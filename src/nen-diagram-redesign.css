@@ -78,6 +78,24 @@
   .nen-advanced-node.is-chained { border-style: dashed; }
   .nen-advanced-node.is-chained small::before { content: 'chain · '; }
 
+  /* Remove legacy orbit coordinates before assigning each active stack. */
+  .nen-advanced-node.is-gyo,
+  .nen-advanced-node.is-in,
+  .nen-advanced-node.is-en,
+  .nen-advanced-node.is-shu,
+  .nen-advanced-node.is-ko,
+  .nen-advanced-node.is-ken,
+  .nen-advanced-node.is-ryu {
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: 82px;
+    height: auto;
+    min-height: 47px;
+    max-height: 54px;
+  }
+
   /* Ten: four direct applications tucked above the Ten card. */
   .nen-principle-map:has(.nen-principle-node.is-top.is-active) .nen-advanced-node.is-en  { top: 13%; left: 34%; }
   .nen-principle-map:has(.nen-principle-node.is-top.is-active) .nen-advanced-node.is-shu { top: 11%; left: 45%; }
