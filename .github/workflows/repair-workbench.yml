@@ -1,0 +1,39 @@
+name: Repair workbench
+
+on:
+  push:
+    branches:
+      - fix/full-visual-backlog
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  export-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run production build
+        run: npm run build
+
+      - name: Export source workbench
+        run: zip -qr hunter-repair-source.zip . -x '.git/*' 'node_modules/*' 'dist/*'
+
+      - name: Upload source workbench
+        uses: actions/upload-artifact@v4
+        with:
+          name: hunter-repair-source
+          path: hunter-repair-source.zip
+          if-no-files-found: error
