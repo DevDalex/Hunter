@@ -5,7 +5,7 @@ import SiteErrorBoundary from './components/SiteErrorBoundary';
 import './styles.css';
 import './redesign.css';
 import './v3.css';
-
+import './nen-hotfix.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
