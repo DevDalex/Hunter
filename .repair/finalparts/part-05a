@@ -1,0 +1,42 @@
+g>{family.family}</strong><small>Power bloc</small></figure>
+               <span>{family.sponsor}</span><h3>{family.family}</h3><p>{family.base}</p>
+               <div><b>Leadership</b>{family.leadership.map((item) => <small key={item}>{item}</small>)}</div>
+               <div><b>Indexed membership</b>{family.members.map((item) => <small key={item}>{item}</small>)}</div>
+@@ -474,6 +475,9 @@ export default function SuccessionDossier({ requestedTab, requestedPrince, reque
+ 
+       {activeTab === 'chapters' && (
+         <div className="chapter-dossier">
++          <div className="record-visual-strip" aria-label="Records section visual guide">
++            {['Chapter ledger', 'Status ledger', 'Evidence index'].map((label, index) => <figure className={`record-visual is-${index + 1}`} role="img" aria-label={`${label} visual`} key={label}><i /><figcaption>{label}</figcaption></figure>)}
++          </div>
+           <div className="chapter-dossier__toolbar">
+             <label><Search size={15} /><input value={chapterQuery} onChange={(event) => setChapterQuery(event.target.value)} placeholder="Number, title, event, thread..." /></label>
+             <select value={chapterPhase} onChange={(event) => setChapterPhase(event.target.value)} aria-label="Filter Succession chapters by phase">
+diff --git a/src/components/SuccessionRoster.jsx b/src/components/SuccessionRoster.jsx
+index e1caef3..551ad69 100644
+--- a/src/components/SuccessionRoster.jsx
++++ b/src/components/SuccessionRoster.jsx
+@@ -56,7 +56,7 @@ export default function SuccessionRoster({ initialQuery = '', spoilerLimit = Num
+                     <SafeImage src={character.image} media={character.media} alt={`${character.name} portrait from Hunterpedia`} />
+                     {deathVisible(character, spoilerLimit) && <i className="death-mark" aria-label="Confirmed deceased">×</i>}
+                   </div>}
+-                  <span>{deathVisible(character, spoilerLimit) ? 'Deceased' : (spoilerLimit >= 405 ? character.statusNote : null) || group.title}</span>
++                  <span>{deathVisible(character, spoilerLimit) ? 'Deceased' : (spoilerLimit >= 405 ? character.statusNote : null) || (group.id === 'royal-family' ? 'Royal house' : group.title)}</span>
+                   <strong>{character.name}</strong>
+                 </a>
+               ))}
+diff --git a/src/data/preSuccessionExperiences.js b/src/data/preSuccessionExperiences.js
+index 8075f80..c373631 100644
+--- a/src/data/preSuccessionExperiences.js
++++ b/src/data/preSuccessionExperiences.js
+@@ -1,4 +1,5 @@
+ const wiki = (slug) => `https://hunterxhunter.fandom.com/wiki/${slug}`;
++const file = (name) => `https://hunterxhunter.fandom.com/wiki/Special:Redirect/file/${encodeURIComponent(name)}`;
+ 
+ const person = (name, role, detail, extra = {}) => ({ name, role, detail, ...extra });
+ const source = (label, slug) => ({ label, href: wiki(slug) });
+@@ -18,12 +19,12 @@ export const preSuccessionExperiences = [
+       ['40', 'reached Trick Tower'], ['24', 'reached Zevil Island'], ['9', 'finalists'], ['8', 'advance after the final ruling'], ['1 week', 'Zevil Island limit'],
+     ],
+     phases: [
+-      { id: 'route', number: '00', title: 'Hidden screening', place: 'Whale Island → Dolle Harbor → Zaban City', examiner: 'Captain · Old Woman · Kiriko family', count: 'Applicants are judged before registration', rule: 'Reach the real examination site by reading intent, cooperating, and surviving the concealed route.', result: 'Gon, Kur
