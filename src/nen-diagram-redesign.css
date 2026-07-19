@@ -1,0 +1,117 @@
+/* Canonical-inspired Nen relationship diagram: balanced square geometry and clear hierarchy. */
+@media (min-width: 721px) {
+  .nen-principle-workbench__layout {
+    grid-template-columns: minmax(620px, 1.12fr) minmax(360px, .88fr);
+    min-height: 720px;
+  }
+
+  .nen-principle-map {
+    min-height: 720px;
+    aspect-ratio: 1 / 1;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(218, 190, 101, .13) 0 9%, transparent 24%),
+      radial-gradient(circle at 50% 50%, rgba(46, 79, 61, .36), transparent 57%),
+      #09100d;
+  }
+
+  .nen-principle-map > img { display: none; }
+  .nen-principle-map__ring { inset: 24%; border-color: rgba(224, 195, 103, .48); }
+  .nen-principle-map__ring::before { inset: -40%; border-color: rgba(224, 195, 103, .28); }
+  .nen-principle-map__ring::after { inset: 24%; background: rgba(224, 195, 103, .045); border-color: rgba(255,255,255,.12); }
+
+  .nen-principle-map__center {
+    z-index: 8;
+    width: 72px;
+    height: 72px;
+    border-width: 2px;
+    background: radial-gradient(circle, #263a30 0 44%, #0c1511 45% 100%);
+    box-shadow: 0 0 0 10px rgba(223, 196, 108, .045), 0 0 34px rgba(223, 196, 108, .18);
+  }
+  .nen-principle-map__center span { font-size: 30px; }
+
+  .nen-principle-node {
+    z-index: 7;
+    width: 124px;
+    min-height: 60px;
+    grid-template-columns: 34px minmax(0,1fr);
+    gap: 8px;
+    padding: 8px 9px;
+    border-color: rgba(232, 211, 142, .28);
+    background: rgba(11, 19, 15, .94);
+    box-shadow: 0 10px 24px rgba(0,0,0,.24);
+  }
+  .nen-principle-node i { width: 32px; height: 32px; font-size: 18px; }
+  .nen-principle-node strong { font-size: 17px; }
+  .nen-principle-node.is-active {
+    border-color: #e7ca70;
+    background: #244735;
+    box-shadow: 0 0 0 3px rgba(231,202,112,.10), 0 12px 30px rgba(0,0,0,.32);
+  }
+
+  .nen-principle-node.is-top { top: 21%; left: 50%; transform: translate(-50%, -50%); }
+  .nen-principle-node.is-right { top: 50%; right: 21%; transform: translate(50%, -50%); }
+  .nen-principle-node.is-bottom { bottom: 21%; left: 50%; transform: translate(-50%, 50%); }
+  .nen-principle-node.is-left { top: 50%; left: 21%; transform: translate(-50%, -50%); }
+
+  .nen-advanced-node {
+    z-index: 6;
+    width: 88px;
+    min-height: 48px;
+    padding: 7px 9px;
+    opacity: .42;
+    border-color: rgba(255,255,255,.16);
+    background: rgba(8, 15, 12, .92);
+    box-shadow: none;
+    transform: translate(-50%, -50%);
+  }
+  .nen-advanced-node strong { font-size: 15px; }
+  .nen-advanced-node small { font-size: 7px; }
+  .nen-advanced-node::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    width: var(--nen-line, 120px);
+    height: 1px;
+    background: rgba(255,255,255,.13);
+    transform-origin: 0 50%;
+    transform: rotate(var(--nen-angle, 0deg));
+    pointer-events: none;
+  }
+  .nen-advanced-node.is-related {
+    opacity: 1;
+    border-color: rgba(230, 202, 112, .62);
+  }
+  .nen-advanced-node.is-related::before { background: rgba(230, 202, 112, .48); }
+  .nen-advanced-node.is-active {
+    background: #6b531f;
+    border-color: #f1d77e;
+    box-shadow: 0 0 22px rgba(230,202,112,.20);
+  }
+
+  .nen-advanced-node.is-gyo { top: 9%; left: 21%; --nen-angle: 45deg; --nen-line: 162px; }
+  .nen-advanced-node.is-in  { top: 9%; left: 79%; --nen-angle: 135deg; --nen-line: 162px; }
+  .nen-advanced-node.is-en  { top: 35%; left: 92%; --nen-angle: 180deg; --nen-line: 155px; }
+  .nen-advanced-node.is-shu { top: 76%; left: 86%; --nen-angle: 218deg; --nen-line: 150px; }
+  .nen-advanced-node.is-ko  { top: 91%; left: 50%; --nen-angle: 270deg; --nen-line: 145px; }
+  .nen-advanced-node.is-ken { top: 76%; left: 14%; --nen-angle: 322deg; --nen-line: 150px; }
+  .nen-advanced-node.is-ryu { top: 35%; left: 8%;  --nen-angle: 0deg; --nen-line: 155px; }
+
+  .nen-principle-inspector { min-height: 720px; }
+}
+
+@media (min-width: 721px) and (max-width: 1180px) {
+  .nen-principle-workbench__layout { grid-template-columns: 1fr; }
+  .nen-principle-map { width: min(100%, 760px); min-height: 680px; margin-inline: auto; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.14); }
+  .nen-principle-inspector { min-height: 0; grid-template-columns: repeat(2, minmax(0,1fr)); grid-template-rows: none; }
+  .nen-principle-inspector__foundation { border-right: 1px solid rgba(255,255,255,.14); border-bottom: 0; }
+}
+
+@media (max-width: 720px) {
+  .nen-principle-map { background: #09100d; }
+  .nen-principle-node, .nen-advanced-node { border-radius: 2px; }
+  .nen-principle-node.is-active, .nen-advanced-node.is-active { box-shadow: inset 4px 0 #e5c96e; }
+}
