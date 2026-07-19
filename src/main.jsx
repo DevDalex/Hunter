@@ -7,6 +7,7 @@ import './redesign.css';
 import './v3.css';
 import './nen-hotfix.css';
 import './nen-diagram-redesign.css';
+import './nen-concept-visuals.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
