@@ -56,7 +56,7 @@ export default function SuccessionRoster({ initialQuery = '', spoilerLimit = Num
                     <SafeImage src={character.image} media={character.media} alt={`${character.name} portrait from Hunterpedia`} />
                     {deathVisible(character, spoilerLimit) && <i className="death-mark" aria-label="Confirmed deceased">×</i>}
                   </div>}
-                  <span>{deathVisible(character, spoilerLimit) ? 'Deceased' : (spoilerLimit >= 405 ? character.statusNote : null) || group.title}</span>
+                  <span>{deathVisible(character, spoilerLimit) ? 'Deceased' : (spoilerLimit >= 405 ? character.statusNote : null) || (group.id === 'royal-family' ? 'Royal house' : group.title)}</span>
                   <strong>{character.name}</strong>
                 </a>
               ))}

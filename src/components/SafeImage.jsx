@@ -1,25 +1,43 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-export default function SafeImage({ src, alt, className = '', loading = 'lazy', eager = false, priority, media = null, onAvailabilityChange, style, ...props }) {
-  const [failed, setFailed] = useState(!src);
+export default function SafeImage({
+  src,
+  fallbackSrc = '',
+  fallbackLabel = '',
+  alt,
+  className = '',
+  loading = 'lazy',
+  eager = false,
+  priority,
+  media = null,
+  onAvailabilityChange,
+  style,
+  ...props
+}) {
+  const sources = useMemo(() => [...new Set([src, fallbackSrc].filter(Boolean))], [src, fallbackSrc]);
+  const [sourceIndex, setSourceIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const [unavailable, setUnavailable] = useState(false);
   const availabilityCallback = useRef(onAvailabilityChange);
 
   useEffect(() => { availabilityCallback.current = onAvailabilityChange; }, [onAvailabilityChange]);
-
   useEffect(() => {
-    setFailed(!src);
+    setSourceIndex(0);
     setLoaded(false);
-    availabilityCallback.current?.(Boolean(src));
-  }, [src]);
+    setUnavailable(false);
+    availabilityCallback.current?.(Boolean(sources[0]));
+  }, [sources]);
 
-  if (!src || failed) return null;
+  const activeSrc = sources[sourceIndex] || '';
+  if (!activeSrc || unavailable) {
+    return fallbackLabel ? <span className={`safe-image-placeholder${className ? ` ${className}` : ''}`} role="img" aria-label={alt || fallbackLabel}><b>{fallbackLabel}</b><small>Visual unavailable</small></span> : null;
+  }
 
   return (
     <img
       {...props}
       className={`safe-image${className ? ` ${className}` : ''}`}
-      src={src}
+      src={activeSrc}
       alt={alt}
       width={media?.width || undefined}
       height={media?.height || undefined}
@@ -28,6 +46,7 @@ export default function SafeImage({ src, alt, className = '', loading = 'lazy', 
       fetchPriority={priority || (eager ? 'high' : 'auto')}
       referrerPolicy="no-referrer"
       data-image-loaded={loaded ? 'true' : 'false'}
+      data-image-fallback={sourceIndex > 0 ? 'true' : 'false'}
       data-media-storage={media?.storage || undefined}
       style={{ ...style, ...(media?.focal ? { objectPosition: media.focal } : {}) }}
       onLoad={() => {
@@ -36,8 +55,12 @@ export default function SafeImage({ src, alt, className = '', loading = 'lazy', 
       }}
       onError={() => {
         setLoaded(false);
-        setFailed(true);
-        availabilityCallback.current?.(false);
+        if (sourceIndex < sources.length - 1) {
+          setSourceIndex((index) => index + 1);
+        } else {
+          setUnavailable(true);
+          availabilityCallback.current?.(false);
+        }
       }}
     />
   );
