@@ -1,0 +1,72 @@
+e),var(--forest-soft)); }
++.roster-card.no-image::before { content: "Portrait not stored"; margin: 14px 12px auto; color: var(--muted); font-size: 9px; text-transform: uppercase; }
++
++/* Correct the relationship atlas selectors to the actual section/a markup */
++.connection-atlas-overview { display: grid; grid-template-columns: minmax(220px,.32fr) minmax(0,1fr); align-items: stretch; }
++.connection-atlas-root { min-width: 0; display: flex; flex-direction: column; justify-content: center; }
++.connection-atlas-lanes { min-width: 0; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1px; margin: 0; background: var(--line); }
++.connection-atlas-lane { min-width: 0; padding: 18px; background: var(--surface); }
++.connection-atlas-lane > header span { color: var(--gold); font-size: 9px; text-transform: uppercase; }
++.connection-atlas-lane > header h3 { margin: 4px 0 7px; font-size: 20px; }
++.connection-atlas-lane > header p { font-size: 11px; }
++.connection-atlas-lane > div { display: grid; gap: 6px; margin-top: 14px; }
++.connection-atlas-lanes button { min-height: 54px; display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; border-color: var(--line); background: var(--surface-soft); color: var(--ink); }
++.connection-atlas-lanes button.is-active { border-color: var(--forest); background: var(--forest); color: #fff; }
++.connection-atlas-person { min-height: 78px; min-width: 0; display: grid; grid-template-columns: 58px minmax(0,1fr); gap: 10px; align-items: center; border: 1px solid var(--line); padding: 8px; background: var(--surface); color: var(--ink); text-decoration: none; }
++.connection-atlas-person > span[data-image-frame] { position: relative; width: 58px; height: 66px; overflow: hidden; background: var(--surface-soft); }
++.connection-atlas-person > span[data-image-frame] img { width: 100%; height: 100%; object-fit: contain; }
++.connection-atlas-person > div { min-width: 0; display: grid; }
++.connection-atlas-person small { color: var(--gold); font-size: 9px; text-transform: uppercase; }
++.connection-atlas-person strong { overflow-wrap: anywhere; font-family: var(--serif); font-size: 16px; }
++.connection-atlas-person p { margin: 3px 0 0; font-size: 10px; }
++.connection-atlas-person.no-image { grid-template-columns: 1fr; }
++.connection-atlas-relation { display: grid; gap: 7px; border-bottom: 1px solid var(--line); padding: 12px 0; color: var(--ink); text-decoration: none; }
++.connection-atlas-relation > span { color: var(--gold); font-size: 9px; text-transform: uppercase; }
++.connection-atlas-relation > div { display: grid; grid-template-columns: minmax(0,1fr) 30px minmax(0,1fr); gap: 8px; align-items: center; }
++.connection-atlas-relation > div i { height: 1px; background: var(--line-strong); }
++.connection-atlas-relation > small { color: var(--muted); }
++
++/* Relationship graph in the dossier */
++.relationship-map__toolbar { display: grid; grid-template-columns: minmax(0,1fr) minmax(280px,.65fr); gap: 24px; align-items: end; }
++.relationship-map__toolbar > div:last-child { display: flex; flex-wrap: wrap; gap: 5px; }
++.relationship-map__toolbar button { min-height: 38px; border: 1px solid var(--line); padding: 6px 9px; background: var(--surface); cursor: pointer; }
++.relationship-map__toolbar button.is-active { background: var(--forest); color: #fff; }
++.relationship-focus-control { display: grid; grid-template-columns: minmax(220px,.4fr) 1fr; gap: 16px; align-items: end; margin: 18px 0; }
++.relationship-focus-control label { display: grid; gap: 5px; }
++.relationship-focus-control select { width: 100%; min-height: 44px; }
++.relationship-network { min-height: 0; display: grid; grid-template-columns: 220px minmax(0,1fr); gap: 1px; place-items: stretch; background: var(--line); }
++.relationship-network__center { display: grid; place-items: center; align-content: center; border: 0; border-radius: 0; padding: 24px; background: var(--forest); color: #fff; text-align: center; }
++.relationship-network__center strong { font-size: 22px; }
++.relationship-network__spokes { position: static; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1px; background: var(--line); }
++.relationship-network__spokes > a { min-width: 0; display: grid; align-content: start; gap: 5px; padding: 16px; background: var(--surface); color: var(--ink); text-decoration: none; }
++.relationship-network__spokes > a i { width: 32px; height: 2px; background: var(--gold); }
++.relationship-network__spokes > a span { color: var(--gold); font-size: 9px; text-transform: uppercase; }
++.relationship-network__spokes > a strong { font-family: var(--serif); font-size: 17px; overflow-wrap: anywhere; }
++.relationship-network__spokes > a p { margin: 0; font-size: 10px; }
++.relationship-ledger { grid-template-columns: repeat(2,minmax(0,1fr)); }
++.relationship-ledger > a { min-width: 0; display: grid; gap: 6px; border: 1px solid var(--line); padding: 14px; background: var(--surface); color: var(--ink); text-decoration: none; }
++.relationship-ledger > a > div { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr); gap: 7px; }
++.relationship-ledger > a span { color: var(--gold); font-size: 9px; text-transform: uppercase; }
++.relationship-ledger > a p { margin: 0; font-size: 11px; }
++
++/* Nen and Beasts, Power Blocs, Records */
++.beast-rules { display: grid; grid-template-columns: minmax(220px,.36fr) minmax(0,1fr); gap: 1px; border: 1px solid var(--line); background: var(--line); }
++.beast-rules > div { padding: 22px; background: var(--forest); color: #fff; }
++.beast-rules > div h3 { color: #fff; }
++.beast-rules > ul { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1px; margin: 0; padding: 0; background: var(--line); list-style: none; }
++.beast-rules li { padding: 16px; background: var(--surface); font-size: 11px; }
++.beast-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; }
++.beast-grid > a { min-width: 0; overflow: hidden; border: 1px solid var(--line); background: var(--surface); color: var(--ink); text-decoration: none; }
++.beast-grid > a > figure { height: 210px; margin: 0; background: #111713; }
++.beast-grid > a > figure img { width: 100%; height: 100%; object-fit: cover; }
++.beast-grid > a > div { display: grid; padding: 16px; }
++.beast-grid > a span { color: var(--gold); font-size: 9px; text-transform: uppercase; }
++.beast-grid > a h3 { margin: 4px 0 7px; }
++.beast-grid > a p { font-size: 11px; }
++.beast-grid > a em { color: var(--muted); font-size: 10px; }
++.mafia-ledger > a { overflow: hidden; padding: 0; }
++.mafia-ledger > a > figure { height: 180px; margin: 0 0 16px; background: #111713; }
++.mafia-ledger > a > figure img { width: 100%; height: 100%; object-fit: cover; }
++.mafia-ledger > a > span, .mafia-ledger > a > h3, .mafia-ledger > a > p, .mafia-ledger > a > div { margin-right: 18px; margin-left: 18px; }
++.mafia-ledger > a > div:last-child { margin-bottom: 18px; }
++.record-visual-strip
