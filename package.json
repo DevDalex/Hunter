@@ -22,6 +22,7 @@
     "audit:release": "node scripts/audit-release.mjs",
     "audit:gaps": "node scripts/report-gaps.mjs",
     "build": "npm run audit:content && npm run audit:implementation && npm run audit:readability && npm run audit:layout && npm run audit:accessibility && npm run audit:media && npm run audit:polish && npm run package:release && npm run audit:release && node scripts/clean-hosting.mjs && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs",
+    "build:pages": "vite build --base=/Hunter/ && node scripts/prepare-pages.mjs",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
@@ -31,5 +32,8 @@
     "react-dom": "latest",
     "lucide-react": "latest"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
 }
