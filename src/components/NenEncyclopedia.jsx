@@ -39,8 +39,25 @@ const techniques = [
   { name: 'Shu', bases: ['Ten'], base: 'Ten', detail: 'Extend the aura shroud around an object so it functions as part of the user.', image: hunterFile('Gon using Shu.png'), position: 'shu' },
   { name: 'Ko', bases: ['Ten', 'Zetsu', 'Ren', 'Hatsu'], base: 'Ten + Zetsu + Ren + Hatsu + Gyo', detail: 'Concentrate nearly all usable aura at one point and leave the rest exposed.', image: hunterFile('Biscuit using Ko.png'), position: 'ko' },
   { name: 'Ken', bases: ['Ten', 'Ren'], base: 'Ten + Ren', detail: 'Maintain a powerful, even, full-body defensive shroud.', image: hunterFile('Gon using Ken.png'), position: 'ken' },
-  { name: 'Ryu', bases: ['Ten', 'Ren'], base: 'Gyo + Ken', detail: 'Redistribute aura percentages during combat as attack and defense change.', image: hunterFile('Biscuit using Ryu.png'), position: 'ryu' },
+  { name: 'Ryu', bases: [], defaultPrinciple: 'Ren', base: 'Gyo + Ken', detail: 'Redistribute aura percentages during combat as attack and defense change.', image: hunterFile('Biscuit using Ryu.png'), position: 'ryu' },
 ];
+
+const principlePoints = {
+  Ten: [50, 21],
+  Zetsu: [79, 50],
+  Ren: [50, 79],
+  Hatsu: [21, 50],
+};
+
+const techniquePoints = {
+  Gyo: [21, 9],
+  In: [79, 9],
+  En: [92, 35],
+  Shu: [86, 76],
+  Ko: [50, 91],
+  Ken: [14, 76],
+  Ryu: [8, 35],
+};
 
 const anatomy = [
   ['Effect', 'What physically or informationally changes?'],
@@ -67,18 +84,33 @@ function NenPrincipleMap({ onOpenRecord }) {
   const [activeTechnique, setActiveTechnique] = useState('In');
   const principle = principles.find((item) => item.name === activePrinciple) || principles[0];
   const related = techniques.filter((item) => item.bases.includes(activePrinciple));
-  const technique = techniques.find((item) => item.name === activeTechnique && item.bases.includes(activePrinciple)) || related[0];
+  const technique = techniques.find((item) => item.name === activeTechnique) || related[0];
+  const isChainedTechnique = Boolean(technique && technique.bases.length === 0);
+  const [originX, originY] = principlePoints[activePrinciple] || principlePoints.Ten;
   const choosePrinciple = (name) => {
     setActivePrinciple(name);
     setActiveTechnique(techniques.find((item) => item.bases.includes(name))?.name || 'Gyo');
   };
+  const chooseTechnique = (item) => {
+    const nextPrinciple = item.bases.includes(activePrinciple)
+      ? activePrinciple
+      : (item.bases[0] || item.defaultPrinciple);
+    if (nextPrinciple) setActivePrinciple(nextPrinciple);
+    setActiveTechnique(item.name);
+  };
 
   return <section className="nen-principle-workbench" aria-labelledby="nen-principle-title">
-    <header><div><span className="section-kicker">Hover, focus, or tap a principle</span><h3 id="nen-principle-title">Four principles → advanced techniques</h3></div><p>The bright outer nodes are the techniques that depend on the selected foundation. A technique can light up from more than one principle because Nen applications combine rules.</p></header>
+    <header><div><span className="section-kicker">Hover, focus, or tap a principle</span><h3 id="nen-principle-title">Four principles → advanced techniques</h3></div><p>The highlighted lines show direct derivations from the selected principle. Chained applications such as Ryu are labeled separately instead of being falsely attached to a basic principle.</p></header>
     <div className="nen-principle-workbench__layout">
       <div className="nen-principle-map" aria-label="Interactive relationship map of the Four Major Principles and advanced Nen techniques">
         <SafeImage src={hunterFile('The four major principles of Nen.png')} fallbackLabel="Four principles" alt="The Four Major Principles of Nen from Hunterpedia" />
         <i className="nen-principle-map__ring" aria-hidden="true" />
+        <svg className="nen-principle-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          {related.map((item) => {
+            const [targetX, targetY] = techniquePoints[item.name];
+            return <line x1={originX} y1={originY} x2={targetX} y2={targetY} key={`${activePrinciple}-${item.name}`} />;
+          })}
+        </svg>
         <div className="nen-principle-map__center"><span>念</span><small>Nen</small></div>
         {principles.map((item) => <button
           type="button"
@@ -91,13 +123,14 @@ function NenPrincipleMap({ onOpenRecord }) {
         ><i>{item.kanji}</i><span><strong>{item.name}</strong><small>{item.action}</small></span></button>)}
         {techniques.map((item) => {
           const connected = item.bases.includes(activePrinciple);
+          const chained = item.bases.length === 0;
           return <button
             type="button"
-            className={`nen-advanced-node is-${item.position}${connected ? ' is-related' : ''}${technique?.name === item.name ? ' is-active' : ''}`}
-            aria-label={`${item.name}: ${item.base}`}
-            onMouseEnter={() => connected && setActiveTechnique(item.name)}
-            onFocus={() => connected && setActiveTechnique(item.name)}
-            onClick={() => { setActiveTechnique(item.name); if (!connected) choosePrinciple(item.bases[0]); }}
+            className={`nen-advanced-node is-${item.position}${connected ? ' is-related' : ''}${chained ? ' is-chained' : ''}${technique?.name === item.name ? ' is-active' : ''}`}
+            aria-label={`${item.name}: ${item.base}${chained ? '; chained technique, not a direct Four Major Principle application' : ''}`}
+            onMouseEnter={() => chooseTechnique(item)}
+            onFocus={() => chooseTechnique(item)}
+            onClick={() => chooseTechnique(item)}
             key={item.name}
           ><strong>{item.name}</strong><small>{item.base}</small></button>;
         })}
@@ -108,9 +141,10 @@ function NenPrincipleMap({ onOpenRecord }) {
           <span>Foundation · {principle.kanji}</span><h3>{principle.name}</h3><p>{principle.summary}</p><blockquote><b>Trade-off</b>{principle.risk}</blockquote>
         </div>
         <div className="nen-principle-inspector__advanced">
-          <header><span>{related.length} dependent application{related.length === 1 ? '' : 's'}</span><strong>{technique?.name}</strong></header>
+          <header><span>{isChainedTechnique ? 'Chained advanced application' : `${related.length} direct application${related.length === 1 ? '' : 's'}`}</span><strong>{technique?.name}</strong></header>
           {technique && <figure><SafeImage src={technique.image} fallbackLabel={technique.name} alt={`${technique.name} demonstration from Hunterpedia`} /><figcaption>{technique.base}</figcaption></figure>}
           <p>{technique?.detail}</p>
+          {isChainedTechnique && <small className="nen-principle-inspector__chain">Ryu is Gyo used while maintaining Ken. It is therefore shown as a second-stage technique, not as a direct branch of Ten or Ren.</small>}
           <div>{related.map((item) => <button type="button" className={technique?.name === item.name ? 'is-active' : ''} onMouseEnter={() => setActiveTechnique(item.name)} onFocus={() => setActiveTechnique(item.name)} onClick={() => setActiveTechnique(item.name)} key={item.name}>{item.name}</button>)}</div>
           <button type="button" className="nen-principle-inspector__records" onClick={() => onOpenRecord(technique?.name || activePrinciple, technique ? 'Advanced applications' : 'Four Major Principles')}>Open matching records <ArrowRight size={13} /></button>
         </div>
