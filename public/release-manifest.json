@@ -1,0 +1,35 @@
+{
+  "name": "Hunter × Hunter Archive",
+  "release": "Phase 8A · Editorial home and portable editions",
+  "released": "July 16, 2026",
+  "chapterBoundary": 413,
+  "sourcePolicy": "Hunterpedia/Fandom only",
+  "readerFacingRoutes": 26,
+  "automatedReleaseGates": 10,
+  "packages": {
+    "sitesReady": {
+      "file": "hxh-archive-phase-8a-sites-source.zip",
+      "purpose": "Maintain, edit, and redeploy the existing ChatGPT Sites project",
+      "includesHostingIdentity": true,
+      "excludes": [
+        "node_modules",
+        "dist",
+        ".git",
+        "credentials",
+        "browser-local study data"
+      ]
+    },
+    "standalone": {
+      "file": "hxh-archive-phase-8a-standalone.zip",
+      "purpose": "Unzip and directly open the website without ChatGPT Sites, Node, or Vite",
+      "startFile": "Open-HxH-Archive.html",
+      "includesHostingIdentity": false,
+      "excludes": [
+        "source toolchain",
+        "credentials",
+        "repository history",
+        "browser-local study data"
+      ]
+    }
+  }
+}

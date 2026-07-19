@@ -1,0 +1,35 @@
+{
+  "name": "hxh-archive",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "audit:content": "node scripts/audit-content.mjs",
+    "audit:implementation": "node scripts/audit-implementation.mjs",
+    "audit:readability": "node scripts/audit-readability.mjs",
+    "audit:layout": "node scripts/audit-layout.mjs",
+    "audit:accessibility": "node scripts/audit-accessibility.mjs",
+    "audit:performance": "node scripts/audit-performance.mjs",
+    "audit:polish": "node scripts/audit-polish.mjs",
+    "qa:visual": "vite build && node scripts/visual-qa.mjs",
+    "qa:accessibility": "vite build && node scripts/accessibility-qa.mjs",
+    "qa:performance": "vite build && node scripts/audit-performance.mjs && node scripts/performance-qa.mjs",
+    "stabilize:media": "node scripts/stabilize-media.mjs",
+    "stabilize:rooms": "node scripts/stabilize-room-media.mjs",
+    "audit:media": "node scripts/stabilize-media.mjs --verify-only && node scripts/stabilize-room-media.mjs --verify-only && node scripts/audit-media.mjs",
+    "package:release": "node scripts/package-release.mjs",
+    "audit:release": "node scripts/audit-release.mjs",
+    "audit:gaps": "node scripts/report-gaps.mjs",
+    "build": "npm run audit:content && npm run audit:implementation && npm run audit:readability && npm run audit:layout && npm run audit:accessibility && npm run audit:media && npm run audit:polish && npm run package:release && npm run audit:release && node scripts/clean-hosting.mjs && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "lucide-react": "latest"
+  },
+  "devDependencies": {}
+}
