@@ -1,0 +1,123 @@
+ult function SafeImage({ src, alt, className = '', loading = 'lazy',
+       fetchPriority={priority || (eager ? 'high' : 'auto')}
+       referrerPolicy="no-referrer"
+       data-image-loaded={loaded ? 'true' : 'false'}
++      data-image-fallback={sourceIndex > 0 ? 'true' : 'false'}
+       data-media-storage={media?.storage || undefined}
+       style={{ ...style, ...(media?.focal ? { objectPosition: media.focal } : {}) }}
+       onLoad={() => {
+@@ -36,8 +53,11 @@ export default function SafeImage({ src, alt, className = '', loading = 'lazy',
+       }}
+       onError={() => {
+         setLoaded(false);
+-        setFailed(true);
+-        availabilityCallback.current?.(false);
++        if (sourceIndex < sources.length - 1) {
++          setSourceIndex((index) => index + 1);
++        } else {
++          availabilityCallback.current?.(false);
++        }
+       }}
+     />
+   );
+diff --git a/src/components/SourcePortrait.jsx b/src/components/SourcePortrait.jsx
+index d1d92e9..d967f79 100644
+--- a/src/components/SourcePortrait.jsx
++++ b/src/components/SourcePortrait.jsx
+@@ -5,6 +5,18 @@ const resolvedPortraits = new Map();
+ const exhaustedPortraits = new Set();
+ 
+ const initialsFor = (name = '') => name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
++
++const portraitAliases = {
++  Lippo: ['Lippo HE Portrait.png'],
++  Beans: ['Mamen Beans HE Portrait.png'],
++  'Mamen Beans': ['Mamen Beans HE Portrait.png'],
++  Zushi: ['Zushi HA Portrait.png'],
++  Kastro: ['Kastro HA Portrait.png'],
++  Gido: ['Gido HA Portrait.png'],
++  Sadaso: ['Sadaso HA Portrait.png'],
++  Riehlvelt: ['Riehlvelt HA Portrait.png'],
++};
++
+ const portraitRedirect = (filename) => `https://hunterxhunter.fandom.com/wiki/Special:Redirect/file/${encodeURIComponent(filename)}`;
+ const sourceTitle = (source = '') => {
+   try { return decodeURIComponent(new URL(source).pathname.split('/wiki/')[1] || '').replaceAll('_', ' '); }
+@@ -23,6 +35,13 @@ const candidatesFor = (item) => {
+   if (!sourceCanResolvePortrait(item)) return [];
+   const name = String(item.name || '').replace(/[†*]/g, '').replace(/\s*\([^)]*\)\s*$/, '').trim();
+   return [
++    ...(portraitAliases[name] || []),
++    `${name} HE Portrait.png`,
++    `${name} HA Portrait.png`,
++    `${name} YN Portrait.png`,
++    `${name} GI Portrait.png`,
++    `${name} CA Portrait.png`,
++    `${name} CE Portrait.png`,
+     `${name} Portrait.png`,
+     `${name} 2011 Portrait.png`,
+     `${name} SC Portrait.png`,
+diff --git a/src/components/SuccessionDossier.jsx b/src/components/SuccessionDossier.jsx
+index 055e7a2..cd86908 100644
+--- a/src/components/SuccessionDossier.jsx
++++ b/src/components/SuccessionDossier.jsx
+@@ -15,6 +15,7 @@ import { deathLedger } from '../data/successionStatus';
+ import HorizontalScrollHint from './HorizontalScrollHint';
+ import SafeImage from './SafeImage';
+ import { characterMedia, characterPortrait } from '../data/entityRegistry';
++import { beastVisual, blocVisual, recordVisual } from '../data/repairVisuals';
+ 
+ const tabs = [
+   ['overview', 'Overview', 'Start'], ['core', 'Woble thread', 'Start'], ['chapters', 'Chapter ledger', 'Start'],
+@@ -328,7 +329,7 @@ export default function SuccessionDossier({ requestedTab, requestedPrince, reque
+           <div className="beast-rules"><div><span>Shared ritual rules</span><h3>What every beast inherits</h3></div><ul>{beastRules.map((rule) => <li key={rule}>{rule}</li>)}</ul></div>
+           <div className="beast-grid">{guardianBeasts.map((beast) => (
+             <a id={`dossier-record-${focusIdFor(beast.host)}`} href={beast.source} target="_blank" rel="noreferrer" key={`${beast.order}-${beast.host}`} className={`${!beast.image ? 'no-image ' : ''}${requestedFocus === focusIdFor(beast.host) ? 'is-focused' : ''}`}>
+-              {beast.image && <figure data-image-frame><SafeImage src={beast.image} alt={`${beast.host} Guardian Spirit Beast from Hunterpedia`} /></figure>}
++              <figure data-image-frame><SafeImage src={beast.image} fallbackSrc={beastVisual(beast.host)} fallbackLabel={`${beast.host} Beast`} alt={`${beast.host} Guardian Spirit Beast from Hunterpedia`} /></figure>
+               <div><span>{beast.order === 'King' ? 'King' : `Prince ${beast.order}`} · {beast.knowledge}</span><h3>{beast.host}</h3><b>{beast.type}</b><p>{beast.ability}</p><em>{beast.conditions}</em><small>Hunterpedia <ExternalLink size={10} /></small></div>
+             </a>
+           ))}</div>
+@@ -402,6 +403,7 @@ export default function SuccessionDossier({ requestedTab, requestedPrince, reque
+         <div className="mafia-dossier-stack">
+           <div className="mafia-ledger">{mafiaDossiers.map((family) => (
+             <a id={`dossier-record-${focusIdFor(family.family)}`} className={requestedFocus === focusIdFor(family.family) ? 'is-focused' : ''} href={family.source} target="_blank" rel="noreferrer" key={family.family}>
++              <figure data-image-frame><SafeImage src={blocVisual(family.family)} fallbackLabel={family.family} alt={`${family.family} power bloc visual`} /></figure>
+               <span>{family.sponsor}</span><h3>{family.family}</h3><p>{family.base}</p>
+               <div><b>Leadership</b>{family.leadership.map((item) => <small key={item}>{item}</small>)}</div>
+               <div><b>Indexed membership</b>{family.members.map((item) => <small key={item}>{item}</small>)}</div>
+@@ -474,6 +476,9 @@ export default function SuccessionDossier({ requestedTab, requestedPrince, reque
+ 
+       {activeTab === 'chapters' && (
+         <div className="chapter-dossier">
++          <div className="record-visual-strip" aria-label="Records section visual guide">
++            {['Chapter ledger', 'Status ledger', 'Evidence index'].map((label, index) => <figure key={label}><SafeImage src={recordVisual(index, label)} fallbackLabel={label} alt={`${label} visual`} /><figcaption>{label}</figcaption></figure>)}
++          </div>
+           <div className="chapter-dossier__toolbar">
+             <label><Search size={15} /><input value={chapterQuery} onChange={(event) => setChapterQuery(event.target.value)} placeholder="Number, title, event, thread..." /></label>
+             <select value={chapterPhase} onChange={(event) => setChapterPhase(event.target.value)} aria-label="Filter Succession chapters by phase">
+diff --git a/src/components/SuccessionRoster.jsx b/src/components/SuccessionRoster.jsx
+index e1caef3..551ad69 100644
+--- a/src/components/SuccessionRoster.jsx
++++ b/src/components/SuccessionRoster.jsx
+@@ -56,7 +56,7 @@ export default function SuccessionRoster({ initialQuery = '', spoilerLimit = Num
+                     <SafeImage src={character.image} media={character.media} alt={`${character.name} portrait from Hunterpedia`} />
+                     {deathVisible(character, spoilerLimit) && <i className="death-mark" aria-label="Confirmed deceased">×</i>}
+                   </div>}
+-                  <span>{deathVisible(character, spoilerLimit) ? 'Deceased' : (spoilerLimit >= 405 ? character.statusNote : null) || group.title}</span>
++                  <span>{deathVisible(character, spoilerLimit) ? 'Deceased' : (spoilerLimit >= 405 ? character.statusNote : null) || (group.id === 'royal-family' ? 'Royal house' : group.title)}</span>
+                   <strong>{character.name}</strong>
+                 </a>
+               ))}
+diff --git a/src/data/preSuccessionExperiences.js b/src/data/preSuccessionExperiences.js
+index 8075f80..c373631 100644
+--- a/src/data/preSuccessionExperiences.js
++++ b/src/data/preSuccessionExperiences.js
+@@ -1,4 +1,5 @@
+ const wiki = (slug) => `https://hunterxhunter.fandom.com/wiki/${slug}`;
++const file = (name) => `https://hunterxhunter.fandom.com/wiki/Special:Redirect/file/${encodeURIComponent(name)}`;
+ 
+ const person = (name, role, detail, extra = {}) => ({ name, role, detail, ...extra });
+ const source = (label, slug) => ({ label, href: wiki(slug) });
+@@ -18,12 +19,12 @@ export const preSuccessionExperiences = [
+       ['40', 'reached
