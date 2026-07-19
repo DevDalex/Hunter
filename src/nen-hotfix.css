@@ -1,0 +1,97 @@
+/* Keep the Nen principle workbench and lesson reference in normal document flow. */
+.nen-foundation-view {
+  display: block;
+  min-width: 0;
+  margin-top: 18px;
+}
+
+.nen-foundation-view > .nen-principle-workbench {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-top: 0;
+}
+
+.nen-foundation-reference {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(240px, 310px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.nen-foundation-index,
+.nen-evidence-card,
+.nen-evidence-card__images,
+.nen-evidence-card__copy {
+  min-width: 0;
+}
+
+.nen-evidence-card {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Failed remote images must stay inside their media frame. */
+.nen-principle-map > .safe-image-placeholder {
+  display: none;
+}
+
+.nen-principle-inspector figure > .safe-image-placeholder,
+.nen-technique-gallery figure > .safe-image-placeholder,
+.nen-category-hex > .safe-image-placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.nen-principle-inspector__foundation figure > .safe-image-placeholder {
+  background: linear-gradient(135deg, #142019, #26382f);
+  color: #fff;
+}
+
+.nen-principle-inspector__advanced figure > .safe-image-placeholder,
+.nen-technique-gallery figure > .safe-image-placeholder {
+  background: linear-gradient(135deg, #111713, #2b3a32);
+  color: #fff;
+}
+
+.nen-category-hex > .safe-image-placeholder {
+  z-index: 0;
+  background: radial-gradient(circle at center, #26344d, #090d18 70%);
+  color: #fff;
+}
+
+.nen-category-hex__nodes,
+.nen-category-hex > span {
+  z-index: 1;
+}
+
+@media (max-width: 900px) {
+  .nen-foundation-reference {
+    grid-template-columns: 1fr;
+  }
+
+  .nen-foundation-index {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nen-foundation-index button {
+    border-right: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 620px) {
+  .nen-foundation-index {
+    grid-template-columns: 1fr;
+  }
+
+  .nen-evidence-card__images {
+    min-height: 300px;
+  }
+}
