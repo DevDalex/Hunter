@@ -1,4 +1,4 @@
-/* Canonical-inspired Nen relationship diagram: balanced square geometry and clear hierarchy. */
+/* Canonical-inspired Nen relationship diagram with source-accurate direct links. */
 @media (min-width: 721px) {
   .nen-principle-workbench__layout {
     grid-template-columns: minmax(620px, 1.12fr) minmax(360px, .88fr);
@@ -20,6 +20,22 @@
   .nen-principle-map__ring { inset: 24%; border-color: rgba(224, 195, 103, .48); }
   .nen-principle-map__ring::before { inset: -40%; border-color: rgba(224, 195, 103, .28); }
   .nen-principle-map__ring::after { inset: 24%; background: rgba(224, 195, 103, .045); border-color: rgba(255,255,255,.12); }
+
+  .nen-principle-links {
+    position: absolute;
+    z-index: 3;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .nen-principle-links line {
+    stroke: rgba(232, 205, 116, .7);
+    stroke-width: 1.2;
+    vector-effect: non-scaling-stroke;
+    filter: drop-shadow(0 0 3px rgba(232,205,116,.18));
+  }
 
   .nen-principle-map__center {
     z-index: 8;
@@ -60,47 +76,53 @@
     width: 88px;
     min-height: 48px;
     padding: 7px 9px;
-    opacity: .42;
+    opacity: .35;
     border-color: rgba(255,255,255,.16);
     background: rgba(8, 15, 12, .92);
     box-shadow: none;
     transform: translate(-50%, -50%);
   }
+  .nen-advanced-node::before { display: none; }
   .nen-advanced-node strong { font-size: 15px; }
   .nen-advanced-node small { font-size: 7px; }
-  .nen-advanced-node::before {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    top: 50%;
-    left: 50%;
-    width: var(--nen-line, 120px);
-    height: 1px;
-    background: rgba(255,255,255,.13);
-    transform-origin: 0 50%;
-    transform: rotate(var(--nen-angle, 0deg));
-    pointer-events: none;
-  }
   .nen-advanced-node.is-related {
     opacity: 1;
-    border-color: rgba(230, 202, 112, .62);
+    border-color: rgba(230, 202, 112, .72);
+    box-shadow: 0 0 0 2px rgba(230,202,112,.06);
   }
-  .nen-advanced-node.is-related::before { background: rgba(230, 202, 112, .48); }
   .nen-advanced-node.is-active {
+    opacity: 1;
     background: #6b531f;
     border-color: #f1d77e;
     box-shadow: 0 0 22px rgba(230,202,112,.20);
   }
+  .nen-advanced-node.is-chained:not(.is-active) {
+    opacity: .62;
+    border-style: dashed;
+    border-color: rgba(182, 202, 191, .36);
+  }
+  .nen-advanced-node.is-chained small::before { content: 'chain · '; }
 
-  .nen-advanced-node.is-gyo { top: 9%; left: 21%; --nen-angle: 45deg; --nen-line: 162px; }
-  .nen-advanced-node.is-in  { top: 9%; left: 79%; --nen-angle: 135deg; --nen-line: 162px; }
-  .nen-advanced-node.is-en  { top: 35%; left: 92%; --nen-angle: 180deg; --nen-line: 155px; }
-  .nen-advanced-node.is-shu { top: 76%; left: 86%; --nen-angle: 218deg; --nen-line: 150px; }
-  .nen-advanced-node.is-ko  { top: 91%; left: 50%; --nen-angle: 270deg; --nen-line: 145px; }
-  .nen-advanced-node.is-ken { top: 76%; left: 14%; --nen-angle: 322deg; --nen-line: 150px; }
-  .nen-advanced-node.is-ryu { top: 35%; left: 8%;  --nen-angle: 0deg; --nen-line: 155px; }
+  .nen-advanced-node.is-gyo { top: 9%; left: 21%; }
+  .nen-advanced-node.is-in  { top: 9%; left: 79%; }
+  .nen-advanced-node.is-en  { top: 35%; left: 92%; }
+  .nen-advanced-node.is-shu { top: 76%; left: 86%; }
+  .nen-advanced-node.is-ko  { top: 91%; left: 50%; }
+  .nen-advanced-node.is-ken { top: 76%; left: 14%; }
+  .nen-advanced-node.is-ryu { top: 35%; left: 8%; }
 
   .nen-principle-inspector { min-height: 720px; }
+}
+
+.nen-principle-inspector__chain {
+  display: block;
+  margin-top: 10px;
+  border-left: 2px solid rgba(230,202,112,.62);
+  padding: 8px 10px;
+  background: rgba(255,255,255,.055);
+  color: rgba(255,255,255,.68);
+  font-size: 10px;
+  line-height: 1.5;
 }
 
 @media (min-width: 721px) and (max-width: 1180px) {
@@ -111,7 +133,9 @@
 }
 
 @media (max-width: 720px) {
+  .nen-principle-links { display: none; }
   .nen-principle-map { background: #09100d; }
   .nen-principle-node, .nen-advanced-node { border-radius: 2px; }
   .nen-principle-node.is-active, .nen-advanced-node.is-active { box-shadow: inset 4px 0 #e5c96e; }
+  .nen-advanced-node.is-chained { border-style: dashed; }
 }
