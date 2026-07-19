@@ -5,6 +5,18 @@ const resolvedPortraits = new Map();
 const exhaustedPortraits = new Set();
 
 const initialsFor = (name = '') => name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
+
+const portraitAliases = {
+  Lippo: ['Lippo HE Portrait.png'],
+  Beans: ['Mamen Beans HE Portrait.png'],
+  'Mamen Beans': ['Mamen Beans HE Portrait.png'],
+  Zushi: ['Zushi HA Portrait.png'],
+  Kastro: ['Kastro HA Portrait.png'],
+  Gido: ['Gido HA Portrait.png'],
+  Sadaso: ['Sadaso HA Portrait.png'],
+  Riehlvelt: ['Riehlvelt HA Portrait.png'],
+};
+
 const portraitRedirect = (filename) => `https://hunterxhunter.fandom.com/wiki/Special:Redirect/file/${encodeURIComponent(filename)}`;
 const sourceTitle = (source = '') => {
   try { return decodeURIComponent(new URL(source).pathname.split('/wiki/')[1] || '').replaceAll('_', ' '); }
@@ -23,6 +35,13 @@ const candidatesFor = (item) => {
   if (!sourceCanResolvePortrait(item)) return [];
   const name = String(item.name || '').replace(/[†*]/g, '').replace(/\s*\([^)]*\)\s*$/, '').trim();
   return [
+    ...(portraitAliases[name] || []),
+    `${name} HE Portrait.png`,
+    `${name} HA Portrait.png`,
+    `${name} YN Portrait.png`,
+    `${name} GI Portrait.png`,
+    `${name} CA Portrait.png`,
+    `${name} CE Portrait.png`,
     `${name} Portrait.png`,
     `${name} 2011 Portrait.png`,
     `${name} SC Portrait.png`,

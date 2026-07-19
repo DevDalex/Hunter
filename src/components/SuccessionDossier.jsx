@@ -328,7 +328,7 @@ export default function SuccessionDossier({ requestedTab, requestedPrince, reque
           <div className="beast-rules"><div><span>Shared ritual rules</span><h3>What every beast inherits</h3></div><ul>{beastRules.map((rule) => <li key={rule}>{rule}</li>)}</ul></div>
           <div className="beast-grid">{guardianBeasts.map((beast) => (
             <a id={`dossier-record-${focusIdFor(beast.host)}`} href={beast.source} target="_blank" rel="noreferrer" key={`${beast.order}-${beast.host}`} className={`${!beast.image ? 'no-image ' : ''}${requestedFocus === focusIdFor(beast.host) ? 'is-focused' : ''}`}>
-              {beast.image && <figure data-image-frame><SafeImage src={beast.image} alt={`${beast.host} Guardian Spirit Beast from Hunterpedia`} /></figure>}
+              <figure data-image-frame><SafeImage src={beast.image} fallbackLabel={`${beast.host} Beast`} alt={`${beast.host} Guardian Spirit Beast from Hunterpedia`} /></figure>
               <div><span>{beast.order === 'King' ? 'King' : `Prince ${beast.order}`} · {beast.knowledge}</span><h3>{beast.host}</h3><b>{beast.type}</b><p>{beast.ability}</p><em>{beast.conditions}</em><small>Hunterpedia <ExternalLink size={10} /></small></div>
             </a>
           ))}</div>
@@ -402,6 +402,7 @@ export default function SuccessionDossier({ requestedTab, requestedPrince, reque
         <div className="mafia-dossier-stack">
           <div className="mafia-ledger">{mafiaDossiers.map((family) => (
             <a id={`dossier-record-${focusIdFor(family.family)}`} className={requestedFocus === focusIdFor(family.family) ? 'is-focused' : ''} href={family.source} target="_blank" rel="noreferrer" key={family.family}>
+              <figure className="power-bloc-visual" role="img" aria-label={`${family.family} power bloc visual`}><i /><strong>{family.family}</strong><small>Power bloc</small></figure>
               <span>{family.sponsor}</span><h3>{family.family}</h3><p>{family.base}</p>
               <div><b>Leadership</b>{family.leadership.map((item) => <small key={item}>{item}</small>)}</div>
               <div><b>Indexed membership</b>{family.members.map((item) => <small key={item}>{item}</small>)}</div>
@@ -474,6 +475,9 @@ export default function SuccessionDossier({ requestedTab, requestedPrince, reque
 
       {activeTab === 'chapters' && (
         <div className="chapter-dossier">
+          <div className="record-visual-strip" aria-label="Records section visual guide">
+            {['Chapter ledger', 'Status ledger', 'Evidence index'].map((label, index) => <figure className={`record-visual is-${index + 1}`} role="img" aria-label={`${label} visual`} key={label}><i /><figcaption>{label}</figcaption></figure>)}
+          </div>
           <div className="chapter-dossier__toolbar">
             <label><Search size={15} /><input value={chapterQuery} onChange={(event) => setChapterQuery(event.target.value)} placeholder="Number, title, event, thread..." /></label>
             <select value={chapterPhase} onChange={(event) => setChapterPhase(event.target.value)} aria-label="Filter Succession chapters by phase">

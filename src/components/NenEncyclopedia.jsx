@@ -77,7 +77,7 @@ function NenPrincipleMap({ onOpenRecord }) {
     <header><div><span className="section-kicker">Hover, focus, or tap a principle</span><h3 id="nen-principle-title">Four principles → advanced techniques</h3></div><p>The bright outer nodes are the techniques that depend on the selected foundation. A technique can light up from more than one principle because Nen applications combine rules.</p></header>
     <div className="nen-principle-workbench__layout">
       <div className="nen-principle-map" aria-label="Interactive relationship map of the Four Major Principles and advanced Nen techniques">
-        <SafeImage src={hunterFile('The four major principles of Nen.png')} alt="The Four Major Principles of Nen from Hunterpedia" />
+        <SafeImage src={hunterFile('The four major principles of Nen.png')} fallbackLabel="Four principles" alt="The Four Major Principles of Nen from Hunterpedia" />
         <i className="nen-principle-map__ring" aria-hidden="true" />
         <div className="nen-principle-map__center"><span>念</span><small>Nen</small></div>
         {principles.map((item) => <button
@@ -104,12 +104,12 @@ function NenPrincipleMap({ onOpenRecord }) {
       </div>
       <aside className="nen-principle-inspector" aria-live="polite">
         <div className="nen-principle-inspector__foundation">
-          <figure><SafeImage src={principle.image} alt={`${principle.name} demonstration from Hunterpedia`} /></figure>
+          <figure><SafeImage src={principle.image} fallbackLabel={principle.name} alt={`${principle.name} demonstration from Hunterpedia`} /></figure>
           <span>Foundation · {principle.kanji}</span><h3>{principle.name}</h3><p>{principle.summary}</p><blockquote><b>Trade-off</b>{principle.risk}</blockquote>
         </div>
         <div className="nen-principle-inspector__advanced">
           <header><span>{related.length} dependent application{related.length === 1 ? '' : 's'}</span><strong>{technique?.name}</strong></header>
-          {technique && <figure><SafeImage src={technique.image} alt={`${technique.name} demonstration from Hunterpedia`} /><figcaption>{technique.base}</figcaption></figure>}
+          {technique && <figure><SafeImage src={technique.image} fallbackLabel={technique.name} alt={`${technique.name} demonstration from Hunterpedia`} /><figcaption>{technique.base}</figcaption></figure>}
           <p>{technique?.detail}</p>
           <div>{related.map((item) => <button type="button" className={technique?.name === item.name ? 'is-active' : ''} onMouseEnter={() => setActiveTechnique(item.name)} onFocus={() => setActiveTechnique(item.name)} onClick={() => setActiveTechnique(item.name)} key={item.name}>{item.name}</button>)}</div>
           <button type="button" className="nen-principle-inspector__records" onClick={() => onOpenRecord(technique?.name || activePrinciple, technique ? 'Advanced applications' : 'Four Major Principles')}>Open matching records <ArrowRight size={13} /></button>
@@ -149,7 +149,7 @@ export default function NenEncyclopedia({ initialQuery = '', spoilerLimit = Numb
 
   return <section className="nen-encyclopedia nen-image-desk" id="nen">
     <header className="nen-desk-hero">
-      <div><span className="section-kicker">Visual Nen curriculum</span><h2>Understand the rule before memorizing the name.</h2><p>The decorative SVG simulations are gone. Every visual subject is represented by actual Hunterpedia character media, and every lesson links to the system record that supports the explanation.</p><div><a href={nenSource} target="_blank" rel="noreferrer">Nen source <ExternalLink size={12} /></a><a href={nenAbilityDirectory} target="_blank" rel="noreferrer">Ability directory <ExternalLink size={12} /></a></div></div>
+      <div><span className="section-kicker">Visual Nen curriculum</span><h2>Understand the rule before memorizing the name.</h2><p>Every lesson now uses a stable local Nen diagram with Hunterpedia action imagery layered in when available. The visual explains the rule; the linked source supports the record.</p><div><a href={nenSource} target="_blank" rel="noreferrer">Nen source <ExternalLink size={12} /></a><a href={nenAbilityDirectory} target="_blank" rel="noreferrer">Ability directory <ExternalLink size={12} /></a></div></div>
       <div className="nen-desk-hero__portraits"><Portrait name="Wing" /><Portrait name="Gon Freecss" /><Portrait name="Killua Zoldyck" /><Portrait name="Kurapika" /><span><ImageIcon size={17} /> Verified Hunterpedia portraits</span></div>
     </header>
 
@@ -170,14 +170,14 @@ export default function NenEncyclopedia({ initialQuery = '', spoilerLimit = Numb
 
     {lessonView === 'categories' && <section className="nen-category-view nen-category-view--visual">
       <div className="nen-category-hex">
-        <SafeImage src={hunterFile('Nen types distribution and relative position.png')} alt="Nen types distribution and relative position from Hunterpedia" />
+        <SafeImage src={hunterFile('Nen types distribution and relative position.png')} fallbackLabel="Nen categories" alt="Nen types distribution and relative position from Hunterpedia" />
         <div className="nen-category-hex__nodes">{categories.map((item) => <button type="button" data-position={item.position.toLowerCase()} className={activeCategory === item.name ? 'is-active' : ''} onMouseEnter={() => setActiveCategory(item.name)} onFocus={() => setActiveCategory(item.name)} onClick={() => setActiveCategory(item.name)} key={item.name}><strong>{item.name}</strong><small>{item.position}</small></button>)}</div>
         <span>Canonical Hunterpedia category chart beneath the interaction layer</span>
       </div>
       <article><Portrait name={selectedCategory.example} /><div><span>{selectedCategory.position} position · natural affinity example</span><h3>{selectedCategory.name}</h3><p>{selectedCategory.idea}</p><dl><div><dt>Water Divination</dt><dd>{selectedCategory.result}</dd></div><div><dt>Example subject</dt><dd>{selectedCategory.example}</dd></div><div><dt>Affinity distance</dt><dd>Adjacent types are normally easier and more efficient than distant types; Specialization is an exception.</dd></div><div><dt>Important limit</dt><dd>Affinity does not equal mastery, output, personality, or a complete future ability.</dd></div></dl><button onClick={() => openRecordSearch(selectedCategory.name)}>Open {selectedCategory.name} records <ArrowRight size={13} /></button></div></article>
     </section>}
 
-    {lessonView === 'techniques' && <section className="nen-technique-view"><header><div><span className="section-kicker">Hunterpedia action imagery</span><h3>Advanced techniques as operational rules</h3></div><p>Every card pairs the dependency formula with a canonical visual example. The image explains what the technique looks like; the text explains what it actually does.</p></header><div className="nen-technique-gallery">{techniques.map((item, index) => <article key={item.name}><figure><SafeImage src={item.image} alt={`${item.name} demonstration from Hunterpedia`} /><i>{String(index + 1).padStart(2, '0')}</i></figure><div><small>{item.base}</small><h3>{item.name}</h3><p>{item.detail}</p><button onClick={() => openRecordSearch(item.name, 'Advanced applications')}>Open records <ArrowRight size={12} /></button></div></article>)}</div></section>}
+    {lessonView === 'techniques' && <section className="nen-technique-view"><header><div><span className="section-kicker">Hunterpedia action imagery</span><h3>Advanced techniques as operational rules</h3></div><p>Every card pairs the dependency formula with a canonical visual example. The image explains what the technique looks like; the text explains what it actually does.</p></header><div className="nen-technique-gallery">{techniques.map((item, index) => <article key={item.name}><figure><SafeImage src={item.image} fallbackLabel={item.name} alt={`${item.name} demonstration from Hunterpedia`} /><i>{String(index + 1).padStart(2, '0')}</i></figure><div><small>{item.base}</small><h3>{item.name}</h3><p>{item.detail}</p><button onClick={() => openRecordSearch(item.name, 'Advanced applications')}>Open records <ArrowRight size={12} /></button></div></article>)}</div></section>}
 
     {lessonView === 'anatomy' && <section className="nen-anatomy-view"><div className="nen-anatomy-view__image"><Portrait name="Kurapika" /><Portrait name="Chrollo Lucilfer" /><Portrait name="Hisoka Morow" /></div><div><span className="section-kicker">Ability reading method</span><h3>Six questions prevent bad Nen explanations.</h3><ol>{anatomy.map(([name, detail], index) => <li key={name}><i>{String(index + 1).padStart(2, '0')}</i><span><strong>{name}</strong><p>{detail}</p></span></li>)}</ol></div></section>}
 
