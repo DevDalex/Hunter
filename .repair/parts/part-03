@@ -1,0 +1,76 @@
+}</i><span>{kind}</span><h3>{name}</h3><p>{detail}</p></article>)}</section>}
+     {view === 'events' && <section className="case-file-grid"><header><span className="section-kicker">Operational record</span><h2>Massacre, contracts, captures, and exchange</h2></header><div>{arc.events.map(([name, type, detail], index) => <article key={name}><i>{String(index + 1).padStart(2, '0')}</i><span>{type}</span><h3>{name}</h3><p>{detail}</p></article>)}</div></section>}
+@@ -169,7 +170,7 @@ function ChimeraAnt({ arc }) {
+   const tabs = [['stages', 'Crisis stages', Timer], ['hierarchy', 'Species hierarchy', Network], ['operation', 'Palace operation', Shield], ['forces', 'People & forces', Users], ['conflicts', 'Conflict files', Swords]];
+   return <>
+     <IndexTabs items={tabs} active={view} onChange={setView} label="Chimera Ant index" />
+-    {view === 'stages' && <section className="chimera-stages"><header><div><span className="section-kicker">Nine operational movements</span><h2>The arc is a sequence of changing systems</h2></div><p>Colony growth, political capture, training, invasion, and poison need different visual scales.</p></header><ol>{arc.stages.map(([number, name, detail, personName]) => <li key={number}><Portrait name={personName} /><i>{number}</i><div><h3>{name}</h3><p>{detail}</p></div></li>)}</ol></section>}
++    {view === 'stages' && <section className="chimera-stages"><header><div><span className="section-kicker">Nine operational movements</span><h2>The arc is a sequence of changing systems</h2></div><p>Colony growth, political capture, training, invasion, and poison need different visual scales.</p></header><ol>{arc.stages.map(([number, name, detail, personName], index) => <li key={number}><figure data-image-frame><SafeImage src={arcVisualArchives['chimera-ant'].plates[index]?.image} fallbackSrc={repairVisual('stage-chimera-ant', index, name, 'Chimera Ant stage', 'arc', '#b75e55')} fallbackLabel={name} alt={`${name} visual record`} /><Portrait name={personName} /></figure><i>{number}</i><div><h3>{name}</h3><p>{detail}</p></div></li>)}</ol></section>}
+     {view === 'hierarchy' && <section className="chimera-hierarchy"><header><span className="section-kicker">Biology and command</span><h2>Queen → King → Guards → squadrons</h2></header><div>{arc.hierarchy.map(([rank, examples, detail], index) => <article key={rank}><i>{String(index + 1).padStart(2, '0')}</i><span>{examples}</span><h3>{rank}</h3><p>{detail}</p></article>)}</div></section>}
+     {view === 'operation' && <section className="palace-operation"><header><div><span className="section-kicker">Concurrent event lanes</span><h2>The palace invasion clock</h2></div><p>Only the opening is given a zero point here. Later blocks preserve verified sequence rather than inventing second counts.</p></header><ol>{arc.operations.map(([time, event], index) => <li key={time}><time>{time}</time><i /><div><span>Operation block {String(index + 1).padStart(2, '0')}</span><p>{event}</p></div></li>)}</ol></section>}
+     {view === 'forces' && <section className="arc-panel-section"><header><span className="section-kicker">Command, loyalty, and change</span><h2>People on every front</h2></header><PersonGrid people={arc.forces} /></section>}
+@@ -182,7 +183,7 @@ function Election({ arc }) {
+   const tabs = [['parallel', 'Parallel timeline', Timer], ['rules', 'Ballot rules', BookOpen], ['candidates', 'Candidates', Users], ['rounds', 'Round ledger', CheckCircle2], ['rescue', 'Alluka rescue', Network]];
+   return <>
+     <IndexTabs items={tabs} active={view} onChange={setView} label="Chairman Election index" />
+-    {view === 'parallel' && <section className="chimera-stages election-stages"><header><div><span className="section-kicker">2011 anime conclusion</span><h2>Ballots outside, rescue inside</h2></div><p>The public Association contest and Killua’s private family mission run as parallel timelines.</p></header><ol>{arc.stages.map(([number, name, detail, personName]) => <li key={number}><Portrait name={personName} /><i>{number}</i><div><h3>{name}</h3><p>{detail}</p></div></li>)}</ol></section>}
++    {view === 'parallel' && <section className="chimera-stages election-stages"><header><div><span className="section-kicker">2011 anime conclusion</span><h2>Ballots outside, rescue inside</h2></div><p>The public Association contest and Killua’s private family mission run as parallel timelines.</p></header><ol>{arc.stages.map(([number, name, detail, personName], index) => <li key={number}><figure data-image-frame><SafeImage src={arcVisualArchives['chairman-election'].plates[index]?.image} fallbackSrc={repairVisual('stage-chairman-election', index, name, 'Election stage', 'arc', '#d6b760')} fallbackLabel={name} alt={`${name} visual record`} /><Portrait name={personName} /></figure><i>{number}</i><div><h3>{name}</h3><p>{detail}</p></div></li>)}</ol></section>}
+     {view === 'rules' && <section className="arena-rulebook election-rulebook"><header><span className="section-kicker">Election procedure</span><h2>Why one lead cannot end the vote</h2></header><ol>{arc.ballotRules.map(([name, detail], index) => <li key={name}><i>{String(index + 1).padStart(2, '0')}</i><div><h3>{name}</h3><p>{detail}</p></div></li>)}</ol></section>}
+     {view === 'candidates' && <section className="arc-panel-section"><header><span className="section-kicker">Power, reform, sincerity, and play</span><h2>Five candidate profiles that explain the field</h2></header><PersonGrid people={arc.candidates} /></section>}
+     {view === 'rounds' && <section className="election-round-ledger"><header><span className="section-kicker">Compressed round logic</span><h2>From the first count to Pariston’s resignation</h2><p>This is a procedural overview rather than a replacement for the full vote tables in Hunterpedia.</p></header><ol>{arc.ballotRounds.map(([round, detail], index) => <li key={round}><i>{String(index + 1).padStart(2, '0')}</i><span><strong>{round}</strong><p>{detail}</p></span></li>)}</ol></section>}
+diff --git a/src/components/SafeImage.jsx b/src/components/SafeImage.jsx
+index 7c9c2f0..b4f0624 100644
+--- a/src/components/SafeImage.jsx
++++ b/src/components/SafeImage.jsx
+@@ -1,25 +1,41 @@
+-import { useEffect, useRef, useState } from 'react';
++import { useEffect, useMemo, useRef, useState } from 'react';
+ 
+-export default function SafeImage({ src, alt, className = '', loading = 'lazy', eager = false, priority, media = null, onAvailabilityChange, style, ...props }) {
+-  const [failed, setFailed] = useState(!src);
++export default function SafeImage({
++  src,
++  fallbackSrc = '',
++  fallbackLabel = '',
++  alt,
++  className = '',
++  loading = 'lazy',
++  eager = false,
++  priority,
++  media = null,
++  onAvailabilityChange,
++  style,
++  ...props
++}) {
++  const sources = useMemo(() => [...new Set([src, fallbackSrc].filter(Boolean))], [src, fallbackSrc]);
++  const [sourceIndex, setSourceIndex] = useState(0);
+   const [loaded, setLoaded] = useState(false);
+   const availabilityCallback = useRef(onAvailabilityChange);
+ 
+   useEffect(() => { availabilityCallback.current = onAvailabilityChange; }, [onAvailabilityChange]);
+-
+   useEffect(() => {
+-    setFailed(!src);
++    setSourceIndex(0);
+     setLoaded(false);
+-    availabilityCallback.current?.(Boolean(src));
+-  }, [src]);
++    availabilityCallback.current?.(Boolean(sources[0]));
++  }, [sources]);
+ 
+-  if (!src || failed) return null;
++  const activeSrc = sources[sourceIndex] || '';
++  if (!activeSrc) {
++    return fallbackLabel ? <span className={`safe-image-placeholder${className ? ` ${className}` : ''}`} role="img" aria-label={alt || fallbackLabel}><b>{fallbackLabel}</b><small>Visual unavailable</small></span> : null;
++  }
+ 
+   return (
+     <img
+       {...props}
+       className={`safe-image${className ? ` ${className}` : ''}`}
+-      src={src}
++      src={activeSrc}
+       alt={alt}
+       width={media?.width || undefined}
+       height={media?.height || undefined}
+@@ -28,6 +44,7 @@ export defa
