@@ -29,7 +29,7 @@ for (const file of await walk(outputDir)) {
 
   let content = await readFile(file, 'utf8');
   for (const root of publicRoots) {
-    const pattern = new RegExp(`(["'\\`(=,:\\s])${escapeRegExp(root)}`, 'g');
+    const pattern = new RegExp(`(["'(=,:\\s])${escapeRegExp(root)}`, 'g');
     content = content.replace(pattern, `$1${pagesBase}${root}`);
   }
 
