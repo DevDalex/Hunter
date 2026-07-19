@@ -1,0 +1,236 @@
+/* Stable local Nen concept visuals. Remote Hunterpedia action images are treated as optional evidence,
+   never as the visual surface, so a failed request cannot produce a broken or "unavailable" card. */
+
+.nen-principle-inspector figure,
+.nen-technique-gallery figure {
+  --nen-accent: #e4c86c;
+  --nen-accent-soft: rgba(228, 200, 108, .24);
+  --nen-glyph: '念';
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 50%, var(--nen-accent-soft) 0 8%, transparent 9% 23%, rgba(255,255,255,.045) 24% 25%, transparent 26%),
+    radial-gradient(circle at 50% 50%, rgba(43, 76, 58, .68), transparent 64%),
+    #0b120f;
+}
+
+/* Hide the failed network image and its fallback copy; the figure itself is the visual. */
+.nen-principle-inspector figure > img,
+.nen-principle-inspector figure > .safe-image-placeholder,
+.nen-technique-gallery figure > img,
+.nen-technique-gallery figure > .safe-image-placeholder {
+  opacity: 0 !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.nen-principle-inspector__foundation figure {
+  opacity: 1;
+}
+
+.nen-principle-inspector figure::before,
+.nen-technique-gallery figure::before {
+  content: var(--nen-glyph);
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: 84px;
+  height: 84px;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--nen-accent);
+  border-radius: 50%;
+  background: rgba(8, 14, 11, .88);
+  color: #f5dda0;
+  box-shadow:
+    0 0 0 13px rgba(228, 200, 108, .055),
+    0 0 46px var(--nen-accent-soft);
+  transform: translate(-50%, -50%);
+  font-family: var(--serif);
+  font-size: 38px;
+  line-height: 1;
+}
+
+.nen-principle-inspector__foundation figure::before {
+  left: 74%;
+  width: 112px;
+  height: 112px;
+  font-size: 50px;
+  opacity: .78;
+}
+
+.nen-technique-gallery figure::before {
+  width: 92px;
+  height: 92px;
+  font-size: 40px;
+}
+
+.nen-technique-gallery figure > i {
+  z-index: 3;
+}
+
+/* Ten — a stable aura shroud. */
+.nen-principle-inspector figure:has(> img[alt^='Ten ']),
+.nen-principle-inspector figure:has(> .safe-image-placeholder[aria-label^='Ten ']),
+.nen-technique-gallery figure:has(> img[alt^='Ten ']),
+.nen-technique-gallery figure:has(> .safe-image-placeholder[aria-label^='Ten ']) {
+  --nen-glyph: '纏';
+  --nen-accent: #e5c96f;
+  --nen-accent-soft: rgba(229, 201, 111, .28);
+  background:
+    radial-gradient(ellipse at 50% 50%, transparent 0 20%, rgba(229,201,111,.22) 21% 23%, transparent 24% 35%, rgba(229,201,111,.12) 36% 38%, transparent 39%),
+    linear-gradient(145deg, #0b120f, #24382e);
+}
+
+/* Zetsu — aura closed down and presence suppressed. */
+.nen-principle-inspector figure:has(> img[alt^='Zetsu ']),
+.nen-principle-inspector figure:has(> .safe-image-placeholder[aria-label^='Zetsu ']),
+.nen-technique-gallery figure:has(> img[alt^='Zetsu ']),
+.nen-technique-gallery figure:has(> .safe-image-placeholder[aria-label^='Zetsu ']) {
+  --nen-glyph: '絶';
+  --nen-accent: #9eb8aa;
+  --nen-accent-soft: rgba(158, 184, 170, .16);
+  background:
+    radial-gradient(circle at 50% 50%, #07100b 0 18%, rgba(130,157,143,.12) 19% 21%, transparent 22% 47%, rgba(130,157,143,.08) 48% 49%, transparent 50%),
+    linear-gradient(145deg, #07100c, #17231d);
+}
+
+/* Ren — increased output and pressure. */
+.nen-principle-inspector figure:has(> img[alt^='Ren ']),
+.nen-principle-inspector figure:has(> .safe-image-placeholder[aria-label^='Ren ']),
+.nen-technique-gallery figure:has(> img[alt^='Ren ']),
+.nen-technique-gallery figure:has(> .safe-image-placeholder[aria-label^='Ren ']) {
+  --nen-glyph: '練';
+  --nen-accent: #f0c85f;
+  --nen-accent-soft: rgba(240, 200, 95, .34);
+  background:
+    repeating-radial-gradient(circle at 50% 55%, rgba(240,200,95,.18) 0 2px, transparent 3px 24px),
+    radial-gradient(circle at 50% 55%, rgba(223,174,54,.30), transparent 56%),
+    #111711;
+}
+
+/* Hatsu — individualized expression radiating outward. */
+.nen-principle-inspector figure:has(> img[alt^='Hatsu ']),
+.nen-principle-inspector figure:has(> .safe-image-placeholder[aria-label^='Hatsu ']),
+.nen-technique-gallery figure:has(> img[alt^='Hatsu ']),
+.nen-technique-gallery figure:has(> .safe-image-placeholder[aria-label^='Hatsu ']) {
+  --nen-glyph: '発';
+  --nen-accent: #d8b45b;
+  --nen-accent-soft: rgba(216, 180, 91, .26);
+  background:
+    repeating-conic-gradient(from 0deg at 50% 50%, rgba(216,180,91,.18) 0 2deg, transparent 3deg 24deg),
+    radial-gradient(circle, rgba(67,102,79,.64), transparent 60%),
+    #0b120f;
+}
+
+/* Gyo — concentrated aura at a chosen point. */
+.nen-principle-inspector figure:has(> img[alt^='Gyo ']),
+.nen-principle-inspector figure:has(> .safe-image-placeholder[aria-label^='Gyo ']),
+.nen-technique-gallery figure:has(> img[alt^='Gyo ']),
+.nen-technique-gallery figure:has(> .safe-image-placeholder[aria-label^='Gyo ']) {
+  --nen-glyph: '凝';
+  --nen-accent: #d9ca83;
+  --nen-accent-soft: rgba(217, 202, 131, .28);
+  background:
+    radial-gradient(ellipse at 50% 50%, #e5ce76 0 4%, #15231b 5% 15%, rgba(217,202,131,.36) 16% 18%, transparent 19% 33%, rgba(217,202,131,.15) 34% 36%, transparent 37%),
+    #09100d;
+}
+
+/* In — the aura remains but is visually concealed. */
+.nen-principle-inspector figure:has(> img[alt^='In ']),
+.nen-principle-inspector figure:has(> .safe-image-placeholder[aria-label^='In ']),
+.nen-technique-gallery figure:has(> img[alt^='In ']),
+.nen-technique-gallery figure:has(> .safe-image-placeholder[aria-label^='In ']) {
+  --nen-glyph: '隠';
+  --nen-accent: #9baea3;
+  --nen-accent-soft: rgba(155, 174, 163, .17);
+  background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,.035) 0 1px, transparent 1px 10px),
+    radial-gradient(circle, rgba(116,145,129,.13), transparent 58%),
+    #09100d;
+}
+
+/* En — a broad controlled detection field. */
+.nen-principle-inspector figure:has(> img[alt^='En ']),
+.nen-principle-inspector figure:has(> .safe-image-placeholder[aria-label^='En ']),
+.nen-technique-gallery figure:has(> img[alt^='En ']),
+.nen-technique-gallery figure:has(> .safe-image-placeholder[aria-label^='En ']) {
+  --nen-glyph: '円';
+  --nen-accent: #dfc36d;
+  --nen-accent-soft: rgba(223, 195, 109, .26);
+  background:
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 28px, rgba(223,195,109,.20) 29px 30px),
+    radial-gradient(circle, rgba(55,91,70,.60), transparent 68%),
+    #09100d;
+}
+
+/* Shu — aura wrapped around an external object. */
+.nen-principle-inspector figure:has(> img[alt^='Shu ']),
+.nen-principle-inspector figure:has(> .safe-image-placeholder[aria-label^='Shu ']),
+.nen-technique-gallery figure:has(> img[alt^='Shu ']),
+.nen-technique-gallery figure:has(> .safe-image-placeholder[aria-label^='Shu ']) {
+  --nen-glyph: '周';
+  --nen-accent: #d3bd73;
+  --nen-accent-soft: rgba(211, 189, 115, .24);
+  background:
+    linear-gradient(90deg, transparent 9%, rgba(211,189,115,.18) 10% 12%, #26332c 13% 87%, rgba(211,189,115,.18) 88% 90%, transparent 91%),
+    radial-gradient(circle, rgba(60,91,74,.45), transparent 66%),
+    #09100d;
+}
+
+/* Ko — almost all usable aura compressed into one point. */
+.nen-principle-inspector figure:has(> img[alt^='Ko ']),
+.nen-principle-inspector figure:has(> .safe-image-placeholder[aria-label^='Ko ']),
+.nen-technique-gallery figure:has(> img[alt^='Ko ']),
+.nen-technique-gallery figure:has(> .safe-image-placeholder[aria-label^='Ko ']) {
+  --nen-glyph: '硬';
+  --nen-accent: #f2d06b;
+  --nen-accent-soft: rgba(242, 208, 107, .38);
+  background:
+    radial-gradient(circle at 68% 38%, #fff1a4 0 2%, #e2bd50 3% 6%, rgba(226,189,80,.24) 7% 18%, transparent 19%),
+    radial-gradient(circle at 68% 38%, rgba(231,195,87,.16), transparent 47%),
+    linear-gradient(145deg, #08100c, #17231c);
+}
+
+/* Ken — a thicker continuous full-body shroud. */
+.nen-principle-inspector figure:has(> img[alt^='Ken ']),
+.nen-principle-inspector figure:has(> .safe-image-placeholder[aria-label^='Ken ']),
+.nen-technique-gallery figure:has(> img[alt^='Ken ']),
+.nen-technique-gallery figure:has(> .safe-image-placeholder[aria-label^='Ken ']) {
+  --nen-glyph: '堅';
+  --nen-accent: #e0c66f;
+  --nen-accent-soft: rgba(224, 198, 111, .30);
+  background:
+    radial-gradient(ellipse at 50% 52%, transparent 0 16%, rgba(224,198,111,.30) 17% 22%, transparent 23% 31%, rgba(224,198,111,.16) 32% 36%, transparent 37%),
+    linear-gradient(145deg, #0a120e, #28392f);
+}
+
+/* Ryu — aura distribution shifts between attack and defense. */
+.nen-principle-inspector figure:has(> img[alt^='Ryu ']),
+.nen-principle-inspector figure:has(> .safe-image-placeholder[aria-label^='Ryu ']),
+.nen-technique-gallery figure:has(> img[alt^='Ryu ']),
+.nen-technique-gallery figure:has(> .safe-image-placeholder[aria-label^='Ryu ']) {
+  --nen-glyph: '流';
+  --nen-accent: #d9c276;
+  --nen-accent-soft: rgba(217, 194, 118, .28);
+  background:
+    conic-gradient(from 215deg at 50% 50%, rgba(217,194,118,.08) 0 22%, rgba(217,194,118,.34) 22% 40%, rgba(217,194,118,.12) 40% 70%, rgba(217,194,118,.28) 70% 87%, rgba(217,194,118,.08) 87%),
+    radial-gradient(circle, #1f3128, #09100d 68%);
+}
+
+/* The category chart already has interactive category nodes; replace a failed remote chart with a local field. */
+.nen-category-hex > img,
+.nen-category-hex > .safe-image-placeholder {
+  opacity: 0 !important;
+  visibility: hidden;
+}
+
+.nen-category-hex {
+  background:
+    linear-gradient(30deg, transparent 48.8%, rgba(229,201,111,.20) 49% 51%, transparent 51.2%),
+    linear-gradient(150deg, transparent 48.8%, rgba(229,201,111,.20) 49% 51%, transparent 51.2%),
+    radial-gradient(circle at 50% 50%, rgba(229,201,111,.16) 0 10%, transparent 11% 42%, rgba(229,201,111,.11) 43% 44%, transparent 45%),
+    #090d18;
+}
