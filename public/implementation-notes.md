@@ -218,7 +218,7 @@ Canonical owner: `public/implementation-notes.md`. Reconcile `README.md`, `docs/
 
 Every production build generates:
 
-- `public/hxh-archive-phase-8a-sites-source.zip` — maintainable source including `src/`, `scripts/`, `architecture/`, `docs/`, `server/`, public assets, configs, and `.openai/hosting.json`;
+- `public/hxh-archive-phase-8a-sites-source.zip` — maintainable source including `src/`, `scripts/`, `architecture/`, `docs/`, `.github/`, `server/`, public assets, configs, and `.openai/hosting.json`;
 - `public/hxh-archive-phase-8a-standalone.zip` — direct-open built edition with local media and no source toolchain.
 
 Neither package may contain dependencies, Git history, credentials, or browser-local study data. `scripts/package-release.mjs` creates both; `scripts/audit-release.mjs` inspects their contents.
