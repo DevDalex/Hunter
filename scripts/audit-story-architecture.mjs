@@ -133,8 +133,25 @@ assert(routeToCleanPath(legacyYorknew.view, legacyYorknew.target, legacyYorknew.
 const server = await readFile(path.resolve('server/index.js'), 'utf8');
 assert(server.includes("fallbackUrl.pathname = '/index.html'"), 'static worker must keep the direct-reload SPA fallback');
 
+const storyFoundation = await readFile(path.resolve('src/components/StoryFoundation.jsx'), 'utf8');
+assert(storyFoundation.includes('StoryFoundationLayout') && storyFoundation.includes('StoryHubFoundation') && storyFoundation.includes('StoryArcFoundation') && storyFoundation.includes('ZoldyckStoryBridge'), 'Story foundation components must remain exported from StoryFoundation.jsx');
+assert(storyFoundation.includes('storyEntries.map') && storyFoundation.includes('storyContentPolicy.standardSections'), 'Story foundation must render taxonomy and standard section rails from canonical architecture data');
+
+const seriesWorkspace = await readFile(path.resolve('src/components/SeriesWorkspace.jsx'), 'utf8');
+assert(seriesWorkspace.includes('StoryFoundationLayout') && seriesWorkspace.includes('StoryHubFoundation') && seriesWorkspace.includes('StoryArcFoundation'), 'SeriesWorkspace must render through the shared Story foundation');
+assert(seriesWorkspace.includes("{ id: 'zoldyck-family', label: 'Zoldyck Family' }"), 'Series workspace navigation must include the Zoldyck editorial destination');
+assert(seriesWorkspace.includes('ZoldyckStoryBridge'), 'Zoldyck route must stay inside the Story workspace foundation');
+
+const app = await readFile(path.resolve('src/App.jsx'), 'utf8');
+assert(app.includes('onPrefetch={preloadRoute}'), 'Story workspace must receive route prefetch support');
+assert(!app.includes("routeTarget === 'zoldyck-family' && <>"), 'Zoldyck route must not bypass the Story foundation in App.jsx');
+
+const routeManifest = await readFile(path.resolve('src/data/routeManifest.js'), 'utf8');
+assert(routeManifest.includes("label: 'Pre-Succession overview'") && !routeManifest.includes("target: 'zoldyck-family'"), 'legacy release route manifest must stay stable until the full Zoldyck page lands');
+
 assert(storyArchitectureAcceptance.length === 10, 'the architecture lock must retain ten acceptance statements');
 await access(path.resolve('docs/STORY-ARCHITECTURE.md'));
 await access(path.resolve('src/lib/appRouter.js'));
+await access(path.resolve('src/components/StoryFoundation.css'));
 
-console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, clean history routing, legacy redirects, direct reload fallback, and mobile deferred.`);
+console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, clean routing, Story foundation shell, Zoldyck workspace bridge, legacy route inventory stable, direct reload fallback, and mobile deferred.`);

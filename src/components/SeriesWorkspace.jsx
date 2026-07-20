@@ -11,6 +11,7 @@ import KurapikaMemories from './KurapikaMemories';
 import AdaptationDesk from './AdaptationDesk';
 import PreSuccessionExperience from './PreSuccessionExperience';
 import PreSuccessionOverview from './PreSuccessionOverview';
+import StoryFoundationLayout, { StoryArcFoundation, StoryHubFoundation, ZoldyckStoryBridge } from './StoryFoundation';
 import { arcs } from '../data/arcs';
 import { chapters, LATEST_CHAPTER } from '../data/chapters';
 import { preSuccessionExperienceById, preSuccessionExperienceIds } from '../data/preSuccessionExperiences';
@@ -19,6 +20,7 @@ import { readStoredJson, writeStoredJson } from '../lib/browserStorage';
 const seriesPages = [
   { id: 'arcs', label: 'Overview' },
   { id: 'hunter-exam', label: 'Hunter Exam' },
+  { id: 'zoldyck-family', label: 'Zoldyck Family' },
   { id: 'heavens-arena', label: 'Heavens Arena' },
   { id: 'yorknew-city', label: 'Yorknew' },
   { id: 'greed-island', label: 'Greed Island' },
@@ -42,14 +44,15 @@ function readProgress() {
   return new Set(Array.isArray(stored) ? stored : []);
 }
 
-export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit, onSpoilerChange, onNavigate }) {
+export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit, onSpoilerChange, onNavigate, onPrefetch }) {
   const arcPage = preSuccessionExperienceIds.has(routeTarget);
   const arcExperience = arcPage ? preSuccessionExperienceById.get(routeTarget) : null;
+  const zoldyckBridgePage = routeTarget === 'zoldyck-family';
   const chronologyPage = routeTarget === 'chronology';
   const chaptersPage = routeTarget === 'chapters';
   const memoriesPage = routeTarget === 'volume-0';
   const adaptationPage = routeTarget === 'adaptation';
-  const activePage = arcPage ? routeTarget : chronologyPage ? 'chronology' : chaptersPage ? 'chapters' : memoriesPage ? 'volume-0' : adaptationPage ? 'adaptation' : 'arcs';
+  const activePage = arcPage ? routeTarget : zoldyckBridgePage ? 'zoldyck-family' : chronologyPage ? 'chronology' : chaptersPage ? 'chapters' : memoriesPage ? 'volume-0' : adaptationPage ? 'adaptation' : 'arcs';
   const [activeArc, setActiveArc] = useState('all');
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('all');
@@ -116,20 +119,26 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
         ? { kicker: 'Selected story anchors before Chapter 340', title: 'Pre-Succession chronology', description: 'Follow curated events, flashbacks, dated periods, and arc movements from Volume 0 through the Chairman Election without pretending every early chapter needs its own timeline event.' }
         : chaptersPage
           ? { kicker: 'Optional manga reference · Chapters 1–339', title: 'Lightweight chapter references', description: 'Find an early chapter by number, title, arc, or volume when needed. These entries support orientation and adaptation lookup; they are not planned as 339 deep dossiers.' }
-          : arcPage
-            ? { kicker: arcExperience.eyebrow, title: arcExperience.title, description: arcExperience.deck }
-            : { kicker: 'Volume 0 + six completed arcs', title: 'The Pre-Succession Archive', description: 'Follow Kurapika’s childhood and the completed adapted journey through dedicated arc editions, actual Hunterpedia portraits, rules, people, places, conflicts, Nen developments, and consequences.' };
+          : zoldyckBridgePage
+            ? { kicker: 'Editorial Story page', title: 'Zoldyck Family', description: 'The clean route is live inside the Story foundation. Its full rescue-mission page lands in the Early Arcs batch; until then, the official Hunter Exam coverage remains the maintained source-backed parent.' }
+            : arcPage
+              ? { kicker: arcExperience.eyebrow, title: arcExperience.title, description: arcExperience.deck }
+              : { kicker: 'Volume 0 + six completed arcs', title: 'The Story Archive', description: 'A route-level foundation for Kurapika’s childhood, the completed adapted journey, and the ongoing Succession Contest archive.' };
 
   return (
-    <>
+    <StoryFoundationLayout activeId={activePage} spoilerLimit={spoilerLimit} onNavigate={onNavigate} onPrefetch={onPrefetch}>
       {!arcPage && <PageIntro kicker={pageIntro.kicker} title={pageIntro.title} description={pageIntro.description}>
         <dl className="page-intro__facts"><div><dt>Deep exception</dt><dd>Volume 0</dd></div><div><dt>Completed arcs</dt><dd>{preSuccessionArcs.length}</dd></div><div><dt>2011 anime</dt><dd>148 episodes</dd></div></dl>
       </PageIntro>}
       <WorkspaceNav items={seriesPages} activeId={activePage} onSelect={selectWorkspace} label="Series library sections" />
       <details className="spoiler-settings"><summary>Reading boundary <b>Chapter {spoilerLimit}</b></summary><SpoilerControl value={spoilerLimit} latestChapter={LATEST_CHAPTER} onChange={onSpoilerChange} /></details>
 
+      {arcPage && <StoryArcFoundation activeId={routeTarget} onNavigate={onNavigate} />}
+
       {arcPage ? (
         <PreSuccessionExperience arcId={routeTarget} onNavigate={onNavigate} />
+      ) : zoldyckBridgePage ? (
+        <ZoldyckStoryBridge onNavigate={onNavigate} />
       ) : memoriesPage ? (
         <KurapikaMemories onNavigate={onNavigate} />
       ) : adaptationPage ? (
@@ -147,18 +156,11 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
           <ChapterIndex chapters={visibleChapters} studied={studied} openChapter={updateChapterRoute} density={density} />
         </section>
       ) : <>
-        <section className="story-section" id="story-split">
-          <div className="section-heading"><div><span className="section-kicker">Pre-Succession orientation</span><h2>Childhood, six arcs, one completed adaptation.</h2></div><p>This portal is organized by story movement, episode, and major place. Chapters 1–339 define the boundary, but they are not the unit of future expansion.</p></div>
-          <div className="story-grid">
-            <article><span>Volume 0 · two chapters</span><h3>Kurapika’s Memories</h3><p>Childhood, Pairo, Sheila, the outside world, departure, and the promise behind Kurapika’s later choices.</p><ul><li>Part One and Part Two</li><li>Kurta Clan context</li><li>Cross-era Kurapika study</li></ul><button onClick={() => onNavigate('series', 'volume-0')}>Open Volume 0</button></article>
-            <article><span>Six arcs · selected anchors</span><h3>The completed journey</h3><p>From Whale Island and the Hunter Exam through Nen, Yorknew, Greed Island, Chimera Ant, and the Chairman Election.</p><ul><li>Arc movements</li><li>Major world locations</li><li>Character and conflict trails</li></ul><button onClick={() => onNavigate('reference', 'atlas', { mode: 'journey', route: 'pre-journey' })}>Open the journey map</button></article>
-            <article><span>2011 anime · Episodes 1–148</span><h3>Adaptation desk</h3><p>See the complete television run as an episode grid aligned to six completed story arcs and concise manga ranges.</p><ul><li>Episode ranges</li><li>Manga source spans</li><li>Unadapted boundaries</li></ul><button onClick={() => onNavigate('series', 'adaptation')}>Open the 2011 desk</button></article>
-          </div>
-        </section>
+        <StoryHubFoundation spoilerLimit={spoilerLimit} onNavigate={onNavigate} />
         <PreSuccessionOverview onNavigate={onNavigate} />
       </>}
 
       <ChapterDrawer chapter={selectedChapter} onClose={() => updateChapterRoute(null)} onMove={moveChapter} studied={selectedChapter ? studied.has(selectedChapter.number) : false} toggleStudied={toggleStudied} onOpenEntity={(category, search) => { setSelectedChapter(null); onNavigate('reference', 'encyclopedia', { category, search }); }} />
-    </>
+    </StoryFoundationLayout>
   );
 }
