@@ -5,6 +5,12 @@ export const dataOwnership = Object.freeze({
     derivative: 'src/data/priorityMedia.generated.js#priorityPortraits',
     generator: 'scripts/stabilize-media.mjs',
     publicDirectory: 'public/media/portraits',
+    consumers: Object.freeze([
+      'src/components/NenEncyclopedia.jsx',
+      'src/components/PreSuccessionExperience.jsx',
+      'src/components/PreSuccessionOverview.jsx',
+      'src/data/characters.js',
+    ]),
   }),
   blackWhaleRooms: Object.freeze({
     key: 'key',
@@ -12,6 +18,9 @@ export const dataOwnership = Object.freeze({
     derivative: 'src/data/blackWhaleMedia.generated.js#blackWhaleRoomMedia',
     generator: 'scripts/stabilize-room-media.mjs',
     publicDirectory: 'public/media/rooms',
+    consumers: Object.freeze([
+      'src/data/blackWhale.js',
+    ]),
   }),
   archiveSearch: Object.freeze({
     canonical: 'src/data/* domain records',
