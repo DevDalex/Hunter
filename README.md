@@ -25,7 +25,7 @@ npm run dev
 - Keep Phase 6E shell totals in `src/data/archiveMeta.js` synchronized through the build-blocking audit; heavy chapter, Succession, search, and encyclopedia datasets must remain behind route-level lazy boundaries.
 - Use the Phase 6F [implementation and maintenance handbook](public/implementation-notes.md) for data ownership, recurring update runbooks, responsive/accessibility checks, and the release definition of done. Every canonical path named there is build-checked.
 - Keep Phase 6G route metadata in `src/data/routeManifest.js`, browser-local access behind `src/lib/browserStorage.js`, and release requirements in `src/data/releaseReadiness.js`. Every build regenerates and checks the portable source package and `public/release-manifest.json`.
-- Keep the Phase 7A reading floor, touch targets, sticky offsets, mobile scroll cues, and responsive density rules in `src/styles.css` and `src/components/HorizontalScrollHint.jsx`; `npm run audit:readability` blocks regressions below the maintained 11px absolute type floor.
+- Keep global style ownership behind the single `src/styles.css` entry point: shared foundations live in `src/styles/base.css`, editorial overrides in `src/styles/editorial.css`, and later route experiences in `src/styles/experiences.css`. Nen remains isolated in `src/nen.css`; `npm run audit:css` blocks extra global entry points and import-order drift.
 - Keep Phase 7B priority portraits local and deterministic; `npm run audit:media` verifies every file and blocks browser-time portrait resolution from returning.
 - Keep the layout contracts in `scripts/audit-layout.mjs`; use `scripts/visual-qa.mjs` to render all 18 focused routes at desktop, tablet, and phone-width browser viewports and scan for runtime errors, overflow, broken media, tiny text, and narrow-width interaction defects. These checks maintain one responsive website; the project is not a PWA or native phone app.
 - Keep the interaction contracts in `scripts/audit-accessibility.mjs`; use `scripts/accessibility-qa.mjs` to run WCAG A/AA checks across all 18 routes at desktop and phone width plus browser-driven keyboard flows for skip navigation, search, menus, grouped views, drawers, downloads, and the Black Whale manifest.
@@ -33,7 +33,7 @@ npm run dev
 - Keep Phase 7F media and density rules in `src/components/SafeImage.jsx`, `src/components/BlackWhaleGuide.jsx`, and `scripts/audit-polish.mjs`; remote imagery must disappear cleanly when unavailable, room records remain progressively readable, and browser QA fails visible pending media or media-copy collisions.
 - Keep Phase 8A release metadata in `src/data/releaseReadiness.js`; the final checkpoint requires all static audits, the visual matrix, the WCAG matrix, keyboard flows, loading profiles, and both downloadable editions to agree with the exact deployed source.
 - Update collected chapter ranges in `src/data/volumes.js`.
-- Expand the Fandom-only entity directories in `src/data/reference.js`, `src/data/studyMap.js`, and `src/data/characters.js`.
+- Expand the maintained entity and search directories in `src/data/referenceEntities.js`, `src/data/archiveSearch.js`, and `src/data/characters.js`.
 - Change `LATEST_CHAPTER` and append a title when Hunterpedia adds a new numbered chapter.
 - Add more character portraits only after verifying the Hunterpedia article and image source, then regenerate the local media manifest.
 
@@ -49,7 +49,7 @@ npm run build
 
 The production-ready browser files are written to `dist/client/`.
 
-Each production build regenerates two deterministic downloads. `public/hxh-archive-phase-8a-sites-source.zip` is the maintainable project and includes `.openai/hosting.json` so another ChatGPT Sites session can continue the same private deployment. `public/hxh-archive-phase-8a-standalone.zip` contains `Open-HxH-Archive.html` plus local media and can be opened directly without Node, Vite, a command file, or the hosted URL. Neither edition contains credentials, Git history, or browser-local study data.
+Each production build regenerates two deterministic downloads. `public/hxh-archive-phase-8a-sites-source.zip` is the maintainable project and includes `.openai/hosting.json` so another ChatGPT Sites session can continue the same private deployment. `public/hxh-archive-phase-8a-standalone.zip` contains `Open-HxH-Archive.html` plus local media and can be opened directly without Node, Vite, a command file, or the hosted URL. Neither edition contains credentials, Git history, or browser-local study data. The ZIP files are generated artifacts rather than tracked source: the build copies them into `dist/client/` for deployment, then removes the temporary copies from `public/`.
 
 Browser-rendered verification is committed as a repeatable project check. Install the pinned development dependencies and Chromium once, then run the complete matrix:
 

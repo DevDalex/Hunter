@@ -28,9 +28,7 @@ export const PHASE_8A_VERSION = DOWNLOAD_RELEASE;
 export const PHASE_8A_RELEASE_DATE = DOWNLOAD_RELEASE_DATE;
 export const CURRENT_RELEASE_VERSION = PHASE_8A_VERSION;
 export const CURRENT_RELEASE_DATE = PHASE_8A_RELEASE_DATE;
-export const SOURCE_PACKAGE_PATH = SITES_SOURCE_PACKAGE_PATH;
 export { RELEASE_MANIFEST_PATH, SITES_SOURCE_PACKAGE_PATH, STANDALONE_PACKAGE_PATH };
-export const LEGACY_SOURCE_PACKAGE_PATH = '/hxh-archive-phase-7d-source.zip';
 
 export const phaseSixSequence = [
   ['6A', 'Media integrity & readability'],

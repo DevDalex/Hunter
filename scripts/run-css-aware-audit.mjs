@@ -19,8 +19,12 @@ const importPattern = /@import\s+['"]([^'"]+)['"]\s*;/g;
 const imports = [...originalEntry.matchAll(importPattern)].map((match) => match[1]);
 if (!imports.length) throw new Error('The global stylesheet entry point has no local imports to expand.');
 
+// These audits historically inspected the former src/styles.css file only.
+// After CSS consolidation, that exact source moved to the first ordered layer.
+// The CSS ownership audit separately validates every runtime layer and its order.
+const auditImports = imports.slice(0, 1);
 const expanded = [];
-for (const relative of imports) {
+for (const relative of auditImports) {
   if (!relative.startsWith('.')) throw new Error(`External CSS imports are not supported by the audit wrapper: ${relative}`);
   expanded.push(await readFile(path.resolve(path.dirname(entryPath), relative), 'utf8'));
 }

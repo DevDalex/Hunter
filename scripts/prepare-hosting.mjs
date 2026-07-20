@@ -9,3 +9,4 @@ const currentPackages = new Set([SITES_SOURCE_PACKAGE_PATH.slice(1), STANDALONE_
 for (const file of await readdir('dist/client')) {
   if (/^hxh-archive-phase-[^/]+-(?:source|sites-source|standalone)\.zip$/.test(file) && !currentPackages.has(file)) await rm(`dist/client/${file}`);
 }
+for (const file of currentPackages) await rm(`public/${file}`, { force: true });

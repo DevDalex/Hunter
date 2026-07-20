@@ -10,7 +10,6 @@ export const routeModuleLoaders = {
   successionDossier: () => import('../components/SuccessionDossier'),
   encyclopedia: () => import('../components/EntityEncyclopedia'),
   nen: () => import('../components/NenEncyclopedia'),
-  referenceAtlas: () => import('../components/ReferenceAtlas'),
   hisokaChrollo: () => import('../components/HisokaChrolloDossier'),
   worldAtlas: () => import('../components/WorldAtlas'),
   systems: () => import('../components/SystemsDesk'),
