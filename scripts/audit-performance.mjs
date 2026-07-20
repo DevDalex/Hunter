@@ -43,7 +43,6 @@ const directBoundaryKeys = [
   'src/components/SystemsDesk.jsx',
   'src/components/OrganizationArchive.jsx',
   'src/components/ConflictArchive.jsx',
-  'src/components/StudyNotebook.jsx',
 ];
 const storyDetailBoundaryKeys = ['src/components/GreedIslandPrototypePage.jsx', 'src/components/ChimeraAntPrototypePage.jsx'];
 const searchShardKeys = [
@@ -59,9 +58,9 @@ assert(entryJs <= budgets.entryJs, `startup application chunk is ${entryJs} byte
 assert(startupJs <= budgets.startupJs, `startup JavaScript closure is ${startupJs} bytes; budget is ${formatPerformanceBudget(budgets.startupJs)}`);
 assert(startupCss <= budgets.startupCss, `startup stylesheet is ${startupCss} bytes; budget is ${formatPerformanceBudget(budgets.startupCss)}`);
 assert(largestJavascript.bytes <= budgets.javascriptChunk, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is ${formatPerformanceBudget(budgets.javascriptChunk)}`);
-assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 17 route/search UI boundaries must remain dynamic entries');
+assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 16 route/search UI boundaries must remain dynamic entries');
 assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Greed Island and Chimera Ant detail pages must remain separate Story detail chunks');
-assert(dynamicEntries.length === 22, `expected 17 direct boundaries, two Story-detail boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
+assert(dynamicEntries.length === 21, `expected 16 direct boundaries, two Story-detail boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
 assert(searchShardKeys.every((key) => manifest[key]?.isDynamicEntry), 'the story, Succession, and reference search indexes must remain separate dynamic entries');
 
 const homeHighlights = await readFile(path.join(root, 'src/data/homeHighlights.js'), 'utf8');
@@ -76,7 +75,7 @@ const packageJson = await readFile(path.join(root, 'package.json'), 'utf8');
 assert(!/from ['"]\.\/characters['"]/.test(homeHighlights), 'the homepage must not import the complete character registry');
 assert(!/priorityMedia\.generated/.test(homeHighlights), 'the homepage must not import the complete priority-media registry');
 assert(!/from ['"].*\/(chapters|encyclopedia|successionDossier|successionRoster|seriesResearch)['"]/.test(app), 'App.jsx imports a heavy research dataset');
-assert((routePreload.match(/\(\) => import\(/g) || []).length === 17, 'the route loader registry must own 17 direct dynamic module boundaries');
+assert((routePreload.match(/\(\) => import\(/g) || []).length === 16, 'the route loader registry must own 16 direct dynamic module boundaries');
 assert((archiveSearch.match(/import\('\.\/archiveSearch\.(?:series|succession|reference)'\)/g) || []).length === 3, 'the archive search loader must own three domain data shards');
 assert(!/from ['"]\.\.\/data\/(?:chapters|encyclopedia|successionDossier|successionRoster|worldMap)['"]/.test(archiveSearchComponent), 'ArchiveSearch.jsx statically imports a heavy archive dataset');
 assert(archiveSearchComponent.includes('useDeferredValue') && archiveSearchComponent.includes('normalizeQuery'), 'archive search must defer and normalize interactive queries');
