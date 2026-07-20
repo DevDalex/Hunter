@@ -24,7 +24,8 @@
     "build": "npm run generate:build-info && npm run audit:content && npm run audit:implementation && npm run audit:readability && npm run audit:layout && npm run audit:accessibility && npm run audit:media && npm run audit:polish && npm run package:release && npm run audit:release && node scripts/clean-hosting.mjs && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs",
     "preview": "vite preview --host 0.0.0.0",
     "generate:build-info": "node scripts/generate-build-info.mjs",
-    "browser:install": "playwright install chromium",
+    "browser:deps": "npm install --no-save --save-exact playwright@1.61.1 axe-core@4.12.1",
+    "browser:install": "npx playwright install chromium",
     "qa:interaction": "node scripts/interaction-qa.mjs",
     "qa:browser": "npm run build && npm run qa:visual && npm run qa:accessibility && npm run qa:interaction && npm run qa:performance"
   },
@@ -35,10 +36,7 @@
     "react-dom": "latest",
     "vite": "latest"
   },
-  "devDependencies": {
-    "axe-core": "4.12.1",
-    "playwright": "1.61.1"
-  },
+  "devDependencies": {},
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   }
