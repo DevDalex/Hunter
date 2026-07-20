@@ -6,6 +6,7 @@
  * 2. editorial.css owns deliberate site-wide visual overrides.
  * 3. experiences.css owns newer page and route experience systems.
  * 4. accessibility-contrast.css owns WCAG AA semantic foreground/background pairs.
+ * 5. archive-system.css owns Batch 12 reusable archive UI primitives.
  *
  * Nen remains isolated in src/nen.css and is imported after this file.
  */
@@ -13,3 +14,4 @@
 @import './styles/editorial.css';
 @import './styles/experiences.css';
 @import './styles/accessibility-contrast.css';
+@import './styles/archive-system.css';

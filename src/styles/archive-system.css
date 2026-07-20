@@ -1,0 +1,257 @@
+/* Batch 12: reusable archive UI primitives. This layer must stay after contrast tokens and before route-specific runtime CSS. */
+.archive-section {
+  margin: clamp(28px, 6vw, 72px) auto;
+  max-width: min(1180px, calc(100vw - 32px));
+  color: var(--archive-ink, #181619);
+}
+
+.archive-section--compact {
+  margin-block: clamp(18px, 4vw, 44px);
+}
+
+.archive-section__header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.archive-section__header h2 {
+  margin: 0;
+  font-family: var(--serif, Georgia, serif);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1;
+  color: var(--archive-ink, #181619);
+}
+
+.archive-section__header p {
+  margin: 8px 0 0;
+  max-width: 68ch;
+  color: var(--archive-muted, #706b63);
+}
+
+.archive-section__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.archive-section__body {
+  display: grid;
+  gap: 14px;
+}
+
+.archive-card {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  border: 1px solid rgba(24,22,25,.14);
+  border-radius: 24px;
+  background: rgba(241,236,226,.92);
+  color: inherit;
+  padding: 18px;
+  text-align: left;
+  text-decoration: none;
+  box-shadow: 0 18px 50px rgba(13,13,16,.08);
+}
+
+button.archive-card {
+  font: inherit;
+  cursor: pointer;
+}
+
+.archive-card--ink {
+  background: linear-gradient(135deg, rgba(13,13,16,.98), rgba(24,22,25,.94));
+  color: #f4efe6;
+  border-color: rgba(244,239,230,.16);
+}
+
+.archive-card--steel {
+  background: linear-gradient(135deg, rgba(85,114,134,.13), rgba(241,236,226,.96));
+}
+
+.archive-card--interactive:hover,
+.archive-card--interactive:focus-visible {
+  transform: translateY(-1px);
+  border-color: rgba(161,42,56,.42);
+  box-shadow: 0 20px 56px rgba(13,13,16,.14);
+  outline: none;
+}
+
+.archive-card__eyebrow {
+  display: inline-flex;
+  margin-bottom: 8px;
+  font-size: 11px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--crimson, #a12a38);
+  font-weight: 800;
+}
+
+.archive-card--ink .archive-card__eyebrow {
+  color: var(--archive-gold, #c29c57);
+}
+
+.archive-card h3 {
+  margin: 0;
+  font-size: clamp(1.05rem, 2vw, 1.35rem);
+  line-height: 1.08;
+}
+
+.archive-card__meta {
+  margin: 7px 0 0;
+  font-size: 12px;
+  color: var(--archive-muted, #706b63);
+}
+
+.archive-card--ink .archive-card__meta {
+  color: rgba(244,239,230,.72);
+}
+
+.archive-card__content {
+  margin-top: 12px;
+}
+
+.evidence-badge,
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 24px;
+  border-radius: 999px;
+  padding: 4px 9px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  border: 1px solid rgba(24,22,25,.14);
+  background: rgba(255,255,255,.5);
+  color: var(--archive-ink, #181619);
+}
+
+.evidence-badge.is-confirmed,
+.status-pill--good {
+  background: rgba(85,114,134,.16);
+  border-color: rgba(85,114,134,.42);
+}
+
+.evidence-badge.is-inferred,
+.status-pill--analysis {
+  background: rgba(194,156,87,.2);
+  border-color: rgba(194,156,87,.5);
+}
+
+.evidence-badge.is-unclear,
+.status-pill--warn {
+  background: rgba(161,42,56,.12);
+  border-color: rgba(161,42,56,.38);
+}
+
+.evidence-badge.is-deferred,
+.evidence-badge.is-source-index-only,
+.status-pill--debt {
+  background: rgba(112,89,120,.14);
+  border-color: rgba(112,89,120,.38);
+}
+
+.evidence-badge.is-manga-only,
+.evidence-badge.is-anime-only,
+.status-pill--medium {
+  background: rgba(13,13,16,.08);
+  border-color: rgba(13,13,16,.18);
+}
+
+.source-stack {
+  border-left: 3px solid var(--archive-gold, #c29c57);
+  background: rgba(255,255,255,.45);
+  border-radius: 0 18px 18px 0;
+  padding: 12px 14px;
+}
+
+.source-stack strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.source-stack ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.source-stack a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 800;
+  color: var(--crimson-dark, #6e1825);
+}
+
+.source-stack li span {
+  display: block;
+  margin-top: 2px;
+  color: var(--archive-muted, #706b63);
+  font-size: 12px;
+}
+
+.archive-ledger {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.archive-ledger div {
+  border: 1px solid rgba(24,22,25,.12);
+  border-radius: 16px;
+  background: rgba(255,255,255,.42);
+  padding: 12px;
+}
+
+.archive-ledger dt {
+  margin: 0 0 4px;
+  color: var(--archive-muted, #706b63);
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+.archive-ledger dd {
+  margin: 0;
+  font-weight: 900;
+  color: var(--archive-ink, #181619);
+}
+
+.archive-ui-home-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.archive-ui-home-grid .archive-card__content {
+  display: grid;
+  gap: 10px;
+}
+
+@media (max-width: 860px) {
+  .archive-section__header {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .archive-section__actions {
+    justify-content: flex-start;
+  }
+
+  .archive-ui-home-grid {
+    grid-template-columns: 1fr;
+  }
+}

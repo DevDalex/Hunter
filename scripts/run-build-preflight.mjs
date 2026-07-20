@@ -16,6 +16,7 @@ export const preflightAuditScripts = Object.freeze([
   'audit:characters',
   'audit:final',
   'audit:governance',
+  'audit:design-system',
   'audit:schema',
   'audit:css',
   'audit:readability',

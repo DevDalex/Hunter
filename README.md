@@ -1,6 +1,6 @@
 # Hunter × Hunter — The Black Archive
 
-A desktop-first Hunter × Hunter study archive with clean Story routes, a complete numbered chapter catalogue through Chapter 413, connected reference records, a 644-character directory, six additive character dossiers, Nen/world/organization/conflict backbones, local study tools, and dedicated Story prototypes.
+A desktop-first Hunter × Hunter study archive with clean Story routes, a complete numbered chapter catalogue through Chapter 413, connected reference records, a 644-character directory, six additive character dossiers, Nen/world/organization/conflict backbones, local study tools, dedicated Story prototypes, and Batch 12 reusable archive UI primitives.
 
 The factual and image-source boundary is Hunterpedia/Fandom only. The archive keeps evidence depth explicit: all 413 chapters are locally structured, 112 have chapter-specific accounts, and 301 retain clearly labeled arc-phase context rather than invented scene summaries.
 
@@ -11,10 +11,11 @@ The factual and image-source boundary is Hunterpedia/Fandom only. The archive ke
 - Clean history paths with direct-reload fallback and legacy hash compatibility through `src/lib/appRouter.js`.
 - Large research datasets remain behind route or on-demand boundaries.
 - Mobile-specific redesign remains deferred; existing responsive and accessibility safeguards remain maintained.
+- Batch 12 adds a reusable design-system foundation in `src/components/ArchiveUI.jsx`, `src/data/archiveDesignSystem.js`, and `src/styles/archive-system.css`.
 
 The global visual order is:
 
-1. `src/styles.css`, which imports `src/styles/base.css`, `src/styles/editorial.css`, and `src/styles/experiences.css`;
+1. `src/styles.css`, which imports `src/styles/base.css`, `src/styles/editorial.css`, `src/styles/experiences.css`, `src/styles/accessibility-contrast.css`, and `src/styles/archive-system.css`;
 2. `src/nen.css`;
 3. `src/styles/final-polish.css`.
 
@@ -36,7 +37,7 @@ npm run build
 The build performs these stages:
 
 1. writes `public/build-info.json` with the exact commit identity;
-2. runs all 14 independent pre-build audits through `scripts/run-build-preflight.mjs`, continuing after individual audit failures and reporting the complete failure list;
+2. runs all 15 independent pre-build audits through `scripts/run-build-preflight.mjs`, continuing after individual audit failures and reporting the complete failure list;
 3. creates and audits both portable editions;
 4. creates the production Vite build;
 5. applies the performance audit;
@@ -56,6 +57,7 @@ Production browser files are written to `dist/client/`, with the worker at `dist
 - Black Whale media: `src/data/blackWhale.js`; regenerate with `npm run stabilize:rooms`.
 - Source policy: `src/data/sourcePolicy.js`.
 - Bibliography/evidence/review governance: `src/data/bibliography.js`, `src/data/evidenceStates.js`, `src/data/reviewQueue.js`.
+- Design system: `src/data/archiveDesignSystem.js`, `src/components/ArchiveUI.jsx`, `src/styles/archive-system.css`, `docs/DESIGN-SYSTEM.md`.
 - Machine-readable ownership and media schema: `src/data/dataOwnership.js`, `src/data/mediaSchema.js`.
 - Performance budgets: `src/data/performanceBudgets.js`.
 - World hierarchy: `src/data/worldAtlas.js`.
@@ -71,6 +73,19 @@ The complete character directory must remain intact. Dossiers are richer overlay
 Canonical human-maintained records own facts and provenance. Generated media manifests and search indexes are deployment derivatives and must remain synchronized with their named owners.
 
 Use direct approved Hunterpedia links. Keep local summaries, analytical connections, unresolved questions, manga-only material, anime-only material, and adaptation notes visibly distinct. Do not convert an inference into a confirmed record.
+
+## Batch 12 design system
+
+Batch 12 adds reusable archive primitives instead of a new major route:
+
+- `ArchiveSection` for page/section shells;
+- `ArchiveCard` for paper, ink, steel, and linked record cards;
+- `EvidenceBadge` for confirmed, inferred, unclear, deferred, source-index-only, manga-only, and anime-only states;
+- `StatusPill` for compact status/design-debt labels;
+- `SourceStack` for safe Hunterpedia/Fandom source blocks;
+- `ArchiveLedger` for fact, count, budget, and release-gate ledgers.
+
+The library is live on the home page and enforced by `audit:design-system`.
 
 ## Performance contract
 

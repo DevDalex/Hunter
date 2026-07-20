@@ -18,6 +18,7 @@ import { locationCategorySource, worldAtlasSource, worldAtlasZones, worldJourney
 import { placementStates, worldMapAssets, worldMapLocations, worldMapLocationsById, worldMapRoutes, worldMapUnplacedLocations } from './worldMap';
 import { institutionCharts, institutionalRelationships, objectTrails, relationTypes, systemsDeskSources } from './systemsDesk';
 import { homeHighlights } from './homeHighlights';
+import { archiveDesignSystemStats } from './archiveDesignSystem';
 import { completionCriteria, implementationSections, maintenanceMatrix, releaseChecklist } from './implementationNotes';
 import { routeManifest, routeManifestStats } from './routeManifest';
 import { phaseSixSequence, releaseGates, releaseStats } from './releaseReadiness';
@@ -164,7 +165,7 @@ export const integrityChecks = [
   },
   {
     id: 'phase7b-character-media-stability', label: 'Priority portrait stability', status: mediaRegistryStats.characters.local === localPriorityCharacters.length && mediaRegistryStats.runtimeResolution === mediaRegistryStats.characters.textOnly && mediaRegistryStats.localMetadataComplete && mediaRegistryStats.uniqueLocalPaths ? 'pass' : 'fail',
-    detail: `${localPriorityCharacters.length} priority portraits are locally stored with intrinsic dimensions, focal points, article sources, and image sources; ${mediaRegistryStats.runtimeResolution} remaining identities use transparent Hunterpedia source-page portrait attempts with an initials fallback.`,
+    detail: `${localPriorityCharacters.length} priority portraits are locally stored with intrinsic dimensions, focal points, article sources, and image sources; ${mediaRegistryStats.runtimeResolution} remaining identities use explicit text-only fallback rather than runtime filename guessing.`,
   },
   {
     id: 'phase6b-character-story-groups', label: 'Character story grouping', status: encyclopediaCharacterRecords.every((record) => record.facts.some((fact) => fact.label === 'Indexed under' && fact.value)) ? 'pass' : 'fail',
@@ -216,8 +217,8 @@ export const integrityChecks = [
     detail: 'Home totals and its four lightweight portrait records are checked against the full research datasets without loading those datasets into the startup bundle.',
   },
   {
-    id: 'phase6f-implementation-contract', label: 'Implementation handoff', status: implementationSections.length === 8 && unique(implementationSections.map((record) => record.id)) && maintenanceMatrix.length >= 12 && unique(maintenanceMatrix.map((record) => record.id)) && releaseChecklist.reduce((total, group) => total + group.items.length, 0) >= 15 && completionCriteria.length >= 8 ? 'pass' : 'fail',
-    detail: `${implementationSections.length} system notes, ${maintenanceMatrix.length} maintenance runbooks, ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks, and ${completionCriteria.length} completion criteria form the Phase 6F handoff.`,
+    id: 'phase6f-implementation-contract', label: 'Implementation handoff', status: implementationSections.length >= 9 && unique(implementationSections.map((record) => record.id)) && maintenanceMatrix.length >= 13 && unique(maintenanceMatrix.map((record) => record.id)) && releaseChecklist.reduce((total, group) => total + group.items.length, 0) >= 15 && completionCriteria.length >= 8 && archiveDesignSystemStats.primitives >= 6 ? 'pass' : 'fail',
+    detail: `${implementationSections.length} system notes, ${maintenanceMatrix.length} maintenance runbooks, ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks, ${completionCriteria.length} completion criteria, and ${archiveDesignSystemStats.primitives} Batch 12 primitives form the current handoff.`,
   },
   {
     id: 'phase6g-release-contract', label: 'Final release contract', status: phaseSixSequence.length === 7 && releaseGates.length === 10 && routeManifest.length === 26 && routeManifestStats.screens === releaseStats.routes && releaseStats.chapterBoundary === ARCHIVE_BOUNDARY ? 'pass' : 'fail',

@@ -8,7 +8,7 @@ Owner: `scripts/run-build-preflight.mjs`
 
 The previous `npm run build` command chained independent audits with `&&`. A deployment stopped at the first failure, so several stale contracts appeared across several Cloudflare attempts instead of one report.
 
-The aggregate runner executes all 14 independent pre-build audits, records every failure, and exits unsuccessfully only after the full list has run.
+The aggregate runner executes all 15 independent pre-build audits, records every failure, and exits unsuccessfully only after the full list has run.
 
 ## Included audits
 
@@ -19,18 +19,19 @@ The aggregate runner executes all 14 independent pre-build audits, records every
 5. `audit:characters`
 6. `audit:final`
 7. `audit:governance`
-8. `audit:schema`
-9. `audit:css`
-10. `audit:readability`
-11. `audit:layout`
-12. `audit:accessibility`
-13. `audit:media`
-14. `audit:polish`
+8. `audit:design-system`
+9. `audit:schema`
+10. `audit:css`
+11. `audit:readability`
+12. `audit:layout`
+13. `audit:accessibility`
+14. `audit:media`
+15. `audit:polish`
 
 ## Ordering rules
 
 - Story → Reference → Characters → Final preserves the Batch 7–10 lock sequence.
-- Final → Governance → Schema preserves the Batch 11 integration point.
+- Final → Governance → Design System → Schema preserves the Batch 11–12 integration point.
 - CSS ownership runs before the CSS-aware readability, layout, accessibility, and polish audits.
 - Media verification runs before polish.
 
@@ -53,4 +54,4 @@ Each audit keeps its original stdout/stderr. At the end, the runner lists every 
 
 ## Verification boundary
 
-Aggregate preflight passing proves only that its 14 repository-side audits passed for that source state. It does not prove release-package generation, Vite output, performance, browser QA, GitHub Actions, or Cloudflare deployment succeeded.
+Aggregate preflight passing proves only that its 15 repository-side audits passed for that source state. It does not prove release-package generation, Vite output, performance, browser QA, GitHub Actions, or Cloudflare deployment succeeded.
