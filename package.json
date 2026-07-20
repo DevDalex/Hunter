@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "generate:build-info": "node scripts/generate-build-info.mjs",
     "audit:content": "node scripts/audit-content.mjs",
     "audit:implementation": "node scripts/audit-implementation.mjs",
     "audit:readability": "node scripts/audit-readability.mjs",
@@ -13,9 +12,9 @@
     "audit:accessibility": "node scripts/audit-accessibility.mjs",
     "audit:performance": "node scripts/audit-performance.mjs",
     "audit:polish": "node scripts/audit-polish.mjs",
-    "qa:visual": "vite build && node scripts/visual-qa.mjs",
-    "qa:accessibility": "vite build && node scripts/accessibility-qa.mjs",
-    "qa:performance": "vite build && node scripts/audit-performance.mjs && node scripts/performance-qa.mjs",
+    "qa:visual": "node scripts/visual-qa.mjs",
+    "qa:accessibility": "node scripts/accessibility-qa.mjs",
+    "qa:performance": "node scripts/audit-performance.mjs && node scripts/performance-qa.mjs",
     "stabilize:media": "node scripts/stabilize-media.mjs",
     "stabilize:rooms": "node scripts/stabilize-room-media.mjs",
     "audit:media": "node scripts/stabilize-media.mjs --verify-only && node scripts/stabilize-room-media.mjs --verify-only && node scripts/audit-media.mjs",
@@ -23,16 +22,23 @@
     "audit:release": "node scripts/audit-release.mjs",
     "audit:gaps": "node scripts/report-gaps.mjs",
     "build": "npm run generate:build-info && npm run audit:content && npm run audit:implementation && npm run audit:readability && npm run audit:layout && npm run audit:accessibility && npm run audit:media && npm run audit:polish && npm run package:release && npm run audit:release && node scripts/clean-hosting.mjs && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "generate:build-info": "node scripts/generate-build-info.mjs",
+    "browser:install": "playwright install chromium",
+    "qa:interaction": "node scripts/interaction-qa.mjs",
+    "qa:browser": "npm run build && npm run qa:visual && npm run qa:accessibility && npm run qa:interaction && npm run qa:performance"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
-    "vite": "latest",
+    "lucide-react": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "lucide-react": "latest"
+    "vite": "latest"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "axe-core": "4.12.1",
+    "playwright": "1.61.1"
+  },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   }
