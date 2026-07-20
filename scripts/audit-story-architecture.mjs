@@ -1,4 +1,4 @@
-import { access } from 'node:fs/promises';
+import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { isApprovedSourceUrl } from '../src/data/sourcePolicy.js';
 import {
@@ -11,6 +11,12 @@ import {
   storyUtilityDestinations,
   successionStorySubpages,
 } from '../architecture/storyArchitecture.mjs';
+import {
+  parseCleanRoute,
+  parseLegacyHashRoute,
+  routeToCleanPath,
+  routeToLegacyHash,
+} from '../src/lib/appRouter.js';
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Story architecture audit failed: ${message}`);
@@ -28,8 +34,9 @@ assert(!Object.keys(storyDesignDirection.palette).some((key) => /green|forest/i.
 
 assert(storyRoutePolicy.hubRoute === '/story', 'Story hub route must be /story');
 assert(storyRoutePolicy.routeMode === 'clean-history-paths', 'target routing model must use clean history paths');
-assert(storyRoutePolicy.currentMode === 'legacy-hash-router-until-batch-2', 'Batch 1 must not claim the router migration is already live');
+assert(storyRoutePolicy.currentMode === 'clean-history-router-live', 'Batch 2 must mark clean history routing as live');
 assert(storyRoutePolicy.directReloadRequired && storyRoutePolicy.historyFallbackRequired, 'clean routes must support reload and hosting fallback');
+assert(storyRoutePolicy.preserveLegacyHashes && storyRoutePolicy.preserveQueryParameters && storyRoutePolicy.preserveSpoilerBoundary, 'routing preservation flags must remain enabled');
 
 assert(storyEntries.length === 9, 'the locked Story taxonomy must contain nine entries including Volume 0 and the editorial Zoldyck page');
 assert(unique(storyEntries.map((item) => item.id)), 'Story entry IDs must be unique');
@@ -98,7 +105,36 @@ assert(unique(legacyRoutes), 'legacy redirect sources must be unique');
 assert(legacyRoutes.every((route) => route.startsWith('#/')), 'legacy redirect sources must remain explicit hash routes');
 assert(storyUtilityDestinations.length === 3 && storyUtilityDestinations.every((item) => item.route.startsWith('/story?view=')), 'chronology, chapters, and adaptation must remain Story utilities');
 
+assert(routeToCleanPath('series') === '/story', 'series hub must navigate to /story');
+assert(routeToCleanPath('series', 'yorknew-city') === '/story/yorknew-city', 'Yorknew must navigate to its clean Story path');
+assert(routeToCleanPath('series', 'zoldyck-family') === '/story/zoldyck-family', 'Zoldyck Family clean route must be live');
+assert(routeToCleanPath('series', 'chapters', { arc: 'yorknew-city' }) === '/story?view=chapters&arc=yorknew-city', 'Story utility queries must be preserved');
+assert(routeToCleanPath('succession', 'black-whale', { room: 'tier-1' }) === '/story/succession-contest/black-whale?room=tier-1', 'Succession subpages must use nested Story paths');
+assert(routeToCleanPath('reference', 'encyclopedia', { category: 'characters' }) === '/characters?category=characters', 'primary reference routes should use clean top-level paths');
+assert(routeToLegacyHash('series', 'yorknew-city', { chapter: 100 }) === '#/series/yorknew-city?chapter=100', 'legacy hash serialization must remain available');
+
+const cleanYorknew = parseCleanRoute('/story/yorknew-city', '?chapter=100');
+assert(cleanYorknew.view === 'series' && cleanYorknew.target === 'yorknew-city' && cleanYorknew.params.chapter === '100', 'clean Yorknew route must parse with query');
+const cleanZoldyck = parseCleanRoute('/story/zoldyck-family', '');
+assert(cleanZoldyck.view === 'series' && cleanZoldyck.target === 'zoldyck-family', 'clean Zoldyck route must parse');
+const cleanUtility = parseCleanRoute('/story', '?view=adaptation');
+assert(cleanUtility.view === 'series' && cleanUtility.target === 'adaptation', 'Story utility route must parse');
+const cleanSuccession = parseCleanRoute('/story/succession-contest/power-blocs', '?panel=justice');
+assert(cleanSuccession.view === 'succession' && cleanSuccession.target === 'mafia' && cleanSuccession.params.panel === 'justice', 'clean Succession subpage must parse');
+const cleanCharacters = parseCleanRoute('/characters', '?search=Gon');
+assert(cleanCharacters.view === 'reference' && cleanCharacters.target === 'encyclopedia' && cleanCharacters.params.category === 'characters' && cleanCharacters.params.search === 'Gon', 'clean character directory route must parse');
+const unknownRoute = parseCleanRoute('/not-a-real-route', '');
+assert(unknownRoute.view === 'not-found' && unknownRoute.params.attemptedPath === '/not-a-real-route', 'unknown routes must not silently open home');
+
+const legacyYorknew = parseLegacyHashRoute('#/series/yorknew-city?chapter=100');
+assert(legacyYorknew.view === 'series' && legacyYorknew.target === 'yorknew-city' && legacyYorknew.params.chapter === '100', 'legacy Yorknew hash must still parse');
+assert(routeToCleanPath(legacyYorknew.view, legacyYorknew.target, legacyYorknew.params) === '/story/yorknew-city?chapter=100', 'legacy Yorknew hash must upgrade to clean path');
+
+const server = await readFile(path.resolve('server/index.js'), 'utf8');
+assert(server.includes("fallbackUrl.pathname = '/index.html'"), 'static worker must keep the direct-reload SPA fallback');
+
 assert(storyArchitectureAcceptance.length === 10, 'the architecture lock must retain ten acceptance statements');
 await access(path.resolve('docs/STORY-ARCHITECTURE.md'));
+await access(path.resolve('src/lib/appRouter.js'));
 
-console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, hybrid Black Archive design, and mobile deferred.`);
+console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, clean history routing, legacy redirects, direct reload fallback, and mobile deferred.`);
