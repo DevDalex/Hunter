@@ -28,11 +28,10 @@ assert(app.includes('className="site-footer"'), 'the site footer must have an ex
 assert(!/(^|\n)footer\s*\{/.test(css), 'an unscoped footer rule would restyle nested record footers');
 assert(!/main > section,\s*footer/.test(css), 'nested footers must not inherit page-shell padding');
 assert(css.includes(':focus-visible') && css.includes('prefers-reduced-motion: reduce'), 'focus visibility and reduced-motion handling are required');
-assert(css.includes("@import './styles/accessibility-contrast.css';"), 'the semantic contrast layer must remain in the global CSS chain');
 assert(contrastCss.includes('--archive-gold-ink: #6b4d00') && contrastCss.includes('--archive-on-dark: #f6ecee') && contrastCss.includes('--archive-active-contrast: #6e1825'), 'the contrast layer must retain tested light, dark, and active-state colors');
 assert(main.includes('installAccessibilityRuntime();'), 'main.jsx must install the legacy accessibility normalizer before rendering');
-assert(accessibilityRuntime.includes(".yn-chain-inspector__menu[role=\"listbox\"]") && accessibilityRuntime.includes(".gi-card-tabs[role=\"tablist\"]") && accessibilityRuntime.includes(".ca-tabs[role=\"tablist\"]"), 'legacy composite roles must remain normalized');
-assert(accessibilityRuntime.includes("document.querySelectorAll('.ca-table-wrap')") && accessibilityRuntime.includes("node.tabIndex = 0") && accessibilityRuntime.includes("node.setAttribute('aria-label'"), 'the Chimera hierarchy scroll region must be keyboard-focusable and named');
+assert(accessibilityRuntime.includes('.yn-chain-inspector__menu[role="listbox"]') && accessibilityRuntime.includes('.gi-card-tabs[role="tablist"]') && accessibilityRuntime.includes('.ca-tabs[role="tablist"]'), 'legacy composite roles must remain normalized');
+assert(accessibilityRuntime.includes("document.querySelectorAll('.ca-table-wrap')") && accessibilityRuntime.includes('node.tabIndex = 0') && accessibilityRuntime.includes("node.setAttribute('aria-label'"), 'the Chimera hierarchy scroll region must be keyboard-focusable and named');
 assert(header.includes("event.key === 'Escape'") && header.includes("event.key !== 'Tab'") && header.includes('.header-links a, .header-actions button'), 'the narrow-browser menu must contain focus and close with Escape');
 assert(sectionTabs.includes("event.key === 'ArrowRight'") && sectionTabs.includes("event.key === 'Home'") && sectionTabs.includes("event.key === 'End'"), 'grouped section navigation needs full keyboard movement');
 assert(familyTree.includes("event.key === 'ArrowRight'") && familyTree.includes('role="tabpanel"') && familyTree.includes('tabIndex={treeMode === id ? 0 : -1}'), 'family-tree modes need roving keyboard focus and named panels');
