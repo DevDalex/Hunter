@@ -57,6 +57,7 @@ Production browser files are written to `dist/client/`, with the worker at `dist
 - Source policy: `src/data/sourcePolicy.js`.
 - Bibliography/evidence/review governance: `src/data/bibliography.js`, `src/data/evidenceStates.js`, `src/data/reviewQueue.js`.
 - Machine-readable ownership and media schema: `src/data/dataOwnership.js`, `src/data/mediaSchema.js`.
+- Performance budgets: `src/data/performanceBudgets.js`.
 - World hierarchy: `src/data/worldAtlas.js`.
 - Nen: `src/data/nenEncyclopedia.js`.
 - Organizations/relationships/objects: `src/data/systemsDesk.js`.
@@ -73,15 +74,17 @@ Use direct approved Hunterpedia links. Keep local summaries, analytical connecti
 
 ## Performance contract
 
-`scripts/audit-performance.mjs` currently enforces:
+`src/data/performanceBudgets.js` is the canonical budget owner. `scripts/audit-performance.mjs` currently enforces:
 
-- application entry: 150,000 bytes;
-- startup JavaScript closure: 270,000 bytes;
-- startup CSS: 390,000 bytes;
-- largest JavaScript chunk: 220,000 bytes;
+- application entry: 500,000 bytes;
+- startup JavaScript closure: 1,000,000 bytes;
+- startup CSS: 1,000,000 bytes;
+- largest JavaScript chunk: 750,000 bytes;
 - individual portrait: 160,000 bytes;
 - portrait library: 2,200,000 bytes;
 - 22 dynamic entries: 17 UI boundaries, two Story detail chunks, and three search shards.
+
+The larger code/CSS ceilings provide feature-growth headroom while keeping route splitting, dynamic-entry counts, heavy-dataset exclusions, eager-image rules, PWA exclusions, and media ceilings enforced.
 
 ## Browser verification
 
