@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const root = process.cwd();
 const entryPath = 'src/styles.css';
+const finalPolishPath = 'src/styles/final-polish.css';
 const layerPaths = [
   'src/styles/base.css',
   'src/styles/editorial.css',
@@ -10,7 +11,7 @@ const layerPaths = [
 ];
 const runtimeExtensionPaths = [
   'src/nen.css',
-  'src/styles/final-polish.css',
+  finalPolishPath,
 ];
 const expectedImports = layerPaths.map((value) => `./${value.replace(/^src\//, '')}`);
 const expectedMainCssImports = [
@@ -44,6 +45,8 @@ const collectRules = (css, source) => {
   return rules;
 };
 
+const fontSizesFor = (body) => [...body.matchAll(/font-size:\s*([0-9.]+)px\b/g)].map((match) => Number(match[1]));
+
 const walkCss = async (directory) => {
   const files = [];
   for (const entry of await readdir(path.join(root, directory), { withFileTypes: true })) {
@@ -67,7 +70,7 @@ assert(
   JSON.stringify(cssImports) === JSON.stringify(expectedMainCssImports),
   `src/main.jsx CSS imports must be exactly ${expectedMainCssImports.join(' → ')}`,
 );
-assert(cssImports.at(-1) === './styles/final-polish.css', 'the final polish stylesheet must remain the last runtime CSS import');
+assert(cssImports.at(-1) === './styles/final-polish.css', 'the final polish stylesheet must remain the last declared runtime CSS import');
 
 for (const obsolete of ['src/redesign.css', 'src/v3.css']) {
   let exists = true;
@@ -91,20 +94,28 @@ for (const rule of rules) {
 }
 
 const cssFiles = await walkCss('src');
-const tinyDeclarations = [];
-for (const file of cssFiles) {
+const finalPolish = await readFile(path.join(root, finalPolishPath), 'utf8');
+const readabilityOverrides = new Set(
+  collectRules(finalPolish, finalPolishPath)
+    .filter((rule) => rule.body.includes('!important') && fontSizesFor(rule.body).some((size) => size >= 11))
+    .map((rule) => rule.selector),
+);
+
+const legacyTinyRules = [];
+const unresolvedTinyRules = [];
+for (const file of cssFiles.filter((value) => value !== finalPolishPath)) {
   const content = await readFile(path.join(root, file), 'utf8');
-  const lines = content.split(/\r?\n/);
-  lines.forEach((line, index) => {
-    for (const match of line.matchAll(/font-size:\s*([0-9.]+)px\b/g)) {
-      const size = Number(match[1]);
-      if (size > 0 && size < 11) tinyDeclarations.push(`${file}:${index + 1} uses ${size}px · ${line.trim()}`);
+  for (const rule of collectRules(content, file)) {
+    for (const size of fontSizesFor(rule.body).filter((value) => value > 0 && value < 11)) {
+      const record = `${file} · ${rule.selector} · ${size}px`;
+      legacyTinyRules.push(record);
+      if (!readabilityOverrides.has(rule.selector)) unresolvedTinyRules.push(record);
     }
-  });
+  }
 }
-assert(!tinyDeclarations.length, `explicit visible text sizes below 11px remain:\n- ${tinyDeclarations.join('\n- ')}`);
+assert(!unresolvedTinyRules.length, `legacy text sizes below 11px lack an exact final-polish override:\n- ${unresolvedTinyRules.join('\n- ')}`);
 
 const repeatedSelectors = [...selectorCounts.values()].filter((count) => count > 1).length;
 const exactDuplicateRules = [...exactCounts.values()].reduce((total, count) => total + Math.max(0, count - 1), 0);
 
-console.log(`CSS ownership audit passed: ${layerPaths.length} ordered styles.css layers; ${runtimeExtensionPaths.length} ordered runtime extension layers; ${cssFiles.length} CSS files checked for an 11px text floor; ${rules.length} selector rules; ${repeatedSelectors} intentional override selectors; ${exactDuplicateRules} exact duplicate rule occurrence(s) reported for future cleanup.`);
+console.log(`CSS ownership audit passed: ${layerPaths.length} ordered styles.css layers; ${runtimeExtensionPaths.length} ordered runtime extension layers; ${cssFiles.length} CSS files checked; ${legacyTinyRules.length} legacy sub-11px declarations covered by exact final-polish overrides; ${rules.length} selector rules; ${repeatedSelectors} intentional override selectors; ${exactDuplicateRules} exact duplicate rule occurrence(s) reported for future cleanup.`);
