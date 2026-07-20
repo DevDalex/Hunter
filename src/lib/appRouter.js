@@ -1,5 +1,6 @@
 import {
   referenceAliases,
+  referencePrimary,
   successionAliases,
   views,
 } from '../data/routeManifest.js';
@@ -45,7 +46,6 @@ const referenceTargetToPath = new Map([
   ['nen', 'nen'],
   ['systems', 'organizations'],
   ['conflicts', 'fights'],
-  ['notebook', 'notebook'],
 ]);
 
 const cleanReferencePaths = new Map([
@@ -54,7 +54,6 @@ const cleanReferencePaths = new Map([
   ['nen', { target: 'nen' }],
   ['organizations', { target: 'systems', params: { view: 'mafia' } }],
   ['fights', { target: 'conflicts' }],
-  ['notebook', { target: 'notebook' }],
 ]);
 
 const stringifyQuery = (params = {}) => {
@@ -92,6 +91,9 @@ export function normalizeDestination(view, target = '', params = {}) {
       target: alias.target,
       params: { ...params, ...(alias.category ? { category: alias.category } : {}), ...(alias.view ? { view: alias.view } : {}), ...(alias.case ? { case: alias.case } : {}) },
     };
+  }
+  if (view === 'reference' && !referencePrimary.includes(target || 'encyclopedia')) {
+    return { view: 'not-found', target: '', params: { attemptedPath: `/reference/${target}` } };
   }
   return { view, target, params };
 }
