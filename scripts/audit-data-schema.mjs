@@ -10,6 +10,7 @@ import { isApprovedSourceUrl, SOURCE_POLICY_VERSION } from '../src/data/sourcePo
 const root = process.cwd();
 const assert = (condition, message) => { if (!condition) throw new Error(`Data-schema audit failed: ${message}`); };
 const unique = (values) => new Set(values).size === values.length;
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const walk = async (directory) => {
   const files = [];
@@ -94,7 +95,9 @@ const generatedImports = new Map(generatedDataFiles.map((file) => [path.basename
 for (const file of sourceFiles) {
   const source = await readFile(file, 'utf8');
   for (const generatedName of generatedImports.keys()) {
-    if (source.includes(generatedName)) generatedImports.get(generatedName).push(path.relative(root, file).replaceAll('\\', '/'));
+    const escapedName = escapeRegExp(generatedName);
+    const importPattern = new RegExp(`(?:from\\s*['\"][^'\"]*${escapedName}|import\\(\\s*['\"][^'\"]*${escapedName})`);
+    if (importPattern.test(source)) generatedImports.get(generatedName).push(path.relative(root, file).replaceAll('\\', '/'));
   }
 }
 assert(JSON.stringify(generatedImports.get('priorityMedia.generated')) === JSON.stringify(['src/data/characters.js']), 'priority portrait derivatives may be imported only by characters.js');
