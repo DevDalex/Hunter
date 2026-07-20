@@ -5,9 +5,11 @@
  * 1. base.css owns tokens, resets, shared primitives, and original component rules.
  * 2. editorial.css owns deliberate site-wide visual overrides.
  * 3. experiences.css owns newer page and route experience systems.
+ * 4. accessibility-contrast.css owns WCAG AA semantic foreground/background pairs.
  *
  * Nen remains isolated in src/nen.css and is imported after this file.
  */
 @import './styles/base.css';
 @import './styles/editorial.css';
 @import './styles/experiences.css';
+@import './styles/accessibility-contrast.css';
