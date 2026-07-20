@@ -38,7 +38,6 @@ const WorldAtlas = lazy(routeModuleLoaders.worldAtlas);
 const SystemsDesk = lazy(routeModuleLoaders.systems);
 const OrganizationArchive = lazy(routeModuleLoaders.organizations);
 const ConflictArchive = lazy(routeModuleLoaders.conflictArchive);
-const StudyNotebook = lazy(routeModuleLoaders.notebook);
 
 const successionPanels = {
   'family-tree': [
@@ -262,7 +261,6 @@ export default function App() {
             {referencePage.id === 'conflicts' && (routeParams.case === 'hisoka-chrollo' ? <HisokaChrolloDossier initialChapter={routeParams.chapter} initialAbility={routeParams.ability} /> : <>
               <ConflictArchive initialQuery={routeParams.search || ''} onOpenEntity={(search) => navigate('reference', 'encyclopedia', { search })} onOpenHisokaDossier={() => navigate('reference', 'conflicts', { case: 'hisoka-chrollo' })} />
             </>)}
-            {referencePage.id === 'notebook' && <StudyNotebook />}
           </Suspense>
         </>}
 
