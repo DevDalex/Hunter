@@ -1,6 +1,5 @@
 import { ArrowRight, MapPinned, Orbit, Search, Swords, UsersRound } from 'lucide-react';
 import SafeImage from './SafeImage';
-import { ArchiveCard, ArchiveLedger, ArchiveSection, EvidenceBadge, SourceStack, StatusPill } from './ArchiveUI';
 
 const entrances = [
   {
@@ -34,12 +33,6 @@ const tools = [
   ['world', 'World map', 'Places and story routes', MapPinned, 'reference', 'atlas'],
   ['nen', 'Nen', 'Visual principles and abilities', Orbit, 'reference', 'nen'],
   ['fight', 'Hisoka vs. Chrollo', 'The complete fight dossier', Swords, 'reference', 'conflicts', { case: 'hisoka-chrollo' }],
-];
-
-const designLedger = [
-  { label: 'Primitives', value: '6 shared UI pieces' },
-  { label: 'Evidence tones', value: '7 states' },
-  { label: 'Gate', value: '15 audits' },
 ];
 
 export default function SiteHome({ onNavigate, onPrefetch, onOpenSearch }) {
@@ -87,29 +80,6 @@ export default function SiteHome({ onNavigate, onPrefetch, onOpenSearch }) {
           ))}
         </div>
       </section>
-
-      <ArchiveSection
-        id="archive-ui-library"
-        compact
-        kicker="Batch 12"
-        title="Design-system foundation"
-        description="Reusable archive primitives now carry source blocks, evidence language, ledgers, cards, and status tokens so future pages stop becoming one-off layouts."
-        actions={<StatusPill tone="debt">Design-system debt tracked separately</StatusPill>}
-      >
-        <div className="archive-ui-home-grid">
-          <ArchiveCard tone="ink" eyebrow="Evidence" title="Shared state language" meta="Confirmed · inferred · unclear · deferred">
-            <EvidenceBadge state="confirmed">Confirmed</EvidenceBadge>
-            <EvidenceBadge state="inferred">Inferred</EvidenceBadge>
-            <EvidenceBadge state="unclear">Unclear</EvidenceBadge>
-          </ArchiveCard>
-          <ArchiveCard tone="steel" eyebrow="Release gate" title="Reusable primitives are audited" meta="No dead design-system code">
-            <ArchiveLedger items={designLedger} label="Batch 12 design-system counts" />
-          </ArchiveCard>
-          <ArchiveCard eyebrow="Source policy" title="Hunterpedia boundary remains visible" meta="Source blocks are reusable now">
-            <SourceStack sources={[{ label: 'Hunterpedia / Fandom', href: 'https://hunterxhunter.fandom.com/', note: 'The archive’s approved factual and media source boundary.' }]} />
-          </ArchiveCard>
-        </div>
-      </ArchiveSection>
     </div>
   );
 }
