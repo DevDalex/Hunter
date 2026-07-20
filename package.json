@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "generate:build-info": "node scripts/generate-build-info.mjs",
     "audit:content": "node scripts/audit-content.mjs",
     "audit:implementation": "node scripts/audit-implementation.mjs",
     "audit:readability": "node scripts/audit-readability.mjs",
@@ -21,7 +22,7 @@
     "package:release": "node scripts/package-release.mjs",
     "audit:release": "node scripts/audit-release.mjs",
     "audit:gaps": "node scripts/report-gaps.mjs",
-    "build": "npm run audit:content && npm run audit:implementation && npm run audit:readability && npm run audit:layout && npm run audit:accessibility && npm run audit:media && npm run audit:polish && npm run package:release && npm run audit:release && node scripts/clean-hosting.mjs && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs",
+    "build": "npm run generate:build-info && npm run audit:content && npm run audit:implementation && npm run audit:readability && npm run audit:layout && npm run audit:accessibility && npm run audit:media && npm run audit:polish && npm run package:release && npm run audit:release && node scripts/clean-hosting.mjs && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
