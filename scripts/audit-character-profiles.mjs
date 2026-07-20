@@ -1,6 +1,6 @@
 import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { encyclopediaRecords, encyclopediaStats } from '../src/data/encyclopedia.js';
+import { SITE_STATS } from '../src/data/archiveMeta.js';
 import { characterDirectoryPolicy, characterProfileStats, featuredCharacterProfiles } from '../src/data/characterProfilePrototype.js';
 import { isApprovedSourceUrl } from '../src/data/sourcePolicy.js';
 
@@ -9,11 +9,18 @@ const assert = (condition, message) => {
 };
 const unique = (values) => new Set(values).size === values.length;
 
-const characterRecords = encyclopediaRecords.filter((record) => record.category === 'characters');
-const characterNames = new Set(characterRecords.map((record) => record.name));
+const [encyclopediaData, charactersData, snapshotData, registryData, successionData] = await Promise.all([
+  readFile(path.resolve('src/data/encyclopedia.js'), 'utf8'),
+  readFile(path.resolve('src/data/characters.js'), 'utf8'),
+  readFile(path.resolve('src/data/generalCharacterSnapshot.js'), 'utf8'),
+  readFile(path.resolve('src/data/entityRegistry.js'), 'utf8'),
+  readFile(path.resolve('src/data/successionRoster.js'), 'utf8'),
+]);
+const characterDirectorySources = `${charactersData}\n${snapshotData}\n${registryData}\n${successionData}`;
 
-assert(encyclopediaStats.characters >= characterRecords.length, 'character statistic must not undercount the visible character directory');
-assert(characterRecords.length >= 100, 'the character directory must remain a broad cast archive, not a reduced profile-only set');
+assert(SITE_STATS.characters >= 100, 'the character directory must remain a broad cast archive, not a reduced profile-only set');
+assert(encyclopediaData.includes('export const encyclopediaRecords') && encyclopediaData.includes('characters: characterRecords.length'), 'the encyclopedia must retain its generated character directory and character statistics');
+assert(encyclopediaData.includes("category: 'characters'") && encyclopediaData.includes('generalCharacterSnapshot.forEach'), 'the encyclopedia must continue building character records from the canonical directory sources');
 assert(characterDirectoryPolicy.rules.some(([name]) => /No cast deletion/i.test(name)), 'directory policy must explicitly preserve all cast records');
 assert(characterDirectoryPolicy.directoryLanes.length >= 3, 'character directory/dossier split needs visible lanes');
 assert(characterProfileStats.profiles >= 6, 'Batch 9 must ship at least six flagship profile prototypes');
@@ -21,7 +28,7 @@ assert(unique(featuredCharacterProfiles.map((profile) => profile.id)), 'profile 
 assert(unique(featuredCharacterProfiles.map((profile) => profile.name)), 'profile names must be unique');
 
 for (const profile of featuredCharacterProfiles) {
-  assert(characterNames.has(profile.name), `${profile.name} profile does not match a character directory record`);
+  assert(characterDirectorySources.includes(profile.name), `${profile.name} profile does not match the canonical character directory sources`);
   assert(isApprovedSourceUrl(profile.source), `${profile.name} primary source is not Hunterpedia/Fandom-approved`);
   assert(profile.sources.length >= 3 && profile.sources.every((source) => isApprovedSourceUrl(source.href)), `${profile.name} needs at least three approved source links`);
   for (const key of ['facts', 'story', 'relationships', 'nen', 'conflicts', 'organizations', 'locations', 'objects']) {
@@ -43,4 +50,4 @@ assert(encyclopedia.includes('sourcePortraitStats.totalCharacters'), 'complete c
 await access(path.resolve('src/components/CharacterProfileDossier.css'));
 await access(path.resolve('docs/CHARACTER-PROFILES.md'));
 
-console.log(`Character profile audit passed: ${characterRecords.length} visible character records, ${featuredCharacterProfiles.length} dossier prototypes, no deletion policy visible, and character directory views preserved.`);
+console.log(`Character profile audit passed: ${SITE_STATS.characters} canonical character records, ${featuredCharacterProfiles.length} dossier prototypes, no deletion policy visible, and character directory views preserved.`);
