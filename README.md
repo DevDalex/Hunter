@@ -51,16 +51,16 @@ The production-ready browser files are written to `dist/client/`.
 
 Each production build regenerates two deterministic downloads. `public/hxh-archive-phase-8a-sites-source.zip` is the maintainable project and includes `.openai/hosting.json` so another ChatGPT Sites session can continue the same private deployment. `public/hxh-archive-phase-8a-standalone.zip` contains `Open-HxH-Archive.html` plus local media and can be opened directly without Node, Vite, a command file, or the hosted URL. Neither edition contains credentials, Git history, or browser-local study data.
 
-For the optional full browser matrix, install the QA-only browser packages without saving them to the project, then run:
+Browser-rendered verification is committed as a repeatable project check. Install the pinned development dependencies and Chromium once, then run the complete matrix:
 
 ```bash
-npm install --no-save playwright-core @sparticuz/chromium axe-core
-npm run qa:visual
-npm run qa:accessibility
-npm run qa:performance
+npm ci
+npm run browser:deps
+npm run browser:install
+npm run qa:browser
 ```
 
-The matrices write reports and optional screenshots to the ignored `.visual-qa/`, `.accessibility-qa/`, and `.performance-qa/` folders. They test ordinary browser widths and constrained loading conditions without adding installable-app behavior.
+`qa:browser` performs the production build once, then runs route screenshots and overflow/media checks, WCAG and keyboard checks, critical Nen/relationship interaction states, and constrained performance profiles. Reports and failure screenshots are written to `.visual-qa/`, `.accessibility-qa/`, `.interaction-qa/`, and `.performance-qa/`. The same command runs automatically in the **Browser Verification** GitHub Actions workflow for pull requests and pushes to `main`.
 
 The build also adds a minimal static worker and hosting metadata to `dist/`, so
 the same source can be deployed through ChatGPT Sites without changing the React app.
