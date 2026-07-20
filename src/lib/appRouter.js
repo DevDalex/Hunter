@@ -14,12 +14,12 @@ const cleanStoryTargets = new Set([
   'greed-island',
   'chimera-ant',
   'chairman-election',
+  'succession-contest',
 ]);
 
 const storyUtilityTargets = new Set(['chronology', 'chapters', 'adaptation']);
 
 const successionPathToTarget = {
-  'succession-contest': { target: 'overview' },
   'royal-family': { target: 'family-tree' },
   cast: { target: 'succession-roster' },
   timeline: { target: 'succession-timeline' },
@@ -30,7 +30,6 @@ const successionPathToTarget = {
 };
 
 const targetToSuccessionPath = new Map([
-  ['overview', 'succession-contest'],
   ['family-tree', 'succession-contest/royal-family'],
   ['succession-roster', 'succession-contest/cast'],
   ['succession-timeline', 'succession-contest/timeline'],
@@ -80,8 +79,10 @@ export const routeIsLegacyHash = (hash = '') => String(hash || '').startsWith('#
 
 export function normalizeDestination(view, target = '', params = {}) {
   if (view === 'series' && target === 'research') return { view, target: 'chapters', params };
+  if (view === 'succession' && (!target || target === 'overview')) return { view: 'series', target: 'succession-contest', params };
   if (view === 'succession' && successionAliases[target]) {
     const alias = successionAliases[target];
+    if (alias.target === 'overview') return { view: 'series', target: 'succession-contest', params };
     return { view, target: alias.target, params: { ...params, ...(alias.panel ? { panel: alias.panel } : {}) } };
   }
   if (view === 'reference' && referenceAliases[target]) {
@@ -120,8 +121,8 @@ export function routeToCleanPath(view, target = '', params = {}, hash = '') {
   }
 
   if (normalized.view === 'succession') {
-    const successionPath = targetToSuccessionPath.get(normalized.target || 'overview') || 'succession-contest';
-    return cleanUrl(`/story/${successionPath}`, normalized.params, hash);
+    const successionPath = targetToSuccessionPath.get(normalized.target);
+    return cleanUrl(`/story/${successionPath || 'succession-contest'}`, normalized.params, hash);
   }
 
   if (normalized.view === 'reference') {
@@ -165,8 +166,8 @@ export function parseCleanRoute(pathname = '/', search = '') {
     }
 
     if (parts[1] === 'succession-contest') {
-      const successionSubpath = parts[2] || 'succession-contest';
-      const destination = successionPathToTarget[successionSubpath];
+      if (parts.length === 2) return normalizeDestination('series', 'succession-contest', params);
+      const destination = successionPathToTarget[parts[2]];
       if (!destination || parts.length > 3) return { view: 'not-found', target: '', params: { attemptedPath: pathnameClean } };
       return normalizeDestination('succession', destination.target, params);
     }
