@@ -1,4 +1,4 @@
-import { BookOpen, Download, Menu, Search, X } from 'lucide-react';
+import { Download, Menu, Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { routeToHref } from '../lib/appRouter';
 
@@ -65,10 +65,6 @@ export default function Header({ activeView, routeTarget, onNavigate, onOpenSear
 
   return (
     <header ref={headerRef} className="site-header">
-      <a className="wordmark" href={routeToHref('home')} onClick={(event) => { event.preventDefault(); navigate('home'); }} aria-label="Hunter x Hunter Archive home">
-        <BookOpen size={19} />
-        <span><b>Hunter × Hunter</b><small>Archive</small></span>
-      </a>
       <nav id="primary-navigation" className={`header-links${menuOpen ? ' is-open' : ''}`} aria-label="Primary navigation">
         {primaryNav.map((item, index) => {
           const active = itemIsActive(item);
