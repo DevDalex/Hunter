@@ -10,6 +10,7 @@ import {
 import { getEntityResearchTrail, summarizeEntityResearchTrail } from '../data/entityResearchTrails';
 import { mediaRegistryStats } from '../data/mediaRegistry';
 import { notifyStudyDataChanged, readStoredJson, writeStoredJson } from '../lib/browserStorage';
+import CharacterProfileDossier from './CharacterProfileDossier';
 import FandomImage from './FandomImage';
 import HorizontalScrollHint from './HorizontalScrollHint';
 import SafeImage from './SafeImage';
@@ -282,6 +283,8 @@ export default function EntityEncyclopedia({ initialCategory = 'characters', ini
                 <dl>{selected.facts.map((fact) => <div key={`${selected.id}-${fact.label}`}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}</dl>
               </div>
             </div>
+
+            <CharacterProfileDossier selected={selected} onOpenRelated={openRelated} />
 
             <section className="entity-record__relations">
               <header><span>Cross-links</span><h3>Connected records</h3></header>
