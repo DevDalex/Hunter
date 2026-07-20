@@ -100,8 +100,10 @@ for (const file of sourceFiles) {
     if (importPattern.test(source)) generatedImports.get(generatedName).push(path.relative(root, file).replaceAll('\\', '/'));
   }
 }
-assert(JSON.stringify(generatedImports.get('priorityMedia.generated')) === JSON.stringify(['src/data/characters.js']), 'priority portrait derivatives may be imported only by characters.js');
-assert(JSON.stringify(generatedImports.get('blackWhaleMedia.generated')) === JSON.stringify(['src/data/blackWhale.js']), 'Black Whale derivatives may be imported only by blackWhale.js');
+const portraitConsumers = generatedImports.get('priorityMedia.generated');
+const roomConsumers = generatedImports.get('blackWhaleMedia.generated');
+assert(JSON.stringify(portraitConsumers) === JSON.stringify(['src/data/characters.js']), `priority portrait derivatives may be imported only by characters.js; found ${portraitConsumers.join(', ') || 'none'}`);
+assert(JSON.stringify(roomConsumers) === JSON.stringify(['src/data/blackWhale.js']), `Black Whale derivatives may be imported only by blackWhale.js; found ${roomConsumers.join(', ') || 'none'}`);
 
 const mediaPipeline = await readFile(path.join(root, 'scripts/lib/mediaPipeline.mjs'), 'utf8');
 const portraitStabilizer = await readFile(path.join(root, 'scripts/stabilize-media.mjs'), 'utf8');
