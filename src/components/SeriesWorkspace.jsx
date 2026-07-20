@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { ExternalLink, Grid2X2, List, Search } from 'lucide-react';
 import PageIntro from './PageIntro';
 import WorkspaceNav from './WorkspaceNav';
@@ -14,12 +14,13 @@ import PreSuccessionOverview from './PreSuccessionOverview';
 import StoryFoundationLayout, { StoryArcFoundation, StoryHubFoundation } from './StoryFoundation';
 import YorknewPrototypePage from './YorknewPrototypePage';
 import EarlyArcPrototypePage from './EarlyArcPrototypePage';
-import GreedIslandPrototypePage from './GreedIslandPrototypePage';
 import { arcs } from '../data/arcs';
 import { chapters, LATEST_CHAPTER } from '../data/chapters';
 import { preSuccessionExperienceById, preSuccessionExperienceIds } from '../data/preSuccessionExperiences';
 import { hasEarlyArcPrototype } from '../data/earlyArcPrototypes';
 import { readStoredJson, writeStoredJson } from '../lib/browserStorage';
+
+const GreedIslandPrototypePage = lazy(() => import('./GreedIslandPrototypePage'));
 
 const seriesPages = [
   { id: 'arcs', label: 'Overview' },
@@ -144,7 +145,9 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
       ) : yorknewPrototypePage ? (
         <YorknewPrototypePage onNavigate={onNavigate} />
       ) : greedIslandPrototypePage ? (
-        <GreedIslandPrototypePage onNavigate={onNavigate} />
+        <Suspense fallback={<aside className="pre-scope-notice"><b>Loading Greed Island archive</b><p>The card binder and game-system modules are loading as a separate Story detail chunk.</p></aside>}>
+          <GreedIslandPrototypePage onNavigate={onNavigate} />
+        </Suspense>
       ) : arcPage ? (
         <PreSuccessionExperience arcId={routeTarget} onNavigate={onNavigate} />
       ) : memoriesPage ? (
