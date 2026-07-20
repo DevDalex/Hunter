@@ -1,0 +1,21 @@
+.archive-landing__hero-person--left {
+  left: 0 !important;
+}
+
+.archive-landing__hero-person--right {
+  right: 0 !important;
+}
+
+@media (max-width: 640px) {
+  .archive-landing__hero-person {
+    width: 64vw !important;
+  }
+
+  .archive-landing__hero-person--left {
+    left: 0 !important;
+  }
+
+  .archive-landing__hero-person--right {
+    right: 0 !important;
+  }
+}
