@@ -11,16 +11,14 @@ import { ARCHIVE_BOUNDARY, SITE_STATS } from './data/archiveMeta';
 import { homeHighlights } from './data/homeHighlights';
 import {
   dossierTabRoutes,
-  referenceAliases,
   referencePages,
   referencePrimary,
   seriesRoutes,
-  successionAliases,
   successionPages,
   successionPrimary,
-  views,
 } from './data/routeManifest';
 import { readStoredNumber, writeStoredString } from './lib/browserStorage';
+import { normalizeDestination, readBrowserRoute, routeIsLegacyHash, routeToHref } from './lib/appRouter';
 import { preloadArchiveSearch, preloadRoute, routeModuleLoaders } from './lib/routePreload';
 
 const ArchiveSearch = lazy(routeModuleLoaders.archiveSearch);
@@ -60,7 +58,7 @@ const successionPanels = {
   mafia: [
     { id: 'mafia', label: 'Mafia families', note: 'Xi-Yu, Cha-R, Heil-Ly' },
     { id: 'justice', label: 'Justice & military', note: 'Authority and custody' },
-    { id: 'operations', label: 'Operations', note: 'Plans and confrontations' },
+    { id: 'operations', label: 'Plans and confrontations' },
     { id: 'relationships', label: 'Political links', note: 'Typed relationships' },
   ],
   chapters: [
@@ -84,31 +82,6 @@ const dossierPanelForTab = {
   chapters: 'chapters', mysteries: 'mysteries', links: 'mysteries', overview: 'tree', core: 'chapters', routes: 'chapters',
 };
 
-function normalizeDestination(view, target = '', params = {}) {
-  if (view === 'series' && target === 'research') return { view, target: 'chapters', params };
-  if (view === 'succession' && successionAliases[target]) {
-    const alias = successionAliases[target];
-    return { view, target: alias.target, params: { ...params, ...(alias.panel ? { panel: alias.panel } : {}) } };
-  }
-  if (view === 'reference' && referenceAliases[target]) {
-    const alias = referenceAliases[target];
-    return {
-      view,
-      target: alias.target,
-      params: { ...params, ...(alias.category ? { category: alias.category } : {}), ...(alias.view ? { view: alias.view } : {}), ...(alias.case ? { case: alias.case } : {}) },
-    };
-  }
-  return { view, target, params };
-}
-
-function readRoute() {
-  if (typeof window === 'undefined') return { view: 'home', target: '', params: {} };
-  const [path, queryString = ''] = window.location.hash.replace(/^#\/?/, '').split('?');
-  const [candidate, target = ''] = path.split('/');
-  const view = views.has(candidate) ? candidate : 'home';
-  return normalizeDestination(view, target, Object.fromEntries(new URLSearchParams(queryString)));
-}
-
 function readSpoilerLimit() {
   const stored = readStoredNumber('hxh-spoiler-limit', ARCHIVE_BOUNDARY);
   return stored >= 1 && stored <= ARCHIVE_BOUNDARY ? stored : ARCHIVE_BOUNDARY;
@@ -122,7 +95,7 @@ function SpoilerSettings({ value, onChange }) {
 }
 
 export default function App() {
-  const initialRoute = readRoute();
+  const initialRoute = readBrowserRoute();
   const standaloneBuild = typeof window !== 'undefined' && window.__HXH_STANDALONE_BUILD__ === true;
   const [activeView, setActiveView] = useState(initialRoute.view);
   const [routeTarget, setRouteTarget] = useState(initialRoute.target);
@@ -134,31 +107,61 @@ export default function App() {
   const successionPage = successionPages.find((page) => page.id === routeTarget) || successionPages[0];
   const referencePage = referencePages.find((page) => page.id === routeTarget) || referencePages[0];
   const seriesPage = seriesRoutes.find((page) => page.target === routeTarget) || seriesRoutes[0];
-  const routeTitle = activeView === 'home' ? 'Archive' : activeView === 'series' ? seriesPage.label : activeView === 'succession' ? successionPage.title : referencePage.title;
+  const seriesTitle = routeTarget === 'zoldyck-family' ? 'Zoldyck Family' : seriesPage.label;
+  const routeTitle = activeView === 'home'
+    ? 'Archive'
+    : activeView === 'series'
+      ? seriesTitle
+      : activeView === 'succession'
+        ? successionPage.title
+        : activeView === 'reference'
+          ? referencePage.title
+          : 'Page not found';
+
+  const applyRoute = (next) => {
+    setActiveView(next.view);
+    setRouteTarget(next.target);
+    setRouteParams(next.params || {});
+  };
 
   const navigate = (view, target = '', params = {}) => {
     const normalized = normalizeDestination(view, target, params);
-    const queryString = new URLSearchParams(Object.entries(normalized.params || {}).filter(([, value]) => value !== undefined && value !== null && value !== '')).toString();
-    const nextHash = `#/${normalized.view}${normalized.target ? `/${normalized.target}` : ''}${queryString ? `?${queryString}` : ''}`;
-    if (window.location.hash === nextHash) {
-      setActiveView(normalized.view); setRouteTarget(normalized.target); setRouteParams(normalized.params || {});
-    } else window.location.hash = nextHash;
+    const nextHref = routeToHref(normalized.view, normalized.target, normalized.params, { preferHash: standaloneBuild });
+    const sameHash = nextHref.startsWith('#/') && window.location.hash === nextHref;
+    const samePath = !nextHref.startsWith('#/') && `${window.location.pathname}${window.location.search}` === nextHref;
+    if (sameHash || samePath) {
+      applyRoute(normalized);
+      return;
+    }
+    if (nextHref.startsWith('#/')) {
+      window.location.hash = nextHref;
+      applyRoute(normalized);
+      return;
+    }
+    window.history.pushState({ hxhRoute: nextHref }, '', nextHref);
+    applyRoute(normalized);
   };
 
   useEffect(() => {
-    const handleRoute = () => {
-      const next = readRoute();
-      setActiveView(next.view); setRouteTarget(next.target); setRouteParams(next.params);
-    };
+    const handleRoute = () => applyRoute(readBrowserRoute());
+    window.addEventListener('popstate', handleRoute);
     window.addEventListener('hashchange', handleRoute);
-    return () => window.removeEventListener('hashchange', handleRoute);
+    return () => {
+      window.removeEventListener('popstate', handleRoute);
+      window.removeEventListener('hashchange', handleRoute);
+    };
   }, []);
 
   useEffect(() => {
     document.title = `${routeTitle} · Hunter × Hunter Archive`;
-    const timer = window.setTimeout(() => window.scrollTo({ top: 0, behavior: reducedMotion() ? 'auto' : 'smooth' }), 20);
+    const timer = window.setTimeout(() => {
+      const anchor = window.location.hash && !routeIsLegacyHash(window.location.hash) ? decodeURIComponent(window.location.hash.slice(1)) : '';
+      const anchorTarget = anchor ? document.getElementById(anchor) : null;
+      if (anchorTarget) anchorTarget.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' });
+      else window.scrollTo({ top: 0, behavior: reducedMotion() ? 'auto' : 'smooth' });
+    }, 20);
     return () => window.clearTimeout(timer);
-  }, [activeView, routeTarget, routeTitle]);
+  }, [activeView, routeTarget, routeTitle, routeParams]);
 
   useEffect(() => {
     const handleKey = (event) => {
@@ -214,7 +217,17 @@ export default function App() {
 
         {activeView === 'home' && <SiteHome onNavigate={navigate} onPrefetch={preloadRoute} onOpenSearch={() => setSearchOpen(true)} onOpenDownloads={() => setDownloadsOpen(true)} latestChapter={ARCHIVE_BOUNDARY} stats={SITE_STATS} heroCharacters={homeHighlights} />}
 
-        {activeView === 'series' && <Suspense fallback={<RouteLoading label="story library" />}><SeriesWorkspace routeTarget={routeTarget} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={changeSpoilerLimit} onNavigate={navigate} /></Suspense>}
+        {activeView === 'series' && routeTarget === 'zoldyck-family' && <>
+          <PageIntro kicker="Editorial Story page" title="Zoldyck Family" description="This clean route is now reserved for the dedicated Zoldyck Family page. Its full content lands in the Early Arcs batch; until then, the current Hunter Exam coverage remains the active source for the official Chapters 1–43 boundary.">
+            <dl className="page-intro__facts"><div><dt>Status</dt><dd>Route ready</dd></div><div><dt>Official parent</dt><dd>Hunter Exam</dd></div><div><dt>Next content batch</dt><dd>Early arcs</dd></div></dl>
+          </PageIntro>
+          <section className="index-section">
+            <div className="index-heading"><div><span className="section-kicker">Migration bridge</span><h2>Independent page route established.</h2><p>The router now treats `/story/zoldyck-family` as a real destination without pretending the final page design exists yet. Use the current Hunter Exam study until the dedicated rescue-mission page is implemented.</p></div></div>
+            <div className="story-grid"><article><span>Current coverage</span><h3>Official Hunter Exam record</h3><p>Open the maintained Hunter Exam page that currently covers the Kukuroo Mountain conclusion inside the official arc boundary.</p><button onClick={() => navigate('series', 'hunter-exam')}>Open Hunter Exam</button></article></div>
+          </section>
+        </>}
+
+        {activeView === 'series' && routeTarget !== 'zoldyck-family' && <Suspense fallback={<RouteLoading label="story library" />}><SeriesWorkspace routeTarget={routeTarget} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={changeSpoilerLimit} onNavigate={navigate} /></Suspense>}
 
         {activeView === 'succession' && <>
           <PageIntro kicker={successionPage.kicker} title={successionPage.title} description={successionPage.description}>
@@ -259,6 +272,16 @@ export default function App() {
             </>)}
             {referencePage.id === 'notebook' && <StudyNotebook />}
           </Suspense>
+        </>}
+
+        {activeView === 'not-found' && <>
+          <PageIntro kicker="404" title="Route not found" description={`The route ${routeParams.attemptedPath || 'you opened'} is not part of the archive.`}>
+            <dl className="page-intro__facts"><div><dt>Fallback</dt><dd>Available</dd></div><div><dt>Story hub</dt><dd>/story</dd></div><div><dt>Search</dt><dd>Ctrl K</dd></div></dl>
+          </PageIntro>
+          <section className="index-section">
+            <div className="index-heading"><div><span className="section-kicker">Routing guard</span><h2>Use a known archive destination.</h2><p>The clean router falls back to this page for unknown paths instead of silently opening the wrong section.</p></div></div>
+            <div className="story-grid"><article><span>Primary route</span><h3>Open the Story hub</h3><p>Return to the Story entry point and choose a known arc or archive section.</p><button onClick={() => navigate('series')}>Open Story</button></article><article><span>Find a record</span><h3>Search the archive</h3><p>Use search to jump to characters, arcs, Nen records, locations, conflicts, and source-backed entries.</p><button onClick={() => setSearchOpen(true)}>Open Search</button></article></div>
+          </section>
         </>}
       </main>
 
