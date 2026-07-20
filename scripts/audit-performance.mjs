@@ -24,7 +24,31 @@ const startupFiles = [...imported].map((key) => manifest[key]?.file).filter(Bool
 const startupJs = (await Promise.all(startupFiles.map(sizeOf))).reduce((total, bytes) => total + bytes, 0);
 const entryJs = await sizeOf(entry.file);
 const startupCss = (await Promise.all((entry.css || []).map(sizeOf))).reduce((total, bytes) => total + bytes, 0);
-const dynamicEntries = Object.values(manifest).filter((record) => record.isDynamicEntry);
+const dynamicEntries = Object.entries(manifest).filter(([, record]) => record.isDynamicEntry);
+const directBoundaryKeys = [
+  'src/components/ArchiveSearch.jsx',
+  'src/components/SeriesWorkspace.jsx',
+  'src/components/SuccessionOverview.jsx',
+  'src/components/FamilyTree.jsx',
+  'src/components/SuccessionRoster.jsx',
+  'src/components/SuccessionTimeline.jsx',
+  'src/components/SuccessionConnectionBoard.jsx',
+  'src/components/BlackWhaleGuide.jsx',
+  'src/components/SuccessionDossier.jsx',
+  'src/components/EntityEncyclopedia.jsx',
+  'src/components/NenEncyclopedia.jsx',
+  'src/components/HisokaChrolloDossier.jsx',
+  'src/components/WorldAtlas.jsx',
+  'src/components/SystemsDesk.jsx',
+  'src/components/OrganizationArchive.jsx',
+  'src/components/ConflictArchive.jsx',
+  'src/components/StudyNotebook.jsx',
+];
+const searchShardKeys = [
+  'src/data/archiveSearch.series.js',
+  'src/data/archiveSearch.succession.js',
+  'src/data/archiveSearch.reference.js',
+];
 const javascriptFiles = Object.values(manifest).map((record) => record.file).filter((file) => file?.endsWith('.js'));
 const javascriptSizes = await Promise.all(javascriptFiles.map(async (file) => ({ file, bytes: await sizeOf(file) })));
 const largestJavascript = javascriptSizes.sort((a, b) => b.bytes - a.bytes)[0];
@@ -33,12 +57,15 @@ assert(entryJs <= 58_000, `startup application chunk is ${entryJs} bytes; budget
 assert(startupJs <= 270_000, `startup JavaScript closure is ${startupJs} bytes; budget is 270,000`);
 assert(startupCss <= 390_000, `startup stylesheet is ${startupCss} bytes; budget is 390,000`);
 assert(largestJavascript.bytes <= 220_000, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is 220,000`);
-assert(dynamicEntries.length === 17, `expected 17 route/search dynamic entries, found ${dynamicEntries.length}`);
-assert(entry.dynamicImports?.length === dynamicEntries.length, 'the entry manifest must expose every dynamic route/search boundary');
+assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 17 route/search UI boundaries must remain dynamic entries');
+assert(dynamicEntries.length === 20, `expected 17 direct boundaries plus three search-data shards, found ${dynamicEntries.length} dynamic entries`);
+assert(searchShardKeys.every((key) => manifest[key]?.isDynamicEntry), 'the story, Succession, and reference search indexes must remain separate dynamic entries');
 
 const homeHighlights = await readFile(path.join(root, 'src/data/homeHighlights.js'), 'utf8');
 const app = await readFile(path.join(root, 'src/App.jsx'), 'utf8');
 const routePreload = await readFile(path.join(root, 'src/lib/routePreload.js'), 'utf8');
+const archiveSearch = await readFile(path.join(root, 'src/data/archiveSearch.js'), 'utf8');
+const archiveSearchComponent = await readFile(path.join(root, 'src/components/ArchiveSearch.jsx'), 'utf8');
 const safeImage = await readFile(path.join(root, 'src/components/SafeImage.jsx'), 'utf8');
 const siteHome = await readFile(path.join(root, 'src/components/SiteHome.jsx'), 'utf8');
 const packageJson = await readFile(path.join(root, 'package.json'), 'utf8');
@@ -46,7 +73,10 @@ const packageJson = await readFile(path.join(root, 'package.json'), 'utf8');
 assert(!/from ['"]\.\/characters['"]/.test(homeHighlights), 'the homepage must not import the complete character registry');
 assert(!/priorityMedia\.generated/.test(homeHighlights), 'the homepage must not import the complete priority-media registry');
 assert(!/from ['"].*\/(chapters|encyclopedia|successionDossier|successionRoster|seriesResearch)['"]/.test(app), 'App.jsx imports a heavy research dataset');
-assert((routePreload.match(/\(\) => import\(/g) || []).length === 17, 'the route loader registry must own 17 dynamic module boundaries');
+assert((routePreload.match(/\(\) => import\(/g) || []).length === 17, 'the route loader registry must own 17 direct dynamic module boundaries');
+assert((archiveSearch.match(/import\('\.\/archiveSearch\.(?:series|succession|reference)'\)/g) || []).length === 3, 'the archive search loader must own three domain data shards');
+assert(!/from ['"]\.\.\/data\/(?:chapters|encyclopedia|successionDossier|successionRoster|worldMap)['"]/.test(archiveSearchComponent), 'ArchiveSearch.jsx statically imports a heavy archive dataset');
+assert(archiveSearchComponent.includes('useDeferredValue') && archiveSearchComponent.includes('normalizeQuery'), 'archive search must defer and normalize interactive queries');
 assert(safeImage.includes("priority || (eager ? 'high' : 'auto')"), 'SafeImage must support explicit fetch priority');
 assert(siteHome.includes("index === 0 ? 'high' : 'auto'"), 'only the first homepage portrait must receive high fetch priority');
 assert(!/vite-plugin-pwa|workbox|serviceWorker\.register|manifest\.webmanifest/.test(`${packageJson}\n${app}\n${routePreload}`), 'PWA or service-worker behavior is outside the website scope');
@@ -59,4 +89,4 @@ const largestPortrait = portraitSizes.sort((a, b) => b.bytes - a.bytes)[0];
 assert(largestPortrait.bytes <= 160_000, `${largestPortrait.file} is ${largestPortrait.bytes} bytes; local portrait ceiling is 160,000`);
 assert(portraitBytes <= 2_200_000, `local portrait library is ${portraitBytes} bytes; budget is 2,200,000`);
 
-console.log(`Performance audit passed: ${entryJs} byte entry; ${startupJs} byte startup JS closure; ${startupCss} byte CSS; ${dynamicEntries.length} lazy entries; ${portraitBytes} portrait bytes.`);
+console.log(`Performance audit passed: ${entryJs} byte entry; ${startupJs} byte startup JS closure; ${startupCss} byte CSS; ${directBoundaryKeys.length} direct lazy entries; 3 search shards; ${portraitBytes} portrait bytes.`);

@@ -27,8 +27,9 @@
     "generate:build-info": "node scripts/generate-build-info.mjs",
     "browser:deps": "npm install --no-save --save-exact playwright@1.61.1 axe-core@4.12.1",
     "browser:install": "npx playwright install chromium",
+    "qa:search": "node scripts/search-qa.mjs",
     "qa:interaction": "node scripts/interaction-qa.mjs",
-    "qa:browser": "npm run build && npm run qa:visual && npm run qa:accessibility && npm run qa:interaction && npm run qa:performance"
+    "qa:browser": "npm run build && npm run qa:search && npm run qa:visual && npm run qa:accessibility && npm run qa:interaction && npm run qa:performance"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
