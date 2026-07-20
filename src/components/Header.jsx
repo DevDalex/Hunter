@@ -1,5 +1,6 @@
 import { BookOpen, Download, Menu, Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import { routeToHref } from '../lib/appRouter';
 
 const primaryNav = [
   { id: 'story', view: 'series', label: 'Story' },
@@ -64,14 +65,14 @@ export default function Header({ activeView, routeTarget, onNavigate, onOpenSear
 
   return (
     <header ref={headerRef} className="site-header">
-      <a className="wordmark" href="#/home" onClick={(event) => { event.preventDefault(); navigate('home'); }} aria-label="Hunter x Hunter Archive home">
+      <a className="wordmark" href={routeToHref('home')} onClick={(event) => { event.preventDefault(); navigate('home'); }} aria-label="Hunter x Hunter Archive home">
         <BookOpen size={19} />
         <span><b>Hunter × Hunter</b><small>Archive</small></span>
       </a>
       <nav id="primary-navigation" className={`header-links${menuOpen ? ' is-open' : ''}`} aria-label="Primary navigation">
         {primaryNav.map((item, index) => {
           const active = itemIsActive(item);
-          const href = `#/${item.view}${item.target ? `/${item.target}` : ''}`;
+          const href = routeToHref(item.view, item.target, item.params);
           return <a ref={index === 0 ? firstLinkRef : undefined} href={href} className={active ? 'is-active' : ''} aria-current={active ? 'page' : undefined} onPointerEnter={() => onPrefetch?.(item.view, item.target)} onFocus={() => onPrefetch?.(item.view, item.target)} onClick={(event) => { event.preventDefault(); navigate(item.view, item.target, item.params); }} key={item.id}>{item.label}</a>;
         })}
       </nav>
