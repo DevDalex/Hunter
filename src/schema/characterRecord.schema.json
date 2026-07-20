@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hxh.archive.characterRecord",
+  "title": "Hunter x Hunter Archive Character Record",
+  "type": "object",
+  "required": ["id", "name", "status", "directoryState", "sourceIds", "evidenceState"],
+  "additionalProperties": true,
+  "properties": {
+    "id": { "type": "string", "pattern": "^char\\.[a-z0-9]+(?:-[a-z0-9]+)*$" },
+    "name": { "type": "string", "minLength": 1 },
+    "aliases": { "type": "array", "items": { "type": "string" } },
+    "status": { "type": "string" },
+    "directoryState": { "type": "string", "enum": ["full-dossier", "curated-record", "source-index-only", "not-yet-reviewed"] },
+    "affiliations": { "type": "array", "items": { "type": "string" } },
+    "arcIds": { "type": "array", "items": { "type": "string", "pattern": "^arc\\.[a-z0-9]+(?:-[a-z0-9]+)*$" } },
+    "nenIds": { "type": "array", "items": { "type": "string" } },
+    "relationshipIds": { "type": "array", "items": { "type": "string" } },
+    "sourceIds": { "type": "array", "minItems": 1, "items": { "type": "string", "pattern": "^src-[a-z0-9]+(?:-[a-z0-9]+)*$" } },
+    "evidenceState": { "type": "string" }
+  }
+}
