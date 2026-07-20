@@ -1,0 +1,15 @@
+.story-utility-shell {
+  width: min(calc(100% - (var(--gutter) * 2)), var(--wide));
+  margin-inline: auto;
+  padding: 24px 0 110px;
+}
+.story-utility-shell__back { margin-bottom: 4px; }
+.story-utility-shell__back button { min-height: 40px; border: 0; padding: 0; background: transparent; color: var(--burgundy); cursor: pointer; font-size: 12px; font-weight: 850; }
+.story-utility-shell > .page-intro { width: 100%; padding-block: 44px 34px; }
+.story-utility-shell > .workspace-nav { width: 100%; position: static; top: auto; }
+.story-utility-shell > .spoiler-settings { width: 100%; }
+.story-utility-shell > :is(.index-section, .series-research, .adaptation-desk) { width: 100%; }
+
+@media (max-width: 720px) {
+  .story-utility-shell { width: min(calc(100% - 28px), var(--wide)); }
+}
