@@ -1,4 +1,4 @@
-import { isApprovedSourceUrl } from './sourcePolicy';
+import { isApprovedSourceUrl } from './sourcePolicy.js';
 
 export const LOCAL_MEDIA_PREFIX = '/media/';
 
