@@ -25,7 +25,25 @@ const startupJs = (await Promise.all(startupFiles.map(sizeOf))).reduce((total, b
 const entryJs = await sizeOf(entry.file);
 const startupCss = (await Promise.all((entry.css || []).map(sizeOf))).reduce((total, bytes) => total + bytes, 0);
 const dynamicEntries = Object.entries(manifest).filter(([, record]) => record.isDynamicEntry);
-const directRouteEntries = entry.dynamicImports || [];
+const directBoundaryKeys = [
+  'src/components/ArchiveSearch.jsx',
+  'src/components/SeriesWorkspace.jsx',
+  'src/components/SuccessionOverview.jsx',
+  'src/components/FamilyTree.jsx',
+  'src/components/SuccessionRoster.jsx',
+  'src/components/SuccessionTimeline.jsx',
+  'src/components/SuccessionConnectionBoard.jsx',
+  'src/components/BlackWhaleGuide.jsx',
+  'src/components/SuccessionDossier.jsx',
+  'src/components/EntityEncyclopedia.jsx',
+  'src/components/NenEncyclopedia.jsx',
+  'src/components/HisokaChrolloDossier.jsx',
+  'src/components/WorldAtlas.jsx',
+  'src/components/SystemsDesk.jsx',
+  'src/components/OrganizationArchive.jsx',
+  'src/components/ConflictArchive.jsx',
+  'src/components/StudyNotebook.jsx',
+];
 const searchShardKeys = [
   'src/data/archiveSearch.series.js',
   'src/data/archiveSearch.succession.js',
@@ -39,7 +57,7 @@ assert(entryJs <= 58_000, `startup application chunk is ${entryJs} bytes; budget
 assert(startupJs <= 270_000, `startup JavaScript closure is ${startupJs} bytes; budget is 270,000`);
 assert(startupCss <= 390_000, `startup stylesheet is ${startupCss} bytes; budget is 390,000`);
 assert(largestJavascript.bytes <= 220_000, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is 220,000`);
-assert(directRouteEntries.length === 17, `expected 17 direct route/search UI boundaries, found ${directRouteEntries.length}`);
+assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 17 route/search UI boundaries must remain dynamic entries');
 assert(dynamicEntries.length === 20, `expected 17 direct boundaries plus three search-data shards, found ${dynamicEntries.length} dynamic entries`);
 assert(searchShardKeys.every((key) => manifest[key]?.isDynamicEntry), 'the story, Succession, and reference search indexes must remain separate dynamic entries');
 
@@ -71,4 +89,4 @@ const largestPortrait = portraitSizes.sort((a, b) => b.bytes - a.bytes)[0];
 assert(largestPortrait.bytes <= 160_000, `${largestPortrait.file} is ${largestPortrait.bytes} bytes; local portrait ceiling is 160,000`);
 assert(portraitBytes <= 2_200_000, `local portrait library is ${portraitBytes} bytes; budget is 2,200,000`);
 
-console.log(`Performance audit passed: ${entryJs} byte entry; ${startupJs} byte startup JS closure; ${startupCss} byte CSS; ${directRouteEntries.length} direct lazy entries; 3 search shards; ${portraitBytes} portrait bytes.`);
+console.log(`Performance audit passed: ${entryJs} byte entry; ${startupJs} byte startup JS closure; ${startupCss} byte CSS; ${directBoundaryKeys.length} direct lazy entries; 3 search shards; ${portraitBytes} portrait bytes.`);
