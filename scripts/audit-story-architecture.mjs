@@ -4,6 +4,7 @@ import { isApprovedSourceUrl } from '../src/data/sourcePolicy.js';
 import { yorknewPrototype, yorknewPrototypeStats } from '../src/data/yorknewPrototype.js';
 import { earlyArcPrototypes, earlyArcPrototypeIds, earlyArcPrototypeStats } from '../src/data/earlyArcPrototypes.js';
 import { greedIslandPrototype, greedIslandPrototypeStats, greedIslandCardStats } from '../src/data/greedIslandPrototype.js';
+import { chimeraAntPrototype, chimeraAntPrototypeStats } from '../src/data/chimeraAntPrototype.js';
 import {
   STORY_ARCHITECTURE_VERSION,
   storyArchitectureAcceptance,
@@ -99,6 +100,7 @@ assert(routeToCleanPath('series') === '/story', 'series hub must navigate to /st
 assert(routeToCleanPath('series', 'yorknew-city') === '/story/yorknew-city', 'Yorknew must navigate to its clean Story path');
 assert(routeToCleanPath('series', 'zoldyck-family') === '/story/zoldyck-family', 'Zoldyck Family clean route must be live');
 assert(routeToCleanPath('series', 'greed-island') === '/story/greed-island', 'Greed Island clean route must be live');
+assert(routeToCleanPath('series', 'chimera-ant') === '/story/chimera-ant', 'Chimera Ant clean route must be live');
 assert(routeToCleanPath('series', 'chapters', { arc: 'yorknew-city' }) === '/story?view=chapters&arc=yorknew-city', 'Story utility queries must be preserved');
 assert(routeToCleanPath('succession', 'black-whale', { room: 'tier-1' }) === '/story/succession-contest/black-whale?room=tier-1', 'Succession subpages must use nested Story paths');
 assert(routeToCleanPath('reference', 'encyclopedia', { category: 'characters' }) === '/characters?category=characters', 'primary reference routes should use clean top-level paths');
@@ -110,6 +112,8 @@ const cleanZoldyck = parseCleanRoute('/story/zoldyck-family', '');
 assert(cleanZoldyck.view === 'series' && cleanZoldyck.target === 'zoldyck-family', 'clean Zoldyck route must parse');
 const cleanGreedIsland = parseCleanRoute('/story/greed-island', '');
 assert(cleanGreedIsland.view === 'series' && cleanGreedIsland.target === 'greed-island', 'clean Greed Island route must parse');
+const cleanChimeraAnt = parseCleanRoute('/story/chimera-ant', '');
+assert(cleanChimeraAnt.view === 'series' && cleanChimeraAnt.target === 'chimera-ant', 'clean Chimera Ant route must parse');
 const cleanUtility = parseCleanRoute('/story', '?view=adaptation');
 assert(cleanUtility.view === 'series' && cleanUtility.target === 'adaptation', 'Story utility route must parse');
 const cleanSuccession = parseCleanRoute('/story/succession-contest/power-blocs', '?panel=justice');
@@ -135,6 +139,7 @@ assert(seriesWorkspace.includes('StoryFoundationLayout') && seriesWorkspace.incl
 assert(seriesWorkspace.includes("{ id: 'zoldyck-family', label: 'Zoldyck Family' }"), 'Series workspace navigation must include the Zoldyck editorial destination');
 assert(seriesWorkspace.includes('EarlyArcPrototypePage') && seriesWorkspace.includes('earlyArcPrototypePage ?') && seriesWorkspace.includes('hasEarlyArcPrototype'), 'Hunter Exam, Zoldyck Family, and Heavens Arena must route through the early arc prototype page');
 assert(seriesWorkspace.includes('GreedIslandPrototypePage') && seriesWorkspace.includes('greedIslandPrototypePage ?'), 'Greed Island must route through its dedicated prototype page');
+assert(seriesWorkspace.includes('ChimeraAntPrototypePage') && seriesWorkspace.includes('chimeraAntPrototypePage ?'), 'Chimera Ant must route through its dedicated prototype page');
 assert(!seriesWorkspace.includes('ZoldyckStoryBridge onNavigate'), 'Zoldyck Family must no longer render the temporary bridge after the Early Arcs batch');
 assert(seriesWorkspace.includes('YorknewPrototypePage') && seriesWorkspace.includes('yorknewPrototypePage ?'), 'Yorknew must route through its dedicated prototype page');
 
@@ -149,6 +154,10 @@ assert(earlyArcComponent.includes("import './EarlyArcPrototypePage.css'"), 'earl
 const greedIslandComponent = await readFile(path.resolve('src/components/GreedIslandPrototypePage.jsx'), 'utf8');
 assert(greedIslandComponent.includes('GreedIslandHero') && greedIslandComponent.includes('CardCatalogue') && greedIslandComponent.includes('SpellStrategy') && greedIslandComponent.includes('Training') && greedIslandComponent.includes('DodgeballAndBomber') && greedIslandComponent.includes('CompletionRoute'), 'Greed Island prototype must retain the required page modules');
 assert(greedIslandComponent.includes("import './GreedIslandPrototypePage.css'"), 'Greed Island prototype must import its page stylesheet');
+
+const chimeraAntComponent = await readFile(path.resolve('src/components/ChimeraAntPrototypePage.jsx'), 'utf8');
+assert(chimeraAntComponent.includes('ChimeraAntHero') && chimeraAntComponent.includes('ThreatModel') && chimeraAntComponent.includes('PalaceClock') && chimeraAntComponent.includes('CharacterBoard') && chimeraAntComponent.includes('AntHierarchy') && chimeraAntComponent.includes('ConflictArchive') && chimeraAntComponent.includes('NenAndObjects'), 'Chimera Ant prototype must retain the required page modules');
+assert(chimeraAntComponent.includes("import './ChimeraAntPrototypePage.css'"), 'Chimera Ant prototype must import its page stylesheet');
 
 assert(yorknewPrototype.id === storyDesignDirection.prototypeArcId, 'Yorknew prototype data must match the architecture prototype ID');
 assert(yorknewPrototype.sections.length >= 11 && yorknewPrototype.overview.length >= 4, 'Yorknew prototype needs overview and section coverage');
@@ -168,6 +177,11 @@ assert(greedIslandPrototypeStats.chronology >= 10 && greedIslandPrototypeStats.r
 assert(greedIslandCardStats.specified === 100 && greedIslandCardStats.spell === 40 && greedIslandCardStats.free >= 18 && greedIslandCardStats.gameMaster >= 4, 'Greed Island card catalogue counts are incomplete');
 assert(greedIslandPrototype.sources.every((source) => isApprovedSourceUrl(source.href)), 'Greed Island prototype sources must follow the approved Hunterpedia/Fandom policy');
 
+assert(chimeraAntPrototype.id === 'chimera-ant', 'Chimera Ant prototype ID changed');
+assert(chimeraAntPrototype.sections.length >= 16 && chimeraAntPrototype.overview.length >= 5, 'Chimera Ant prototype needs overview and section coverage');
+assert(chimeraAntPrototypeStats.chronology >= 18 && chimeraAntPrototypeStats.threatModel >= 8 && chimeraAntPrototypeStats.palaceClock >= 12 && chimeraAntPrototypeStats.characters >= 18 && chimeraAntPrototypeStats.antHierarchy >= 16 && chimeraAntPrototypeStats.humanTeam >= 8 && chimeraAntPrototypeStats.factions >= 8 && chimeraAntPrototypeStats.locations >= 10 && chimeraAntPrototypeStats.conflicts >= 12 && chimeraAntPrototypeStats.nenSystems >= 12 && chimeraAntPrototypeStats.objects >= 10 && chimeraAntPrototypeStats.themes >= 8 && chimeraAntPrototypeStats.aftermath >= 8 && chimeraAntPrototypeStats.adaptation >= 5 && chimeraAntPrototypeStats.sources >= 18, 'Chimera Ant prototype content groups are incomplete');
+assert(chimeraAntPrototype.sources.every((source) => isApprovedSourceUrl(source.href)), 'Chimera Ant prototype sources must follow the approved Hunterpedia/Fandom policy');
+
 const app = await readFile(path.resolve('src/App.jsx'), 'utf8');
 assert(app.includes('onPrefetch={preloadRoute}'), 'Story workspace must receive route prefetch support');
 assert(!app.includes("routeTarget === 'zoldyck-family' && <>"), 'Zoldyck route must not bypass the Story foundation in App.jsx');
@@ -181,10 +195,12 @@ await access(path.resolve('docs/STORY-FOUNDATION.md'));
 await access(path.resolve('docs/YORKNEW-PROTOTYPE.md'));
 await access(path.resolve('docs/EARLY-ARCS-PROTOTYPES.md'));
 await access(path.resolve('docs/GREED-ISLAND-PROTOTYPE.md'));
+await access(path.resolve('docs/CHIMERA-ANT-PROTOTYPE.md'));
 await access(path.resolve('src/lib/appRouter.js'));
 await access(path.resolve('src/components/StoryFoundation.css'));
 await access(path.resolve('src/components/YorknewPrototypePage.css'));
 await access(path.resolve('src/components/EarlyArcPrototypePage.css'));
 await access(path.resolve('src/components/GreedIslandPrototypePage.css'));
+await access(path.resolve('src/components/ChimeraAntPrototypePage.css'));
 
-console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, clean routing, Story foundation shell, Yorknew prototype page, ${earlyArcPrototypes.length} early arc prototype pages, Greed Island prototype page with ${greedIslandCardStats.specified} specified cards and ${greedIslandCardStats.spell} spell cards, legacy route inventory stable, direct reload fallback, and mobile deferred.`);
+console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, clean routing, Story foundation shell, Yorknew prototype page, ${earlyArcPrototypes.length} early arc prototype pages, Greed Island prototype page with ${greedIslandCardStats.specified} specified cards and ${greedIslandCardStats.spell} spell cards, Chimera Ant prototype page with ${chimeraAntPrototypeStats.chronology} chronology phases and ${chimeraAntPrototypeStats.conflicts} conflicts, legacy route inventory stable, direct reload fallback, and mobile deferred.`);
