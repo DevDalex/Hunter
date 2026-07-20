@@ -1,0 +1,478 @@
+/* Home refinement: lighter charcoal surfaces, restrained contrast, and a clean Nen category diagram. */
+:root {
+  --home-bg: #24282c;
+  --home-surface: #2d3237;
+  --home-surface-raised: #34393e;
+  --home-line: rgba(244, 239, 230, .14);
+  --home-line-strong: rgba(244, 239, 230, .22);
+  --home-text: #f1ece3;
+  --home-muted: #c3bdb4;
+  --home-gold: #cfad69;
+}
+
+.view-home,
+.view-home main {
+  background: var(--home-bg);
+  color: var(--home-text);
+}
+
+.archive-landing {
+  background: var(--home-bg);
+}
+
+.archive-landing__hero {
+  border-bottom-color: var(--home-line-strong);
+  background: #292d31;
+}
+
+.archive-landing__hero::before {
+  background:
+    linear-gradient(90deg, rgba(36, 40, 44, .2), rgba(36, 40, 44, .76) 41%, rgba(36, 40, 44, .78) 59%, rgba(36, 40, 44, .2)),
+    linear-gradient(180deg, rgba(36, 40, 44, .08), rgba(36, 40, 44, .58) 76%, var(--home-bg));
+}
+
+.archive-landing__hero-person {
+  opacity: .86;
+}
+
+.archive-landing__hero-person--left::after {
+  background: linear-gradient(90deg, transparent 48%, #292d31 98%);
+}
+
+.archive-landing__hero-person--right::after {
+  background: linear-gradient(270deg, transparent 48%, #292d31 98%);
+}
+
+.archive-landing__hero-person img {
+  filter: saturate(.74) contrast(1.02) brightness(.86);
+}
+
+.archive-landing__hero-city {
+  opacity: .22;
+}
+
+.archive-landing__hero-copy h1 {
+  color: #f7f2e9;
+  text-shadow: none;
+}
+
+.archive-landing__hero-copy h1 em,
+.archive-landing__hero-copy > span,
+.archive-section-heading > span,
+.archive-storyline header > span,
+.archive-preview > header span,
+.archive-number-band header span,
+.archive-featured-exhibit > div > span,
+.archive-desk-links > header span {
+  color: var(--home-gold);
+}
+
+.archive-landing__hero-copy > p {
+  color: #d3cdc4;
+}
+
+.archive-landing__hero-stats > div {
+  border-right-color: var(--home-line);
+}
+
+.archive-landing__hero-stats dt {
+  color: #f5efe6;
+}
+
+.archive-landing__hero-stats dd {
+  color: #b9b2a9;
+}
+
+.archive-landing__hero-actions button {
+  border-color: var(--home-line-strong);
+  background: #353a3f;
+  color: #f3eee5;
+  box-shadow: none;
+}
+
+.archive-landing__hero-actions button.is-primary {
+  border-color: #c5a45f;
+  background: #c5a45f;
+  color: #211d17;
+}
+
+.archive-landing__hero-actions button:hover,
+.archive-landing__hero-actions button:focus-visible {
+  border-color: #d6b672;
+  background: #3b4045;
+  transform: translateY(-1px);
+}
+
+.archive-landing__hero-actions button.is-primary:hover,
+.archive-landing__hero-actions button.is-primary:focus-visible {
+  background: #d1b16d;
+}
+
+.archive-landing__body {
+  background: var(--home-bg);
+}
+
+.archive-section-heading h2,
+.archive-storyline header h2,
+.archive-number-band header h2,
+.archive-desk-links > header h2 {
+  color: var(--home-text);
+}
+
+.archive-gateway,
+.archive-storyline,
+.archive-preview,
+.archive-number-band,
+.archive-featured-exhibit,
+.archive-desk-links {
+  border-color: var(--home-line);
+  background: var(--home-surface);
+  box-shadow: none;
+}
+
+.archive-gateway:hover,
+.archive-gateway:focus-visible {
+  border-color: rgba(207, 173, 105, .56);
+  box-shadow: none;
+  transform: translateY(-2px);
+}
+
+.archive-gateway figure img {
+  filter: saturate(.72) brightness(.74) contrast(1.04);
+}
+
+.archive-gateway--world figure img {
+  filter: saturate(.5) brightness(.72) contrast(1.06);
+}
+
+.archive-gateway:hover figure img,
+.archive-gateway:focus-visible figure img {
+  filter: saturate(.82) brightness(.78) contrast(1.03);
+}
+
+.archive-gateway__shade {
+  background: linear-gradient(180deg, rgba(36,40,44,.04), rgba(36,40,44,.32) 42%, rgba(36,40,44,.94));
+}
+
+.archive-gateway__copy > svg,
+.archive-gateway__copy strong,
+.archive-preview > header svg,
+.archive-status-list svg,
+.archive-desk-links > div button svg,
+.archive-desk-links__fight > svg:first-child {
+  color: var(--home-gold);
+}
+
+.archive-gateway__copy small,
+.archive-preview p,
+.archive-preview dt,
+.archive-desk-links > div button small,
+.archive-desk-links__fight small {
+  color: var(--home-muted);
+}
+
+.archive-gateway__copy h3,
+.archive-preview h2,
+.archive-desk-links > div button strong,
+.archive-desk-links__fight strong {
+  color: var(--home-text);
+}
+
+.archive-gateway--nen {
+  background: #31363b;
+}
+
+.archive-gateway__nen {
+  opacity: .72;
+}
+
+.archive-gateway__nen::before,
+.archive-gateway__nen::after {
+  border-color: rgba(207,173,105,.28);
+}
+
+.archive-gateway__nen i,
+.archive-gateway__nen b {
+  border-radius: 0;
+  background: #3a3f44;
+  color: #dfc17e;
+  clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0 50%);
+}
+
+.archive-storyline {
+  background: var(--home-surface);
+}
+
+.archive-storyline__rail::before {
+  background: #6f7479;
+}
+
+.archive-storyline__rail button {
+  color: #d0cac1;
+}
+
+.archive-storyline__rail button i {
+  border-color: #747b82;
+  background: #34393e;
+  color: #dbc181;
+  box-shadow: none;
+}
+
+.archive-storyline__rail button:hover i,
+.archive-storyline__rail button:focus-visible i {
+  border-color: #b99a59;
+  background: #4a4140;
+  transform: scale(1.03);
+}
+
+.archive-preview {
+  background: var(--home-surface);
+}
+
+.archive-preview > header,
+.archive-preview dl > div,
+.archive-status-list > div,
+.archive-number-band header,
+.archive-desk-links > header,
+.archive-desk-links > div button {
+  border-color: var(--home-line);
+}
+
+.archive-preview > figure {
+  background: #292e33;
+}
+
+.archive-preview > figure img {
+  filter: saturate(.68) brightness(.82);
+}
+
+.archive-preview--world > figure img {
+  filter: saturate(.48) brightness(.84) contrast(1.05);
+}
+
+.archive-preview dd,
+.archive-status-list b {
+  color: #e9e4dc;
+}
+
+.archive-preview button,
+.archive-featured-exhibit button,
+.archive-desk-links button {
+  color: #d8b870;
+}
+
+/* Clean Nen diagram: flat muted geometry, no glow, no neon. */
+.archive-nen-wheel {
+  position: relative;
+  min-height: 330px;
+  margin: 18px 14px 0;
+  overflow: visible;
+  background: #2b3035;
+}
+
+.archive-nen-wheel::before,
+.archive-nen-wheel::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  clip-path: polygon(50% 0, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  content: "";
+  transform: translate(-50%, -50%);
+}
+
+.archive-nen-wheel::before {
+  width: 224px;
+  height: 258px;
+  background: #727a81;
+}
+
+.archive-nen-wheel::after {
+  width: 220px;
+  height: 254px;
+  background: #2b3035;
+}
+
+.archive-nen-wheel i {
+  position: absolute;
+  z-index: 3;
+  width: 112px;
+  height: 96px;
+  display: block;
+  padding-top: 73px;
+  background: transparent;
+  color: #e9e4dc;
+  font-size: 11px;
+  font-style: normal;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.archive-nen-wheel i::before,
+.archive-nen-wheel i::after {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  clip-path: polygon(25% 6%, 75% 6%, 100% 50%, 75% 94%, 25% 94%, 0 50%);
+  content: "";
+  transform: translateX(-50%);
+}
+
+.archive-nen-wheel i::before {
+  width: 66px;
+  height: 72px;
+  background: currentColor;
+}
+
+.archive-nen-wheel i::after {
+  width: 62px;
+  height: 68px;
+  background: #34393e;
+  color: #ebe6de;
+  font-family: var(--serif);
+  font-size: 25px;
+}
+
+.archive-nen-wheel .is-one {
+  top: 1%;
+  left: 50%;
+  color: #7891a2;
+  transform: translateX(-50%);
+}
+
+.archive-nen-wheel .is-one::after { content: "強"; }
+
+.archive-nen-wheel .is-two {
+  top: 23%;
+  right: -2%;
+  color: #a27674;
+}
+
+.archive-nen-wheel .is-two::after { content: "放"; }
+
+.archive-nen-wheel .is-three {
+  right: -2%;
+  bottom: 13%;
+  color: #70958e;
+}
+
+.archive-nen-wheel .is-three::after { content: "操"; }
+
+.archive-nen-wheel .is-four {
+  bottom: -1%;
+  left: 50%;
+  color: #98938d;
+  transform: translateX(-50%);
+}
+
+.archive-nen-wheel .is-four::after { content: "特"; }
+
+.archive-nen-wheel .is-five {
+  bottom: 13%;
+  left: -2%;
+  color: #8d738c;
+}
+
+.archive-nen-wheel .is-five::after { content: "具"; }
+
+.archive-nen-wheel .is-six {
+  top: 23%;
+  left: -2%;
+  color: #7182a0;
+}
+
+.archive-nen-wheel .is-six::after { content: "変"; }
+
+.archive-nen-wheel b {
+  position: absolute;
+  z-index: 4;
+  top: 50%;
+  left: 50%;
+  width: 86px;
+  height: 86px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  border: 1px solid #bd9b57;
+  border-radius: 50%;
+  background: #34383b;
+  color: #e0c077;
+  font-family: var(--serif);
+  font-size: 34px;
+  box-shadow: none;
+  transform: translate(-50%, -50%);
+}
+
+.archive-nen-wheel b small {
+  margin-top: 2px;
+  color: #d9d2c8;
+  font-family: var(--sans);
+  font-size: 11px;
+}
+
+.archive-number-band {
+  background: var(--home-surface-raised);
+}
+
+.archive-number-band dl > div {
+  border-right-color: var(--home-line);
+}
+
+.archive-number-band dt {
+  color: var(--home-text);
+}
+
+.archive-number-band dd {
+  color: #bfb8af;
+}
+
+.archive-featured-exhibit,
+.archive-desk-links {
+  background: var(--home-surface);
+}
+
+.archive-featured-exhibit figure img {
+  filter: saturate(.56) brightness(.66) contrast(1.06);
+}
+
+.archive-featured-exhibit::after {
+  background: linear-gradient(90deg, rgba(42,46,50,.96), rgba(42,46,50,.7) 56%, rgba(42,46,50,.14));
+}
+
+.archive-featured-exhibit h2 {
+  color: var(--home-text);
+}
+
+.archive-featured-exhibit p {
+  color: #cec8bf;
+}
+
+.archive-desk-links__fight {
+  border-color: rgba(207,173,105,.34) !important;
+}
+
+.archive-landing button:focus-visible {
+  outline-color: #d2b16d;
+}
+
+@media (max-width: 1180px) {
+  .archive-number-band dl > div:nth-child(n+4) {
+    border-top-color: var(--home-line);
+  }
+}
+
+@media (max-width: 640px) {
+  .archive-landing__hero-person {
+    opacity: .48;
+  }
+
+  .archive-nen-wheel {
+    min-height: 350px;
+    margin-inline: 8px;
+  }
+
+  .archive-featured-exhibit::after {
+    background: linear-gradient(180deg, rgba(42,46,50,.16), rgba(42,46,50,.95) 64%);
+  }
+}
