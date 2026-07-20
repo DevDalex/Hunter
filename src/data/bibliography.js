@@ -1,4 +1,4 @@
-import { hunterpediaArticle } from './sourcePolicy';
+import { hunterpediaArticle } from './sourcePolicy.js';
 
 export const BIBLIOGRAPHY_VERSION = 'Batch 11 / 2026-07-20';
 
