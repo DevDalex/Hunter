@@ -21,7 +21,7 @@ const standaloneStage = path.join(root, '.standalone-stage');
 const fixedDate = new Date('2026-07-16T12:00:00Z');
 
 const sourceRoots = [
-  'src', 'scripts', 'server', 'public', 'architecture', 'docs', '.openai/hosting.json', 'README.md',
+  'src', 'scripts', 'server', 'public', 'architecture', 'docs', '.github', '.openai/hosting.json', 'README.md',
   'index.html', 'package.json', 'package-lock.json', 'vite.config.js',
   'vite.standalone.config.js',
 ];
