@@ -44,7 +44,8 @@ for (const contract of archivePrimitiveContracts) {
 for (const exportedName of ['ArchiveSection', 'ArchiveCard', 'EvidenceBadge', 'StatusPill', 'SourceStack', 'ArchiveLedger']) {
   assert(component.includes(`export function ${exportedName}`), `ArchiveUI must export ${exportedName}`);
 }
-assert(component.includes("rel={safeRel}") && component.includes("target=\"_blank\""), 'source and external card links must use safe external-link attributes');
+assert(component.includes('target="_blank"') && component.includes('rel="noreferrer noopener"'), 'source links must use literal safe external-link attributes');
+assert(component.includes('safeRel') && component.includes("rel: href.startsWith('http') ? safeRel : undefined"), 'external card links must use the shared safeRel guard');
 assert(component.includes('toneForEvidenceState'), 'EvidenceBadge must use the canonical tone map');
 assert(css.includes('font-size: 11px') && css.includes('@media (max-width: 860px)'), 'design-system CSS must preserve the 11px text floor and responsive collapse');
 assert(styles.includes("@import './styles/archive-system.css';"), 'global CSS must import the Batch 12 design-system layer');
