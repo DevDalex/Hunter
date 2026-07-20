@@ -33,7 +33,7 @@ export const storyDesignDirection = Object.freeze({
 export const storyRoutePolicy = Object.freeze({
   hubRoute: '/story',
   routeMode: 'clean-history-paths',
-  currentMode: 'legacy-hash-router-until-batch-2',
+  currentMode: 'clean-history-router-live',
   directReloadRequired: true,
   historyFallbackRequired: true,
   preserveLegacyHashes: true,

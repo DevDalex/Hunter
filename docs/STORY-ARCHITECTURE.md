@@ -1,11 +1,11 @@
 # Story redesign architecture
 
-Status: **locked for implementation**  
+Status: **locked and routing-active**  
 Version: **2026-07-20**  
-Runtime status: **the current hash router remains live until Batch 2**  
+Runtime status: **clean history routing is live; legacy hashes redirect when possible**  
 Mobile status: **deferred**
 
-This document is the design and routing contract for the Story redesign. The machine-readable companion is `architecture/storyArchitecture.mjs`; `npm run audit:story` blocks accidental drift from the decisions below.
+This document is the design and routing contract for the Story redesign. The machine-readable companion is `architecture/storyArchitecture.mjs`; `npm run audit:story` blocks accidental drift from the decisions below and now checks the clean route adapter in `src/lib/appRouter.js`.
 
 ## 1. Product direction
 
@@ -88,20 +88,22 @@ Story utilities remain beneath the Story destination without pretending to be ar
 
 ## 4. Routing policy
 
-Batch 2 will replace the current hash parser with clean history paths. The target router must provide:
+Batch 2 made clean history paths live through `src/lib/appRouter.js`.
 
-1. direct opening and reloading of every clean route;
-2. hosting fallback to the application document;
-3. browser back/forward behavior;
-4. explicit 404 handling;
-5. scroll restoration;
-6. preservation of query parameters;
-7. preservation of the reading/spoiler boundary;
-8. redirects from existing hash URLs;
-9. updated search, bookmark, notebook and cross-record destinations;
-10. route-level lazy loading.
+The router provides:
 
-The current hash routes remain functional until that migration is complete. Batch 1 changes no live navigation behavior.
+1. direct opening and reloading of every clean route through the static worker fallback;
+2. browser back/forward behavior through `popstate`;
+3. explicit unknown-route handling through a real 404 state;
+4. scroll restoration, with clean-path anchors allowed to scroll to local sections;
+5. preservation of query parameters;
+6. preservation of the reading/spoiler boundary through the existing browser-local store;
+7. redirects from existing Story and Succession hash URLs where a clean destination exists;
+8. updated primary navigation hrefs;
+9. route-level lazy loading preserved through the existing preload registry;
+10. a standalone-build escape hatch that can continue using hashes when `window.__HXH_STANDALONE_BUILD__` is true.
+
+The route adapter is deliberately compatibility-focused: it changes URLs before replacing the existing Story page components. The actual page redesign and page ownership begin in later batches.
 
 ## 5. Page-depth rules
 
@@ -146,17 +148,7 @@ Every standard arc page owns the following editorial sequence:
 13. 2011 adaptation layer
 14. Sources, evidence boundaries and maintenance notes
 
-Every page also provides:
-
-- one `h1`;
-- arc order and classification;
-- manga and anime ranges;
-- previous/next Story navigation;
-- a desktop contents rail;
-- a visible spoiler boundary;
-- direct links to characters, locations, abilities, conflicts and organizations;
-- a unique title, description and canonical route;
-- one arc-specific primary interaction.
+Every page also provides one `h1`, arc order and classification, manga/anime ranges, previous/next Story navigation, a desktop contents rail, a visible spoiler boundary, direct links to characters, locations, abilities, conflicts and organizations, a unique title, description and canonical route, and one arc-specific primary interaction.
 
 ## 7. Factual and analytical separation
 
@@ -216,16 +208,7 @@ Yorknew City is the first implementation prototype because it exercises nearly e
 - manga/anime comparison;
 - long-term consequences.
 
-The prototype should establish:
-
-1. the dark hero and paper-body composition;
-2. desktop contents and context rails;
-3. shared arc facts and previous/next navigation;
-4. event and phase schemas;
-5. character-in-arc records;
-6. source/evidence presentation;
-7. arc-specific module boundaries;
-8. performance budgets for independently loaded pages.
+The prototype should establish the dark hero and paper-body composition, desktop contents and context rails, shared arc facts and previous/next navigation, event and phase schemas, character-in-arc records, source/evidence presentation, arc-specific module boundaries, and performance budgets for independently loaded pages.
 
 Yorknew-specific modules may include an auction chronology, Phantom Troupe board, Kurapika chain inspector, fortune matrix, power map and hostage-exchange sequence.
 
@@ -265,7 +248,7 @@ Large arc domains may split into independently loaded files only after the route
 
 ## 11. Legacy route mapping
 
-The router migration must map, at minimum:
+The router migration maps, at minimum:
 
 ```text
 #/series                    → /story
@@ -281,11 +264,11 @@ The router migration must map, at minimum:
 #/series/adaptation         → /story?view=adaptation
 ```
 
-Current Succession routes map to their new nested Story destinations. Query parameters such as selected chapter, panel, prince, focus or mode must be translated rather than discarded.
+Current Succession routes map to their nested Story destinations. Query parameters such as selected chapter, panel, prince, focus or mode must be translated rather than discarded.
 
 ## 12. Nine implementation batches
 
-1. **Architecture lock** — this contract, taxonomy, routes, visual direction and audit.
+1. **Architecture lock** — taxonomy, routes, visual direction and audit.
 2. **Router migration** — clean paths, redirects, history, reload fallback and 404 behavior.
 3. **Story foundation** — `/story`, shared arc shell, breadcrumbs, timeline, spoiler and desktop navigation primitives.
 4. **Yorknew prototype** — first complete route-level arc page and final reusable design language.
@@ -297,34 +280,30 @@ Current Succession routes map to their new nested Story destinations. Query para
 
 One major batch is completed at a time.
 
-## 13. Batch 1 acceptance criteria
+## 13. Batch 2 acceptance criteria
 
-Batch 1 is complete when:
+Batch 2 is complete when:
 
-- the taxonomy contains exactly nine editorial Story destinations;
-- all seven official arcs are represented once;
-- Volume 0 is explicitly a prologue;
-- Zoldyck Family is explicitly an editorial page inside the official Hunter Exam boundary;
-- every destination has a planned clean route and reciprocal previous/next relationship;
-- Succession retains seven planned subpages;
-- manga/anime and factual/analytical policies are machine-readable;
-- The Black Archive hybrid design and crimson primary accent are locked;
-- mobile is explicitly deferred;
-- Yorknew is locked as the prototype;
-- the build runs `audit:story`;
-- this document and the machine-readable contract agree.
+- clean Story routes resolve through the browser history API;
+- Story utility routes preserve their query state;
+- current Succession routes have planned clean nested destinations;
+- legacy Story and Succession hashes continue to parse and upgrade to clean URLs where possible;
+- unknown paths show a not-found route instead of silently opening home;
+- the static worker retains the `index.html` fallback required for direct reload;
+- primary navigation uses generated route hrefs rather than hard-coded hashes;
+- standalone builds can continue to prefer legacy hashes;
+- `npm run audit:story` verifies the route adapter;
+- existing route-level lazy loading remains in place.
 
-## 14. Out of scope for Batch 1
+## 14. Out of scope for Batch 2
 
 This patch does **not**:
 
-- change the live router;
-- change existing URLs;
-- redesign current pages;
-- add Zoldyck Family to live navigation;
-- move Succession pages;
+- redesign current Story pages;
+- complete the Zoldyck Family content page;
+- move the Succession components into new page folders;
+- create Yorknew’s prototype layout;
 - add responsive/mobile layouts;
-- replace current Story components;
-- expand arc prose or research.
+- replace the old Story workspace component.
 
-Those changes begin in Batch 2 and later batches against this locked contract.
+Those changes begin in Batch 3 and later batches against this locked router.
