@@ -217,17 +217,7 @@ export default function App() {
 
         {activeView === 'home' && <SiteHome onNavigate={navigate} onPrefetch={preloadRoute} onOpenSearch={() => setSearchOpen(true)} onOpenDownloads={() => setDownloadsOpen(true)} latestChapter={ARCHIVE_BOUNDARY} stats={SITE_STATS} heroCharacters={homeHighlights} />}
 
-        {activeView === 'series' && routeTarget === 'zoldyck-family' && <>
-          <PageIntro kicker="Editorial Story page" title="Zoldyck Family" description="This clean route is now reserved for the dedicated Zoldyck Family page. Its full content lands in the Early Arcs batch; until then, the current Hunter Exam coverage remains the active source for the official Chapters 1–43 boundary.">
-            <dl className="page-intro__facts"><div><dt>Status</dt><dd>Route ready</dd></div><div><dt>Official parent</dt><dd>Hunter Exam</dd></div><div><dt>Next content batch</dt><dd>Early arcs</dd></div></dl>
-          </PageIntro>
-          <section className="index-section">
-            <div className="index-heading"><div><span className="section-kicker">Migration bridge</span><h2>Independent page route established.</h2><p>The router now treats `/story/zoldyck-family` as a real destination without pretending the final page design exists yet. Use the current Hunter Exam study until the dedicated rescue-mission page is implemented.</p></div></div>
-            <div className="story-grid"><article><span>Current coverage</span><h3>Official Hunter Exam record</h3><p>Open the maintained Hunter Exam page that currently covers the Kukuroo Mountain conclusion inside the official arc boundary.</p><button onClick={() => navigate('series', 'hunter-exam')}>Open Hunter Exam</button></article></div>
-          </section>
-        </>}
-
-        {activeView === 'series' && routeTarget !== 'zoldyck-family' && <Suspense fallback={<RouteLoading label="story library" />}><SeriesWorkspace routeTarget={routeTarget} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={changeSpoilerLimit} onNavigate={navigate} /></Suspense>}
+        {activeView === 'series' && <Suspense fallback={<RouteLoading label="story library" />}><SeriesWorkspace routeTarget={routeTarget} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={changeSpoilerLimit} onNavigate={navigate} onPrefetch={preloadRoute} /></Suspense>}
 
         {activeView === 'succession' && <>
           <PageIntro kicker={successionPage.kicker} title={successionPage.title} description={successionPage.description}>
