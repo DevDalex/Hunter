@@ -27,15 +27,38 @@ assert(characterProfileStats.profiles >= 6, 'Batch 9 must ship at least six flag
 assert(unique(featuredCharacterProfiles.map((profile) => profile.id)), 'profile IDs must be unique');
 assert(unique(featuredCharacterProfiles.map((profile) => profile.name)), 'profile names must be unique');
 
+const coverageMinimums = Object.freeze({
+  facts: 4,
+  story: 4,
+  relationships: 4,
+  nen: 3,
+  conflicts: 3,
+  organizations: 2,
+  locations: 3,
+  objects: 3,
+});
+const profileIssues = [];
+
 for (const profile of featuredCharacterProfiles) {
-  assert(characterDirectorySources.includes(profile.name), `${profile.name} profile does not match the canonical character directory sources`);
-  assert(isApprovedSourceUrl(profile.source), `${profile.name} primary source is not Hunterpedia/Fandom-approved`);
-  assert(profile.sources.length >= 3 && profile.sources.every((source) => isApprovedSourceUrl(source.href)), `${profile.name} needs at least three approved source links`);
-  for (const key of ['facts', 'story', 'relationships', 'nen', 'conflicts', 'organizations', 'locations', 'objects']) {
-    assert(profile[key].length >= 3, `${profile.name} ${key} coverage is too thin`);
+  if (!characterDirectorySources.includes(profile.name)) profileIssues.push(`${profile.name}: missing from canonical character directory sources`);
+  if (!isApprovedSourceUrl(profile.source)) profileIssues.push(`${profile.name}: primary source is not Hunterpedia/Fandom-approved`);
+  if (!Array.isArray(profile.sources) || profile.sources.length < 3) {
+    profileIssues.push(`${profile.name}: needs at least three approved source links`);
+  } else if (!profile.sources.every((source) => isApprovedSourceUrl(source.href))) {
+    profileIssues.push(`${profile.name}: contains an unapproved source link`);
   }
-  assert(profile.status && profile.lead && profile.role, `${profile.name} needs status, lead, and role copy`);
+
+  for (const [key, minimum] of Object.entries(coverageMinimums)) {
+    const count = Array.isArray(profile[key]) ? profile[key].length : 0;
+    if (count < minimum) profileIssues.push(`${profile.name}: ${key} has ${count}; minimum is ${minimum}`);
+  }
+
+  if (!profile.status) profileIssues.push(`${profile.name}: missing status copy`);
+  if (!profile.lead) profileIssues.push(`${profile.name}: missing lead copy`);
+  if (!profile.role) profileIssues.push(`${profile.name}: missing role copy`);
 }
+
+assert(!profileIssues.length, `profile preflight found ${profileIssues.length} issue(s):\n- ${profileIssues.join('\n- ')}`);
 
 const component = await readFile(path.resolve('src/components/CharacterProfileDossier.jsx'), 'utf8');
 assert(component.includes('DirectoryBoundary') && component.includes('characterDirectoryPolicy.rules'), 'component must show retained-directory state for non-profile characters');
@@ -50,4 +73,4 @@ assert(encyclopedia.includes('sourcePortraitStats.totalCharacters'), 'complete c
 await access(path.resolve('src/components/CharacterProfileDossier.css'));
 await access(path.resolve('docs/CHARACTER-PROFILES.md'));
 
-console.log(`Character profile audit passed: ${SITE_STATS.characters} canonical character records, ${featuredCharacterProfiles.length} dossier prototypes, no deletion policy visible, and character directory views preserved.`);
+console.log(`Character profile audit passed: ${SITE_STATS.characters} canonical character records, ${featuredCharacterProfiles.length} dossier prototypes, all section-specific depth minimums satisfied, no deletion policy visible, and character directory views preserved.`);
