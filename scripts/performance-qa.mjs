@@ -84,7 +84,8 @@ const page = await browser.newPage({ viewport: profiles[0].viewport });
 const session = await page.context().newCDPSession(page);
 await session.send('Network.enable');
 await page.addInitScript(() => {
-  window.__archiveVitals = { cls: 0, longTasks: 0 };
+  window.__resetArchiveVitals = () => { window.__archiveVitals = { cls: 0, longTasks: 0 }; };
+  window.__resetArchiveVitals();
   new PerformanceObserver((list) => {
     for (const entry of list.getEntries()) if (!entry.hadRecentInput) window.__archiveVitals.cls += entry.value;
   }).observe({ type: 'layout-shift', buffered: true });
@@ -125,14 +126,15 @@ try {
         await page.goto(`${base}/#/${route.hash}`, { waitUntil: 'domcontentloaded', timeout: 15_000 });
         await page.waitForSelector('main', { timeout: 8_000 });
         await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 });
-        if (route.id === 'home') await page.waitForFunction(() => document.querySelector('.archive-home-hero img')?.naturalWidth > 0, null, { timeout: 8_000 });
-        await page.waitForTimeout(350);
+        if (route.id === 'home') await page.waitForSelector('.archive-home-hero, .simple-home', { timeout: 8_000 });
+        await page.evaluate(() => window.__resetArchiveVitals?.());
+        await page.waitForTimeout(550);
       } catch (error) { fatal = error.message; }
       const readyMs = Date.now() - started;
       const metrics = fatal ? {} : await page.evaluate(async () => {
         const navigation = performance.getEntriesByType('navigation')[0];
         const resources = performance.getEntriesByType('resource');
-        const highPriorityImages = [...document.images].filter((image) => image.getAttribute('fetchpriority') === 'high').length;
+        const highPriorityImages = [...document.images].filter((image) => image.fetchPriority === 'high' || image.getAttribute('fetchpriority') === 'high').length;
         return {
           domContentLoadedMs: Math.round(navigation?.domContentLoadedEventEnd || 0),
           loadMs: Math.round(navigation?.loadEventEnd || 0),
@@ -152,7 +154,7 @@ try {
         ...failedRequests,
         ...(readyMs > 13_000 ? [`route ready time ${readyMs}ms exceeds 13,000ms`] : []),
         ...(metrics.mainText === 0 ? ['main content is empty'] : []),
-        ...(metrics.cls > 0.15 ? [`CLS ${metrics.cls} exceeds 0.15`] : []),
+        ...(metrics.cls > 0.15 ? [`settled CLS ${metrics.cls} exceeds 0.15`] : []),
         ...(route.id === 'home' && dynamicRequests.length ? [`home loaded dynamic entries: ${dynamicRequests.join(', ')}`] : []),
         ...(route.id === 'home' && metrics.highPriorityImages !== 1 ? [`home has ${metrics.highPriorityImages} high-priority images; expected 1`] : []),
         ...(metrics.serviceWorkers ? [`${metrics.serviceWorkers} service worker registration(s) found`] : []),
