@@ -1,17 +1,24 @@
 import { useMemo, useState } from 'react';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import SourcePortrait from './SourcePortrait';
+import { characters } from '../data/characters';
 import { yorknewPrototype } from '../data/yorknewPrototype';
 import './YorknewPrototypePage.css';
 
 const wiki = (name) => `https://hunterxhunter.fandom.com/wiki/${encodeURIComponent(name.replaceAll(' ', '_'))}`;
+const characterByName = new Map(characters.map((character) => [character.name, character]));
+const initialsFor = (name = '') => name.split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join('').toUpperCase();
 
 function portraitRecord(name) {
-  return { id: name, name, source: wiki(name) };
+  return characterByName.get(name) || { id: name, name, source: wiki(name) };
 }
 
 function Portrait({ name, eager = false }) {
-  return <SourcePortrait item={portraitRecord(name)} eager={eager} alt={`${name} portrait from Hunterpedia`} />;
+  const item = portraitRecord(name);
+  if (!item.image) {
+    return <span className="yn-portrait-token" aria-label={`No stored Hunterpedia portrait available for ${name}`}><b>{initialsFor(name)}</b></span>;
+  }
+  return <SourcePortrait item={item} eager={eager} alt={`${name} portrait from Hunterpedia`} />;
 }
 
 function SectionHeader({ id, eyebrow, title, children }) {
