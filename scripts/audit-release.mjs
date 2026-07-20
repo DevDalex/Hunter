@@ -142,6 +142,7 @@ for (const required of [
   'docs/STORY-ARCHITECTURE.md',
   'docs/FINAL-POLISH.md',
   'docs/ARCHIVE-GOVERNANCE.md',
+  '.github/workflows/browser-verification.yml',
   'server/index.js',
   '.openai/hosting.json',
   'README.md',
