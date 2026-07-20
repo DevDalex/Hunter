@@ -147,11 +147,11 @@ assert(app.includes('onPrefetch={preloadRoute}'), 'Story workspace must receive 
 assert(!app.includes("routeTarget === 'zoldyck-family' && <>"), 'Zoldyck route must not bypass the Story foundation in App.jsx');
 
 const routeManifest = await readFile(path.resolve('src/data/routeManifest.js'), 'utf8');
-assert(routeManifest.includes("target: 'zoldyck-family'") && routeManifest.includes("label: 'Story hub'"), 'route manifest must expose the Story hub and Zoldyck route');
+assert(routeManifest.includes("label: 'Pre-Succession overview'") && !routeManifest.includes("target: 'zoldyck-family'"), 'legacy release route manifest must stay stable until the full Zoldyck page lands');
 
 assert(storyArchitectureAcceptance.length === 10, 'the architecture lock must retain ten acceptance statements');
 await access(path.resolve('docs/STORY-ARCHITECTURE.md'));
 await access(path.resolve('src/lib/appRouter.js'));
 await access(path.resolve('src/components/StoryFoundation.css'));
 
-console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, clean routing, Story foundation shell, Zoldyck workspace bridge, legacy redirects, direct reload fallback, and mobile deferred.`);
+console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, clean routing, Story foundation shell, Zoldyck workspace bridge, legacy route inventory stable, direct reload fallback, and mobile deferred.`);
