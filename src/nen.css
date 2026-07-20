@@ -1,0 +1,357 @@
+/* Nen-only layout and media rules. The component owns its state; CSS only places it. */
+.nen-foundation-view {
+  display: block;
+  min-width: 0;
+  margin-top: 18px;
+}
+
+.nen-foundation-view > .nen-principle-workbench {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-top: 0;
+}
+
+.nen-foundation-reference {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(240px, 310px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.nen-foundation-index,
+.nen-evidence-card,
+.nen-evidence-card__images,
+.nen-evidence-card__copy {
+  min-width: 0;
+}
+
+.nen-evidence-card {
+  width: 100%;
+  overflow: hidden;
+}
+
+.nen-principle-inspector figure,
+.nen-technique-gallery figure {
+  position: relative;
+  overflow: hidden;
+  background: #0b120f;
+}
+
+.nen-principle-inspector figure > img,
+.nen-technique-gallery figure > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  visibility: visible;
+}
+
+.nen-principle-inspector__foundation figure > img {
+  filter: none;
+}
+
+.nen-principle-inspector__advanced figure > img,
+.nen-technique-gallery figure > img {
+  object-fit: contain;
+}
+
+.nen-principle-inspector figure > .safe-image-placeholder,
+.nen-technique-gallery figure > .safe-image-placeholder,
+.nen-category-hex > .safe-image-placeholder {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+}
+
+.nen-category-hex__nodes,
+.nen-category-hex > span {
+  z-index: 1;
+}
+
+.nen-technique-gallery figure > i {
+  z-index: 2;
+}
+
+.nen-principle-inspector__chain {
+  display: block;
+  margin-top: 10px;
+  border-left: 2px solid rgba(230, 202, 112, .62);
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, .055);
+  color: rgba(255, 255, 255, .68);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+@media (min-width: 721px) {
+  .nen-principle-workbench__layout {
+    grid-template-columns: minmax(680px, 1.15fr) minmax(360px, .85fr);
+    min-height: 760px;
+  }
+
+  .nen-principle-map {
+    min-height: 760px;
+    aspect-ratio: 1 / 1;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(218, 190, 101, .14) 0 8%, transparent 23%),
+      radial-gradient(circle at 50% 50%, rgba(46, 79, 61, .34), transparent 57%),
+      #09100d;
+  }
+
+  .nen-principle-map > img {
+    display: none;
+  }
+
+  .nen-principle-map__ring {
+    inset: 25%;
+    border-color: rgba(224, 195, 103, .42);
+  }
+
+  .nen-principle-map__ring::before {
+    inset: -42%;
+    border-color: rgba(224, 195, 103, .20);
+  }
+
+  .nen-principle-map__ring::after {
+    inset: 25%;
+    background: rgba(224, 195, 103, .04);
+    border-color: rgba(255, 255, 255, .10);
+  }
+
+  .nen-principle-links {
+    display: none;
+  }
+
+  .nen-principle-map__center {
+    z-index: 8;
+    width: 72px;
+    height: 72px;
+    border-width: 2px;
+    background: radial-gradient(circle, #263a30 0 44%, #0c1511 45% 100%);
+    box-shadow: 0 0 0 10px rgba(223, 196, 108, .045), 0 0 34px rgba(223, 196, 108, .18);
+  }
+
+  .nen-principle-map__center span {
+    font-size: 30px;
+  }
+
+  .nen-principle-node {
+    z-index: 8;
+    width: 132px;
+    min-height: 64px;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 8px;
+    padding: 9px 10px;
+    border-color: rgba(232, 211, 142, .34);
+    background: rgba(11, 19, 15, .97);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, .30);
+  }
+
+  .nen-principle-node i {
+    width: 34px;
+    height: 34px;
+    font-size: 19px;
+  }
+
+  .nen-principle-node strong {
+    font-size: 18px;
+  }
+
+  .nen-principle-node.is-active {
+    border-color: #e7ca70;
+    background: #244735;
+    box-shadow: 0 0 0 3px rgba(231, 202, 112, .10), 0 14px 34px rgba(0, 0, 0, .36);
+  }
+
+  .nen-principle-node.is-top {
+    top: 24%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .nen-principle-node.is-right {
+    top: 50%;
+    right: 24%;
+    transform: translate(50%, -50%);
+  }
+
+  .nen-principle-node.is-bottom {
+    bottom: 24%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+  }
+
+  .nen-principle-node.is-left {
+    top: 50%;
+    left: 24%;
+    transform: translate(-50%, -50%);
+  }
+
+  .nen-advanced-node {
+    z-index: 6;
+    width: 82px;
+    min-height: 47px;
+    display: grid;
+    align-content: center;
+    gap: 2px;
+    padding: 7px 8px;
+    opacity: 1;
+    border: 1px solid rgba(230, 202, 112, .45);
+    background: rgba(7, 13, 10, .96);
+    color: rgba(255, 255, 255, .78);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, .25);
+    transform: translate(-50%, -50%);
+  }
+
+  .nen-advanced-node::before {
+    display: none;
+  }
+
+  .nen-advanced-node strong {
+    font-size: 14px;
+  }
+
+  .nen-advanced-node small {
+    color: rgba(255, 255, 255, .43);
+    font-size: 7px;
+  }
+
+  .nen-advanced-node:hover,
+  .nen-advanced-node:focus-visible,
+  .nen-advanced-node.is-active {
+    z-index: 7;
+    border-color: #f1d77e;
+    background: #6b531f;
+    color: #fff;
+    outline: none;
+    box-shadow: 0 0 18px rgba(230, 202, 112, .16);
+  }
+
+  .nen-advanced-node.is-chained {
+    border-style: dashed;
+  }
+
+  .nen-advanced-node.is-chained small::before {
+    content: 'chain · ';
+  }
+
+  .nen-advanced-node.is-gyo,
+  .nen-advanced-node.is-in,
+  .nen-advanced-node.is-en,
+  .nen-advanced-node.is-shu,
+  .nen-advanced-node.is-ko,
+  .nen-advanced-node.is-ken,
+  .nen-advanced-node.is-ryu {
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    width: 82px;
+    height: auto;
+    min-height: 47px;
+    max-height: 54px;
+  }
+
+  .nen-principle-map.is-stack-ten .nen-advanced-node.is-en { top: 13%; left: 34%; }
+  .nen-principle-map.is-stack-ten .nen-advanced-node.is-shu { top: 11%; left: 45%; }
+  .nen-principle-map.is-stack-ten .nen-advanced-node.is-ko { top: 11%; left: 56%; }
+  .nen-principle-map.is-stack-ten .nen-advanced-node.is-ken { top: 13%; left: 67%; }
+
+  .nen-principle-map.is-stack-zetsu .nen-advanced-node.is-in { top: 42%; left: 90%; }
+  .nen-principle-map.is-stack-zetsu .nen-advanced-node.is-ko { top: 58%; left: 90%; }
+
+  .nen-principle-map.is-stack-ren .nen-advanced-node.is-gyo { top: 87%; left: 34%; }
+  .nen-principle-map.is-stack-ren .nen-advanced-node.is-en { top: 89%; left: 45%; }
+  .nen-principle-map.is-stack-ren .nen-advanced-node.is-ko { top: 89%; left: 56%; }
+  .nen-principle-map.is-stack-ren .nen-advanced-node.is-ken { top: 87%; left: 67%; }
+  .nen-principle-map.is-stack-ren .nen-advanced-node.is-ryu { top: 82%; left: 22%; }
+
+  .nen-principle-map.is-stack-hatsu .nen-advanced-node.is-ko { top: 50%; left: 10%; }
+
+  .nen-principle-inspector {
+    min-height: 760px;
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1180px) {
+  .nen-principle-workbench__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .nen-principle-map {
+    width: min(100%, 800px);
+    min-height: 720px;
+    margin-inline: auto;
+    border-right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .14);
+  }
+
+  .nen-principle-inspector {
+    min-height: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+  }
+
+  .nen-principle-inspector__foundation {
+    border-right: 1px solid rgba(255, 255, 255, .14);
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .nen-foundation-reference {
+    grid-template-columns: 1fr;
+  }
+
+  .nen-foundation-index {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .nen-foundation-index button {
+    border-right: 1px solid var(--line);
+  }
+}
+
+@media (max-width: 720px) {
+  .nen-principle-links {
+    display: none;
+  }
+
+  .nen-principle-map {
+    background: #09100d;
+  }
+
+  .nen-principle-node,
+  .nen-advanced-node {
+    border-radius: 2px;
+  }
+
+  .nen-principle-node.is-active,
+  .nen-advanced-node.is-active {
+    box-shadow: inset 4px 0 #e5c96e;
+  }
+
+  .nen-advanced-node.is-chained {
+    border-style: dashed;
+  }
+}
+
+@media (max-width: 620px) {
+  .nen-foundation-index {
+    grid-template-columns: 1fr;
+  }
+
+  .nen-evidence-card__images {
+    min-height: 300px;
+  }
+}

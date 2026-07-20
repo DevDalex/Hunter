@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, BookOpen, ExternalLink, Image as ImageIcon, Search } from 'lucide-react';
+import { ArrowRight, ExternalLink, Image as ImageIcon, Search } from 'lucide-react';
 import SourcePortrait from './SourcePortrait';
 import SafeImage from './SafeImage';
 import { nenAbilityDirectory, nenGroups, nenRecords, nenSource } from '../data/nenEncyclopedia';
 import { priorityPortraitByName } from '../data/priorityMedia.generated';
 
-const hunterFile = (name) => `https://hunterxhunter.fandom.com/wiki/Special:Redirect/file/${encodeURIComponent(name)}`;
+const nenAsset = (name) => `/media/nen/${name}.svg`;
 
 const categories = [
   { name: 'Enhancement', position: 'Top', result: 'Water volume changes', idea: 'Strengthen what already exists', example: 'Gon Freecss' },
@@ -26,20 +26,20 @@ const foundations = [
 ];
 
 const principles = [
-  { name: 'Ten', position: 'top', kanji: '纏', action: 'Contain', summary: 'Keep aura flowing around the body instead of leaking away. Ten is the stable shroud underneath defense, endurance, Shu, En, Ken, and Ko.', risk: 'Limited protection by itself; it does not replace stronger defensive applications.', image: hunterFile('Gon and Killua using Ten.png') },
-  { name: 'Zetsu', position: 'right', kanji: '絶', action: 'Suppress', summary: 'Close the aura nodes and stop outward flow. Presence becomes difficult to sense, fatigue eases, and outside aura becomes easier to feel.', risk: 'The body loses its aura defense and becomes highly vulnerable to Nen attacks.', image: hunterFile('Gon using Zetsu.png') },
-  { name: 'Ren', position: 'bottom', kanji: '練', action: 'Output', summary: 'Produce and sustain much more aura than Ten. Ren supplies the volume behind pressure, Gyo, En, Ken, and stronger Hatsu use.', risk: 'Higher output consumes aura and stamina; hostile Ren can overwhelm an unprotected person.', image: hunterFile('Zushi using Ren.png') },
-  { name: 'Hatsu', position: 'left', kanji: '発', action: 'Express', summary: 'Give aura an individual function through affinity, training, personality, conditions, and design. Named Nen abilities are applications of Hatsu.', risk: 'A badly matched or overloaded design can waste potential; conditions and vows carry real costs.', image: hunterFile('Wing using Hatsu.png') },
+  { name: 'Ten', position: 'top', kanji: '纏', action: 'Contain', summary: 'Keep aura flowing around the body instead of leaking away. Ten is the stable shroud underneath defense, endurance, Shu, En, Ken, and Ko.', risk: 'Limited protection by itself; it does not replace stronger defensive applications.', image: nenAsset('ten') },
+  { name: 'Zetsu', position: 'right', kanji: '絶', action: 'Suppress', summary: 'Close the aura nodes and stop outward flow. Presence becomes difficult to sense, fatigue eases, and outside aura becomes easier to feel.', risk: 'The body loses its aura defense and becomes highly vulnerable to Nen attacks.', image: nenAsset('zetsu') },
+  { name: 'Ren', position: 'bottom', kanji: '練', action: 'Output', summary: 'Produce and sustain much more aura than Ten. Ren supplies the volume behind pressure, Gyo, En, Ken, and stronger Hatsu use.', risk: 'Higher output consumes aura and stamina; hostile Ren can overwhelm an unprotected person.', image: nenAsset('ren') },
+  { name: 'Hatsu', position: 'left', kanji: '発', action: 'Express', summary: 'Give aura an individual function through affinity, training, personality, conditions, and design. Named Nen abilities are applications of Hatsu.', risk: 'A badly matched or overloaded design can waste potential; conditions and vows carry real costs.', image: nenAsset('hatsu') },
 ];
 
 const techniques = [
-  { name: 'Gyo', bases: ['Ren'], base: 'Ren', detail: 'Concentrate more aura in one body part; the eyes can perceive aura hidden with In.', image: hunterFile('Zushi using Gyo.png'), position: 'gyo' },
-  { name: 'In', bases: ['Zetsu'], base: 'Zetsu', detail: 'Conceal aura or an aura construct without making it cease to exist.', image: hunterFile("Uvogin trapped within Kurapika's chains, which are concealed from view through In.png"), position: 'in' },
-  { name: 'En', bases: ['Ten', 'Ren'], base: 'Ten + Ren', detail: 'Expand and contain a controlled aura field to detect intrusion and movement.', image: hunterFile('Nobunaga using En.png'), position: 'en' },
-  { name: 'Shu', bases: ['Ten'], base: 'Ten', detail: 'Extend the aura shroud around an object so it functions as part of the user.', image: hunterFile('Gon using Shu.png'), position: 'shu' },
-  { name: 'Ko', bases: ['Ten', 'Zetsu', 'Ren', 'Hatsu'], base: 'Ten + Zetsu + Ren + Hatsu + Gyo', detail: 'Concentrate nearly all usable aura at one point and leave the rest exposed.', image: hunterFile('Biscuit using Ko.png'), position: 'ko' },
-  { name: 'Ken', bases: ['Ten', 'Ren'], base: 'Ten + Ren', detail: 'Maintain a powerful, even, full-body defensive shroud.', image: hunterFile('Gon using Ken.png'), position: 'ken' },
-  { name: 'Ryu', bases: [], defaultPrinciple: 'Ren', base: 'Gyo + Ken', detail: 'Redistribute aura percentages during combat as attack and defense change.', image: hunterFile('Biscuit using Ryu.png'), position: 'ryu' },
+  { name: 'Gyo', bases: ['Ren'], base: 'Ren', detail: 'Concentrate more aura in one body part; the eyes can perceive aura hidden with In.', image: nenAsset('gyo'), position: 'gyo' },
+  { name: 'In', bases: ['Zetsu'], base: 'Zetsu', detail: 'Conceal aura or an aura construct without making it cease to exist.', image: nenAsset('in'), position: 'in' },
+  { name: 'En', bases: ['Ten', 'Ren'], base: 'Ten + Ren', detail: 'Expand and contain a controlled aura field to detect intrusion and movement.', image: nenAsset('en'), position: 'en' },
+  { name: 'Shu', bases: ['Ten'], base: 'Ten', detail: 'Extend the aura shroud around an object so it functions as part of the user.', image: nenAsset('shu'), position: 'shu' },
+  { name: 'Ko', bases: ['Ten', 'Zetsu', 'Ren', 'Hatsu'], base: 'Ten + Zetsu + Ren + Hatsu + Gyo', detail: 'Concentrate nearly all usable aura at one point and leave the rest exposed.', image: nenAsset('ko'), position: 'ko' },
+  { name: 'Ken', bases: ['Ten', 'Ren'], base: 'Ten + Ren', detail: 'Maintain a powerful, even, full-body defensive shroud.', image: nenAsset('ken'), position: 'ken' },
+  { name: 'Ryu', bases: [], defaultPrinciple: 'Ren', base: 'Gyo + Ken', detail: 'Redistribute aura percentages during combat as attack and defense change.', image: nenAsset('ryu'), position: 'ryu' },
 ];
 
 const principlePoints = {
@@ -84,13 +84,17 @@ function NenPrincipleMap({ onOpenRecord }) {
   const [activeTechnique, setActiveTechnique] = useState('In');
   const principle = principles.find((item) => item.name === activePrinciple) || principles[0];
   const related = techniques.filter((item) => item.bases.includes(activePrinciple));
+  const chained = activePrinciple === 'Ren' ? techniques.find((item) => item.name === 'Ryu') : null;
+  const visibleTechniques = chained ? [...related, chained] : related;
   const technique = techniques.find((item) => item.name === activeTechnique) || related[0];
   const isChainedTechnique = Boolean(technique && technique.bases.length === 0);
   const [originX, originY] = principlePoints[activePrinciple] || principlePoints.Ten;
+
   const choosePrinciple = (name) => {
     setActivePrinciple(name);
     setActiveTechnique(techniques.find((item) => item.bases.includes(name))?.name || 'Gyo');
   };
+
   const chooseTechnique = (item) => {
     const nextPrinciple = item.bases.includes(activePrinciple)
       ? activePrinciple
@@ -100,10 +104,10 @@ function NenPrincipleMap({ onOpenRecord }) {
   };
 
   return <section className="nen-principle-workbench" aria-labelledby="nen-principle-title">
-    <header><div><span className="section-kicker">Hover, focus, or tap a principle</span><h3 id="nen-principle-title">Four principles → advanced techniques</h3></div><p>The highlighted lines show direct derivations from the selected principle. Chained applications such as Ryu are labeled separately instead of being falsely attached to a basic principle.</p></header>
+    <header><div><span className="section-kicker">Hover, focus, or tap a principle</span><h3 id="nen-principle-title">Four principles → advanced techniques</h3></div><p>Each active principle owns its direct applications. Ryu remains separately marked because it is Gyo performed while maintaining Ken, not a direct branch of one foundation.</p></header>
     <div className="nen-principle-workbench__layout">
-      <div className="nen-principle-map" aria-label="Interactive relationship map of the Four Major Principles and advanced Nen techniques">
-        <SafeImage src={hunterFile('The four major principles of Nen.png')} fallbackLabel="Four principles" alt="The Four Major Principles of Nen from Hunterpedia" />
+      <div className={`nen-principle-map is-stack-${activePrinciple.toLowerCase()}`} aria-label="Interactive relationship map of the Four Major Principles and advanced Nen techniques">
+        <SafeImage src={nenAsset('principles')} fallbackLabel="Four principles" alt="Local diagram of the Four Major Principles of Nen" />
         <i className="nen-principle-map__ring" aria-hidden="true" />
         <svg className="nen-principle-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
           {related.map((item) => {
@@ -121,13 +125,13 @@ function NenPrincipleMap({ onOpenRecord }) {
           onClick={() => choosePrinciple(item.name)}
           key={item.name}
         ><i>{item.kanji}</i><span><strong>{item.name}</strong><small>{item.action}</small></span></button>)}
-        {techniques.map((item) => {
+        {visibleTechniques.map((item) => {
           const connected = item.bases.includes(activePrinciple);
-          const chained = item.bases.length === 0;
+          const isChained = item.bases.length === 0;
           return <button
             type="button"
-            className={`nen-advanced-node is-${item.position}${connected ? ' is-related' : ''}${chained ? ' is-chained' : ''}${technique?.name === item.name ? ' is-active' : ''}`}
-            aria-label={`${item.name}: ${item.base}${chained ? '; chained technique, not a direct Four Major Principle application' : ''}`}
+            className={`nen-advanced-node is-${item.position}${connected ? ' is-related' : ''}${isChained ? ' is-chained' : ''}${technique?.name === item.name ? ' is-active' : ''}`}
+            aria-label={`${item.name}: ${item.base}${isChained ? '; chained technique, not a direct Four Major Principle application' : ''}`}
             onMouseEnter={() => chooseTechnique(item)}
             onFocus={() => chooseTechnique(item)}
             onClick={() => chooseTechnique(item)}
@@ -137,15 +141,15 @@ function NenPrincipleMap({ onOpenRecord }) {
       </div>
       <aside className="nen-principle-inspector" aria-live="polite">
         <div className="nen-principle-inspector__foundation">
-          <figure><SafeImage src={principle.image} fallbackLabel={principle.name} alt={`${principle.name} demonstration from Hunterpedia`} /></figure>
+          <figure><SafeImage src={principle.image} fallbackLabel={principle.name} alt={`${principle.name} Nen concept diagram`} /></figure>
           <span>Foundation · {principle.kanji}</span><h3>{principle.name}</h3><p>{principle.summary}</p><blockquote><b>Trade-off</b>{principle.risk}</blockquote>
         </div>
         <div className="nen-principle-inspector__advanced">
           <header><span>{isChainedTechnique ? 'Chained advanced application' : `${related.length} direct application${related.length === 1 ? '' : 's'}`}</span><strong>{technique?.name}</strong></header>
-          {technique && <figure><SafeImage src={technique.image} fallbackLabel={technique.name} alt={`${technique.name} demonstration from Hunterpedia`} /><figcaption>{technique.base}</figcaption></figure>}
+          {technique && <figure><SafeImage src={technique.image} fallbackLabel={technique.name} alt={`${technique.name} Nen concept diagram`} /><figcaption>{technique.base}</figcaption></figure>}
           <p>{technique?.detail}</p>
           {isChainedTechnique && <small className="nen-principle-inspector__chain">Ryu is Gyo used while maintaining Ken. It is therefore shown as a second-stage technique, not as a direct branch of Ten or Ren.</small>}
-          <div>{related.map((item) => <button type="button" className={technique?.name === item.name ? 'is-active' : ''} onMouseEnter={() => setActiveTechnique(item.name)} onFocus={() => setActiveTechnique(item.name)} onClick={() => setActiveTechnique(item.name)} key={item.name}>{item.name}</button>)}</div>
+          <div>{visibleTechniques.map((item) => <button type="button" className={technique?.name === item.name ? 'is-active' : ''} onMouseEnter={() => chooseTechnique(item)} onFocus={() => chooseTechnique(item)} onClick={() => chooseTechnique(item)} key={item.name}>{item.name}</button>)}</div>
           <button type="button" className="nen-principle-inspector__records" onClick={() => onOpenRecord(technique?.name || activePrinciple, technique ? 'Advanced applications' : 'Four Major Principles')}>Open matching records <ArrowRight size={13} /></button>
         </div>
       </aside>
@@ -183,7 +187,7 @@ export default function NenEncyclopedia({ initialQuery = '', spoilerLimit = Numb
 
   return <section className="nen-encyclopedia nen-image-desk" id="nen">
     <header className="nen-desk-hero">
-      <div><span className="section-kicker">Visual Nen curriculum</span><h2>Understand the rule before memorizing the name.</h2><p>Every lesson now uses a stable local Nen diagram with Hunterpedia action imagery layered in when available. The visual explains the rule; the linked source supports the record.</p><div><a href={nenSource} target="_blank" rel="noreferrer">Nen source <ExternalLink size={12} /></a><a href={nenAbilityDirectory} target="_blank" rel="noreferrer">Ability directory <ExternalLink size={12} /></a></div></div>
+      <div><span className="section-kicker">Visual Nen curriculum</span><h2>Understand the rule before memorizing the name.</h2><p>Each lesson uses a stable local concept diagram, while the evidence cards and record links keep the Hunterpedia sourcing visible. The visual explains the rule; the linked source supports the record.</p><div><a href={nenSource} target="_blank" rel="noreferrer">Nen source <ExternalLink size={12} /></a><a href={nenAbilityDirectory} target="_blank" rel="noreferrer">Ability directory <ExternalLink size={12} /></a></div></div>
       <div className="nen-desk-hero__portraits"><Portrait name="Wing" /><Portrait name="Gon Freecss" /><Portrait name="Killua Zoldyck" /><Portrait name="Kurapika" /><span><ImageIcon size={17} /> Verified Hunterpedia portraits</span></div>
     </header>
 
@@ -204,14 +208,14 @@ export default function NenEncyclopedia({ initialQuery = '', spoilerLimit = Numb
 
     {lessonView === 'categories' && <section className="nen-category-view nen-category-view--visual">
       <div className="nen-category-hex">
-        <SafeImage src={hunterFile('Nen types distribution and relative position.png')} fallbackLabel="Nen categories" alt="Nen types distribution and relative position from Hunterpedia" />
+        <SafeImage src={nenAsset('categories')} fallbackLabel="Nen categories" alt="Local diagram of Nen category positions and affinities" />
         <div className="nen-category-hex__nodes">{categories.map((item) => <button type="button" data-position={item.position.toLowerCase()} className={activeCategory === item.name ? 'is-active' : ''} onMouseEnter={() => setActiveCategory(item.name)} onFocus={() => setActiveCategory(item.name)} onClick={() => setActiveCategory(item.name)} key={item.name}><strong>{item.name}</strong><small>{item.position}</small></button>)}</div>
-        <span>Canonical Hunterpedia category chart beneath the interaction layer</span>
+        <span>Local category relationship diagram beneath the interaction layer</span>
       </div>
       <article><Portrait name={selectedCategory.example} /><div><span>{selectedCategory.position} position · natural affinity example</span><h3>{selectedCategory.name}</h3><p>{selectedCategory.idea}</p><dl><div><dt>Water Divination</dt><dd>{selectedCategory.result}</dd></div><div><dt>Example subject</dt><dd>{selectedCategory.example}</dd></div><div><dt>Affinity distance</dt><dd>Adjacent types are normally easier and more efficient than distant types; Specialization is an exception.</dd></div><div><dt>Important limit</dt><dd>Affinity does not equal mastery, output, personality, or a complete future ability.</dd></div></dl><button onClick={() => openRecordSearch(selectedCategory.name)}>Open {selectedCategory.name} records <ArrowRight size={13} /></button></div></article>
     </section>}
 
-    {lessonView === 'techniques' && <section className="nen-technique-view"><header><div><span className="section-kicker">Hunterpedia action imagery</span><h3>Advanced techniques as operational rules</h3></div><p>Every card pairs the dependency formula with a canonical visual example. The image explains what the technique looks like; the text explains what it actually does.</p></header><div className="nen-technique-gallery">{techniques.map((item, index) => <article key={item.name}><figure><SafeImage src={item.image} fallbackLabel={item.name} alt={`${item.name} demonstration from Hunterpedia`} /><i>{String(index + 1).padStart(2, '0')}</i></figure><div><small>{item.base}</small><h3>{item.name}</h3><p>{item.detail}</p><button onClick={() => openRecordSearch(item.name, 'Advanced applications')}>Open records <ArrowRight size={12} /></button></div></article>)}</div></section>}
+    {lessonView === 'techniques' && <section className="nen-technique-view"><header><div><span className="section-kicker">Local concept diagrams</span><h3>Advanced techniques as operational rules</h3></div><p>Every card pairs its dependency formula with a dedicated local diagram. The visual describes the operation; the text states the rule and limitation.</p></header><div className="nen-technique-gallery">{techniques.map((item, index) => <article key={item.name}><figure><SafeImage src={item.image} alt={`${item.name} Nen concept diagram`} /><i>{String(index + 1).padStart(2, '0')}</i></figure><div><small>{item.base}</small><h3>{item.name}</h3><p>{item.detail}</p><button onClick={() => openRecordSearch(item.name, 'Advanced applications')}>Open records <ArrowRight size={12} /></button></div></article>)}</div></section>}
 
     {lessonView === 'anatomy' && <section className="nen-anatomy-view"><div className="nen-anatomy-view__image"><Portrait name="Kurapika" /><Portrait name="Chrollo Lucilfer" /><Portrait name="Hisoka Morow" /></div><div><span className="section-kicker">Ability reading method</span><h3>Six questions prevent bad Nen explanations.</h3><ol>{anatomy.map(([name, detail], index) => <li key={name}><i>{String(index + 1).padStart(2, '0')}</i><span><strong>{name}</strong><p>{detail}</p></span></li>)}</ol></div></section>}
 

@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { nenVisualForLabel } from '../data/nenVisuals';
 
 export default function SafeImage({
   src,
@@ -15,8 +14,7 @@ export default function SafeImage({
   style,
   ...props
 }) {
-  const embeddedNenVisual = useMemo(() => nenVisualForLabel(alt || fallbackLabel), [alt, fallbackLabel]);
-  const sources = useMemo(() => [...new Set([embeddedNenVisual || src, fallbackSrc].filter(Boolean))], [embeddedNenVisual, fallbackSrc, src]);
+  const sources = useMemo(() => [...new Set([src, fallbackSrc].filter(Boolean))], [fallbackSrc, src]);
   const [sourceIndex, setSourceIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
