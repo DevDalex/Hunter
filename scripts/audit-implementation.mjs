@@ -7,6 +7,7 @@ import {
   maintenanceMatrix,
   releaseChecklist,
 } from '../src/data/implementationNotes.js';
+import { formatPerformanceBudget, performanceBudgets } from '../src/data/performanceBudgets.js';
 
 const assert = (condition, message) => { if (!condition) throw new Error(`Implementation notes audit failed: ${message}`); };
 const unique = (values) => new Set(values).size === values.length;
@@ -23,9 +24,17 @@ const architecture = implementationSections.find((item) => item.id === 'architec
 const performance = implementationSections.find((item) => item.id === 'performance');
 const release = implementationSections.find((item) => item.id === 'release');
 const runbooks = implementationSections.find((item) => item.id === 'runbooks');
+const performanceCopy = performance?.checks.join(' ') || '';
+const documentedCodeBudgets = [
+  performanceBudgets.entryJs,
+  performanceBudgets.startupJs,
+  performanceBudgets.startupCss,
+  performanceBudgets.javascriptChunk,
+];
+
 assert(architecture?.decisions.some(([name]) => name === 'Clean history routes'), 'architecture notes must describe the clean-history route model');
-assert(performance?.checks.join(' ').includes('150KB') && performance.checks.join(' ').includes('270KB') && performance.checks.join(' ').includes('390KB') && performance.checks.join(' ').includes('220KB'), 'performance notes must match the current executable budgets');
-assert(performance?.checks.join(' ').includes('Twenty-two dynamic entries'), 'performance notes must match the current 22-entry dynamic split');
+assert(documentedCodeBudgets.every((value) => performanceCopy.includes(`${formatPerformanceBudget(value)} bytes`)), 'visible performance notes must match the canonical executable budgets');
+assert(performanceCopy.includes('Twenty-two dynamic entries'), 'performance notes must match the current 22-entry dynamic split');
 assert(release?.checks.join(' ').includes('26-route × 3-viewport') && release.checks.join(' ').includes('26-route × 2-viewport'), 'release notes must match the current visual and accessibility route matrices');
 assert(runbooks?.decisions.some(([name]) => name === 'Aggregate preflight'), 'runbook notes must document aggregate build preflight');
 
@@ -44,19 +53,25 @@ for (const heading of ['Architecture', 'Content schema', 'Source and evidence co
 }
 for (const item of maintenanceMatrix) assert(handbook.includes(item.canonical), `handbook is missing canonical path ${item.canonical}`);
 
-for (const phrase of [
+const currentContractPhrases = [
   '26 reader-facing screens',
   '106 character portraits and 29 Black Whale derivatives',
-  '150,000 bytes',
   '22 dynamic entries',
   '14 independent pre-build audits',
   'hxh-archive-phase-8a-sites-source.zip',
   'architecture/',
   'docs/',
   '.github/',
-]) {
+  'src/data/performanceBudgets.js',
+];
+for (const phrase of currentContractPhrases) {
   assert(handbook.includes(phrase), `handbook is missing current contract phrase “${phrase}”`);
   assert(readme.includes(phrase) || phrase === '106 character portraits and 29 Black Whale derivatives', `README is missing current contract phrase “${phrase}”`);
+}
+for (const value of documentedCodeBudgets) {
+  const phrase = `${formatPerformanceBudget(value)} bytes`;
+  assert(handbook.includes(phrase), `handbook is missing canonical performance budget ${phrase}`);
+  assert(readme.includes(phrase), `README is missing canonical performance budget ${phrase}`);
 }
 
 for (const phrase of ['14 independent pre-build audits', 'Story → Reference → Characters → Final', 'Final → Governance → Schema', 'package:release', 'audit:performance']) {
@@ -67,4 +82,4 @@ const preflightScripts = [...preflight.matchAll(/^\s*'audit:[^']+',?$/gm)].map((
 assert(preflightScripts.length === 14, `aggregate preflight must list 14 audits, found ${preflightScripts.length}`);
 assert(packageJson.includes('"preflight:build"') && packageJson.includes('npm run generate:build-info && npm run preflight:build'), 'package build must invoke aggregate preflight immediately after build identity generation');
 
-console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; 14-audit aggregate preflight; current route, media, performance, and package contracts synchronized.`);
+console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; 14-audit aggregate preflight; route, media, canonical performance-budget, and package contracts synchronized.`);
