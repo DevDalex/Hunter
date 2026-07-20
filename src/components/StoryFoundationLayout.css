@@ -1,0 +1,187 @@
+/* Wide Story workspace: navigation stays compact so the reading canvas owns the page. */
+.story-foundation--wide {
+  width: min(calc(100% - (var(--gutter) * 2)), 1660px);
+  padding-top: clamp(18px, 2.5vw, 34px);
+}
+
+.story-foundation--wide .story-breadcrumbs {
+  margin-bottom: 12px;
+}
+
+.story-route-strip {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  margin-bottom: clamp(22px, 3vw, 34px);
+  border: 1px solid var(--story-line);
+  background: var(--story-paper);
+  color: var(--story-ink);
+}
+
+.story-route-strip > header {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 3px;
+  border-right: 1px solid var(--story-line);
+  padding: 13px 17px;
+}
+
+.story-route-strip > header span {
+  color: var(--story-crimson);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.story-route-strip > header strong {
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.story-route-strip__scroller {
+  min-width: 0;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  overscroll-behavior-inline: contain;
+}
+
+.story-route-strip__scroller a {
+  flex: 1 0 150px;
+  min-height: 66px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 9px;
+  align-items: center;
+  border-right: 1px solid var(--story-line);
+  padding: 10px 13px;
+  background: #f7f2e8;
+  color: var(--story-ink);
+  text-decoration: none;
+}
+
+.story-route-strip__scroller a:last-child {
+  border-right: 0;
+}
+
+.story-route-strip__scroller a:hover,
+.story-route-strip__scroller a:focus-visible {
+  background: #fffaf1;
+  outline: 2px solid rgba(161, 42, 56, .28);
+  outline-offset: -2px;
+}
+
+.story-route-strip__scroller a.is-active {
+  background: var(--story-crimson);
+  color: #fff;
+}
+
+.story-route-strip__scroller i {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-style: normal;
+}
+
+.story-route-strip__scroller span {
+  overflow: hidden;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.story-foundation--wide .story-foundation__main {
+  width: 100%;
+  min-width: 0;
+}
+
+.story-foundation--wide .page-intro {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, .48fr);
+  gap: clamp(30px, 5vw, 72px);
+  padding-block: clamp(38px, 5vw, 70px) clamp(28px, 4vw, 48px);
+}
+
+.story-foundation--wide .page-intro::before {
+  top: 24px;
+}
+
+.story-foundation--wide .page-intro h1 {
+  max-width: 1080px;
+  margin-bottom: 15px;
+  font-size: clamp(50px, 5.4vw, 82px);
+}
+
+.story-foundation--wide .page-intro > div > p {
+  max-width: 980px;
+  font-size: clamp(16px, 1.25vw, 19px);
+}
+
+.story-foundation--wide .workspace-nav {
+  position: relative;
+  top: auto;
+  z-index: 20;
+}
+
+.story-foundation--wide .story-hub-foundation__timeline {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.story-foundation--wide .story-hub-card {
+  min-height: 250px;
+}
+
+.story-foundation--wide .story-hub-foundation__hero {
+  grid-template-columns: minmax(0, 1fr) minmax(280px, .34fr);
+}
+
+@media (max-width: 1180px) {
+  .story-foundation--wide .story-hub-foundation__timeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .story-route-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .story-route-strip > header {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    align-items: center;
+    border-right: 0;
+    border-bottom: 1px solid var(--story-line);
+  }
+
+  .story-foundation--wide .page-intro {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .story-foundation--wide {
+    width: min(calc(100% - 28px), 1660px);
+  }
+
+  .story-route-strip__scroller a {
+    flex-basis: 132px;
+  }
+
+  .story-foundation--wide .story-hub-foundation__timeline {
+    grid-template-columns: 1fr;
+  }
+}
