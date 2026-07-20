@@ -1,0 +1,2 @@
+Redeploy trigger after the GitHub service outage.
+No application code or website content is changed by this file.
