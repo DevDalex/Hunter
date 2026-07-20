@@ -4,8 +4,9 @@ export const viewIds = ['home', 'series', 'succession', 'reference'];
 export const views = new Set(viewIds);
 
 export const seriesRoutes = [
-  { id: 'arcs', target: '', label: 'Pre-Succession overview' },
+  { id: 'arcs', target: '', label: 'Story hub' },
   { id: 'hunter-exam', target: 'hunter-exam', label: 'Hunter Exam' },
+  { id: 'zoldyck-family', target: 'zoldyck-family', label: 'Zoldyck Family' },
   { id: 'heavens-arena', target: 'heavens-arena', label: 'Heavens Arena' },
   { id: 'yorknew-city', target: 'yorknew-city', label: 'Yorknew City' },
   { id: 'greed-island', target: 'greed-island', label: 'Greed Island' },
