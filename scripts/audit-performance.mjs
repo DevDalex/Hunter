@@ -1,6 +1,6 @@
 import { access, readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { formatPerformanceBudget, performanceBudgets as budgets } from './performance-budgets.mjs';
+import { formatPerformanceBudget, performanceBudgets as budgets } from '../src/data/performanceBudgets.js';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
