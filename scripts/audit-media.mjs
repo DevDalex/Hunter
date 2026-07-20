@@ -39,7 +39,10 @@ const changelog = await readFile(path.join(root, 'src/data/referenceEntities.js'
 assert(!/\bfetch\s*\(|api\.php|localStorage|sessionStorage/.test(fandomImage), 'FandomImage must not perform network discovery or browser caching');
 assert(fandomImage.includes('if (!fallbackImage || !available) return null'), 'image-less records must collapse instead of leaving a frame');
 assert(safeImage.includes('width={media?.width') && safeImage.includes('height={media?.height') && safeImage.includes('objectPosition: media.focal'), 'SafeImage must apply dimensions and focal metadata');
-assert(mediaRegistry.includes("state: mediaStateFor(record)") && mediaRegistry.includes('sourcesApproved:'), 'media registry must use the canonical media and source schemas');
+assert(mediaRegistry.includes("from './mediaSchema'")
+  && mediaRegistry.includes("from './sourcePolicy'")
+  && mediaRegistry.includes('state: mediaStateFor(record)')
+  && mediaRegistry.includes('sourcesApproved,'), 'media registry must use and report the canonical media and source schemas');
 assert(sourcePortrait.includes('Special:Redirect/file') && sourcePortrait.includes('exhaustedPortraits') && !/\bfetch\s*\(|api\.php|localStorage|sessionStorage/.test(sourcePortrait), 'source portrait recovery must use bounded Hunterpedia file redirects with an explicit exhausted state');
 assert(roster.includes("character.image && <div className=\"roster-card__image\""), 'Succession roster must omit the media area when no portrait exists');
 assert(connectionBoard.includes('member.image && <span data-image-frame>'), 'connection board must omit the media area when no portrait exists');
