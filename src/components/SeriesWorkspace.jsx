@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { ExternalLink, Grid2X2, List, Search } from 'lucide-react';
 import PageIntro from './PageIntro';
 import WorkspaceNav from './WorkspaceNav';
@@ -8,13 +8,14 @@ import ChapterIndex from './ChapterIndex';
 import ChapterDrawer from './ChapterDrawer';
 import SeriesResearchDesk from './SeriesResearchDesk';
 import AdaptationDesk from './AdaptationDesk';
-import ArcPage from './ArcPage';
-import StoryHub from './StoryHub';
 import { arcs } from '../data/arcs';
 import { chapters, LATEST_CHAPTER } from '../data/chapters';
 import { storyArcIds } from '../data/storyArcPages';
 import { readStoredJson, writeStoredJson } from '../lib/browserStorage';
 import './StoryUtilities.css';
+
+const ArcPage = lazy(() => import('./ArcPage'));
+const StoryHub = lazy(() => import('./StoryHub'));
 
 const utilityPages = [
   { id: 'chronology', label: 'Chronology' },
@@ -27,6 +28,7 @@ const preSuccessionArcs = arcs.filter((arc) => arc.chapters[1] <= PRE_SUCCESSION
 const adaptationArcMap = { 'hunter-exam': 'hunter-exam', 'heavens-arena': 'heavens-arena', yorknew: 'yorknew-city', 'greed-island': 'greed-island', 'chimera-ant': 'chimera-ant', election: 'chairman-election' };
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const scrollToSection = (id) => document.getElementById(id)?.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
+const StoryLoading = ({ label }) => <section className="route-loading" role="status" aria-live="polite" aria-busy="true"><span /><strong>Opening {label}…</strong></section>;
 
 function readProgress() {
   const stored = readStoredJson('hxh-studied', []);
@@ -89,8 +91,8 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     if (next) updateChapterRoute(next);
   };
 
-  if (!routeTarget) return <StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} />;
-  if (storyArcIds.has(routeTarget)) return <ArcPage arcId={routeTarget} onNavigate={onNavigate} />;
+  if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
+  if (storyArcIds.has(routeTarget)) return <Suspense fallback={<StoryLoading label="dedicated arc page" />}><ArcPage arcId={routeTarget} onNavigate={onNavigate} /></Suspense>;
 
   const pageIntro = adaptationPage
     ? { kicker: '2011 television anime', title: 'The adaptation guide', description: 'Map all 148 episodes to the completed manga arcs and their source ranges without mixing the adaptation reference into any individual arc page.' }
