@@ -56,7 +56,7 @@ export function SourceStack({ title = 'Sources', sources = [] }) {
       <ul>
         {sources.map((source) => (
           <li key={`${source.label}-${source.href}`}>
-            <a href={source.href} target="_blank" rel={safeRel}>{source.label}<ExternalLink size={12} aria-hidden="true" /></a>
+            <a href={source.href} target="_blank" rel="noreferrer noopener">{source.label}<ExternalLink size={12} aria-hidden="true" /></a>
             {source.note && <span>{source.note}</span>}
           </li>
         ))}
