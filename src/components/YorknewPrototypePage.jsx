@@ -1,16 +1,13 @@
 import { useMemo, useState } from 'react';
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import SourcePortrait from './SourcePortrait';
-import { priorityPortraitByName } from '../data/priorityMedia.generated';
 import { yorknewPrototype } from '../data/yorknewPrototype';
 import './YorknewPrototypePage.css';
 
 const wiki = (name) => `https://hunterxhunter.fandom.com/wiki/${encodeURIComponent(name.replaceAll(' ', '_'))}`;
 
 function portraitRecord(name) {
-  const media = priorityPortraitByName.get(name);
-  if (!media) return { id: name, name, source: wiki(name) };
-  return { id: name, name, source: media.articleSource, image: media.src, media };
+  return { id: name, name, source: wiki(name) };
 }
 
 function Portrait({ name, eager = false }) {
