@@ -1,0 +1,36 @@
+@media (max-width: 860px) {
+  .arc-page__hero-art figure {
+    width: 58% !important;
+  }
+
+  .arc-page__hero-art figure.is-primary {
+    left: 0 !important;
+  }
+
+  .arc-page__hero-art figure.is-secondary {
+    right: 0 !important;
+  }
+}
+
+@media (max-width: 660px) {
+  .arc-page__hero-art figure {
+    width: 62% !important;
+  }
+
+  .arc-inline-action {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 44px;
+    justify-content: space-between;
+    padding-block: 8px !important;
+    white-space: normal;
+  }
+
+  .arc-page__hero-route button,
+  .arc-character-grid button,
+  .arc-location-grid button,
+  .arc-transition button,
+  .arc-records__summary button {
+    min-height: 44px;
+  }
+}
