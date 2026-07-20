@@ -106,10 +106,6 @@ export const referencePages = [
     id: 'conflicts', label: 'Fights', kicker: 'Battles, games and operations', title: 'Fights and conflicts',
     description: 'Browse battles, assassinations, pursuits, operations, games, negotiations, objectives, participants, abilities, turning points, results, and consequences.',
   },
-  {
-    id: 'notebook', label: 'Notebook', kicker: 'Your study space', title: 'Bookmarks, notes and progress',
-    description: 'Keep private browser-local notes, saved records, recent reading, and study progress without changing the shared reference archive.',
-  },
 ];
 
 export const referencePrimary = referencePages.map((page) => page.id);
@@ -131,7 +127,6 @@ export const referenceAliases = {
   directory: { target: 'encyclopedia' },
   hunterpedia: { target: 'encyclopedia' },
   sources: { target: 'encyclopedia' },
-  maintenance: { target: 'notebook' },
 };
 
 export const routeManifest = [
