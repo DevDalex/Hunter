@@ -1,5 +1,5 @@
 import { encyclopediaCategories, encyclopediaRecords } from './encyclopedia';
-import { isLocalMediaPath, mediaRecordIsComplete, mediaStateFor } from './mediaSchema';
+import { isLocalMediaPath, mediaStateFor } from './mediaSchema';
 import { APPROVED_SOURCE_HOSTS, isApprovedSourceUrl, SOURCE_POLICY_VERSION } from './sourcePolicy';
 
 export const mediaRegistry = encyclopediaRecords.map((record) => ({
@@ -39,6 +39,15 @@ export const mediaCoverageByCategory = encyclopediaCategories.map((category) => 
 
 const localRecords = mediaRegistry.filter((record) => record.state === 'local');
 const remoteRecords = mediaRegistry.filter((record) => record.state === 'verified-remote');
+const sourcesApproved = mediaRegistry.every((record) => (!record.articleSource || isApprovedSourceUrl(record.articleSource))
+  && (!record.imageSource || isApprovedSourceUrl(record.imageSource)));
+const remoteImagesApproved = remoteRecords.every((record) => isApprovedSourceUrl(record.image));
+const localMetadataComplete = localRecords.every((record) => Number.isInteger(record.width) && record.width > 0
+  && Number.isInteger(record.height) && record.height > 0
+  && /^\d+% \d+%$/.test(record.focal || '')
+  && (!record.articleSource || isApprovedSourceUrl(record.articleSource))
+  && (!record.imageSource || isApprovedSourceUrl(record.imageSource)));
+const uniqueLocalPaths = new Set(localRecords.map((record) => record.image)).size === new Set(localRecords.map((record) => record.name)).size;
 
 export const mediaRegistryStats = {
   policyVersion: SOURCE_POLICY_VERSION,
@@ -50,12 +59,12 @@ export const mediaRegistryStats = {
   runtimeResolution: mediaCoverageByCategory.find((record) => record.id === 'characters')?.textOnly || 0,
   characters: mediaCoverageByCategory.find((record) => record.id === 'characters'),
   locations: mediaCoverageByCategory.find((record) => record.id === 'locations'),
-  sourcesApproved: mediaRegistry.every((record) => isApprovedSourceUrl(record.articleSource)
-    && (!record.imageSource || isApprovedSourceUrl(record.imageSource))),
-  localMetadataComplete: localRecords.every(mediaRecordIsComplete),
-  remoteImagesApproved: remoteRecords.every((record) => isApprovedSourceUrl(record.image)),
+  allowedHosts: sourcesApproved && remoteImagesApproved,
+  sourcesApproved,
+  localMetadataComplete,
+  remoteImagesApproved,
   localPathsValid: localRecords.every((record) => isLocalMediaPath(record.image)),
-  uniqueLocalPaths: new Set(localRecords.map((record) => record.image)).size === localRecords.length,
+  uniqueLocalPaths,
   uniqueIds: new Set(mediaRegistry.map((record) => record.id)).size === mediaRegistry.length,
 };
 
