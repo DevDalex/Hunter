@@ -72,7 +72,7 @@ The layer must keep:
 
 ## Build gate
 
-`audit:design-system` verifies:
+`audit:design-system` is part of the 15 independent pre-build audits in aggregate preflight. It verifies:
 
 1. contract statistics match the design-system registry;
 2. each primitive has a component and required CSS class;
