@@ -1,5 +1,6 @@
 @import './home-redesign.css';
 @import './home-refinement.css';
+@import './home-layout-fixes.css';
 
 :root {
   --archive-gold-ink: #6b4d00;
@@ -154,11 +155,3 @@ button[data-family] * {
 .is-in > small {
   color: #fff !important;
 }
-
-.archive-nen-wheel i::before { background: var(--nen-node-color, #858b90); }
-.archive-nen-wheel .is-one { --nen-node-color: #7891a2; }
-.archive-nen-wheel .is-two { --nen-node-color: #a27674; }
-.archive-nen-wheel .is-three { --nen-node-color: #70958e; }
-.archive-nen-wheel .is-four { --nen-node-color: #98938d; }
-.archive-nen-wheel .is-five { --nen-node-color: #8d738c; }
-.archive-nen-wheel .is-six { --nen-node-color: #7182a0; }
