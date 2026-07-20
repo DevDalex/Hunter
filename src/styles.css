@@ -17,3 +17,4 @@
 @import './styles/archive-system.css';
 
 .site-header { grid-template-columns: minmax(0, 1fr) auto; }
+.site-footer { display: none !important; }
