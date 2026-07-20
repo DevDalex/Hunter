@@ -5,9 +5,8 @@
  * 1. base.css owns tokens, resets, shared primitives, and original component rules.
  * 2. editorial.css owns deliberate site-wide visual overrides.
  * 3. experiences.css owns newer page and route experience systems.
- * 4. accessibility-contrast.css owns WCAG AA semantic foreground/background pairs.
+ * 4. accessibility-contrast.css owns WCAG AA semantic foreground/background pairs and imports the home experience.
  * 5. archive-system.css owns Batch 12 reusable archive UI primitives.
- * 6. home-redesign.css owns the focused reader-facing home layout.
  *
  * Nen remains isolated in src/nen.css and is imported after this file.
  */
@@ -16,7 +15,6 @@
 @import './styles/experiences.css';
 @import './styles/accessibility-contrast.css';
 @import './styles/archive-system.css';
-@import './styles/home-redesign.css';
 
 .site-header { grid-template-columns: minmax(0, 1fr) auto; }
 .site-footer { display: none !important; }
