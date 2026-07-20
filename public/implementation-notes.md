@@ -45,13 +45,14 @@ The principal structured owners are:
 - `src/data/entityRegistry.js` — canonical character identities, aliases, and status;
 - `src/data/entityIds.js` — stable archive ID namespaces and seed IDs;
 - `src/data/encyclopedia.js` — connected entity records;
+- `src/data/performanceBudgets.js` — canonical code, CSS, and media performance ceilings;
 - `src/data/worldAtlas.js` — place hierarchy and travel relationships;
 - `src/data/blackWhale.js` — Black Whale spaces and source-owned media records;
 - `src/data/successionTimeline.js` — voyage chronology;
 - `src/data/nenEncyclopedia.js` — Nen principles and named abilities;
 - `src/data/systemsDesk.js` — organizations, relationships, and object trails.
 
-Stable IDs and canonical owners should be updated before visual consumers. Do not add status flags, spellings, or source URLs independently to individual cards when a central record already owns them.
+Stable IDs and canonical owners should be updated before visual consumers. Do not add status flags, spellings, source URLs, or performance numbers independently when a central record already owns them.
 
 The full character directory remains intact. Dossier profiles are additive and do not replace or delete source-index characters.
 
@@ -112,14 +113,16 @@ Static contracts live in `scripts/audit-readability.mjs`, `scripts/audit-layout.
 
 ## Performance boundaries
 
-`scripts/audit-performance.mjs` currently enforces:
+`src/data/performanceBudgets.js` is the canonical budget owner. `scripts/audit-performance.mjs` currently enforces:
 
-- application entry: 150,000 bytes;
-- startup JavaScript closure: 270,000 bytes;
-- startup CSS: 390,000 bytes;
-- largest JavaScript chunk: 220,000 bytes;
+- application entry: 500,000 bytes;
+- startup JavaScript closure: 1,000,000 bytes;
+- startup CSS: 1,000,000 bytes;
+- largest JavaScript chunk: 750,000 bytes;
 - local portrait: 160,000 bytes;
 - portrait library: 2,200,000 bytes.
+
+The code and CSS ceilings were intentionally raised well above the current build to provide substantial feature-growth headroom. The structural guardrails remain strict: the home shell cannot import heavy archive datasets, dynamic boundaries must remain split, only the first home portrait receives high fetch priority, service-worker/PWA behavior remains excluded, and media ceilings remain unchanged.
 
 The production manifest must retain 22 dynamic entries:
 
@@ -129,7 +132,7 @@ The production manifest must retain 22 dynamic entries:
 
 `src/lib/routePreload.js` owns the 17 direct UI loaders. Search data remains split across the three `src/data/archiveSearch.*.js` shards. `scripts/performance-qa.mjs` checks six representative routes under desktop and constrained-mobile profiles, for 12 route/profile checks.
 
-A budget increase requires documentation and review. The guardrail should not be removed merely to hide a regression.
+Budget changes require review and synchronized documentation. The guardrail should not be removed merely to hide a regression.
 
 ## Aggregate build preflight
 
