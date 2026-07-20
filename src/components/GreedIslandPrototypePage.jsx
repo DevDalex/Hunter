@@ -134,7 +134,7 @@ function CardCatalogue() {
     </div>
     <div className="gi-card-toolbar">
       <div className="gi-card-tabs" role="tablist" aria-label="Greed Island card groups">
-        {greedIslandCardGroups.map(([value, label]) => <button key={value} className={activeType === value ? 'is-active' : ''} onClick={() => setActiveType(value)} type="button">{label}</button>)}
+        {greedIslandCardGroups.map(([value, label]) => <button key={value} role="tab" aria-selected={activeType === value} className={activeType === value ? 'is-active' : ''} onClick={() => setActiveType(value)} type="button">{label}</button>)}
       </div>
       <label className="gi-card-search"><Search size={15} /><span className="sr-only">Search Greed Island cards</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search card number, name, group…" /></label>
     </div>
