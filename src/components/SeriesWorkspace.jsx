@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ExternalLink, Grid2X2, List, Search } from 'lucide-react';
 import PageIntro from './PageIntro';
 import WorkspaceNav from './WorkspaceNav';
@@ -7,41 +7,24 @@ import ArcNav from './ArcNav';
 import ChapterIndex from './ChapterIndex';
 import ChapterDrawer from './ChapterDrawer';
 import SeriesResearchDesk from './SeriesResearchDesk';
-import KurapikaMemories from './KurapikaMemories';
 import AdaptationDesk from './AdaptationDesk';
-import PreSuccessionExperience from './PreSuccessionExperience';
-import PreSuccessionOverview from './PreSuccessionOverview';
-import StoryFoundationLayout, { StoryArcFoundation, StoryHubFoundation } from './StoryFoundation';
-import YorknewPrototypePage from './YorknewPrototypePage';
-import EarlyArcPrototypePage from './EarlyArcPrototypePage';
+import ArcPage from './ArcPage';
+import StoryHub from './StoryHub';
 import { arcs } from '../data/arcs';
 import { chapters, LATEST_CHAPTER } from '../data/chapters';
-import { preSuccessionExperienceById, preSuccessionExperienceIds } from '../data/preSuccessionExperiences';
-import { hasEarlyArcPrototype } from '../data/earlyArcPrototypes';
+import { storyArcIds } from '../data/storyArcPages';
 import { readStoredJson, writeStoredJson } from '../lib/browserStorage';
+import './StoryUtilities.css';
 
-const GreedIslandPrototypePage = lazy(() => import('./GreedIslandPrototypePage'));
-const ChimeraAntPrototypePage = lazy(() => import('./ChimeraAntPrototypePage'));
-
-const seriesPages = [
-  { id: 'arcs', label: 'Overview' },
-  { id: 'hunter-exam', label: 'Hunter Exam' },
-  { id: 'zoldyck-family', label: 'Zoldyck Family' },
-  { id: 'heavens-arena', label: 'Heavens Arena' },
-  { id: 'yorknew-city', label: 'Yorknew' },
-  { id: 'greed-island', label: 'Greed Island' },
-  { id: 'chimera-ant', label: 'Chimera Ant' },
-  { id: 'chairman-election', label: 'Election' },
-  { id: 'volume-0', label: 'Volume 0' },
-  { id: 'adaptation', label: '2011 anime' },
+const utilityPages = [
   { id: 'chronology', label: 'Chronology' },
-  { id: 'chapters', label: 'Chapter references' },
+  { id: 'chapters', label: 'Chapter directory' },
+  { id: 'adaptation', label: '2011 anime guide' },
 ];
 
 const PRE_SUCCESSION_END = 339;
 const preSuccessionArcs = arcs.filter((arc) => arc.chapters[1] <= PRE_SUCCESSION_END);
 const adaptationArcMap = { 'hunter-exam': 'hunter-exam', 'heavens-arena': 'heavens-arena', yorknew: 'yorknew-city', 'greed-island': 'greed-island', 'chimera-ant': 'chimera-ant', election: 'chairman-election' };
-
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const scrollToSection = (id) => document.getElementById(id)?.scrollIntoView({ behavior: reducedMotion() ? 'auto' : 'smooth', block: 'start' });
 
@@ -51,17 +34,9 @@ function readProgress() {
 }
 
 export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit, onSpoilerChange, onNavigate, onPrefetch }) {
-  const arcPage = preSuccessionExperienceIds.has(routeTarget);
-  const arcExperience = arcPage ? preSuccessionExperienceById.get(routeTarget) : null;
-  const earlyArcPrototypePage = hasEarlyArcPrototype(routeTarget);
-  const yorknewPrototypePage = routeTarget === 'yorknew-city';
-  const greedIslandPrototypePage = routeTarget === 'greed-island';
-  const chimeraAntPrototypePage = routeTarget === 'chimera-ant';
   const chronologyPage = routeTarget === 'chronology';
   const chaptersPage = routeTarget === 'chapters';
-  const memoriesPage = routeTarget === 'volume-0';
   const adaptationPage = routeTarget === 'adaptation';
-  const activePage = arcPage ? routeTarget : earlyArcPrototypePage ? routeTarget : greedIslandPrototypePage ? 'greed-island' : chimeraAntPrototypePage ? 'chimera-ant' : chronologyPage ? 'chronology' : chaptersPage ? 'chapters' : memoriesPage ? 'volume-0' : adaptationPage ? 'adaptation' : 'arcs';
   const [activeArc, setActiveArc] = useState('all');
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('all');
@@ -88,14 +63,12 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   }, [routeParams.chapter]);
 
   useEffect(() => {
-    if (routeParams.arc && preSuccessionArcs.some((arc) => arc.id === routeParams.arc)) {
-      setActiveArc(routeParams.arc);
-    }
+    if (routeParams.arc && preSuccessionArcs.some((arc) => arc.id === routeParams.arc)) setActiveArc(routeParams.arc);
   }, [routeParams.arc]);
 
   const updateChapterRoute = (chapter) => {
     setSelectedChapter(chapter);
-    onNavigate('series', activePage === 'arcs' ? '' : activePage, { ...routeParams, chapter: chapter?.number || undefined });
+    onNavigate('series', 'chapters', { ...routeParams, chapter: chapter?.number || undefined });
   };
 
   const toggleStudied = (number) => setStudied((current) => {
@@ -116,68 +89,34 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     if (next) updateChapterRoute(next);
   };
 
-  const selectWorkspace = (id) => {
-    onNavigate('series', id === 'arcs' ? '' : id);
-  };
+  if (!routeTarget) return <StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} />;
+  if (storyArcIds.has(routeTarget)) return <ArcPage arcId={routeTarget} onNavigate={onNavigate} />;
 
-  const pageIntro = memoriesPage
-    ? { kicker: 'Volume 0 · Kurapika backstory', title: 'Kurapika’s Memories', description: 'Read the two supplementary manga chapters as a connected visual study of the Kurta settlement, Pairo, Sheila, departure, loss, and the promise carried into Kurapika’s later story.' }
-    : adaptationPage
-      ? { kicker: '2011 television anime', title: 'The adaptation desk', description: 'Map all 148 episodes to six completed manga arcs and their source ranges without turning Chapters 1–339 into a second detailed-content backlog.' }
-      : chronologyPage
-        ? { kicker: 'Selected story anchors before Chapter 340', title: 'Pre-Succession chronology', description: 'Follow curated events, flashbacks, dated periods, and arc movements from Volume 0 through the Chairman Election without pretending every early chapter needs its own timeline event.' }
-        : chaptersPage
-          ? { kicker: 'Optional manga reference · Chapters 1–339', title: 'Lightweight chapter references', description: 'Find an early chapter by number, title, arc, or volume when needed. These entries support orientation and adaptation lookup; they are not planned as 339 deep dossiers.' }
-          : arcPage
-            ? { kicker: arcExperience.eyebrow, title: arcExperience.title, description: arcExperience.deck }
-            : { kicker: 'Volume 0 + six completed arcs', title: 'The Story Archive', description: 'A route-level foundation for Kurapika’s childhood, the completed adapted journey, and the ongoing Succession Contest archive.' };
+  const pageIntro = adaptationPage
+    ? { kicker: '2011 television anime', title: 'The adaptation guide', description: 'Map all 148 episodes to the completed manga arcs and their source ranges without mixing the adaptation reference into any individual arc page.' }
+    : chronologyPage
+      ? { kicker: 'Cross-arc reference', title: 'The complete chronology', description: 'Follow selected events, flashbacks, dated periods, and movements across the Story archive. Every arc keeps its own internal timeline on its dedicated page.' }
+      : { kicker: 'Complete manga reference', title: 'The chapter directory', description: 'Search Chapters 1–339 here. Every dedicated arc page also contains its own scoped chapter directory, while the Succession archive maintains Chapters 340–413.' };
 
-  return (
-    <StoryFoundationLayout activeId={activePage} spoilerLimit={spoilerLimit} onNavigate={onNavigate} onPrefetch={onPrefetch}>
-      {!arcPage && !earlyArcPrototypePage && !greedIslandPrototypePage && !chimeraAntPrototypePage && <PageIntro kicker={pageIntro.kicker} title={pageIntro.title} description={pageIntro.description}>
-        <dl className="page-intro__facts"><div><dt>Deep exception</dt><dd>Volume 0</dd></div><div><dt>Completed arcs</dt><dd>{preSuccessionArcs.length}</dd></div><div><dt>2011 anime</dt><dd>148 episodes</dd></div></dl>
-      </PageIntro>}
-      <WorkspaceNav items={seriesPages} activeId={activePage} onSelect={selectWorkspace} label="Series library sections" />
-      <details className="spoiler-settings"><summary>Reading boundary <b>Chapter {spoilerLimit}</b></summary><SpoilerControl value={spoilerLimit} latestChapter={LATEST_CHAPTER} onChange={onSpoilerChange} /></details>
+  return <section className="story-utility-shell">
+    <nav className="story-utility-shell__back" aria-label="Story utility navigation"><button type="button" onClick={() => onNavigate('series')}>← All arcs</button></nav>
+    <PageIntro kicker={pageIntro.kicker} title={pageIntro.title} description={pageIntro.description} compact>
+      <dl className="page-intro__facts"><div><dt>Story arcs</dt><dd>9 pages</dd></div><div><dt>Numbered chapters</dt><dd>413</dd></div><div><dt>2011 anime</dt><dd>148 episodes</dd></div></dl>
+    </PageIntro>
+    <WorkspaceNav items={utilityPages} activeId={routeTarget} onSelect={(id) => onNavigate('series', id)} label="Story reference tools" />
+    <details className="spoiler-settings"><summary>Reading boundary <b>Chapter {spoilerLimit}</b></summary><SpoilerControl value={spoilerLimit} latestChapter={LATEST_CHAPTER} onChange={onSpoilerChange} /></details>
 
-      {arcPage && !yorknewPrototypePage && !earlyArcPrototypePage && !greedIslandPrototypePage && !chimeraAntPrototypePage && <StoryArcFoundation activeId={routeTarget} onNavigate={onNavigate} />}
+    {adaptationPage && <AdaptationDesk onOpenChapters={(arc) => onNavigate('series', 'chapters', { arc: adaptationArcMap[arc] || arc })} />}
+    {chronologyPage && <SeriesResearchDesk chapters={chapters} spoilerLimit={Math.min(spoilerLimit, PRE_SUCCESSION_END)} maxChapter={PRE_SUCCESSION_END} onOpenSuccessionTimeline={() => onNavigate('succession', 'succession-timeline')} />}
+    {chaptersPage && <section className="index-section" id="chapter-index">
+      <div className="index-heading"><div><span className="section-kicker">{currentArc ? `Reference range · Chapters ${currentArc.chapters[0]}–${currentArc.chapters[1]}` : 'Complete Pre-Succession catalogue'}</span><h2>{currentArc ? currentArc.title : 'Chapters 1–339'}</h2><p>{currentArc ? currentArc.premise : 'Use this directory when you need to search across arc boundaries. For focused reading, open the chapter directory embedded at the end of the relevant dedicated arc page.'}</p></div><span className="review-boundary">Pre-Succession boundary · Ch. 339</span></div>
+      <ArcNav activeArc={activeArc} setActiveArc={chooseArc} completedCount={studied.size} />
+      {currentArc && <div className="arc-context arc-context--expanded"><div><b>Study lenses</b>{currentArc.focus.map((item) => <button key={item} onClick={() => setQuery(item)}>{item}</button>)}</div><div><b>Internal movements</b><span>{currentArc.phases.join(' · ')}</span></div><div><b>Key people</b><span>{currentArc.people.join(' · ')}</span></div><div><b>Places</b><span>{currentArc.places.join(' · ')}</span></div><div><b>Nen developments</b><span>{currentArc.nen.join(' · ')}</span></div><div><b>Turning points</b><span>{currentArc.turningPoints.join(' · ')}</span></div><div><b>Aftermath / status</b><span>{currentArc.aftermath}</span><a href={currentArc.source} target="_blank" rel="noreferrer">Hunterpedia <ExternalLink size={11} /></a></div></div>}
+      <div className="index-toolbar"><div className="filter-group">{[['all','All'],['studied','Studied'],['unread','To study']].map(([value,label]) => <button key={value} className={filter === value ? 'is-active' : ''} onClick={() => setFilter(value)}>{label}</button>)}</div><label className="index-search"><span className="sr-only">Search chapters</span><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Title, number, arc…" />{query && <button onClick={() => setQuery('')}>Clear</button>}</label><select value={volume} onChange={(event) => setVolume(event.target.value)} aria-label="Filter by volume"><option value="all">All volumes</option>{Array.from({length:39},(_,index) => <option key={index + 1} value={index + 1}>Volume {index + 1}</option>)}<option value="uncollected">Uncollected</option></select><div className="density-toggle" aria-label="Chapter layout"><button className={density === 'comfortable' ? 'is-active' : ''} onClick={() => setDensity('comfortable')} aria-label="List view" aria-pressed={density === 'comfortable'}><List size={17} /></button><button className={density === 'compact' ? 'is-active' : ''} onClick={() => setDensity('compact')} aria-label="Grid view" aria-pressed={density === 'compact'}><Grid2X2 size={16} /></button></div></div>
+      <div className="result-count" role="status" aria-live="polite">Showing {visibleChapters.length} chapter{visibleChapters.length === 1 ? '' : 's'}</div>
+      <ChapterIndex chapters={visibleChapters} studied={studied} openChapter={updateChapterRoute} density={density} />
+    </section>}
 
-      {earlyArcPrototypePage ? (
-        <EarlyArcPrototypePage arcId={routeTarget} onNavigate={onNavigate} />
-      ) : yorknewPrototypePage ? (
-        <YorknewPrototypePage onNavigate={onNavigate} />
-      ) : greedIslandPrototypePage ? (
-        <Suspense fallback={<aside className="pre-scope-notice"><b>Loading Greed Island archive</b><p>The card binder and game-system modules are loading as a separate Story detail chunk.</p></aside>}>
-          <GreedIslandPrototypePage onNavigate={onNavigate} />
-        </Suspense>
-      ) : chimeraAntPrototypePage ? (
-        <Suspense fallback={<aside className="pre-scope-notice"><b>Loading Chimera Ant archive</b><p>The war dossier, palace clock, Ant hierarchy, Nen systems, and aftermath records are loading as a separate Story detail chunk.</p></aside>}>
-          <ChimeraAntPrototypePage onNavigate={onNavigate} />
-        </Suspense>
-      ) : arcPage ? (
-        <PreSuccessionExperience arcId={routeTarget} onNavigate={onNavigate} />
-      ) : memoriesPage ? (
-        <KurapikaMemories onNavigate={onNavigate} />
-      ) : adaptationPage ? (
-        <AdaptationDesk onOpenChapters={(arc) => onNavigate('series', 'chapters', { arc: adaptationArcMap[arc] || arc })} />
-      ) : chronologyPage ? (
-        <SeriesResearchDesk chapters={chapters} spoilerLimit={Math.min(spoilerLimit, PRE_SUCCESSION_END)} maxChapter={PRE_SUCCESSION_END} onOpenSuccessionTimeline={() => onNavigate('succession', 'succession-timeline')} />
-      ) : chaptersPage ? (
-        <section className="index-section" id="chapter-index">
-          <div className="index-heading"><div><span className="section-kicker">{currentArc ? `Reference range · Chapters ${currentArc.chapters[0]}–${currentArc.chapters[1]}` : 'Lightweight Pre-Succession catalogue'}</span><h2>{currentArc ? currentArc.title : 'Chapters 1–339 · reference only'}</h2><p>{currentArc ? currentArc.premise : 'Use this ledger when a chapter number, title, volume, or adaptation range is useful. The six arc studies, Volume 0, the 2011 desk, and the world map are the primary Pre-Succession experiences.'}</p></div><span className="review-boundary">Coverage boundary · Ch. 339</span></div>
-          <aside className="pre-scope-notice"><b>Deliberate depth boundary</b><p>No additional chapter-by-chapter expansion is planned for Chapters 1–339. Existing records remain searchable, while deep manga event/state research begins in the Succession Archive at Chapter 340.</p></aside>
-          <ArcNav activeArc={activeArc} setActiveArc={chooseArc} completedCount={studied.size} />
-          {currentArc && <div className="arc-context arc-context--expanded"><div><b>Study lenses</b>{currentArc.focus.map((item) => <button key={item} onClick={() => setQuery(item)}>{item}</button>)}</div><div><b>Internal movements</b><span>{currentArc.phases.join(' · ')}</span></div><div><b>Key people</b><span>{currentArc.people.join(' · ')}</span></div><div><b>Places</b><span>{currentArc.places.join(' · ')}</span></div><div><b>Nen developments</b><span>{currentArc.nen.join(' · ')}</span></div><div><b>Turning points</b><span>{currentArc.turningPoints.join(' · ')}</span></div><div><b>Aftermath / status</b><span>{currentArc.aftermath}</span><a href={currentArc.source} target="_blank" rel="noreferrer">Hunterpedia <ExternalLink size={11} /></a></div></div>}
-          <div className="index-toolbar"><div className="filter-group">{[['all','All'],['studied','Studied'],['unread','To study']].map(([value,label]) => <button key={value} className={filter === value ? 'is-active' : ''} onClick={() => setFilter(value)}>{label}</button>)}</div><label className="index-search"><span className="sr-only">Search chapters</span><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Title, number, arc…" />{query && <button onClick={() => setQuery('')}>Clear</button>}</label><select value={volume} onChange={(event) => setVolume(event.target.value)} aria-label="Filter by volume"><option value="all">All volumes</option>{Array.from({length:39},(_,index) => <option key={index + 1} value={index + 1}>Volume {index + 1}</option>)}<option value="uncollected">Uncollected</option></select><div className="density-toggle" aria-label="Chapter layout"><button className={density === 'comfortable' ? 'is-active' : ''} onClick={() => setDensity('comfortable')} aria-label="List view" aria-pressed={density === 'comfortable'}><List size={17} /></button><button className={density === 'compact' ? 'is-active' : ''} onClick={() => setDensity('compact')} aria-label="Grid view" aria-pressed={density === 'compact'}><Grid2X2 size={16} /></button></div></div>
-          <div className="result-count" role="status" aria-live="polite">Showing {visibleChapters.length} chapter{visibleChapters.length === 1 ? '' : 's'}</div>
-          <ChapterIndex chapters={visibleChapters} studied={studied} openChapter={updateChapterRoute} density={density} />
-        </section>
-      ) : <>
-        <StoryHubFoundation spoilerLimit={spoilerLimit} onNavigate={onNavigate} />
-        <PreSuccessionOverview onNavigate={onNavigate} />
-      </>}
-
-      <ChapterDrawer chapter={selectedChapter} onClose={() => updateChapterRoute(null)} onMove={moveChapter} studied={selectedChapter ? studied.has(selectedChapter.number) : false} toggleStudied={toggleStudied} onOpenEntity={(category, search) => { setSelectedChapter(null); onNavigate('reference', 'encyclopedia', { category, search }); }} />
-    </StoryFoundationLayout>
-  );
+    <ChapterDrawer chapter={selectedChapter} onClose={() => updateChapterRoute(null)} onMove={moveChapter} studied={selectedChapter ? studied.has(selectedChapter.number) : false} toggleStudied={toggleStudied} onOpenEntity={(category, search) => { setSelectedChapter(null); onNavigate('reference', 'encyclopedia', { category, search }); }} />
+  </section>;
 }
