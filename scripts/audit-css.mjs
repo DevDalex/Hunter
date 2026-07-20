@@ -8,6 +8,7 @@ const layerPaths = [
   'src/styles/base.css',
   'src/styles/editorial.css',
   'src/styles/experiences.css',
+  'src/styles/accessibility-contrast.css',
 ];
 const runtimeExtensionPaths = [
   'src/nen.css',
@@ -118,4 +119,4 @@ assert(!unresolvedTinyRules.length, `legacy text sizes below 11px lack an exact 
 const repeatedSelectors = [...selectorCounts.values()].filter((count) => count > 1).length;
 const exactDuplicateRules = [...exactCounts.values()].reduce((total, count) => total + Math.max(0, count - 1), 0);
 
-console.log(`CSS ownership audit passed: ${layerPaths.length} ordered styles.css layers; ${runtimeExtensionPaths.length} ordered runtime extension layers; ${cssFiles.length} CSS files checked; ${legacyTinyRules.length} legacy sub-11px declarations covered by exact final-polish overrides; ${rules.length} selector rules; ${repeatedSelectors} intentional override selectors; ${exactDuplicateRules} exact duplicate rule occurrence(s) reported for future cleanup.`);
+console.log(`CSS ownership audit passed: ${layerPaths.length} ordered styles.css layers including semantic contrast; ${runtimeExtensionPaths.length} ordered runtime extension layers; ${cssFiles.length} CSS files checked; ${legacyTinyRules.length} legacy sub-11px declarations covered by exact final-polish overrides; ${rules.length} selector rules; ${repeatedSelectors} intentional override selectors; ${exactDuplicateRules} exact duplicate rule occurrence(s) reported for future cleanup.`);
