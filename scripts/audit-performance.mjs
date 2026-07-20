@@ -44,7 +44,7 @@ const directBoundaryKeys = [
   'src/components/ConflictArchive.jsx',
   'src/components/StudyNotebook.jsx',
 ];
-const storyDetailBoundaryKeys = ['src/components/GreedIslandPrototypePage.jsx'];
+const storyDetailBoundaryKeys = ['src/components/GreedIslandPrototypePage.jsx', 'src/components/ChimeraAntPrototypePage.jsx'];
 const searchShardKeys = [
   'src/data/archiveSearch.series.js',
   'src/data/archiveSearch.succession.js',
@@ -59,8 +59,8 @@ assert(startupJs <= 270_000, `startup JavaScript closure is ${startupJs} bytes; 
 assert(startupCss <= 390_000, `startup stylesheet is ${startupCss} bytes; budget is 390,000`);
 assert(largestJavascript.bytes <= 220_000, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is 220,000`);
 assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 17 route/search UI boundaries must remain dynamic entries');
-assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Greed Island card catalogue must remain a separate Story detail chunk');
-assert(dynamicEntries.length === 21, `expected 17 direct boundaries, one Story-detail boundary, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
+assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Greed Island and Chimera Ant detail pages must remain separate Story detail chunks');
+assert(dynamicEntries.length === 22, `expected 17 direct boundaries, two Story-detail boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
 assert(searchShardKeys.every((key) => manifest[key]?.isDynamicEntry), 'the story, Succession, and reference search indexes must remain separate dynamic entries');
 
 const homeHighlights = await readFile(path.join(root, 'src/data/homeHighlights.js'), 'utf8');
@@ -88,7 +88,7 @@ const portraitFiles = await readdir(portraitsDir);
 const portraitSizes = await Promise.all(portraitFiles.map(async (file) => ({ file, bytes: (await stat(path.join(portraitsDir, file))).size })));
 const portraitBytes = portraitSizes.reduce((total, record) => total + record.bytes, 0);
 const largestPortrait = portraitSizes.sort((a, b) => b.bytes - a.bytes)[0];
-assert(largestPortrait.bytes <= 160_000, `${largestPortrait.file} is ${largestPortrait.bytes} bytes; local portrait ceiling is 160,000`);
+assert(largestPortrait.bytes <= 160_000, `${largestPortrait.file} is ${largestPortrait.bytes}; local portrait ceiling is 160,000`);
 assert(portraitBytes <= 2_200_000, `local portrait library is ${portraitBytes} bytes; budget is 2,200,000`);
 
-console.log(`Performance audit passed: entry JS ${entryJs} bytes; startup JS ${startupJs} bytes; startup CSS ${startupCss} bytes; ${directBoundaryKeys.length} route/search UI chunks, ${storyDetailBoundaryKeys.length} Story detail chunk, ${searchShardKeys.length} search shards, largest JS chunk ${largestJavascript.file} at ${largestJavascript.bytes} bytes; local portraits ${portraitBytes} bytes.`);
+console.log(`Performance audit passed: entry JS ${entryJs} bytes; startup JS ${startupJs} bytes; startup CSS ${startupCss} bytes; ${directBoundaryKeys.length} route/search UI chunks, ${storyDetailBoundaryKeys.length} Story detail chunks, ${searchShardKeys.length} search shards, largest JS chunk ${largestJavascript.file} at ${largestJavascript.bytes} bytes; local portraits ${portraitBytes} bytes.`);
