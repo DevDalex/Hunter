@@ -19,7 +19,9 @@ npm run dev
 - Maintain completed-arc phase research, story chronology, and adaptation evidence boundaries in `src/data/seriesResearch.js`.
 - Maintain encyclopedia-to-story phase trails in `src/data/entityResearchTrails.js`.
 - Review local, verified-remote, and text-only coverage in `src/data/mediaRegistry.js`.
-- Add a verified portrait source in `src/data/characters.js`, then run `npm run stabilize:media`; the generated manifest in `src/data/priorityMedia.generated.js` retains dimensions, focal points, and direct Hunterpedia sources.
+- Treat `src/data/characters.js#characterPortraitSources` as the canonical owner of portrait provenance. Add a verified article and image source there, then run `npm run stabilize:media`; `src/data/priorityMedia.generated.js` is only a generated derivative mirror containing local asset metadata plus checked provenance.
+- Treat `src/data/blackWhale.js#blackWhaleRemoteImageSources` as the canonical owner of Black Whale image provenance. Run `npm run stabilize:rooms` after changing those records; `src/data/blackWhaleMedia.generated.js` is never edited as source data.
+- Keep approved source hosts and URL constructors in `src/data/sourcePolicy.js`, shared media semantics in `src/data/mediaSchema.js`, and machine-readable ownership in `src/data/dataOwnership.js`. `npm run audit:schema` blocks generated-provenance drift, duplicate identity keys, unauthorized generated imports, and source-policy violations.
 - Maintain the structured world hierarchy and story-route legs in `src/data/worldAtlas.js`.
 - Maintain Phase 6D organization charts, institutional relationships, and object/evidence trails in `src/data/systemsDesk.js`; every diagram record must retain a direct Hunterpedia source and an explicit time scope.
 - Keep Phase 6E shell totals in `src/data/archiveMeta.js` synchronized through the build-blocking audit; heavy chapter, Succession, search, and encyclopedia datasets must remain behind route-level lazy boundaries.
@@ -33,13 +35,15 @@ npm run dev
 - Keep Phase 7F media and density rules in `src/components/SafeImage.jsx`, `src/components/BlackWhaleGuide.jsx`, and `scripts/audit-polish.mjs`; remote imagery must disappear cleanly when unavailable, room records remain progressively readable, and browser QA fails visible pending media or media-copy collisions.
 - Keep Phase 8A release metadata in `src/data/releaseReadiness.js`; the final checkpoint requires all static audits, the visual matrix, the WCAG matrix, keyboard flows, loading profiles, and both downloadable editions to agree with the exact deployed source.
 - Update collected chapter ranges in `src/data/volumes.js`.
-- Expand the maintained entity and search directories in `src/data/referenceEntities.js`, `src/data/archiveSearch.js`, and `src/data/characters.js`.
+- Expand the maintained entity and search directories in `src/data/referenceEntities.js`, the three `src/data/archiveSearch.*.js` domain shards, and `src/data/characters.js`.
 - Change `LATEST_CHAPTER` and append a title when Hunterpedia adds a new numbered chapter.
 - Add more character portraits only after verifying the Hunterpedia article and image source, then regenerate the local media manifest.
 
 ## Source policy
 
 The project uses Hunterpedia on Fandom for chapter titles, arc boundaries, character images, Nen links, and reference links. Long community-written synopses are linked rather than copied; chapter-specific accounts, arc-phase context, and live source evidence are labeled separately.
+
+Canonical human-maintained records own facts and provenance. Generated media manifests and runtime search records are derivatives: they may repeat canonical values for deployment, but the schema audit requires exact agreement with their named owner and prevents components from importing those generated files directly.
 
 ## Build
 
@@ -60,7 +64,7 @@ npm run browser:install
 npm run qa:browser
 ```
 
-`qa:browser` performs the production build once, then runs route screenshots and overflow/media checks, WCAG and keyboard checks, critical Nen/relationship interaction states, and constrained performance profiles. Reports and failure screenshots are written to `.visual-qa/`, `.accessibility-qa/`, `.interaction-qa/`, and `.performance-qa/`. The same command runs automatically in the **Browser Verification** GitHub Actions workflow for pull requests and pushes to `main`.
+`qa:browser` performs the production build once, then runs focused search-shard verification, route screenshots and overflow/media checks, WCAG and keyboard checks, critical Nen/relationship interaction states, and constrained performance profiles. Reports, the complete console log, and failure screenshots are written to `.search-qa/`, `.visual-qa/`, `.accessibility-qa/`, `.interaction-qa/`, `.performance-qa/`, and `.browser-qa/`. The same command runs automatically in the **Browser Verification** GitHub Actions workflow for pull requests and pushes to `main`.
 
 The build also adds a minimal static worker and hosting metadata to `dist/`, so
 the same source can be deployed through ChatGPT Sites without changing the React app.

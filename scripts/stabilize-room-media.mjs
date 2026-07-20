@@ -1,11 +1,12 @@
 import { execFile } from 'node:child_process';
-import { createHash } from 'node:crypto';
-import { access, mkdtemp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { access, mkdtemp, mkdir, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { promisify } from 'node:util';
 import { createServer } from 'vite';
 import { blackWhaleRoomMedia } from '../src/data/blackWhaleMedia.generated.js';
+import { isApprovedSourceUrl } from '../src/data/sourcePolicy.js';
+import { readWebpDimensions, slugifyMediaKey, stableHunterpediaImageUrl } from './lib/mediaPipeline.mjs';
 
 const execFileAsync = promisify(execFile);
 const root = process.cwd();
@@ -14,39 +15,6 @@ const manifestPath = path.join(root, 'src/data/blackWhaleMedia.generated.js');
 const verifyOnly = process.argv.includes('--verify-only');
 const reviewed = 'July 16, 2026';
 const concurrency = 3;
-
-const slugify = (value) => value.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-const dimensionsOf = async (file) => {
-  const bytes = await readFile(file);
-  if (bytes.subarray(0, 4).toString('ascii') !== 'RIFF' || bytes.subarray(8, 12).toString('ascii') !== 'WEBP') throw new Error(`Not a WebP file: ${file}`);
-  let offset = 12;
-  while (offset + 8 <= bytes.length) {
-    const type = bytes.subarray(offset, offset + 4).toString('ascii');
-    const size = bytes.readUInt32LE(offset + 4);
-    const data = offset + 8;
-    if (type === 'VP8X' && data + 10 <= bytes.length) return { width: bytes.readUIntLE(data + 4, 3) + 1, height: bytes.readUIntLE(data + 7, 3) + 1 };
-    if (type === 'VP8L' && data + 5 <= bytes.length && bytes[data] === 0x2f) {
-      return {
-        width: 1 + bytes[data + 1] + ((bytes[data + 2] & 0x3f) << 8),
-        height: 1 + ((bytes[data + 2] & 0xc0) >> 6) + (bytes[data + 3] << 2) + ((bytes[data + 4] & 0x0f) << 10),
-      };
-    }
-    if (type === 'VP8 ' && data + 10 <= bytes.length && bytes[data + 3] === 0x9d && bytes[data + 4] === 0x01 && bytes[data + 5] === 0x2a) {
-      return { width: bytes.readUInt16LE(data + 6) & 0x3fff, height: bytes.readUInt16LE(data + 8) & 0x3fff };
-    }
-    offset = data + size + (size % 2);
-  }
-  throw new Error(`Could not read WebP dimensions for ${file}`);
-};
-
-const stableImageRequestUrl = (source) => {
-  const marker = '/wiki/Special:Redirect/file/';
-  if (!source.includes(marker)) return source;
-  const filename = decodeURIComponent(source.split(marker)[1] || '').replaceAll(' ', '_');
-  const hash = createHash('md5').update(filename).digest('hex');
-  return `https://static.wikia.nocookie.net/hunterxhunter/images/${hash[0]}/${hash.slice(0, 2)}/${encodeURIComponent(filename).replaceAll('%2F', '/')}/revision/latest`;
-};
 
 const loadSources = async () => {
   const server = await createServer({ root, appType: 'custom', server: { middlewareMode: true }, logLevel: 'silent' });
@@ -58,17 +26,21 @@ const loadSources = async () => {
   }
 };
 
-const verify = async (records, sources = null) => {
+const verify = async (records, sources) => {
   const failures = [];
-  if (sources) {
-    const expected = new Set(sources.map((record) => record.imageSource));
-    const actual = new Set(records.map((record) => record.imageSource));
-    if (expected.size !== actual.size || [...expected].some((source) => !actual.has(source))) failures.push('manifest does not cover every remote Black Whale image source');
+  const sourceByKey = new Map(sources.map((record) => [record.key, record]));
+  if (sourceByKey.size !== sources.length) failures.push('canonical Black Whale media keys are not unique');
+  if (records.length !== sources.length) failures.push(`manifest has ${records.length} records for ${sources.length} canonical Black Whale sources`);
+  for (const source of sources) {
+    if (!isApprovedSourceUrl(source.articleSource) || !isApprovedSourceUrl(source.imageSource)) failures.push(`${source.key}: canonical source is outside the approved Hunterpedia hosts`);
   }
   for (const record of records) {
+    const canonical = sourceByKey.get(record.key);
+    if (!canonical) failures.push(`${record.key}: manifest record has no canonical source record`);
+    else if (record.articleSource !== canonical.articleSource || record.imageSource !== canonical.imageSource) failures.push(`${record.key}: generated provenance drifted from blackWhale.js`);
     const file = path.join(root, 'public', record.src.slice(1));
     try {
-      const dimensions = await dimensionsOf(file);
+      const dimensions = await readWebpDimensions(file);
       if (dimensions.width !== record.width || dimensions.height !== record.height) failures.push(`${record.key}: manifest dimensions do not match the file`);
       if (!/^\d+% \d+%$/.test(record.focal)) failures.push(`${record.key}: invalid focal point`);
     } catch (error) {
@@ -82,7 +54,7 @@ const verify = async (records, sources = null) => {
 if (verifyOnly) {
   const sources = await loadSources();
   const count = await verify(blackWhaleRoomMedia, sources);
-  console.log(`Black Whale media verified: ${count} locally stored Hunterpedia images.`);
+  console.log(`Black Whale media verified: ${count} local derivatives match canonical room sources.`);
   process.exit(0);
 }
 
@@ -94,19 +66,20 @@ const failures = [];
 let cursor = 0;
 
 const processRecord = async (record, index) => {
+  if (!isApprovedSourceUrl(record.articleSource) || !isApprovedSourceUrl(record.imageSource)) throw new Error(`${record.key} has an unapproved source URL`);
   const temporaryFile = path.join(temporaryDirectory, `${String(index).padStart(3, '0')}.download`);
-  const filename = `black-whale-${slugify(record.key)}.webp`;
+  const filename = `black-whale-${slugifyMediaKey(record.key)}.webp`;
   const output = path.join(outputDirectory, filename);
   let existingIsValid = false;
   try {
     await access(output);
-    await dimensionsOf(output);
+    await readWebpDimensions(output);
     existingIsValid = true;
   } catch {
     await rm(output, { force: true });
   }
   if (!existingIsValid) {
-    const response = await fetch(stableImageRequestUrl(record.imageSource), {
+    const response = await fetch(stableHunterpediaImageUrl(record.imageSource), {
       redirect: 'follow',
       headers: { Accept: 'image/avif,image/webp,image/png,image/*,*/*;q=0.8', 'User-Agent': 'Hunter-x-Hunter-Archive/Media-Stabilizer' },
     });
@@ -116,7 +89,7 @@ const processRecord = async (record, index) => {
     await writeFile(temporaryFile, Buffer.from(await response.arrayBuffer()));
     await execFileAsync('convert', [temporaryFile, '-auto-orient', '-resize', '1400x1400>', '-strip', '-quality', '84', output]);
   }
-  const { width, height } = await dimensionsOf(output);
+  const { width, height } = await readWebpDimensions(output);
   results[index] = {
     key: record.key,
     src: `/media/rooms/${filename}`,
@@ -148,7 +121,7 @@ try {
   if (failures.length) throw new Error(`Could not stabilize ${failures.length} Black Whale images:\n${failures.join('\n')}`);
   await verify(stableResults, sources);
   const lines = stableResults.map((record) => `  { key: ${JSON.stringify(record.key)}, src: ${JSON.stringify(record.src)}, width: ${record.width}, height: ${record.height}, focal: ${JSON.stringify(record.focal)}, articleSource: ${JSON.stringify(record.articleSource)}, imageSource: ${JSON.stringify(record.imageSource)}, storage: 'local', reviewed: ${JSON.stringify(record.reviewed)} },`);
-  const manifest = `// Generated by scripts/stabilize-room-media.mjs. Do not edit individual entries by hand.\nexport const blackWhaleRoomMedia = [\n${lines.join('\n')}\n];\nexport const blackWhaleRoomMediaBySource = new Map(blackWhaleRoomMedia.map((record) => [record.imageSource, record]));\n`;
+  const manifest = `// Generated by scripts/stabilize-room-media.mjs from src/data/blackWhale.js. Do not edit individual entries by hand.\nexport const blackWhaleRoomMedia = [\n${lines.join('\n')}\n];\nexport const blackWhaleRoomMediaBySource = new Map(blackWhaleRoomMedia.map((record) => [record.imageSource, record]));\nexport const blackWhaleRoomMediaByKey = new Map(blackWhaleRoomMedia.map((record) => [record.key, record]));\n`;
   await writeFile(manifestPath, manifest);
   console.log(`Black Whale media stabilized: ${stableResults.length} verified images written to public/media/rooms/.`);
 } finally {
