@@ -58,7 +58,7 @@ const successionPanels = {
   mafia: [
     { id: 'mafia', label: 'Mafia families', note: 'Xi-Yu, Cha-R, Heil-Ly' },
     { id: 'justice', label: 'Justice & military', note: 'Authority and custody' },
-    { id: 'operations', label: 'Plans and confrontations' },
+    { id: 'operations', label: 'Operations', note: 'Plans and confrontations' },
     { id: 'relationships', label: 'Political links', note: 'Typed relationships' },
   ],
   chapters: [
