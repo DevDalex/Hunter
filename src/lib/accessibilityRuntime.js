@@ -1,12 +1,14 @@
 const legacyCompositeSelectors = [
-  '.yn-chain-inspector__menu[role="listbox"]',
-  '.gi-card-tabs[role="tablist"]',
-  '.ca-tabs[role="tablist"]',
+  ['.yn-chain-inspector__menu', 'listbox'],
+  ['.gi-card-tabs', 'tablist'],
+  ['.ca-tabs', 'tablist'],
 ];
 
 const normalizeLegacyAccessibility = () => {
-  for (const selector of legacyCompositeSelectors) {
-    document.querySelectorAll(selector).forEach((node) => node.removeAttribute('role'));
+  for (const [selector, role] of legacyCompositeSelectors) {
+    document.querySelectorAll(selector).forEach((node) => {
+      if (node.querySelector('[role="option"], [role="tab"]')) node.setAttribute('role', role);
+    });
   }
 
   document.querySelectorAll('.ca-table-wrap').forEach((node) => {
