@@ -3,6 +3,7 @@ import path from 'node:path';
 import { isApprovedSourceUrl } from '../src/data/sourcePolicy.js';
 import { yorknewPrototype, yorknewPrototypeStats } from '../src/data/yorknewPrototype.js';
 import { earlyArcPrototypes, earlyArcPrototypeIds, earlyArcPrototypeStats } from '../src/data/earlyArcPrototypes.js';
+import { greedIslandPrototype, greedIslandPrototypeStats, greedIslandCardStats } from '../src/data/greedIslandPrototype.js';
 import {
   STORY_ARCHITECTURE_VERSION,
   storyArchitectureAcceptance,
@@ -61,21 +62,12 @@ for (const item of storyEntries) {
   }
 }
 
-const expectedOfficialArcIds = [
-  'hunter-exam',
-  'heavens-arena',
-  'yorknew-city',
-  'greed-island',
-  'chimera-ant',
-  'chairman-election',
-  'succession-contest',
-];
+const expectedOfficialArcIds = ['hunter-exam', 'heavens-arena', 'yorknew-city', 'greed-island', 'chimera-ant', 'chairman-election', 'succession-contest'];
 const representedOfficialArcIds = storyEntries.filter((item) => item.officialArcId).map((item) => item.officialArcId);
 assert(same(representedOfficialArcIds, expectedOfficialArcIds), 'all seven official arcs must appear once and in series order');
 
 const volumeZero = storyEntries.find((item) => item.id === 'volume-0');
 assert(volumeZero.type === 'prologue' && volumeZero.order === 0 && volumeZero.officialArcId === null, 'Volume 0 must remain an unnumbered prologue');
-
 const hunterExam = storyEntries.find((item) => item.id === 'hunter-exam');
 const zoldyck = storyEntries.find((item) => item.id === 'zoldyck-family');
 assert(same(hunterExam.manga.officialRange, [1, 43]) && same(hunterExam.anime2011.officialRange, [1, 26]), 'official Hunter Exam boundaries must remain visible');
@@ -98,11 +90,7 @@ assert(successionStorySubpages.length === 7, 'Succession Contest must retain sev
 assert(unique(successionStorySubpages.map((item) => item.id)) && unique(successionStorySubpages.map((item) => item.route)), 'Succession subpage IDs and routes must be unique');
 assert(successionStorySubpages.every((item) => item.route.startsWith('/story/succession-contest/') && item.legacyRoute.startsWith('#/succession/')), 'Succession subpages need clean routes and legacy mappings');
 
-const legacyRoutes = [
-  ...storyEntries.flatMap((item) => item.legacyRoutes),
-  ...successionStorySubpages.map((item) => item.legacyRoute),
-  ...storyUtilityDestinations.map((item) => item.legacyRoute),
-];
+const legacyRoutes = [...storyEntries.flatMap((item) => item.legacyRoutes), ...successionStorySubpages.map((item) => item.legacyRoute), ...storyUtilityDestinations.map((item) => item.legacyRoute)];
 assert(unique(legacyRoutes), 'legacy redirect sources must be unique');
 assert(legacyRoutes.every((route) => route.startsWith('#/')), 'legacy redirect sources must remain explicit hash routes');
 assert(storyUtilityDestinations.length === 3 && storyUtilityDestinations.every((item) => item.route.startsWith('/story?view=')), 'chronology, chapters, and adaptation must remain Story utilities');
@@ -110,6 +98,7 @@ assert(storyUtilityDestinations.length === 3 && storyUtilityDestinations.every((
 assert(routeToCleanPath('series') === '/story', 'series hub must navigate to /story');
 assert(routeToCleanPath('series', 'yorknew-city') === '/story/yorknew-city', 'Yorknew must navigate to its clean Story path');
 assert(routeToCleanPath('series', 'zoldyck-family') === '/story/zoldyck-family', 'Zoldyck Family clean route must be live');
+assert(routeToCleanPath('series', 'greed-island') === '/story/greed-island', 'Greed Island clean route must be live');
 assert(routeToCleanPath('series', 'chapters', { arc: 'yorknew-city' }) === '/story?view=chapters&arc=yorknew-city', 'Story utility queries must be preserved');
 assert(routeToCleanPath('succession', 'black-whale', { room: 'tier-1' }) === '/story/succession-contest/black-whale?room=tier-1', 'Succession subpages must use nested Story paths');
 assert(routeToCleanPath('reference', 'encyclopedia', { category: 'characters' }) === '/characters?category=characters', 'primary reference routes should use clean top-level paths');
@@ -119,6 +108,8 @@ const cleanYorknew = parseCleanRoute('/story/yorknew-city', '?chapter=100');
 assert(cleanYorknew.view === 'series' && cleanYorknew.target === 'yorknew-city' && cleanYorknew.params.chapter === '100', 'clean Yorknew route must parse with query');
 const cleanZoldyck = parseCleanRoute('/story/zoldyck-family', '');
 assert(cleanZoldyck.view === 'series' && cleanZoldyck.target === 'zoldyck-family', 'clean Zoldyck route must parse');
+const cleanGreedIsland = parseCleanRoute('/story/greed-island', '');
+assert(cleanGreedIsland.view === 'series' && cleanGreedIsland.target === 'greed-island', 'clean Greed Island route must parse');
 const cleanUtility = parseCleanRoute('/story', '?view=adaptation');
 assert(cleanUtility.view === 'series' && cleanUtility.target === 'adaptation', 'Story utility route must parse');
 const cleanSuccession = parseCleanRoute('/story/succession-contest/power-blocs', '?panel=justice');
@@ -143,6 +134,7 @@ const seriesWorkspace = await readFile(path.resolve('src/components/SeriesWorksp
 assert(seriesWorkspace.includes('StoryFoundationLayout') && seriesWorkspace.includes('StoryHubFoundation') && seriesWorkspace.includes('StoryArcFoundation'), 'SeriesWorkspace must render through the shared Story foundation');
 assert(seriesWorkspace.includes("{ id: 'zoldyck-family', label: 'Zoldyck Family' }"), 'Series workspace navigation must include the Zoldyck editorial destination');
 assert(seriesWorkspace.includes('EarlyArcPrototypePage') && seriesWorkspace.includes('earlyArcPrototypePage ?') && seriesWorkspace.includes('hasEarlyArcPrototype'), 'Hunter Exam, Zoldyck Family, and Heavens Arena must route through the early arc prototype page');
+assert(seriesWorkspace.includes('GreedIslandPrototypePage') && seriesWorkspace.includes('greedIslandPrototypePage ?'), 'Greed Island must route through its dedicated prototype page');
 assert(!seriesWorkspace.includes('ZoldyckStoryBridge onNavigate'), 'Zoldyck Family must no longer render the temporary bridge after the Early Arcs batch');
 assert(seriesWorkspace.includes('YorknewPrototypePage') && seriesWorkspace.includes('yorknewPrototypePage ?'), 'Yorknew must route through its dedicated prototype page');
 
@@ -153,6 +145,10 @@ assert(yorknewComponent.includes("import './YorknewPrototypePage.css'"), 'Yorkne
 const earlyArcComponent = await readFile(path.resolve('src/components/EarlyArcPrototypePage.jsx'), 'utf8');
 assert(earlyArcComponent.includes('EarlyArcHero') && earlyArcComponent.includes('Chronology') && earlyArcComponent.includes('Systems') && earlyArcComponent.includes('CharacterBoard') && earlyArcComponent.includes('ConflictLedger') && earlyArcComponent.includes('Mechanics'), 'early arc prototype must retain the required page modules');
 assert(earlyArcComponent.includes("import './EarlyArcPrototypePage.css'"), 'early arc prototype must import its page stylesheet');
+
+const greedIslandComponent = await readFile(path.resolve('src/components/GreedIslandPrototypePage.jsx'), 'utf8');
+assert(greedIslandComponent.includes('GreedIslandHero') && greedIslandComponent.includes('CardCatalogue') && greedIslandComponent.includes('SpellStrategy') && greedIslandComponent.includes('Training') && greedIslandComponent.includes('DodgeballAndBomber') && greedIslandComponent.includes('CompletionRoute'), 'Greed Island prototype must retain the required page modules');
+assert(greedIslandComponent.includes("import './GreedIslandPrototypePage.css'"), 'Greed Island prototype must import its page stylesheet');
 
 assert(yorknewPrototype.id === storyDesignDirection.prototypeArcId, 'Yorknew prototype data must match the architecture prototype ID');
 assert(yorknewPrototype.sections.length >= 11 && yorknewPrototype.overview.length >= 4, 'Yorknew prototype needs overview and section coverage');
@@ -166,6 +162,12 @@ for (const [id, stats] of Object.entries(earlyArcPrototypeStats)) {
 }
 assert(earlyArcPrototypes.flatMap((arc) => arc.sources).every((source) => isApprovedSourceUrl(source.href)), 'Early Arc prototype sources must follow the approved Hunterpedia/Fandom policy');
 
+assert(greedIslandPrototype.id === 'greed-island', 'Greed Island prototype ID changed');
+assert(greedIslandPrototype.sections.length >= 14 && greedIslandPrototype.overview.length >= 4, 'Greed Island prototype needs overview and section coverage');
+assert(greedIslandPrototypeStats.chronology >= 10 && greedIslandPrototypeStats.rules >= 8 && greedIslandPrototypeStats.locations >= 8 && greedIslandPrototypeStats.teams >= 6 && greedIslandPrototypeStats.training >= 5 && greedIslandPrototypeStats.conflicts >= 7 && greedIslandPrototypeStats.sources >= 10, 'Greed Island prototype content groups are incomplete');
+assert(greedIslandCardStats.specified === 100 && greedIslandCardStats.spell === 40 && greedIslandCardStats.free >= 18 && greedIslandCardStats.gameMaster >= 4, 'Greed Island card catalogue counts are incomplete');
+assert(greedIslandPrototype.sources.every((source) => isApprovedSourceUrl(source.href)), 'Greed Island prototype sources must follow the approved Hunterpedia/Fandom policy');
+
 const app = await readFile(path.resolve('src/App.jsx'), 'utf8');
 assert(app.includes('onPrefetch={preloadRoute}'), 'Story workspace must receive route prefetch support');
 assert(!app.includes("routeTarget === 'zoldyck-family' && <>"), 'Zoldyck route must not bypass the Story foundation in App.jsx');
@@ -178,9 +180,11 @@ await access(path.resolve('docs/STORY-ARCHITECTURE.md'));
 await access(path.resolve('docs/STORY-FOUNDATION.md'));
 await access(path.resolve('docs/YORKNEW-PROTOTYPE.md'));
 await access(path.resolve('docs/EARLY-ARCS-PROTOTYPES.md'));
+await access(path.resolve('docs/GREED-ISLAND-PROTOTYPE.md'));
 await access(path.resolve('src/lib/appRouter.js'));
 await access(path.resolve('src/components/StoryFoundation.css'));
 await access(path.resolve('src/components/YorknewPrototypePage.css'));
 await access(path.resolve('src/components/EarlyArcPrototypePage.css'));
+await access(path.resolve('src/components/GreedIslandPrototypePage.css'));
 
-console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, clean routing, Story foundation shell, Yorknew prototype page, ${earlyArcPrototypes.length} early arc prototype pages, legacy route inventory stable, direct reload fallback, and mobile deferred.`);
+console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, clean routing, Story foundation shell, Yorknew prototype page, ${earlyArcPrototypes.length} early arc prototype pages, Greed Island prototype page with ${greedIslandCardStats.specified} specified cards and ${greedIslandCardStats.spell} spell cards, legacy route inventory stable, direct reload fallback, and mobile deferred.`);
