@@ -30,7 +30,7 @@ assert(!/main > section,\s*footer/.test(css), 'nested footers must not inherit p
 assert(css.includes(':focus-visible') && css.includes('prefers-reduced-motion: reduce'), 'focus visibility and reduced-motion handling are required');
 assert(contrastCss.includes('--archive-gold-ink: #6b4d00') && contrastCss.includes('--archive-on-dark: #f6ecee') && contrastCss.includes('--archive-active-contrast: #6e1825'), 'the contrast layer must retain tested light, dark, and active-state colors');
 assert(main.includes('installAccessibilityRuntime();'), 'main.jsx must install the legacy accessibility normalizer before rendering');
-assert(accessibilityRuntime.includes('.yn-chain-inspector__menu[role="listbox"]') && accessibilityRuntime.includes('.gi-card-tabs[role="tablist"]') && accessibilityRuntime.includes('.ca-tabs[role="tablist"]'), 'legacy composite roles must remain normalized');
+assert(accessibilityRuntime.includes("['.yn-chain-inspector__menu', 'listbox']") && accessibilityRuntime.includes("['.gi-card-tabs', 'tablist']") && accessibilityRuntime.includes("['.ca-tabs', 'tablist']") && accessibilityRuntime.includes("node.setAttribute('role', role)"), 'legacy composite parent roles must be preserved or restored');
 assert(accessibilityRuntime.includes("document.querySelectorAll('.ca-table-wrap')") && accessibilityRuntime.includes('node.tabIndex = 0') && accessibilityRuntime.includes("node.setAttribute('aria-label'"), 'the Chimera hierarchy scroll region must be keyboard-focusable and named');
 assert(header.includes("event.key === 'Escape'") && header.includes("event.key !== 'Tab'") && header.includes('.header-links a, .header-actions button'), 'the narrow-browser menu must contain focus and close with Escape');
 assert(sectionTabs.includes("event.key === 'ArrowRight'") && sectionTabs.includes("event.key === 'Home'") && sectionTabs.includes("event.key === 'End'"), 'grouped section navigation needs full keyboard movement');
@@ -44,4 +44,4 @@ assert(drawer.includes('role="status" aria-live="polite"') && drawer.includes("e
 assert(familyTree.includes('Confirmed deceased'), 'a written nonvisual death status must accompany the red X treatment');
 assert(packageJson.includes('"qa:accessibility"') && packageJson.includes('"audit:accessibility"'), 'repeatable accessibility commands are missing');
 
-console.log('Accessibility audit passed: semantic contrast layer; legacy ARIA normalization; skip navigation; contained menus and dialogs; keyboard section and tree navigation; named scroll regions; live announcements; reduced motion and written status.');
+console.log('Accessibility audit passed: semantic contrast layer; legacy ARIA parent-role preservation; skip navigation; contained menus and dialogs; keyboard section and tree navigation; named scroll regions; live announcements; reduced motion and written status.');
