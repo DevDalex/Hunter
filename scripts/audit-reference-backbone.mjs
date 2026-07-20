@@ -1,6 +1,8 @@
 import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { isApprovedSourceUrl } from '../src/data/sourcePolicy.js';
+import { referenceAliases, referencePages } from '../src/data/routeManifest.js';
+import { parseCleanRoute } from '../src/lib/appRouter.js';
 import {
   referenceBackboneDomains,
   referenceBackbonePrototype,
@@ -51,8 +53,17 @@ assert(organizations.includes('ReferenceBackbonePanel') && organizations.include
 assert(conflicts.includes('ReferenceBackbonePanel') && conflicts.includes('domain="conflicts"'), 'Conflict archive must surface the reference backbone');
 assert(panel.includes('referenceBackbonePrototype') && panel.includes('reference-backbone__records') && panel.includes('reference-backbone__sources'), 'ReferenceBackbonePanel must render records and sources from canonical data');
 
+assert(!referencePages.some((page) => page.id === 'notebook'), 'the Notebook navigation button must remain removed from the Reference workspace');
+assert(!Object.values(referenceAliases).some((alias) => alias.target === 'notebook'), 'no legacy Reference alias may reopen Notebook');
+const retiredNotebook = parseCleanRoute('/notebook', '');
+assert(retiredNotebook.view === 'not-found' && retiredNotebook.params.attemptedPath === '/notebook', 'the retired /notebook URL must resolve to the not-found route');
+assert(!app.includes('StudyNotebook') && !app.includes("referencePage.id === 'notebook'"), 'the application shell must not render the retired Notebook component');
+let notebookComponentExists = true;
+try { await access(path.resolve('src/components/StudyNotebook.jsx')); } catch { notebookComponentExists = false; }
+assert(!notebookComponentExists, 'src/components/StudyNotebook.jsx must remain deleted');
+
 await access(path.resolve('src/components/ReferenceBackbonePanel.css'));
 await access(path.resolve('src/data/referenceBackbonePrototype.js'));
 await access(path.resolve('docs/REFERENCE-BACKBONE.md'));
 
-console.log(`Reference backbone audit passed: ${referenceBackboneStats.domains} domains, ${referenceBackboneStats.lanes} lanes, ${referenceBackboneStats.records} records, ${referenceBackboneStats.chimeraBridgeItems} Chimera bridge items, ${referenceBackboneStats.sources} approved sources.`);
+console.log(`Reference backbone audit passed: ${referenceBackboneStats.domains} domains, ${referenceBackboneStats.lanes} lanes, ${referenceBackboneStats.records} records, ${referenceBackboneStats.chimeraBridgeItems} Chimera bridge items, ${referenceBackboneStats.sources} approved sources, and the retired /notebook route and navigation button remain absent.`);
