@@ -85,7 +85,7 @@ assert(!/vite-plugin-pwa|workbox|serviceWorker\.register|manifest\.webmanifest/.
 
 const portraitsDir = path.join(root, 'public/media/portraits');
 const portraitFiles = await readdir(portraitsDir);
-const portraitSizes = await Promise.all(portraitFiles.map(async (file) => ({ file, bytes: (await stat(path.join(portraitsDir, file)).size })));
+const portraitSizes = await Promise.all(portraitFiles.map(async (file) => ({ file, bytes: (await stat(path.join(portraitsDir, file))).size })));
 const portraitBytes = portraitSizes.reduce((total, record) => total + record.bytes, 0);
 const largestPortrait = portraitSizes.sort((a, b) => b.bytes - a.bytes)[0];
 assert(largestPortrait.bytes <= 160_000, `${largestPortrait.file} is ${largestPortrait.bytes} bytes; local portrait ceiling is 160,000`);
