@@ -100,10 +100,12 @@ for (const file of sourceFiles) {
     if (importPattern.test(source)) generatedImports.get(generatedName).push(path.relative(root, file).replaceAll('\\', '/'));
   }
 }
-const portraitConsumers = generatedImports.get('priorityMedia.generated');
-const roomConsumers = generatedImports.get('blackWhaleMedia.generated');
-assert(JSON.stringify(portraitConsumers) === JSON.stringify(['src/data/characters.js']), `priority portrait derivatives may be imported only by characters.js; found ${portraitConsumers.join(', ') || 'none'}`);
-assert(JSON.stringify(roomConsumers) === JSON.stringify(['src/data/blackWhale.js']), `Black Whale derivatives may be imported only by blackWhale.js; found ${roomConsumers.join(', ') || 'none'}`);
+const portraitConsumers = generatedImports.get('priorityMedia.generated').sort();
+const roomConsumers = generatedImports.get('blackWhaleMedia.generated').sort();
+const expectedPortraitConsumers = [...dataOwnership.characterPortraits.consumers].sort();
+const expectedRoomConsumers = [...dataOwnership.blackWhaleRooms.consumers].sort();
+assert(JSON.stringify(portraitConsumers) === JSON.stringify(expectedPortraitConsumers), `portrait derivative consumers differ from the ownership contract; found ${portraitConsumers.join(', ') || 'none'}`);
+assert(JSON.stringify(roomConsumers) === JSON.stringify(expectedRoomConsumers), `Black Whale derivative consumers differ from the ownership contract; found ${roomConsumers.join(', ') || 'none'}`);
 
 const mediaPipeline = await readFile(path.join(root, 'scripts/lib/mediaPipeline.mjs'), 'utf8');
 const portraitStabilizer = await readFile(path.join(root, 'scripts/stabilize-media.mjs'), 'utf8');
