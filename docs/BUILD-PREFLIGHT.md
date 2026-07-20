@@ -8,7 +8,7 @@ Owner: `scripts/run-build-preflight.mjs`
 
 The previous `npm run build` command chained independent audits with `&&`. A deployment stopped at the first failure, so several stale contracts appeared across several Cloudflare attempts instead of one report.
 
-The aggregate runner executes every independent pre-build audit, records all failures, and exits unsuccessfully only after the full list has run.
+The aggregate runner executes all 14 independent pre-build audits, records every failure, and exits unsuccessfully only after the full list has run.
 
 ## Included audits
 
