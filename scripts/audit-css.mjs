@@ -1,4 +1,4 @@
-import { access, readFile } from 'node:fs/promises';
+import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = process.cwd();
@@ -44,6 +44,16 @@ const collectRules = (css, source) => {
   return rules;
 };
 
+const walkCss = async (directory) => {
+  const files = [];
+  for (const entry of await readdir(path.join(root, directory), { withFileTypes: true })) {
+    const relative = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await walkCss(relative));
+    else if (entry.name.endsWith('.css')) files.push(relative.replaceAll('\\', '/'));
+  }
+  return files;
+};
+
 await access(path.resolve(entryPath));
 for (const file of [...layerPaths, ...runtimeExtensionPaths]) await access(path.resolve(file));
 
@@ -80,7 +90,21 @@ for (const rule of rules) {
   exactCounts.set(exactKey, (exactCounts.get(exactKey) || 0) + 1);
 }
 
+const cssFiles = await walkCss('src');
+const tinyDeclarations = [];
+for (const file of cssFiles) {
+  const content = await readFile(path.join(root, file), 'utf8');
+  const lines = content.split(/\r?\n/);
+  lines.forEach((line, index) => {
+    for (const match of line.matchAll(/font-size:\s*([0-9.]+)px\b/g)) {
+      const size = Number(match[1]);
+      if (size > 0 && size < 11) tinyDeclarations.push(`${file}:${index + 1} uses ${size}px · ${line.trim()}`);
+    }
+  });
+}
+assert(!tinyDeclarations.length, `explicit visible text sizes below 11px remain:\n- ${tinyDeclarations.join('\n- ')}`);
+
 const repeatedSelectors = [...selectorCounts.values()].filter((count) => count > 1).length;
 const exactDuplicateRules = [...exactCounts.values()].reduce((total, count) => total + Math.max(0, count - 1), 0);
 
-console.log(`CSS ownership audit passed: ${layerPaths.length} ordered styles.css layers; ${runtimeExtensionPaths.length} ordered runtime extension layers; ${rules.length} selector rules; ${repeatedSelectors} intentional override selectors; ${exactDuplicateRules} exact duplicate rule occurrence(s) reported for future cleanup.`);
+console.log(`CSS ownership audit passed: ${layerPaths.length} ordered styles.css layers; ${runtimeExtensionPaths.length} ordered runtime extension layers; ${cssFiles.length} CSS files checked for an 11px text floor; ${rules.length} selector rules; ${repeatedSelectors} intentional override selectors; ${exactDuplicateRules} exact duplicate rule occurrence(s) reported for future cleanup.`);
