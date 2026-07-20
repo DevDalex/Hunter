@@ -43,7 +43,15 @@ assert(mediaRegistry.includes("from './mediaSchema'")
   && mediaRegistry.includes("from './sourcePolicy'")
   && mediaRegistry.includes('state: mediaStateFor(record)')
   && mediaRegistry.includes('sourcesApproved,'), 'media registry must use and report the canonical media and source schemas');
-assert(sourcePortrait.includes('Special:Redirect/file') && sourcePortrait.includes('exhaustedPortraits') && !/\bfetch\s*\(|api\.php|localStorage|sessionStorage/.test(sourcePortrait), 'source portrait recovery must use bounded Hunterpedia file redirects with an explicit exhausted state');
+assert(
+  sourcePortrait.includes("const source = item?.image || ''")
+    && sourcePortrait.includes('sourceCandidates: 0')
+    && sourcePortrait.includes('source-portrait--missing')
+    && !sourcePortrait.includes('Special:Redirect/file')
+    && !sourcePortrait.includes('portraitAliases')
+    && !/\bfetch\s*\(|api\.php|localStorage|sessionStorage/.test(sourcePortrait),
+  'source portraits must use explicit stored/verified image records or an immediate text fallback without runtime filename discovery',
+);
 assert(roster.includes("character.image && <div className=\"roster-card__image\""), 'Succession roster must omit the media area when no portrait exists');
 assert(connectionBoard.includes('member.image && <span data-image-frame>'), 'connection board must omit the media area when no portrait exists');
 assert(changelog.includes('Phase 7B media stabilization'), 'archive changelog is missing Phase 7B');
@@ -61,4 +69,4 @@ let legacyResolverExists = true;
 try { await access(path.join(root, 'src/lib/hunterpediaMedia.js')); } catch { legacyResolverExists = false; }
 assert(!legacyResolverExists, 'legacy runtime portrait resolver must remain removed');
 
-console.log(`Media audit passed under source policy ${SOURCE_POLICY_VERSION}: ${priorityPortraits.length} local portraits and ${blackWhaleRoomMedia.length} Black Whale derivatives satisfy the shared schema.`);
+console.log(`Media audit passed under source policy ${SOURCE_POLICY_VERSION}: ${priorityPortraits.length} local portraits and ${blackWhaleRoomMedia.length} Black Whale derivatives satisfy the shared schema; source portraits use explicit-only media records.`);
