@@ -7,9 +7,10 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Final polish audit failed: ${message}`);
 };
 
-const [main, packageJson, finalCss, storyArchitecture, storyAudit, referenceAudit, characterAudit, docs] = await Promise.all([
+const [main, packageJson, preflight, finalCss, storyArchitecture, storyAudit, referenceAudit, characterAudit, docs] = await Promise.all([
   read('src/main.jsx'),
   read('package.json'),
+  read('scripts/run-build-preflight.mjs'),
   read('src/styles/final-polish.css'),
   read('docs/STORY-ARCHITECTURE.md'),
   read('scripts/audit-story-architecture.mjs'),
@@ -33,10 +34,15 @@ for (const selector of ['.site-header', '.header-links a::after', '.page-intro::
   assert(finalCss.includes(selector), `final polish CSS must cover ${selector}`);
 }
 
-for (const script of ['audit:story', 'audit:reference', 'audit:characters', 'audit:final', 'audit:polish', 'qa:browser']) {
+for (const script of ['audit:story', 'audit:reference', 'audit:characters', 'audit:final', 'audit:polish', 'preflight:build', 'qa:browser']) {
   assert(packageJson.includes(`"${script}"`), `package.json is missing ${script}`);
 }
-assert(packageJson.includes('npm run audit:story && npm run audit:reference && npm run audit:characters && npm run audit:final'), 'build chain must lock Story, Reference, Characters, then Final before general audits');
+assert(packageJson.includes('npm run generate:build-info && npm run preflight:build'), 'the normal build must enter the aggregate preflight after build identity generation');
+
+const lockedAuditOrder = ['audit:story', 'audit:reference', 'audit:characters', 'audit:final'];
+const lockedAuditPositions = lockedAuditOrder.map((name) => preflight.indexOf(`'${name}'`));
+assert(lockedAuditPositions.every((position) => position >= 0), 'aggregate preflight is missing a Batch 7–10 lock audit');
+assert(lockedAuditPositions.every((position, index) => index === 0 || position > lockedAuditPositions[index - 1]), 'aggregate preflight must run Story, Reference, Characters, then Final in order');
 
 for (const auditText of [storyAudit, referenceAudit, characterAudit]) {
   assert(auditText.includes('Hunterpedia') || auditText.includes('isApprovedSourceUrl'), 'batch audits must keep the approved source policy visible');
@@ -49,4 +55,4 @@ for (const docName of ['CHIMERA-ANT-PROTOTYPE.md', 'REFERENCE-BACKBONE.md', 'CHA
   assert(docs.includes('Batch 10') || docName !== 'FINAL-POLISH.md', 'final polish documentation must identify Batch 10');
 }
 
-console.log('Final polish audit passed: Black Archive palette locked, final CSS loaded last, Batch 7–9 audits preserved, mobile deferred, and Batch 10 documented.');
+console.log('Final polish audit passed: Black Archive palette locked, final CSS loaded last, Batch 7–9 audits preserved inside aggregate preflight, mobile deferred, and Batch 10 documented.');
