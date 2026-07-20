@@ -1,6 +1,6 @@
 # Hunter × Hunter Archive — Implementation and Maintenance Handbook
 
-Current contract: Phase 8A release base · Batch 11 governance · July 20, 2026
+Current contract: Phase 8A release base · Batch 12 design system · July 20, 2026
 
 - Maintained story boundary: Chapter 413
 - Factual source boundary: Hunterpedia / Fandom only
@@ -29,7 +29,7 @@ The removed public Sources page must not return as a top-level route. Source lin
 
 Global CSS loads in this exact order:
 
-1. `src/styles.css`, which imports `src/styles/base.css`, `src/styles/editorial.css`, and `src/styles/experiences.css`;
+1. `src/styles.css`, which imports `src/styles/base.css`, `src/styles/editorial.css`, `src/styles/experiences.css`, `src/styles/accessibility-contrast.css`, and `src/styles/archive-system.css`;
 2. `src/nen.css`;
 3. `src/styles/final-polish.css`.
 
@@ -45,6 +45,7 @@ The principal structured owners are:
 - `src/data/entityRegistry.js` — canonical character identities, aliases, and status;
 - `src/data/entityIds.js` — stable archive ID namespaces and seed IDs;
 - `src/data/encyclopedia.js` — connected entity records;
+- `src/data/archiveDesignSystem.js` — Batch 12 primitive, tone, and design-system rules;
 - `src/data/performanceBudgets.js` — canonical code, CSS, and media performance ceilings;
 - `src/data/worldAtlas.js` — place hierarchy and travel relationships;
 - `src/data/blackWhale.js` — Black Whale spaces and source-owned media records;
@@ -52,7 +53,7 @@ The principal structured owners are:
 - `src/data/nenEncyclopedia.js` — Nen principles and named abilities;
 - `src/data/systemsDesk.js` — organizations, relationships, and object trails.
 
-Stable IDs and canonical owners should be updated before visual consumers. Do not add status flags, spellings, source URLs, or performance numbers independently when a central record already owns them.
+Stable IDs and canonical owners should be updated before visual consumers. Do not add status flags, spellings, source URLs, performance numbers, evidence badges, source blocks, or reusable card shells independently when a central record already owns them.
 
 The full character directory remains intact. Dossier profiles are additive and do not replace or delete source-index characters.
 
@@ -75,6 +76,17 @@ Rules:
 - preserve unknown or disputed states rather than completing them by inference;
 - keep current-arc records within Chapter 413;
 - do not copy long community-written passages into local records.
+
+## Batch 12 design system
+
+Batch 12 adds reusable archive UI primitives without adding a new major route:
+
+- `src/components/ArchiveUI.jsx` — `ArchiveSection`, `ArchiveCard`, `EvidenceBadge`, `StatusPill`, `SourceStack`, and `ArchiveLedger`;
+- `src/styles/archive-system.css` — reusable primitive styling;
+- `docs/DESIGN-SYSTEM.md` — Batch 12 design-system documentation;
+- `scripts/audit-design-system.mjs` — build-blocking primitive, tone, doc, CSS, and home-usage audit.
+
+Use these primitives instead of inventing one-off badges, source blocks, record cards, status pills, and ledgers. The home page uses the library so the system is live rather than dead code.
 
 ## Media and status rules
 
@@ -136,7 +148,7 @@ Budget changes require review and synchronized documentation. The guardrail shou
 
 ## Aggregate build preflight
 
-`scripts/run-build-preflight.mjs` runs all 14 independent pre-build audits and continues after individual failures, so one Cloudflare deployment reports the complete repair list:
+`scripts/run-build-preflight.mjs` runs all 15 independent pre-build audits and continues after individual failures, so one Cloudflare deployment reports the complete repair list:
 
 1. content;
 2. implementation;
@@ -145,13 +157,14 @@ Budget changes require review and synchronized documentation. The guardrail shou
 5. character dossiers;
 6. final polish;
 7. archive governance;
-8. data schema;
-9. CSS ownership;
-10. readability;
-11. layout;
-12. accessibility;
-13. media;
-14. polish.
+8. design system;
+9. data schema;
+10. CSS ownership;
+11. readability;
+12. layout;
+13. accessibility;
+14. media;
+15. polish.
 
 Packaging, release-package validation, the final Vite build, performance validation, and hosting preparation remain ordered after a successful aggregate preflight because they depend on generated artifacts.
 
@@ -190,8 +203,11 @@ Canonical owner: `src/data/routeManifest.js`. Update `src/App.jsx`, `src/lib/app
 ### 11. Layout or readability defect
 Canonical owner: `src/styles.css`, with final overrides in `src/styles/final-polish.css`. Run the static layout checks and the 26-route × 3-viewport visual matrix before declaring the defect closed.
 
-### 12. Release documentation
-Canonical owner: `public/implementation-notes.md`. Reconcile `README.md`, `docs/FINAL-POLISH.md`, `docs/ARCHIVE-GOVERNANCE.md`, and the visible change log whenever current contracts change.
+### 12. Design-system primitive or tone
+Canonical owner: `src/data/archiveDesignSystem.js`. Update `src/components/ArchiveUI.jsx`, `src/styles/archive-system.css`, `docs/DESIGN-SYSTEM.md`, and `scripts/audit-design-system.mjs` together.
+
+### 13. Release documentation
+Canonical owner: `public/implementation-notes.md`. Reconcile `README.md`, `docs/FINAL-POLISH.md`, `docs/ARCHIVE-GOVERNANCE.md`, `docs/DESIGN-SYSTEM.md`, and the visible change log whenever current contracts change.
 
 ## Release checklist
 
@@ -210,8 +226,9 @@ Canonical owner: `public/implementation-notes.md`. Reconcile `README.md`, `docs/
 - [ ] Existing narrow-browser safeguards still work without expanding deferred mobile redesign scope.
 - [ ] Keyboard, focus, dialogs, live regions, reduced motion, and nonvisual alternatives remain intact.
 
-### Performance and release
-- [ ] All 14 aggregate preflight audits pass.
+### Design system and release
+- [ ] Shared primitives cover cards, sections, source stacks, evidence badges, status pills, and ledgers.
+- [ ] All 15 aggregate preflight audits pass.
 - [ ] Release ZIPs are generated and audited.
 - [ ] The final production build and performance audit pass.
 - [ ] Browser QA is run and reviewed when required for the checkpoint.
@@ -229,12 +246,12 @@ Neither package may contain dependencies, Git history, credentials, or browser-l
 ## Completion criteria
 
 1. The Chapter 413 scope and unequal research depth remain visible.
-2. Stable IDs, statuses, bibliography records, evidence states, sources, and relationships have canonical owners.
-3. Twelve maintenance runbooks cover recurring changes.
+2. Stable IDs, statuses, bibliography records, evidence states, sources, relationships, and design-system primitives have canonical owners.
+3. Thirteen maintenance runbooks cover recurring changes.
 4. Media and written status remain deterministic and honest.
 5. Keyboard, focus, reduced motion, narrow-browser safeguards, and nonvisual alternatives remain explicit.
 6. Large data stays outside the startup shell under the maintained budgets.
-7. Fourteen independent audits report together before packaging.
+7. Fifteen independent audits report together before packaging.
 8. The maintainable source package contains the files required to rebuild, audit, document, and redeploy the archive.
 
 A successful local or repository audit is not proof of a successful hosted deployment. Record that claim only after the corresponding workflow or Cloudflare build reaches terminal success.
