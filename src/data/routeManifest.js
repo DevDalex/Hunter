@@ -4,7 +4,8 @@ export const viewIds = ['home', 'series', 'succession', 'reference'];
 export const views = new Set(viewIds);
 
 export const seriesRoutes = [
-  { id: 'arcs', target: '', label: 'Pre-Succession overview' },
+  { id: 'arcs', target: '', label: 'Story hub' },
+  { id: 'volume-0', target: 'volume-0', label: 'Volume 0 · Kurapika’s Memories' },
   { id: 'hunter-exam', target: 'hunter-exam', label: 'Hunter Exam' },
   { id: 'zoldyck-family', target: 'zoldyck-family', label: 'Zoldyck Family' },
   { id: 'heavens-arena', target: 'heavens-arena', label: 'Heavens Arena' },
@@ -12,16 +13,16 @@ export const seriesRoutes = [
   { id: 'greed-island', target: 'greed-island', label: 'Greed Island' },
   { id: 'chimera-ant', target: 'chimera-ant', label: 'Chimera Ant' },
   { id: 'chairman-election', target: 'chairman-election', label: 'Chairman Election' },
-  { id: 'volume-0', target: 'volume-0', label: 'Volume 0 · Kurapika’s Memories' },
-  { id: 'adaptation', target: 'adaptation', label: '2011 anime adaptation desk' },
-  { id: 'chronology', target: 'chronology', label: 'Pre-Succession chronology' },
-  { id: 'chapters', target: 'chapters', label: 'Lightweight chapter references · 1–339' },
+  { id: 'succession-contest', target: 'succession-contest', label: 'Succession Contest' },
+  { id: 'chronology', target: 'chronology', label: 'Complete chronology' },
+  { id: 'chapters', target: 'chapters', label: 'Chapter directory' },
+  { id: 'adaptation', target: 'adaptation', label: '2011 anime guide' },
 ];
 
 export const successionPages = [
   {
-    id: 'overview', label: 'Overview', kicker: 'The current story', title: 'Succession Contest',
-    description: 'A guided map of the expedition setup, the royal contest, and the overlapping systems aboard the Black Whale.',
+    id: 'overview', label: 'Arc overview', kicker: 'The current story', title: 'Succession Contest',
+    description: 'The dedicated Succession Contest arc page, with the deep royal, cast, timeline, ship, Nen, power-bloc, and record pages preserved beneath it.',
   },
   {
     id: 'family-tree', label: 'Royal family', kicker: 'King, queens and princes', title: 'The Kakin royal family',
@@ -133,13 +134,13 @@ export const referenceAliases = {
 export const routeManifest = [
   { view: 'home', target: '', label: 'Hunter Archive home' },
   ...seriesRoutes.map((route) => ({ view: 'series', target: route.target, label: route.label })),
-  ...successionPages.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
+  ...successionPages.filter((route) => route.id !== 'overview').map((route) => ({ view: 'succession', target: route.id, label: route.title })),
   ...referencePages.map((route) => ({ view: 'reference', target: route.id, label: route.title })),
 ];
 
 export const routeManifestStats = {
   screens: routeManifest.length,
-  succession: successionPages.length,
+  succession: successionPages.length - 1,
   reference: referencePages.length,
   aliases: Object.keys(referenceAliases).length + Object.keys(successionAliases).length,
 };
