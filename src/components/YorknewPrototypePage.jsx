@@ -4,6 +4,7 @@ import SourcePortrait from './SourcePortrait';
 import { characters } from '../data/characters';
 import { yorknewPrototype } from '../data/yorknewPrototype';
 import './YorknewPrototypePage.css';
+import './YorknewPrototypeMedia.css';
 
 const wiki = (name) => `https://hunterxhunter.fandom.com/wiki/${encodeURIComponent(name.replaceAll(' ', '_'))}`;
 const characterByName = new Map(characters.map((character) => [character.name, character]));
