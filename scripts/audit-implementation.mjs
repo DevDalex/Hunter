@@ -39,7 +39,7 @@ assert(architecture?.decisions.some(([name]) => name === 'Clean history routes')
 assert(designSystem?.files.includes('src/components/ArchiveUI.jsx') && designSystem.files.includes('src/styles/archive-system.css'), 'design-system notes must name the canonical component and CSS owners');
 assert(designCopy.includes(`${archiveDesignSystemStats.primitives} primitives`) && designCopy.includes(`${archiveDesignSystemStats.semanticTones} tones`), 'design-system notes must match the canonical primitive and tone counts');
 assert(documentedCodeBudgets.every((value) => performanceCopy.includes(`${formatPerformanceBudget(value)} bytes`)), 'visible performance notes must match the canonical executable budgets');
-assert(performanceCopy.includes('Twenty-two dynamic entries'), 'performance notes must match the current 22-entry dynamic split');
+assert(performanceCopy.includes('Twenty-one dynamic entries'), 'performance notes must match the current 21-entry dynamic split');
 assert(release?.checks.join(' ').includes('All fifteen independent pre-build audits pass'), 'release notes must match the current 15-audit preflight');
 assert(runbooks?.decisions.some(([name]) => name === 'Aggregate preflight'), 'runbook notes must document aggregate build preflight');
 
@@ -62,7 +62,7 @@ for (const item of maintenanceMatrix) assert(handbook.includes(item.canonical), 
 const currentContractPhrases = [
   '26 reader-facing screens',
   '106 character portraits and 29 Black Whale derivatives',
-  '22 dynamic entries',
+  '21 dynamic entries',
   '15 independent pre-build audits',
   'hxh-archive-phase-8a-sites-source.zip',
   'architecture/',
