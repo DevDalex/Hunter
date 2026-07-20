@@ -1,4 +1,4 @@
-import { makeArchiveEntityId } from './entityIds';
+import { makeArchiveEntityId } from './entityIds.js';
 
 export const REVIEW_QUEUE_VERSION = 'Batch 11 / 2026-07-20';
 
