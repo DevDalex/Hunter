@@ -1,11 +1,11 @@
 import { ArrowRight, BookOpen, ChevronRight, CircleDot, Layers3, ShieldCheck } from 'lucide-react';
 import {
-  storyContentPolicy,
   storyDesignDirection,
   storyEntries,
 } from '../../architecture/storyArchitecture.mjs';
 import { routeToHref } from '../lib/appRouter';
 import './StoryFoundation.css';
+import './StoryFoundationLayout.css';
 
 const entryById = new Map(storyEntries.map((entry) => [entry.id, entry]));
 const utilityLabels = new Map([
@@ -47,45 +47,31 @@ function StoryBreadcrumbs({ activeEntry, activeId, onNavigate }) {
   </nav>;
 }
 
-function StoryTimelineRail({ activeId, onNavigate, onPrefetch }) {
-  return <aside className="story-timeline-rail" aria-label="Story route timeline">
-    <header><span>Story routes</span><h2>Chronological rail</h2></header>
-    <ol>
+function StoryRouteStrip({ activeId, onNavigate, onPrefetch }) {
+  const activeEntry = entryById.get(activeId);
+  return <nav className="story-route-strip" aria-label="Chronological Story routes">
+    <header>
+      <span>Chronological routes</span>
+      <strong>{activeEntry?.shortTitle || utilityLabels.get(activeId) || 'Story hub'}</strong>
+    </header>
+    <div className="story-route-strip__scroller">
       {storyEntries.map((entry) => {
         const active = entry.id === activeId;
-        return <li key={entry.id}>
-          <a
-            href={entryHref(entry)}
-            className={active ? 'is-active' : ''}
-            aria-current={active ? 'page' : undefined}
-            onPointerEnter={() => onPrefetch?.(entry.id === 'succession-contest' ? 'succession' : 'series', entry.id === 'succession-contest' ? 'overview' : entry.id)}
-            onFocus={() => onPrefetch?.(entry.id === 'succession-contest' ? 'succession' : 'series', entry.id === 'succession-contest' ? 'overview' : entry.id)}
-            onClick={(event) => navigateToEntry(event, entry, onNavigate)}
-          >
-            <i>{String(entry.order).padStart(2, '0')}</i>
-            <span><strong>{entry.shortTitle}</strong><small>{entry.type.replaceAll('-', ' ')}</small></span>
-          </a>
-        </li>;
+        return <a
+          href={entryHref(entry)}
+          className={active ? 'is-active' : ''}
+          aria-current={active ? 'page' : undefined}
+          onPointerEnter={() => onPrefetch?.(entry.id === 'succession-contest' ? 'succession' : 'series', entry.id === 'succession-contest' ? 'overview' : entry.id)}
+          onFocus={() => onPrefetch?.(entry.id === 'succession-contest' ? 'succession' : 'series', entry.id === 'succession-contest' ? 'overview' : entry.id)}
+          onClick={(event) => navigateToEntry(event, entry, onNavigate)}
+          key={entry.id}
+        >
+          <i>{String(entry.order).padStart(2, '0')}</i>
+          <span>{entry.shortTitle}</span>
+        </a>;
       })}
-    </ol>
-  </aside>;
-}
-
-function StoryContextRail({ activeEntry, activeId, spoilerLimit }) {
-  const sections = storyContentPolicy.standardSections.slice(0, 9);
-  return <aside className="story-context-rail" aria-label="Story page context">
-    <header><span>Foundation</span><h2>{activeEntry ? 'Arc shell' : 'Story hub'}</h2></header>
-    <dl className="story-context-rail__facts">
-      <div><dt>Reading boundary</dt><dd>Chapter {spoilerLimit}</dd></div>
-      <div><dt>Factual spine</dt><dd>{storyContentPolicy.factualSpine}</dd></div>
-      <div><dt>Visual direction</dt><dd>{storyDesignDirection.identity}</dd></div>
-      <div><dt>Mobile scope</dt><dd>{storyDesignDirection.mobileStatus}</dd></div>
-    </dl>
-    <header><span>Standard sections</span><h2>{activeEntry ? activeEntry.shortTitle : utilityLabels.get(activeId) || 'Hub'}</h2></header>
-    <ol>
-      {sections.map((section, index) => <li key={section}><i>{String(index + 1).padStart(2, '0')}</i><span>{section.replaceAll('-', ' ')}</span></li>)}
-    </ol>
-  </aside>;
+    </div>
+  </nav>;
 }
 
 export function StoryArcFoundation({ activeId, onNavigate }) {
@@ -176,14 +162,11 @@ export function ZoldyckStoryBridge({ onNavigate }) {
   </section>;
 }
 
-export default function StoryFoundationLayout({ activeId = 'arcs', spoilerLimit, onNavigate, onPrefetch, children }) {
+export default function StoryFoundationLayout({ activeId = 'arcs', onNavigate, onPrefetch, children }) {
   const activeEntry = entryById.get(activeId);
-  return <section className="story-foundation" aria-label="Story foundation layout">
+  return <section className="story-foundation story-foundation--wide" aria-label="Story archive layout">
     <StoryBreadcrumbs activeEntry={activeEntry} activeId={activeId} onNavigate={onNavigate} />
-    <div className="story-foundation__grid">
-      <div className="story-foundation__rail"><StoryTimelineRail activeId={activeId} onNavigate={onNavigate} onPrefetch={onPrefetch} /></div>
-      <div className="story-foundation__main">{children}</div>
-      <div className="story-foundation__rail"><StoryContextRail activeEntry={activeEntry} activeId={activeId} spoilerLimit={spoilerLimit} /></div>
-    </div>
+    <StoryRouteStrip activeId={activeId} onNavigate={onNavigate} onPrefetch={onPrefetch} />
+    <div className="story-foundation__main">{children}</div>
   </section>;
 }
