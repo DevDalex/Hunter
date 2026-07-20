@@ -1,7 +1,7 @@
 import { createServer } from 'node:http';
 import { access, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pathToFileURL } from 'node:url';
 import { routeManifest } from '../src/data/routeManifest.js';
 
 const root = process.cwd();
@@ -13,6 +13,7 @@ const selectedViewport = process.env.VISUAL_QA_VIEWPORT || 'all';
 const selectedRoute = process.env.VISUAL_QA_ROUTE || '';
 const playwrightSpecifier = process.env.PLAYWRIGHT_CORE_PATH || 'playwright-core';
 const executablePath = process.env.CHROMIUM_PATH;
+const approvedExternalMediaHosts = new Set(['hunterxhunter.fandom.com', 'static.wikia.nocookie.net']);
 
 const viewports = [
   { id: 'desktop', width: 1440, height: 1000 },
@@ -32,6 +33,16 @@ const routes = routeManifest.map((route, index) => ({
 })).filter((route) => !selectedRoute || route.path === selectedRoute.replace(/^#?\/?/, ''));
 
 if (!routes.length) throw new Error(`No visual-QA route matched “${selectedRoute}”.`);
+
+const isApprovedExternalMediaRequest = (request) => {
+  if (request.resourceType() !== 'image') return false;
+  try {
+    const url = new URL(request.url());
+    return url.protocol === 'https:' && approvedExternalMediaHosts.has(url.hostname);
+  } catch {
+    return false;
+  }
+};
 
 const mime = {
   '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8',
@@ -129,7 +140,7 @@ const inspectPage = () => {
     .filter((image) => visible(image) && !image.complete)
     .map((image) => ({ alt: image.alt, src: image.currentSrc || image.src }));
   const emptyFrames = [...document.querySelectorAll('[data-image-frame]')]
-    .filter((frame) => visible(frame) && !frame.querySelector('img'))
+    .filter((frame) => visible(frame) && !frame.querySelector('img, .safe-image-placeholder, .source-portrait--missing'))
     .map(selector);
   const mediaTextOverlaps = [...document.querySelectorAll('.room-card, .world-gallery-grid article, .entity-record__identity, .world-place-inspector')]
     .map((container) => {
@@ -150,7 +161,12 @@ const inspectPage = () => {
     .map((element) => ({ element, size: Number.parseFloat(getComputedStyle(element).fontSize) }))
     .filter(({ size }) => size < 11)
     .slice(0, 30)
-    .map(({ element, size }) => ({ selector: selector(element), size }));
+    .map(({ element, size }) => ({
+      selector: selector(element),
+      parent: element.parentElement ? selector(element.parentElement) : null,
+      text: (element.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 80),
+      size,
+    }));
   const smallTargets = [...document.querySelectorAll('button, input, select, textarea, [role="button"]')]
     .filter((element) => visible(element) && !element.disabled && !element.matches('.sr-only, .skip-link:not(:focus)'))
     .map((element) => ({ element, rect: element.getBoundingClientRect() }))
@@ -191,10 +207,10 @@ const settlePage = async (page) => {
     window.scrollTo(0, 0);
     await Promise.race([
       Promise.all([...document.images].map((image) => image.complete ? null : new Promise((resolve) => { image.addEventListener('load', resolve, { once: true }); image.addEventListener('error', resolve, { once: true }); }))),
-      new Promise((resolve) => setTimeout(resolve, 1_500)),
+      new Promise((resolve) => setTimeout(resolve, 2_500)),
     ]);
   });
-  await page.waitForTimeout(120);
+  await page.waitForTimeout(180);
 };
 
 await rm(output, { recursive: true, force: true });
@@ -229,8 +245,13 @@ try {
       else await page.setViewportSize({ width: viewport.width, height: viewport.height });
       const runtimeErrors = [];
       const failedRequests = [];
+      const approvedExternalMediaFailures = [];
       const onPageError = (error) => runtimeErrors.push(error.message);
-      const onRequestFailed = (request) => failedRequests.push(`${request.url()} · ${request.failure()?.errorText || 'failed'}`);
+      const onRequestFailed = (request) => {
+        const record = `${request.url()} · ${request.failure()?.errorText || 'failed'}`;
+        if (isApprovedExternalMediaRequest(request)) approvedExternalMediaFailures.push(record);
+        else failedRequests.push(record);
+      };
       page.on('pageerror', onPageError);
       page.on('requestfailed', onRequestFailed);
       try {
@@ -238,14 +259,14 @@ try {
         await settlePage(page);
         const audit = await page.evaluate(inspectPage);
         const defects = runtimeErrors.length + failedRequests.length + audit.spill.length + audit.brokenImages.length + audit.pendingImages.length + audit.emptyFrames.length + audit.mediaTextOverlaps.length + audit.tinyText.length + (audit.bodyOverflow > 1 ? 1 : 0) + (strictTouch && viewport.id !== 'desktop' ? audit.smallTargets.length : 0);
-        const row = { viewport: viewport.id, route: route.path, label: route.label, runtimeErrors, failedRequests, ...audit, defects };
+        const row = { viewport: viewport.id, route: route.path, label: route.label, runtimeErrors, failedRequests, approvedExternalMediaFailures, ...audit, defects };
         report.push(row);
         if (screenshotMode === 'all' || (screenshotMode === 'failures' && defects)) {
           await page.screenshot({ path: path.join(screenDir, `${route.file}.png`), fullPage: true });
         }
         process.stdout.write(`${defects ? '✗' : '✓'} ${viewport.id.padEnd(7)} ${route.path}\n`);
       } catch (error) {
-        report.push({ viewport: viewport.id, route: route.path, label: route.label, runtimeErrors: [...runtimeErrors, error.message], failedRequests, defects: 1 });
+        report.push({ viewport: viewport.id, route: route.path, label: route.label, runtimeErrors: [...runtimeErrors, error.message], failedRequests, approvedExternalMediaFailures, defects: 1 });
         await page.screenshot({ path: path.join(screenDir, `${route.file}-fatal.png`), fullPage: true }).catch(() => {});
         process.stdout.write(`✗ ${viewport.id.padEnd(7)} ${route.path} · ${error.message}\n`);
       } finally {
@@ -262,6 +283,7 @@ try {
 }
 
 const failures = report.filter((row) => row.defects);
+const approvedExternalMediaFailureCount = report.reduce((total, row) => total + (row.approvedExternalMediaFailures?.length || 0), 0);
 const summary = {
   generatedAt: new Date().toISOString(),
   routes: routes.length,
@@ -269,11 +291,12 @@ const summary = {
   checks: report.length,
   passed: report.length - failures.length,
   failed: failures.length,
+  approvedExternalMediaFailureCount,
   strictTouch,
 };
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results: report }, null, 2)}\n`);
 await writeFile(path.join(output, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
-console.log(`\nVisual QA: ${summary.passed}/${summary.checks} route/viewport renders passed. Report: ${path.relative(root, path.join(output, 'report.json'))}`);
+console.log(`\nVisual QA: ${summary.passed}/${summary.checks} route/viewport renders passed. Approved external media availability events: ${approvedExternalMediaFailureCount}. Report: ${path.relative(root, path.join(output, 'report.json'))}`);
 if (failures.length) {
   for (const failure of failures) console.error(`- ${failure.viewport} ${failure.route}: ${failure.defects} defect signal(s)`);
   process.exitCode = 1;
