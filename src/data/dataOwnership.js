@@ -1,0 +1,31 @@
+export const dataOwnership = Object.freeze({
+  characterPortraits: Object.freeze({
+    key: 'name',
+    canonical: 'src/data/characters.js#characterPortraitSources',
+    derivative: 'src/data/priorityMedia.generated.js#priorityPortraits',
+    generator: 'scripts/stabilize-media.mjs',
+    publicDirectory: 'public/media/portraits',
+  }),
+  blackWhaleRooms: Object.freeze({
+    key: 'key',
+    canonical: 'src/data/blackWhale.js#blackWhaleRemoteImageSources',
+    derivative: 'src/data/blackWhaleMedia.generated.js#blackWhaleRoomMedia',
+    generator: 'scripts/stabilize-room-media.mjs',
+    publicDirectory: 'public/media/rooms',
+  }),
+  archiveSearch: Object.freeze({
+    canonical: 'src/data/* domain records',
+    derivative: 'runtime-only normalized search records',
+    generator: 'src/data/archiveSearch.js',
+    shards: Object.freeze([
+      'src/data/archiveSearch.series.js',
+      'src/data/archiveSearch.succession.js',
+      'src/data/archiveSearch.reference.js',
+    ]),
+  }),
+});
+
+export const generatedDataFiles = Object.freeze([
+  'src/data/priorityMedia.generated.js',
+  'src/data/blackWhaleMedia.generated.js',
+]);
