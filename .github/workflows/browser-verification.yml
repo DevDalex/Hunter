@@ -39,9 +39,13 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run production build and browser verification
+        shell: bash
         env:
           VISUAL_QA_SCREENSHOTS: failures
-        run: npm run qa:browser
+        run: |
+          set -o pipefail
+          mkdir -p .browser-qa
+          npm run qa:browser 2>&1 | tee .browser-qa/console.log
 
       - name: Upload browser QA reports
         if: always()
@@ -51,6 +55,7 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
           path: |
+            .browser-qa/
             .visual-qa/
             .accessibility-qa/
             .interaction-qa/
