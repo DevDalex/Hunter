@@ -1,3 +1,5 @@
+import { preloadArchiveSearchIndex } from '../data/archiveSearch';
+
 export const routeModuleLoaders = {
   archiveSearch: () => import('../components/ArchiveSearch'),
   series: () => import('../components/SeriesWorkspace'),
@@ -59,4 +61,7 @@ const preload = (loader) => {
 };
 
 export const preloadRoute = (view, target = '') => preload(loaderForRoute(view, target));
-export const preloadArchiveSearch = () => preload(routeModuleLoaders.archiveSearch);
+export const preloadArchiveSearch = () => Promise.all([
+  preload(routeModuleLoaders.archiveSearch),
+  preloadArchiveSearchIndex(),
+]);

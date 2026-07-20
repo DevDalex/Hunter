@@ -1,8 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, ExternalLink, Search, X } from 'lucide-react';
-import { archiveSearchIndex } from '../data/archiveSearch';
+import { loadArchiveSearchIndex } from '../data/archiveSearch';
 
 const popularSearches = ['Kurapika', 'Kakin Empire', 'Room 1014', 'Guardian Spirit Beast', 'Chapter 359'];
+const collator = new Intl.Collator(undefined, { sensitivity: 'base' });
+const normalizeQuery = (value) => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 
 export default function ArchiveSearch({ open, spoilerLimit = Number.MAX_SAFE_INTEGER, onClose, onSelect }) {
   const dialogRef = useRef(null);
@@ -11,19 +13,45 @@ export default function ArchiveSearch({ open, spoilerLimit = Number.MAX_SAFE_INT
   const [query, setQuery] = useState('');
   const [type, setType] = useState('all');
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [searchIndex, setSearchIndex] = useState([]);
+  const [indexState, setIndexState] = useState('loading');
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  const deferredQuery = useDeferredValue(query);
+  const normalizedQuery = normalizeQuery(deferredQuery);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    let cancelled = false;
+    setIndexState(searchIndex.length ? 'ready' : 'loading');
+    loadArchiveSearchIndex().then(({ index }) => {
+      if (cancelled) return;
+      setSearchIndex(index);
+      setIndexState('ready');
+    }).catch(() => {
+      if (!cancelled) setIndexState('error');
+    });
+    return () => { cancelled = true; };
+  }, [loadAttempt, open]);
 
   const matchingResults = useMemo(() => {
-    const terms = query.toLowerCase().trim().split(/\s+/).filter(Boolean);
-    if (!terms.length) return [];
-    return archiveSearchIndex
-      .filter((item) => (!item.chapter || item.chapter <= spoilerLimit) && terms.every((term) => item.searchText.includes(term)))
-      .sort((a, b) => {
-        const aTitle = a.title.toLowerCase().startsWith(query.toLowerCase()) ? 0 : 1;
-        const bTitle = b.title.toLowerCase().startsWith(query.toLowerCase()) ? 0 : 1;
-        return aTitle - bTitle || a.title.localeCompare(b.title);
-      })
-      .slice(0, 240);
-  }, [query, spoilerLimit]);
+    const terms = normalizedQuery.split(/\s+/).filter(Boolean);
+    if (!terms.length || indexState !== 'ready') return [];
+    const ranked = [];
+    for (const item of searchIndex) {
+      if (item.chapter && item.chapter > spoilerLimit) continue;
+      if (!terms.every((term) => item.searchText.includes(term))) continue;
+      const score = item.titleText === normalizedQuery
+        ? 0
+        : item.titleText.startsWith(normalizedQuery)
+          ? 1
+          : terms.every((term) => item.titleText.includes(term))
+            ? 2
+            : 3;
+      ranked.push({ item, score });
+    }
+    ranked.sort((a, b) => a.score - b.score || a.item.title.length - b.item.title.length || collator.compare(a.item.title, b.item.title));
+    return ranked.slice(0, 240).map(({ item }) => item);
+  }, [indexState, normalizedQuery, searchIndex, spoilerLimit]);
 
   const results = useMemo(() => matchingResults.filter((item) => type === 'all' || item.type === type).slice(0, 80), [matchingResults, type]);
   const visibleTypes = useMemo(() => [...new Set(matchingResults.map((item) => item.type))], [matchingResults]);
@@ -84,22 +112,33 @@ export default function ArchiveSearch({ open, spoilerLimit = Number.MAX_SAFE_INT
   };
 
   if (!open) return null;
+  const statusMessage = indexState === 'loading'
+    ? 'Preparing the archive search index'
+    : indexState === 'error'
+      ? 'The archive search index could not be loaded'
+      : normalizedQuery
+        ? `${results.length} matching archive result${results.length === 1 ? '' : 's'}`
+        : 'Archive search ready';
+
   return (
     <div className="archive-search-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
-      <section ref={dialogRef} className="archive-search-dialog" role="dialog" aria-modal="true" aria-labelledby="archive-search-title">
+      <section ref={dialogRef} className="archive-search-dialog" role="dialog" aria-modal="true" aria-labelledby="archive-search-title" aria-busy={indexState === 'loading'}>
         <header>
           <div><span className="section-kicker">Global archive search</span><h2 id="archive-search-title">Find any maintained record</h2></div>
           <button onClick={onClose} aria-label="Close archive search"><X size={20} /></button>
         </header>
-        <label className="archive-search-input"><span className="sr-only">Search the archive</span><Search size={19} /><input ref={inputRef} role="combobox" value={query} onChange={(event) => { setQuery(event.target.value); setType('all'); }} onKeyDown={handleInputKeyDown} aria-controls="archive-search-results" aria-expanded={Boolean(query)} aria-autocomplete="list" placeholder="Character, mapped place, chapter, room, ability…" /><kbd>Esc</kbd></label>
-        <p className="sr-only" role="status" aria-live="polite">{query ? `${results.length} matching archive result${results.length === 1 ? '' : 's'}` : 'Archive search ready'}</p>
+        <label className="archive-search-input"><span className="sr-only">Search the archive</span><Search size={19} /><input ref={inputRef} role="combobox" value={query} onChange={(event) => { setQuery(event.target.value); setType('all'); }} onKeyDown={handleInputKeyDown} aria-controls="archive-search-results" aria-expanded={Boolean(normalizedQuery && indexState === 'ready')} aria-autocomplete="list" placeholder="Character, mapped place, chapter, room, ability…" /><kbd>Esc</kbd></label>
+        <p className="sr-only" role="status" aria-live="polite">{statusMessage}</p>
 
         {!query && <div className="archive-search-empty">
           <p>Searches cover mapped places, chapters, arcs, characters, princes, Guardian Spirit Beasts, Nen abilities, factions, rooms, operations, objects, mysteries, and reference shelves.</p>
           <div>{popularSearches.map((item) => <button onClick={() => setQuery(item)} key={item}>{item}</button>)}</div>
         </div>}
 
-        {query && <>
+        {query && indexState === 'loading' && <div className="archive-search-no-results" role="status"><strong>Preparing archive search</strong><p>Loading the story, Succession, and reference indexes…</p></div>}
+        {query && indexState === 'error' && <div className="archive-search-no-results" role="alert"><strong>Search index unavailable</strong><p>The archive itself is still available through navigation.</p><button type="button" onClick={() => setLoadAttempt((attempt) => attempt + 1)}>Retry search index</button></div>}
+
+        {query && indexState === 'ready' && <>
           <div className="archive-search-filters" aria-label="Filter search result type">
             <button className={type === 'all' ? 'is-active' : ''} onClick={() => setType('all')}>All <small>{matchingResults.length}</small></button>
             {visibleTypes.map((item) => <button className={type === item ? 'is-active' : ''} onClick={() => setType(item)} key={item}>{item}</button>)}
