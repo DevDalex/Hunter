@@ -1,6 +1,7 @@
 import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { isApprovedSourceUrl } from '../src/data/sourcePolicy.js';
+import { yorknewPrototype, yorknewPrototypeStats } from '../src/data/yorknewPrototype.js';
 import {
   STORY_ARCHITECTURE_VERSION,
   storyArchitectureAcceptance,
@@ -141,6 +142,16 @@ const seriesWorkspace = await readFile(path.resolve('src/components/SeriesWorksp
 assert(seriesWorkspace.includes('StoryFoundationLayout') && seriesWorkspace.includes('StoryHubFoundation') && seriesWorkspace.includes('StoryArcFoundation'), 'SeriesWorkspace must render through the shared Story foundation');
 assert(seriesWorkspace.includes("{ id: 'zoldyck-family', label: 'Zoldyck Family' }"), 'Series workspace navigation must include the Zoldyck editorial destination');
 assert(seriesWorkspace.includes('ZoldyckStoryBridge'), 'Zoldyck route must stay inside the Story workspace foundation');
+assert(seriesWorkspace.includes('YorknewPrototypePage') && seriesWorkspace.includes('yorknewPrototypePage ?'), 'Yorknew must route through its dedicated prototype page');
+
+const yorknewComponent = await readFile(path.resolve('src/components/YorknewPrototypePage.jsx'), 'utf8');
+assert(yorknewComponent.includes('YorknewHero') && yorknewComponent.includes('Chronology') && yorknewComponent.includes('Factions') && yorknewComponent.includes('TroupeBoard') && yorknewComponent.includes('ChainInspector') && yorknewComponent.includes('ConflictLedger') && yorknewComponent.includes('FortuneMatrix') && yorknewComponent.includes('ObjectLedger'), 'Yorknew prototype must retain the required page modules');
+assert(yorknewComponent.includes("import './YorknewPrototypePage.css'"), 'Yorknew prototype must import its page stylesheet');
+
+assert(yorknewPrototype.id === storyDesignDirection.prototypeArcId, 'Yorknew prototype data must match the architecture prototype ID');
+assert(yorknewPrototype.sections.length >= 11 && yorknewPrototype.overview.length >= 4, 'Yorknew prototype needs overview and section coverage');
+assert(yorknewPrototypeStats.chronology >= 10 && yorknewPrototypeStats.factions >= 6 && yorknewPrototypeStats.chains >= 6 && yorknewPrototypeStats.conflicts >= 7 && yorknewPrototypeStats.sources >= 8, 'Yorknew prototype content groups are incomplete');
+assert(yorknewPrototype.sources.every((source) => isApprovedSourceUrl(source.href)), 'Yorknew prototype sources must follow the approved Hunterpedia/Fandom policy');
 
 const app = await readFile(path.resolve('src/App.jsx'), 'utf8');
 assert(app.includes('onPrefetch={preloadRoute}'), 'Story workspace must receive route prefetch support');
@@ -151,7 +162,10 @@ assert(routeManifest.includes("label: 'Pre-Succession overview'") && !routeManif
 
 assert(storyArchitectureAcceptance.length === 10, 'the architecture lock must retain ten acceptance statements');
 await access(path.resolve('docs/STORY-ARCHITECTURE.md'));
+await access(path.resolve('docs/STORY-FOUNDATION.md'));
+await access(path.resolve('docs/YORKNEW-PROTOTYPE.md'));
 await access(path.resolve('src/lib/appRouter.js'));
 await access(path.resolve('src/components/StoryFoundation.css'));
+await access(path.resolve('src/components/YorknewPrototypePage.css'));
 
-console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, clean routing, Story foundation shell, Zoldyck workspace bridge, legacy route inventory stable, direct reload fallback, and mobile deferred.`);
+console.log(`Story architecture audit passed: ${storyEntries.length} Story entries, ${successionStorySubpages.length} Succession subpages, ${storyContentPolicy.standardSections.length} standard sections, clean routing, Story foundation shell, Yorknew prototype page, Zoldyck workspace bridge, legacy route inventory stable, direct reload fallback, and mobile deferred.`);
