@@ -57,6 +57,7 @@ jobs:
           retention-days: 14
           path: |
             .browser-qa/
+            .search-qa/
             .visual-qa/
             .accessibility-qa/
             .interaction-qa/
