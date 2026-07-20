@@ -1,0 +1,153 @@
+:root {
+  --archive-gold-ink: #6b4d00;
+  --archive-muted-ink: #5c5750;
+  --archive-steel-ink: #36566a;
+  --archive-on-dark: #f6ecee;
+  --archive-active-contrast: #6e1825;
+}
+
+/* Metadata should inherit a readable surface color unless a component owns a
+   contrast-tested semantic accent below. This removes fragile muted descendants. */
+main :is(small, i, dt, figcaption),
+main button :is(span, small, em, i, b),
+main a :is(span, small, em, i, b) {
+  color: inherit !important;
+}
+
+/* Dark archive surfaces use one warm-white reading color. */
+:where(
+  .archive-home-hero__lead,
+  .arc-experience-hero__copy,
+  .yn-dark-section,
+  .ea-dark-section,
+  .gi-dark-section,
+  .ca-dark-section,
+  .memories-bridge,
+  .nen-desk-hero,
+  .nen-principle-workbench,
+  .nen-principle-map
+) {
+  color: var(--archive-on-dark) !important;
+}
+
+:where(
+  .archive-home-hero__lead,
+  .arc-experience-hero__copy,
+  .yn-dark-section,
+  .ea-dark-section,
+  .gi-dark-section,
+  .ca-dark-section,
+  .memories-bridge,
+  .nen-desk-hero,
+  .nen-principle-workbench,
+  .nen-principle-map
+) :is(h1, h2, h3, h4, p, li, span, small, i, dt, dd, strong, b, em, a) {
+  color: inherit !important;
+}
+
+/* Paper surfaces keep gold as a dark ink rather than a low-contrast highlight. */
+:where(
+  .chapter-row__number,
+  .timeline-record__time,
+  [id^="dossier-record-"] > span,
+  [id^="dossier-record-"] > div > span,
+  [id^="voyage-day-"] > header > div > span,
+  .timeline-prelude__heading > span,
+  .complete-roster-grid .roster-card > span,
+  .roster-card > span,
+  .room-card > div > span,
+  .story-context-rail > ol > li > i,
+  .story-hub-card > i,
+  .arc-nav > button > span,
+  .section-tabs > button > span,
+  .royal-room-plan__side > button > i,
+  .royal-household-matrix > div > button > span > small,
+  .ship-route > header > span,
+  .ea-character-board > article > div > span,
+  .ea-system-grid > article > span,
+  .ea-mechanics-inspector__detail > span,
+  .yn-conflict-ledger > article > div > span,
+  .yn-object-ledger > article > span,
+  .world-map-scale-path > article > span,
+  .world-map-inspector > header > span,
+  .world-map-inspector__mobile-toggle small,
+  .entity-record__header > div > span,
+  .entity-record__relations > header > span,
+  .entity-encyclopedia__context > div > span,
+  .conflict-index > header > span,
+  .conflict-dossier > header span,
+  .reference-backbone__sources > a,
+  .underworld-era--yorknew > header > span,
+  .nen-foundation-index > button > i,
+  .nen-record > header > span,
+  [class*="-paper-section"] [class*="-section-header"] > span
+) {
+  color: var(--archive-gold-ink) !important;
+}
+
+/* Secondary copy on paper uses a neutral dark ink. */
+:where(
+  .story-context-rail__facts dt,
+  .story-breadcrumbs > span,
+  .story-arc-foundation__facts dt,
+  .entity-record__integrity span,
+  .pre-scope-notice p,
+  .underworld-transition small,
+  .power-bloc-visual small
+) {
+  color: var(--archive-muted-ink) !important;
+}
+
+.reference-backbone__workspace > aside > header > span {
+  color: var(--archive-steel-ink) !important;
+}
+
+/* Active controls share a guaranteed AA combination instead of retaining gold,
+   rose, or muted descendants from their inactive state. */
+main button:is(.is-active, [aria-current="page"], [aria-selected="true"]),
+main [role="option"].is-active {
+  background: var(--archive-active-contrast) !important;
+  color: #fff !important;
+}
+
+main button:is(.is-active, [aria-current="page"], [aria-selected="true"]) *,
+main [role="option"].is-active * {
+  color: inherit !important;
+}
+
+.timeline-record.is-selected {
+  color: #4a3d40 !important;
+}
+
+.timeline-record.is-selected * {
+  color: inherit !important;
+}
+
+button[data-family] {
+  color: #fff !important;
+}
+
+button[data-family] * {
+  color: inherit !important;
+}
+
+.succession-system-map {
+  color: #fff !important;
+}
+
+.succession-system-map :is(h2, h3, p, span, small, i, b, strong, em) {
+  color: inherit !important;
+}
+
+.ca-data-table thead th,
+.ship-manifest__table-wrap thead th {
+  color: #fff !important;
+}
+
+:where(.yn-hero__portraits, .gi-hero__portraits, .ca-hero__portraits) figcaption {
+  color: #181619 !important;
+}
+
+.is-in > small {
+  color: #fff !important;
+}

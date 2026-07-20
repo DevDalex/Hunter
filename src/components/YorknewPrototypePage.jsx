@@ -128,7 +128,7 @@ function ChainInspector() {
     </SectionHeader>
     <div className="yn-chain-inspector">
       <div className="yn-chain-inspector__menu" role="listbox" aria-label="Choose Kurapika chain concept">
-        {yorknewPrototype.chains.map((chain, index) => <button key={chain.name} className={chain.name === selected.name ? 'is-active' : ''} aria-pressed={chain.name === selected.name} onClick={() => setSelectedName(chain.name)}>
+        {yorknewPrototype.chains.map((chain, index) => <button key={chain.name} role="option" className={chain.name === selected.name ? 'is-active' : ''} aria-selected={chain.name === selected.name} onClick={() => setSelectedName(chain.name)}>
           <i>{String(index + 1).padStart(2, '0')}</i><span>{chain.name}</span>
         </button>)}
       </div>

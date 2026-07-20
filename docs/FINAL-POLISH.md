@@ -2,7 +2,7 @@
 
 Status: Batch 10 locked
 Date: 2026-07-20
-Scope: desktop-first stabilization, visual identity lock, audit-chain lock, and release-readiness notes
+Scope: desktop-first stabilization, visual identity lock, regression contracts, and release-readiness notes
 Mobile status: deferred
 
 ## Purpose
@@ -17,86 +17,83 @@ Batch 10 is not a new content feature. It closes the redesign sequence by making
 
 ## Final visual correction
 
-The older codebase still uses compatibility custom properties named `--forest`, `--forest-dark`, and `--forest-soft` in many established selectors. Removing every old variable name would create a large risk surface late in the batch cycle.
+The older codebase still uses compatibility custom properties named `--forest`, `--forest-dark`, and `--forest-soft` in established selectors. Removing every old variable name would create unnecessary risk.
 
-Batch 10 therefore keeps those variable names but remaps their final cascade values:
-
-- `--forest` resolves to crimson.
-- `--forest-dark` resolves to deep crimson.
-- `--forest-soft` resolves to pale crimson paper.
-
-This preserves old component wiring while preventing the global identity from feeling green.
-
-Green is still allowed only when it has a subject-specific reason, such as terrain, NGL material, local aura diagrams, or a page-specific visual metaphor. It is not the site brand.
+`src/styles/final-polish.css` therefore remaps those names to crimson-compatible values. Green remains acceptable only where the subject itself calls for it, such as terrain, NGL material, or a local visual metaphor. It is not the global brand.
 
 ## Locked design direction
 
 The final global identity remains:
 
-- black cinematic shell
-- warm ivory reading surfaces
-- crimson active states
-- antique gold structural metadata
-- steel blue for neutral/system information
-- selective purple for royal, mystery, and Succession material
+- black cinematic shell;
+- warm ivory reading surfaces;
+- crimson active states;
+- antique gold structural metadata;
+- steel blue neutral/system information;
+- selective purple for royal, mystery, and Succession material.
 
-The site should read as a serious illustrated story archive rather than a fan wiki, streaming platform, corporate dashboard, or generic anime landing page.
+The site should read as a serious illustrated story archive rather than a fan-wiki clone, streaming platform, corporate dashboard, or generic anime landing page.
+
+## CSS ownership
+
+Runtime CSS must load in this exact order:
+
+1. `src/styles.css`;
+2. `src/nen.css`;
+3. `src/styles/final-polish.css`.
+
+The CSS ownership audit validates the exact three-entry runtime order. The final-polish audit separately verifies that the final layer remains last and contains the locked Black Archive tokens and selectors.
 
 ## What Batch 10 owns
 
-Batch 10 owns:
-
-- final cascade overrides in `src/styles/final-polish.css`
-- loading that final stylesheet after the Nen stylesheet in `src/main.jsx`
-- a new `audit:final` script
-- build-chain integration for the final audit
-- this documentation file
+- final cascade overrides in `src/styles/final-polish.css`;
+- loading that final stylesheet after Nen CSS in `src/main.jsx`;
+- `scripts/audit-final-polish.mjs`;
+- Batch 7–10 lock ordering inside `scripts/run-build-preflight.mjs`;
+- this documentation file.
 
 ## What Batch 10 does not own
 
 Batch 10 does not:
 
-- add a new major content section
-- split Chimera Ant into nested pages
-- delete character records
-- turn source-index characters into full profiles automatically
-- redesign mobile navigation
-- replace the Hunterpedia/Fandom source policy
-- run or claim external CI results when GitHub does not provide a workflow run
+- add a new major content section;
+- split Chimera Ant into nested pages;
+- delete character records;
+- turn source-index characters into full profiles automatically;
+- reopen mobile-specific redesign;
+- replace the Hunterpedia/Fandom source policy;
+- prove external CI or browser QA without a completed successful run.
 
 ## Required previous batch locks
 
-Batch 10 assumes these earlier batch artifacts remain present:
-
-- `docs/CHIMERA-ANT-PROTOTYPE.md`
-- `docs/REFERENCE-BACKBONE.md`
-- `docs/CHARACTER-PROFILES.md`
-- `scripts/audit-story-architecture.mjs`
-- `scripts/audit-reference-backbone.mjs`
-- `scripts/audit-character-profiles.mjs`
+- `docs/CHIMERA-ANT-PROTOTYPE.md`;
+- `docs/REFERENCE-BACKBONE.md`;
+- `docs/CHARACTER-PROFILES.md`;
+- `scripts/audit-story-architecture.mjs`;
+- `scripts/audit-reference-backbone.mjs`;
+- `scripts/audit-character-profiles.mjs`.
 
 ## Verification
 
 The final audit checks that:
 
-1. `src/main.jsx` loads `src/styles/final-polish.css` after `src/nen.css`.
-2. final Black Archive tokens exist.
-3. old green compatibility variables resolve to crimson values.
-4. old global green hex values are not reintroduced inside the final polish layer.
-5. header, intro, Greed Island, Chimera Ant, Nen, and character profile selectors have final lock coverage.
-6. `package.json` contains `audit:story`, `audit:reference`, `audit:characters`, `audit:final`, `audit:polish`, and `qa:browser`.
-7. the normal build chain runs Story, Reference, Characters, and Final locks before the general schema/CSS/readability/layout/accessibility/media/polish/release sequence.
-8. Hunterpedia/Fandom source policy and mobile-deferred status remain visible.
+1. final polish loads after Nen CSS;
+2. Black Archive tokens exist;
+3. compatibility forest variables resolve to crimson values;
+4. old global green values do not return in the final layer;
+5. shared shell, Story prototypes, Nen, and character profiles receive final coverage;
+6. Story, Reference, Characters, and Final audits remain present;
+7. `scripts/run-build-preflight.mjs` runs those locks in that order;
+8. Hunterpedia/Fandom sourcing and deferred mobile scope remain explicit.
 
-## Current final batch order
+## Current redesign sequence
 
-The redesign sequence now stands as:
-
-- Batch 7: Chimera Ant prototype page
-- Batch 8: Reference Backbone — Nen / World / Organizations / Conflicts
-- Batch 9: Characters / Profile Dossiers
-- Batch 10: Final polish / QA lock / visual identity stabilization
+- Batch 7: Chimera Ant prototype page;
+- Batch 8: Reference Backbone — Nen / World / Organizations / Conflicts;
+- Batch 9: Characters / Profile Dossiers;
+- Batch 10: Final polish / QA lock / visual identity stabilization;
+- Batch 11: archive governance foundation.
 
 ## Remaining honest boundary
 
-This batch adds repository-side safeguards. It does not prove that GitHub Actions or browser QA passed unless a workflow run exists and reports success.
+Repository-side safeguards are not proof that GitHub Actions, browser QA, or Cloudflare deployment passed. A success claim requires the corresponding run to reach terminal success for the exact commit.

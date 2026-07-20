@@ -141,7 +141,7 @@ function CharacterBoard() {
     </SectionHeader>
     <div className="ca-toolbar">
       <div className="ca-tabs" role="tablist" aria-label="Chimera Ant character groups">
-        {chimeraAntCharacterGroups.map(([value, label]) => <button key={value} className={activeGroup === value ? 'is-active' : ''} onClick={() => setActiveGroup(value)} type="button">{label}</button>)}
+        {chimeraAntCharacterGroups.map(([value, label]) => <button key={value} role="tab" aria-selected={activeGroup === value} className={activeGroup === value ? 'is-active' : ''} onClick={() => setActiveGroup(value)} type="button">{label}</button>)}
       </div>
       <label className="ca-search"><Search size={15} /><span className="sr-only">Search Chimera Ant characters</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search role, status, theme…" /></label>
     </div>
@@ -157,7 +157,7 @@ function CharacterBoard() {
 function AntHierarchy() {
   return <section className="ca-dark-section" aria-labelledby="ca-ants-title">
     <SectionHeader id="ca-ants" eyebrow="Ant hierarchy" title="Ranks, loyalties, survivor states and story functions" />
-    <div className="ca-table-wrap">
+    <div className="ca-table-wrap" role="region" aria-label="Chimera Ant hierarchy table" tabIndex={0}>
       <table className="ca-data-table">
         <thead><tr><th>Name</th><th>Rank</th><th>Allegiance</th><th>Status</th><th>Function</th></tr></thead>
         <tbody>{chimeraAntPrototype.antHierarchy.map((ant) => <tr key={ant.name}><th>{ant.name}</th><td>{ant.rank}</td><td>{ant.allegiance}</td><td>{ant.status}</td><td>{ant.function}</td></tr>)}</tbody>
@@ -195,7 +195,7 @@ function ConflictArchive() {
   return <section className="ca-dark-section" aria-labelledby="ca-conflicts-title">
     <SectionHeader id="ca-conflicts" eyebrow="Conflict archive" title="Fights, games, scouting failures, hostage pressure and ideology clashes" />
     <div className="ca-tabs ca-tabs--dark" role="tablist" aria-label="Chimera Ant conflict types">
-      {chimeraAntConflictGroups.map(([value, label]) => <button key={value} className={activeType === value ? 'is-active' : ''} onClick={() => setActiveType(value)} type="button">{label}</button>)}
+      {chimeraAntConflictGroups.map(([value, label]) => <button key={value} role="tab" aria-selected={activeType === value} className={activeType === value ? 'is-active' : ''} onClick={() => setActiveType(value)} type="button">{label}</button>)}
     </div>
     <div className="ca-conflict-ledger">
       {filteredConflicts.map((conflict, index) => <article key={conflict.name}>

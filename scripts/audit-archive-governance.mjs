@@ -59,8 +59,12 @@ for (const file of schemaFiles) {
 }
 
 const packageJson = await read('package.json');
+const preflight = await read('scripts/run-build-preflight.mjs');
 assert(packageJson.includes('audit:governance') && packageJson.includes('node scripts/audit-archive-governance.mjs'), 'package.json must expose audit:governance');
-assert(packageJson.includes('npm run audit:final && npm run audit:governance && npm run audit:schema'), 'build chain must run governance after final lock and before schema audit');
+assert(packageJson.includes('preflight:build') && packageJson.includes('node scripts/run-build-preflight.mjs'), 'package.json must expose aggregate build preflight');
+const governanceOrder = ['audit:final', 'audit:governance', 'audit:schema'].map((name) => preflight.indexOf(`'${name}'`));
+assert(governanceOrder.every((position) => position >= 0), 'aggregate preflight is missing Final, Governance, or Schema');
+assert(governanceOrder[0] < governanceOrder[1] && governanceOrder[1] < governanceOrder[2], 'aggregate preflight must run governance after final lock and before schema audit');
 
 for (const docName of ['ARCHIVE-GOVERNANCE.md', 'BIBLIOGRAPHY-SYSTEM.md', 'ENTITY-ID-CONVENTIONS.md', 'REVIEW-QUEUE.md']) {
   await access(path.resolve('docs', docName));
@@ -71,4 +75,4 @@ for (const phrase of ['Batch 11', 'bibliography registry', 'stable entity IDs', 
   assert(governanceDoc.includes(phrase), `governance doc missing ${phrase}`);
 }
 
-console.log(`Archive governance audit passed: ${bibliographyStats.records} bibliography records, ${entityIdStats.canonicalIds} canonical IDs, ${evidenceStateStats.states} evidence states, ${reviewQueueStats.items} review items, and ${schemaFiles.length} schema contracts.`);
+console.log(`Archive governance audit passed: ${bibliographyStats.records} bibliography records, ${entityIdStats.canonicalIds} canonical IDs, ${evidenceStateStats.states} evidence states, ${reviewQueueStats.items} review items, ${schemaFiles.length} schema contracts, and aggregate preflight ordering verified.`);

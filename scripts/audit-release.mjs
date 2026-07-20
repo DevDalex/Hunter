@@ -133,7 +133,22 @@ const readZipEntries = async (file, label) => {
 
 const sitesZip = await readZipEntries(packageFile, 'Sites-ready source package');
 const archiveEntries = sitesZip.entries;
-for (const required of ['src/App.jsx', 'src/data/routeManifest.js', 'src/lib/browserStorage.js', 'server/index.js', '.openai/hosting.json', 'README.md', 'package.json', 'vite.standalone.config.js']) {
+for (const required of [
+  'src/App.jsx',
+  'src/data/routeManifest.js',
+  'src/lib/browserStorage.js',
+  'scripts/run-build-preflight.mjs',
+  'architecture/storyArchitecture.mjs',
+  'docs/STORY-ARCHITECTURE.md',
+  'docs/FINAL-POLISH.md',
+  'docs/ARCHIVE-GOVERNANCE.md',
+  '.github/workflows/browser-verification.yml',
+  'server/index.js',
+  '.openai/hosting.json',
+  'README.md',
+  'package.json',
+  'vite.standalone.config.js',
+]) {
   assert(archiveEntries.includes(required), `Sites-ready source package is missing ${required}`);
 }
 for (const forbidden of ['node_modules/', 'dist/', '.git/']) {
