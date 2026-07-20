@@ -31,9 +31,10 @@ assert(runbooks?.decisions.some(([name]) => name === 'Aggregate preflight'), 'ru
 
 for (const item of maintenanceMatrix) await access(path.resolve(item.canonical));
 
-const [handbook, readme, preflight, packageJson] = await Promise.all([
+const [handbook, readme, preflightDoc, preflight, packageJson] = await Promise.all([
   readFile(path.resolve('public/implementation-notes.md'), 'utf8'),
   readFile(path.resolve('README.md'), 'utf8'),
+  readFile(path.resolve('docs/BUILD-PREFLIGHT.md'), 'utf8'),
   readFile(path.resolve('scripts/run-build-preflight.mjs'), 'utf8'),
   readFile(path.resolve('package.json'), 'utf8'),
 ]);
@@ -56,6 +57,10 @@ for (const phrase of [
 ]) {
   assert(handbook.includes(phrase), `handbook is missing current contract phrase “${phrase}”`);
   assert(readme.includes(phrase) || phrase === '106 character portraits and 29 Black Whale derivatives', `README is missing current contract phrase “${phrase}”`);
+}
+
+for (const phrase of ['14 independent pre-build audits', 'Story → Reference → Characters → Final', 'Final → Governance → Schema', 'package:release', 'audit:performance']) {
+  assert(preflightDoc.includes(phrase), `preflight runbook is missing “${phrase}”`);
 }
 
 const preflightScripts = [...preflight.matchAll(/^\s*'audit:[^']+',?$/gm)].map((match) => match[0]);
