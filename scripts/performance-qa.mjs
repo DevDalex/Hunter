@@ -128,7 +128,7 @@ try {
         await page.goto(`${base}/#/${route.hash}`, { waitUntil: 'domcontentloaded', timeout: 15_000 });
         await page.waitForSelector('main', { timeout: 8_000 });
         await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 });
-        if (route.id === 'home') await page.waitForSelector('.archive-home-hero, .simple-home', { timeout: 8_000 });
+        if (route.id === 'home') await page.waitForSelector('.archive-landing', { timeout: 8_000 });
         await page.evaluate(() => window.__resetArchiveVitals?.());
         await page.waitForTimeout(550);
       } catch (error) { fatal = error.message; }

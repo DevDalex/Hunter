@@ -17,7 +17,6 @@ export const routeModuleLoaders = {
   systems: () => import('../components/SystemsDesk'),
   organizations: () => import('../components/OrganizationArchive'),
   conflictArchive: () => import('../components/ConflictArchive'),
-  notebook: () => import('../components/StudyNotebook'),
 };
 
 const successionDossierTargets = new Set([
@@ -42,7 +41,6 @@ const loaderForRoute = (view, target = '') => {
     if (target === 'hisoka-chrollo') return routeModuleLoaders.hisokaChrollo;
     if (target === 'atlas') return routeModuleLoaders.worldAtlas;
     if (target === 'systems') return routeModuleLoaders.organizations;
-    if (target === 'notebook') return routeModuleLoaders.notebook;
   }
   return null;
 };

@@ -8,7 +8,7 @@ Scope: reusable archive primitives, shared evidence language, source blocks, car
 
 Batch 12 stops future archive pages from becoming custom one-off layouts. It introduces a small reusable component library for common Black Archive patterns while preserving the current route inventory and source policy.
 
-This is not a new major reader-facing route. It is an additive UI foundation.
+This is not a new major reader-facing route. It is an additive UI foundation, and it no longer has a reader-facing demonstration on the home page.
 
 ## Canonical files
 
@@ -79,7 +79,7 @@ The layer must keep:
 3. semantic tones cover the current evidence vocabulary;
 4. source/external links use safe attributes;
 5. the global CSS chain imports the design-system layer;
-6. the home page uses the primitives so the library is live, not dead code;
+6. the removed home-page showcase does not return;
 7. README, handbook, docs, package scripts, and aggregate preflight are synchronized.
 
 ## Boundaries
@@ -87,6 +87,7 @@ The layer must keep:
 Batch 12 does not:
 
 - add a new major route;
+- require a reader-facing component-library showcase;
 - delete characters or reduce the character directory;
 - change the Hunterpedia/Fandom source policy;
 - complete the visible governance UI;

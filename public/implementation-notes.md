@@ -7,6 +7,8 @@ Current contract: Phase 8A release base · Batch 12 design system · July 20, 20
 - Reader-facing route inventory: 26 screens
 - Priority local media: 106 character portraits and 29 Black Whale derivatives
 - Mobile-specific redesign: deferred
+- Reader-facing Notebook route: retired
+- Home-page design-system demonstration: retired
 
 ## Purpose
 
@@ -23,9 +25,11 @@ The route model is:
 - clean browser paths for the hosted site;
 - static-worker fallback through `server/index.js`;
 - legacy hash routes retained only for compatibility and the direct-open standalone edition;
-- large research datasets kept behind route or on-demand boundaries.
+- large research datasets kept behind route or on-demand boundaries;
+- retired Notebook paths resolve to the not-found experience;
+- the existing Zoldyck Family page is now represented in the canonical route inventory.
 
-The removed public Sources page must not return as a top-level route. Source links remain attached to the records they support.
+The removed public Sources page and retired Notebook page must not return as top-level routes. Source links remain attached to the records they support.
 
 Global CSS loads in this exact order:
 
@@ -79,14 +83,14 @@ Rules:
 
 ## Batch 12 design system
 
-Batch 12 adds reusable archive UI primitives without adding a new major route:
+Batch 12 provides reusable archive UI primitives without adding a reader-facing system page:
 
 - `src/components/ArchiveUI.jsx` — `ArchiveSection`, `ArchiveCard`, `EvidenceBadge`, `StatusPill`, `SourceStack`, and `ArchiveLedger`;
 - `src/styles/archive-system.css` — reusable primitive styling;
 - `docs/DESIGN-SYSTEM.md` — Batch 12 design-system documentation;
-- `scripts/audit-design-system.mjs` — build-blocking primitive, tone, doc, CSS, and home-usage audit.
+- `scripts/audit-design-system.mjs` — build-blocking primitive, tone, documentation, CSS, and showcase-exclusion audit.
 
-Use these primitives instead of inventing one-off badges, source blocks, record cards, status pills, and ledgers. The home page uses the library so the system is live rather than dead code.
+Use these primitives instead of inventing one-off badges, source blocks, record cards, status pills, and ledgers. The library remains available for real archive pages, while its former home-page demonstration stays removed.
 
 ## Media and status rules
 
@@ -134,15 +138,15 @@ Static contracts live in `scripts/audit-readability.mjs`, `scripts/audit-layout.
 - local portrait: 160,000 bytes;
 - portrait library: 2,200,000 bytes.
 
-The code and CSS ceilings were intentionally raised well above the current build to provide substantial feature-growth headroom. The structural guardrails remain strict: the home shell cannot import heavy archive datasets, dynamic boundaries must remain split, only the first home portrait receives high fetch priority, service-worker/PWA behavior remains excluded, and media ceilings remain unchanged.
+The code and CSS ceilings provide substantial feature-growth headroom. Structural guardrails remain strict: the home shell cannot import heavy archive datasets, dynamic boundaries must remain split, only the first home portrait receives high fetch priority, service-worker/PWA behavior remains excluded, and media ceilings remain unchanged.
 
-The production manifest must retain 22 dynamic entries:
+The production manifest must retain 21 dynamic entries:
 
-- 17 route/search UI boundaries;
+- 16 route/search UI boundaries;
 - two Story detail boundaries;
 - three search-data shards.
 
-`src/lib/routePreload.js` owns the 17 direct UI loaders. Search data remains split across the three `src/data/archiveSearch.*.js` shards. `scripts/performance-qa.mjs` checks six representative routes under desktop and constrained-mobile profiles, for 12 route/profile checks.
+`src/lib/routePreload.js` owns the 16 direct UI loaders. Search data remains split across the three `src/data/archiveSearch.*.js` shards. `scripts/performance-qa.mjs` checks six representative routes under desktop and constrained-mobile profiles, for 12 route/profile checks.
 
 Budget changes require review and synchronized documentation. The guardrail should not be removed merely to hide a regression.
 
@@ -228,6 +232,7 @@ Canonical owner: `public/implementation-notes.md`. Reconcile `README.md`, `docs/
 
 ### Design system and release
 - [ ] Shared primitives cover cards, sections, source stacks, evidence badges, status pills, and ledgers.
+- [ ] The removed home-page design-system showcase remains absent.
 - [ ] All 15 aggregate preflight audits pass.
 - [ ] Release ZIPs are generated and audited.
 - [ ] The final production build and performance audit pass.

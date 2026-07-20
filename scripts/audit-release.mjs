@@ -43,8 +43,9 @@ assert(phaseSixSequence.length === 7 && phaseSixSequence.at(-1)?.[0] === '6G', '
 assert(viewIds.length === 4 && unique(viewIds), 'top-level views must be unique');
 assert(routeManifest.length === 26 && routeManifestStats.screens === routeManifest.length, 'reader-facing route inventory must contain 26 purposeful screens');
 assert(unique(routeManifest.map((route) => `${route.view}/${route.target}`)), 'reader-facing route destinations must be unique');
-assert(successionPages.length === 8 && referencePages.length === 6, 'workspace route totals must remain eight Succession and six Reference screens');
+assert(successionPages.length === 8 && referencePages.length === 5, 'workspace route totals must remain eight Succession and five Reference screens after Notebook removal');
 assert(!routeManifest.some((route) => /source/i.test(`${route.target} ${route.label}`)), 'the removed Sources section returned to the public route manifest');
+assert(!routeManifest.some((route) => route.view === 'reference' && route.target === 'notebook'), 'the retired Notebook route returned to the public route manifest');
 assert(successionPrimary.every((id) => successionPages.some((page) => page.id === id)), 'Succession primary navigation contains an unknown page');
 assert(referencePrimary.every((id) => referencePages.some((page) => page.id === id)), 'Reference primary navigation contains an unknown page');
 assert(Object.values(referenceAliases).every((alias) => referencePages.some((page) => page.id === alias.target)), 'Reference alias resolves to an unknown page');

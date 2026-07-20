@@ -12,6 +12,7 @@ The factual and image-source boundary is Hunterpedia/Fandom only. The archive ke
 - Large research datasets remain behind route or on-demand boundaries.
 - Mobile-specific redesign remains deferred; existing responsive and accessibility safeguards remain maintained.
 - Batch 12 adds a reusable design-system foundation in `src/components/ArchiveUI.jsx`, `src/data/archiveDesignSystem.js`, and `src/styles/archive-system.css`.
+- The reader-facing Notebook route and home-page design-system demonstration are intentionally retired; the existing Zoldyck Family page now occupies the maintained route inventory slot.
 
 The global visual order is:
 
@@ -85,7 +86,7 @@ Batch 12 adds reusable archive primitives instead of a new major route:
 - `SourceStack` for safe Hunterpedia/Fandom source blocks;
 - `ArchiveLedger` for fact, count, budget, and release-gate ledgers.
 
-The library is live on the home page and enforced by `audit:design-system`.
+The library remains available to real archive pages and is enforced by `audit:design-system`; its reader-facing home-page showcase is intentionally removed.
 
 ## Performance contract
 
@@ -97,7 +98,7 @@ The library is live on the home page and enforced by `audit:design-system`.
 - largest JavaScript chunk: 750,000 bytes;
 - individual portrait: 160,000 bytes;
 - portrait library: 2,200,000 bytes;
-- 22 dynamic entries: 17 UI boundaries, two Story detail chunks, and three search shards.
+- 21 dynamic entries: 16 UI boundaries, two Story detail chunks, and three search shards.
 
 The larger code/CSS ceilings provide feature-growth headroom while keeping route splitting, dynamic-entry counts, heavy-dataset exclusions, eager-image rules, PWA exclusions, and media ceilings enforced.
 
