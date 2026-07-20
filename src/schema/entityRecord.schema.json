@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "hxh.archive.entityRecord",
+  "title": "Hunter x Hunter Archive Entity Record",
+  "type": "object",
+  "required": ["id", "label", "status"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(arc|char|nen|faction|conflict|location|object|chapter|status|source|mystery|operation)\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "label": { "type": "string", "minLength": 2 },
+    "route": { "type": "string" },
+    "status": { "type": "string", "minLength": 2 },
+    "sourceIds": { "type": "array", "items": { "type": "string", "pattern": "^src-[a-z0-9]+(?:-[a-z0-9]+)*$" } },
+    "evidenceState": { "type": "string" }
+  }
+}
