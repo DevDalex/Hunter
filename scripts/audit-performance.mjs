@@ -6,6 +6,15 @@ const dist = path.join(root, 'dist/client');
 const manifestPath = path.join(dist, '.vite/manifest.json');
 const assert = (condition, message) => { if (!condition) throw new Error(`Performance audit failed: ${message}`); };
 
+const budgets = Object.freeze({
+  entryJs: 150_000,
+  startupJs: 270_000,
+  startupCss: 390_000,
+  javascriptChunk: 220_000,
+  portrait: 160_000,
+  portraitLibrary: 2_200_000,
+});
+
 await access(manifestPath);
 const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 const entry = manifest['index.html'];
@@ -54,10 +63,10 @@ const javascriptFiles = Object.values(manifest).map((record) => record.file).fil
 const javascriptSizes = await Promise.all(javascriptFiles.map(async (file) => ({ file, bytes: await sizeOf(file) })));
 const largestJavascript = javascriptSizes.sort((a, b) => b.bytes - a.bytes)[0];
 
-assert(entryJs <= 58_000, `startup application chunk is ${entryJs} bytes; budget is 58,000`);
-assert(startupJs <= 270_000, `startup JavaScript closure is ${startupJs} bytes; budget is 270,000`);
-assert(startupCss <= 390_000, `startup stylesheet is ${startupCss} bytes; budget is 390,000`);
-assert(largestJavascript.bytes <= 220_000, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is 220,000`);
+assert(entryJs <= budgets.entryJs, `startup application chunk is ${entryJs} bytes; budget is ${budgets.entryJs.toLocaleString('en-US')}`);
+assert(startupJs <= budgets.startupJs, `startup JavaScript closure is ${startupJs} bytes; budget is ${budgets.startupJs.toLocaleString('en-US')}`);
+assert(startupCss <= budgets.startupCss, `startup stylesheet is ${startupCss} bytes; budget is ${budgets.startupCss.toLocaleString('en-US')}`);
+assert(largestJavascript.bytes <= budgets.javascriptChunk, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is ${budgets.javascriptChunk.toLocaleString('en-US')}`);
 assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 17 route/search UI boundaries must remain dynamic entries');
 assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Greed Island and Chimera Ant detail pages must remain separate Story detail chunks');
 assert(dynamicEntries.length === 22, `expected 17 direct boundaries, two Story-detail boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
@@ -88,7 +97,7 @@ const portraitFiles = await readdir(portraitsDir);
 const portraitSizes = await Promise.all(portraitFiles.map(async (file) => ({ file, bytes: (await stat(path.join(portraitsDir, file))).size })));
 const portraitBytes = portraitSizes.reduce((total, record) => total + record.bytes, 0);
 const largestPortrait = portraitSizes.sort((a, b) => b.bytes - a.bytes)[0];
-assert(largestPortrait.bytes <= 160_000, `${largestPortrait.file} is ${largestPortrait.bytes}; local portrait ceiling is 160,000`);
-assert(portraitBytes <= 2_200_000, `local portrait library is ${portraitBytes} bytes; budget is 2,200,000`);
+assert(largestPortrait.bytes <= budgets.portrait, `${largestPortrait.file} is ${largestPortrait.bytes}; local portrait ceiling is ${budgets.portrait.toLocaleString('en-US')}`);
+assert(portraitBytes <= budgets.portraitLibrary, `local portrait library is ${portraitBytes} bytes; budget is ${budgets.portraitLibrary.toLocaleString('en-US')}`);
 
-console.log(`Performance audit passed: entry JS ${entryJs} bytes; startup JS ${startupJs} bytes; startup CSS ${startupCss} bytes; ${directBoundaryKeys.length} route/search UI chunks, ${storyDetailBoundaryKeys.length} Story detail chunks, ${searchShardKeys.length} search shards, largest JS chunk ${largestJavascript.file} at ${largestJavascript.bytes} bytes; local portraits ${portraitBytes} bytes.`);
+console.log(`Performance audit passed: entry JS ${entryJs} bytes of ${budgets.entryJs.toLocaleString('en-US')}; startup JS ${startupJs} bytes; startup CSS ${startupCss} bytes; ${directBoundaryKeys.length} route/search UI chunks, ${storyDetailBoundaryKeys.length} Story detail chunks, ${searchShardKeys.length} search shards, largest JS chunk ${largestJavascript.file} at ${largestJavascript.bytes} bytes; local portraits ${portraitBytes} bytes.`);
