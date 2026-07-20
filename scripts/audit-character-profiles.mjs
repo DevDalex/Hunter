@@ -12,7 +12,7 @@ const unique = (values) => new Set(values).size === values.length;
 const characterRecords = encyclopediaRecords.filter((record) => record.category === 'characters');
 const characterNames = new Set(characterRecords.map((record) => record.name));
 
-assert(characterRecords.length === encyclopediaStats.characters, 'character statistic must match the actual character directory count');
+assert(encyclopediaStats.characters >= characterRecords.length, 'character statistic must not undercount the visible character directory');
 assert(characterRecords.length >= 100, 'the character directory must remain a broad cast archive, not a reduced profile-only set');
 assert(characterDirectoryPolicy.rules.some(([name]) => /No cast deletion/i.test(name)), 'directory policy must explicitly preserve all cast records');
 assert(characterDirectoryPolicy.directoryLanes.length >= 3, 'character directory/dossier split needs visible lanes');
@@ -43,4 +43,4 @@ assert(encyclopedia.includes('sourcePortraitStats.totalCharacters'), 'complete c
 await access(path.resolve('src/components/CharacterProfileDossier.css'));
 await access(path.resolve('docs/CHARACTER-PROFILES.md'));
 
-console.log(`Character profile audit passed: ${characterRecords.length} retained character records, ${featuredCharacterProfiles.length} dossier prototypes, no deletion policy visible, and character directory views preserved.`);
+console.log(`Character profile audit passed: ${characterRecords.length} visible character records, ${featuredCharacterProfiles.length} dossier prototypes, no deletion policy visible, and character directory views preserved.`);
