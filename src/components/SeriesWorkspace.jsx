@@ -12,6 +12,7 @@ import AdaptationDesk from './AdaptationDesk';
 import PreSuccessionExperience from './PreSuccessionExperience';
 import PreSuccessionOverview from './PreSuccessionOverview';
 import StoryFoundationLayout, { StoryArcFoundation, StoryHubFoundation, ZoldyckStoryBridge } from './StoryFoundation';
+import YorknewPrototypePage from './YorknewPrototypePage';
 import { arcs } from '../data/arcs';
 import { chapters, LATEST_CHAPTER } from '../data/chapters';
 import { preSuccessionExperienceById, preSuccessionExperienceIds } from '../data/preSuccessionExperiences';
@@ -48,6 +49,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   const arcPage = preSuccessionExperienceIds.has(routeTarget);
   const arcExperience = arcPage ? preSuccessionExperienceById.get(routeTarget) : null;
   const zoldyckBridgePage = routeTarget === 'zoldyck-family';
+  const yorknewPrototypePage = routeTarget === 'yorknew-city';
   const chronologyPage = routeTarget === 'chronology';
   const chaptersPage = routeTarget === 'chapters';
   const memoriesPage = routeTarget === 'volume-0';
@@ -133,9 +135,11 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
       <WorkspaceNav items={seriesPages} activeId={activePage} onSelect={selectWorkspace} label="Series library sections" />
       <details className="spoiler-settings"><summary>Reading boundary <b>Chapter {spoilerLimit}</b></summary><SpoilerControl value={spoilerLimit} latestChapter={LATEST_CHAPTER} onChange={onSpoilerChange} /></details>
 
-      {arcPage && <StoryArcFoundation activeId={routeTarget} onNavigate={onNavigate} />}
+      {arcPage && !yorknewPrototypePage && <StoryArcFoundation activeId={routeTarget} onNavigate={onNavigate} />}
 
-      {arcPage ? (
+      {yorknewPrototypePage ? (
+        <YorknewPrototypePage onNavigate={onNavigate} />
+      ) : arcPage ? (
         <PreSuccessionExperience arcId={routeTarget} onNavigate={onNavigate} />
       ) : zoldyckBridgePage ? (
         <ZoldyckStoryBridge onNavigate={onNavigate} />
