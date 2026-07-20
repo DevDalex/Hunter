@@ -49,7 +49,7 @@ assert(component.includes('safeRel') && component.includes("rel: href.startsWith
 assert(component.includes('toneForEvidenceState'), 'EvidenceBadge must use the canonical tone map');
 assert(css.includes('font-size: 11px') && css.includes('@media (max-width: 860px)'), 'design-system CSS must preserve the 11px text floor and responsive collapse');
 assert(styles.includes("@import './styles/archive-system.css';"), 'global CSS must import the Batch 12 design-system layer');
-assert(home.includes('ArchiveSection') && home.includes('EvidenceBadge') && home.includes('SourceStack') && home.includes('archive-ui-home-grid'), 'home page must use the reusable ArchiveUI primitives so the library is not dead code');
+assert(!home.includes('archive-ui-library') && !home.includes('Design-system foundation'), 'the removed reader-facing design-system showcase must not return to the home page');
 assert(packageJson.includes('"audit:design-system"') && packageJson.includes('node scripts/audit-design-system.mjs'), 'package.json must expose audit:design-system');
 assert(preflight.includes("'audit:design-system'"), 'aggregate preflight must include audit:design-system');
 
@@ -63,4 +63,4 @@ for (const phrase of ['Batch 12', 'src/components/ArchiveUI.jsx', 'src/data/arch
 
 for (const file of ['src/data/archiveDesignSystem.js', 'src/components/ArchiveUI.jsx', 'src/styles/archive-system.css', 'docs/DESIGN-SYSTEM.md']) await access(path.resolve(file));
 
-console.log(`Design system audit passed: ${archivePrimitiveContracts.length} primitives, ${archiveSemanticTones.length} semantic tones, ${archiveDesignSystemRules.length} governance rules, home usage, docs, and aggregate preflight wiring verified.`);
+console.log(`Design system audit passed: ${archivePrimitiveContracts.length} primitives, ${archiveSemanticTones.length} semantic tones, ${archiveDesignSystemRules.length} governance rules, hidden homepage showcase, docs, and aggregate preflight wiring verified.`);
