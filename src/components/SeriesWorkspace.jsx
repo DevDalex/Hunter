@@ -11,11 +11,13 @@ import KurapikaMemories from './KurapikaMemories';
 import AdaptationDesk from './AdaptationDesk';
 import PreSuccessionExperience from './PreSuccessionExperience';
 import PreSuccessionOverview from './PreSuccessionOverview';
-import StoryFoundationLayout, { StoryArcFoundation, StoryHubFoundation, ZoldyckStoryBridge } from './StoryFoundation';
+import StoryFoundationLayout, { StoryArcFoundation, StoryHubFoundation } from './StoryFoundation';
 import YorknewPrototypePage from './YorknewPrototypePage';
+import EarlyArcPrototypePage from './EarlyArcPrototypePage';
 import { arcs } from '../data/arcs';
 import { chapters, LATEST_CHAPTER } from '../data/chapters';
 import { preSuccessionExperienceById, preSuccessionExperienceIds } from '../data/preSuccessionExperiences';
+import { hasEarlyArcPrototype } from '../data/earlyArcPrototypes';
 import { readStoredJson, writeStoredJson } from '../lib/browserStorage';
 
 const seriesPages = [
@@ -48,13 +50,13 @@ function readProgress() {
 export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit, onSpoilerChange, onNavigate, onPrefetch }) {
   const arcPage = preSuccessionExperienceIds.has(routeTarget);
   const arcExperience = arcPage ? preSuccessionExperienceById.get(routeTarget) : null;
-  const zoldyckBridgePage = routeTarget === 'zoldyck-family';
+  const earlyArcPrototypePage = hasEarlyArcPrototype(routeTarget);
   const yorknewPrototypePage = routeTarget === 'yorknew-city';
   const chronologyPage = routeTarget === 'chronology';
   const chaptersPage = routeTarget === 'chapters';
   const memoriesPage = routeTarget === 'volume-0';
   const adaptationPage = routeTarget === 'adaptation';
-  const activePage = arcPage ? routeTarget : zoldyckBridgePage ? 'zoldyck-family' : chronologyPage ? 'chronology' : chaptersPage ? 'chapters' : memoriesPage ? 'volume-0' : adaptationPage ? 'adaptation' : 'arcs';
+  const activePage = arcPage ? routeTarget : earlyArcPrototypePage ? routeTarget : chronologyPage ? 'chronology' : chaptersPage ? 'chapters' : memoriesPage ? 'volume-0' : adaptationPage ? 'adaptation' : 'arcs';
   const [activeArc, setActiveArc] = useState('all');
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('all');
@@ -121,28 +123,26 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
         ? { kicker: 'Selected story anchors before Chapter 340', title: 'Pre-Succession chronology', description: 'Follow curated events, flashbacks, dated periods, and arc movements from Volume 0 through the Chairman Election without pretending every early chapter needs its own timeline event.' }
         : chaptersPage
           ? { kicker: 'Optional manga reference · Chapters 1–339', title: 'Lightweight chapter references', description: 'Find an early chapter by number, title, arc, or volume when needed. These entries support orientation and adaptation lookup; they are not planned as 339 deep dossiers.' }
-          : zoldyckBridgePage
-            ? { kicker: 'Editorial Story page', title: 'Zoldyck Family', description: 'The clean route is live inside the Story foundation. Its full rescue-mission page lands in the Early Arcs batch; until then, the official Hunter Exam coverage remains the maintained source-backed parent.' }
-            : arcPage
-              ? { kicker: arcExperience.eyebrow, title: arcExperience.title, description: arcExperience.deck }
-              : { kicker: 'Volume 0 + six completed arcs', title: 'The Story Archive', description: 'A route-level foundation for Kurapika’s childhood, the completed adapted journey, and the ongoing Succession Contest archive.' };
+          : arcPage
+            ? { kicker: arcExperience.eyebrow, title: arcExperience.title, description: arcExperience.deck }
+            : { kicker: 'Volume 0 + six completed arcs', title: 'The Story Archive', description: 'A route-level foundation for Kurapika’s childhood, the completed adapted journey, and the ongoing Succession Contest archive.' };
 
   return (
     <StoryFoundationLayout activeId={activePage} spoilerLimit={spoilerLimit} onNavigate={onNavigate} onPrefetch={onPrefetch}>
-      {!arcPage && <PageIntro kicker={pageIntro.kicker} title={pageIntro.title} description={pageIntro.description}>
+      {!arcPage && !earlyArcPrototypePage && <PageIntro kicker={pageIntro.kicker} title={pageIntro.title} description={pageIntro.description}>
         <dl className="page-intro__facts"><div><dt>Deep exception</dt><dd>Volume 0</dd></div><div><dt>Completed arcs</dt><dd>{preSuccessionArcs.length}</dd></div><div><dt>2011 anime</dt><dd>148 episodes</dd></div></dl>
       </PageIntro>}
       <WorkspaceNav items={seriesPages} activeId={activePage} onSelect={selectWorkspace} label="Series library sections" />
       <details className="spoiler-settings"><summary>Reading boundary <b>Chapter {spoilerLimit}</b></summary><SpoilerControl value={spoilerLimit} latestChapter={LATEST_CHAPTER} onChange={onSpoilerChange} /></details>
 
-      {arcPage && !yorknewPrototypePage && <StoryArcFoundation activeId={routeTarget} onNavigate={onNavigate} />}
+      {arcPage && !yorknewPrototypePage && !earlyArcPrototypePage && <StoryArcFoundation activeId={routeTarget} onNavigate={onNavigate} />}
 
-      {yorknewPrototypePage ? (
+      {earlyArcPrototypePage ? (
+        <EarlyArcPrototypePage arcId={routeTarget} onNavigate={onNavigate} />
+      ) : yorknewPrototypePage ? (
         <YorknewPrototypePage onNavigate={onNavigate} />
       ) : arcPage ? (
         <PreSuccessionExperience arcId={routeTarget} onNavigate={onNavigate} />
-      ) : zoldyckBridgePage ? (
-        <ZoldyckStoryBridge onNavigate={onNavigate} />
       ) : memoriesPage ? (
         <KurapikaMemories onNavigate={onNavigate} />
       ) : adaptationPage ? (
