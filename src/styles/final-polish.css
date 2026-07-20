@@ -1,0 +1,119 @@
+/* Batch 10 final polish: keep legacy variable names but align the visible shell with The Black Archive. */
+:root {
+  --archive-black: #0d0d10;
+  --archive-panel: #17171c;
+  --archive-paper: #f1ece2;
+  --archive-paper-deep: #e4dcce;
+  --archive-ink: #181619;
+  --archive-muted: #706b63;
+  --crimson: #a12a38;
+  --crimson-dark: #6e1825;
+  --crimson-soft: #f1dfe3;
+  --archive-gold: #c29c57;
+  --archive-steel: #557286;
+  --archive-purple: #705978;
+
+  /* Compatibility aliases used by older components. These are no longer green globally. */
+  --forest: var(--crimson);
+  --forest-dark: var(--crimson-dark);
+  --forest-soft: var(--crimson-soft);
+  --gold: var(--archive-gold);
+}
+
+body {
+  background: var(--archive-paper);
+  color: var(--archive-ink);
+}
+
+.site-header {
+  background: rgba(13, 13, 16, .985);
+  box-shadow: 0 1px 0 rgba(255,255,255,.09), 0 18px 44px rgba(0,0,0,.14);
+}
+
+.header-links a::after,
+.page-intro::before {
+  background: var(--crimson);
+}
+
+.wordmark > svg {
+  color: var(--archive-gold);
+}
+
+.archive-home-hero__lead {
+  background:
+    linear-gradient(108deg, rgba(13,13,16,.98), rgba(24,22,25,.92)),
+    radial-gradient(circle at 18% 0%, rgba(194,156,87,.26), transparent 40%),
+    radial-gradient(circle at 86% 20%, rgba(161,42,56,.18), transparent 34%);
+}
+
+.archive-home-directory__grid > button:hover,
+.simple-home__tools button:hover {
+  background: var(--archive-panel);
+  color: var(--light, #eee9df);
+}
+
+.archive-home-directory__grid > button:hover svg,
+.simple-home__tools button:hover svg,
+.pre-overview__footer button svg {
+  color: var(--crimson);
+}
+
+[data-arc="greed-island"] .arc-experience-hero__copy {
+  background: linear-gradient(120deg, #071923, #123c5a 58%, #4b255b);
+}
+
+[data-arc="chimera-ant"] .arc-experience-hero__copy {
+  background: linear-gradient(120deg, #0d0d10, #2d2317 55%, #483016);
+}
+
+.nen-desk-hero,
+.nen-principle-workbench,
+.nen-principle-map {
+  background:
+    radial-gradient(circle at 50% 18%, rgba(194,156,87,.18), transparent 36%),
+    linear-gradient(135deg, #0d0d10, #17171c 66%, #1d232b);
+}
+
+.nen-principle-map__center,
+.nen-principle-node.is-active,
+.nen-foundation-index button.is-active,
+.nen-lesson-tabs button.is-active,
+.nen-category-list button.is-active {
+  background: var(--crimson-dark);
+  border-color: var(--archive-gold);
+  color: #fff;
+}
+
+.nen-category-hex__nodes button.is-active {
+  background: rgba(85, 114, 134, .94);
+  border-color: var(--archive-gold);
+  box-shadow: 0 0 22px rgba(194,156,87,.26);
+}
+
+.nen-evidence-card__copy > span,
+.nen-category-view article > div > span,
+.nen-technique-view li button {
+  color: var(--crimson);
+}
+
+.reference-backbone,
+.character-profile-dossier,
+.chimera-ant-prototype,
+.greed-island-prototype {
+  scroll-margin-top: calc(var(--content-sticky-top, 84px) + 16px);
+}
+
+.entity-record__integrity strong,
+.arc-source-links a,
+.reference-backbone a,
+.character-profile-dossier a {
+  text-underline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+  }
+}
