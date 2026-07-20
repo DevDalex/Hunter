@@ -8,6 +8,7 @@ import {
 import { mafiaFamilyTree, successionRosterGroups } from '../data/successionRoster';
 import { resolveCharacter } from '../data/entityRegistry';
 import SourcePortrait from './SourcePortrait';
+import ReferenceBackbonePanel from './ReferenceBackbonePanel';
 
 const views = [
   ['overview', 'Underworld map'], ['families', 'Three families'], ['people', 'Member directory'],
@@ -61,6 +62,8 @@ export default function OrganizationArchive({ onOpenRecord, onOpenSuccession, on
       <div><span className="section-kicker">Organizations and underworld</span><h2>Power has a structure—and a location.</h2><p>Compare the Yorknew Mafia Community with Kakin’s three-family balance, then follow royal sponsorship, territorial routes, people, Nen systems, current operations, and temporary alliances.</p></div>
       <dl><div><dt>Kakin families</dt><dd>3</dd></div><div><dt>Connected people</dt><dd>{directory.length}</dd></div><div><dt>Operations</dt><dd>{successionOperations.length}</dd></div><div><dt>Relations</dt><dd>{mafiaRelations.length}</dd></div></dl>
     </header>
+
+    <ReferenceBackbonePanel domain="organizations" onSearch={(value) => { setQuery(value); setFamilyName('all'); setView('operations'); }} />
 
     <nav className="organization-archive__views" aria-label="Organization archive views">{views.map(([id, label], index) => <button type="button" className={view === id ? 'is-active' : ''} onClick={() => setView(id)} key={id}><i>{String(index + 1).padStart(2, '0')}</i>{label}</button>)}</nav>
 
