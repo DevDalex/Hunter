@@ -1,3 +1,5 @@
+import { formatPerformanceBudget, performanceBudgets } from './performanceBudgets.js';
+
 export const IMPLEMENTATION_NOTES_VERSION = 'Phase 6F handoff · Phase 8A current release · Batch 11 governance · July 20, 2026';
 
 export const implementationSections = [
@@ -79,14 +81,19 @@ export const implementationSections = [
     title: 'Load the archive a reader actually requested',
     summary: 'The site separates the startup shell from large research collections, preloads only after clear navigation intent, and measures representative routes under desktop and constrained-mobile conditions.',
     owner: 'Bundle and media loading',
-    files: ['vite.config.js', 'src/App.jsx', 'src/lib/routePreload.js', 'src/data/homeHighlights.js', 'scripts/audit-performance.mjs', 'scripts/performance-qa.mjs'],
+    files: ['src/data/performanceBudgets.js', 'vite.config.js', 'src/App.jsx', 'src/lib/routePreload.js', 'src/data/homeHighlights.js', 'scripts/audit-performance.mjs', 'scripts/performance-qa.mjs'],
     decisions: [
       ['Lazy workspaces', 'Seventeen route/search UI boundaries, two Story detail pages, and three search-data shards remain dynamic production entries.'],
       ['Audited shell totals', 'Home statistics are lightweight constants checked against the full datasets during the build.'],
       ['Intent prefetch', 'A route begins loading after focus, pointer intent, or deliberate navigation—not simply because a link exists.'],
       ['Deferred media', 'Only first-viewport portraits are eager; archive and gallery images remain lazy by default.'],
     ],
-    checks: ['The application entry remains at or below 150KB, the startup JavaScript closure at or below 270KB, startup CSS at or below 390KB, and any JavaScript chunk at or below 220KB.', 'Twenty-two dynamic entries remain separated and no large index enters the home shell.', 'Six representative routes pass both desktop and constrained-mobile readiness profiles without material layout shift.', 'No manifest, service worker, install prompt, or other PWA behavior is introduced.'],
+    checks: [
+      `The application entry remains at or below ${formatPerformanceBudget(performanceBudgets.entryJs)} bytes, the startup JavaScript closure at or below ${formatPerformanceBudget(performanceBudgets.startupJs)} bytes, startup CSS at or below ${formatPerformanceBudget(performanceBudgets.startupCss)} bytes, and any JavaScript chunk at or below ${formatPerformanceBudget(performanceBudgets.javascriptChunk)} bytes.`,
+      'Twenty-two dynamic entries remain separated and no large index enters the home shell.',
+      'Six representative routes pass both desktop and constrained-mobile readiness profiles without material layout shift.',
+      'No manifest, service worker, install prompt, or other PWA behavior is introduced.',
+    ],
   },
   {
     id: 'runbooks',
