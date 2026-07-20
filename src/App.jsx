@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import Header from './components/Header';
+import ReferenceBackbonePanel from './components/ReferenceBackbonePanel';
 import SiteHome from './components/SiteHome';
 import PageIntro from './components/PageIntro';
 import WorkspaceNav from './components/WorkspaceNav';
@@ -249,6 +250,7 @@ export default function App() {
           </PageIntro>
           <WorkspaceNav items={referencePages} activeId={referencePage.id} onSelect={(id) => navigate('reference', id)} onIntent={(id) => preloadRoute('reference', id)} primaryIds={referencePrimary} label="Encyclopedia sections" />
           <SpoilerSettings value={spoilerLimit} onChange={changeSpoilerLimit} />
+          {referencePage.id === 'nen' && <ReferenceBackbonePanel domain="nen" onSearch={(search) => navigate('reference', 'nen', { search })} />}
 
           <Suspense fallback={<RouteLoading label={referencePage.label.toLowerCase()} />}>
             {referencePage.id === 'encyclopedia' && <EntityEncyclopedia key={`encyclopedia-${routeParams.category || ''}-${routeParams.search || ''}-${routeParams.record || ''}`} initialCategory={routeParams.category || 'characters'} initialQuery={routeParams.search || ''} initialRecord={routeParams.record || ''} spoilerLimit={spoilerLimit} />}
