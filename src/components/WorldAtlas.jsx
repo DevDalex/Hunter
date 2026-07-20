@@ -7,6 +7,7 @@ import {
 import FandomImage from './FandomImage';
 import HorizontalScrollHint from './HorizontalScrollHint';
 import InteractiveWorldMap from './InteractiveWorldMap';
+import ReferenceBackbonePanel from './ReferenceBackbonePanel';
 
 const viewOptions = [
   ['map', 'Interactive map', MapIcon],
@@ -122,6 +123,13 @@ export default function WorldAtlas({ initialLocation = '', initialMode = 'explor
     if (journey) setActiveJourneyId(journey.id);
   };
 
+  const searchBackbonePlace = (value) => {
+    setQuery(value);
+    setView('hierarchy');
+    const match = worldLocations.find((location) => normalizedText(`${location.name} ${location.summary} ${location.arc}`).includes(normalizedText(value)));
+    if (match) selectLocation(match.id);
+  };
+
   return (
     <section className="world-atlas" id="world-atlas">
       <div className="section-heading world-atlas__heading">
@@ -135,6 +143,8 @@ export default function WorldAtlas({ initialLocation = '', initialMode = 'explor
         <div><strong>{worldAtlasStats.journeyLegs}</strong><span>story-route legs</span></div>
         <div><strong>{worldGalleryIds.length}</strong><span>pictured major places</span></div>
       </div>
+
+      <ReferenceBackbonePanel domain="world" onSearch={searchBackbonePlace} />
 
       <nav className="world-atlas__views" aria-label="World atlas views">
         {viewOptions.map(([id, label, Icon]) => <button type="button" className={view === id ? 'is-active' : ''} aria-current={view === id ? 'page' : undefined} onClick={() => setView(id)} key={id}><Icon size={15} />{label}</button>)}
