@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { ExternalLink, Grid2X2, List, Search } from 'lucide-react';
 import PageIntro from './PageIntro';
 import WorkspaceNav from './WorkspaceNav';
@@ -19,6 +19,8 @@ import { chapters, LATEST_CHAPTER } from '../data/chapters';
 import { preSuccessionExperienceById, preSuccessionExperienceIds } from '../data/preSuccessionExperiences';
 import { hasEarlyArcPrototype } from '../data/earlyArcPrototypes';
 import { readStoredJson, writeStoredJson } from '../lib/browserStorage';
+
+const GreedIslandPrototypePage = lazy(() => import('./GreedIslandPrototypePage'));
 
 const seriesPages = [
   { id: 'arcs', label: 'Overview' },
@@ -52,11 +54,12 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   const arcExperience = arcPage ? preSuccessionExperienceById.get(routeTarget) : null;
   const earlyArcPrototypePage = hasEarlyArcPrototype(routeTarget);
   const yorknewPrototypePage = routeTarget === 'yorknew-city';
+  const greedIslandPrototypePage = routeTarget === 'greed-island';
   const chronologyPage = routeTarget === 'chronology';
   const chaptersPage = routeTarget === 'chapters';
   const memoriesPage = routeTarget === 'volume-0';
   const adaptationPage = routeTarget === 'adaptation';
-  const activePage = arcPage ? routeTarget : earlyArcPrototypePage ? routeTarget : chronologyPage ? 'chronology' : chaptersPage ? 'chapters' : memoriesPage ? 'volume-0' : adaptationPage ? 'adaptation' : 'arcs';
+  const activePage = arcPage ? routeTarget : earlyArcPrototypePage ? routeTarget : greedIslandPrototypePage ? 'greed-island' : chronologyPage ? 'chronology' : chaptersPage ? 'chapters' : memoriesPage ? 'volume-0' : adaptationPage ? 'adaptation' : 'arcs';
   const [activeArc, setActiveArc] = useState('all');
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('all');
@@ -129,18 +132,22 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
 
   return (
     <StoryFoundationLayout activeId={activePage} spoilerLimit={spoilerLimit} onNavigate={onNavigate} onPrefetch={onPrefetch}>
-      {!arcPage && !earlyArcPrototypePage && <PageIntro kicker={pageIntro.kicker} title={pageIntro.title} description={pageIntro.description}>
+      {!arcPage && !earlyArcPrototypePage && !greedIslandPrototypePage && <PageIntro kicker={pageIntro.kicker} title={pageIntro.title} description={pageIntro.description}>
         <dl className="page-intro__facts"><div><dt>Deep exception</dt><dd>Volume 0</dd></div><div><dt>Completed arcs</dt><dd>{preSuccessionArcs.length}</dd></div><div><dt>2011 anime</dt><dd>148 episodes</dd></div></dl>
       </PageIntro>}
       <WorkspaceNav items={seriesPages} activeId={activePage} onSelect={selectWorkspace} label="Series library sections" />
       <details className="spoiler-settings"><summary>Reading boundary <b>Chapter {spoilerLimit}</b></summary><SpoilerControl value={spoilerLimit} latestChapter={LATEST_CHAPTER} onChange={onSpoilerChange} /></details>
 
-      {arcPage && !yorknewPrototypePage && !earlyArcPrototypePage && <StoryArcFoundation activeId={routeTarget} onNavigate={onNavigate} />}
+      {arcPage && !yorknewPrototypePage && !earlyArcPrototypePage && !greedIslandPrototypePage && <StoryArcFoundation activeId={routeTarget} onNavigate={onNavigate} />}
 
       {earlyArcPrototypePage ? (
         <EarlyArcPrototypePage arcId={routeTarget} onNavigate={onNavigate} />
       ) : yorknewPrototypePage ? (
         <YorknewPrototypePage onNavigate={onNavigate} />
+      ) : greedIslandPrototypePage ? (
+        <Suspense fallback={<aside className="pre-scope-notice"><b>Loading Greed Island archive</b><p>The card binder and game-system modules are loading as a separate Story detail chunk.</p></aside>}>
+          <GreedIslandPrototypePage onNavigate={onNavigate} />
+        </Suspense>
       ) : arcPage ? (
         <PreSuccessionExperience arcId={routeTarget} onNavigate={onNavigate} />
       ) : memoriesPage ? (
