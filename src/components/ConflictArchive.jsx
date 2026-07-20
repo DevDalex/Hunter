@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { ArrowRight, ExternalLink, Filter, MapPin, Search, ShieldAlert, Swords, Target, UsersRound } from 'lucide-react';
 import { encyclopediaRecords } from '../data/encyclopedia';
+import ReferenceBackbonePanel from './ReferenceBackbonePanel';
 
 const conflictRecords = encyclopediaRecords.filter((item) => item.category === 'conflicts');
 const factLike = (record, pattern) => record?.facts?.find((item) => pattern.test(item.label))?.value || '';
@@ -53,6 +54,8 @@ export default function ConflictArchive({ initialQuery = '', onOpenEntity, onOpe
       <div><span className="section-kicker">Fights and conflicts</span><h2>What each side wanted—and what changed.</h2><p>The archive separates formal fights, group operations, assassinations, pursuits, games, negotiations, and information wars. Every record tracks objective, tools, turning point, result, and consequence where the local source record supports them.</p></div>
       <dl><div><dt>Indexed conflicts</dt><dd>{conflictRecords.length}</dd></div><div><dt>Major dossiers</dt><dd>{majorNames.size}</dd></div><div><dt>Conflict forms</dt><dd>3</dd></div><div><dt>Featured reconstruction</dt><dd>Ch. 351–357</dd></div></dl>
     </header>
+
+    <ReferenceBackbonePanel domain="conflicts" onSearch={(value) => { setQuery(value); setFilter('all'); setView('workbench'); }} />
 
     <div className="conflict-archive__featured"><div><span>Full visual reconstruction</span><h3>Hisoka vs. Chrollo</h3><p>Arena position, information states, borrowed abilities, puppet rules, explosions, body damage, revival, and the Troupe aftermath.</p></div><button type="button" onClick={onOpenHisokaDossier}>Open the complete dossier <ArrowRight size={15} /></button></div>
 
