@@ -20,11 +20,13 @@
     "audit:accessibility": "node scripts/run-css-aware-audit.mjs audit-accessibility.mjs",
     "audit:performance": "node scripts/audit-performance.mjs",
     "audit:polish": "node scripts/run-css-aware-audit.mjs audit-polish.mjs",
+    "audit:greed-island-archive": "node scripts/audit-greed-island-archive.mjs",
     "qa:visual": "node scripts/visual-qa.mjs",
     "qa:accessibility": "node scripts/accessibility-qa.mjs",
     "qa:performance": "node scripts/audit-performance.mjs && node scripts/performance-qa.mjs",
     "stabilize:media": "node scripts/stabilize-media.mjs",
     "stabilize:rooms": "node scripts/stabilize-room-media.mjs",
+    "stabilize:greed-island-cards": "node scripts/stabilize-greed-island-card-media.mjs",
     "audit:media": "node scripts/stabilize-media.mjs --verify-only && node scripts/stabilize-room-media.mjs --verify-only && node scripts/audit-media.mjs",
     "package:release": "node scripts/package-release.mjs",
     "audit:release": "node scripts/run-css-aware-audit.mjs audit-release.mjs",
@@ -37,7 +39,7 @@
     "browser:install": "npx playwright install chromium",
     "qa:search": "node scripts/search-qa.mjs",
     "qa:interaction": "node scripts/interaction-qa.mjs",
-    "qa:greed-island": "node scripts/audit-greed-island-media.mjs && node scripts/greed-island-qa.mjs",
+    "qa:greed-island": "node scripts/audit-greed-island-archive.mjs && node scripts/stabilize-greed-island-card-media.mjs --verify-only && node scripts/audit-greed-island-media.mjs && node scripts/greed-island-qa.mjs",
     "qa:browser": "npm run build && npm run qa:search && npm run qa:visual && npm run qa:accessibility && npm run qa:interaction && npm run qa:greed-island && npm run qa:performance"
   },
   "dependencies": {
