@@ -13,16 +13,17 @@ import { GREED_ISLAND_CARD_SOURCE, specifiedCards } from '../data/greed-island/s
 import { GREED_ISLAND_RULE_SOURCES } from '../data/greed-island/tutorialRules';
 import EtaTutorial from './greed-island/EtaTutorial';
 import GreedIslandBinder from './greed-island/GreedIslandBinder';
+import SpecifiedCardArchive from './greed-island/SpecifiedCardArchive';
 import './GreedIslandPage.css';
 import './GreedIslandPageResponsive.css';
 import './greed-island/GreedIslandBook.css';
 import './greed-island/EtaTutorialReadability.css';
 
 const nextStages = [
-  ['Card archive', 'Descriptions, acquisition quests, story uses, chapter and episode mappings, and local media stabilization.'],
   ['Spell and Free Slot libraries', 'Complete verified records for all Spell Cards, documented Free Slot cards, and Game Master-only cards.'],
   ['Island systems', 'Map, locations, quests, players, travel paths, and the Game Master control room.'],
-  ['Tactical records', 'Biscuit training, Razor dodgeball, the Bomber system, final battles, quiz, and reward sequence.'],
+  ['Tactical records', 'Biscuit training, Razor dodgeball, the Bomber system, and final battles.'],
+  ['Completion archive', 'Full quiz research, reward sequence, adaptation mapping, and final release verification.'],
 ];
 
 function GreedIslandHero({ onNavigate, mode, setMode, summoned, setSummoned }) {
@@ -46,10 +47,10 @@ function GreedIslandHero({ onNavigate, mode, setMode, summoned, setSummoned }) {
     <div className="gi-hero__copy">
       <span>Story 05 · Chapters 120–185</span>
       <h1>Enter<br />Greed Island</h1>
-      <p>Learn the rules from Eta. Summon your Book. Examine, hold, insert, and organize the complete Specified Slot collection.</p>
+      <p>Learn the rules from Eta. Summon your Book. Examine, hold, insert, and research the complete Specified Slot collection.</p>
       <dl>
         <div><dt>Specified Slots</dt><dd>{specifiedCards.length}</dd></div>
-        <div><dt>Free Slots</dt><dd>45</dd></div>
+        <div><dt>Effects archived</dt><dd>100</dd></div>
         <div><dt>Card ranks</dt><dd>H–SS</dd></div>
         <div><dt>Eta lessons</dt><dd>12</dd></div>
       </dl>
@@ -69,17 +70,17 @@ function FoundationNotes() {
   return <section className="gi-foundation" id="foundation" aria-labelledby="gi-foundation-title">
     <header className="gi-section-heading">
       <span>Verified implementation boundary</span>
-      <h2 id="gi-foundation-title">Rules are interactive without being invented.</h2>
-      <p>The verified card registry, card scans, reconstructed Book, and twelve-part Eta course now share one rule model sourced to Hunterpedia.</p>
+      <h2 id="gi-foundation-title">Complete effects, honest evidence gaps.</h2>
+      <p>The card registry, verified scans, reconstructed Book, Eta course, and searchable deep archive now share validated `000–099` records sourced to Hunterpedia.</p>
     </header>
     <div className="gi-foundation__grid">
-      <article><ShieldCheck size={23} /><span>Completed now</span><h3>Twelve connected lessons</h3><p>The Ring, Book, Binder, card anatomy, slot types, ranks, limits, Gain, spell targeting, protection, completion, and review are all taught through usable controls.</p></article>
-      <article><MousePointer2 size={23} /><span>Measured from data</span><h3>Registry-driven card systems</h3><p>Rank counts, example cards, observed conversion-limit ranges, card selections, and completion examples come directly from the verified 000–099 registry.</p></article>
-      <article><LockKeyhole size={23} /><span>Clearly labelled</span><h3>Simulation is not canon fabrication</h3><p>Gain, availability, spell, protection, and quiz controls identify themselves as archive demonstrations and preserve the documented rules around them.</p></article>
+      <article><ShieldCheck size={23} /><span>Completed now</span><h3>One hundred effect records</h3><p>Every Specified Slot card has a concise verified effect, materialized form, rank, limit, exact card scan reference, and source provenance.</p></article>
+      <article><MousePointer2 size={23} /><span>Usable now</span><h3>Searchable evidence archive</h3><p>Cards can be filtered by rank and material type, searched by effect or owner, and opened into acquisition, story, chapter, and episode records.</p></article>
+      <article><LockKeyhole size={23} /><span>Clearly labelled</span><h3>Unknown is not invented</h3><p>Verified routes, explicitly unknown methods, and undocumented table fields use different statuses. Missing chronology is never silently inferred.</p></article>
     </div>
     <div className="gi-stage-list">
       <h3>Next verified stages</h3>
-      <ol>{nextStages.map(([title, note], index) => <li key={title}><i>{String(index + 5).padStart(2, '0')}</i><div><strong>{title}</strong><p>{note}</p></div></li>)}</ol>
+      <ol>{nextStages.map(([title, note], index) => <li key={title}><i>{String(index + 6).padStart(2, '0')}</i><div><strong>{title}</strong><p>{note}</p></div></li>)}</ol>
     </div>
   </section>;
 }
@@ -93,7 +94,7 @@ export default function GreedIslandPage({ onNavigate }) {
   return <article className="greed-island-page">
     <GreedIslandHero onNavigate={onNavigate} mode={mode} setMode={setMode} summoned={summoned} setSummoned={setSummoned} />
     <nav className="gi-local-nav" aria-label="Greed Island page sections">
-      <div><a href="#entry">Entry</a><a href="#tutorial">Eta tutorial</a><a href="#binder">Binder</a><a href="#foundation">Build stages</a><a href="#sources">Sources</a></div>
+      <div><a href="#entry">Entry</a><a href="#tutorial">Eta tutorial</a><a href="#binder">Binder</a><a href="#card-archive">Card archive</a><a href="#foundation">Build stages</a><a href="#sources">Sources</a></div>
     </nav>
     <main className="gi-canvas">
       <EtaTutorial mode={mode} summoned={summoned} setSummoned={setSummoned} />
@@ -101,13 +102,14 @@ export default function GreedIslandPage({ onNavigate }) {
         <div aria-hidden="true"><span>G</span><b>GREED ISLAND</b><span>I</span></div>
         <span>Book not summoned</span>
         <h2 id="gi-book-gate-title">Say “Book” to open the working Binder.</h2>
-        <p>The complete Eta tutorial remains available above. Story Mode leaves the Book absent until the player invokes the command; Free Exploration summons it immediately.</p>
+        <p>The complete Eta tutorial and card archive remain available. Story Mode leaves the Book absent until the player invokes the command; Free Exploration summons it immediately.</p>
         <button type="button" onClick={() => setSummoned(true)}>Book</button>
       </section>}
+      <SpecifiedCardArchive />
       <FoundationNotes />
       <section className="gi-sources" id="sources" aria-labelledby="gi-sources-title">
-        <header className="gi-section-heading"><span>Primary research sources</span><h2 id="gi-sources-title">Hunterpedia / Hunter × Hunter Fandom</h2><p>Card images, filenames, Book references, tutorial rules, Spell examples, and completion behavior retain explicit sources and verification states.</p></header>
-        <a href={GREED_ISLAND_CARD_SOURCE.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{GREED_ISLAND_CARD_SOURCE.label}</strong><small>Specified Slot registry, card anatomy, ranks, limits, Spell rules, and card images · verified {GREED_ISLAND_CARD_SOURCE.verifiedAt}</small></span><ExternalLink size={14} /></a>
+        <header className="gi-section-heading"><span>Primary research sources</span><h2 id="gi-sources-title">Hunterpedia / Hunter × Hunter Fandom</h2><p>Card images, effects, Book references, tutorial rules, acquisition records, and story mappings retain explicit sources and verification states.</p></header>
+        <a href={GREED_ISLAND_CARD_SOURCE.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{GREED_ISLAND_CARD_SOURCE.label}</strong><small>Specified Slot registry, descriptions, ranks, limits, Spell rules, and card images · verified {GREED_ISLAND_CARD_SOURCE.verifiedAt}</small></span><ExternalLink size={14} /></a>
         <a href={overviewSource.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{overviewSource.label}</strong><small>Ring, Book, Gain, Binder, slots, and one-minute card rule · verified {overviewSource.verifiedAt}</small></span><ExternalLink size={14} /></a>
         <a href={etaSource.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{etaSource.label}</strong><small>Cards 001–099, 100-question quiz, and card 000 award · verified {etaSource.verifiedAt}</small></span><ExternalLink size={14} /></a>
       </section>
