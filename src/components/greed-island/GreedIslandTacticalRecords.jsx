@@ -24,11 +24,7 @@ function SourceLink({ sourceId, children = 'Open tactical source' }) {
 function RecordCard({ record }) {
   const source = resolveGreedIslandTacticalSource(record.sourceId);
   return <article className="gi-tactical-record" aria-live="polite">
-    <header>
-      <span>{tacticalStatusLabels[record.status] || titleCase(record.status)} · {source.label}</span>
-      <h3>{record.title}</h3>
-      <p>{record.summary}</p>
-    </header>
+    <header><span>{tacticalStatusLabels[record.status] || titleCase(record.status)} · {source.label}</span><h3>{record.title}</h3><p>{record.summary}</p></header>
     <dl>
       {record.focus && <div><dt>Focus</dt><dd>{record.focus}</dd></div>}
       {record.location && <div><dt>Location</dt><dd>{record.location}</dd></div>}
@@ -39,9 +35,7 @@ function RecordCard({ record }) {
       {record.actors.map((actor) => <TacticalBadge key={actor} tone="actor">{actor}</TacticalBadge>)}
       {record.tags.map((tag) => <TacticalBadge key={tag}>{titleCase(tag)}</TacticalBadge>)}
     </div>
-    {!!record.cards.length && <div className="gi-tactical-cards" aria-label={`${record.title} linked cards`}>
-      {record.cards.map((card) => <TacticalBadge key={card} tone="card">{card}</TacticalBadge>)}
-    </div>}
+    {!!record.cards.length && <div className="gi-tactical-cards" aria-label={`${record.title} linked cards`}>{record.cards.map((card) => <TacticalBadge key={card} tone="card">{card}</TacticalBadge>)}</div>}
     <ol>{record.steps.map((step) => <li key={step}>{step}</li>)}</ol>
     {!!record.counters.length && <section className="gi-tactical-counters"><h4>Counter / pressure notes</h4><p>{record.counters.join(' · ')}</p></section>}
     <SourceLink sourceId={record.sourceId} />
@@ -53,9 +47,7 @@ function TrainingLab({ records, selectedId, setSelectedId }) {
   return <section className="gi-tactical-training" aria-labelledby="gi-tactical-training-title">
     <header><Dumbbell size={21} /><div><span>Biscuit training lab</span><h3 id="gi-tactical-training-title">Training is tracked as tactical preparation.</h3></div></header>
     <div className="gi-tactical-steps" role="group" aria-label="Biscuit training modules">
-      {records.map((record, index) => <button type="button" key={record.id} className={selected.id === record.id ? 'is-active' : ''} aria-pressed={selected.id === record.id} onClick={() => setSelectedId(record.id)} data-training-module={record.id}>
-        <i>{String(index + 1).padStart(2, '0')}</i><span>{record.title}</span>
-      </button>)}
+      {records.map((record, index) => <button type="button" key={record.id} className={selected.id === record.id ? 'is-active' : ''} aria-pressed={selected.id === record.id} onClick={() => setSelectedId(record.id)} data-training-module={record.id}><i>{String(index + 1).padStart(2, '0')}</i><span>{record.title}</span></button>)}
     </div>
     <RecordCard record={selected} />
   </section>;
@@ -66,9 +58,7 @@ function RazorReplay({ records, selectedId, setSelectedId }) {
   return <section className="gi-tactical-razor" aria-labelledby="gi-tactical-razor-title">
     <header><Activity size={21} /><div><span>Razor dodgeball replay</span><h3 id="gi-tactical-razor-title">The match is reconstructed as a phase ledger.</h3></div></header>
     <div className="gi-dodgeball-court" aria-label="Razor dodgeball phase selector">
-      {records.map((record) => <button type="button" key={record.id} className={selected.id === record.id ? 'is-active' : ''} aria-pressed={selected.id === record.id} style={{ '--phase': record.order }} onClick={() => setSelectedId(record.id)} data-dodgeball-phase={record.id}>
-        <span>{record.order}</span><small>{record.title}</small>
-      </button>)}
+      {records.map((record) => <button type="button" key={record.id} className={selected.id === record.id ? 'is-active' : ''} aria-pressed={selected.id === record.id} style={{ '--phase': record.order }} onClick={() => setSelectedId(record.id)} data-dodgeball-phase={record.id}><span>{record.order}</span><small>{record.title}</small></button>)}
     </div>
     <RecordCard record={selected} />
   </section>;
@@ -85,9 +75,7 @@ function BomberConsole({ records, selectedId, setSelectedId }) {
   return <section className="gi-tactical-bomber" aria-labelledby="gi-tactical-bomber-title">
     <header><Bomb size={21} /><div><span>Bomber system</span><h3 id="gi-tactical-bomber-title">Countdown is a conditions puzzle, not a damage meter.</h3></div></header>
     <div className="gi-tactical-bomber__layout">
-      <div className="gi-tactical-list" aria-label="Bomber mechanics">
-        {records.map((record) => <button type="button" key={record.id} className={selected.id === record.id ? 'is-active' : ''} aria-pressed={selected.id === record.id} onClick={() => setSelectedId(record.id)} data-bomber-mechanic={record.id}>{record.title}</button>)}
-      </div>
+      <div className="gi-tactical-list" aria-label="Bomber mechanics">{records.map((record) => <button type="button" key={record.id} className={selected.id === record.id ? 'is-active' : ''} aria-pressed={selected.id === record.id} onClick={() => setSelectedId(record.id)} data-bomber-mechanic={record.id}>{record.title}</button>)}</div>
       <div className="gi-tactical-bomber__sim">
         <h4>Disarm / Release simulation</h4>
         <label><input type="checkbox" checked={touch} onChange={(event) => setTouch(event.target.checked)} /> <span>Victim touches Genthru</span></label>
@@ -104,17 +92,15 @@ function BattleSplit({ records, selectedId, setSelectedId }) {
   const selected = records.find((record) => record.id === selectedId) || records[0];
   return <section className="gi-tactical-battles" aria-labelledby="gi-tactical-battles-title">
     <header><Trophy size={21} /><div><span>Three final battles</span><h3 id="gi-tactical-battles-title">The Bomber trio is solved by splitting the field.</h3></div></header>
-    <div className="gi-battle-grid" aria-label="Final battle selector">
-      {records.map((record) => <button type="button" key={record.id} className={selected.id === record.id ? 'is-active' : ''} aria-pressed={selected.id === record.id} onClick={() => setSelectedId(record.id)} data-final-battle={record.id}>
-        <strong>{record.title}</strong><span>{record.outcome}</span>
-      </button>)}
-    </div>
+    <div className="gi-battle-grid" aria-label="Final battle selector">{records.map((record) => <button type="button" key={record.id} className={selected.id === record.id ? 'is-active' : ''} aria-pressed={selected.id === record.id} onClick={() => setSelectedId(record.id)} data-final-battle={record.id}><strong>{record.title}</strong><span>{record.outcome}</span></button>)}</div>
     <RecordCard record={selected} />
   </section>;
 }
 
-export default function GreedIslandTacticalRecords() {
-  const [collectionId, setCollectionId] = useState('training');
+export default function GreedIslandTacticalRecords({ requestedCollection, onCollectionChange }) {
+  const collections = tacticalRecordCollections;
+  const [localCollection, setLocalCollection] = useState('training');
+  const collectionId = collections[requestedCollection] ? requestedCollection : localCollection;
   const [query, setQuery] = useState('');
   const [selectedByCollection, setSelectedByCollection] = useState({
     training: 'gyo-feint-read',
@@ -122,23 +108,19 @@ export default function GreedIslandTacticalRecords() {
     bomber: 'countdown-conditions',
     battles: 'gon-vs-genthru',
   });
-  const collections = tacticalRecordCollections;
   const collection = collections[collectionId];
   const Icon = icons[collectionId] || ShieldCheck;
+
+  const chooseCollection = (id) => {
+    setLocalCollection(id);
+    setQuery('');
+    onCollectionChange?.(id);
+  };
 
   const matches = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     if (!normalized) return collection.records;
-    return collection.records.filter((record) => [
-      record.title,
-      record.summary,
-      record.focus,
-      record.location,
-      record.outcome,
-      ...record.actors,
-      ...record.tags,
-      ...record.counters,
-    ].some((value) => String(value || '').toLowerCase().includes(normalized)));
+    return collection.records.filter((record) => [record.title, record.summary, record.focus, record.location, record.outcome, ...record.actors, ...record.tags, ...record.counters].some((value) => String(value || '').toLowerCase().includes(normalized)));
   }, [collection, query]);
 
   const selectedId = selectedByCollection[collectionId];
@@ -146,11 +128,11 @@ export default function GreedIslandTacticalRecords() {
   const activeRecords = matches.length ? matches : collection.records;
   const selectedRecord = activeRecords.find((record) => record.id === selectedId) || activeRecords[0];
 
-  return <section className="gi-tactical" id="tactical-records" aria-labelledby="gi-tactical-title">
+  return <section className="gi-tactical" id="tactical-records" aria-labelledby="gi-tactical-title" data-tactical-collection={collectionId}>
     <header className="gi-section-heading">
       <span>Stage 08 · Tactical records</span>
-      <h2 id="gi-tactical-title">Training, Razor, Bomber mechanics, and final fights now read as connected tactics.</h2>
-      <p>These tools analyze source-grounded combat systems without turning injuries or violence into a live game. Every tactical record stays tied to Hunterpedia/Fandom source pages.</p>
+      <h2 id="gi-tactical-title">Training, Razor, Bomber mechanics, and final fights load independently.</h2>
+      <p>Only the active tactical collection is mounted. Switching routes discards its simulations and keeps unrelated battle tools out of memory.</p>
     </header>
 
     <div className="gi-tactical__metrics" aria-label="Greed Island tactical verification summary">
@@ -163,9 +145,7 @@ export default function GreedIslandTacticalRecords() {
     <nav className="gi-tactical__tabs" aria-label="Tactical record collections">
       {Object.values(collections).map((item) => {
         const TabIcon = icons[item.id] || ShieldCheck;
-        return <button type="button" key={item.id} className={collectionId === item.id ? 'is-active' : ''} aria-pressed={collectionId === item.id} onClick={() => { setCollectionId(item.id); setQuery(''); }}>
-          <TabIcon size={17} /><span>{item.label}</span><small>{item.records.length}</small>
-        </button>;
+        return <button type="button" key={item.id} className={collectionId === item.id ? 'is-active' : ''} aria-pressed={collectionId === item.id} onClick={() => chooseCollection(item.id)}><TabIcon size={17} /><span>{item.label}</span><small>{item.records.length}</small></button>;
       })}
     </nav>
 
@@ -174,7 +154,7 @@ export default function GreedIslandTacticalRecords() {
       <p><Filter size={15} /> {matches.length} matching {collection.label.toLowerCase()} records</p>
     </div>
 
-    <div className="gi-tactical__active" data-tactical-collection={collectionId}>
+    <div className="gi-tactical__active">
       <div className="gi-tactical__collection-header"><Icon size={22} /><div><span>{collection.label}</span><h3>{selectedRecord?.title || collection.label}</h3></div></div>
       {collectionId === 'training' && <TrainingLab records={activeRecords} selectedId={selectedRecord.id} setSelectedId={setSelectedId} />}
       {collectionId === 'razor' && <RazorReplay records={activeRecords} selectedId={selectedRecord.id} setSelectedId={setSelectedId} />}
