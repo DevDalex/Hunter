@@ -1,6 +1,8 @@
 import { useMemo, useState } from 'react';
 import {
   AlertCircle,
+  ArrowLeft,
+  ArrowRight,
   BookOpen,
   CheckCircle2,
   ExternalLink,
@@ -21,6 +23,7 @@ import { GREED_ISLAND_CARD_RANKS } from '../../data/greed-island/specifiedCards.
 import InteractiveCard from './InteractiveCard';
 import './SpecifiedCardArchive.css';
 
+const PAGE_SIZE = 10;
 const titleCase = (value) => value.replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 const statusLabel = (status) => status === 'verified' ? 'Verified' : status === 'unknown' ? 'Unknown in source' : 'Not documented';
 
@@ -43,6 +46,7 @@ export default function SpecifiedCardArchive() {
   const [rank, setRank] = useState('all');
   const [kind, setKind] = useState('all');
   const [storyOnly, setStoryOnly] = useState(false);
+  const [page, setPage] = useState(0);
 
   const selected = enrichedSpecifiedCardById.get(selectedId) || enrichedSpecifiedCards[2];
   const results = useMemo(() => {
@@ -65,6 +69,10 @@ export default function SpecifiedCardArchive() {
     });
   }, [kind, query, rank, storyOnly]);
 
+  const pageCount = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
+  const activePage = Math.min(page, pageCount - 1);
+  const visibleResults = results.slice(activePage * PAGE_SIZE, activePage * PAGE_SIZE + PAGE_SIZE);
+
   const related = useMemo(() => {
     const sameKind = enrichedSpecifiedCards.filter((card) => card.id !== selected.id && card.kind === selected.kind);
     const adjacent = enrichedSpecifiedCards.filter((card) => card.id !== selected.id && Math.abs(card.number - selected.number) <= 2);
@@ -73,43 +81,44 @@ export default function SpecifiedCardArchive() {
 
   const verifiedAcquisitions = enrichedSpecifiedCards.filter((card) => card.acquisition.status === 'verified').length;
   const verifiedStory = enrichedSpecifiedCards.filter((card) => card.story.status === 'verified').length;
+  const resetPage = () => setPage(0);
 
-  return <section className="gi-card-archive" id="card-archive" aria-labelledby="gi-card-archive-title">
+  return <section className="gi-card-archive" id="card-archive" aria-labelledby="gi-card-archive-title" data-card-page={activePage + 1}>
     <header className="gi-section-heading">
       <span>Stage 05 · Specified Slot archive</span>
-      <h2 id="gi-card-archive-title">Every card now has a readable record.</h2>
-      <p>Search all 100 cards by number, name, rank, material form, effect, acquisition status, owner, chapter, or episode. Missing acquisition and story data stays visibly undocumented instead of being inferred.</p>
+      <h2 id="gi-card-archive-title">Every card has a readable record, ten at a time.</h2>
+      <p>Search all 100 cards while rendering only one ten-card result page. The selected detail record remains available without mounting a hundred result rows.</p>
     </header>
 
     <div className="gi-card-archive__metrics" aria-label="Specified card archive verification summary">
       <div><b>100 / 100</b><span>effects verified</span></div>
       <div><b>{verifiedAcquisitions}</b><span>acquisition routes verified</span></div>
       <div><b>{verifiedStory}</b><span>story mappings verified</span></div>
-      <div><b>{SPECIFIED_CARD_KINDS.length}</b><span>material categories</span></div>
+      <div><b>10</b><span>rows mounted per page</span></div>
     </div>
 
     <div className="gi-card-archive__filters">
       <label className="gi-card-archive__search">
         <Search size={16} />
         <span className="sr-only">Search Specified Slot archive</span>
-        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search number, card, effect, owner…" />
+        <input value={query} onChange={(event) => { setQuery(event.target.value); resetPage(); }} placeholder="Search number, card, effect, owner…" />
       </label>
-      <label><Filter size={15} /><span>Rank</span><select value={rank} onChange={(event) => setRank(event.target.value)}>
+      <label><Filter size={15} /><span>Rank</span><select value={rank} onChange={(event) => { setRank(event.target.value); resetPage(); }}>
         <option value="all">All ranks</option>
         {GREED_ISLAND_CARD_RANKS.map((value) => <option key={value} value={value}>{value}</option>)}
       </select></label>
-      <label><Filter size={15} /><span>Material</span><select value={kind} onChange={(event) => setKind(event.target.value)}>
+      <label><Filter size={15} /><span>Material</span><select value={kind} onChange={(event) => { setKind(event.target.value); resetPage(); }}>
         <option value="all">All materials</option>
         {SPECIFIED_CARD_KINDS.map((value) => <option key={value} value={value}>{titleCase(value)}</option>)}
       </select></label>
-      <label className="gi-card-archive__check"><input type="checkbox" checked={storyOnly} onChange={(event) => setStoryOnly(event.target.checked)} /><span>Verified story cards only</span></label>
+      <label className="gi-card-archive__check"><input type="checkbox" checked={storyOnly} onChange={(event) => { setStoryOnly(event.target.checked); resetPage(); }} /><span>Verified story cards only</span></label>
     </div>
 
     <div className="gi-card-archive__layout">
       <aside className="gi-card-archive__results" aria-label={`${results.length} matching Specified Slot cards`}>
-        <header><b>{results.length}</b><span>matching cards</span></header>
+        <header><b>{results.length}</b><span>matching cards · page {activePage + 1} / {pageCount}</span></header>
         <div>
-          {results.map((card) => <button
+          {visibleResults.map((card) => <button
             type="button"
             key={card.id}
             className={selected.id === card.id ? 'is-active' : ''}
@@ -122,6 +131,11 @@ export default function SpecifiedCardArchive() {
           </button>)}
           {!results.length && <p>No cards match these filters.</p>}
         </div>
+        <nav className="gi-card-archive__pagination" aria-label="Specified card result pages">
+          <button type="button" onClick={() => setPage(Math.max(0, activePage - 1))} disabled={activePage === 0}><ArrowLeft size={14} /> Previous</button>
+          <span>{String(activePage * PAGE_SIZE).padStart(3, '0')}–{String(Math.min(results.length - 1, activePage * PAGE_SIZE + PAGE_SIZE - 1)).padStart(3, '0')}</span>
+          <button type="button" onClick={() => setPage(Math.min(pageCount - 1, activePage + 1))} disabled={activePage === pageCount - 1}>Next <ArrowRight size={14} /></button>
+        </nav>
       </aside>
 
       <article className="gi-card-archive__record" aria-live="polite">
