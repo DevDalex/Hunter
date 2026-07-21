@@ -33,3 +33,17 @@
 .he-journeys p,
 .he-object-ledger p,
 .he-adaptation__grid p { color: #505653; }
+
+@media (max-width: 620px) {
+  .he-tower-route {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 8px;
+  }
+
+  .he-tower-route span,
+  .he-tower-route i {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+}
