@@ -33,21 +33,25 @@ import {
   trickTowerMatches,
 } from '../data/hunterExam';
 import SafeImage from './SafeImage';
+import HunterExamVisualArchive from './HunterExamVisualArchive';
 import './HunterExamPage.css';
 import './HunterExamPageContrast.css';
 
 const localNavigation = [
   ['overview', 'Overview'],
   ['route', 'Route'],
+  ['locations', 'Locations'],
   ['phase-one', 'Phase One'],
   ['phase-two', 'Phase Two'],
   ['phase-three', 'Phase Three'],
   ['phase-four', 'Phase Four'],
   ['final-phase', 'Final Phase'],
   ['applicants', 'Applicants'],
+  ['progression', 'Progression'],
   ['examiners', 'Examiners'],
   ['outcomes', 'Outcomes'],
   ['adaptation', 'Adaptation'],
+  ['visuals', 'Gallery'],
   ['sources', 'Sources'],
 ];
 
@@ -82,7 +86,7 @@ function HunterExamHero({ onNavigate }) {
         <div><dt>Licensed</dt><dd>{hunterExamSummary.licensed}</dd></div>
         <div><dt>Disqualified</dt><dd>{hunterExamSummary.disqualified}</dd></div>
       </dl>
-      <div className="he-hero__actions"><a href="#route"><MapPinned size={16} /> Open course</a><a href="#applicants"><Users size={16} /> Applicant registry</a></div>
+      <div className="he-hero__actions"><a href="#locations"><MapPinned size={16} /> Illustrated route</a><a href="#portraits"><Users size={16} /> Visual applicants</a></div>
     </div>
     <a className="he-hero__source" href={hunterExamArtwork.hero.source} target="_blank" rel="noreferrer noopener">Artwork source <ExternalLink size={12} /></a>
   </header>;
@@ -245,6 +249,7 @@ export default function HunterExamPage({ onNavigate }) {
       <BadgeMatrix />
       <FinalPhase />
       <ApplicantRegistry />
+      <HunterExamVisualArchive />
       <ExaminerBoard />
       <OutcomesAndRules />
       <AdaptationAndRecords onNavigate={onNavigate} />

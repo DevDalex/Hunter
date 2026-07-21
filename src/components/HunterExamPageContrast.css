@@ -34,6 +34,39 @@
 .he-object-ledger p,
 .he-adaptation__grid p { color: #505653; }
 
+.hev-visual figcaption span,
+.hev-location-grid span,
+.hev-location-focus__copy dt,
+.hev-portrait-grid header span,
+.hev-portrait-grid dt,
+.hev-early-applicants article span,
+.hev-table thead th,
+.hev-table td span,
+.hev-attrition dt,
+.hev-tower-cutaway span,
+.hev-prisoners i,
+.hev-prisoners span,
+.hev-prisoners a,
+.hev-network-picker button,
+.hev-finalists i,
+.hev-bracket-flow span,
+.hev-object-grid a,
+.hev-conflict-grid dt,
+.hev-conflict-grid a {
+  font-size: 11px !important;
+}
+
+@media (max-width: 820px) {
+  .hev-record-map {
+    grid-template-columns: minmax(0, 1fr);
+    overflow-x: visible;
+  }
+
+  .hev-record-map article {
+    min-width: 0;
+  }
+}
+
 @media (max-width: 620px) {
   .he-tower-route {
     flex-wrap: wrap;
