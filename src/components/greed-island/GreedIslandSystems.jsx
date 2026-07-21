@@ -105,7 +105,7 @@ function QuestDirectory({ selectedLocationId }) {
   return <section className="gi-systems-quests" aria-labelledby="gi-systems-quests-title">
     <header><Route size={20} /><div><span>Quest directory</span><h3 id="gi-systems-quests-title">Acquisition paths stay tied to locations.</h3></div></header>
     <div className="gi-systems-quest-layout">
-      <div className="gi-systems-quest-list" role="list">
+      <div className="gi-systems-quest-list">
         {greedIslandQuestRecords.map((quest) => <button
           type="button"
           key={quest.id}
@@ -189,7 +189,7 @@ function GameMasterRoom() {
   return <section className="gi-systems-gm" aria-labelledby="gi-systems-gm-title">
     <header><ShieldCheck size={20} /><div><span>Game Master room</span><h3 id="gi-systems-gm-title">Control flow is archived, not made playable.</h3></div></header>
     <div className="gi-systems-gm__layout">
-      <div className="gi-systems-gm__console" role="list">
+      <div className="gi-systems-gm__console">
         {greedIslandGameMasterControls.map((item) => <button
           type="button"
           key={item.id}
