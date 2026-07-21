@@ -61,4 +61,5 @@ jobs:
             .visual-qa/
             .accessibility-qa/
             .interaction-qa/
+            .greed-island-qa/
             .performance-qa/
