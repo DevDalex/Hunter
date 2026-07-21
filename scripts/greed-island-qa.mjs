@@ -68,6 +68,17 @@ const openGreedIsland = async (page, base) => {
   await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 }).catch(() => {});
 };
 
+const readProgress = async (page) => {
+  const label = await page.locator('.gi-progress').getAttribute('aria-label');
+  const match = label?.match(/^(\d+)\s+of\s+100/);
+  return match ? Number(match[1]) : Number.NaN;
+};
+
+const transitionSeconds = (value) => value
+  .split(',')
+  .map((duration) => Number.parseFloat(duration.trim()))
+  .filter(Number.isFinite);
+
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 const executablePath = await firstAvailable([
@@ -104,14 +115,14 @@ try {
     await slot002.focus();
     await desktop.keyboard.press('Enter');
     await desktop.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
-    if (!(await desktop.locator('.gi-progress').innerText()).includes('001 / 100')) throw new Error('Binder progress did not advance to 001 / 100');
+    if (await readProgress(desktop) !== 1) throw new Error('Binder progress did not advance to 1 of 100');
 
     const card003 = desktop.locator('.gi-card-tray .gi-card').filter({ hasText: 'Pitcher of Eternal Water' });
     await card003.click();
     await desktop.getByRole('button', { name: 'Insert held card into Specified Slot 004' }).click();
     const etaText = await desktop.locator('.gi-eta-status').innerText();
     if (!etaText.includes('belongs in Specified Slot 003, not 004')) throw new Error('Eta did not reject the mismatched slot');
-    if (!(await desktop.locator('.gi-progress').innerText()).includes('001 / 100')) throw new Error('Invalid insertion changed Binder progress');
+    if (await readProgress(desktop) !== 1) throw new Error('Invalid insertion changed Binder progress');
 
     await desktop.locator('.gi-binder-toolbar input').fill('Blue Planet');
     await desktop.locator('.gi-binder-toolbar form button').click();
@@ -122,7 +133,7 @@ try {
     await desktop.locator('.gi-book-gate button').click();
     await desktop.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
     await desktop.getByRole('button', { name: /Reset simulation/i }).click();
-    if (!(await desktop.locator('.gi-progress').innerText()).includes('000 / 100')) throw new Error('Reset did not clear Binder progress');
+    if (await readProgress(desktop) !== 0) throw new Error('Reset did not clear Binder progress');
   });
   await desktop.close();
 
@@ -142,7 +153,8 @@ try {
     });
     if (state.overflow > 1) throw new Error(`mobile page overflowed horizontally by ${state.overflow}px`);
     if (!state.reducedMotion) throw new Error('reduced-motion emulation was not active');
-    if (state.transitionDuration !== '0s') throw new Error(`card transition remains ${state.transitionDuration} under reduced motion`);
+    const durations = transitionSeconds(state.transitionDuration);
+    if (!durations.length || durations.some((duration) => duration > 0.001)) throw new Error(`card transition remains ${state.transitionDuration} under reduced motion`);
     if (state.liveRegion !== 'polite') throw new Error('Eta status is not exposed as a polite live region');
 
     await mobile.locator('.gi-card-tray .gi-card').filter({ hasText: 'Plot of Beach' }).click();
