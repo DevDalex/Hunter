@@ -53,7 +53,7 @@
 .hev-object-grid a,
 .hev-conflict-grid dt,
 .hev-conflict-grid a {
-  font-size: 11px;
+  font-size: 11px !important;
 }
 
 @media (max-width: 620px) {
