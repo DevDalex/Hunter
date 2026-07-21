@@ -68,6 +68,13 @@ const openGreedIsland = async (page, base) => {
   await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 }).catch(() => {});
 };
 
+const openLesson = async (page, title) => {
+  const button = page.locator('.gi-eta-course__chapters button').filter({ hasText: title });
+  if (await button.count() !== 1) throw new Error(`Eta lesson “${title}” is missing or duplicated`);
+  await button.click();
+  await page.locator('.gi-eta-course__lesson h3').filter({ hasText: title }).waitFor();
+};
+
 const readProgress = async (page) => {
   const label = await page.locator('.gi-progress').getAttribute('aria-label');
   const match = label?.match(/^(\d+)\s+of\s+100/);
@@ -99,6 +106,68 @@ const server = await serve();
 const base = `http://127.0.0.1:${server.address().port}`;
 
 try {
+  const tutorial = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  await record('Eta tutorial card rules, simulations, and persistence', tutorial, async () => {
+    await openGreedIsland(tutorial, base);
+    if (await tutorial.locator('.gi-eta-course__chapters button').count() !== 12) throw new Error('Eta tutorial does not expose 12 lessons');
+    if (await tutorial.locator('.gi-eta-course__announcement').getAttribute('aria-live') !== 'polite') throw new Error('Eta tutorial announcement is not a polite live region');
+
+    await openLesson(tutorial, 'Card anatomy');
+    await tutorial.getByRole('button', { name: 'Illustration' }).click();
+    await tutorial.locator('.gi-rule-demo--anatomy h4').filter({ hasText: 'Illustration' }).waitFor();
+
+    await openLesson(tutorial, 'Card ranks');
+    await tutorial.locator('.gi-rank-ladder button').filter({ hasText: /^SS$/ }).click();
+    if ((await tutorial.locator('.gi-rank-readout > b').innerText()).trim() !== 'SS') throw new Error('Rank ladder did not select SS');
+    if (!await tutorial.locator('.gi-rank-readout').innerText().then((text) => text.includes('Ruler’s Blessing') || text.includes("Ruler's Blessing"))) throw new Error('Rank ladder is not derived from the Specified registry');
+
+    await openLesson(tutorial, 'Conversion limits');
+    await tutorial.locator('.gi-rule-demo--limits select').selectOption('081');
+    await tutorial.getByRole('button', { name: 'Fill simulated limit' }).click();
+    await tutorial.locator('.gi-limit-result').filter({ hasText: 'LIMIT REACHED' }).waitFor();
+
+    await openLesson(tutorial, '“Gain”');
+    await tutorial.getByRole('button', { name: /Say “Gain”/i }).click();
+    await tutorial.locator('.gi-gain-object.is-visible').waitFor();
+    await tutorial.getByRole('button', { name: /Reset demonstration/i }).click();
+    if (await tutorial.locator('.gi-gain-object.is-visible').count()) throw new Error('Gain demonstration did not reset');
+
+    await openLesson(tutorial, 'Spell targeting');
+    await tutorial.locator('.gi-rule-demo--spell select').selectOption('1006');
+    await tutorial.locator('.gi-rule-demo--spell input').fill('Killua');
+    await tutorial.getByRole('button', { name: /Cast with “On”/i }).click();
+    await tutorial.locator('.gi-spell-outcome').filter({ hasText: 'Pickpocket On Killua' }).waitFor();
+
+    await openLesson(tutorial, 'Protection and counters');
+    await tutorial.locator('.gi-rule-demo--protection select').selectOption('1004');
+    await tutorial.getByRole('button', { name: 'Resolve attack' }).click();
+    await tutorial.locator('.gi-protection-result').filter({ hasText: 'Reflects one Attack Spell' }).waitFor();
+
+    await openLesson(tutorial, 'Completing the game');
+    if (!await tutorial.locator('.gi-rule-demo--completion fieldset').isDisabled()) throw new Error('Completion quiz is not initially locked');
+    await tutorial.getByRole('button', { name: 'Complete 001–099' }).click();
+    if (await tutorial.locator('.gi-rule-demo--completion fieldset').isDisabled()) throw new Error('Completion quiz did not unlock at 99 cards');
+    await tutorial.getByLabel('Blue Planet').check();
+    await tutorial.locator('.gi-completion-sequence div').nth(2).filter({ hasText: 'Sample complete' }).waitFor();
+    await tutorial.locator('.gi-eta-course__controls button.is-primary').click();
+
+    await tutorial.getByLabel('Gain', { exact: true }).check();
+    await tutorial.locator('.gi-rule-demo--review > p.is-correct').waitFor();
+    await tutorial.locator('.gi-eta-course__controls button.is-primary').click();
+    const progressLabel = await tutorial.locator('.gi-eta-course__progress').getAttribute('aria-label');
+    if (!progressLabel?.startsWith('2 of 12')) throw new Error(`Tutorial progress did not record completed lessons: ${progressLabel}`);
+
+    await tutorial.reload({ waitUntil: 'domcontentloaded' });
+    await tutorial.waitForSelector('.gi-eta-course');
+    const persistedLabel = await tutorial.locator('.gi-eta-course__progress').getAttribute('aria-label');
+    if (!persistedLabel?.startsWith('2 of 12')) throw new Error(`Tutorial progress did not persist: ${persistedLabel}`);
+    await tutorial.getByRole('button', { name: /Replay all/i }).click();
+    const resetLabel = await tutorial.locator('.gi-eta-course__progress').getAttribute('aria-label');
+    if (!resetLabel?.startsWith('0 of 12')) throw new Error('Replay all did not clear tutorial progress');
+    if (await tutorial.locator('.gi-eta-course__controls a', { hasText: 'Show source' }).count() !== 1) throw new Error('Active lesson source control is missing');
+  });
+  await tutorial.close();
+
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   await record('Greed Island Book keyboard, sections, and persistence', desktop, async () => {
     await openGreedIsland(desktop, base);
@@ -157,8 +226,26 @@ try {
   await desktop.close();
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Greed Island Book mobile and reduced motion', mobile, async () => {
+  await record('Greed Island tutorial and Book mobile reduced motion', mobile, async () => {
     await openGreedIsland(mobile, base);
+    await openLesson(mobile, '“Gain”');
+    const tutorialState = await mobile.evaluate(() => {
+      const gainCard = document.querySelector('.gi-gain-card');
+      const progress = document.querySelector('.gi-eta-course__progress > i span');
+      return {
+        overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+        reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+        gainTransition: gainCard ? getComputedStyle(gainCard).transitionDuration : '',
+        progressTransition: progress ? getComputedStyle(progress).transitionDuration : '',
+        tutorialLiveRegion: document.querySelector('.gi-eta-course__announcement')?.getAttribute('aria-live'),
+      };
+    });
+    if (tutorialState.overflow > 1) throw new Error(`mobile tutorial overflowed horizontally by ${tutorialState.overflow}px`);
+    if (!tutorialState.reducedMotion) throw new Error('reduced-motion emulation was not active');
+    if (transitionSeconds(tutorialState.gainTransition).some((duration) => duration > 0.001)) throw new Error(`Gain transition remains ${tutorialState.gainTransition} under reduced motion`);
+    if (transitionSeconds(tutorialState.progressTransition).some((duration) => duration > 0.001)) throw new Error(`Tutorial progress transition remains ${tutorialState.progressTransition} under reduced motion`);
+    if (tutorialState.tutorialLiveRegion !== 'polite') throw new Error('Eta tutorial status is not exposed as a polite live region');
+
     await mobile.getByRole('button', { name: /Free Exploration/i }).click();
     await mobile.waitForSelector('.gi-binder-section');
     await mobile.getByRole('button', { name: /Free Slots/i }).click();
@@ -168,14 +255,12 @@ try {
       const book = document.querySelector('.gi-book');
       return {
         overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-        reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
         transitionDuration: card ? getComputedStyle(card).transitionDuration : '',
         bookTransitionDuration: book ? getComputedStyle(book).transitionDuration : '',
         liveRegion: document.querySelector('.gi-eta-status')?.getAttribute('aria-live'),
       };
     });
     if (state.overflow > 1) throw new Error(`mobile page overflowed horizontally by ${state.overflow}px`);
-    if (!state.reducedMotion) throw new Error('reduced-motion emulation was not active');
     const durations = transitionSeconds(state.transitionDuration);
     if (!durations.length || durations.some((duration) => duration > 0.001)) throw new Error(`card transition remains ${state.transitionDuration} under reduced motion`);
     const bookDurations = transitionSeconds(state.bookTransitionDuration);
