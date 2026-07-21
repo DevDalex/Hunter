@@ -53,10 +53,10 @@ assert(!home.includes('archive-ui-library') && !home.includes('Design-system fou
 assert(packageJson.includes('"audit:design-system"') && packageJson.includes('node scripts/audit-design-system.mjs'), 'package.json must expose audit:design-system');
 assert(preflight.includes("'audit:design-system'"), 'aggregate preflight must include audit:design-system');
 
-for (const phrase of ['Batch 12', 'ArchiveSection', 'ArchiveCard', 'EvidenceBadge', 'SourceStack', '15 independent pre-build audits']) {
+for (const phrase of ['Batch 12', 'ArchiveSection', 'ArchiveCard', 'EvidenceBadge', 'SourceStack', '16 independent pre-build audits']) {
   assert(docs.includes(phrase), `design-system documentation is missing ${phrase}`);
 }
-for (const phrase of ['Batch 12', 'src/components/ArchiveUI.jsx', 'src/data/archiveDesignSystem.js', '15 independent pre-build audits']) {
+for (const phrase of ['Batch 12', 'src/components/ArchiveUI.jsx', 'src/data/archiveDesignSystem.js', '16 independent pre-build audits']) {
   assert(readme.includes(phrase), `README is missing Batch 12 contract phrase ${phrase}`);
   assert(handbook.includes(phrase), `handbook is missing Batch 12 contract phrase ${phrase}`);
 }
