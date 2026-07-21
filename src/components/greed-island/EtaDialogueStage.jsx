@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import './EtaDialogueStage.css';
+import './EtaDialogueStagePatches.css';
 
 const ETA_ASSETS = Object.freeze({
   room: '/media/greed-island/eta/eta-tutorial-room.webp',
@@ -118,6 +119,7 @@ export default function EtaDialogueStage({ lesson, announcement, onAdvance }) {
   };
 
   return <section className="gi-eta-scene" aria-label={`Eta tutorial scene: ${lesson.title}`} data-eta-scene data-eta-state={state}>
+    <h3 id={`gi-lesson-${lesson.id}`} className="sr-only">{lesson.title}</h3>
     <img className="gi-eta-scene__room" src={ETA_ASSETS.room} alt="" aria-hidden="true" />
     <div className="gi-eta-scene__scanlines" aria-hidden="true" />
     <div className="gi-eta-scene__floor-glow" aria-hidden="true" />
