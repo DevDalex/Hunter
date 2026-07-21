@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { priorityPortraitByName } from '../data/priorityMedia.generated';
 
 const normalizeSubject = (value = '') => value
   .toLowerCase()
@@ -7,27 +6,34 @@ const normalizeSubject = (value = '') => value
   .trim()
   .replaceAll(/\s+/g, ' ');
 
-const portraitAliases = new Map([
-  ['gon', 'Gon Freecss'],
-  ['killua', 'Killua Zoldyck'],
-  ['leorio', 'Leorio Paradinight'],
-  ['hisoka', 'Hisoka Morow'],
-  ['illumi', 'Illumi Zoldyck'],
-  ['gittarackur', 'Illumi Zoldyck'],
-  ['gittarackur illumi', 'Illumi Zoldyck'],
+const localPortraitBySubject = new Map([
+  ['gon freecss', '/media/portraits/gon-freecss.webp'],
+  ['gon', '/media/portraits/gon-freecss.webp'],
+  ['killua zoldyck', '/media/portraits/killua-zoldyck.webp'],
+  ['killua', '/media/portraits/killua-zoldyck.webp'],
+  ['kurapika', '/media/portraits/kurapika.webp'],
+  ['leorio paradinight', '/media/portraits/leorio-paradinight.webp'],
+  ['leorio', '/media/portraits/leorio-paradinight.webp'],
+  ['hisoka morow', '/media/portraits/hisoka-morow.webp'],
+  ['hisoka', '/media/portraits/hisoka-morow.webp'],
+  ['illumi zoldyck', '/media/portraits/illumi-zoldyck.webp'],
+  ['illumi', '/media/portraits/illumi-zoldyck.webp'],
+  ['gittarackur', '/media/portraits/illumi-zoldyck.webp'],
+  ['gittarackur illumi', '/media/portraits/illumi-zoldyck.webp'],
+  ['hanzo', '/media/portraits/hanzo.webp'],
+  ['ponzu', '/media/portraits/ponzu.webp'],
+  ['pokkle', '/media/portraits/pokkle.webp'],
+  ['tonpa', '/media/portraits/tonpa.webp'],
+  ['satotz', '/media/portraits/satotz.webp'],
+  ['menchi', '/media/portraits/menchi.webp'],
+  ['buhara', '/media/portraits/buhara.webp'],
+  ['isaac netero', '/media/portraits/isaac-netero.webp'],
 ]);
-
-const localPortraitBySubject = new Map(
-  [...priorityPortraitByName.entries()].map(([name, media]) => [normalizeSubject(name), media.src]),
-);
 
 const inferLocalPortraitFallback = ({ fallbackLabel, alt }) => {
   const candidates = [fallbackLabel, String(alt || '').split(',')[0]];
   for (const candidate of candidates) {
-    const normalized = normalizeSubject(candidate);
-    if (!normalized) continue;
-    const canonical = portraitAliases.get(normalized);
-    const src = localPortraitBySubject.get(normalizeSubject(canonical || normalized));
+    const src = localPortraitBySubject.get(normalizeSubject(candidate));
     if (src) return src;
   }
   return '';
