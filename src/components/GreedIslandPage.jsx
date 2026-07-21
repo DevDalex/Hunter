@@ -3,7 +3,6 @@ import {
   ArrowLeft,
   ArrowRight,
   BookOpen,
-  CheckCircle2,
   ExternalLink,
   Gamepad2,
   LockKeyhole,
@@ -11,29 +10,18 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import { GREED_ISLAND_CARD_SOURCE, specifiedCards } from '../data/greed-island/specifiedCards';
+import { GREED_ISLAND_RULE_SOURCES } from '../data/greed-island/tutorialRules';
+import EtaTutorial from './greed-island/EtaTutorial';
 import GreedIslandBinder from './greed-island/GreedIslandBinder';
 import './GreedIslandPage.css';
 import './GreedIslandPageResponsive.css';
 import './greed-island/GreedIslandBook.css';
 
-const GREED_ISLAND_BOOK_SOURCE = Object.freeze({
-  label: 'Greed Island — Ring, Binder, and Cards',
-  href: 'https://hunterxhunter.fandom.com/wiki/Greed_Island#Ring,_Binder,_and_Cards',
-  verifiedAt: '2026-07-21',
-});
-
-const tutorialSteps = [
-  ['01', 'The Ring', 'Every player receives the ring that connects them to the game system.'],
-  ['02', '“Book”', 'The command summons the Binder used to store cards and access player information.'],
-  ['03', 'The Binder', 'Specified Slot cards belong in numbered slots. Free Slots support additional inventory.'],
-  ['04', 'Card anatomy', 'Number, name, rank, conversion limit, illustration, and effect form the card record.'],
-];
-
 const nextStages = [
-  ['Eta tutorial', 'Progressive lessons for the Ring, Book, Binder, ranks, limits, Gain, spells, protection, and completion.'],
-  ['Card systems', 'Card anatomy viewer, rank ladder, conversion-limit simulation, Gain, and field-by-field record enrichment.'],
-  ['Card archive', 'Descriptions, quests, story uses, chapter and episode mappings, and local media stabilization.'],
-  ['Island systems', 'Map, locations, quests, players, spells, and the Game Master control room.'],
+  ['Card archive', 'Descriptions, acquisition quests, story uses, chapter and episode mappings, and local media stabilization.'],
+  ['Spell and Free Slot libraries', 'Complete verified records for all Spell Cards, documented Free Slot cards, and Game Master-only cards.'],
+  ['Island systems', 'Map, locations, quests, players, travel paths, and the Game Master control room.'],
+  ['Tactical records', 'Biscuit training, Razor dodgeball, the Bomber system, final battles, quiz, and reward sequence.'],
 ];
 
 function GreedIslandHero({ onNavigate, mode, setMode, summoned, setSummoned }) {
@@ -62,7 +50,7 @@ function GreedIslandHero({ onNavigate, mode, setMode, summoned, setSummoned }) {
         <div><dt>Specified Slots</dt><dd>{specifiedCards.length}</dd></div>
         <div><dt>Free Slots</dt><dd>45</dd></div>
         <div><dt>Card ranks</dt><dd>H–SS</dd></div>
-        <div><dt>2011 anime</dt><dd>Episodes 59–75</dd></div>
+        <div><dt>Eta lessons</dt><dd>12</dd></div>
       </dl>
       <div className="gi-mode-switch" aria-label="Greed Island entry mode">
         <button type="button" className={mode === 'story' ? 'is-active' : ''} onClick={() => setMode('story')} aria-pressed={mode === 'story'}><BookOpen size={16} /> Story Mode</button>
@@ -76,54 +64,21 @@ function GreedIslandHero({ onNavigate, mode, setMode, summoned, setSummoned }) {
   </header>;
 }
 
-function EtaFoundation({ mode, summoned, setSummoned }) {
-  const [step, setStep] = useState(0);
-  const active = tutorialSteps[step];
-
-  return <section className="gi-tutorial" id="tutorial" aria-labelledby="gi-tutorial-title">
-    <header className="gi-section-heading">
-      <span>Starting Point tutorial</span>
-      <h2 id="gi-tutorial-title">Eta teaches one rule at a time.</h2>
-      <p>{mode === 'story' ? 'Story Mode follows the intended entry sequence before opening the wider archive.' : 'Free Exploration keeps the tutorial available without blocking the Binder.'}</p>
-    </header>
-    <div className="gi-tutorial__layout">
-      <div className="gi-eta-machine" aria-hidden="true"><i /><span>ETA</span><i /><b /></div>
-      <div className="gi-dialogue">
-        <span>Lesson {active[0]} / {String(tutorialSteps.length).padStart(2, '0')}</span>
-        <h3>{active[1]}</h3>
-        <p>{active[2]}</p>
-        <div>
-          <button type="button" onClick={() => setStep((value) => Math.max(0, value - 1))} disabled={step === 0}><ArrowLeft size={15} /> Previous</button>
-          <button type="button" onClick={() => setStep((value) => Math.min(tutorialSteps.length - 1, value + 1))} disabled={step === tutorialSteps.length - 1}>Continue <ArrowRight size={15} /></button>
-          {!summoned && <button type="button" className="is-command" onClick={() => setSummoned(true)}>Try “Book”</button>}
-        </div>
-      </div>
-      <ol className="gi-tutorial__steps" aria-label="Foundation tutorial chapters">
-        {tutorialSteps.map(([number, title], index) => <li key={number}>
-          <button type="button" className={step === index ? 'is-active' : ''} onClick={() => setStep(index)} aria-current={step === index ? 'step' : undefined}>
-            <i>{number}</i><span>{title}</span>{index < step && <CheckCircle2 size={14} />}
-          </button>
-        </li>)}
-      </ol>
-    </div>
-  </section>;
-}
-
 function FoundationNotes() {
   return <section className="gi-foundation" id="foundation" aria-labelledby="gi-foundation-title">
     <header className="gi-section-heading">
       <span>Verified implementation boundary</span>
-      <h2 id="gi-foundation-title">Built in stages, not filled with guesses.</h2>
-      <p>The card records, verified scans, and interactive Binder now share a canon-closer Book reconstructed from Hunterpedia’s G.I. Book and G.I. Book Slots references.</p>
+      <h2 id="gi-foundation-title">Rules are interactive without being invented.</h2>
+      <p>The verified card registry, card scans, reconstructed Book, and twelve-part Eta course now share one rule model sourced to Hunterpedia.</p>
     </header>
     <div className="gi-foundation__grid">
-      <article><ShieldCheck size={23} /><span>Reconstructed now</span><h3>The Book finally resembles the Book</h3><p>The route now uses the violet-black cover, metallic frame, circular mechanism, pale rigid pages, central spine, and dark card pockets visible in the reference images.</p></article>
-      <article><MousePointer2 size={23} /><span>Usable now</span><h3>Specified and Free Slot pages</h3><p>All ten Specified Slot pages and five Free Slot pages can be opened and turned by pointer, touch, keyboard activation, or focused arrow-key controls.</p></article>
-      <article><LockKeyhole size={23} /><span>Clearly deferred</span><h3>No fabricated secondary systems</h3><p>Player List and Map tabs are visible as Binder functions but disabled until their verified records are built. Analysis remains explicitly labelled as an archive reconstruction.</p></article>
+      <article><ShieldCheck size={23} /><span>Completed now</span><h3>Twelve connected lessons</h3><p>The Ring, Book, Binder, card anatomy, slot types, ranks, limits, Gain, spell targeting, protection, completion, and review are all taught through usable controls.</p></article>
+      <article><MousePointer2 size={23} /><span>Measured from data</span><h3>Registry-driven card systems</h3><p>Rank counts, example cards, observed conversion-limit ranges, card selections, and completion examples come directly from the verified 000–099 registry.</p></article>
+      <article><LockKeyhole size={23} /><span>Clearly labelled</span><h3>Simulation is not canon fabrication</h3><p>Gain, availability, spell, protection, and quiz controls identify themselves as archive demonstrations and preserve the documented rules around them.</p></article>
     </div>
     <div className="gi-stage-list">
       <h3>Next verified stages</h3>
-      <ol>{nextStages.map(([title, note], index) => <li key={title}><i>{String(index + 4).padStart(2, '0')}</i><div><strong>{title}</strong><p>{note}</p></div></li>)}</ol>
+      <ol>{nextStages.map(([title, note], index) => <li key={title}><i>{String(index + 5).padStart(2, '0')}</i><div><strong>{title}</strong><p>{note}</p></div></li>)}</ol>
     </div>
   </section>;
 }
@@ -131,6 +86,8 @@ function FoundationNotes() {
 export default function GreedIslandPage({ onNavigate }) {
   const [mode, setMode] = useState('story');
   const [summoned, setSummoned] = useState(false);
+  const overviewSource = GREED_ISLAND_RULE_SOURCES.overview;
+  const etaSource = GREED_ISLAND_RULE_SOURCES.eta;
 
   return <article className="greed-island-page">
     <GreedIslandHero onNavigate={onNavigate} mode={mode} setMode={setMode} summoned={summoned} setSummoned={setSummoned} />
@@ -138,19 +95,20 @@ export default function GreedIslandPage({ onNavigate }) {
       <div><a href="#entry">Entry</a><a href="#tutorial">Eta tutorial</a><a href="#binder">Binder</a><a href="#foundation">Build stages</a><a href="#sources">Sources</a></div>
     </nav>
     <main className="gi-canvas">
-      <EtaFoundation mode={mode} summoned={summoned} setSummoned={setSummoned} />
+      <EtaTutorial mode={mode} summoned={summoned} setSummoned={setSummoned} />
       {summoned ? <GreedIslandBinder /> : <section className="gi-book-gate" aria-labelledby="gi-book-gate-title">
         <div aria-hidden="true"><span>G</span><b>GREED ISLAND</b><span>I</span></div>
         <span>Book not summoned</span>
-        <h2 id="gi-book-gate-title">Say “Book” to begin the card tutorial.</h2>
-        <p>The Book remains absent in the entry sequence until the player invokes the command. Free Exploration can summon it immediately.</p>
+        <h2 id="gi-book-gate-title">Say “Book” to open the working Binder.</h2>
+        <p>The complete Eta tutorial remains available above. Story Mode leaves the Book absent until the player invokes the command; Free Exploration summons it immediately.</p>
         <button type="button" onClick={() => setSummoned(true)}>Book</button>
       </section>}
       <FoundationNotes />
       <section className="gi-sources" id="sources" aria-labelledby="gi-sources-title">
-        <header className="gi-section-heading"><span>Primary research sources</span><h2 id="gi-sources-title">Hunterpedia / Hunter × Hunter Fandom</h2><p>Card images, filenames, Book references, and data retain explicit sources and verification states.</p></header>
-        <a href={GREED_ISLAND_CARD_SOURCE.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{GREED_ISLAND_CARD_SOURCE.label}</strong><small>Specified Slot registry and card images · verified {GREED_ISLAND_CARD_SOURCE.verifiedAt}</small></span><ExternalLink size={14} /></a>
-        <a href={GREED_ISLAND_BOOK_SOURCE.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{GREED_ISLAND_BOOK_SOURCE.label}</strong><small>G.I. Book, G.I. Book Slots, and Binder rules · verified {GREED_ISLAND_BOOK_SOURCE.verifiedAt}</small></span><ExternalLink size={14} /></a>
+        <header className="gi-section-heading"><span>Primary research sources</span><h2 id="gi-sources-title">Hunterpedia / Hunter × Hunter Fandom</h2><p>Card images, filenames, Book references, tutorial rules, Spell examples, and completion behavior retain explicit sources and verification states.</p></header>
+        <a href={GREED_ISLAND_CARD_SOURCE.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{GREED_ISLAND_CARD_SOURCE.label}</strong><small>Specified Slot registry, card anatomy, ranks, limits, Spell rules, and card images · verified {GREED_ISLAND_CARD_SOURCE.verifiedAt}</small></span><ExternalLink size={14} /></a>
+        <a href={overviewSource.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{overviewSource.label}</strong><small>Ring, Book, Gain, Binder, slots, and one-minute card rule · verified {overviewSource.verifiedAt}</small></span><ExternalLink size={14} /></a>
+        <a href={etaSource.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{etaSource.label}</strong><small>Cards 001–099, 100-question quiz, and card 000 award · verified {etaSource.verifiedAt}</small></span><ExternalLink size={14} /></a>
       </section>
     </main>
     <footer className="gi-next-page"><div><span>Story 06</span><h2>Chimera Ant</h2><p>The card selected to find Ging instead redirects Gon and Killua toward Kite.</p></div><button type="button" onClick={() => onNavigate('series', 'chimera-ant')}>Continue <ArrowRight size={18} /></button></footer>
