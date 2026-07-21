@@ -62,9 +62,9 @@ const record = async (name, page, test) => {
   }
 };
 
-const openGreedIsland = async (page, base) => {
-  await page.goto(`${base}/#/series/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-  await page.waitForSelector('.greed-island-page', { timeout: 12_000 });
+const openGreedIsland = async (page, base, module) => {
+  await page.goto(`${base}/#/series/greed-island/${module}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.waitForSelector(`.greed-island-page[data-greed-island-active-module="${module}"]`, { timeout: 12_000 });
   await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 }).catch(() => {});
 };
 
@@ -107,8 +107,9 @@ const base = `http://127.0.0.1:${server.address().port}`;
 
 try {
   const tutorial = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await record('Eta tutorial card rules, simulations, and persistence', tutorial, async () => {
-    await openGreedIsland(tutorial, base);
+  await record('Eta tutorial direct route rules, simulations, and persistence', tutorial, async () => {
+    await openGreedIsland(tutorial, base, 'eta');
+    if (await tutorial.locator('.gi-binder-section, .gi-card-archive, .gi-systems, .gi-tactical, .gi-completion').count()) throw new Error('Inactive Greed Island modules remain mounted on the Eta route');
     if (await tutorial.locator('.gi-eta-course__chapters button').count() !== 12) throw new Error('Eta tutorial does not expose 12 lessons');
     if (await tutorial.locator('.gi-eta-course__announcement').getAttribute('aria-live') !== 'polite') throw new Error('Eta tutorial announcement is not a polite live region');
 
@@ -170,10 +171,10 @@ try {
   await tutorial.close();
 
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await record('Greed Island Book keyboard, sections, and persistence', desktop, async () => {
-    await openGreedIsland(desktop, base);
-    await desktop.locator('.gi-book-gate button').click();
+  await record('Greed Island Binder direct route keyboard, sections, and persistence', desktop, async () => {
+    await openGreedIsland(desktop, base, 'binder');
     await desktop.waitForSelector('.gi-binder-section');
+    if (await desktop.locator('[data-eta-scene], .gi-card-archive, .gi-systems, .gi-tactical, .gi-completion').count()) throw new Error('Inactive Greed Island modules remain mounted on the Binder route');
     const binder = desktop.locator('.gi-binder-section');
     await binder.locator('.gi-book[data-book-state="open"]').waitFor();
 
@@ -219,8 +220,7 @@ try {
     await binder.locator('.gi-book__pages > header b').filter({ hasText: '080–089' }).waitFor();
 
     await desktop.reload({ waitUntil: 'domcontentloaded' });
-    await desktop.waitForSelector('.greed-island-page');
-    await desktop.locator('.gi-book-gate button').click();
+    await desktop.waitForSelector('.gi-binder-section');
     const reloadedBinder = desktop.locator('.gi-binder-section');
     await reloadedBinder.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
     await reloadedBinder.getByRole('button', { name: /Reset simulation/i }).click();
@@ -229,8 +229,8 @@ try {
   await desktop.close();
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Greed Island tutorial and Book mobile reduced motion', mobile, async () => {
-    await openGreedIsland(mobile, base);
+  await record('Greed Island separate Eta and Binder routes mobile reduced motion', mobile, async () => {
+    await openGreedIsland(mobile, base, 'eta');
     await openLesson(mobile, '“Gain”');
     const tutorialState = await mobile.evaluate(() => {
       const gainCard = document.querySelector('.gi-gain-card');
@@ -249,7 +249,7 @@ try {
     if (transitionSeconds(tutorialState.progressTransition).some((duration) => duration > 0.001)) throw new Error(`Tutorial progress transition remains ${tutorialState.progressTransition} under reduced motion`);
     if (tutorialState.tutorialLiveRegion !== 'polite') throw new Error('Eta tutorial status is not exposed as a polite live region');
 
-    await mobile.getByRole('button', { name: /Free Exploration/i }).click();
+    await mobile.goto(`${base}/#/series/greed-island/binder`, { waitUntil: 'domcontentloaded' });
     await mobile.waitForSelector('.gi-binder-section');
     const binder = mobile.locator('.gi-binder-section');
     await binder.getByRole('button', { name: 'Free Slots', exact: true }).click();
