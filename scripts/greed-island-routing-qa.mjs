@@ -72,7 +72,7 @@ const base = `http://127.0.0.1:${server.address().port}`;
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   await record('Hub mounts no heavy Greed Island module', page, async () => {
-    await page.goto(`${base}/#/series/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+    await page.goto(`${base}/story/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
     await waitForModule(page, 'home');
     if (await page.locator('.gi-hub').count() !== 1) throw new Error('Lightweight Greed Island hub is missing.');
     if (await page.locator(activeHeavySelectors).count()) throw new Error('The hub mounted a heavy Greed Island module.');
@@ -82,13 +82,13 @@ try {
   await record('Module navigation unmounts previous experience', page, async () => {
     await page.locator('[data-gi-open-module="binder"]').click();
     await waitForModule(page, 'binder');
-    if (!page.url().includes('/greed-island/binder')) throw new Error(`Binder URL is incorrect: ${page.url()}`);
+    if (!page.url().includes('/story/greed-island/binder')) throw new Error(`Binder URL is incorrect: ${page.url()}`);
     if (await page.locator('.gi-binder-section').count() !== 1) throw new Error('Binder route did not mount Binder.');
     if (await page.locator('.gi-eta-course, .gi-card-archive, .gi-card-libraries, .gi-systems, .gi-tactical, .gi-completion').count()) throw new Error('Binder route retained another heavy module.');
 
     await page.locator('[data-gi-module-nav="eta"]').click();
     await waitForModule(page, 'eta');
-    if (!page.url().includes('/greed-island/eta')) throw new Error(`Eta URL is incorrect: ${page.url()}`);
+    if (!page.url().includes('/story/greed-island/eta')) throw new Error(`Eta URL is incorrect: ${page.url()}`);
     if (await page.locator('.gi-eta-course').count() !== 1) throw new Error('Eta route did not mount the tutorial.');
     if (await page.locator('.gi-binder-section').count()) throw new Error('Binder remained mounted after navigating to Eta.');
 
@@ -111,7 +111,7 @@ try {
       ['sources', 'sources', '', '.gi-sources[data-greed-island-module="sources"]'],
     ];
     for (const [route, module, subview, selector] of cases) {
-      await direct.goto(`${base}/#/series/greed-island/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+      await direct.goto(`${base}/story/greed-island/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
       await waitForModule(direct, module);
       await direct.waitForSelector(selector, { timeout: 15_000 });
       const shellSubview = await direct.locator('.greed-island-page').getAttribute('data-greed-island-active-subview');
@@ -122,7 +122,7 @@ try {
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   await record('Mobile module drawer stays contained', mobile, async () => {
-    await mobile.goto(`${base}/#/series/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+    await mobile.goto(`${base}/story/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
     await waitForModule(mobile, 'home');
     await mobile.locator('.gi-app__mobile-menu').click();
     const state = await mobile.evaluate(() => {
