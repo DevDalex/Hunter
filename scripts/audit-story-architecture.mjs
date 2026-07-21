@@ -13,6 +13,12 @@ import {
 } from '../architecture/storyArchitecture.mjs';
 import { storyArcPages } from '../src/data/storyArcPages.js';
 import { storyArcArtwork } from '../src/data/storyArcArtwork.js';
+import {
+  volumeZeroChapters,
+  volumeZeroGallery,
+  volumeZeroPeople,
+  volumeZeroSources,
+} from '../src/data/volumeZero.js';
 import { parseCleanRoute, routeToCleanPath } from '../src/lib/appRouter.js';
 import { routeManifest, seriesRoutes } from '../src/data/routeManifest.js';
 
@@ -46,6 +52,11 @@ assert(successionStorySubpages.length === 7 && unique(successionStorySubpages.ma
 assert(storyUtilityDestinations.length === 3, 'the three Story utility destinations must remain available');
 assert(storyArchitectureAcceptance.length === 10, 'the architecture lock must retain ten acceptance statements');
 
+assert(volumeZeroChapters.length === 2 && volumeZeroChapters.every((chapter) => chapter.scenes.length >= 6), 'Volume 0 needs two complete chapter studies');
+assert(volumeZeroPeople.length === 3 && volumeZeroPeople.map((item) => item.name).join('|') === 'Kurapika|Pairo|Sheila', 'Volume 0 must keep its three-person emotional center');
+assert(volumeZeroGallery.length >= 8, 'Volume 0 needs a curated scene archive');
+assert(volumeZeroSources.length >= 8 && volumeZeroSources.every((item) => isApprovedSourceUrl(item.href)), 'Volume 0 needs direct Hunterpedia sources');
+
 assert(routeToCleanPath('series') === '/story', 'Story hub route changed');
 for (const entry of storyEntries) {
   assert(routeToCleanPath('series', entry.id) === entry.route, `${entry.shortTitle} clean route must remain live`);
@@ -59,13 +70,20 @@ const app = await readFile(path.resolve('src/App.jsx'), 'utf8');
 const seriesWorkspace = await readFile(path.resolve('src/components/SeriesWorkspace.jsx'), 'utf8');
 const arcPage = await readFile(path.resolve('src/components/ArcPage.jsx'), 'utf8');
 const storyHub = await readFile(path.resolve('src/components/StoryHub.jsx'), 'utf8');
+const volumeZeroPage = await readFile(path.resolve('src/components/VolumeZeroPage.jsx'), 'utf8');
 const server = await readFile(path.resolve('server/index.js'), 'utf8');
 assert(app.includes('onPrefetch={preloadRoute}'), 'Story workspace must receive route prefetch support');
-assert(seriesWorkspace.includes('storyArcIds.has(routeTarget)') && seriesWorkspace.includes('<ArcPage'), 'SeriesWorkspace must route each arc to the dedicated renderer');
+assert(seriesWorkspace.includes('storyArcIds.has(routeTarget)') && seriesWorkspace.includes('<ArcPage'), 'SeriesWorkspace must route each standard arc to the dedicated renderer');
+assert(seriesWorkspace.includes("routeTarget === 'volume-0'") && seriesWorkspace.includes('<VolumeZeroPage'), 'Volume 0 must bypass the generic arc renderer');
 assert(seriesWorkspace.includes('<StoryHub') && !seriesWorkspace.includes('StoryFoundationLayout'), 'the Story hub must replace the old shared foundation shell');
 for (const section of ['context', 'premise', 'chronology', 'characters', 'factions', 'locations', 'nen', 'conflicts', 'objects', 'themes', 'changes', 'ending', 'transition', 'adaptation', 'records', 'sources']) {
   assert(arcPage.includes(`id="${section}"`), `ArcPage is missing the ${section} section`);
 }
+for (const section of ['overview', 'part-one', 'part-two', 'people', 'settlement', 'examination', 'promise', 'aftermath', 'sources']) {
+  assert(volumeZeroPage.includes(`id="${section}"`), `VolumeZeroPage is missing the ${section} destination`);
+}
+assert(volumeZeroPage.includes('The Scarlet Eyes are not presented here as a Nen ability.'), 'Volume 0 must distinguish the Scarlet Eyes from Nen');
+assert(volumeZeroPage.includes('<details className="v0-aftermath__details">'), 'graphic source context must remain collapsed by default');
 assert(arcPage.includes('storyArcArtworkById') && storyHub.includes('storyArcArtworkById'), 'both dedicated arc heroes and Story directory cards must use the arc-artwork registry');
 assert(storyHub.includes('Nine dedicated destinations') && storyHub.includes('Story reference tools'), 'StoryHub must separate arc routes from utility pages');
 assert(server.includes("fallbackUrl.pathname = '/index.html'"), 'static worker must keep direct-reload fallback');
@@ -74,12 +92,15 @@ for (const file of [
   'docs/STORY-ARCHITECTURE.md',
   'src/data/storyArcPages.js',
   'src/data/storyArcArtwork.js',
+  'src/data/volumeZero.js',
   'src/components/ArcPage.jsx',
   'src/components/ArcPage.css',
   'src/components/StoryArcArtwork.css',
   'src/components/StoryHub.jsx',
   'src/components/StoryHub.css',
   'src/components/StoryUtilities.css',
+  'src/components/VolumeZeroPage.jsx',
+  'src/components/VolumeZeroPage.css',
 ]) await access(path.resolve(file));
 
-console.log(`Story architecture audit passed: nine dedicated arc routes, nine arc-specific artwork records, sixteen arc sections plus hero, three separate utilities, preserved Succession subpages, clean routing, direct reload fallback, and retired Notebook route.`);
+console.log(`Story architecture audit passed: nine dedicated arc routes, a purpose-built Volume 0 memory-book experience, nine arc-specific artwork records, sixteen standard arc sections plus hero, three separate utilities, preserved Succession subpages, clean routing, direct reload fallback, and retired Notebook route.`);
