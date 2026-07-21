@@ -63,7 +63,7 @@ const record = async (name, page, test) => {
 };
 
 const openGreedIsland = async (page, base) => {
-  await page.goto(`${base}/#/story/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.goto(`${base}/#/series/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
   await page.waitForSelector('.greed-island-page', { timeout: 12_000 });
   await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 }).catch(() => {});
 };
