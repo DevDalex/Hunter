@@ -2,20 +2,15 @@ import { useMemo, useState } from 'react';
 import {
   ArrowLeft,
   ArrowRight,
-  BadgeCheck,
   BookOpen,
-  Clock3,
   ExternalLink,
   Filter,
   Flag,
   MapPinned,
   Search,
   ShieldCheck,
-  Skull,
-  Target,
   Trophy,
   Users,
-  Utensils,
 } from 'lucide-react';
 import { chapters } from '../data/chapters';
 import {
@@ -39,6 +34,7 @@ import {
 } from '../data/hunterExam';
 import SafeImage from './SafeImage';
 import './HunterExamPage.css';
+import './HunterExamPageContrast.css';
 
 const localNavigation = [
   ['overview', 'Overview'],
@@ -115,7 +111,7 @@ function ExamRoute() {
     <SectionHeading number={2} kicker="Complete examination course" title="The tests begin before the advertised exam site.">
       Preliminary scouts control access; the five formal phases begin only after candidate numbers are assigned.
     </SectionHeading>
-    <ol id="he-route-title">{hunterExamRoute.map(([place, note], index) => <li key={place}>
+    <ol id="he-route-title" tabIndex="0" aria-label="Scrollable Hunter Exam route">{hunterExamRoute.map(([place, note], index) => <li key={place}>
       <i>{String(index + 1).padStart(2, '0')}</i><div><strong>{place}</strong><p>{note}</p></div>
     </li>)}</ol>
     <div className="he-preliminary-grid">{hunterExamPreliminary.map((item) => <article key={item.host}>
@@ -160,7 +156,7 @@ function BadgeMatrix() {
     <PhaseNumbers phase={phase} />
     <div className="he-points"><article><b>3</b><span>Own badge</span></article><article><b>3</b><span>Assigned target</span></article><article><b>1</b><span>Any other badge</span></article><article><b>6</b><span>Points required</span></article></div>
     <div className="he-badge-matrix">
-      <div className="he-badge-matrix__grid" role="list" aria-label="Twenty-four Zevil Island participants">{phaseFourApplicants.map((item) => <button type="button" className={`${selected.badge === item.badge ? 'is-active' : ''} is-${statusClass(item.result)}`} onClick={() => setSelectedBadge(item.badge)} aria-pressed={selected.badge === item.badge} key={item.badge}><i>#{item.badge}</i><strong>{item.name}</strong><span>{item.result}</span><small>{item.points} pts</small></button>)}</div>
+      <div className="he-badge-matrix__grid" aria-label="Twenty-four Zevil Island participants">{phaseFourApplicants.map((item) => <button type="button" className={`${selected.badge === item.badge ? 'is-active' : ''} is-${statusClass(item.result)}`} onClick={() => setSelectedBadge(item.badge)} aria-pressed={selected.badge === item.badge} key={item.badge}><i>#{item.badge}</i><strong>{item.name}</strong><span>{item.result}</span><small>{item.points} pts</small></button>)}</div>
       <aside><span>Applicant #{selected.badge}</span><h3>{selected.name}</h3><dl><div><dt>Assigned target</dt><dd>{selected.target}</dd></div><div><dt>Final points</dt><dd>{selected.points}</dd></div><div><dt>Badges recorded</dt><dd>{selected.badges}</dd></div><div><dt>Outcome</dt><dd>{selected.status}</dd></div></dl></aside>
     </div>
   </section>;
