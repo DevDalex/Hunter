@@ -3,9 +3,9 @@ import './EtaDialogueStage.css';
 
 const ETA_ASSETS = Object.freeze({
   room: '/media/greed-island/eta/eta-tutorial-room.webp',
-  open: '/media/greed-island/eta/eta-open.webp',
   closed: '/media/greed-island/eta/eta-closed.webp',
-  blink: '/media/greed-island/eta/eta-blink.webp',
+  mouthPatch: '/media/greed-island/eta/eta-mouth-open-patch.webp',
+  blinkPatch: '/media/greed-island/eta/eta-blink-patch.webp',
   bubble: '/media/greed-island/eta/eta-dialogue-bubble.webp',
 });
 
@@ -104,14 +104,6 @@ export default function EtaDialogueStage({ lesson, announcement, onAdvance }) {
     return () => window.clearTimeout(blinkRef.current);
   }, [isTyping, reducedMotion, fullText]);
 
-  const sprite = reducedMotion
-    ? ETA_ASSETS.closed
-    : isTyping
-      ? (mouthOpen ? ETA_ASSETS.open : ETA_ASSETS.closed)
-      : blinking
-        ? ETA_ASSETS.blink
-        : ETA_ASSETS.closed;
-
   const state = reducedMotion ? 'reduced-motion' : isTyping ? 'speaking' : blinking ? 'blink' : 'idle';
   const visibleText = fullText.slice(0, visibleCount);
 
@@ -130,13 +122,11 @@ export default function EtaDialogueStage({ lesson, announcement, onAdvance }) {
     <div className="gi-eta-scene__scanlines" aria-hidden="true" />
     <div className="gi-eta-scene__floor-glow" aria-hidden="true" />
 
-    <img
-      className="gi-eta-scene__sprite"
-      src={sprite}
-      alt="Pixel-art Eta seated at the Greed Island tutorial console"
-      data-eta-sprite
-      draggable="false"
-    />
+    <div className="gi-eta-scene__sprite" data-eta-sprite>
+      <img src={ETA_ASSETS.closed} alt="Pixel-art Eta seated at the Greed Island tutorial console" draggable="false" />
+      <img className={`gi-eta-scene__expression gi-eta-scene__expression--mouth${mouthOpen && isTyping ? ' is-visible' : ''}`} src={ETA_ASSETS.mouthPatch} alt="" aria-hidden="true" draggable="false" />
+      <img className={`gi-eta-scene__expression gi-eta-scene__expression--blink${blinking && !isTyping ? ' is-visible' : ''}`} src={ETA_ASSETS.blinkPatch} alt="" aria-hidden="true" draggable="false" />
+    </div>
 
     <button
       type="button"
