@@ -14,15 +14,15 @@ const EXPECTED_PAYLOAD_LENGTH = 112132;
 const EXPECTED_ARCHIVE_SHA256 = '06e324157a570545923a7c80b9db38fc24b13bbd33c6d95fd9cb566983209c5d';
 
 const stagedSegments = [
-  ['00.part', 'raw', 14000, 'H4sIAAAAAAAAA+z9Y8xwPfg9'],
-  ['01a.part', 'raw', 2000, '2rKnn2kMAjDoed1UN0Rp'],
-  ['01b.part', 'raw', 4000, 'uEmgH9IxY1Gm4WlXqDtb'],
-  ['01c.js', 'module', 8000, 'BI1uJ9cMoLg28FjgdRTW'],
-  ['02.js', 'module', 14000, 'TtlGDzJU8UluxxMpAIrF'],
-  ['03a.js', 'module', 18000, 'PMmUZxCHoRZGSlGzKEpd'],
-  ['03b.js', 'module', 18000, 'ARd/OTO2sdZrJGMHxd8j'],
-  ['03c.js', 'module', 18000, 'rc4hgNopTH2jl6d3ky+G'],
-  ['03d.js', 'module', 16132, 'qdnr9zWjGK5pwMXSEk3a'],
+  ['00.part', 'raw', 14000, 'H4sIAAAAAAAAA+z9Y8xwPfg9', '8aebea480f12148ea227d9674f8fb772ea2f5e37dcd9b4ce2c2e183270fb169b'],
+  ['01a.part', 'raw', 2000, '2rKnn2kMAjDoed1UN0Rp', '491d600f15bfbc091d4e71f478317ee3e2711965ab3038b212c45eb71ff3cc60'],
+  ['01b.part', 'raw', 4000, 'uEmgH9IxY1Gm4WlXqDtb', 'dc9a5e352aa55496fce27525a06aaf01ea7d2a72133532988d7dc622a1172873'],
+  ['01c.js', 'module', 8000, 'BI1uJ9cMoLg28FjgdRTW', '0edf21451b87b48749c43824ea994311ba68104c1ca402265b74f817961e24b7'],
+  ['02.js', 'module', 14000, 'TtlGDzJU8UluxxMpAIrF', '6ed46729af3cf579fc56f21547502082e108332a201584d97be83d1cb893f14a'],
+  ['03a.js', 'module', 18000, 'PMmUZxCHoRZGSlGzKEpd', '4b8bf0cc4d4ffdb0c07341c35c5b01600b958a16abbdebbabc1fa2411f057b15'],
+  ['03b.js', 'module', 18000, 'ARd/OTO2sdZrJGMHxd8j', '137c0cd18685b0f95060ac6e5e88304b9b7719279f9483089499706cbfe0207b'],
+  ['03c.js', 'module', 18000, 'rc4hgNopTH2jl6d3ky+G', '18abc36e9bd867adba44e8fba776630e3fecc707ef311c1ffdb9fa9a4a7f67a7'],
+  ['03d.js', 'module', 16132, 'qdnr9zWjGK5pwMXSEk3a', 'e4d77ccc834bd9b27c57858b70ccf348828832f05ed396c559a73ba731ec0fe2'],
 ];
 
 const expectedAssets = Object.freeze({
@@ -84,7 +84,7 @@ async function readStagedValue(fileName, type) {
 
 async function readPayload() {
   const chunks = [];
-  for (const [fileName, type, take, expectedStart] of stagedSegments) {
+  for (const [fileName, type, take, expectedStart, expectedDigest] of stagedSegments) {
     const value = await readStagedValue(fileName, type);
     if (!value.startsWith(expectedStart)) {
       throw new Error(`${fileName} does not begin at its canonical Eta archive boundary.`);
@@ -92,7 +92,12 @@ async function readPayload() {
     if (value.length < take) {
       throw new Error(`${fileName} contains ${value.length} characters but ${take} are required.`);
     }
-    chunks.push(value.slice(0, take));
+    const chunk = value.slice(0, take);
+    const digest = sha256(Buffer.from(chunk, 'utf8'));
+    if (digest !== expectedDigest) {
+      throw new Error(`${fileName} canonical range digest mismatch: expected ${expectedDigest}, received ${digest}.`);
+    }
+    chunks.push(chunk);
   }
   return chunks.join('');
 }
