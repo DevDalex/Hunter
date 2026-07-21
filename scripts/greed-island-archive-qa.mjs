@@ -109,9 +109,9 @@ try {
     await bluePlanet.waitFor();
     await bluePlanet.click();
     await archive.locator('.gi-card-archive__record h3').filter({ hasText: 'Blue Planet' }).waitFor();
-    const blueRecord = await archive.locator('.gi-card-archive__record').innerText();
-    if (!blueRecord.includes('Unknown in source')) throw new Error('Blue Planet acquisition is not identified as explicitly unknown');
-    if (!blueRecord.includes('Ch. 184') || !blueRecord.includes('Ch. 185') || !blueRecord.includes('Ep. 75')) throw new Error('Blue Planet story mapping is incomplete');
+    const blueRecord = (await archive.locator('.gi-card-archive__record').innerText()).toLowerCase();
+    if (!blueRecord.includes('unknown in source')) throw new Error('Blue Planet acquisition is not identified as explicitly unknown');
+    if (!blueRecord.includes('ch. 184') || !blueRecord.includes('ch. 185') || !blueRecord.includes('ep. 75')) throw new Error('Blue Planet story mapping is incomplete');
     if (!blueRecord.includes('gift from space')) throw new Error('Blue Planet verified effect is missing');
     await assertLocalCardImage(desktop);
 
@@ -121,8 +121,8 @@ try {
     await paladin.waitFor();
     await paladin.click();
     await archive.locator('.gi-card-archive__check input').check();
-    const paladinRecord = await archive.locator('.gi-card-archive__record').innerText();
-    if (!paladinRecord.includes('Verified') || !paladinRecord.includes('Gon Freecss')) throw new Error('Paladin story evidence is incomplete');
+    const paladinRecord = (await archive.locator('.gi-card-archive__record').innerText()).toLowerCase();
+    if (!paladinRecord.includes('verified') || !paladinRecord.includes('gon freecss')) throw new Error('Paladin story evidence is incomplete');
     if (await archive.locator('a', { hasText: 'Open story source' }).count() !== 1) throw new Error('Card-specific story source is missing');
     if (await archive.locator('a', { hasText: 'Table source' }).count() !== 1) throw new Error('Archive table attribution is missing');
   });
