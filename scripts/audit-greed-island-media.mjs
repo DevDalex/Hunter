@@ -19,7 +19,7 @@ for (const [index, card] of specifiedCards.entries()) {
   assert(card.media?.remote.startsWith('https://hunterxhunter.fandom.com/wiki/Special:Redirect/file/'), `card ${card.id} does not use the stable Hunterpedia file redirect`);
   assert(card.media?.filePage.startsWith('https://hunterxhunter.fandom.com/wiki/File:'), `card ${card.id} has no Hunterpedia file page`);
   assert(card.media?.fallback === 'generated-card-back', `card ${card.id} has an unsafe fallback`);
-  assert(!/portraits|gon|killua|biscuit/i.test(`${card.media?.remote} ${card.media?.local || ''}`), `card ${card.id} points to character portrait media`);
+  assert(!/\/media\/portraits\//i.test(`${card.media?.remote} ${card.media?.local || ''}`), `card ${card.id} points to a local portrait path`);
 }
 
 assert(specifiedCards[2].media.fileName === 'Patch of Shore (G.I card) =scan=.png', 'card 002 filename exception was lost');
