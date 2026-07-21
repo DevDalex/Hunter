@@ -60,9 +60,9 @@ const record = async (name, page, test) => {
   }
 };
 
-const openCompletion = async (page, base) => {
-  await page.goto(`${base}/#/series/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-  await page.waitForSelector('.gi-completion', { timeout: 15_000 });
+const openCompletion = async (page, base, collection = 'quiz') => {
+  await page.goto(`${base}/#/series/greed-island/completion/${collection}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.waitForSelector(`.gi-completion[data-completion-collection="${collection}"]`, { timeout: 15_000 });
   await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 }).catch(() => {});
   await page.locator('.gi-completion').scrollIntoViewIfNeeded();
 };
@@ -87,11 +87,12 @@ const base = `http://127.0.0.1:${server.address().port}`;
 
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await record('Completion quiz and reward sequence', desktop, async () => {
-    await openCompletion(desktop, base);
-    const completion = desktop.locator('.gi-completion');
+  await record('Completion quiz and reward direct routes', desktop, async () => {
+    await openCompletion(desktop, base, 'quiz');
+    let completion = desktop.locator('.gi-completion');
     const metrics = await completion.locator('.gi-completion__metrics').innerText();
-    if (!metrics.includes('5') || !metrics.includes('3') || !metrics.includes('6')) throw new Error(`Completion metrics are incomplete: ${metrics}`);
+    if (!metrics.includes('5') || !metrics.includes('3') || !metrics.includes('4')) throw new Error(`Completion metrics are incomplete: ${metrics}`);
+    if (await completion.locator('.gi-completion-rewards, .gi-completion-route, .gi-completion-adaptation, .gi-completion-release').count()) throw new Error('Inactive completion collections remain mounted on the quiz route');
 
     const board = await completion.locator('.gi-completion-quiz__board').innerText();
     if (!board.includes('001–099') || !board.includes('100') || !board.includes('87/100') || !board.includes('000')) throw new Error('Quiz board does not expose the verified completion facts');
@@ -100,7 +101,10 @@ try {
     const boundaryText = (await completion.locator('.gi-completion-record').innerText()).toLowerCase();
     if (!boundaryText.includes('does not invent') || !boundaryText.includes('100 questions')) throw new Error('Quiz transcript boundary is not visible');
 
-    await completion.locator('[data-completion-tab="rewards"]').click();
+    await desktop.goto(`${base}/#/series/greed-island/completion/rewards`, { waitUntil: 'domcontentloaded' });
+    await desktop.waitForSelector('.gi-completion[data-completion-collection="rewards"]');
+    completion = desktop.locator('.gi-completion');
+    if (await completion.locator('.gi-completion-quiz, .gi-completion-route, .gi-completion-adaptation, .gi-completion-release').count()) throw new Error('Inactive completion collections remain mounted on the rewards route');
     await completion.locator('[data-reward-step="paladins-necklace-conversion"]').click();
     const rewardText = (await completion.locator('.gi-completion-rewards').innerText()).toLowerCase();
     if (!rewardText.includes('paladin') || !rewardText.includes('plot of beach') || !rewardText.includes('accompany') || !rewardText.includes('1039')) throw new Error('Reward sequence does not expose Paladin’s Necklace / Accompany route');
@@ -109,11 +113,11 @@ try {
   await desktop.close();
 
   const routePage = await browser.newPage({ viewport: { width: 1366, height: 920 } });
-  await record('Post-clear route fork and adaptation archive', routePage, async () => {
-    await openCompletion(routePage, base);
-    const completion = routePage.locator('.gi-completion');
+  await record('Post-clear route fork and adaptation direct routes', routePage, async () => {
+    await openCompletion(routePage, base, 'route');
+    let completion = routePage.locator('.gi-completion');
+    if (await completion.locator('.gi-completion-quiz, .gi-completion-rewards, .gi-completion-adaptation, .gi-completion-release').count()) throw new Error('Inactive completion collections remain mounted on the route-fork route');
 
-    await completion.locator('[data-completion-tab="route"]').click();
     await completion.locator('[data-route-choice="magnetic-force-to-ging"]').click();
     const magneticText = (await completion.locator('.gi-completion-route').innerText()).toLowerCase();
     if (!magneticText.includes('magnetic force') || !magneticText.includes('ging') || !magneticText.includes('one-on-one')) throw new Error('Magnetic Force route to Ging is incomplete');
@@ -123,7 +127,10 @@ try {
     if (!accompanyText.includes('accompany') || !accompanyText.includes('kite') || !accompanyText.includes('killua')) throw new Error('Accompany route to Kite is incomplete');
     if (!accompanyText.includes('chimera ant')) throw new Error('Kite handoff does not connect to the next route');
 
-    await completion.locator('[data-completion-tab="adaptation"]').click();
+    await routePage.goto(`${base}/#/series/greed-island/completion/adaptation`, { waitUntil: 'domcontentloaded' });
+    await routePage.waitForSelector('.gi-completion[data-completion-collection="adaptation"]');
+    completion = routePage.locator('.gi-completion');
+    if (await completion.locator('.gi-completion-quiz, .gi-completion-rewards, .gi-completion-route, .gi-completion-release').count()) throw new Error('Inactive completion collections remain mounted on the adaptation route');
     await completion.locator('[data-adaptation-record="manga-chapter-185"]').click();
     const adaptationText = (await completion.locator('.gi-completion-adaptation').innerText()).toLowerCase();
     if (!adaptationText.includes('chapter 185') || !adaptationText.includes('elena') || !adaptationText.includes('route-fork')) throw new Error('Chapter 185 adaptation record is incomplete');
@@ -131,16 +138,14 @@ try {
   await routePage.close();
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Completion release review mobile containment and reduced motion', mobile, async () => {
-    await openCompletion(mobile, base);
+  await record('Completion quiz mobile containment and reduced motion', mobile, async () => {
+    await openCompletion(mobile, base, 'quiz');
     const completion = mobile.locator('.gi-completion');
-    await completion.locator('[data-completion-tab="release"]').click();
-    const releaseText = (await completion.locator('.gi-completion-release').innerText()).toLowerCase();
-    if (!releaseText.includes('full browser qa') || !releaseText.includes('deployment') || !releaseText.includes('not called live')) throw new Error('Release review gates are incomplete');
+    if (await completion.locator('[data-completion-tab="release"], .gi-completion-release').count()) throw new Error('Development release gate remains visible in the story completion module');
 
-    await completion.locator('.gi-completion__search input').fill('deployment');
+    await completion.locator('.gi-completion__search input').fill('87');
     const filtered = (await completion.locator('.gi-completion__filters').innerText()).toLowerCase();
-    if (!filtered.includes('1 matching release review records')) throw new Error(`Release search did not isolate deployment gate: ${filtered}`);
+    if (!filtered.includes('matching completion quiz records')) throw new Error(`Quiz search did not remain scoped to the quiz route: ${filtered}`);
 
     const state = await mobile.evaluate(() => {
       const completion = document.querySelector('.gi-completion');
