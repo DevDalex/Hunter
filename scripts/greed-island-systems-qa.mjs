@@ -60,9 +60,9 @@ const record = async (name, page, test) => {
   }
 };
 
-const openSystems = async (page, base) => {
-  await page.goto(`${base}/#/series/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-  await page.waitForSelector('.gi-systems', { timeout: 15_000 });
+const openSystems = async (page, base, view = 'map') => {
+  await page.goto(`${base}/#/series/greed-island/island/${view}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.waitForSelector(`.gi-systems[data-island-system-view="${view}"]`, { timeout: 15_000 });
   await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 }).catch(() => {});
   await page.locator('.gi-systems').scrollIntoViewIfNeeded();
 };
@@ -87,10 +87,11 @@ const base = `http://127.0.0.1:${server.address().port}`;
 
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await record('Island map, locations, and quests', desktop, async () => {
-    await openSystems(desktop, base);
+  await record('Island map and location route', desktop, async () => {
+    await openSystems(desktop, base, 'map');
     const systems = desktop.locator('.gi-systems');
     if (await systems.locator('.gi-systems-map button').count() !== 9) throw new Error('Island map does not expose 9 locations/facilities');
+    if (await systems.locator('.gi-systems-quests, .gi-systems-player, .gi-systems-gm').count()) throw new Error('Inactive island system views remain mounted on the map route');
     const metrics = await systems.locator('.gi-systems__metrics').innerText();
     if (!metrics.includes('9') || !metrics.includes('8') || !metrics.includes('6')) throw new Error('Island system metrics are incomplete');
 
@@ -98,22 +99,29 @@ try {
     const portText = (await systems.locator('.gi-systems-location-card').innerText()).toLowerCase();
     if (!portText.includes('only port') || !portText.includes('transport ticket')) throw new Error('Port location record is incomplete');
 
-    await systems.locator('[data-quest-id="soufrabi-plot-of-beach"]').click();
-    const questText = (await systems.locator('.gi-systems-quest-record').innerText()).toLowerCase();
-    if (!questText.includes('plot of beach') || !questText.includes('razor') || !questText.includes('soufrabi')) throw new Error('Soufrabi quest record is incomplete');
-    if (await systems.locator('a', { hasText: 'Open quest source' }).count() < 1) throw new Error('Quest source link is missing');
-
     await systems.locator('.gi-systems__search input').fill('love');
     const header = await systems.locator('.gi-systems__map-header').innerText();
     if (!header.includes('1 matching map records')) throw new Error(`Location search did not narrow to Aiai: ${header}`);
   });
   await desktop.close();
 
-  const desktopControls = await browser.newPage({ viewport: { width: 1366, height: 920 } });
-  await record('Player Binder and Game Master controls', desktopControls, async () => {
-    await openSystems(desktopControls, base);
-    const systems = desktopControls.locator('.gi-systems');
+  const quests = await browser.newPage({ viewport: { width: 1366, height: 920 } });
+  await record('Quest route isolation and source records', quests, async () => {
+    await openSystems(quests, base, 'quests');
+    const systems = quests.locator('.gi-systems');
+    if (await systems.locator('.gi-systems-map, .gi-systems-player, .gi-systems-gm').count()) throw new Error('Map, players, or Game Master controls remain mounted on the quest route');
+    await systems.locator('[data-quest-id="soufrabi-plot-of-beach"]').click();
+    const questText = (await systems.locator('.gi-systems-quest-record').innerText()).toLowerCase();
+    if (!questText.includes('plot of beach') || !questText.includes('razor') || !questText.includes('soufrabi')) throw new Error('Soufrabi quest record is incomplete');
+    if (await systems.locator('a', { hasText: 'Open quest source' }).count() < 1) throw new Error('Quest source link is missing');
+  });
+  await quests.close();
 
+  const desktopControls = await browser.newPage({ viewport: { width: 1366, height: 920 } });
+  await record('Player Binder and Game Master direct routes', desktopControls, async () => {
+    await openSystems(desktopControls, base, 'players');
+    let systems = desktopControls.locator('.gi-systems');
+    if (await systems.locator('.gi-systems-map, .gi-systems-quests, .gi-systems-gm').count()) throw new Error('Inactive island systems remain mounted on the players route');
     await systems.locator('.gi-systems-player__controls label').filter({ hasText: 'Known record' }).locator('select').selectOption('genthru');
     await systems.locator('.gi-systems-player__controls label').filter({ hasText: 'Binder system' }).locator('select').selectOption('attack-risk');
     const playerText = (await systems.locator('.gi-systems-player').innerText()).toLowerCase();
@@ -123,6 +131,10 @@ try {
     const blockedText = (await systems.locator('.gi-systems-player__outcome').innerText()).toLowerCase();
     if (!blockedText.includes('blocks normal player-target assumptions')) throw new Error('Game Master player-target block is missing');
 
+    await desktopControls.goto(`${base}/#/series/greed-island/island/game-masters`, { waitUntil: 'domcontentloaded' });
+    await desktopControls.waitForSelector('.gi-systems[data-island-system-view="game-masters"]');
+    systems = desktopControls.locator('.gi-systems');
+    if (await systems.locator('.gi-systems-map, .gi-systems-quests, .gi-systems-player').count()) throw new Error('Inactive island systems remain mounted on the Game Masters route');
     await systems.locator('[data-gm-control="negative-card-console"]').click();
     const gmText = (await systems.locator('.gi-systems-gm__record').innerText()).toLowerCase();
     if (!gmText.includes('game master-only') || !gmText.includes('eliminate') || !gmText.includes('-003')) throw new Error('GM-only negative card console is incomplete');
@@ -134,14 +146,13 @@ try {
   await desktopControls.close();
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Island systems mobile containment and reduced motion', mobile, async () => {
-    await openSystems(mobile, base);
+  await record('Island map mobile containment and reduced motion', mobile, async () => {
+    await openSystems(mobile, base, 'map');
     const systems = mobile.locator('.gi-systems');
     await systems.locator('.gi-systems__search input').fill('limeiro');
     await systems.locator('[data-location-id="limeiro"]').click();
-    await systems.locator('[data-gm-control="list-dwun-castle"]').click();
     const mobileText = (await systems.innerText()).toLowerCase();
-    if (!mobileText.includes('limeiro') || !mobileText.includes('capital') || !mobileText.includes('list / dwun')) throw new Error('Mobile systems view did not expose Limeiro and GM castle records');
+    if (!mobileText.includes('limeiro') || !mobileText.includes('capital')) throw new Error('Mobile map view did not expose Limeiro');
 
     const state = await mobile.evaluate(() => {
       const systems = document.querySelector('.gi-systems');
