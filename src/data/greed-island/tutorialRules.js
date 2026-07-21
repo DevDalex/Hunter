@@ -27,9 +27,9 @@ export const ETA_TUTORIAL_LESSONS = Object.freeze([
   ['slots', 'Specified and Free Slots', 'Specified cards must occupy matching numbered pockets. Free and Spell cards can be stored in the 45 Free Slots.', 'cards'],
   ['ranks', 'Card ranks', 'Acquisition difficulty runs from H through SS. Rank describes difficulty and scarcity, not a universal combat-power scale.', 'cards'],
   ['limits', 'Conversion limits', 'The conversion limit caps how many copies of a card can exist at once. A full limit blocks new conversions until a copy leaves card form or save data is lost.', 'cards'],
-  ['gain', '“Gain”', 'Holding a card and saying “Gain” returns it to material form. Ordinarily, that item cannot become a card again.', 'overview'],
+  ['gain', '“Gain”', 'A newly acquired card must enter the Binder within one minute or it reverts permanently. Saying “Gain” also returns a held card to material form, ordinarily preventing it from becoming a card again.', 'overview'],
   ['targeting', 'Spell targeting', 'A Spell Card can be spoken with “On” and a target, or inserted into the Binder terminal so a target can be selected.', 'cards'],
-  ['protection', 'Protection and counters', 'Defensive, anti-attack, continuous, and versus spells can block, reflect, or protect against documented spell effects.', 'cards'],
+  ['protection', 'Protection and counters', 'When the target has the Binder open and owns a defensive spell, an Attack Spell waits 15 seconds. Defensive and counter spells can then block, reflect, or protect against documented effects.', 'cards'],
   ['completion', 'Completing the game', 'Collecting cards 001–099 opens a 100-question quiz. The highest score receives card 000, completing the 100-card set.', 'eta'],
   ['review', 'Practice and replay', 'Review the command words, slot rules, ranks, limits, spell flow, and completion sequence at any time.', 'cards'],
 ].map(([id, title, summary, sourceId], index) => Object.freeze({
