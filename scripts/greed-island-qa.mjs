@@ -100,10 +100,29 @@ const base = `http://127.0.0.1:${server.address().port}`;
 
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await record('Greed Island Binder keyboard and persistence', desktop, async () => {
+  await record('Greed Island Book keyboard, sections, and persistence', desktop, async () => {
     await openGreedIsland(desktop, base);
     await desktop.locator('.gi-book-gate button').click();
     await desktop.waitForSelector('.gi-binder-section');
+    await desktop.locator('.gi-book[data-book-state="open"]').waitFor();
+
+    await desktop.getByRole('button', { name: 'Close Greed Island Book' }).click();
+    await desktop.locator('.gi-book[data-book-state="closed"]').waitFor();
+    await desktop.getByRole('button', { name: 'Open Greed Island Book' }).click();
+    await desktop.locator('.gi-book[data-book-state="open"]').waitFor();
+
+    await desktop.getByRole('button', { name: /Free Slots/i }).click();
+    await desktop.getByRole('img', { name: 'Free Slot 01, empty' }).waitFor();
+    for (let turn = 0; turn < 4; turn += 1) await desktop.getByRole('button', { name: /Next/i }).click();
+    await desktop.getByRole('img', { name: 'Free Slot 45, empty' }).waitFor();
+    await desktop.getByRole('button', { name: /Specified/i }).click();
+
+    const book = desktop.locator('.gi-book[data-book-state="open"]');
+    await book.focus();
+    await desktop.keyboard.press('ArrowRight');
+    await desktop.locator('.gi-book__pages > header b').filter({ hasText: '010–019' }).waitFor();
+    await desktop.keyboard.press('ArrowLeft');
+    await desktop.locator('.gi-book__pages > header b').filter({ hasText: '000–009' }).waitFor();
 
     const lockedReward = desktop.getByRole('button', { name: /Specified Slot 000 locked/i });
     if (await lockedReward.count() !== 1) throw new Error('Specified Slot 000 is not visibly locked at initial state');
@@ -138,16 +157,20 @@ try {
   await desktop.close();
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Greed Island mobile and reduced motion', mobile, async () => {
+  await record('Greed Island Book mobile and reduced motion', mobile, async () => {
     await openGreedIsland(mobile, base);
     await mobile.getByRole('button', { name: /Free Exploration/i }).click();
     await mobile.waitForSelector('.gi-binder-section');
+    await mobile.getByRole('button', { name: /Free Slots/i }).click();
+    await mobile.getByRole('img', { name: 'Free Slot 01, empty' }).waitFor();
     const state = await mobile.evaluate(() => {
       const card = document.querySelector('.gi-card');
+      const book = document.querySelector('.gi-book');
       return {
         overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
         reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
         transitionDuration: card ? getComputedStyle(card).transitionDuration : '',
+        bookTransitionDuration: book ? getComputedStyle(book).transitionDuration : '',
         liveRegion: document.querySelector('.gi-eta-status')?.getAttribute('aria-live'),
       };
     });
@@ -155,8 +178,11 @@ try {
     if (!state.reducedMotion) throw new Error('reduced-motion emulation was not active');
     const durations = transitionSeconds(state.transitionDuration);
     if (!durations.length || durations.some((duration) => duration > 0.001)) throw new Error(`card transition remains ${state.transitionDuration} under reduced motion`);
+    const bookDurations = transitionSeconds(state.bookTransitionDuration);
+    if (bookDurations.some((duration) => duration > 0.001)) throw new Error(`Book transition remains ${state.bookTransitionDuration} under reduced motion`);
     if (state.liveRegion !== 'polite') throw new Error('Eta status is not exposed as a polite live region');
 
+    await mobile.getByRole('button', { name: /Specified/i }).click();
     await mobile.locator('.gi-card-tray .gi-card').filter({ hasText: 'Plot of Beach' }).click();
     await mobile.getByRole('button', { name: 'Insert held card into Specified Slot 002' }).click();
     await mobile.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
