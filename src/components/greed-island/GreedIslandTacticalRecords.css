@@ -1,0 +1,181 @@
+.gi-tactical {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid rgba(245, 183, 92, .24);
+  border-radius: 2rem;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(205, 73, 68, .17), transparent 34%),
+    radial-gradient(circle at 86% 10%, rgba(92, 142, 245, .15), transparent 28%),
+    linear-gradient(145deg, rgba(23, 18, 27, .97), rgba(9, 11, 20, .98));
+  color: #fff1dc;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .3);
+}
+
+.gi-tactical__metrics,
+.gi-tactical__tabs,
+.gi-tactical__filters,
+.gi-tactical-steps,
+.gi-tactical-bomber__layout,
+.gi-battle-grid {
+  display: grid;
+  gap: .8rem;
+}
+
+.gi-tactical__metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.gi-tactical__metrics > div {
+  min-height: 5rem;
+  padding: .95rem;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 1.1rem;
+  background: rgba(255,255,255,.06);
+}
+.gi-tactical__metrics b { display: block; font-size: clamp(1.35rem, 3vw, 2.2rem); line-height: 1; }
+.gi-tactical__metrics span,
+.gi-tactical__boundary,
+.gi-tactical__filters p,
+.gi-tactical-record header span,
+.gi-tactical-record dt,
+.gi-tactical__tabs small { color: rgba(255, 241, 220, .72); font-size: .82rem; }
+
+.gi-tactical__tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.gi-tactical__tabs button,
+.gi-tactical-steps button,
+.gi-dodgeball-court button,
+.gi-tactical-list button,
+.gi-battle-grid button,
+.gi-tactical__search,
+.gi-tactical-bomber__sim label {
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 1rem;
+  background: rgba(255,255,255,.07);
+  color: inherit;
+}
+.gi-tactical__tabs button {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: .65rem;
+  min-height: 3.75rem;
+  padding: .85rem;
+  text-align: left;
+  cursor: pointer;
+}
+.gi-tactical__tabs button.is-active,
+.gi-tactical-steps button.is-active,
+.gi-dodgeball-court button.is-active,
+.gi-tactical-list button.is-active,
+.gi-battle-grid button.is-active { border-color: rgba(245, 183, 92, .78); background: rgba(245, 183, 92, .15); }
+.gi-tactical__tabs small { justify-self: end; min-width: 1.8rem; padding: .18rem .42rem; border-radius: 999px; background: rgba(255,255,255,.12); text-align: center; }
+
+.gi-tactical__filters { grid-template-columns: minmax(14rem, 1fr) auto; align-items: center; }
+.gi-tactical__search { display: flex; align-items: center; gap: .5rem; min-height: 3.1rem; padding: .5rem .75rem; }
+.gi-tactical__search input { width: 100%; border: 0; background: transparent; color: #fff6e8; font: inherit; outline: none; }
+.gi-tactical__filters p,
+.gi-tactical__boundary { display: flex; align-items: center; gap: .45rem; margin: 0; }
+
+.gi-tactical__active,
+.gi-tactical-training,
+.gi-tactical-razor,
+.gi-tactical-bomber,
+.gi-tactical-battles,
+.gi-tactical-record,
+.gi-tactical-bomber__sim {
+  display: grid;
+  gap: .95rem;
+}
+.gi-tactical__active { padding: 1rem; border: 1px solid rgba(255,255,255,.12); border-radius: 1.35rem; background: rgba(0,0,0,.18); }
+.gi-tactical__collection-header,
+.gi-tactical-training > header,
+.gi-tactical-razor > header,
+.gi-tactical-bomber > header,
+.gi-tactical-battles > header,
+.gi-tactical-record header { display: flex; align-items: flex-start; gap: .75rem; }
+.gi-tactical__collection-header span,
+.gi-tactical-training header span,
+.gi-tactical-razor header span,
+.gi-tactical-bomber header span,
+.gi-tactical-battles header span { color: #f5b75c; font-size: .82rem; text-transform: uppercase; letter-spacing: .13em; }
+.gi-tactical__collection-header h3,
+.gi-tactical-training h3,
+.gi-tactical-razor h3,
+.gi-tactical-bomber h3,
+.gi-tactical-battles h3,
+.gi-tactical-record h3 { margin: .1rem 0 .35rem; font-size: clamp(1.25rem, 3vw, 2.15rem); }
+
+.gi-tactical-steps { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.gi-tactical-steps button { display: grid; gap: .35rem; padding: .75rem; text-align: left; cursor: pointer; }
+.gi-tactical-steps i { font-style: normal; font-weight: 900; color: #f5b75c; }
+
+.gi-dodgeball-court {
+  position: relative;
+  min-height: 18rem;
+  border: 2px solid rgba(255,255,255,.18);
+  border-radius: 1.5rem;
+  background:
+    linear-gradient(90deg, transparent calc(50% - 1px), rgba(255,255,255,.18) calc(50% - 1px), rgba(255,255,255,.18) calc(50% + 1px), transparent calc(50% + 1px)),
+    radial-gradient(circle at center, rgba(245,183,92,.1), transparent 32%),
+    rgba(255,255,255,.04);
+}
+.gi-dodgeball-court button {
+  position: absolute;
+  left: calc(8% + (var(--phase) - 1) * 15%);
+  top: calc(18% + (var(--phase) % 2) * 36%);
+  width: min(11rem, 26vw);
+  min-height: 4.5rem;
+  padding: .65rem;
+  cursor: pointer;
+  text-align: left;
+}
+.gi-dodgeball-court span { display: inline-grid; place-items: center; width: 1.8rem; height: 1.8rem; border-radius: 999px; background: rgba(245,183,92,.18); font-weight: 900; }
+.gi-dodgeball-court small { display: block; margin-top: .3rem; color: rgba(255,241,220,.76); }
+
+.gi-tactical-bomber__layout { grid-template-columns: minmax(13rem, .35fr) minmax(0, 1fr); align-items: start; }
+.gi-tactical-list { display: grid; gap: .45rem; }
+.gi-tactical-list button { min-height: 3.2rem; padding: .75rem; text-align: left; cursor: pointer; }
+.gi-tactical-bomber__sim { padding: 1rem; border: 1px solid rgba(245,183,92,.24); border-radius: 1rem; background: rgba(245,183,92,.08); }
+.gi-tactical-bomber__sim h4 { margin: 0; }
+.gi-tactical-bomber__sim label { display: flex; align-items: center; gap: .55rem; padding: .65rem .75rem; }
+.gi-tactical-bomber__sim input { width: 1.1rem; height: 1.1rem; }
+.gi-tactical-bomber__sim p { margin: 0; line-height: 1.65; }
+
+.gi-battle-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.gi-battle-grid button { display: grid; gap: .45rem; min-height: 7rem; padding: .85rem; text-align: left; cursor: pointer; }
+.gi-battle-grid strong { font-size: 1rem; }
+.gi-battle-grid span { color: rgba(255,241,220,.76); line-height: 1.45; }
+
+.gi-tactical-record { position: relative; padding: 1.1rem; border: 1px solid rgba(255,255,255,.12); border-radius: 1.25rem; background: rgba(255,255,255,.045); overflow: hidden; }
+.gi-tactical-record::before { content: ''; position: absolute; inset: 0 auto 0 0; width: .42rem; background: linear-gradient(#f5b75c, #cf514e); }
+.gi-tactical-record p { margin: 0; line-height: 1.65; }
+.gi-tactical-record dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; margin: 0; }
+.gi-tactical-record dl div { padding: .75rem; border: 1px solid rgba(255,255,255,.1); border-radius: .9rem; background: rgba(0,0,0,.16); }
+.gi-tactical-record dt { text-transform: uppercase; letter-spacing: .08em; }
+.gi-tactical-record dd { margin: .2rem 0 0; font-weight: 800; }
+.gi-tactical-tags,
+.gi-tactical-cards { display: flex; flex-wrap: wrap; gap: .45rem; }
+.gi-tactical-badge { display: inline-flex; align-items: center; gap: .25rem; padding: .35rem .55rem; border: 1px solid rgba(255,255,255,.13); border-radius: 999px; background: rgba(255,255,255,.07); font-size: .82rem; }
+.gi-tactical-badge.is-actor { border-color: rgba(107,184,255,.45); color: #d8ecff; }
+.gi-tactical-badge.is-card { border-color: rgba(245,183,92,.55); color: #ffe0a5; }
+.gi-tactical-record ol { margin: 0; padding-left: 1.2rem; line-height: 1.65; }
+.gi-tactical-counters { padding: .85rem; border-radius: 1rem; background: rgba(255,255,255,.055); }
+.gi-tactical-counters h4 { margin: 0 0 .35rem; }
+.gi-tactical-record a { color: #ffe0a5; }
+
+@media (max-width: 900px) {
+  .gi-tactical__metrics,
+  .gi-tactical__tabs,
+  .gi-tactical__filters,
+  .gi-tactical-steps,
+  .gi-tactical-bomber__layout,
+  .gi-battle-grid,
+  .gi-tactical-record dl { grid-template-columns: 1fr; }
+  .gi-tactical { border-radius: 1.35rem; padding: 1rem; }
+  .gi-dodgeball-court { display: grid; gap: .55rem; min-height: auto; padding: .75rem; }
+  .gi-dodgeball-court button { position: static; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gi-tactical *,
+  .gi-tactical *::before,
+  .gi-tactical *::after { transition-duration: .001ms !important; animation-duration: .001ms !important; }
+}
