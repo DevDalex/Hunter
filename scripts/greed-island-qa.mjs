@@ -144,9 +144,10 @@ try {
     await tutorial.locator('.gi-protection-result').filter({ hasText: 'Reflects one Attack Spell' }).waitFor();
 
     await openLesson(tutorial, 'Completing the game');
-    if (!await tutorial.locator('.gi-rule-demo--completion fieldset').isDisabled()) throw new Error('Completion quiz is not initially locked');
+    const completionQuiz = tutorial.locator('.gi-rule-demo--completion fieldset');
+    if (await completionQuiz.getAttribute('disabled') === null) throw new Error('Completion quiz is not initially locked');
     await tutorial.getByRole('button', { name: 'Complete 001–099' }).click();
-    if (await tutorial.locator('.gi-rule-demo--completion fieldset').isDisabled()) throw new Error('Completion quiz did not unlock at 99 cards');
+    if (await completionQuiz.getAttribute('disabled') !== null) throw new Error('Completion quiz did not unlock at 99 cards');
     await tutorial.getByLabel('Blue Planet').check();
     await tutorial.locator('.gi-completion-sequence div').nth(2).filter({ hasText: 'Sample complete' }).waitFor();
     await tutorial.locator('.gi-eta-course__controls button.is-primary').click();
@@ -173,54 +174,56 @@ try {
     await openGreedIsland(desktop, base);
     await desktop.locator('.gi-book-gate button').click();
     await desktop.waitForSelector('.gi-binder-section');
-    await desktop.locator('.gi-book[data-book-state="open"]').waitFor();
+    const binder = desktop.locator('.gi-binder-section');
+    await binder.locator('.gi-book[data-book-state="open"]').waitFor();
 
-    await desktop.getByRole('button', { name: 'Close Greed Island Book' }).click();
-    await desktop.locator('.gi-book[data-book-state="closed"]').waitFor();
-    await desktop.getByRole('button', { name: 'Open Greed Island Book' }).click();
-    await desktop.locator('.gi-book[data-book-state="open"]').waitFor();
+    await binder.getByRole('button', { name: 'Close Greed Island Book' }).click();
+    await binder.locator('.gi-book[data-book-state="closed"]').waitFor();
+    await binder.getByRole('button', { name: 'Open Greed Island Book' }).click();
+    await binder.locator('.gi-book[data-book-state="open"]').waitFor();
 
-    await desktop.getByRole('button', { name: /Free Slots/i }).click();
-    await desktop.getByRole('img', { name: 'Free Slot 01, empty' }).waitFor();
-    for (let turn = 0; turn < 4; turn += 1) await desktop.getByRole('button', { name: /Next/i }).click();
-    await desktop.getByRole('img', { name: 'Free Slot 45, empty' }).waitFor();
-    await desktop.getByRole('button', { name: /Specified/i }).click();
+    await binder.getByRole('button', { name: 'Free Slots', exact: true }).click();
+    await binder.getByRole('img', { name: 'Free Slot 01, empty' }).waitFor();
+    for (let turn = 0; turn < 4; turn += 1) await binder.getByRole('button', { name: /Next/i }).click();
+    await binder.getByRole('img', { name: 'Free Slot 45, empty' }).waitFor();
+    await binder.getByRole('button', { name: 'Specified', exact: true }).click();
 
-    const book = desktop.locator('.gi-book[data-book-state="open"]');
+    const book = binder.locator('.gi-book[data-book-state="open"]');
     await book.focus();
     await desktop.keyboard.press('ArrowRight');
-    await desktop.locator('.gi-book__pages > header b').filter({ hasText: '010–019' }).waitFor();
+    await binder.locator('.gi-book__pages > header b').filter({ hasText: '010–019' }).waitFor();
     await desktop.keyboard.press('ArrowLeft');
-    await desktop.locator('.gi-book__pages > header b').filter({ hasText: '000–009' }).waitFor();
+    await binder.locator('.gi-book__pages > header b').filter({ hasText: '000–009' }).waitFor();
 
-    const lockedReward = desktop.getByRole('button', { name: /Specified Slot 000 locked/i });
+    const lockedReward = binder.getByRole('button', { name: /Specified Slot 000 locked/i });
     if (await lockedReward.count() !== 1) throw new Error('Specified Slot 000 is not visibly locked at initial state');
 
-    const plotOfBeach = desktop.locator('.gi-card-tray .gi-card').filter({ hasText: 'Plot of Beach' });
+    const plotOfBeach = binder.locator('.gi-card-tray .gi-card').filter({ hasText: 'Plot of Beach' });
     await plotOfBeach.focus();
     await desktop.keyboard.press('Enter');
-    const slot002 = desktop.getByRole('button', { name: 'Insert held card into Specified Slot 002' });
+    const slot002 = binder.getByRole('button', { name: 'Insert held card into Specified Slot 002' });
     await slot002.focus();
     await desktop.keyboard.press('Enter');
-    await desktop.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
+    await binder.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
     if (await readProgress(desktop) !== 1) throw new Error('Binder progress did not advance to 1 of 100');
 
-    const card003 = desktop.locator('.gi-card-tray .gi-card').filter({ hasText: 'Pitcher of Eternal Water' });
+    const card003 = binder.locator('.gi-card-tray .gi-card').filter({ hasText: 'Pitcher of Eternal Water' });
     await card003.click();
-    await desktop.getByRole('button', { name: 'Insert held card into Specified Slot 004' }).click();
-    const etaText = await desktop.locator('.gi-eta-status').innerText();
+    await binder.getByRole('button', { name: 'Insert held card into Specified Slot 004' }).click();
+    const etaText = await binder.locator('.gi-eta-status').innerText();
     if (!etaText.includes('belongs in Specified Slot 003, not 004')) throw new Error('Eta did not reject the mismatched slot');
     if (await readProgress(desktop) !== 1) throw new Error('Invalid insertion changed Binder progress');
 
-    await desktop.locator('.gi-binder-toolbar input').fill('Blue Planet');
-    await desktop.locator('.gi-binder-toolbar form button').click();
-    await desktop.locator('.gi-book__pages > header b').filter({ hasText: '080–089' }).waitFor();
+    await binder.locator('.gi-binder-toolbar input').fill('Blue Planet');
+    await binder.locator('.gi-binder-toolbar form button').click();
+    await binder.locator('.gi-book__pages > header b').filter({ hasText: '080–089' }).waitFor();
 
     await desktop.reload({ waitUntil: 'domcontentloaded' });
     await desktop.waitForSelector('.greed-island-page');
     await desktop.locator('.gi-book-gate button').click();
-    await desktop.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
-    await desktop.getByRole('button', { name: /Reset simulation/i }).click();
+    const reloadedBinder = desktop.locator('.gi-binder-section');
+    await reloadedBinder.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
+    await reloadedBinder.getByRole('button', { name: /Reset simulation/i }).click();
     if (await readProgress(desktop) !== 0) throw new Error('Reset did not clear Binder progress');
   });
   await desktop.close();
@@ -248,8 +251,9 @@ try {
 
     await mobile.getByRole('button', { name: /Free Exploration/i }).click();
     await mobile.waitForSelector('.gi-binder-section');
-    await mobile.getByRole('button', { name: /Free Slots/i }).click();
-    await mobile.getByRole('img', { name: 'Free Slot 01, empty' }).waitFor();
+    const binder = mobile.locator('.gi-binder-section');
+    await binder.getByRole('button', { name: 'Free Slots', exact: true }).click();
+    await binder.getByRole('img', { name: 'Free Slot 01, empty' }).waitFor();
     const state = await mobile.evaluate(() => {
       const card = document.querySelector('.gi-card');
       const book = document.querySelector('.gi-book');
@@ -267,10 +271,10 @@ try {
     if (bookDurations.some((duration) => duration > 0.001)) throw new Error(`Book transition remains ${state.bookTransitionDuration} under reduced motion`);
     if (state.liveRegion !== 'polite') throw new Error('Eta status is not exposed as a polite live region');
 
-    await mobile.getByRole('button', { name: /Specified/i }).click();
-    await mobile.locator('.gi-card-tray .gi-card').filter({ hasText: 'Plot of Beach' }).click();
-    await mobile.getByRole('button', { name: 'Insert held card into Specified Slot 002' }).click();
-    await mobile.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
+    await binder.getByRole('button', { name: 'Specified', exact: true }).click();
+    await binder.locator('.gi-card-tray .gi-card').filter({ hasText: 'Plot of Beach' }).click();
+    await binder.getByRole('button', { name: 'Insert held card into Specified Slot 002' }).click();
+    await binder.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
   });
   await mobile.close();
 } finally {
