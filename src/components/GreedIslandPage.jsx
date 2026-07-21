@@ -58,7 +58,7 @@ function GreedIslandHero({ onNavigate, mode, setMode, summoned, setSummoned }) {
       </dl>
       <div className="gi-mode-switch" aria-label="Greed Island entry mode">
         <button type="button" className={mode === 'story' ? 'is-active' : ''} onClick={() => setMode('story')} aria-pressed={mode === 'story'}><BookOpen size={16} /> Story Mode</button>
-        <button type="button" className={mode === 'free' ? 'is-active' : ''} onClick={() => setMode('free')} aria-pressed={mode === 'free'}><Gamepad2 size={16} /> Free Exploration</button>
+        <button type="button" className={mode === 'free' ? 'is-active' : ''} onClick={() => { setMode('free'); setSummoned(true); }} aria-pressed={mode === 'free'}><Gamepad2 size={16} /> Free Exploration</button>
       </div>
       <button type="button" className="gi-book-command" onClick={() => setSummoned((value) => !value)} aria-pressed={summoned}>
         <span>{summoned ? 'Close Binder' : 'Book'}</span>
