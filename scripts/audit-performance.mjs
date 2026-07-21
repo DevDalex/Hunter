@@ -48,6 +48,7 @@ const storyDetailBoundaryKeys = [
   'src/components/StoryHub.jsx',
   'src/components/ArcPage.jsx',
   'src/components/VolumeZeroPage.jsx',
+  'src/components/HunterExamPage.jsx',
 ];
 const searchShardKeys = [
   'src/data/archiveSearch.series.js',
@@ -63,8 +64,8 @@ assert(startupJs <= budgets.startupJs, `startup JavaScript closure is ${startupJ
 assert(startupCss <= budgets.startupCss, `startup stylesheet is ${startupCss} bytes; budget is ${formatPerformanceBudget(budgets.startupCss)}`);
 assert(largestJavascript.bytes <= budgets.javascriptChunk, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is ${formatPerformanceBudget(budgets.javascriptChunk)}`);
 assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 16 route/search UI boundaries must remain dynamic entries');
-assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Story directory, standard arc renderer, and Volume 0 memory book must remain separate on-demand chunks');
-assert(dynamicEntries.length === 22, `expected 16 direct boundaries, three Story experience boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
+assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Story directory, standard arc renderer, Volume 0, and Hunter Exam must remain separate on-demand chunks');
+assert(dynamicEntries.length === 23, `expected 16 direct boundaries, four Story experience boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
 assert(searchShardKeys.every((key) => manifest[key]?.isDynamicEntry), 'the story, Succession, and reference search indexes must remain separate dynamic entries');
 
 const homeHighlights = await readFile(path.join(root, 'src/data/homeHighlights.js'), 'utf8');
@@ -84,8 +85,9 @@ assert((routePreload.match(/\(\) => import\(/g) || []).length === 16, 'the route
 assert(
   seriesWorkspace.includes("lazy(() => import('./StoryHub'))")
     && seriesWorkspace.includes("lazy(() => import('./ArcPage'))")
-    && seriesWorkspace.includes("lazy(() => import('./VolumeZeroPage'))"),
-  'SeriesWorkspace must keep the Story directory, standard arc renderer, and Volume 0 experience on demand',
+    && seriesWorkspace.includes("lazy(() => import('./VolumeZeroPage'))")
+    && seriesWorkspace.includes("lazy(() => import('./HunterExamPage'))"),
+  'SeriesWorkspace must keep the Story directory, standard arc renderer, Volume 0, and Hunter Exam on demand',
 );
 assert((archiveSearch.match(/import\('\.\/archiveSearch\.(?:series|succession|reference)'\)/g) || []).length === 3, 'the archive search loader must own three domain data shards');
 assert(!/from ['"]\.\.\/data\/(?:chapters|encyclopedia|successionDossier|successionRoster|worldMap)['"]/.test(archiveSearchComponent), 'ArchiveSearch.jsx statically imports a heavy archive dataset');
