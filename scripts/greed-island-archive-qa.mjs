@@ -61,7 +61,7 @@ const record = async (name, page, test) => {
 };
 
 const openArchive = async (page, base) => {
-  await page.goto(`${base}/#/series/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.goto(`${base}/#/series/greed-island/cards/specified`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
   await page.waitForSelector('.gi-card-archive', { timeout: 15_000 });
   await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 }).catch(() => {});
 };
@@ -97,15 +97,19 @@ const base = `http://127.0.0.1:${server.address().port}`;
 
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await record('Specified archive search, evidence, and local media', desktop, async () => {
+  await record('Specified archive pagination, search, evidence, and local media', desktop, async () => {
     await openArchive(desktop, base);
     const archive = desktop.locator('.gi-card-archive');
-    if (await archive.locator('.gi-card-archive__results button').count() !== 100) throw new Error('Archive does not initially expose 100 cards');
-    if (!await archive.locator('.gi-card-archive__metrics').innerText().then((text) => text.includes('100 / 100'))) throw new Error('Archive verification metric is missing');
+    if (await archive.locator('.gi-card-archive__results > div > button').count() !== 10) throw new Error('Archive does not initially expose exactly ten paginated card rows');
+    if (!await archive.locator('.gi-card-archive__metrics').innerText().then((text) => text.includes('100 / 100') && text.includes('10'))) throw new Error('Archive verification or pagination metric is missing');
+    if ((await archive.getAttribute('data-card-page')) !== '1') throw new Error('Specified archive did not begin on page 1');
+    await archive.locator('.gi-card-archive__pagination button').filter({ hasText: 'Next' }).click();
+    if ((await archive.getAttribute('data-card-page')) !== '2') throw new Error('Specified archive pagination did not advance');
+    if (await archive.locator('.gi-card-archive__results > div > button').count() !== 10) throw new Error('Specified archive page 2 does not contain ten rows');
     await assertLocalCardImage(desktop);
 
     await archive.locator('.gi-card-archive__search input').fill('Blue Planet');
-    const bluePlanet = archive.locator('.gi-card-archive__results button').filter({ hasText: 'Blue Planet' });
+    const bluePlanet = archive.locator('.gi-card-archive__results > div > button').filter({ hasText: 'Blue Planet' });
     await bluePlanet.waitFor();
     await bluePlanet.click();
     await archive.locator('.gi-card-archive__record h3').filter({ hasText: 'Blue Planet' }).waitFor();
@@ -117,7 +121,7 @@ try {
 
     await archive.locator('.gi-card-archive__search input').fill('');
     await archive.locator('label').filter({ hasText: 'Material' }).locator('select').selectOption('equipment');
-    const paladin = archive.locator('.gi-card-archive__results button').filter({ hasText: "Paladin's Necklace" });
+    const paladin = archive.locator('.gi-card-archive__results > div > button').filter({ hasText: "Paladin's Necklace" });
     await paladin.waitFor();
     await paladin.click();
     await archive.locator('.gi-card-archive__check input').check();
@@ -133,7 +137,7 @@ try {
     await openArchive(mobile, base);
     const archive = mobile.locator('.gi-card-archive');
     await archive.locator('.gi-card-archive__search input').fill('000');
-    await archive.locator('.gi-card-archive__results button').filter({ hasText: "Ruler's Blessing" }).click();
+    await archive.locator('.gi-card-archive__results > div > button').filter({ hasText: "Ruler's Blessing" }).click();
     await assertLocalCardImage(mobile);
     const state = await mobile.evaluate(() => {
       const record = document.querySelector('.gi-card-archive__record');
