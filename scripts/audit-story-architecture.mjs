@@ -12,6 +12,7 @@ import {
   successionStorySubpages,
 } from '../architecture/storyArchitecture.mjs';
 import { storyArcPages } from '../src/data/storyArcPages.js';
+import { storyArcArtwork } from '../src/data/storyArcArtwork.js';
 import { parseCleanRoute, routeToCleanPath } from '../src/lib/appRouter.js';
 import { routeManifest, seriesRoutes } from '../src/data/routeManifest.js';
 
@@ -31,7 +32,11 @@ assert(storyArcPages.every((arc) => arc.phases.length >= 3 && arc.characters.len
 assert(storyArcPages.every((arc) => arc.nen.length >= 2 && arc.conflicts.length >= 1 && arc.objects.length >= 2 && arc.themes.length >= 3), 'every arc needs Nen, conflict, object, and interpretation records');
 assert(storyArcPages.every((arc) => arc.changes.length >= 2 && arc.ending && arc.transition && arc.adaptation.length >= 2), 'every arc needs change, ending, transition, and adaptation sections');
 assert(storyArcPages.every((arc) => arc.sources.length >= 2 && arc.sources.every((item) => isApprovedSourceUrl(item.href))), 'every arc needs direct approved Hunterpedia sources');
-assert(storyArcPages.every((arc) => arc.visual?.className && arc.visual?.paper && arc.visual?.accent && arc.visual?.hero?.length), 'every arc needs its own visual identity');
+assert(storyArcPages.every((arc) => arc.visual?.className && arc.visual?.paper && arc.visual?.accent), 'every arc needs its own visual identity');
+assert(storyArcArtwork.length === 9 && unique(storyArcArtwork.map((item) => item.id)), 'all nine dedicated arc pages need unique arc-level artwork');
+assert(storyArcArtwork.every((item) => item.image && item.fallback && item.alt && item.source && isApprovedSourceUrl(item.source)), 'every arc artwork record needs media, fallback, accessible description, and approved Hunterpedia source');
+assert(storyArcArtwork.every((item) => !item.image.includes('/media/portraits/')), 'arc cover artwork must represent the arc rather than use a character portrait as its primary image');
+assert(storyArcArtwork.every((item) => storyArcPages.some((arc) => arc.id === item.id)), 'arc artwork IDs must match canonical dedicated arc pages');
 assert(storyEntries.some((item) => item.id === 'zoldyck-family' && item.type === 'editorial-story-page'), 'Zoldyck Family must remain an editorial Story page');
 assert(seriesRoutes.filter((item) => storyEntries.some((entry) => entry.id === item.target)).length === 9, 'the route manifest must expose all nine dedicated Story pages');
 assert(routeManifest.some((item) => item.view === 'series' && item.target === 'succession-contest'), 'Succession Contest must occupy the dedicated arc-page route slot');
@@ -61,17 +66,20 @@ assert(seriesWorkspace.includes('<StoryHub') && !seriesWorkspace.includes('Story
 for (const section of ['context', 'premise', 'chronology', 'characters', 'factions', 'locations', 'nen', 'conflicts', 'objects', 'themes', 'changes', 'ending', 'transition', 'adaptation', 'records', 'sources']) {
   assert(arcPage.includes(`id="${section}"`), `ArcPage is missing the ${section} section`);
 }
+assert(arcPage.includes('storyArcArtworkById') && storyHub.includes('storyArcArtworkById'), 'both dedicated arc heroes and Story directory cards must use the arc-artwork registry');
 assert(storyHub.includes('Nine dedicated destinations') && storyHub.includes('Story reference tools'), 'StoryHub must separate arc routes from utility pages');
 assert(server.includes("fallbackUrl.pathname = '/index.html'"), 'static worker must keep direct-reload fallback');
 
 for (const file of [
   'docs/STORY-ARCHITECTURE.md',
   'src/data/storyArcPages.js',
+  'src/data/storyArcArtwork.js',
   'src/components/ArcPage.jsx',
   'src/components/ArcPage.css',
+  'src/components/StoryArcArtwork.css',
   'src/components/StoryHub.jsx',
   'src/components/StoryHub.css',
   'src/components/StoryUtilities.css',
 ]) await access(path.resolve(file));
 
-console.log(`Story architecture audit passed: nine dedicated arc routes, sixteen arc sections plus hero, three separate utilities, preserved Succession subpages, clean routing, direct reload fallback, and retired Notebook route.`);
+console.log(`Story architecture audit passed: nine dedicated arc routes, nine arc-specific artwork records, sixteen arc sections plus hero, three separate utilities, preserved Succession subpages, clean routing, direct reload fallback, and retired Notebook route.`);
