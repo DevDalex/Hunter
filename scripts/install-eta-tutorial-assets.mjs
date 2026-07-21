@@ -15,7 +15,6 @@ const EXPECTED_ARCHIVE_SHA256 = '06e324157a570545923a7c80b9db38fc24b13bbd33c6d95
 
 const stagedParts = [
   ['00.part', 'raw'],
-  ['01b.part', 'raw'],
   ['01c.js', 'module'],
   ['02.js', 'module'],
   ['03a.js', 'module'],
