@@ -1,7 +1,9 @@
 import { ArrowRight, BookOpenText, Clock3, Film, LibraryBig } from 'lucide-react';
 import { storyArcPages } from '../data/storyArcPages';
+import { storyArcArtworkById } from '../data/storyArcArtwork';
 import SafeImage from './SafeImage';
 import './StoryHub.css';
+import './StoryArcArtwork.css';
 
 const utilityLinks = [
   { id: 'chronology', title: 'Complete chronology', note: 'Cross-arc events, flashbacks, and movements', icon: Clock3 },
@@ -19,26 +21,33 @@ export default function StoryHub({ onNavigate, onPrefetch }) {
 
     <section className="story-directory__arcs" aria-labelledby="story-directory-title">
       <header><span>Nine dedicated destinations</span><h2 id="story-directory-title">Choose an arc.</h2></header>
-      <div>{storyArcPages.map((arc) => <button
-        type="button"
-        className={`story-directory-card story-directory-card--${arc.visual.className}`}
-        style={{ '--story-card-accent': arc.visual.accent, '--story-card-paper': arc.visual.paper }}
-        onClick={() => onNavigate('series', arc.id)}
-        onPointerEnter={() => onPrefetch?.('series', arc.id)}
-        onFocus={() => onPrefetch?.('series', arc.id)}
-        key={arc.id}
-      >
-        <figure><SafeImage src={arc.visual.hero[0]} alt="" /></figure>
-        <div className="story-directory-card__shade" />
-        <div className="story-directory-card__copy">
-          <i>{String(arc.order).padStart(2, '0')}</i>
-          <span>{arc.status}</span>
-          <h3>{arc.title}</h3>
-          <p>{arc.premise}</p>
-          <dl><div><dt>Manga</dt><dd>{Array.isArray(arc.manga?.pageRange) ? `Ch. ${arc.manga.pageRange[0]}–${arc.manga.pageRange[1]}` : 'Two supplementary chapters'}</dd></div><div><dt>Anime</dt><dd>{arc.anime2011 ? `Ep. ${arc.anime2011.pageRange[0]}–${arc.anime2011.pageRange[1]}` : 'Manga-only'}</dd></div></dl>
-          <strong>Open arc <ArrowRight size={15} /></strong>
-        </div>
-      </button>)}</div>
+      <div>{storyArcPages.map((arc) => {
+        const artwork = storyArcArtworkById.get(arc.id);
+        const artworkStyle = {
+          '--arc-artwork-position': artwork?.position || 'center',
+          '--arc-artwork-fit': artwork?.fit || 'cover',
+        };
+        return <button
+          type="button"
+          className={`story-directory-card story-directory-card--${arc.visual.className}`}
+          style={{ '--story-card-accent': arc.visual.accent, '--story-card-paper': arc.visual.paper }}
+          onClick={() => onNavigate('series', arc.id)}
+          onPointerEnter={() => onPrefetch?.('series', arc.id)}
+          onFocus={() => onPrefetch?.('series', arc.id)}
+          key={arc.id}
+        >
+          <figure><SafeImage className="story-arc-artwork" src={artwork?.image || arc.visual.hero[0]} fallbackSrc={artwork?.fallback || arc.visual.hero[0]} alt={artwork?.alt || `${arc.title} arc artwork`} style={artworkStyle} /></figure>
+          <div className="story-directory-card__shade" />
+          <div className="story-directory-card__copy">
+            <i>{String(arc.order).padStart(2, '0')}</i>
+            <span>{arc.status}</span>
+            <h3>{arc.title}</h3>
+            <p>{arc.premise}</p>
+            <dl><div><dt>Manga</dt><dd>{Array.isArray(arc.manga?.pageRange) ? `Ch. ${arc.manga.pageRange[0]}–${arc.manga.pageRange[1]}` : 'Two supplementary chapters'}</dd></div><div><dt>Anime</dt><dd>{arc.anime2011 ? `Ep. ${arc.anime2011.pageRange[0]}–${arc.anime2011.pageRange[1]}` : 'Manga-only'}</dd></div></dl>
+            <strong>Open arc <ArrowRight size={15} /></strong>
+          </div>
+        </button>;
+      })}</div>
     </section>
 
     <section className="story-directory__utilities" aria-labelledby="story-utilities-title">
