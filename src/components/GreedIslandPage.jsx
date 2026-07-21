@@ -16,6 +16,7 @@ import GreedIslandBinder from './greed-island/GreedIslandBinder';
 import './GreedIslandPage.css';
 import './GreedIslandPageResponsive.css';
 import './greed-island/GreedIslandBook.css';
+import './greed-island/EtaTutorialReadability.css';
 
 const nextStages = [
   ['Card archive', 'Descriptions, acquisition quests, story uses, chapter and episode mappings, and local media stabilization.'],
