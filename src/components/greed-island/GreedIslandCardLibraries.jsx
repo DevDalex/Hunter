@@ -94,15 +94,23 @@ function SpellLab() {
   </section>;
 }
 
-export default function GreedIslandCardLibraries() {
-  const [collection, setCollection] = useState('spell');
+export default function GreedIslandCardLibraries({ requestedCollection, onCollectionChange }) {
+  const collections = greedIslandCardLibraryCollections;
+  const [localCollection, setLocalCollection] = useState('spell');
+  const collection = collections[requestedCollection] ? requestedCollection : localCollection;
   const [query, setQuery] = useState('');
   const [classFilter, setClassFilter] = useState('all');
   const [selectedByCollection, setSelectedByCollection] = useState({ spell: '1006', free: '100', gm: '-000' });
-  const collections = greedIslandCardLibraryCollections;
   const active = collections[collection];
   const cards = active.cards;
   const selectedId = selectedByCollection[collection];
+
+  const chooseCollection = (id) => {
+    setLocalCollection(id);
+    setClassFilter('all');
+    setQuery('');
+    onCollectionChange?.(id);
+  };
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -129,11 +137,11 @@ export default function GreedIslandCardLibraries() {
   const attackCount = spellCards.filter((card) => card.classes.includes('AS')).length;
   const defenseCount = spellCards.filter((card) => card.classes.some((code) => ['DS', 'AA', 'VS'].includes(code))).length;
 
-  return <section className="gi-card-libraries" id="card-libraries" aria-labelledby="gi-card-libraries-title">
+  return <section className="gi-card-libraries" id="card-libraries" aria-labelledby="gi-card-libraries-title" data-card-library={collection}>
     <header className="gi-section-heading">
       <span>Stage 06 · Card libraries</span>
       <h2 id="gi-card-libraries-title">Spell, Free Slot, and Game Master cards are separated and searchable.</h2>
-      <p>These records cover the non-Specified card systems that drive targeting, protection, travel, Free Slot storage, and Game Master control without mixing their rules together.</p>
+      <p>Only the selected collection is mounted. Spell simulations are not kept alive while viewing Free Slot or Game Master records.</p>
     </header>
 
     <div className="gi-card-libraries__metrics" aria-label="Greed Island card library verification summary">
@@ -148,7 +156,7 @@ export default function GreedIslandCardLibraries() {
         type="button"
         key={item.id}
         className={collection === item.id ? 'is-active' : ''}
-        onClick={() => { setCollection(item.id); setClassFilter('all'); }}
+        onClick={() => chooseCollection(item.id)}
         aria-pressed={collection === item.id}
       >
         <i aria-hidden="true" className={`is-${item.border}`} />
@@ -188,7 +196,7 @@ export default function GreedIslandCardLibraries() {
       {selected && <LibraryRecord card={selected} />}
     </div>
 
-    <SpellLab />
+    {collection === 'spell' && <SpellLab />}
 
     <p className="gi-card-libraries__provenance"><Users size={15} /> Library effects are concise archive paraphrases of the Hunterpedia table. Free Slot coverage means the table’s documented Free Slot examples, not every possible Greed Island object. <a href={GREED_ISLAND_LIBRARY_SOURCE.href} target="_blank" rel="noreferrer noopener">Open shared source <ExternalLink size={12} /></a></p>
   </section>;
