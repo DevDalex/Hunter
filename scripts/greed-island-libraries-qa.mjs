@@ -60,8 +60,8 @@ const record = async (name, page, test) => {
   }
 };
 
-const openLibraries = async (page, base) => {
-  await page.goto(`${base}/#/series/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+const openLibraries = async (page, base, collection = 'spells') => {
+  await page.goto(`${base}/#/series/greed-island/cards/${collection}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
   await page.waitForSelector('.gi-card-libraries', { timeout: 15_000 });
   await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 }).catch(() => {});
 };
@@ -86,9 +86,10 @@ const base = `http://127.0.0.1:${server.address().port}`;
 
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await record('Card libraries search, classes, and spell lab', desktop, async () => {
-    await openLibraries(desktop, base);
+  await record('Card libraries search, classes, spell route, and spell lab', desktop, async () => {
+    await openLibraries(desktop, base, 'spells');
     const library = desktop.locator('.gi-card-libraries');
+    if ((await library.getAttribute('data-card-library')) !== 'spell') throw new Error('Spell route did not select the Spell Card collection');
     const metrics = await library.locator('.gi-card-libraries__metrics').innerText();
     if (!metrics.includes('40') || !metrics.includes('20') || !metrics.includes('4')) throw new Error(`library metrics are incomplete: ${metrics}`);
     if (await library.locator('.gi-card-libraries__results button').count() !== 40) throw new Error('Spell library does not expose 40 records by default');
@@ -115,19 +116,22 @@ try {
   await desktop.close();
 
   const freeAndGm = await browser.newPage({ viewport: { width: 1280, height: 940 } });
-  await record('Free Slot and Game Master library boundaries', freeAndGm, async () => {
-    await openLibraries(freeAndGm, base);
-    const library = freeAndGm.locator('.gi-card-libraries');
-    await library.getByRole('button', { name: /Documented Free Slot Cards/i }).click();
+  await record('Free Slot and Game Master direct route boundaries', freeAndGm, async () => {
+    await openLibraries(freeAndGm, base, 'free-slot');
+    let library = freeAndGm.locator('.gi-card-libraries');
+    if ((await library.getAttribute('data-card-library')) !== 'free') throw new Error('Free Slot route did not select the documented Free Slot collection');
     if (await library.locator('.gi-card-libraries__results button').count() !== 20) throw new Error('Free Slot library does not expose 20 documented records');
+    if (await library.locator('.gi-card-libraries__lab').count()) throw new Error('Spell lab remained mounted on the Free Slot route');
     await library.locator('.gi-card-libraries__search input').fill('Chidon');
     await library.locator('.gi-card-libraries__results button').filter({ hasText: 'Chidon' }).click();
     const chidon = (await library.locator('.gi-card-libraries__record').innerText()).toLowerCase();
     if (!chidon.includes('chapter 172') || !chidon.includes('fish')) throw new Error('Chidon record lost its documented debut/effect boundary');
 
-    await library.locator('.gi-card-libraries__search input').fill('');
-    await library.getByRole('button', { name: /Game Master-only Cards/i }).click();
+    await freeAndGm.goto(`${base}/#/series/greed-island/cards/game-master`, { waitUntil: 'domcontentloaded' });
+    await freeAndGm.waitForSelector('.gi-card-libraries[data-card-library="gm"]');
+    library = freeAndGm.locator('.gi-card-libraries');
     if (await library.locator('.gi-card-libraries__results button').count() !== 4) throw new Error('GM library does not expose four records');
+    if (await library.locator('.gi-card-libraries__lab').count()) throw new Error('Spell lab remained mounted on the Game Master route');
     await library.locator('.gi-card-libraries__results button').filter({ hasText: 'Eliminate' }).click();
     const eliminate = (await library.locator('.gi-card-libraries__record').innerText()).toLowerCase();
     if (!eliminate.includes('game master only') || !eliminate.includes('azian continent')) throw new Error('Eliminate record lost restricted-access boundary');
@@ -137,7 +141,7 @@ try {
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   await record('Card libraries mobile containment and reduced motion', mobile, async () => {
-    await openLibraries(mobile, base);
+    await openLibraries(mobile, base, 'spells');
     const state = await mobile.evaluate(() => {
       const library = document.querySelector('.gi-card-libraries');
       const recordPanel = document.querySelector('.gi-card-libraries__record');
