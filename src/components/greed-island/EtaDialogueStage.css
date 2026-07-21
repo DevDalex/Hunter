@@ -210,8 +210,12 @@
   to { background-position: 0 80px; }
 }
 
-@keyframes gi-eta-cursor,
-           gi-eta-prompt {
+@keyframes gi-eta-cursor {
+  0%, 48% { opacity: 1; }
+  49%, 100% { opacity: 0; }
+}
+
+@keyframes gi-eta-prompt {
   0%, 48% { opacity: 1; }
   49%, 100% { opacity: 0; }
 }
