@@ -10,8 +10,10 @@ import {
 } from 'lucide-react';
 import { chapters } from '../data/chapters';
 import { storyArcPageById } from '../data/storyArcPages';
+import { storyArcArtworkById } from '../data/storyArcArtwork';
 import SafeImage from './SafeImage';
 import './ArcPage.css';
+import './StoryArcArtwork.css';
 
 const sectionLinks = [
   ['context', 'Before the arc'],
@@ -63,10 +65,23 @@ function ArcSection({ id, number, kicker, title, children, className = '' }) {
 }
 
 function ArcHero({ arc, onNavigate }) {
-  const heroImages = arc.id === 'volume-0' ? arc.visual.hero.slice(0, 1) : arc.visual.hero;
-  return <header className="arc-page__hero">
+  const artwork = storyArcArtworkById.get(arc.id);
+  const artworkStyle = {
+    '--arc-artwork-position': artwork?.position || 'center',
+    '--arc-artwork-fit': artwork?.fit || 'cover',
+  };
+  return <header className="arc-page__hero arc-page__hero--artwork">
     <div className="arc-page__hero-art" aria-hidden="true">
-      {heroImages.map((image, index) => <figure className={`is-${index === 0 ? 'primary' : 'secondary'}`} key={image}><SafeImage src={image} alt="" eager={index === 0} priority={index === 0 ? 'high' : 'auto'} /></figure>)}
+      <figure className="is-primary is-arc-artwork">
+        <SafeImage
+          src={artwork?.image || arc.visual.hero[0]}
+          fallbackSrc={artwork?.fallback || arc.visual.hero[0]}
+          alt=""
+          eager
+          priority="high"
+          style={artworkStyle}
+        />
+      </figure>
     </div>
     <div className="arc-page__hero-shade" />
     <div className="arc-page__hero-content">
