@@ -19,6 +19,16 @@ const cleanStoryTargets = new Set([
 
 const storyUtilityTargets = new Set(['chronology', 'chapters', 'adaptation']);
 
+const greedIslandSubviews = Object.freeze({
+  eta: new Set(),
+  binder: new Set(),
+  cards: new Set(['specified', 'spells', 'free-slot', 'game-master']),
+  island: new Set(['map', 'quests', 'players', 'game-masters']),
+  tactics: new Set(['training', 'razor', 'bombers', 'final-battles']),
+  completion: new Set(['quiz', 'rewards', 'route', 'adaptation']),
+  sources: new Set(),
+});
+
 const successionPathToTarget = {
   'royal-family': { target: 'family-tree' },
   cast: { target: 'succession-roster' },
@@ -75,10 +85,25 @@ const cleanUrl = (pathname, params = {}, hash = '') => {
   return `${pathname}${query ? `?${query}` : ''}${hash && !hash.startsWith('#/') ? hash : ''}`;
 };
 
+const normalizeGreedIslandParams = (params = {}) => {
+  const module = String(params.module || '');
+  const subview = String(params.subview || '');
+  const { module: _module, subview: _subview, ...rest } = params;
+  if (!module) return { ...rest };
+  if (!Object.hasOwn(greedIslandSubviews, module)) return null;
+  if (subview && !greedIslandSubviews[module].has(subview)) return null;
+  return { ...rest, module, ...(subview ? { subview } : {}) };
+};
+
 export const routeIsLegacyHash = (hash = '') => String(hash || '').startsWith('#/');
 
 export function normalizeDestination(view, target = '', params = {}) {
   if (view === 'series' && target === 'research') return { view, target: 'chapters', params };
+  if (view === 'series' && target === 'greed-island') {
+    const normalizedParams = normalizeGreedIslandParams(params);
+    if (!normalizedParams) return { view: 'not-found', target: '', params: { attemptedPath: '/story/greed-island' } };
+    return { view, target, params: normalizedParams };
+  }
   if (view === 'succession' && (!target || target === 'overview')) return { view: 'series', target: 'succession-contest', params };
   if (view === 'succession' && successionAliases[target]) {
     const alias = successionAliases[target];
@@ -101,6 +126,12 @@ export function normalizeDestination(view, target = '', params = {}) {
 
 export function routeToLegacyHash(view, target = '', params = {}) {
   const normalized = normalizeDestination(view, target, params);
+  if (normalized.view === 'series' && normalized.target === 'greed-island') {
+    const { module, subview, ...rest } = normalized.params;
+    const path = `#/series/greed-island${module ? `/${module}` : ''}${subview ? `/${subview}` : ''}`;
+    const query = stringifyQuery(rest);
+    return `${path}${query ? `?${query}` : ''}`;
+  }
   const query = stringifyQuery(normalized.params);
   return `#/${normalized.view}${normalized.target ? `/${normalized.target}` : ''}${query ? `?${query}` : ''}`;
 }
@@ -115,6 +146,11 @@ export function routeToCleanPath(view, target = '', params = {}, hash = '') {
     if (storyUtilityTargets.has(normalized.target)) {
       const { view: _view, ...rest } = normalized.params || {};
       return cleanUrl('/story', { view: normalized.target, ...rest }, hash);
+    }
+    if (normalized.target === 'greed-island') {
+      const { module, subview, ...rest } = normalized.params || {};
+      const path = `/story/greed-island${module ? `/${module}` : ''}${subview ? `/${subview}` : ''}`;
+      return cleanUrl(path, rest, hash);
     }
     if (cleanStoryTargets.has(normalized.target)) return cleanUrl(`/story/${normalized.target}`, normalized.params, hash);
     return cleanUrl('/story', { view: normalized.target, ...(normalized.params || {}) }, hash);
@@ -143,9 +179,13 @@ export function routeToHref(view, target = '', params = {}, options = {}) {
 export function parseLegacyHashRoute(hash = '') {
   if (!routeIsLegacyHash(hash)) return null;
   const [path, queryString = ''] = hash.replace(/^#\/?/, '').split('?');
-  const [candidate = 'home', target = ''] = path.split('/');
+  const [candidate = 'home', target = '', module = '', subview = ''] = path.split('/');
   const view = views.has(candidate) ? candidate : 'home';
-  return normalizeDestination(view, target, readQuery(queryString));
+  const params = readQuery(queryString);
+  if (view === 'series' && target === 'greed-island') {
+    return normalizeDestination(view, target, { ...params, ...(module ? { module } : {}), ...(subview ? { subview } : {}) });
+  }
+  return normalizeDestination(view, target, params);
 }
 
 export function parseCleanRoute(pathname = '/', search = '') {
@@ -170,6 +210,15 @@ export function parseCleanRoute(pathname = '/', search = '') {
       const destination = successionPathToTarget[parts[2]];
       if (!destination || parts.length > 3) return { view: 'not-found', target: '', params: { attemptedPath: pathnameClean } };
       return normalizeDestination('succession', destination.target, params);
+    }
+
+    if (parts[1] === 'greed-island') {
+      if (parts.length > 4) return { view: 'not-found', target: '', params: { attemptedPath: pathnameClean } };
+      return normalizeDestination('series', 'greed-island', {
+        ...params,
+        ...(parts[2] ? { module: parts[2] } : {}),
+        ...(parts[3] ? { subview: parts[3] } : {}),
+      });
     }
 
     const storyTarget = parts[1];
