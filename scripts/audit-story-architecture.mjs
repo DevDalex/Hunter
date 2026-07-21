@@ -53,6 +53,7 @@ assert(storyUtilityDestinations.length === 3, 'the three Story utility destinati
 assert(storyArchitectureAcceptance.length === 10, 'the architecture lock must retain ten acceptance statements');
 
 assert(volumeZeroChapters.length === 2 && volumeZeroChapters.every((chapter) => chapter.scenes.length >= 6), 'Volume 0 needs two complete chapter studies');
+assert(volumeZeroChapters.map((chapter) => chapter.id).join('|') === 'part-one|part-two', 'Volume 0 chapter destinations changed');
 assert(volumeZeroPeople.length === 3 && volumeZeroPeople.map((item) => item.name).join('|') === 'Kurapika|Pairo|Sheila', 'Volume 0 must keep its three-person emotional center');
 assert(volumeZeroGallery.length >= 8, 'Volume 0 needs a curated scene archive');
 assert(volumeZeroSources.length >= 8 && volumeZeroSources.every((item) => isApprovedSourceUrl(item.href)), 'Volume 0 needs direct Hunterpedia sources');
@@ -79,9 +80,10 @@ assert(seriesWorkspace.includes('<StoryHub') && !seriesWorkspace.includes('Story
 for (const section of ['context', 'premise', 'chronology', 'characters', 'factions', 'locations', 'nen', 'conflicts', 'objects', 'themes', 'changes', 'ending', 'transition', 'adaptation', 'records', 'sources']) {
   assert(arcPage.includes(`id="${section}"`), `ArcPage is missing the ${section} section`);
 }
-for (const section of ['overview', 'part-one', 'part-two', 'people', 'settlement', 'examination', 'promise', 'aftermath', 'sources']) {
+for (const section of ['overview', 'people', 'settlement', 'examination', 'promise', 'aftermath', 'sources']) {
   assert(volumeZeroPage.includes(`id="${section}"`), `VolumeZeroPage is missing the ${section} destination`);
 }
+assert(volumeZeroPage.includes('id={chapter.id}') && volumeZeroPage.includes('volumeZeroChapters[0]') && volumeZeroPage.includes('volumeZeroChapters[1]'), 'Volume 0 chapter destinations must render from canonical chapter IDs');
 assert(volumeZeroPage.includes('The Scarlet Eyes are not presented here as a Nen ability.'), 'Volume 0 must distinguish the Scarlet Eyes from Nen');
 assert(volumeZeroPage.includes('<details className="v0-aftermath__details">'), 'graphic source context must remain collapsed by default');
 assert(arcPage.includes('storyArcArtworkById') && storyHub.includes('storyArcArtworkById'), 'both dedicated arc heroes and Story directory cards must use the arc-artwork registry');
