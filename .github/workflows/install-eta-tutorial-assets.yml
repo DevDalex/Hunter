@@ -1,0 +1,52 @@
+name: Install Eta Tutorial Assets
+
+on:
+  push:
+    branches:
+      - feature/greed-island-binder-foundation
+    paths:
+      - '.eta-assets/**'
+      - 'scripts/install-eta-tutorial-assets.mjs'
+      - '.github/workflows/install-eta-tutorial-assets.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/greed-island-binder-foundation
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install verified Eta assets
+        run: node scripts/install-eta-tutorial-assets.mjs
+
+      - name: Verify generated files
+        run: |
+          test -f public/media/greed-island/eta/eta-closed.webp
+          test -f public/media/greed-island/eta/eta-mouth-open-patch.webp
+          test -f public/media/greed-island/eta/eta-blink-patch.webp
+          test -f public/media/greed-island/eta/eta-tutorial-room.webp
+          test -f public/media/greed-island/eta/eta-dialogue-bubble.webp
+          test -f src/data/greed-island/etaAssetManifest.generated.js
+
+      - name: Remove one-time transport files
+        run: git rm -r .eta-assets scripts/install-eta-tutorial-assets.mjs .github/workflows/install-eta-tutorial-assets.yml
+
+      - name: Commit local assets
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add public/media/greed-island/eta src/data/greed-island/etaAssetManifest.generated.js
+          git commit -m 'Install approved Eta tutorial assets [skip ci]'
+          git push origin HEAD:feature/greed-island-binder-foundation
