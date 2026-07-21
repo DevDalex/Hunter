@@ -27,6 +27,20 @@ import {
   hunterExamSources,
   phaseFourApplicants,
 } from '../src/data/hunterExam.js';
+import {
+  earlyApplicantRecords,
+  hunterExamAttrition,
+  hunterExamChapterMap,
+  hunterExamConflicts,
+  hunterExamGallery,
+  hunterExamHostPortraits,
+  hunterExamLocations,
+  hunterExamObjectsVisual,
+  hunterExamPhaseVisuals,
+  hunterExamProgression,
+  phaseFourPortraitFiles,
+  trickTowerPrisoners,
+} from '../src/data/hunterExamVisuals.js';
 import { parseCleanRoute, routeToCleanPath } from '../src/lib/appRouter.js';
 import { routeManifest, seriesRoutes } from '../src/data/routeManifest.js';
 
@@ -77,6 +91,20 @@ assert(finalOutcomes.find((item) => item.status === 'Killed')?.people.join('|') 
 assert(hunterExamHosts.length === 6, 'Hunter Exam needs preliminary and five formal host records');
 assert(hunterExamSources.length >= 6 && hunterExamSources.every((item) => isApprovedSourceUrl(item.href)), 'Hunter Exam needs direct Hunterpedia sources');
 
+assert(hunterExamLocations.length === 13 && unique(hunterExamLocations.map((item) => item.id)), 'Hunter Exam needs thirteen unique illustrated route records');
+assert(hunterExamLocations.every((item) => item.image && item.alt && item.source && isApprovedSourceUrl(item.source)), 'every Hunter Exam location needs artwork, accessible text, and a Hunterpedia source');
+assert(hunterExamPhaseVisuals.length === 6 && hunterExamPhaseVisuals.every((item) => item.images.length >= 2), 'preliminary screening and all five phases need dedicated visual records');
+assert(Object.keys(phaseFourPortraitFiles).length === 24 && phaseFourApplicants.every((item) => phaseFourPortraitFiles[item.badge]), 'all twenty-four Zevil applicants need portrait mappings');
+assert(earlyApplicantRecords.length >= 5 && earlyApplicantRecords.every((item) => item.image && isApprovedSourceUrl(item.source)), 'named earlier applicants need visual elimination records');
+assert(hunterExamProgression.length >= 15, 'Hunter Exam needs a notable-applicant progression matrix');
+assert(hunterExamAttrition.length === 7 && hunterExamAttrition.every((item) => item.entered >= item.passed), 'Hunter Exam needs a seven-stage attrition ledger');
+assert(hunterExamHostPortraits.length === 12 && hunterExamHostPortraits.every((item) => item.image && isApprovedSourceUrl(item.source)), 'Hunter Exam needs twelve illustrated authority records');
+assert(trickTowerPrisoners.length === 5 && unique(trickTowerPrisoners.map((item) => item.name)), 'Trick Tower needs five prisoner portrait records');
+assert(hunterExamObjectsVisual.length === 10 && hunterExamObjectsVisual.every((item) => item.image && isApprovedSourceUrl(item.source)), 'Hunter Exam needs a ten-object visual museum');
+assert(hunterExamConflicts.length === 8 && hunterExamConflicts.every((item) => item.image && isApprovedSourceUrl(item.source)), 'Hunter Exam needs eight illustrated conflict records');
+assert(hunterExamChapterMap.length === 7, 'Hunter Exam needs seven phase-specific chapter and episode records');
+assert(hunterExamGallery.length >= 15 && hunterExamGallery.every((item) => item.image && item.alt && isApprovedSourceUrl(item.source)), 'Hunter Exam needs a sourced curated visual gallery');
+
 assert(routeToCleanPath('series') === '/story', 'Story hub route changed');
 for (const entry of storyEntries) {
   assert(routeToCleanPath('series', entry.id) === entry.route, `${entry.shortTitle} clean route must remain live`);
@@ -92,6 +120,7 @@ const arcPage = await readFile(path.resolve('src/components/ArcPage.jsx'), 'utf8
 const storyHub = await readFile(path.resolve('src/components/StoryHub.jsx'), 'utf8');
 const volumeZeroPage = await readFile(path.resolve('src/components/VolumeZeroPage.jsx'), 'utf8');
 const hunterExamPage = await readFile(path.resolve('src/components/HunterExamPage.jsx'), 'utf8');
+const hunterExamVisualArchive = await readFile(path.resolve('src/components/HunterExamVisualArchive.jsx'), 'utf8');
 const server = await readFile(path.resolve('server/index.js'), 'utf8');
 assert(app.includes('onPrefetch={preloadRoute}'), 'Story workspace must receive route prefetch support');
 assert(seriesWorkspace.includes('storyArcIds.has(routeTarget)') && seriesWorkspace.includes('<ArcPage'), 'SeriesWorkspace must route each standard arc to the dedicated renderer');
@@ -107,9 +136,14 @@ for (const section of ['overview', 'people', 'settlement', 'examination', 'promi
 for (const section of ['overview', 'route', 'phase-three', 'phase-four', 'final-phase', 'applicants', 'examiners', 'outcomes', 'adaptation', 'sources']) {
   assert(hunterExamPage.includes(`id="${section}"`), `HunterExamPage is missing the ${section} destination`);
 }
+for (const section of ['locations', 'phase-visuals', 'portraits', 'progression', 'examiner-portraits', 'tower-blueprint', 'zevil-network', 'final-bracket', 'objects', 'conflicts', 'records', 'visuals']) {
+  assert(hunterExamVisualArchive.includes(`id="${section}"`), `HunterExamVisualArchive is missing the ${section} destination`);
+}
+assert(hunterExamPage.includes('<HunterExamVisualArchive />'), 'Hunter Exam must render the complete visual archive');
 assert(hunterExamPage.includes('phase={hunterExamPhases[0]}') && hunterExamPage.includes('phase={hunterExamPhases[1]}'), 'Hunter Exam must render Phase One and Phase Two from canonical phase IDs');
 assert(hunterExamPage.includes('phaseFourApplicants.map') && hunterExamPage.includes('finalMatches.map'), 'Hunter Exam must render the Zevil roster and Final Phase sequence');
 assert(hunterExamPage.includes('Failure is not the same as disqualification.'), 'Hunter Exam must preserve explicit outcome terminology');
+assert(hunterExamVisualArchive.includes('portraitForBadge') && hunterExamVisualArchive.includes('targetBadgeFrom'), 'Hunter Exam must render portraits and the interactive target network');
 assert(volumeZeroPage.includes('id={chapter.id}') && volumeZeroPage.includes('volumeZeroChapters[0]') && volumeZeroPage.includes('volumeZeroChapters[1]'), 'Volume 0 chapter destinations must render from canonical chapter IDs');
 assert(volumeZeroPage.includes('The Scarlet Eyes are not presented here as a Nen ability.'), 'Volume 0 must distinguish the Scarlet Eyes from Nen');
 assert(volumeZeroPage.includes('<details className="v0-aftermath__details">'), 'graphic source context must remain collapsed by default');
@@ -123,6 +157,7 @@ for (const file of [
   'src/data/storyArcArtwork.js',
   'src/data/volumeZero.js',
   'src/data/hunterExam.js',
+  'src/data/hunterExamVisuals.js',
   'src/components/ArcPage.jsx',
   'src/components/ArcPage.css',
   'src/components/StoryArcArtwork.css',
@@ -133,6 +168,8 @@ for (const file of [
   'src/components/VolumeZeroPage.css',
   'src/components/HunterExamPage.jsx',
   'src/components/HunterExamPage.css',
+  'src/components/HunterExamVisualArchive.jsx',
+  'src/components/HunterExamVisualArchive.css',
 ]) await access(path.resolve(file));
 
-console.log(`Story architecture audit passed: nine dedicated arc routes, purpose-built Volume 0 and Hunter Exam experiences, a locked 405-to-7 examination funnel, twenty-four Zevil participants, nine arc-specific artwork records, three separate utilities, preserved Succession subpages, clean routing, direct reload fallback, and retired Notebook route.`);
+console.log(`Story architecture audit passed: nine dedicated arc routes, purpose-built Volume 0 and Hunter Exam experiences, a locked 405-to-7 examination funnel, twenty-four Zevil participants and portraits, thirteen illustrated locations, phase visuals, progression and attrition ledgers, examiner and prisoner portraits, object and conflict archives, a target network, Final Phase bracket, reading map, curated gallery, three separate utilities, preserved Succession subpages, clean routing, direct reload fallback, and retired Notebook route.`);
