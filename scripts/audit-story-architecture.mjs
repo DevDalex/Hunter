@@ -19,6 +19,14 @@ import {
   volumeZeroPeople,
   volumeZeroSources,
 } from '../src/data/volumeZero.js';
+import {
+  finalOutcomes,
+  hunterExamFunnel,
+  hunterExamHosts,
+  hunterExamPhases,
+  hunterExamSources,
+  phaseFourApplicants,
+} from '../src/data/hunterExam.js';
 import { parseCleanRoute, routeToCleanPath } from '../src/lib/appRouter.js';
 import { routeManifest, seriesRoutes } from '../src/data/routeManifest.js';
 
@@ -58,6 +66,17 @@ assert(volumeZeroPeople.length === 3 && volumeZeroPeople.map((item) => item.name
 assert(volumeZeroGallery.length >= 8, 'Volume 0 needs a curated scene archive');
 assert(volumeZeroSources.length >= 8 && volumeZeroSources.every((item) => isApprovedSourceUrl(item.href)), 'Volume 0 needs direct Hunterpedia sources');
 
+assert(hunterExamFunnel.map((item) => item.count).join('|') === '405|404|148|42|40|24|9|7', 'Hunter Exam population funnel changed');
+assert(hunterExamPhases.length === 5 && hunterExamPhases.map((item) => item.id).join('|') === 'phase-one|phase-two|phase-three|phase-four|final-phase', 'Hunter Exam needs five formal phases in order');
+assert(phaseFourApplicants.length === 24 && unique(phaseFourApplicants.map((item) => item.badge)), 'Zevil Island needs twenty-four unique documented applicant badges');
+assert(phaseFourApplicants.filter((item) => item.result === 'Passed').length === 9, 'exactly nine applicants must pass Zevil Island');
+assert(phaseFourApplicants.filter((item) => item.result === 'Died').length === 5, 'the documented Zevil Island roster must retain five deaths');
+assert(finalOutcomes.find((item) => item.status === 'Licensed')?.count === 7, 'the 287th Exam must retain seven licensed Hunters');
+assert(finalOutcomes.find((item) => item.status === 'Disqualified')?.people.join('|') === 'Killua Zoldyck', 'Killua must remain the sole explicit disqualification');
+assert(finalOutcomes.find((item) => item.status === 'Killed')?.people.join('|') === 'Bodoro', 'Bodoro must remain recorded as killed, not failed or disqualified');
+assert(hunterExamHosts.length === 6, 'Hunter Exam needs preliminary and five formal host records');
+assert(hunterExamSources.length >= 6 && hunterExamSources.every((item) => isApprovedSourceUrl(item.href)), 'Hunter Exam needs direct Hunterpedia sources');
+
 assert(routeToCleanPath('series') === '/story', 'Story hub route changed');
 for (const entry of storyEntries) {
   assert(routeToCleanPath('series', entry.id) === entry.route, `${entry.shortTitle} clean route must remain live`);
@@ -72,10 +91,12 @@ const seriesWorkspace = await readFile(path.resolve('src/components/SeriesWorksp
 const arcPage = await readFile(path.resolve('src/components/ArcPage.jsx'), 'utf8');
 const storyHub = await readFile(path.resolve('src/components/StoryHub.jsx'), 'utf8');
 const volumeZeroPage = await readFile(path.resolve('src/components/VolumeZeroPage.jsx'), 'utf8');
+const hunterExamPage = await readFile(path.resolve('src/components/HunterExamPage.jsx'), 'utf8');
 const server = await readFile(path.resolve('server/index.js'), 'utf8');
 assert(app.includes('onPrefetch={preloadRoute}'), 'Story workspace must receive route prefetch support');
 assert(seriesWorkspace.includes('storyArcIds.has(routeTarget)') && seriesWorkspace.includes('<ArcPage'), 'SeriesWorkspace must route each standard arc to the dedicated renderer');
 assert(seriesWorkspace.includes("routeTarget === 'volume-0'") && seriesWorkspace.includes('<VolumeZeroPage'), 'Volume 0 must bypass the generic arc renderer');
+assert(seriesWorkspace.includes("routeTarget === 'hunter-exam'") && seriesWorkspace.includes('<HunterExamPage'), 'Hunter Exam must bypass the generic arc renderer');
 assert(seriesWorkspace.includes('<StoryHub') && !seriesWorkspace.includes('StoryFoundationLayout'), 'the Story hub must replace the old shared foundation shell');
 for (const section of ['context', 'premise', 'chronology', 'characters', 'factions', 'locations', 'nen', 'conflicts', 'objects', 'themes', 'changes', 'ending', 'transition', 'adaptation', 'records', 'sources']) {
   assert(arcPage.includes(`id="${section}"`), `ArcPage is missing the ${section} section`);
@@ -83,6 +104,12 @@ for (const section of ['context', 'premise', 'chronology', 'characters', 'factio
 for (const section of ['overview', 'people', 'settlement', 'examination', 'promise', 'aftermath', 'sources']) {
   assert(volumeZeroPage.includes(`id="${section}"`), `VolumeZeroPage is missing the ${section} destination`);
 }
+for (const section of ['overview', 'route', 'phase-three', 'phase-four', 'final-phase', 'applicants', 'examiners', 'outcomes', 'adaptation', 'sources']) {
+  assert(hunterExamPage.includes(`id="${section}"`), `HunterExamPage is missing the ${section} destination`);
+}
+assert(hunterExamPage.includes('phase={hunterExamPhases[0]}') && hunterExamPage.includes('phase={hunterExamPhases[1]}'), 'Hunter Exam must render Phase One and Phase Two from canonical phase IDs');
+assert(hunterExamPage.includes('phaseFourApplicants.map') && hunterExamPage.includes('finalMatches.map'), 'Hunter Exam must render the Zevil roster and Final Phase sequence');
+assert(hunterExamPage.includes('Failure is not the same as disqualification.'), 'Hunter Exam must preserve explicit outcome terminology');
 assert(volumeZeroPage.includes('id={chapter.id}') && volumeZeroPage.includes('volumeZeroChapters[0]') && volumeZeroPage.includes('volumeZeroChapters[1]'), 'Volume 0 chapter destinations must render from canonical chapter IDs');
 assert(volumeZeroPage.includes('The Scarlet Eyes are not presented here as a Nen ability.'), 'Volume 0 must distinguish the Scarlet Eyes from Nen');
 assert(volumeZeroPage.includes('<details className="v0-aftermath__details">'), 'graphic source context must remain collapsed by default');
@@ -95,6 +122,7 @@ for (const file of [
   'src/data/storyArcPages.js',
   'src/data/storyArcArtwork.js',
   'src/data/volumeZero.js',
+  'src/data/hunterExam.js',
   'src/components/ArcPage.jsx',
   'src/components/ArcPage.css',
   'src/components/StoryArcArtwork.css',
@@ -103,6 +131,8 @@ for (const file of [
   'src/components/StoryUtilities.css',
   'src/components/VolumeZeroPage.jsx',
   'src/components/VolumeZeroPage.css',
+  'src/components/HunterExamPage.jsx',
+  'src/components/HunterExamPage.css',
 ]) await access(path.resolve(file));
 
-console.log(`Story architecture audit passed: nine dedicated arc routes, a purpose-built Volume 0 memory-book experience, nine arc-specific artwork records, sixteen standard arc sections plus hero, three separate utilities, preserved Succession subpages, clean routing, direct reload fallback, and retired Notebook route.`);
+console.log(`Story architecture audit passed: nine dedicated arc routes, purpose-built Volume 0 and Hunter Exam experiences, a locked 405-to-7 examination funnel, twenty-four Zevil participants, nine arc-specific artwork records, three separate utilities, preserved Succession subpages, clean routing, direct reload fallback, and retired Notebook route.`);
