@@ -56,6 +56,17 @@
   font-size: 11px !important;
 }
 
+@media (max-width: 820px) {
+  .hev-record-map {
+    grid-template-columns: minmax(0, 1fr);
+    overflow-x: visible;
+  }
+
+  .hev-record-map article {
+    min-width: 0;
+  }
+}
+
 @media (max-width: 620px) {
   .he-tower-route {
     flex-wrap: wrap;
