@@ -4,21 +4,22 @@ import './GreedIslandCardMedia.css';
 function CardArtwork({ card }) {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
+  const source = card.media?.local || card.media?.remote;
 
   useEffect(() => {
     setLoaded(false);
     setFailed(false);
-  }, [card.id, card.media?.remote]);
+  }, [card.id, source]);
 
   return <span className={`gi-card__media${loaded ? ' is-loaded' : ''}${failed ? ' is-failed' : ''}`}>
-    {!failed && card.media?.remote && <img
-      src={card.media.remote}
+    {!failed && source && <img
+      src={source}
       alt=""
       draggable="false"
       loading="lazy"
       decoding="async"
-      referrerPolicy="no-referrer"
-      data-card-media="hunterpedia"
+      referrerPolicy={card.media?.local ? undefined : 'no-referrer'}
+      data-card-media={card.media?.local ? 'local-webp' : 'hunterpedia'}
       data-card-file={card.media.fileName}
       onLoad={() => setLoaded(true)}
       onError={() => { setLoaded(false); setFailed(true); }}
