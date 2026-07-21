@@ -119,7 +119,7 @@ export const documentedFreeSlotCards = Object.freeze([
   free(null, 'Gold Dust Girl Guard', 'F', '?', 'npc', 'An NPC who guarded the Gold Dust Girl.'),
   free(14170, 'Gasoline', 'H', '∞', 'item', 'A flammable vial of gasoline.'),
   free(21449, 'Rock', 'H', '∞', 'item', 'A simple hard rock that can vary in size.'),
-  free(25008, 'Large Rock', 'H', '∞', 'item', 'A large rock.'),
+  free(25008, 'Large Rock', 'H', '∞', 'item', 'A large rock represented as a documented Free Slot card.'),
 ]);
 
 const gm = (id, name, effect) => Object.freeze({
