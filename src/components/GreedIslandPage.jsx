@@ -13,6 +13,7 @@ import {
 import { GREED_ISLAND_CARD_SOURCE, specifiedCards } from '../data/greed-island/specifiedCards';
 import GreedIslandBinder from './greed-island/GreedIslandBinder';
 import './GreedIslandPage.css';
+import './GreedIslandPageResponsive.css';
 
 const tutorialSteps = [
   ['01', 'The Ring', 'Every player receives the ring that connects them to the game system.'],
