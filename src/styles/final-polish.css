@@ -208,6 +208,19 @@ body {
   font-size: 11px !important;
 }
 
+/* Volume 0 uses small archival labels, but never below the maintained site floor. */
+.v0-local-nav a i,
+.v0-reading-path li > i,
+.v0-settlement__map article i,
+.v0-exam-card dt,
+.v0-route-map i,
+.v0-scarlet__layout li i,
+.v0-object-shelf article > span,
+.v0-state-changes article > div span,
+.v0-gallery article a {
+  font-size: 11px !important;
+}
+
 @media (max-width: 1100px) {
   .chimera-ant-prototype {
     box-sizing: border-box !important;
