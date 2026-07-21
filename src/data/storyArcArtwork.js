@@ -67,11 +67,11 @@ export const storyArcArtwork = [
   },
   {
     id: 'succession-contest',
-    image: '/black-whale-cutaway.png',
-    fallback: '/media/portraits/kurapika.webp',
-    alt: 'Black Whale 1 cutaway representing the Succession Contest and voyage',
-    source: 'https://hunterxhunter.fandom.com/wiki/Black_Whale',
-    position: 'center center',
+    image: fandomImage('2/2b/Hunter_x_Hunter_Succession_Contest_arc.png/revision/latest?cb=20221115004342'),
+    fallback: '/black-whale-cutaway.png',
+    alt: 'Succession Contest arc artwork representing the Kakin princes, royal conflict, and voyage',
+    source: 'https://hunterxhunter.fandom.com/wiki/Succession_Contest_arc',
+    position: 'center 24%',
   },
 ];
 
