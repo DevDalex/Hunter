@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "prepare:eta-assets": "node scripts/install-eta-tutorial-assets.mjs",
+    "prepare:eta-assets": "node scripts/prepare-eta-tutorial-component.mjs && node scripts/install-eta-tutorial-assets.mjs",
     "dev": "npm run prepare:eta-assets && vite --host 0.0.0.0",
     "audit:content": "node scripts/audit-content.mjs",
     "audit:implementation": "node scripts/audit-implementation.mjs",
