@@ -13,7 +13,10 @@ import {
   Users,
 } from 'lucide-react';
 import { readStoredJson, writeStoredJson } from '../../lib/browserStorage';
-import { specifiedCards, specifiedCardById } from '../../data/greed-island/specifiedCards';
+import {
+  enrichedSpecifiedCards as specifiedCards,
+  enrichedSpecifiedCardById as specifiedCardById,
+} from '../../data/greed-island/specifiedCardsEnriched.js';
 import InteractiveCard from './InteractiveCard';
 import './GreedIslandBook.css';
 
@@ -305,8 +308,9 @@ export default function GreedIslandBinder() {
       <div>
         <span>Eta’s analysis console · archive reconstruction</span>
         <h3>{selectedCard.name}</h3>
-        <dl><div><dt>Specified Slot</dt><dd>{selectedCard.id}</dd></div><div><dt>Rank</dt><dd>{selectedCard.rank}</dd></div><div><dt>Conversion limit</dt><dd>{selectedCard.conversionLimit}</dd></div><div><dt>Core data</dt><dd><Check size={13} /> Verified</dd></div></dl>
-        <p>The card scan, number, name, rank, and conversion limit are verified. Descriptions, acquisition quests, story uses, chapters, and episodes remain pending rather than being guessed.</p>
+        <dl><div><dt>Specified Slot</dt><dd>{selectedCard.id}</dd></div><div><dt>Rank</dt><dd>{selectedCard.rank}</dd></div><div><dt>Conversion limit</dt><dd>{selectedCard.conversionLimit}</dd></div><div><dt>Effect data</dt><dd><Check size={13} /> Verified</dd></div></dl>
+        <p>{selectedCard.description}</p>
+        <p><strong>Materialized form:</strong> {selectedCard.materializedAs}. <a href="#card-archive">Open the full acquisition and story record.</a></p>
       </div>
     </div>
   </section>;
