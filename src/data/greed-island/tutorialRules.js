@@ -1,3 +1,5 @@
+import { spellCardsById, SPELL_CLASS_LABELS } from './cardLibraries.js';
+
 export const GREED_ISLAND_RULE_SOURCES = Object.freeze({
   overview: Object.freeze({
     id: 'greed-island-overview',
@@ -50,34 +52,31 @@ export const CARD_ANATOMY_PARTS = Object.freeze([
 
 export const CARD_RANK_ORDER = Object.freeze(['H', 'G', 'F', 'E', 'D', 'C', 'B', 'A', 'S', 'SS']);
 
+const classNameFor = (card) => [card.range, ...card.classes].map((code) => SPELL_CLASS_LABELS[code]).join(' · ');
+const spellExample = (id, target, outcome) => {
+  const card = spellCardsById.get(id);
+  if (!card) throw new Error(`Eta tutorial references missing Spell Card ${id}.`);
+  return Object.freeze({ id: card.id, name: card.name, className: classNameFor(card), target, effect: card.effect, outcome });
+};
+
 export const SPELL_TUTORIAL_EXAMPLES = Object.freeze([
-  Object.freeze({
-    id: '1005', name: 'Magnetic Force', className: 'Long Range · Regular Spell', target: 'player',
-    effect: 'Moves the caster to the location of a previously met target player.',
-    outcome: 'The caster travels to the selected player.',
-  }),
-  Object.freeze({
-    id: '1006', name: 'Pickpocket', className: 'Short Range · Attack Spell', target: 'player',
-    effect: 'Steals one random card from the target player’s Free Slots.',
-    outcome: 'A random Free Slot card is selected by the simulation.',
-  }),
-  Object.freeze({
-    id: '1009', name: 'Return', className: 'Long Range · Regular Spell', target: 'place',
-    effect: 'Moves the caster to a previously visited location.',
-    outcome: 'The caster travels to the selected visited location.',
-  }),
-  Object.freeze({
-    id: '1031', name: 'Analysis', className: 'Long Range · Regular Spell', target: 'card number',
-    effect: 'Shows the explanation for a selected card number other than 000.',
-    outcome: 'The selected card explanation is displayed.',
-  }),
+  spellExample('1005', 'player', 'The caster travels to the selected player.'),
+  spellExample('1006', 'player', 'A random Free Slot card is selected by the simulation.'),
+  spellExample('1009', 'place', 'The caster travels to the selected visited location.'),
+  spellExample('1031', 'card number', 'The selected card explanation is displayed.'),
 ]);
 
+const protectionExample = (id, uses, outcome) => {
+  const card = spellCardsById.get(id);
+  if (!card) throw new Error(`Eta protection tutorial references missing Spell Card ${id}.`);
+  return Object.freeze({ id: card.id, name: card.name, uses, outcome });
+};
+
 export const PROTECTION_TUTORIAL_EXAMPLES = Object.freeze([
-  Object.freeze({ id: '1003', name: 'Defensive Wall', uses: 1, outcome: 'Blocks one Attack Spell.' }),
-  Object.freeze({ id: '1004', name: 'Reflect', uses: 1, outcome: 'Reflects one Attack Spell from a previously met player.' }),
-  Object.freeze({ id: '1026', name: 'Holy Water', uses: 10, outcome: 'Protects against ten Attack Spells and resists stealing and destruction effects.' }),
-  Object.freeze({ id: '1035', name: 'Fortress', uses: null, outcome: 'Continuously protects cards on a chosen Specified Slot page from stealing and destruction while they remain inserted.' }),
+  protectionExample('1003', 1, 'Blocks one Attack Spell.'),
+  protectionExample('1004', 1, 'Reflects one Attack Spell from a previously met player.'),
+  protectionExample('1026', 10, 'Protects against ten Attack Spells and resists stealing and destruction effects.'),
+  protectionExample('1035', null, 'Continuously protects cards on a chosen Specified Slot page from stealing and destruction while they remain inserted.'),
 ]);
 
 if (ETA_TUTORIAL_LESSONS.length !== 12) throw new Error('Eta tutorial must contain exactly 12 lessons.');
