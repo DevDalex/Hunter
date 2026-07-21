@@ -1,0 +1,49 @@
+.hunter-exam-page {
+  --he-muted: #505653;
+  --he-orange: #78411f;
+}
+
+.he-hero__copy > span,
+.he-hero__source { color: #fffaf1; }
+.he-hero__actions a:not(:first-child) { background: rgba(35, 43, 38, .86); color: #fffaf1; }
+
+.he-section-heading span,
+.he-phase__header span,
+.he-preliminary-grid article > span,
+.he-funnel aside > span,
+.he-badge-matrix aside > span,
+.he-examiners article span,
+.he-rule-grid span,
+.he-final__outcomes span,
+.he-adaptation__grid span,
+.he-nen-note span,
+.he-final__matches span,
+.he-prisoner-board span { color: #713b1b; }
+
+.he-prisoner-board article > i,
+.he-examiners article > i { color: #fffaf1 !important; }
+
+.he-applicant-table th { color: #414744; }
+.he-funnel aside p,
+.he-section-heading p,
+.he-route > ol p,
+.he-phase__header p,
+.he-phase__events p,
+.he-final__matches p,
+.he-journeys p,
+.he-object-ledger p,
+.he-adaptation__grid p { color: #505653; }
+
+@media (max-width: 620px) {
+  .he-tower-route {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 8px;
+  }
+
+  .he-tower-route span,
+  .he-tower-route i {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+}
