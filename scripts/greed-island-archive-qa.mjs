@@ -69,6 +69,8 @@ const openArchive = async (page, base) => {
 const assertLocalCardImage = async (page) => {
   const image = page.locator('.gi-card-archive__card img[data-card-media="local-webp"]');
   await image.waitFor({ state: 'attached' });
+  await image.scrollIntoViewIfNeeded();
+  await image.waitFor({ state: 'visible' });
   await page.waitForFunction(() => {
     const element = document.querySelector('.gi-card-archive__card img[data-card-media="local-webp"]');
     return element && element.complete && element.naturalWidth > 0 && element.currentSrc.includes('/media/greed-island/cards/');
