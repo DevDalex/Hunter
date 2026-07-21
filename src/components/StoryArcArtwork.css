@@ -1,0 +1,42 @@
+.arc-page__hero--artwork .arc-page__hero-art figure.is-arc-artwork {
+  inset: 0 0 0 auto;
+  width: min(68%, 1080px);
+}
+
+.arc-page__hero--artwork .arc-page__hero-art figure.is-arc-artwork img,
+.story-directory-card .story-arc-artwork {
+  object-fit: var(--arc-artwork-fit, cover);
+  object-position: var(--arc-artwork-position, center) !important;
+}
+
+.arc-page__hero--artwork .arc-page__hero-art figure.is-arc-artwork img {
+  filter: saturate(.78) contrast(.96) brightness(.82);
+}
+
+.arc-page__hero--artwork .arc-page__hero-shade {
+  background:
+    linear-gradient(90deg, rgba(32, 30, 29, .98) 0%, rgba(32, 30, 29, .94) 30%, rgba(32, 30, 29, .68) 50%, rgba(32, 30, 29, .24) 78%, rgba(32, 30, 29, .12) 100%),
+    linear-gradient(180deg, rgba(25, 24, 23, .08), rgba(25, 24, 23, .16) 46%, rgba(25, 24, 23, .86));
+}
+
+.story-directory-card .story-arc-artwork {
+  filter: saturate(.8) brightness(.72) contrast(.98);
+}
+
+.story-directory-card:hover .story-arc-artwork,
+.story-directory-card:focus-visible .story-arc-artwork {
+  filter: saturate(.92) brightness(.78) contrast(.98);
+}
+
+@media (max-width: 820px) {
+  .arc-page__hero--artwork .arc-page__hero-art figure.is-arc-artwork {
+    inset: 0;
+    width: 100%;
+  }
+
+  .arc-page__hero--artwork .arc-page__hero-shade {
+    background:
+      linear-gradient(180deg, rgba(32, 30, 29, .34), rgba(32, 30, 29, .72) 45%, rgba(32, 30, 29, .97) 82%),
+      linear-gradient(90deg, rgba(32, 30, 29, .62), rgba(32, 30, 29, .18));
+  }
+}
