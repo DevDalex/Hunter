@@ -16,6 +16,7 @@ import './StoryUtilities.css';
 
 const ArcPage = lazy(() => import('./ArcPage'));
 const StoryHub = lazy(() => import('./StoryHub'));
+const VolumeZeroPage = lazy(() => import('./VolumeZeroPage'));
 
 const utilityPages = [
   { id: 'chronology', label: 'Chronology' },
@@ -92,6 +93,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   };
 
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
+  if (routeTarget === 'volume-0') return <Suspense fallback={<StoryLoading label="Kurapika’s Memories" />}><VolumeZeroPage onNavigate={onNavigate} /></Suspense>;
   if (storyArcIds.has(routeTarget)) return <Suspense fallback={<StoryLoading label="dedicated arc page" />}><ArcPage arcId={routeTarget} onNavigate={onNavigate} /></Suspense>;
 
   const pageIntro = adaptationPage
