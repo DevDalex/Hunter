@@ -9,6 +9,7 @@ const ROOT = resolve(import.meta.dirname, '..');
 const STAGING = join(ROOT, '.eta-assets');
 const DESTINATION = join(ROOT, 'public/media/greed-island/eta');
 const MANIFEST = join(ROOT, 'src/data/greed-island/etaAssetManifest.generated.js');
+const TUTORIAL_COMPONENT = join(ROOT, 'src/components/greed-island/EtaTutorial.jsx');
 const EXPECTED_PAYLOAD_LENGTH = 112132;
 const EXPECTED_ARCHIVE_SHA256 = '06e324157a570545923a7c80b9db38fc24b13bbd33c6d95fd9cb566983209c5d';
 
@@ -51,6 +52,25 @@ const expectedAssets = Object.freeze({
     role: 'approved pixel dialogue bubble',
   },
 });
+
+const etaImport = "import EtaDialogueStage from './EtaDialogueStage';";
+const interactiveCardImport = "import InteractiveCard from './InteractiveCard';";
+const legacyScene = `        <div className="gi-eta-course__eta" aria-hidden="true">
+          <div><i /><span>ETA</span><i /></div>
+          <b>{lesson.number}</b>
+        </div>
+        <div className="gi-eta-course__dialogue">
+          <span>Lesson {lesson.number} · {lesson.title}</span>
+          <h3 id={\`gi-lesson-\${lesson.id}\`}>{lesson.title}</h3>
+          <p>{lesson.summary}</p>
+          <div className="gi-eta-course__rule"><MessageSquareText size={17} /><p>{lesson.rule}</p></div>
+          <div className="gi-eta-course__note"><Info size={16} /><p>{lesson.note}</p></div>
+          <div className="gi-eta-course__status" aria-live="polite">
+            <Volume2 size={16} />
+            <span>{announcement}</span>
+          </div>
+        </div>`;
+const approvedScene = '        <EtaDialogueStage lesson={lesson} announcement={announcement} onAdvance={nextLesson} />';
 
 const sha256 = (buffer) => createHash('sha256').update(buffer).digest('hex');
 
@@ -96,6 +116,22 @@ function writeManifest(records) {
   writeFileSync(MANIFEST, content);
 }
 
+function prepareTutorialComponent() {
+  let source = readFileSync(TUTORIAL_COMPONENT, 'utf8');
+  if (!source.includes(etaImport)) {
+    if (!source.includes(interactiveCardImport)) throw new Error('Eta tutorial import insertion point was not found.');
+    source = source.replace(interactiveCardImport, `${interactiveCardImport}\n${etaImport}`);
+  }
+  if (!source.includes(approvedScene)) {
+    if (!source.includes(legacyScene)) throw new Error('Legacy Eta tutorial scene was not found.');
+    source = source.replace(legacyScene, approvedScene);
+  }
+  writeFileSync(TUTORIAL_COMPONENT, source);
+  if (!source.includes(etaImport) || !source.includes(approvedScene) || source.includes('gi-eta-course__eta')) {
+    throw new Error('Eta tutorial source preparation did not reach the approved scene state.');
+  }
+}
+
 async function main() {
   const payload = await readPayload();
   if (payload.length !== EXPECTED_PAYLOAD_LENGTH) {
@@ -119,9 +155,10 @@ async function main() {
     Object.entries(expectedAssets).map(([fileName, expectation]) => [fileName, verifyAsset(fileName, expectation)]),
   );
   writeManifest(records);
+  prepareTutorialComponent();
   rmSync(tempDirectory, { recursive: true, force: true });
 
-  console.log(`Eta tutorial assets installed and verified: ${Object.keys(records).length}/5.`);
+  console.log(`Eta tutorial prepared: ${Object.keys(records).length}/5 verified assets and the approved animated scene.`);
 }
 
 main().catch((error) => {
