@@ -13,14 +13,15 @@ const TUTORIAL_COMPONENT = join(ROOT, 'src/components/greed-island/EtaTutorial.j
 const EXPECTED_PAYLOAD_LENGTH = 112132;
 const EXPECTED_ARCHIVE_SHA256 = '06e324157a570545923a7c80b9db38fc24b13bbd33c6d95fd9cb566983209c5d';
 
-const stagedParts = [
-  ['00.part', 'raw'],
-  ['01c.js', 'module'],
-  ['02.js', 'module'],
-  ['03a.js', 'module'],
-  ['03b.js', 'module'],
-  ['03c.js', 'module'],
-  ['03d.js', 'module'],
+const stagedSegments = [
+  ['00.part', 'raw', 14000, 'H4sIAAAAAAAAA+z9Y8xwPfg9'],
+  ['01a.part', 'raw', 6000, '2rKnn2kMAjDoed1UN0Rp'],
+  ['01c.js', 'module', 8000, 'BI1uJ9cMoLg28FjgdRTW'],
+  ['02.js', 'module', 14000, 'TtlGDzJU8UluxxMpAIrF'],
+  ['03a.js', 'module', 18000, 'PMmUZxCHoRZGSlGzKEpd'],
+  ['03b.js', 'module', 18000, 'ARd/OTO2sdZrJGMHxd8j'],
+  ['03c.js', 'module', 18000, 'rc4hgNopTH2jl6d3ky+G'],
+  ['03d.js', 'module', 16132, 'qdnr9zWjGK5pwMXSEk3a'],
 ];
 
 const expectedAssets = Object.freeze({
@@ -72,17 +73,25 @@ const approvedScene = '        <EtaDialogueStage lesson={lesson} announcement={a
 
 const sha256 = (buffer) => createHash('sha256').update(buffer).digest('hex');
 
+async function readStagedValue(fileName, type) {
+  const absolutePath = join(STAGING, fileName);
+  if (type === 'raw') return readFileSync(absolutePath, 'utf8').trim();
+  const module = await import(`${pathToFileURL(absolutePath).href}?install=${Date.now()}-${fileName}`);
+  if (typeof module.default !== 'string') throw new Error(`${fileName} did not export a payload string.`);
+  return module.default;
+}
+
 async function readPayload() {
   const chunks = [];
-  for (const [fileName, type] of stagedParts) {
-    const absolutePath = join(STAGING, fileName);
-    if (type === 'raw') {
-      chunks.push(readFileSync(absolutePath, 'utf8').trim());
-    } else {
-      const module = await import(`${pathToFileURL(absolutePath).href}?install=${Date.now()}-${fileName}`);
-      if (typeof module.default !== 'string') throw new Error(`${fileName} did not export a payload string.`);
-      chunks.push(module.default);
+  for (const [fileName, type, take, expectedStart] of stagedSegments) {
+    const value = await readStagedValue(fileName, type);
+    if (!value.startsWith(expectedStart)) {
+      throw new Error(`${fileName} does not begin at its canonical Eta archive boundary.`);
     }
+    if (value.length < take) {
+      throw new Error(`${fileName} contains ${value.length} characters but ${take} are required.`);
+    }
+    chunks.push(value.slice(0, take));
   }
   return chunks.join('');
 }
