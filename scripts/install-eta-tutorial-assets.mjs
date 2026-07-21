@@ -15,7 +15,8 @@ const EXPECTED_ARCHIVE_SHA256 = '06e324157a570545923a7c80b9db38fc24b13bbd33c6d95
 
 const stagedSegments = [
   ['00.part', 'raw', 14000, 'H4sIAAAAAAAAA+z9Y8xwPfg9'],
-  ['01a.part', 'raw', 6000, '2rKnn2kMAjDoed1UN0Rp'],
+  ['01a.part', 'raw', 2000, '2rKnn2kMAjDoed1UN0Rp'],
+  ['01b.part', 'raw', 4000, 'uEmgH9IxY1Gm4WlXqDtb'],
   ['01c.js', 'module', 8000, 'BI1uJ9cMoLg28FjgdRTW'],
   ['02.js', 'module', 14000, 'TtlGDzJU8UluxxMpAIrF'],
   ['03a.js', 'module', 18000, 'PMmUZxCHoRZGSlGzKEpd'],
