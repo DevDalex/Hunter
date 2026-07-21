@@ -23,10 +23,10 @@ const tutorialSteps = [
 ];
 
 const nextStages = [
+  ['Binder reconstruction', 'Rebuild the cover, spine, pages, pockets, and terminal to match the manga and 2011 anime more closely.'],
   ['Eta tutorial', 'Progressive lessons for every canonical rule and command.'],
-  ['Card archive', 'Descriptions, quests, story uses, chapter and episode mappings, and verified media.'],
+  ['Card archive', 'Descriptions, quests, story uses, chapter and episode mappings, and local media stabilization.'],
   ['Island systems', 'Map, locations, quests, players, spells, and the Game Master control room.'],
-  ['Tactical records', 'Biscuit training, Razor dodgeball, Bomber system, quiz, and reward sequence.'],
 ];
 
 function GreedIslandHero({ onNavigate, mode, setMode, summoned, setSummoned }) {
@@ -107,16 +107,16 @@ function FoundationNotes() {
     <header className="gi-section-heading">
       <span>Verified implementation boundary</span>
       <h2 id="gi-foundation-title">Built in stages, not filled with guesses.</h2>
-      <p>This pull request establishes the shared data and Binder foundation. Later systems will consume the same verified records.</p>
+      <p>The shared card model and Binder interactions now use the exact Specified Slot image references published in Hunterpedia’s card table.</p>
     </header>
     <div className="gi-foundation__grid">
-      <article><ShieldCheck size={23} /><span>Verified now</span><h3>Canonical core registry</h3><p>Cards 000–099 include number, name, rank, and conversion limit, with schema checks that reject gaps and duplicates.</p></article>
+      <article><ShieldCheck size={23} /><span>Verified now</span><h3>One hundred exact card scans</h3><p>Every card from 000–099 is linked to its individual Hunterpedia file record, including filename exceptions that do not match the English card name.</p></article>
       <article><MousePointer2 size={23} /><span>Usable now</span><h3>Equal input paths</h3><p>Cards can be moved by drag and drop, tap or click selection, and keyboard activation. No interaction requires hover or a mouse.</p></article>
-      <article><LockKeyhole size={23} /><span>Deliberately pending</span><h3>Media and deep records</h3><p>No Hunterpedia image filename is guessed. Descriptions, quests, episodes, chapters, and visuals remain visibly pending until individually verified.</p></article>
+      <article><LockKeyhole size={23} /><span>Safe fallback</span><h3>No unrelated replacement art</h3><p>If Hunterpedia cannot deliver a scan, the interface shows a designed Greed Island card back. Local optimized copies and deep card records remain a later verification stage.</p></article>
     </div>
     <div className="gi-stage-list">
       <h3>Next verified stages</h3>
-      <ol>{nextStages.map(([title, note], index) => <li key={title}><i>{String(index + 2).padStart(2, '0')}</i><div><strong>{title}</strong><p>{note}</p></div></li>)}</ol>
+      <ol>{nextStages.map(([title, note], index) => <li key={title}><i>{String(index + 3).padStart(2, '0')}</i><div><strong>{title}</strong><p>{note}</p></div></li>)}</ol>
     </div>
   </section>;
 }
@@ -141,8 +141,8 @@ export default function GreedIslandPage({ onNavigate }) {
       </section>}
       <FoundationNotes />
       <section className="gi-sources" id="sources" aria-labelledby="gi-sources-title">
-        <header className="gi-section-heading"><span>Primary research source</span><h2 id="gi-sources-title">Hunterpedia / Hunter × Hunter Fandom</h2><p>Every future description and visual will retain an explicit verification state and source link.</p></header>
-        <a href={GREED_ISLAND_CARD_SOURCE.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{GREED_ISLAND_CARD_SOURCE.label}</strong><small>Core Specified Slot registry · verified {GREED_ISLAND_CARD_SOURCE.verifiedAt}</small></span><ExternalLink size={14} /></a>
+        <header className="gi-section-heading"><span>Primary research source</span><h2 id="gi-sources-title">Hunterpedia / Hunter × Hunter Fandom</h2><p>Card images, filenames, and data retain an explicit source and verification state.</p></header>
+        <a href={GREED_ISLAND_CARD_SOURCE.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{GREED_ISLAND_CARD_SOURCE.label}</strong><small>Specified Slot registry and card images · verified {GREED_ISLAND_CARD_SOURCE.verifiedAt}</small></span><ExternalLink size={14} /></a>
       </section>
     </main>
     <footer className="gi-next-page"><div><span>Story 06</span><h2>Chimera Ant</h2><p>The card selected to find Ging instead redirects Gon and Killua toward Kite.</p></div><button type="button" onClick={() => onNavigate('series', 'chimera-ant')}>Continue <ArrowRight size={18} /></button></footer>
