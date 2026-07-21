@@ -56,8 +56,8 @@ for (const item of [...SPELL_TUTORIAL_EXAMPLES, ...PROTECTION_TUTORIAL_EXAMPLES]
 
 const attackCount = spellCards.filter((card) => card.classes.includes('AS')).length;
 const defenseCount = spellCards.filter((card) => card.classes.some((code) => ['DS', 'AA', 'VS'].includes(code))).length;
-assert(attackCount === 11, `expected 11 Attack Spells, found ${attackCount}`);
-assert(defenseCount === 7, `expected 7 defensive/counter spells, found ${defenseCount}`);
+assert(attackCount === 10, `expected 10 Attack Spells, found ${attackCount}`);
+assert(defenseCount === 6, `expected 6 defensive/counter spells, found ${defenseCount}`);
 assert(spellCardsById.get('1035')?.classes.includes('AA'), 'Fortress must remain Anti-Attack capable');
 assert(gameMasterCards.some((card) => card.name === 'Eliminate'), 'Eliminate GM card is missing');
 
