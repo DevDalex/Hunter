@@ -14,6 +14,13 @@ import { GREED_ISLAND_CARD_SOURCE, specifiedCards } from '../data/greed-island/s
 import GreedIslandBinder from './greed-island/GreedIslandBinder';
 import './GreedIslandPage.css';
 import './GreedIslandPageResponsive.css';
+import './greed-island/GreedIslandBook.css';
+
+const GREED_ISLAND_BOOK_SOURCE = Object.freeze({
+  label: 'Greed Island — Ring, Binder, and Cards',
+  href: 'https://hunterxhunter.fandom.com/wiki/Greed_Island#Ring,_Binder,_and_Cards',
+  verifiedAt: '2026-07-21',
+});
 
 const tutorialSteps = [
   ['01', 'The Ring', 'Every player receives the ring that connects them to the game system.'],
@@ -23,8 +30,8 @@ const tutorialSteps = [
 ];
 
 const nextStages = [
-  ['Binder reconstruction', 'Rebuild the cover, spine, pages, pockets, and terminal to match the manga and 2011 anime more closely.'],
-  ['Eta tutorial', 'Progressive lessons for every canonical rule and command.'],
+  ['Eta tutorial', 'Progressive lessons for the Ring, Book, Binder, ranks, limits, Gain, spells, protection, and completion.'],
+  ['Card systems', 'Card anatomy viewer, rank ladder, conversion-limit simulation, Gain, and field-by-field record enrichment.'],
   ['Card archive', 'Descriptions, quests, story uses, chapter and episode mappings, and local media stabilization.'],
   ['Island systems', 'Map, locations, quests, players, spells, and the Game Master control room.'],
 ];
@@ -62,7 +69,7 @@ function GreedIslandHero({ onNavigate, mode, setMode, summoned, setSummoned }) {
         <button type="button" className={mode === 'free' ? 'is-active' : ''} onClick={() => { setMode('free'); setSummoned(true); }} aria-pressed={mode === 'free'}><Gamepad2 size={16} /> Free Exploration</button>
       </div>
       <button type="button" className="gi-book-command" onClick={() => setSummoned((value) => !value)} aria-pressed={summoned}>
-        <span>{summoned ? 'Close Binder' : 'Book'}</span>
+        <span>{summoned ? 'Dismiss Book' : 'Book'}</span>
         <small>{summoned ? 'Return to the Starting Point' : 'Summon the Binder'}</small>
       </button>
     </div>
@@ -107,16 +114,16 @@ function FoundationNotes() {
     <header className="gi-section-heading">
       <span>Verified implementation boundary</span>
       <h2 id="gi-foundation-title">Built in stages, not filled with guesses.</h2>
-      <p>The shared card model and Binder interactions now use the exact Specified Slot image references published in Hunterpedia’s card table.</p>
+      <p>The card records, verified scans, and interactive Binder now share a canon-closer Book reconstructed from Hunterpedia’s G.I. Book and G.I. Book Slots references.</p>
     </header>
     <div className="gi-foundation__grid">
-      <article><ShieldCheck size={23} /><span>Verified now</span><h3>One hundred exact card scans</h3><p>Every card from 000–099 is linked to its individual Hunterpedia file record, including filename exceptions that do not match the English card name.</p></article>
-      <article><MousePointer2 size={23} /><span>Usable now</span><h3>Equal input paths</h3><p>Cards can be moved by drag and drop, tap or click selection, and keyboard activation. No interaction requires hover or a mouse.</p></article>
-      <article><LockKeyhole size={23} /><span>Safe fallback</span><h3>No unrelated replacement art</h3><p>If Hunterpedia cannot deliver a scan, the interface shows a designed Greed Island card back. Local optimized copies and deep card records remain a later verification stage.</p></article>
+      <article><ShieldCheck size={23} /><span>Reconstructed now</span><h3>The Book finally resembles the Book</h3><p>The route now uses the violet-black cover, metallic frame, circular mechanism, pale rigid pages, central spine, and dark card pockets visible in the reference images.</p></article>
+      <article><MousePointer2 size={23} /><span>Usable now</span><h3>Specified and Free Slot pages</h3><p>All ten Specified Slot pages and five Free Slot pages can be opened and turned by pointer, touch, keyboard activation, or focused arrow-key controls.</p></article>
+      <article><LockKeyhole size={23} /><span>Clearly deferred</span><h3>No fabricated secondary systems</h3><p>Player List and Map tabs are visible as Binder functions but disabled until their verified records are built. Analysis remains explicitly labelled as an archive reconstruction.</p></article>
     </div>
     <div className="gi-stage-list">
       <h3>Next verified stages</h3>
-      <ol>{nextStages.map(([title, note], index) => <li key={title}><i>{String(index + 3).padStart(2, '0')}</i><div><strong>{title}</strong><p>{note}</p></div></li>)}</ol>
+      <ol>{nextStages.map(([title, note], index) => <li key={title}><i>{String(index + 4).padStart(2, '0')}</i><div><strong>{title}</strong><p>{note}</p></div></li>)}</ol>
     </div>
   </section>;
 }
@@ -134,15 +141,16 @@ export default function GreedIslandPage({ onNavigate }) {
       <EtaFoundation mode={mode} summoned={summoned} setSummoned={setSummoned} />
       {summoned ? <GreedIslandBinder /> : <section className="gi-book-gate" aria-labelledby="gi-book-gate-title">
         <div aria-hidden="true"><span>G</span><b>GREED ISLAND</b><span>I</span></div>
-        <span>Binder not summoned</span>
+        <span>Book not summoned</span>
         <h2 id="gi-book-gate-title">Say “Book” to begin the card tutorial.</h2>
-        <p>The Binder remains closed in the entry sequence until the player invokes the command. Free Exploration can open it immediately.</p>
+        <p>The Book remains absent in the entry sequence until the player invokes the command. Free Exploration can summon it immediately.</p>
         <button type="button" onClick={() => setSummoned(true)}>Book</button>
       </section>}
       <FoundationNotes />
       <section className="gi-sources" id="sources" aria-labelledby="gi-sources-title">
-        <header className="gi-section-heading"><span>Primary research source</span><h2 id="gi-sources-title">Hunterpedia / Hunter × Hunter Fandom</h2><p>Card images, filenames, and data retain an explicit source and verification state.</p></header>
+        <header className="gi-section-heading"><span>Primary research sources</span><h2 id="gi-sources-title">Hunterpedia / Hunter × Hunter Fandom</h2><p>Card images, filenames, Book references, and data retain explicit sources and verification states.</p></header>
         <a href={GREED_ISLAND_CARD_SOURCE.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{GREED_ISLAND_CARD_SOURCE.label}</strong><small>Specified Slot registry and card images · verified {GREED_ISLAND_CARD_SOURCE.verifiedAt}</small></span><ExternalLink size={14} /></a>
+        <a href={GREED_ISLAND_BOOK_SOURCE.href} target="_blank" rel="noreferrer noopener"><BookOpen size={18} /><span><strong>{GREED_ISLAND_BOOK_SOURCE.label}</strong><small>G.I. Book, G.I. Book Slots, and Binder rules · verified {GREED_ISLAND_BOOK_SOURCE.verifiedAt}</small></span><ExternalLink size={14} /></a>
       </section>
     </main>
     <footer className="gi-next-page"><div><span>Story 06</span><h2>Chimera Ant</h2><p>The card selected to find Ging instead redirects Gon and Killua toward Kite.</p></div><button type="button" onClick={() => onNavigate('series', 'chimera-ant')}>Continue <ArrowRight size={18} /></button></footer>
