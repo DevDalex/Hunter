@@ -61,10 +61,11 @@ const record = async (name, page, test) => {
 };
 
 const openEta = async (page, base) => {
-  await page.goto(`${base}/#/series/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.goto(`${base}/#/series/greed-island/eta`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
   await page.waitForSelector('[data-eta-scene]', { timeout: 15_000 });
   await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 }).catch(() => {});
   await page.locator('[data-eta-scene]').scrollIntoViewIfNeeded();
+  if (await page.locator('.gi-binder-section, .gi-card-archive, .gi-systems, .gi-tactical, .gi-completion').count()) throw new Error('Inactive Greed Island modules remain mounted on the Eta route.');
 };
 
 await mkdir(output, { recursive: true });
