@@ -1,3 +1,5 @@
+import { specifiedCardLocalMediaById } from './specifiedCardLocalMedia.generated.js';
+
 const CARD_LIST_SOURCE = 'https://hunterxhunter.fandom.com/wiki/Greed_Island_Card_Lists';
 const FILE_PAGE_BASE = 'https://hunterxhunter.fandom.com/wiki/File:';
 const FILE_REDIRECT_BASE = 'https://hunterxhunter.fandom.com/wiki/Special:Redirect/file/';
@@ -113,17 +115,24 @@ if (verifiedImageFiles.length !== 100) throw new Error(`Expected 100 verified Sp
 if (new Set(verifiedImageFiles).size !== 100) throw new Error('Specified Slot image registry contains duplicate file names.');
 if (verifiedImageFiles.some((fileName) => !fileName.endsWith('.png'))) throw new Error('Every verified Specified Slot image must be a PNG file reference.');
 
-export const specifiedCardMedia = Object.freeze(verifiedImageFiles.map((fileName, number) => Object.freeze({
-  cardId: String(number).padStart(3, '0'),
-  fileName,
-  filePage: `${FILE_PAGE_BASE}${wikiPath(fileName)}`,
-  remote: `${FILE_REDIRECT_BASE}${wikiPath(fileName)}`,
-  local: null,
-  storage: 'hunterpedia-remote',
-  fallback: 'generated-card-back',
-  sourcePage: CARD_LIST_SOURCE,
-  verifiedAt: '2026-07-21',
-})));
+export const specifiedCardMedia = Object.freeze(verifiedImageFiles.map((fileName, number) => {
+  const cardId = String(number).padStart(3, '0');
+  const stabilized = specifiedCardLocalMediaById.get(cardId) || null;
+  return Object.freeze({
+    cardId,
+    fileName,
+    filePage: `${FILE_PAGE_BASE}${wikiPath(fileName)}`,
+    remote: `${FILE_REDIRECT_BASE}${wikiPath(fileName)}`,
+    local: stabilized?.src || null,
+    width: stabilized?.width || null,
+    height: stabilized?.height || null,
+    storage: stabilized ? 'local-webp-with-remote-source' : 'hunterpedia-remote',
+    fallback: 'generated-card-back',
+    sourcePage: CARD_LIST_SOURCE,
+    verifiedAt: '2026-07-21',
+    localReviewedAt: stabilized?.reviewed || null,
+  });
+}));
 
 export const specifiedCardMediaById = new Map(specifiedCardMedia.map((media) => [media.cardId, media]));
 export const getSpecifiedCardMedia = (id) => specifiedCardMediaById.get(String(id).padStart(3, '0')) || null;
