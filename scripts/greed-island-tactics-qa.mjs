@@ -56,9 +56,10 @@ const record = async (name, page, test) => {
   }
 };
 
-const openTactics = async (page, base) => {
-  await page.goto(`${base}/#/series/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-  await page.waitForSelector('.gi-tactical', { timeout: 15_000 });
+const collectionMap = { training: 'training', razor: 'razor', bombers: 'bomber', 'final-battles': 'battles' };
+const openTactics = async (page, base, route = 'training') => {
+  await page.goto(`${base}/#/series/greed-island/tactics/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.waitForSelector(`.gi-tactical[data-tactical-collection="${collectionMap[route]}"]`, { timeout: 15_000 });
   await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 }).catch(() => {});
   await page.locator('.gi-tactical').scrollIntoViewIfNeeded();
 };
@@ -73,17 +74,21 @@ const base = `http://127.0.0.1:${server.address().port}`;
 
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await record('Biscuit training and Razor replay', desktop, async () => {
-    await openTactics(desktop, base);
-    const tactics = desktop.locator('.gi-tactical');
+  await record('Biscuit training and Razor direct routes', desktop, async () => {
+    await openTactics(desktop, base, 'training');
+    let tactics = desktop.locator('.gi-tactical');
     const metrics = await tactics.locator('.gi-tactical__metrics').innerText();
     if (!metrics.includes('5') || !metrics.includes('6') || !metrics.includes('3')) throw new Error(`Tactical metrics are incomplete: ${metrics}`);
+    if (await tactics.locator('.gi-tactical-razor, .gi-tactical-bomber, .gi-tactical-battles').count()) throw new Error('Inactive tactical views remain mounted on the training route');
 
     await tactics.locator('[data-training-module="gyo-feint-read"]').click();
     const trainingText = (await tactics.locator('.gi-tactical-record').innerText()).toLowerCase();
     if (!trainingText.includes('little flower') || !trainingText.includes('gyo')) throw new Error('Gyo/Little Flower training record is incomplete');
 
-    await tactics.locator('.gi-tactical__tabs button').filter({ hasText: 'Razor dodgeball replay' }).click();
+    await desktop.goto(`${base}/#/series/greed-island/tactics/razor`, { waitUntil: 'domcontentloaded' });
+    await desktop.waitForSelector('.gi-tactical[data-tactical-collection="razor"]');
+    tactics = desktop.locator('.gi-tactical');
+    if (await tactics.locator('.gi-tactical-training, .gi-tactical-bomber, .gi-tactical-battles').count()) throw new Error('Inactive tactical views remain mounted on the Razor route');
     await tactics.locator('[data-dodgeball-phase="eight-player-rule"]').click();
     const ruleText = (await tactics.locator('.gi-tactical-record').innerText()).toLowerCase();
     if (!ruleText.includes('eight players') || !ruleText.includes('outside')) throw new Error('Eight-player dodgeball rule record is incomplete');
@@ -94,10 +99,10 @@ try {
   await desktop.close();
 
   const desktopBomber = await browser.newPage({ viewport: { width: 1366, height: 920 } });
-  await record('Bomber conditions and final battle split', desktopBomber, async () => {
-    await openTactics(desktopBomber, base);
-    const tactics = desktopBomber.locator('.gi-tactical');
-    await tactics.locator('.gi-tactical__tabs button').filter({ hasText: 'Bomber system' }).click();
+  await record('Bomber conditions and final battle direct routes', desktopBomber, async () => {
+    await openTactics(desktopBomber, base, 'bombers');
+    let tactics = desktopBomber.locator('.gi-tactical');
+    if (await tactics.locator('.gi-tactical-training, .gi-tactical-razor, .gi-tactical-battles').count()) throw new Error('Inactive tactical views remain mounted on the Bomber route');
     await tactics.locator('[data-bomber-mechanic="countdown-conditions"]').click();
     const countdown = (await tactics.locator('.gi-tactical-record').innerText()).toLowerCase();
     if (!countdown.includes('touch') || !countdown.includes('bomber') || !countdown.includes('explanation')) throw new Error('Countdown condition record is incomplete');
@@ -109,7 +114,10 @@ try {
     status = (await tactics.locator('.gi-tactical-bomber__sim [role="status"]').innerText()).toLowerCase();
     if (!status.includes('countdown disarmed') || !status.includes('release is blocked')) throw new Error(`Disarm simulation failed: ${status}`);
 
-    await tactics.locator('.gi-tactical__tabs button').filter({ hasText: 'Final battle split' }).click();
+    await desktopBomber.goto(`${base}/#/series/greed-island/tactics/final-battles`, { waitUntil: 'domcontentloaded' });
+    await desktopBomber.waitForSelector('.gi-tactical[data-tactical-collection="battles"]');
+    tactics = desktopBomber.locator('.gi-tactical');
+    if (await tactics.locator('.gi-tactical-training, .gi-tactical-razor, .gi-tactical-bomber').count()) throw new Error('Inactive tactical views remain mounted on the final-battles route');
     await tactics.locator('[data-final-battle="gon-vs-genthru"]').click();
     const gonText = (await tactics.locator('.gi-tactical-record').innerText()).toLowerCase();
     if (!gonText.includes('gasoline') || !gonText.includes('pitfall') || !gonText.includes('rock')) throw new Error('Gon vs Genthru battle record is incomplete');
@@ -120,10 +128,9 @@ try {
   await desktopBomber.close();
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Tactical records mobile containment and reduced motion', mobile, async () => {
-    await openTactics(mobile, base);
+  await record('Bomber tactical route mobile containment and reduced motion', mobile, async () => {
+    await openTactics(mobile, base, 'bombers');
     const tactics = mobile.locator('.gi-tactical');
-    await tactics.locator('.gi-tactical__tabs button').filter({ hasText: 'Bomber system' }).click();
     await tactics.locator('[data-bomber-mechanic="caught-bomber-disarm"]').click();
     const mobileText = (await tactics.innerText()).toLowerCase();
     if (!mobileText.includes('caught the bomber') || !mobileText.includes('archive simulation')) throw new Error('Mobile tactical view did not expose Bomber disarm boundary');
