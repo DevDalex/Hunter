@@ -1,9 +1,8 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import {
   Activity,
   ArrowLeft,
   ArrowRight,
-  BookOpen,
   CheckCircle2,
   FileText,
   GraduationCap,
@@ -104,14 +103,6 @@ export default function GreedIslandPage({ onNavigate, routeParams = {} }) {
     });
   };
 
-  useEffect(() => {
-    try {
-      window.localStorage.setItem('hxh-greed-island-last-module', activeModule);
-    } catch {
-      // Storage is optional; the URL remains the source of truth.
-    }
-  }, [activeModule]);
-
   const outlet = useMemo(() => {
     if (activeModule === 'home') return <GreedIslandHub onOpen={(module) => navigateModule(module, defaults[module])} />;
     if (activeModule === 'eta') return <EtaTutorial mode="story" summoned={summoned} setSummoned={setSummoned} />;
@@ -121,7 +112,7 @@ export default function GreedIslandPage({ onNavigate, routeParams = {} }) {
       const collection = activeSubview === 'free-slot' ? 'free' : activeSubview === 'game-master' ? 'gm' : 'spell';
       return <GreedIslandCardLibraries requestedCollection={collection} onCollectionChange={(next) => navigateModule('cards', next === 'free' ? 'free-slot' : next === 'gm' ? 'game-master' : 'spells')} />;
     }
-    if (activeModule === 'island') return <GreedIslandSystems requestedView={activeSubview} onViewChange={(view) => navigateModule('island', view)} />;
+    if (activeModule === 'island') return <GreedIslandSystems requestedView={activeSubview} />;
     if (activeModule === 'tactics') {
       const collection = activeSubview === 'bombers' ? 'bomber' : activeSubview === 'final-battles' ? 'battles' : activeSubview;
       return <GreedIslandTacticalRecords requestedCollection={collection} onCollectionChange={(next) => navigateModule('tactics', next === 'bomber' ? 'bombers' : next === 'battles' ? 'final-battles' : next)} />;
