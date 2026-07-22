@@ -196,6 +196,9 @@ export function parseCleanRoute(pathname = '/', search = '') {
 
     if (parts[1] === 'succession-contest') {
       if (parts.length === 2) return normalizeDestination('series', 'succession-contest', params);
+      if (parts.length === 3 && parts[2] === 'timeline') {
+        return { view: 'succession', target: 'succession-timeline', params };
+      }
       if (parts.length === 3 && parts[2] === 'chapters') {
         return normalizeDestination('series', 'succession-contest', { section: 'chapters', ...params });
       }
@@ -239,5 +242,6 @@ export function readBrowserRoute() {
     return legacyRoute;
   }
 
-  return parseCleanRoute(window.location.pathname, window.location.search);
+  const cleanRoute = parseCleanRoute(window.location.pathname, window.location.search);
+  return normalizeDestination(cleanRoute.view, cleanRoute.target, cleanRoute.params);
 }
