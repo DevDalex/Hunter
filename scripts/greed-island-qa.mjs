@@ -202,7 +202,7 @@ try {
     await desktop.keyboard.press('ArrowRight');
     if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '009') throw new Error('Keyboard ArrowRight did not return to card 009');
 
-    await binder.getByRole('button', { name: 'Open Binder page 10' }).click();
+    await binder.getByRole('button', { name: 'Open Binder page 10', exact: true }).click();
     if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '085') throw new Error('Direct page selection did not highlight the middle available card');
     await binder.locator('.gi-binder-search input').fill('Blue Planet');
     await binder.locator('.gi-binder-search button').click();
@@ -215,7 +215,7 @@ try {
     const deepText = (await deepRecord.innerText()).toLowerCase();
     if (!deepText.includes('acquisition') || !deepText.includes('story record')) throw new Error('Center red button did not reveal the extended card record');
 
-    await binder.getByRole('button', { name: 'Open Binder page 1' }).click();
+    await binder.getByRole('button', { name: 'Open Binder page 1', exact: true }).click();
     await binder.getByRole('button', { name: /Card 002, Plot of Beach/ }).click();
     if (!(await binder.locator('.gi-binder-screen').innerText()).includes('Plot of Beach')) throw new Error('Direct card selection did not update the right-hand display');
   });
@@ -251,7 +251,7 @@ try {
     if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '005') throw new Error('Mobile red control did not update the selected card');
     await binder.getByRole('button', { name: 'Open extended selected-card record' }).click();
     await binder.locator('.gi-binder-screen__deep.is-open').waitFor();
-    await binder.getByRole('button', { name: 'Open Binder page 12' }).click();
+    await binder.getByRole('button', { name: 'Open Binder page 12', exact: true }).click();
     if (await binder.locator('[data-binder-card-id="099"]').count() !== 1) throw new Error('Final Binder page does not expose card 099');
     if (await binder.locator('.gi-binder-card--empty').count() !== 8) throw new Error('Final Binder page does not retain eight deliberate empty pockets');
 
