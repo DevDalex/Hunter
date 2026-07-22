@@ -88,6 +88,8 @@ The server then:
 10. stages and writes the chapter folder;
 11. updates the generated manifest.
 
+After a successful import, restart or refresh the Vite development site and open the chapter in the public reader. The pages appear automatically from the updated manifest.
+
 The temporary admin token expires when the process stops. Press `Ctrl+C` to stop the local server.
 
 ## URL import from the terminal
