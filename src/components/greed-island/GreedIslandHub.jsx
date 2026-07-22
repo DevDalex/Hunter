@@ -1,4 +1,4 @@
-import { Activity, BookOpen, CheckCircle2, FileText, GraduationCap, LibraryBig, Map, NotebookTabs } from 'lucide-react';
+import { Activity, BookOpen, CheckCircle2, GraduationCap, LibraryBig, Map, NotebookTabs } from 'lucide-react';
 import './GreedIslandHub.css';
 
 const modules = [
@@ -8,7 +8,6 @@ const modules = [
   { id: 'island', label: 'Island', note: 'Map, quests, player systems, and Game Master controls.', icon: Map },
   { id: 'tactics', label: 'Tactics', note: 'Training, Razor, Bomber mechanics, and final battles.', icon: Activity },
   { id: 'completion', label: 'Completion', note: 'Quiz boundary, rewards, route fork, and adaptation records.', icon: CheckCircle2 },
-  { id: 'sources', label: 'Sources', note: 'The complete Hunterpedia / Fandom research registry.', icon: FileText },
 ];
 
 export default function GreedIslandHub({ onOpen }) {
