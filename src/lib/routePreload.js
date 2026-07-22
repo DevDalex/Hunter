@@ -21,7 +21,7 @@ export const routeModuleLoaders = {
 };
 
 const successionDossierTargets = new Set([
-  'beasts', 'mafia',
+  'beasts', 'mafia', 'chapters',
 ]);
 
 const loaderForRoute = (view, target = '') => {
@@ -31,7 +31,6 @@ const loaderForRoute = (view, target = '') => {
     if (target === 'family-tree') return routeModuleLoaders.familyTree;
     if (target === 'succession-roster') return routeModuleLoaders.successionRoster;
     if (target === 'succession-timeline') return routeModuleLoaders.successionTimeline;
-    if (target === 'chapters') return routeModuleLoaders.successionChapterReader;
     if (target === 'black-whale') return routeModuleLoaders.blackWhale;
     if (successionDossierTargets.has(target)) return routeModuleLoaders.successionDossier;
     return null;
