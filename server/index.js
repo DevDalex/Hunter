@@ -2,6 +2,7 @@ import { handleHostedChapterAdmin, isHostedChapterAdminRequest } from './chapter
 
 const INSPECT_PATH = '/api/admin/chapter/inspect';
 const ADMIN_PATHS = new Set(['/admin/chapters', '/admin/chapters/']);
+const INSPECTION_CONTRACT_PATH = '/admin/chapters/inspect-contract.js';
 
 const jsonError = (status, message) => new Response(JSON.stringify({ error: message }), {
   status,
@@ -59,16 +60,66 @@ const normalizeInspectionGet = async (request, env) => {
   return validateInspectionResponse(await handleHostedChapterAdmin(normalized, env));
 };
 
+const inlineInspectionContract = `<script data-inspection-contract="inline">
+(() => {
+  const nativeFetch = window.fetch.bind(window);
+
+  window.fetch = async (input, init = {}) => {
+    const response = await nativeFetch(input, init);
+    let requestUrl;
+    try {
+      requestUrl = new URL(typeof input === 'string' ? input : input.url, window.location.href);
+    } catch {
+      return response;
+    }
+
+    if (requestUrl.pathname !== '${INSPECT_PATH}' || !response.ok) return response;
+
+    const text = await response.clone().text();
+    let payload = null;
+    try {
+      payload = text ? JSON.parse(text) : null;
+    } catch {}
+
+    if (payload && Array.isArray(payload.pages)) return response;
+
+    const looksLikeHtml = /^\\s*</.test(text);
+    const message = payload?.error
+      || (looksLikeHtml
+        ? 'The inspection request was rewritten to a webpage instead of reaching the chapter-admin API.'
+        : 'The chapter-admin API returned an invalid inspection response without a pages list.');
+
+    return new Response(JSON.stringify({ error: message }), {
+      status: 502,
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'cache-control': 'no-store',
+        'x-content-type-options': 'nosniff',
+      },
+    });
+  };
+})();
+</script>`;
+
 const injectInspectionContract = async (response) => {
   if (!response.ok || !String(response.headers.get('content-type') || '').includes('text/html')) return response;
 
   const html = await response.text();
-  const script = '<script src="/admin/chapters/inspect-contract.js"></script>';
-  const patched = html.includes(script)
+  const externalScript = `<script src="${INSPECTION_CONTRACT_PATH}"></script>`;
+  const scripts = `${inlineInspectionContract}${externalScript}`;
+  const patched = html.includes('data-inspection-contract="inline"')
     ? html
-    : html.replace('</body>', `${script}</body>`);
+    : html.replace('</body>', `${scripts}</body>`);
   const headers = new Headers(response.headers);
   headers.delete('content-length');
+
+  const contentSecurityPolicy = headers.get('content-security-policy');
+  if (contentSecurityPolicy && !contentSecurityPolicy.includes("script-src 'self'")) {
+    headers.set(
+      'content-security-policy',
+      contentSecurityPolicy.replace("script-src 'unsafe-inline'", "script-src 'self' 'unsafe-inline'"),
+    );
+  }
 
   return new Response(patched, {
     status: response.status,
