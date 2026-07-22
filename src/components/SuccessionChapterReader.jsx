@@ -7,6 +7,7 @@ import {
   ImageOff,
   List,
   Search,
+  ShieldAlert,
 } from 'lucide-react';
 import {
   SUCCESSION_READER_END,
@@ -27,17 +28,19 @@ const numeric = (value, fallback) => {
 
 function ReaderPage({ chapter, page, index }) {
   const [failed, setFailed] = useState(false);
-  return <figure className={`succession-reader__page${failed ? ' is-failed' : ''}`} data-reader-page={index + 1}>
+  const pageNumber = page.page || index + 1;
+  const label = page.label || `p.${pageNumber}`;
+  return <figure className={`succession-reader__page${failed ? ' is-failed' : ''}`} data-reader-page={pageNumber} data-page-id={page.id}>
     {!failed ? <img
       src={page.src}
-      alt={`Hunter × Hunter chapter ${chapter}, page ${index + 1}`}
+      alt={`Hunter × Hunter Chapter ${chapter}, ${label}`}
       width={page.width}
       height={page.height}
       loading={index < 2 ? 'eager' : 'lazy'}
       decoding="async"
       onError={() => setFailed(true)}
-    /> : <div role="img" aria-label={`Chapter ${chapter} page ${index + 1} could not be loaded`}><ImageOff aria-hidden="true" /><strong>Page unavailable</strong></div>}
-    <figcaption>Chapter {chapter} · Page {index + 1}</figcaption>
+    /> : <div role="img" aria-label={`Chapter ${chapter} ${label} could not be loaded`}><ImageOff aria-hidden="true" /><strong>{label} unavailable</strong></div>}
+    <figcaption>Chapter {chapter} · {label}</figcaption>
   </figure>;
 }
 
@@ -66,14 +69,12 @@ export default function SuccessionChapterReader({ requestedChapter, requestedPag
   }, [chapter, mode, safePageIndex]);
 
   const filteredChapters = useMemo(() => {
-    const normalized = query.trim();
+    const normalized = query.trim().toLowerCase();
     if (!normalized) return successionChapterReaderRecords;
-    return successionChapterReaderRecords.filter((item) => String(item.chapter).includes(normalized));
+    return successionChapterReaderRecords.filter((item) => `${item.chapter} ${item.bankStatus} ${item.pages.map((page) => page.label).join(' ')}`.toLowerCase().includes(normalized));
   }, [query]);
 
-  const navigateRoute = (nextChapter, nextPage, nextMode = mode) => {
-    onNavigate?.(nextChapter, nextPage, nextMode);
-  };
+  const navigateRoute = (nextChapter, nextPage, nextMode = mode) => onNavigate?.(nextChapter, nextPage, nextMode);
 
   const openChapter = (nextChapter, source = 'Opened') => {
     const bounded = clamp(nextChapter, SUCCESSION_READER_START, SUCCESSION_READER_END);
@@ -87,7 +88,7 @@ export default function SuccessionChapterReader({ requestedChapter, requestedPag
     if (!pageCount) return;
     const bounded = clamp(nextIndex, 0, pageCount - 1);
     setPageIndex(bounded);
-    setAnnouncement(`Chapter ${chapter}, page ${bounded + 1} of ${pageCount}.`);
+    setAnnouncement(`Chapter ${chapter}, p.${bounded + 1} of ${pageCount}.`);
     navigateRoute(chapter, bounded + 1);
   };
 
@@ -109,35 +110,29 @@ export default function SuccessionChapterReader({ requestedChapter, requestedPag
       if (pageCount && safePageIndex < pageCount - 1) openPage(safePageIndex + 1);
       else openChapter(chapter + 1, 'Moved to');
     }
-    if (event.key === 'PageUp') {
-      event.preventDefault();
-      openChapter(chapter - 1, 'Moved to');
-    }
-    if (event.key === 'PageDown') {
-      event.preventDefault();
-      openChapter(chapter + 1, 'Moved to');
-    }
+    if (event.key === 'PageUp') { event.preventDefault(); openChapter(chapter - 1, 'Moved to'); }
+    if (event.key === 'PageDown') { event.preventDefault(); openChapter(chapter + 1, 'Moved to'); }
   };
 
   return <section className="succession-reader" aria-labelledby="succession-reader-title">
     <header className="succession-reader__heading">
       <div>
-        <span>Succession Contest · chapter reader framework</span>
+        <span>Succession Contest · Chapter Bank reader</span>
         <h2 id="succession-reader-title">Chapters {SUCCESSION_READER_START}–{SUCCESSION_READER_END}</h2>
-        <p>{SUCCESSION_READER_TOTAL} chapters are indexed in reading order. Approved local chapter pages appear automatically from beginning to end when they are added to the reader manifest.</p>
+        <p>{SUCCESSION_READER_TOTAL} permanent chapter records are indexed. Approved bank pages appear in stored order with stable <code>p.N</code> identities.</p>
       </div>
       <dl>
-        <div><dt>Indexed chapters</dt><dd>{SUCCESSION_READER_TOTAL}</dd></div>
+        <div><dt>Bank chapters</dt><dd>{SUCCESSION_READER_TOTAL}</dd></div>
         <div><dt>Selected</dt><dd>{chapter}</dd></div>
-        <div><dt>Reader pages</dt><dd>{pageCount}</dd></div>
+        <div><dt>Stored pages</dt><dd>{pageCount}</dd></div>
       </dl>
     </header>
 
     <p className="succession-reader__status" role="status" aria-live="polite">{announcement}</p>
 
     <div className="succession-reader__workspace">
-      <aside className="succession-reader__directory" aria-label="Chapter directory">
-        <label className="succession-reader__search"><Search size={17} aria-hidden="true" /><span className="sr-only">Search chapter number</span><input value={query} onChange={(event) => setQuery(event.target.value)} inputMode="numeric" placeholder="Find chapter…" /></label>
+      <aside className="succession-reader__directory" aria-label="Chapter Bank directory">
+        <label className="succession-reader__search"><Search size={17} aria-hidden="true" /><span className="sr-only">Search chapter, status, or page</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Find chapter or p.7…" /></label>
         <div className="succession-reader__chapter-grid">
           {filteredChapters.map((item) => <button
             type="button"
@@ -147,7 +142,7 @@ export default function SuccessionChapterReader({ requestedChapter, requestedPag
             onClick={() => openChapter(item.chapter)}
           >
             <b>{item.chapter}</b>
-            <small>{item.pageCount ? `${item.pageCount} pages` : 'Indexed'}</small>
+            <small>{item.pageCount ? `${item.pageCount} pages` : item.bankStatus === 'needs-repair' ? 'Needs repair' : 'Empty bank'}</small>
           </button>)}
         </div>
       </aside>
@@ -160,29 +155,32 @@ export default function SuccessionChapterReader({ requestedChapter, requestedPag
         data-reader-chapter={chapter}
         data-reader-mode={mode}
         data-reader-page-count={pageCount}
+        data-bank-status={record.bankStatus}
       >
         <header className="succession-reader__toolbar">
-          <div><span>Chapter</span><strong>{chapter}</strong><small>{pageCount ? `${safePageIndex + 1} / ${pageCount}` : 'Awaiting approved pages'}</small></div>
+          <div><span>Chapter</span><strong>{chapter}</strong><small>{pageCount ? `${record.pages[safePageIndex]?.label || `p.${safePageIndex + 1}`} / ${pageCount}` : 'Empty bank record'}</small></div>
           <div className="succession-reader__mode" role="group" aria-label="Reading mode">
             <button type="button" className={mode === 'continuous' ? 'is-active' : ''} aria-pressed={mode === 'continuous'} onClick={() => changeMode('continuous')}><List size={16} /> Continuous</button>
             <button type="button" className={mode === 'single' ? 'is-active' : ''} aria-pressed={mode === 'single'} onClick={() => changeMode('single')}><Grid3X3 size={16} /> Single page</button>
           </div>
         </header>
 
+        {record.missingPages?.length ? <div className="succession-reader__empty" role="alert"><ShieldAlert aria-hidden="true" /><h3>Chapter {chapter} needs repair.</h3><p>Missing bank pages: {record.missingPages.map((page) => `p.${page}`).join(', ')}. Stored page identities remain fixed until the missing files are repaired or the chapter is intentionally renumbered.</p></div> : null}
+
         {pageCount ? <div className={`succession-reader__pages is-${mode}`}>
           {mode === 'continuous'
-            ? record.pages.map((page, index) => <ReaderPage key={`${chapter}-${page.page}`} chapter={chapter} page={page} index={index} />)
+            ? record.pages.map((page, index) => <ReaderPage key={page.id || `${chapter}-${page.page}`} chapter={chapter} page={page} index={index} />)
             : <ReaderPage chapter={chapter} page={record.pages[safePageIndex]} index={safePageIndex} />}
         </div> : <div className="succession-reader__empty" role="note">
           <BookOpen aria-hidden="true" />
-          <h3>Chapter {chapter} is indexed.</h3>
-          <p>No authorized local page images have been added for this chapter. The reader will preserve the supplied page order automatically when approved media is available.</p>
+          <h3>Chapter {chapter} has an empty bank record.</h3>
+          <p>No authorized page files are stored yet. When imported, p.1 begins at the sequential path below.</p>
           <code>public/media/succession-contest/chapters/{chapter}/001.webp</code>
         </div>}
 
         <nav className="succession-reader__controls" aria-label="Chapter and page controls">
           <button type="button" onClick={() => pageCount && safePageIndex > 0 ? openPage(safePageIndex - 1) : openChapter(chapter - 1)} disabled={chapter === SUCCESSION_READER_START && (!pageCount || safePageIndex === 0)}><ArrowLeft size={17} /> {pageCount && safePageIndex > 0 ? 'Previous page' : 'Previous chapter'}</button>
-          <span>Chapter {chapter}{pageCount ? ` · Page ${safePageIndex + 1} of ${pageCount}` : ''}</span>
+          <span>Chapter {chapter}{pageCount ? ` · ${record.pages[safePageIndex]?.label || `p.${safePageIndex + 1}`} of ${pageCount}` : ''}</span>
           <button type="button" onClick={() => pageCount && safePageIndex < pageCount - 1 ? openPage(safePageIndex + 1) : openChapter(chapter + 1)} disabled={chapter === SUCCESSION_READER_END && (!pageCount || safePageIndex === pageCount - 1)}>{pageCount && safePageIndex < pageCount - 1 ? 'Next page' : 'Next chapter'} <ArrowRight size={17} /></button>
         </nav>
       </div>
