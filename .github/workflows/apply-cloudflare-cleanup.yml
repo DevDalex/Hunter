@@ -27,7 +27,33 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          cat .refactor/cloudflare-cleanup-*.b64 > /tmp/cloudflare-cleanup.b64
+
+          test "$(git hash-object .refactor/cloudflare-cleanup-00.b64)" = "b696a953fb251ca3947a810b4145430b2a64f28b"
+          test "$(git hash-object .refactor/cloudflare-cleanup-01.b64)" = "f485c900a92e065ba4a37649fb017389bb126376"
+          test "$(git hash-object .refactor/cloudflare-cleanup-02.b64)" = "124e5482149d183aa9b602ecda324997669cabe8"
+          test "$(git hash-object .refactor/cloudflare-rem-00.b64)" = "7b52ee4f9ab369ca5cd237acbd8e6cd523c84a54"
+          test "$(git hash-object .refactor/cloudflare-rem-01.b64)" = "5a1f8f09e7b0933fc63a6ed4e1f3a881aef07e7c"
+          test "$(git hash-object .refactor/cloudflare-rem-02.b64)" = "032f751156ed10175788129bd82ce839a9c591da"
+          test "$(git hash-object .refactor/cloudflare-rem-03.b64)" = "faf3d948313b045f8423dfa71fd53ae3dc248c62"
+          test "$(git hash-object .refactor/cloudflare-rem-04.b64)" = "3c937a107ddd66c15f779827e4f052e6d5fd85e6"
+          test "$(git hash-object .refactor/cloudflare-rem-05.b64)" = "35319faf2ff671b66ee9c82988296bec65a1cb56"
+          test "$(git hash-object .refactor/cloudflare-rem-06.b64)" = "4b988f9a25e217598deb1142fed1b1fc75bd8b24"
+          test "$(git hash-object .refactor/cloudflare-rem-07.b64)" = "5f5b83da23dd9331ae2af1ca45933e435633d44b"
+
+          cat \
+            .refactor/cloudflare-cleanup-00.b64 \
+            .refactor/cloudflare-cleanup-01.b64 \
+            .refactor/cloudflare-cleanup-02.b64 \
+            .refactor/cloudflare-rem-00.b64 \
+            .refactor/cloudflare-rem-01.b64 \
+            .refactor/cloudflare-rem-02.b64 \
+            .refactor/cloudflare-rem-03.b64 \
+            .refactor/cloudflare-rem-04.b64 \
+            .refactor/cloudflare-rem-05.b64 \
+            .refactor/cloudflare-rem-06.b64 \
+            .refactor/cloudflare-rem-07.b64 \
+            > /tmp/cloudflare-cleanup.b64
+
           echo 'be8bc479302caeb7603927a2c82a4335c9e5c918825573fd9385f6d86652cd55  /tmp/cloudflare-cleanup.b64' | sha256sum --check
           base64 --decode /tmp/cloudflare-cleanup.b64 | gzip --decompress > /tmp/cloudflare-cleanup.patch
           echo 'fc53847d0ac763828ae0aed5b896de59adc0b14bbed9fb53efd219ee83336936  /tmp/cloudflare-cleanup.patch' | sha256sum --check
