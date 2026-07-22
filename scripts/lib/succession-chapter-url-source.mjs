@@ -95,9 +95,8 @@ export async function safeFetchBuffer(input, {
   for (let redirect = 0; redirect <= MAX_REDIRECTS; redirect += 1) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30_000);
-    let response;
     try {
-      response = await fetch(current, {
+      const response = await fetch(current, {
         redirect: 'manual',
         signal: controller.signal,
         headers: {
@@ -107,23 +106,23 @@ export async function safeFetchBuffer(input, {
           ...(referer ? { referer } : {}),
         },
       });
+
+      if ([301, 302, 303, 307, 308].includes(response.status)) {
+        const location = response.headers.get('location');
+        if (!location) throw new Error(`Redirect from ${current.href} did not include a destination.`);
+        current = await assertPublicHttpUrl(new URL(location, current).href);
+        continue;
+      }
+      if (!response.ok) throw new Error(`${label} returned HTTP ${response.status}: ${current.href}`);
+      const buffer = await readLimitedBody(response, maxBytes, label);
+      return {
+        buffer,
+        contentType: response.headers.get('content-type')?.split(';')[0].trim().toLowerCase() || '',
+        finalUrl: current.href,
+      };
     } finally {
       clearTimeout(timeout);
     }
-
-    if ([301, 302, 303, 307, 308].includes(response.status)) {
-      const location = response.headers.get('location');
-      if (!location) throw new Error(`Redirect from ${current.href} did not include a destination.`);
-      current = await assertPublicHttpUrl(new URL(location, current).href);
-      continue;
-    }
-    if (!response.ok) throw new Error(`${label} returned HTTP ${response.status}: ${current.href}`);
-    const buffer = await readLimitedBody(response, maxBytes, label);
-    return {
-      buffer,
-      contentType: response.headers.get('content-type')?.split(';')[0].trim().toLowerCase() || '',
-      finalUrl: current.href,
-    };
   }
   throw new Error(`Too many redirects while fetching ${input}.`);
 }
@@ -200,9 +199,9 @@ export function extractChapterImageUrls(html, pageUrl) {
     }
   }
 
-  for (const match of html.matchAll(/(?:https?:)?\\?\/\\?\/[^
-\r"'<>\s]+?\.(?:jpe?g|png|webp)(?:\?[^"'<>\s]*)?/gi)) {
-    add(match[0].replace(/\\\//g, '/'), 'embedded image URL');
+  const normalizedHtml = html.replace(/\\\//g, '/');
+  for (const match of normalizedHtml.matchAll(/(?:https?:)?\/\/[^\s"'<>]+?\.(?:jpe?g|png|webp)(?:\?[^\s"'<>]*)?/gi)) {
+    add(match[0], 'embedded image URL');
   }
 
   const byUrl = new Map();
@@ -258,15 +257,15 @@ export async function inspectChapterSource(sourceUrl) {
 }
 
 export function detectImageType(buffer, contentType = '', sourceUrl = '') {
-  if (buffer.length >= 12 && buffer[0] === 0xff && buffer[1] === 0xd8) return { extension: '.jpg', contentType: 'image/jpeg' };
-  if (buffer.length >= 24 && buffer.toString('ascii', 1, 4) === 'PNG') return { extension: '.png', contentType: 'image/png' };
-  if (buffer.length >= 16 && buffer.toString('ascii', 0, 4) === 'RIFF' && buffer.toString('ascii', 8, 12) === 'WEBP') return { extension: '.webp', contentType: 'image/webp' };
+  if (buffer.length >= 2 && buffer[0] === 0xff && buffer[1] === 0xd8) return { extension: '.jpg', contentType: 'image/jpeg' };
+  if (buffer.length >= 8 && buffer.toString('ascii', 1, 4) === 'PNG') return { extension: '.png', contentType: 'image/png' };
+  if (buffer.length >= 12 && buffer.toString('ascii', 0, 4) === 'RIFF' && buffer.toString('ascii', 8, 12) === 'WEBP') return { extension: '.webp', contentType: 'image/webp' };
   if (contentType === 'image/jpeg') return { extension: '.jpg', contentType };
   if (contentType === 'image/png') return { extension: '.png', contentType };
   if (contentType === 'image/webp') return { extension: '.webp', contentType };
-  const extension = path.extname(new URL(sourceUrl).pathname).toLowerCase();
+  const extension = sourceUrl ? path.extname(new URL(sourceUrl).pathname).toLowerCase() : '';
   if (['.jpg', '.jpeg', '.png', '.webp'].includes(extension)) return { extension: extension === '.jpeg' ? '.jpg' : extension, contentType: contentType || `image/${extension.slice(1)}` };
-  throw new Error(`Downloaded content is not a supported JPG, PNG, or WebP image: ${sourceUrl}`);
+  throw new Error(`Downloaded content is not a supported JPG, PNG, or WebP image: ${sourceUrl || '(unknown source)'}`);
 }
 
 export async function fetchChapterImage(imageUrl, sourceUrl) {
