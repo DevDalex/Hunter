@@ -13,6 +13,19 @@ const jsonError = (status, message) => new Response(JSON.stringify({ error: mess
   },
 });
 
+// Some chapter-admin route branches return async handlers directly from their
+// own try/catch. Await them at the Worker boundary so rejected handler promises
+// are still normalized into JSON instead of escaping as an unhandled exception.
+const runHostedChapterAdmin = async (request, env) => {
+  try {
+    return await handleHostedChapterAdmin(request, env);
+  } catch (error) {
+    const status = Number.isInteger(error?.status) ? error.status : 500;
+    console.error('Hosted chapter administration boundary error', error);
+    return jsonError(status, status >= 500 ? (error?.message || 'Chapter administration failed.') : error.message);
+  }
+};
+
 const validateInspectionResponse = async (response) => {
   if (!response.ok) return response;
 
@@ -57,7 +70,7 @@ const normalizeInspectionGet = async (request, env) => {
     }),
   });
 
-  return validateInspectionResponse(await handleHostedChapterAdmin(normalized, env));
+  return validateInspectionResponse(await runHostedChapterAdmin(normalized, env));
 };
 
 const inlineInspectionContract = `<script data-inspection-contract="inline">
@@ -128,8 +141,8 @@ const injectInspectionContract = async (response) => {
   });
 };
 
-// Static-site worker used by the private host. Vite's built assets are exposed
-// through the ASSETS binding; unknown client-side routes fall back to index.html.
+// Full-stack Sites Worker. Vite's built assets are exposed through the ASSETS
+// binding; all chapter-admin routes execute before any client-side SPA fallback.
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -147,11 +160,11 @@ export default {
     }
 
     if (request.method === 'GET' && ADMIN_PATHS.has(url.pathname)) {
-      return injectInspectionContract(await handleHostedChapterAdmin(request, env));
+      return injectInspectionContract(await runHostedChapterAdmin(request, env));
     }
 
     if (isHostedChapterAdminRequest(url)) {
-      const response = await handleHostedChapterAdmin(request, env);
+      const response = await runHostedChapterAdmin(request, env);
       return url.pathname === INSPECT_PATH ? validateInspectionResponse(response) : response;
     }
 
