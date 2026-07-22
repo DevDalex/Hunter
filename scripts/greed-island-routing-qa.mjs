@@ -106,6 +106,7 @@ try {
   await record('Nested direct links preserve subviews', direct, async () => {
     const cases = [
       ['cards/game-master', 'cards', 'game-master', '.gi-card-libraries[data-card-library="gm"]'],
+      ['island/locations', 'island', 'locations', '.gi-systems[data-island-system-view="locations"]'],
       ['island/game-masters', 'island', 'game-masters', '.gi-systems[data-island-system-view="game-masters"]'],
       ['tactics/final-battles', 'tactics', 'final-battles', '.gi-tactical[data-tactical-collection="battles"]'],
       ['completion/route', 'completion', 'route', '.gi-completion[data-completion-collection="route"]'],
