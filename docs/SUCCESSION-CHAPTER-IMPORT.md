@@ -6,7 +6,9 @@ The chapter reader lives at:
 /story/succession-contest/chapters
 ```
 
-It is the first view in the existing Succession **Chapters** workspace. The directory covers Chapters 338–414 and supports continuous and single-page reading modes.
+That route remains inside **Story → Succession Contest**. It renders the illustrated Succession Contest arc page and opens the chapter reader as an embedded arc section. The separate route `/story/succession-contest/records` remains the research workspace for the chapter ledger, deaths, objects, and mysteries.
+
+The reader directory covers Chapters 338–414 and supports continuous and single-page reading modes.
 
 ## Storage contract
 
@@ -88,6 +90,8 @@ npm run audit:succession-media
 ```
 
 This audit is included in the normal build preflight. It checks sequential page numbers, normalized paths, supported file extensions, positive dimensions, duplicate paths, missing files, and chapter directories that are not registered in the manifest.
+
+The dedicated browser QA also verifies that the chapter route keeps the illustrated Story arc shell, mounts the reader inside `#arc-chapters`, and does not fall back to the generic Succession records workspace.
 
 ## Commit boundary
 
