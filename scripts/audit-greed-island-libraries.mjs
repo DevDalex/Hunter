@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import {
   documentedFreeSlotCards,
   gameMasterCards,
@@ -6,12 +8,15 @@ import {
   spellCards,
   spellCardsById,
 } from '../src/data/greed-island/cardLibraries.js';
+import { cardLibraryLocalMedia } from '../src/data/greed-island/cardLibraryLocalMedia.generated.js';
+import { cardLibraryRemoteMedia } from '../src/data/greed-island/cardLibraryMedia.js';
 import { PROTECTION_TUTORIAL_EXAMPLES, SPELL_TUTORIAL_EXAMPLES } from '../src/data/greed-island/tutorialRules.js';
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Greed Island library audit failed: ${message}`);
 };
 
+const root = process.cwd();
 const ranks = new Set(['H', 'G', 'F', 'E', 'D', 'C', 'B', 'A', 'S', 'SS']);
 const classCodes = new Set(Object.keys(SPELL_CLASS_LABELS));
 
@@ -61,4 +66,25 @@ assert(defenseCount === 6, `expected 6 defensive/counter spells, found ${defense
 assert(spellCardsById.get('1035')?.classes.includes('AA'), 'Fortress must remain Anti-Attack capable');
 assert(gameMasterCards.some((card) => card.name === 'Eliminate'), 'Eliminate GM card is missing');
 
-console.log(`Greed Island library audit passed: ${spellCards.length} Spell Cards, ${documentedFreeSlotCards.length} documented Free Slot cards, ${gameMasterCards.length} GM-only cards, ${attackCount} attacks, ${defenseCount} defensive/counter spells.`);
+assert(cardLibraryRemoteMedia.length === 62, `expected 62 exact Hunterpedia table images, found ${cardLibraryRemoteMedia.length}`);
+assert(cardLibraryLocalMedia.length === 62, `expected 62 local card-library WebPs, found ${cardLibraryLocalMedia.length}`);
+assert(new Set(cardLibraryLocalMedia.map((record) => record.cardId)).size === 62, 'local card-library media ids are not unique');
+const remoteById = new Map(cardLibraryRemoteMedia.map((record) => [record.cardId, record]));
+for (const record of cardLibraryLocalMedia) {
+  const remote = remoteById.get(record.cardId);
+  assert(remote, `${record.cardId} local artwork has no exact table-image registry record`);
+  assert(record.imageSource === remote.remote, `${record.cardId} local artwork source drifted from Hunterpedia table image`);
+  assert(record.filePage === remote.filePage, `${record.cardId} local artwork file-page provenance drifted`);
+  assert(/^\/media\/greed-island\/library-cards\/(?:gm-)?\d+\.webp$/.test(record.src), `${record.cardId} uses invalid local artwork path ${record.src}`);
+  assert(!record.src.includes('/portraits/'), `${record.cardId} incorrectly uses a portrait fallback`);
+  const bytes = await readFile(path.join(root, 'public', record.src.slice(1)));
+  assert(bytes.subarray(0, 4).toString('ascii') === 'RIFF' && bytes.subarray(8, 12).toString('ascii') === 'WEBP', `${record.cardId} local artwork is not WebP`);
+  assert(record.width >= 120 && record.height >= 120, `${record.cardId} local artwork dimensions are unexpectedly small`);
+}
+
+const localIds = new Set(cardLibraryLocalMedia.map((record) => record.cardId));
+for (const card of spellCards) assert(localIds.has(card.id), `${card.id} Spell Card is missing local artwork`);
+for (const card of gameMasterCards) assert(localIds.has(card.id), `${card.id} Game Master card is missing local artwork`);
+assert(documentedFreeSlotCards.filter((card) => localIds.has(card.id)).length === 18, 'documented Free Slot artwork coverage must remain 18/20; the table explicitly shows no image for two records');
+
+console.log(`Greed Island library audit passed: ${spellCards.length} Spell Cards, ${documentedFreeSlotCards.length} documented Free Slot cards, ${gameMasterCards.length} GM-only cards, ${cardLibraryLocalMedia.length} local table images, ${attackCount} attacks, ${defenseCount} defensive/counter spells.`);
