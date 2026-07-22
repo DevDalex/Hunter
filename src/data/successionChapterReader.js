@@ -2,8 +2,7 @@ export const SUCCESSION_READER_START = 338;
 export const SUCCESSION_READER_END = 414;
 
 // This manifest intentionally contains only media the project is authorized to host.
-// Add approved local pages in reading order using the documented shape below:
-// 338: [{ page: 1, src: '/media/succession-contest/chapters/338/001.webp', width: 1200, height: 1800 }]
+// Approved records must provide page, local src, width, and height fields in reading order.
 export const authorizedSuccessionChapterMedia = Object.freeze({});
 
 export const successionChapterReaderRecords = Object.freeze(
