@@ -1,18 +1,20 @@
 name: Apply Cloudflare HxH cleanup
 
 on:
-  push:
+  pull_request:
     branches:
-      - refactor/02-cloudflare-hxh-only
-    paths:
-      - .github/workflows/apply-cloudflare-cleanup.yml
+      - main
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 permissions:
   contents: write
 
 jobs:
   apply:
-    if: github.actor != 'github-actions[bot]'
+    if: github.head_ref == 'refactor/02-cloudflare-hxh-only' && github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -43,6 +45,3 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'Remove obsolete Sites and portable packaging systems'
           git push origin HEAD:refactor/02-cloudflare-hxh-only
-
-      - name: Record completion
-        run: echo 'Cloudflare/HxH cleanup patch applied and pushed.'
