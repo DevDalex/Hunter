@@ -29,6 +29,7 @@ const dynamicEntries = Object.entries(manifest).filter(([, record]) => record.is
 const directBoundaryKeys = [
   'src/components/ArchiveSearch.jsx',
   'src/components/SeriesWorkspace.jsx',
+  'src/components/TimelineWorkspace.jsx',
   'src/components/SuccessionOverview.jsx',
   'src/components/FamilyTree.jsx',
   'src/components/SuccessionRoster.jsx',
@@ -41,8 +42,7 @@ const directBoundaryKeys = [
   'src/components/NenEncyclopedia.jsx',
   'src/components/HisokaChrolloDossier.jsx',
   'src/components/WorldAtlas.jsx',
-  'src/components/SystemsDesk.jsx',
-  'src/components/OrganizationArchive.jsx',
+  'src/components/OrganizationWorkspace.jsx',
   'src/components/ConflictArchive.jsx',
 ];
 const storyDetailBoundaryKeys = [
