@@ -24,10 +24,10 @@ import { preloadArchiveSearch, preloadRoute, routeModuleLoaders } from './lib/ro
 
 const ArchiveSearch = lazy(routeModuleLoaders.archiveSearch);
 const SeriesWorkspace = lazy(routeModuleLoaders.series);
+const TimelineWorkspace = lazy(routeModuleLoaders.timeline);
 const SuccessionOverview = lazy(routeModuleLoaders.successionOverview);
 const FamilyTree = lazy(routeModuleLoaders.familyTree);
 const SuccessionRoster = lazy(routeModuleLoaders.successionRoster);
-const SuccessionTimeline = lazy(routeModuleLoaders.successionTimeline);
 const SuccessionConnectionBoard = lazy(routeModuleLoaders.successionConnections);
 const BlackWhaleGuide = lazy(routeModuleLoaders.blackWhale);
 const SuccessionDossier = lazy(routeModuleLoaders.successionDossier);
@@ -35,8 +35,7 @@ const EntityEncyclopedia = lazy(routeModuleLoaders.encyclopedia);
 const NenEncyclopedia = lazy(routeModuleLoaders.nen);
 const HisokaChrolloDossier = lazy(routeModuleLoaders.hisokaChrollo);
 const WorldAtlas = lazy(routeModuleLoaders.worldAtlas);
-const SystemsDesk = lazy(routeModuleLoaders.systems);
-const OrganizationArchive = lazy(routeModuleLoaders.organizations);
+const OrganizationWorkspace = lazy(routeModuleLoaders.organizationWorkspace);
 const ConflictArchive = lazy(routeModuleLoaders.conflictArchive);
 
 const successionPanels = {
@@ -114,9 +113,11 @@ export default function App() {
       ? seriesTitle
       : activeView === 'succession'
         ? successionPage.title
-        : activeView === 'reference'
-          ? referencePage.title
-          : 'Page not found';
+        : activeView === 'timeline'
+          ? 'Timeline'
+          : activeView === 'reference'
+            ? referencePage.title
+            : 'Page not found';
 
   const applyRoute = (next) => {
     setActiveView(next.view);
@@ -219,6 +220,8 @@ export default function App() {
 
         {activeView === 'series' && <Suspense fallback={<RouteLoading label="story library" />}><SeriesWorkspace routeTarget={routeTarget} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={changeSpoilerLimit} onNavigate={navigate} onPrefetch={preloadRoute} /></Suspense>}
 
+        {activeView === 'timeline' && <Suspense fallback={<RouteLoading label="global timeline" />}><TimelineWorkspace requestedArc={routeParams.arc || 'all'} requestedScope={routeParams.scope || 'overview'} requestedSearch={routeParams.search || ''} spoilerLimit={spoilerLimit} onNavigate={(params) => navigate('timeline', '', params)} onOpenLocation={(room) => navigate('succession', 'black-whale', { room })} /></Suspense>}
+
         {activeView === 'succession' && <>
           <PageIntro kicker={successionPage.kicker} title={successionPage.title} description={successionPage.description}>
             <dl className="page-intro__facts"><div><dt>Arc</dt><dd>Ch. 340–{ARCHIVE_BOUNDARY}</dd></div><div><dt>Contest</dt><dd>Begins Ch. 359</dd></div><div><dt>Reading boundary</dt><dd>Ch. {spoilerLimit}</dd></div></dl>
@@ -235,7 +238,6 @@ export default function App() {
             {successionPage.id === 'succession-roster' && activePanel === 'roster' && <SuccessionRoster spoilerLimit={spoilerLimit} initialQuery={routeParams.search || ''} />}
             {successionPage.id === 'succession-roster' && activePanel === 'relationships' && <SuccessionConnectionBoard />}
             {successionPage.id === 'succession-roster' && activePanel === 'assignments' && renderEmbeddedDossier('assignments')}
-            {successionPage.id === 'succession-timeline' && <SuccessionTimeline spoilerLimit={spoilerLimit} initialQuery={routeParams.search || ''} onOpenLocation={(room) => navigate('succession', 'black-whale', { room })} />}
             {successionPage.id === 'black-whale' && <BlackWhaleGuide initialQuery={routeParams.room || ''} onOpenWorldMap={() => navigate('reference', 'atlas', { mode: 'succession', location: 'black-whale-voyage' })} />}
             {successionPage.id === 'beasts' && renderEmbeddedDossier(activePanel)}
             {successionPage.id === 'mafia' && renderEmbeddedDossier(activePanel)}
@@ -243,7 +245,9 @@ export default function App() {
           </Suspense>
         </>}
 
-        {activeView === 'reference' && <>
+        {activeView === 'reference' && referencePage.id === 'systems' && <Suspense fallback={<RouteLoading label="organizations" />}><OrganizationWorkspace requestedView={routeParams.view || 'overview'} requestedFamily={routeParams.family || 'all'} requestedSearch={routeParams.search || ''} onNavigate={(params) => navigate('reference', 'systems', params)} onOpenRecord={(category, record, search) => navigate('reference', 'encyclopedia', { category, record, search })} onOpenSuccession={() => navigate('succession', 'mafia')} onOpenBlackWhale={() => navigate('succession', 'black-whale')} onOpenNen={(search) => navigate('reference', 'nen', search ? { search } : {})} onOpenFights={() => navigate('reference', 'conflicts')} onOpenObjects={() => navigate('reference', 'encyclopedia', { category: 'objects' })} /></Suspense>}
+
+        {activeView === 'reference' && referencePage.id !== 'systems' && <>
           <PageIntro kicker={referencePage.kicker} title={referencePage.title} description={referencePage.description}>
             <dl className="page-intro__facts"><div><dt>Connected records</dt><dd>{SITE_STATS.records}</dd></div><div><dt>Characters</dt><dd>{SITE_STATS.characters}</dd></div><div><dt>Reading boundary</dt><dd>Ch. {spoilerLimit}</dd></div></dl>
           </PageIntro>
@@ -254,13 +258,8 @@ export default function App() {
           <Suspense fallback={<RouteLoading label={referencePage.label.toLowerCase()} />}>
             {referencePage.id === 'encyclopedia' && <EntityEncyclopedia key={`encyclopedia-${routeParams.category || ''}-${routeParams.search || ''}-${routeParams.record || ''}`} initialCategory={routeParams.category || 'characters'} initialQuery={routeParams.search || ''} initialRecord={routeParams.record || ''} spoilerLimit={spoilerLimit} />}
             {referencePage.id === 'nen' && <NenEncyclopedia initialQuery={routeParams.search || ''} spoilerLimit={spoilerLimit} />}
-            {referencePage.id === 'atlas' && <WorldAtlas initialLocation={routeParams.location || routeParams.search || ''} initialMode={routeParams.mode || 'explore'} initialRoute={routeParams.route || ''} onOpenBlackWhale={() => navigate('succession', 'black-whale')} onOpenEncyclopedia={(search) => navigate('reference', 'encyclopedia', { category: 'locations', search })} onOpenTimeline={(search) => navigate('succession', 'succession-timeline', { search })} />}
-            {referencePage.id === 'systems' && (routeParams.view === 'institutions' || routeParams.view === 'relations' || routeParams.view === 'objects' || routeParams.view === 'conflicts'
-              ? <SystemsDesk initialView={routeParams.view} initialQuery={routeParams.search || ''} onOpenRecord={(category, record, search) => navigate('reference', 'encyclopedia', { category, record, search })} />
-              : <OrganizationArchive onOpenRecord={(category, record, search) => navigate('reference', 'encyclopedia', { category, record, search })} onOpenSuccession={() => navigate('succession', 'mafia')} onOpenBlackWhale={() => navigate('succession', 'black-whale')} />)}
-            {referencePage.id === 'conflicts' && (routeParams.case === 'hisoka-chrollo' ? <HisokaChrolloDossier initialChapter={routeParams.chapter} initialAbility={routeParams.ability} /> : <>
-              <ConflictArchive initialQuery={routeParams.search || ''} onOpenEntity={(search) => navigate('reference', 'encyclopedia', { search })} onOpenHisokaDossier={() => navigate('reference', 'conflicts', { case: 'hisoka-chrollo' })} />
-            </>)}
+            {referencePage.id === 'atlas' && <WorldAtlas initialLocation={routeParams.location || routeParams.search || ''} initialMode={routeParams.mode || 'explore'} initialRoute={routeParams.route || ''} onOpenBlackWhale={() => navigate('succession', 'black-whale')} onOpenEncyclopedia={(search) => navigate('reference', 'encyclopedia', { category: 'locations', search })} onOpenTimeline={(search) => navigate('timeline', '', { arc: 'succession-contest', scope: 'events', search })} />}
+            {referencePage.id === 'conflicts' && (routeParams.case === 'hisoka-chrollo' ? <HisokaChrolloDossier initialChapter={routeParams.chapter} initialAbility={routeParams.ability} /> : <ConflictArchive initialQuery={routeParams.search || ''} onOpenEntity={(search) => navigate('reference', 'encyclopedia', { search })} onOpenHisokaDossier={() => navigate('reference', 'conflicts', { case: 'hisoka-chrollo' })} />)}
           </Suspense>
         </>}
 
@@ -277,7 +276,7 @@ export default function App() {
 
       <footer className="site-footer">
         <div><b>Hunter × Hunter Archive</b><p>An independent, non-commercial visual encyclopedia. Manga facts and displayed media are linked to Hunterpedia/Fandom; Hunter × Hunter belongs to Yoshihiro Togashi and its rights holders.</p></div>
-        <nav aria-label="Footer links"><button onClick={() => navigate('series')}>Story</button><button onClick={() => navigate('reference', 'encyclopedia')}>Encyclopedia</button><button onClick={() => navigate('succession', 'overview')}>Succession</button><button onClick={() => setDownloadsOpen(true)}>Download website</button></nav>
+        <nav aria-label="Footer links"><button onClick={() => navigate('series')}>Story</button><button onClick={() => navigate('timeline')}>Timeline</button><button onClick={() => navigate('reference', 'encyclopedia')}>Encyclopedia</button><button onClick={() => navigate('succession', 'overview')}>Succession</button><button onClick={() => setDownloadsOpen(true)}>Download website</button></nav>
         <a href="https://hunterxhunter.fandom.com/" target="_blank" rel="noreferrer">Hunterpedia <ExternalLink size={11} /></a>
       </footer>
 
