@@ -70,7 +70,7 @@
 <main>
   <header>
     <div><span class="eyebrow">Hunter Archive administration</span><h1>Import chapter pages from the website.</h1><p>Sign in, inspect the source URL, review every detected page, then create one GitHub commit containing the normalized chapter folder and updated reader manifest.</p></div>
-    <div class="access"><strong>Server-protected route</strong><span>HttpOnly session · CSRF protection · GitHub token stays server-side</span></div>
+    <div class="access"><strong>Server-protected route</strong><span>HttpOnly session · CSRF protection · GitHub token stays server-side</span><span>Admin build 2026-07-23.1</span></div>
   </header>
 
   <section id="login" class="panel login">
@@ -137,6 +137,12 @@
     }
     return payload;
   };
+  const requireInspectionPayload = (payload) => {
+    if (!payload || !Array.isArray(payload.pages)) {
+      throw new Error(payload?.error || 'The chapter inspector returned an invalid response without a pages list.');
+    }
+    return payload;
+  };
   const showLogin = () => { csrf=''; inspection=null; $('app').hidden=true; $('login').hidden=false; };
   const showApp = (payload) => { csrf=payload.csrfToken || ''; $('signed-in-user').textContent=payload.username || 'administrator'; $('login').hidden=true; $('app').hidden=false; };
   const clearPreview = () => {
@@ -146,11 +152,11 @@
     const sourceUrl = $('source-url').value;
     const chapter = $('chapter').value || null;
     try {
-      return await api('/api/admin/chapter/inspect',{method:'POST',body:JSON.stringify({sourceUrl,chapter})});
+      return requireInspectionPayload(await api('/api/admin/chapter/inspect',{method:'POST',body:JSON.stringify({sourceUrl,chapter})}));
     } catch (error) {
       if (error.status !== 405) throw error;
       const query = new URLSearchParams({ sourceUrl, ...(chapter ? { chapter } : {}) });
-      return api(`/api/admin/chapter/inspect?${query}`,{method:'GET'});
+      return requireInspectionPayload(await api(`/api/admin/chapter/inspect?${query}`,{method:'GET'}));
     }
   };
 
