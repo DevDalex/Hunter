@@ -1,0 +1,52 @@
+name: Sites full-stack build
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build complete Sites distribution
+        run: npm run build
+
+      - name: Verify full-stack artifact shape
+        shell: bash
+        run: |
+          test -f dist/server/index.js
+          test -f dist/server/chapter-admin.js
+          test -f dist/client/index.html
+          test -f dist/.openai/hosting.json
+          node -e "const c=require('./wrangler.jsonc'); if(c.main!=='dist/server/index.js'||c.assets?.directory!=='dist/client'||c.assets?.binding!=='ASSETS'||c.assets?.run_worker_first!==true) process.exit(1)"
+
+      - name: Verify chapter-admin Worker routing
+        run: node scripts/verify-sites-worker.mjs
+
+      - name: Publish complete dist artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: hunter-sites-dist
+          path: dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
