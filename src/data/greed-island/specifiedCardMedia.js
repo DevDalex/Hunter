@@ -1,0 +1,138 @@
+import { specifiedCardLocalMediaById } from './specifiedCardLocalMedia.generated.js';
+
+const CARD_LIST_SOURCE = 'https://hunterxhunter.fandom.com/wiki/Greed_Island_Card_Lists';
+const FILE_PAGE_BASE = 'https://hunterxhunter.fandom.com/wiki/File:';
+const FILE_REDIRECT_BASE = 'https://hunterxhunter.fandom.com/wiki/Special:Redirect/file/';
+
+// Exact file names linked by the Hunterpedia Specified Slot table, in card order 000–099.
+// These are intentionally explicit because several files differ from the English card name.
+const verifiedImageFiles = Object.freeze([
+  "Ruler's Blessing (G.I card) =scan=.png",
+  'Patch of Forest (G.I card) =scan=.png',
+  'Patch of Shore (G.I card) =scan=.png',
+  'Pitcher of Eternal Water (G.I card) =scan=.png',
+  'Skin Care Hot Springs (G.I card) =scan=.png',
+  'Spirited Away Hollow (G.I card) =scan=.png',
+  'Liquor Spring (G.I card) =scan=.png',
+  'Pregnancy Stones (G.I card) =scan=.png',
+  'Mystery Pond (G.I card) =scan=.png',
+  'Tree of Plenty (G.I card) =scan=.png',
+  'Golden Guidebook (G.I card) =scan=.png',
+  'Golden Scales (G.I card) =scan=.png',
+  'Golden Dictionary (G.I card) =scan=.png',
+  'Luck Bankbook (G.I card) =scan=.png',
+  'Connection Severing Scissors (G.I card) =scan=.png',
+  'Fickle Genie (G.I card) =scan=.png',
+  "Fairy King's Advice (G.I card) =scan=.png",
+  'Breath of Archangel (G.I card) =scan=.png',
+  "Imp's Wink (G.I card) =scan=.png",
+  'Poltergeist Pillow (G.I card) =scan=.png',
+  'Mood Clock (G.I card) =scan=.png',
+  'X-Ray Goggles (G.I card) =scan=.png',
+  'Toraemon (G.I card) =scan=.png',
+  'Tome of a Thousand Tales (G.I card) =scan=.png',
+  'Hypothetical T.V. (G.I card) =scan=.png',
+  'Risky Dice (G.I card) =scan=.png',
+  'Night Shift Dwarves (G.I card) =scan=.png',
+  'Book of V.I.P Passes (G.I card) =scan=.png',
+  'Capricious Remote (G.I card) =scan=.png',
+  'Pre-Order Vouchers (G.I card) =scan=.png',
+  'Favor Cushion (G.I card) =scan=.png',
+  'Double Postcard to the Dead (G.I card) =scan=.png',
+  'Parrot Candy (G.I card) =scan=.png',
+  'Hormone Cookies (G.I card) =scan=.png',
+  'Universal Survey (G.I card) =scan=.png',
+  'Chameleon Cat (G.I card) =scan=.png',
+  'Recycling Room (G.I card) =scan=.png',
+  'Fledgling Athlete (G.I card).png',
+  'Fledgling Artist (G.I card) =scan=.png',
+  'Fledgling Politician (G.I card) =scan=.png',
+  'Fledgling Musician (G.I card) =scan=.png',
+  'Fledgling Pilot (G.I card) =scan=.png',
+  'Fledgling Novelist (G.I card) =scan=.png',
+  'Fledgling Gambler (G.I card) =scan=.png',
+  'Fledgling Actor (G.I card) =scan=.png',
+  'Fledgling CEO (G.I card) =scan=.png',
+  'Gold Dust Girl (G.I card) =scan=.png',
+  'Sleeping Girl (G.I card) =scan=.png',
+  'Aromatherapy Girl (G.I card) =scan=.png',
+  'Miniature Mermaid (G.I card) =scan=.png',
+  'Miniature Dino (G.I card) =scan=.png',
+  'Miniature Dragon (G.I card) =scan=.png',
+  'Pearl Locusts (G.I card) =scan=.png',
+  'King Great White Beetle (G.I card) =scan=.png',
+  'Millennium Butterfly (G.I card) =scan=.png',
+  'Revenge Shop (G.I card) =scan=.png',
+  'Perfect Memory Studio (G.I card) =scan=.png',
+  'Hideout Realtor (G.I card) =scan=.png',
+  'Secrets Video Rental (G.I card) =scan=.png',
+  'Instant Foreign Language School (G.I card) =scan=.png',
+  'Long Lost Delivery (G.I card) =scan=.png',
+  'Vending Check-Up (G.I card) =scan=.png',
+  'Club "You Rule" (G.I card) =scan=.png',
+  'Virtual Restaurant (G.I card) =scan=.png',
+  "Witch's Love Potion (G.I card) =scan=.png",
+  "Witch's Rejuvenation Potion (G.I card) =scan=.png",
+  "Witch's Diet Pills (G.I card) =scan=.png",
+  "Doyen's Growth Pills (G.I card) =scan=.png",
+  "Doyen's Virility Pills (G.I card) =scan=.png",
+  "Doyen's Hair Restorer (G.I card) =scan=.png",
+  "Mad Scientist's Steroids (G.I card) =scan=.png",
+  "Mad Scientist's Pheromones (G.I card) =scan=.png",
+  "Mad Scientist's Plastic Surgery (G.I card) =scan=.png",
+  'Night Jade (G.I card) =scan=.png',
+  "Sage's Aquamarine (G.I card) =scan=.png",
+  'Wild Luck Alexandrite (G.I card) =scan=.png',
+  'Roaming Ruby (G.I card) =scan=.png',
+  'Beauty Magnet Emerald (G.I card) =scan=.png',
+  'Lonely Sapphire (G.I card) =scan=.png',
+  'Rainbow Diamond (G.I card) =scan=.png',
+  'Levitation Stone (G.I card) =scan=.png',
+  'Blue Planet (G.I card) =scan=.png',
+  'Staff of Judgement (G.I card) =scan=.png',
+  'Sword of Truth (G.I card) =scan=.png',
+  "Paladin's Necklace (G.I card) =scan=.png",
+  'Sacrifice Armor (G.I card) =scan=.png',
+  'Quiver of Frustration (G.I card) =scan=.png',
+  'Shield of Faith (G.I card) =scan=.png',
+  'Eternal Hammer (G.I card) =scan=.png',
+  "Tax Collector's Gauntlet (G.I card) =scan=.png",
+  'Memory Helmet (G.I card) =scan=.png',
+  'Plastic King (G.I card) =scan=.png',
+  'Swap Ticket (G.I card) =scan=.png',
+  'Book of Life (G.I card) =scan=.png',
+  "Bandit's Blade (G.I card) =scan=.png",
+  'Secret Cape (G.I card) =scan=.png',
+  'Clairvoyant Snake (G.I card) =scan=.png',
+  '3-D Camera (G.I card) =scan=.png',
+  'Silver Dog (G.I card) =scan=.png',
+  'Panda Maid (G.I card) =scan=.png',
+]);
+
+const wikiPath = (fileName) => encodeURIComponent(fileName.replaceAll(' ', '_'));
+
+if (verifiedImageFiles.length !== 100) throw new Error(`Expected 100 verified Specified Slot images; found ${verifiedImageFiles.length}.`);
+if (new Set(verifiedImageFiles).size !== 100) throw new Error('Specified Slot image registry contains duplicate file names.');
+if (verifiedImageFiles.some((fileName) => !fileName.endsWith('.png'))) throw new Error('Every verified Specified Slot image must be a PNG file reference.');
+
+export const specifiedCardMedia = Object.freeze(verifiedImageFiles.map((fileName, number) => {
+  const cardId = String(number).padStart(3, '0');
+  const stabilized = specifiedCardLocalMediaById.get(cardId) || null;
+  return Object.freeze({
+    cardId,
+    fileName,
+    filePage: `${FILE_PAGE_BASE}${wikiPath(fileName)}`,
+    remote: `${FILE_REDIRECT_BASE}${wikiPath(fileName)}`,
+    local: stabilized?.src || null,
+    width: stabilized?.width || null,
+    height: stabilized?.height || null,
+    storage: stabilized ? 'local-webp-with-remote-source' : 'hunterpedia-remote',
+    fallback: 'generated-card-back',
+    sourcePage: CARD_LIST_SOURCE,
+    verifiedAt: '2026-07-21',
+    localReviewedAt: stabilized?.reviewed || null,
+  });
+}));
+
+export const specifiedCardMediaById = new Map(specifiedCardMedia.map((media) => [media.cardId, media]));
+export const getSpecifiedCardMedia = (id) => specifiedCardMediaById.get(String(id).padStart(3, '0')) || null;

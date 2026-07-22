@@ -40,7 +40,7 @@ assert(designSystem?.files.includes('src/components/ArchiveUI.jsx') && designSys
 assert(designCopy.includes(`${archiveDesignSystemStats.primitives} primitives`) && designCopy.includes(`${archiveDesignSystemStats.semanticTones} tones`), 'design-system notes must match the canonical primitive and tone counts');
 assert(documentedCodeBudgets.every((value) => performanceCopy.includes(`${formatPerformanceBudget(value)} bytes`)), 'visible performance notes must match the canonical executable budgets');
 assert(performanceCopy.includes('Twenty-one dynamic entries'), 'performance notes must match the current 21-entry dynamic split');
-assert(release?.checks.join(' ').includes('All fifteen independent pre-build audits pass'), 'release notes must match the current 15-audit preflight');
+assert(release?.checks.join(' ').includes('All sixteen independent pre-build audits pass'), 'release notes must match the current 16-audit preflight');
 assert(runbooks?.decisions.some(([name]) => name === 'Aggregate preflight'), 'runbook notes must document aggregate build preflight');
 
 for (const item of maintenanceMatrix) await access(path.resolve(item.canonical));
@@ -63,7 +63,7 @@ const currentContractPhrases = [
   '26 reader-facing screens',
   '106 character portraits and 29 Black Whale derivatives',
   '21 dynamic entries',
-  '15 independent pre-build audits',
+  '16 independent pre-build audits',
   'hxh-archive-phase-8a-sites-source.zip',
   'architecture/',
   'docs/',
@@ -83,7 +83,7 @@ for (const value of documentedCodeBudgets) {
   assert(readme.includes(phrase), `README is missing canonical performance budget ${phrase}`);
 }
 
-for (const phrase of ['15 independent pre-build audits', 'Story → Reference → Characters → Final', 'Final → Governance → Design System → Schema', 'package:release', 'audit:performance']) {
+for (const phrase of ['16 independent pre-build audits', 'Story → Reference → Characters → Final', 'Final → Governance → Design System → Schema', 'package:release', 'audit:performance']) {
   assert(preflightDoc.includes(phrase), `preflight runbook is missing “${phrase}”`);
 }
 for (const phrase of ['Batch 12', 'ArchiveSection', 'ArchiveCard', 'EvidenceBadge', 'SourceStack']) {
@@ -91,9 +91,9 @@ for (const phrase of ['Batch 12', 'ArchiveSection', 'ArchiveCard', 'EvidenceBadg
 }
 
 const preflightScripts = [...preflight.matchAll(/^\s*'audit:[^']+',?$/gm)].map((match) => match[0]);
-assert(preflightScripts.length === 15, `aggregate preflight must list 15 audits, found ${preflightScripts.length}`);
+assert(preflightScripts.length === 16, `aggregate preflight must list 16 audits, found ${preflightScripts.length}`);
 assert(preflight.includes("'audit:design-system'"), 'aggregate preflight must include audit:design-system');
 assert(packageJson.includes('"preflight:build"') && packageJson.includes('npm run generate:build-info && npm run preflight:build'), 'package build must invoke aggregate preflight immediately after build identity generation');
 assert(packageJson.includes('"audit:design-system"') && packageJson.includes('node scripts/audit-design-system.mjs'), 'package.json must expose audit:design-system');
 
-console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; 15-audit aggregate preflight; route, media, design-system, canonical performance-budget, and package contracts synchronized.`);
+console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; 16-audit aggregate preflight; route, media, design-system, canonical performance-budget, and package contracts synchronized.`);

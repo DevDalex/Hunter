@@ -1,0 +1,180 @@
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { dirname, join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const ROOT = resolve(import.meta.dirname, '..');
+const STAGING = join(ROOT, '.eta-assets');
+const DESTINATION = join(ROOT, 'public/media/greed-island/eta');
+const MANIFEST = join(ROOT, 'src/data/greed-island/etaAssetManifest.generated.js');
+const TUTORIAL_COMPONENT = join(ROOT, 'src/components/greed-island/EtaTutorial.jsx');
+const EXPECTED_PAYLOAD_LENGTH = 112132;
+const EXPECTED_ARCHIVE_SHA256 = '06e324157a570545923a7c80b9db38fc24b13bbd33c6d95fd9cb566983209c5d';
+
+const stagedSegments = [
+  ['00.part', 'raw', 14000, 'H4sIAAAAAAAAA+z9Y8xwPfg9', '8aebea480f12148ea227d9674f8fb772ea2f5e37dcd9b4ce2c2e183270fb169b'],
+  ['01a.part', 'raw', 2000, '2rKnn2kMAjDoed1UN0Rp', '491d600f15bfbc091d4e71f478317ee3e2711965ab3038b212c45eb71ff3cc60'],
+  ['01b.part', 'raw', 4000, 'uEmgH9IxY1Gm4WlXqDtb', 'dc9a5e352aa55496fce27525a06aaf01ea7d2a72133532988d7dc622a1172873'],
+  ['01c.js', 'module', 8000, 'BI1uJ9cMoLg28FjgdRTW', '0edf21451b87b48749c43824ea994311ba68104c1ca402265b74f817961e24b7'],
+  ['02.js', 'module', 14000, 'TtlGDzJU8UluxxMpAIrF', '6ed46729af3cf579fc56f21547502082e108332a201584d97be83d1cb893f14a'],
+  ['03a.js', 'module', 18000, 'PMmUZxCHoRZGSlGzKEpd', '4b8bf0cc4d4ffdb0c07341c35c5b01600b958a16abbdebbabc1fa2411f057b15'],
+  ['03b.js', 'module', 18000, 'ARd/OTO2sdZrJGMHxd8j', '137c0cd18685b0f95060ac6e5e88304b9b7719279f9483089499706cbfe0207b'],
+  ['03c.js', 'module', 18000, 'rc4hgNopTH2jl6d3ky+G', '18abc36e9bd867adba44e8fba776630e3fecc707ef311c1ffdb9fa9a4a7f67a7'],
+  ['03d.js', 'module', 16132, 'qdnr9zWjGK5pwMXSEk3a', 'e4d77ccc834bd9b27c57858b70ccf348828832f05ed396c559a73ba731ec0fe2'],
+];
+
+const expectedAssets = Object.freeze({
+  'eta-closed.webp': {
+    size: 28110,
+    sha256: 'c78300d754f5fa521d989a80c7d5f7e85c815fd387020ea4bbded60cf225400a',
+    role: 'idle and silent base frame',
+  },
+  'eta-mouth-open-patch.webp': {
+    size: 6748,
+    sha256: 'aaf8df8f424b2f10e77fa8225a6ff963080a66526065dbabecbcabd46381a415',
+    role: 'aligned speaking-mouth overlay',
+  },
+  'eta-blink-patch.webp': {
+    size: 7366,
+    sha256: '7d042901de083b209ccdbe540a765553c3f8ce76630f55121dcacc90a974fb2e',
+    role: 'aligned idle-blink overlay',
+  },
+  'eta-tutorial-room.webp': {
+    size: 36070,
+    sha256: '8d6d1519de41cdf683745ac71207b7a873c1af86f92e543ae43885481e5d0ce5',
+    role: 'approved black-and-white tutorial-room background',
+  },
+  'eta-dialogue-bubble.webp': {
+    size: 5776,
+    sha256: '5e371616cc9ad07f0cc98c01e248420d37aad4f2b46866b0f18bb5eb79a01207',
+    role: 'approved pixel dialogue bubble',
+  },
+});
+
+const etaImport = "import EtaDialogueStage from './EtaDialogueStage';";
+const interactiveCardImport = "import InteractiveCard from './InteractiveCard';";
+const legacyScene = `        <div className="gi-eta-course__eta" aria-hidden="true">
+          <div><i /><span>ETA</span><i /></div>
+          <b>{lesson.number}</b>
+        </div>
+        <div className="gi-eta-course__dialogue">
+          <span>Lesson {lesson.number} · {lesson.title}</span>
+          <h3 id={\`gi-lesson-\${lesson.id}\`}>{lesson.title}</h3>
+          <p>{lesson.summary}</p>
+          <div className="gi-eta-course__rule"><MessageSquareText size={17} /><p>{lesson.rule}</p></div>
+          <div className="gi-eta-course__note"><Info size={16} /><p>{lesson.note}</p></div>
+          <div className="gi-eta-course__status" aria-live="polite">
+            <Volume2 size={16} />
+            <span>{announcement}</span>
+          </div>
+        </div>`;
+const approvedScene = '        <EtaDialogueStage lesson={lesson} announcement={announcement} onAdvance={nextLesson} />';
+
+const sha256 = (buffer) => createHash('sha256').update(buffer).digest('hex');
+
+async function readStagedValue(fileName, type) {
+  const absolutePath = join(STAGING, fileName);
+  if (type === 'raw') return readFileSync(absolutePath, 'utf8').trim();
+  const module = await import(`${pathToFileURL(absolutePath).href}?install=${Date.now()}-${fileName}`);
+  if (typeof module.default !== 'string') throw new Error(`${fileName} did not export a payload string.`);
+  return module.default;
+}
+
+async function readPayload() {
+  const chunks = [];
+  for (const [fileName, type, take, expectedStart, expectedDigest] of stagedSegments) {
+    const value = await readStagedValue(fileName, type);
+    if (!value.startsWith(expectedStart)) {
+      throw new Error(`${fileName} does not begin at its canonical Eta archive boundary.`);
+    }
+    if (value.length < take) {
+      throw new Error(`${fileName} contains ${value.length} characters but ${take} are required.`);
+    }
+    const chunk = value.slice(0, take);
+    const digest = sha256(Buffer.from(chunk, 'utf8'));
+    if (digest !== expectedDigest) {
+      throw new Error(`${fileName} canonical range digest mismatch: expected ${expectedDigest}, received ${digest}.`);
+    }
+    chunks.push(chunk);
+  }
+  return chunks.join('');
+}
+
+function verifyAsset(fileName, expectation) {
+  const absolutePath = join(DESTINATION, fileName);
+  const buffer = readFileSync(absolutePath);
+  const digest = sha256(buffer);
+  if (buffer.length !== expectation.size) {
+    throw new Error(`${fileName}: expected ${expectation.size} bytes, received ${buffer.length}.`);
+  }
+  if (digest !== expectation.sha256) {
+    throw new Error(`${fileName}: expected ${expectation.sha256}, received ${digest}.`);
+  }
+  return { ...expectation, fileName, local: `/media/greed-island/eta/${fileName}` };
+}
+
+function writeManifest(records) {
+  mkdirSync(dirname(MANIFEST), { recursive: true });
+  const content = `// Generated by scripts/install-eta-tutorial-assets.mjs. Do not edit by hand.\n`
+    + `// Art direction and final asset selections were explicitly approved in the project conversation.\n\n`
+    + `export const ETA_TUTORIAL_ASSET_PROVENANCE = Object.freeze({\n`
+    + `  status: 'user-approved-original-art',\n`
+    + `  storage: 'local-webp',\n`
+    + `  verifiedAt: '2026-07-21',\n`
+    + `  note: 'Approved Eta frames, room background, and pixel dialogue bubble; expression patches preserve exact alignment.',\n`
+    + `});\n\n`
+    + `export const etaTutorialAssets = Object.freeze(${JSON.stringify(records, null, 2)});\n`;
+  writeFileSync(MANIFEST, content);
+}
+
+function prepareTutorialComponent() {
+  let source = readFileSync(TUTORIAL_COMPONENT, 'utf8');
+  if (!source.includes(etaImport)) {
+    if (!source.includes(interactiveCardImport)) throw new Error('Eta tutorial import insertion point was not found.');
+    source = source.replace(interactiveCardImport, `${interactiveCardImport}\n${etaImport}`);
+  }
+  if (!source.includes(approvedScene)) {
+    if (!source.includes(legacyScene)) throw new Error('Legacy Eta tutorial scene was not found.');
+    source = source.replace(legacyScene, approvedScene);
+  }
+  writeFileSync(TUTORIAL_COMPONENT, source);
+  if (!source.includes(etaImport) || !source.includes(approvedScene) || source.includes('gi-eta-course__eta')) {
+    throw new Error('Eta tutorial source preparation did not reach the approved scene state.');
+  }
+}
+
+async function main() {
+  const payload = await readPayload();
+  if (payload.length !== EXPECTED_PAYLOAD_LENGTH) {
+    throw new Error(`Expected ${EXPECTED_PAYLOAD_LENGTH} base64 characters, received ${payload.length}.`);
+  }
+
+  const archive = Buffer.from(payload, 'base64');
+  const archiveDigest = sha256(archive);
+  if (archiveDigest !== EXPECTED_ARCHIVE_SHA256) {
+    throw new Error(`Eta archive digest mismatch: ${archiveDigest}.`);
+  }
+
+  const tempDirectory = mkdtempSync(join(tmpdir(), 'eta-assets-'));
+  const archivePath = join(tempDirectory, 'eta-assets.tar.gz');
+  writeFileSync(archivePath, archive);
+  rmSync(DESTINATION, { recursive: true, force: true });
+  mkdirSync(DESTINATION, { recursive: true });
+  execFileSync('tar', ['-xzf', archivePath, '-C', DESTINATION], { stdio: 'inherit' });
+
+  const records = Object.fromEntries(
+    Object.entries(expectedAssets).map(([fileName, expectation]) => [fileName, verifyAsset(fileName, expectation)]),
+  );
+  writeManifest(records);
+  prepareTutorialComponent();
+  rmSync(tempDirectory, { recursive: true, force: true });
+
+  console.log(`Eta tutorial prepared: ${Object.keys(records).length}/5 verified assets and the approved animated scene.`);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
+});

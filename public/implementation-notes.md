@@ -152,7 +152,7 @@ Budget changes require review and synchronized documentation. The guardrail shou
 
 ## Aggregate build preflight
 
-`scripts/run-build-preflight.mjs` runs all 15 independent pre-build audits and continues after individual failures, so one Cloudflare deployment reports the complete repair list:
+`scripts/run-build-preflight.mjs` runs all 16 independent pre-build audits and continues after individual failures, so one Cloudflare deployment reports the complete repair list:
 
 1. content;
 2. implementation;
@@ -168,7 +168,8 @@ Budget changes require review and synchronized documentation. The guardrail shou
 12. layout;
 13. accessibility;
 14. media;
-15. polish.
+15. Greed Island card libraries;
+16. polish.
 
 Packaging, release-package validation, the final Vite build, performance validation, and hosting preparation remain ordered after a successful aggregate preflight because they depend on generated artifacts.
 
@@ -181,7 +182,7 @@ Canonical owner: `src/data/chapterTitles.js`. Update `src/data/chapters.js` and 
 Canonical owner: `src/data/chapters.js`. Keep chapter-specific evidence separate from arc-phase context and direct source links.
 
 ### 3. Character identity or status
-Canonical owner: `src/data/entityRegistry.js`. Update aliases and status centrally before encyclopedia, roster, tree, or dossier consumers.
+Canonical owner: `src/data/entityRegistry.js`. Update aliases and status centrally before encyclopedia, roster, or dossier consumers.
 
 ### 4. Character portrait
 Canonical owner: `src/data/characters.js`. Run `npm run stabilize:media`, inspect the generated record, then run the media audit.
@@ -233,7 +234,7 @@ Canonical owner: `public/implementation-notes.md`. Reconcile `README.md`, `docs/
 ### Design system and release
 - [ ] Shared primitives cover cards, sections, source stacks, evidence badges, status pills, and ledgers.
 - [ ] The removed home-page design-system showcase remains absent.
-- [ ] All 15 aggregate preflight audits pass.
+- [ ] All 16 aggregate preflight audits pass.
 - [ ] Release ZIPs are generated and audited.
 - [ ] The final production build and performance audit pass.
 - [ ] Browser QA is run and reviewed when required for the checkpoint.
@@ -256,7 +257,7 @@ Neither package may contain dependencies, Git history, credentials, or browser-l
 4. Media and written status remain deterministic and honest.
 5. Keyboard, focus, reduced motion, narrow-browser safeguards, and nonvisual alternatives remain explicit.
 6. Large data stays outside the startup shell under the maintained budgets.
-7. Fifteen independent audits report together before packaging.
+7. Sixteen independent audits report together before packaging.
 8. The maintainable source package contains the files required to rebuild, audit, document, and redeploy the archive.
 
 A successful local or repository audit is not proof of a successful hosted deployment. Record that claim only after the corresponding workflow or Cloudflare build reaches terminal success.

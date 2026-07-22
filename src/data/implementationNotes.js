@@ -65,7 +65,7 @@ export const implementationSections = [
     summary: 'New chapters, portraits, locations, Succession changes, UI primitives, and system records each have a canonical edit path and verification step.',
     owner: 'Ongoing archive maintenance',
     files: ['public/implementation-notes.md', 'README.md', 'scripts/audit-implementation.mjs', 'scripts/run-build-preflight.mjs'],
-    decisions: [['Trigger-based review', 'Maintenance starts from a source, route, media, UI, taxonomy, or audit-contract change.'], ['Canonical first', 'Update the central record before consumers.'], ['Aggregate preflight', 'All fifteen independent pre-build audits run even when one fails.']],
+    decisions: [['Trigger-based review', 'Maintenance starts from a source, route, media, UI, taxonomy, or audit-contract change.'], ['Canonical first', 'Update the central record before consumers.'], ['Aggregate preflight', 'All sixteen independent pre-build audits run even when one fails.']],
     checks: ['Follow the relevant matrix row.', 'Update review date/change log when applicable.', 'Run aggregate preflight before packaging.'],
   },
   {
@@ -74,7 +74,7 @@ export const implementationSections = [
     owner: 'QA and release discipline',
     files: ['src/data/releaseReadiness.js', 'scripts/run-build-preflight.mjs', 'scripts/audit-release.mjs', 'scripts/visual-qa.mjs', 'scripts/performance-qa.mjs', 'scripts/package-release.mjs'],
     decisions: [['Automated gate', 'Schema, ranges, IDs, sources, media, layout, packages, and handbook structure fail when inconsistent.'], ['Browser matrix', 'All 26 routes render at desktop, tablet, and phone widths.'], ['Immutable checkpoint', 'The deployed version must match the validated source state.']],
-    checks: ['All fifteen independent pre-build audits pass.', 'Visual and accessibility browser matrices pass when required.', 'The final hosted deployment reaches terminal success.'],
+    checks: ['All sixteen independent pre-build audits pass.', 'Visual and accessibility browser matrices pass when required.', 'The final hosted deployment reaches terminal success.'],
   },
 ];
 
@@ -109,7 +109,7 @@ export const completionCriteria = [
   ['Media integrity', 'Local, verified-remote, and text-only media states are documented and audited.'],
   ['Accessible shell', 'Keyboard, touch, focus, reduced-motion, and nonvisual alternatives have explicit rules.'],
   ['Performance boundary', 'Large research collections remain separate from the startup shell under explicit budgets.'],
-  ['Build gate', 'Fifteen independent audits run through one aggregate preflight before packaging.'],
+  ['Build gate', 'Sixteen independent audits run through one aggregate preflight before packaging.'],
   ['Public handoff', 'The maintainable source ZIP includes source, scripts, architecture, documentation, hosting identity, and current maintenance instructions.'],
 ];
 

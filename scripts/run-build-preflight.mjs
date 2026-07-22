@@ -23,6 +23,7 @@ export const preflightAuditScripts = Object.freeze([
   'audit:layout',
   'audit:accessibility',
   'audit:media',
+  'audit:greed-island-libraries',
   'audit:polish',
 ]);
 

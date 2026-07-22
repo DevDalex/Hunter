@@ -38,7 +38,7 @@ npm run build
 The build performs these stages:
 
 1. writes `public/build-info.json` with the exact commit identity;
-2. runs all 15 independent pre-build audits through `scripts/run-build-preflight.mjs`, continuing after individual audit failures and reporting the complete failure list;
+2. runs all 16 independent pre-build audits through `scripts/run-build-preflight.mjs`, continuing after individual audit failures and reporting the complete failure list;
 3. creates and audits both portable editions;
 4. creates the production Vite build;
 5. applies the performance audit;
