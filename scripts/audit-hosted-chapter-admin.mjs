@@ -70,10 +70,10 @@ assert(bankWorker.includes('CHAPTER_SOURCE_HOSTS') && bankWorker.includes('CHAPT
 assert(bankWorker.includes('/git/blobs') && bankWorker.includes('/git/trees') && bankWorker.includes('/git/commits') && bankWorker.includes('/git/refs/heads/'), 'GitHub publication must remain one Git-data commit flow');
 assert(bankWorker.includes('force: false'), 'branch update must reject non-fast-forward publication races');
 assert(bankWorker.includes('CHAPTER_HISTORY_PATH') && bankWorker.includes('serializeGeneratedHistory'), 'publication must write Chapter Bank history in the same tree');
-assert(bankWorker.includes("'/api/admin/chapter/bank'") && bankWorker.includes('/api/admin/chapter/bank/'), 'Chapter Bank list and detail endpoints are missing');
+assert(bankWorker.includes('/api/admin/chapter/bank') && bankWorker.includes('handleBank(request, env)'), 'Chapter Bank list and detail endpoints are missing');
 assert(bankHelpers.includes('checksumBytes') && bankHelpers.includes('createChapterPageRecord') && bankHelpers.includes('buildChapterBank'), 'Chapter Bank metadata helpers are incomplete');
 assert(adminPage.includes('/api/admin/chapter/login') && adminPage.includes('/api/admin/chapter/import') && adminPage.includes('/api/admin/chapter/bank'), 'admin dashboard must use authenticated Chapter Bank endpoints');
-assert(adminPage.includes('Chapter Bank build 2026-07-23.2') && adminPage.includes('p.${page}'), 'admin dashboard build marker or page labels are missing');
+assert(adminPage.includes('Chapter Bank build 2026-07-23.2') && adminPage.includes('page.label'), 'admin dashboard build marker or page labels are missing');
 assert(adminPage.includes("error.status!==405") && adminPage.includes("method:'GET'"), 'read-only inspection must retain the GET fallback');
 assert(adminPage.includes("credentials:'same-origin'"), 'administrator requests must send the session cookie only to the same origin');
 assert(adminPage.includes('returned the Hunter Archive webpage instead of the chapter-bank API response'), 'admin must explain SPA-fallback HTML responses');
