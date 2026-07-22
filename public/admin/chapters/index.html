@@ -4,195 +4,102 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="noindex,nofollow,noarchive" />
-  <title>Chapter Import · Hunter Archive Admin</title>
+  <title>Chapter Bank · Hunter Archive Admin</title>
   <style>
-    :root { color-scheme: dark; --bg:#0d0d10; --panel:#17171c; --line:#33333b; --paper:#eee8dc; --muted:#aaa49b; --red:#a12a38; --red2:#731c29; --good:#7caf8b; --danger:#e08a94; }
-    * { box-sizing:border-box; }
-    body { margin:0; min-height:100vh; background:radial-gradient(circle at 20% 0%,#24181b 0,transparent 34%),var(--bg); color:var(--paper); font:15px/1.5 Inter,ui-sans-serif,system-ui,sans-serif; }
-    main { width:min(1180px,calc(100% - 32px)); margin:0 auto; padding:52px 0 80px; }
-    header { display:grid; grid-template-columns:1fr auto; gap:32px; align-items:end; padding-bottom:28px; border-bottom:1px solid var(--line); }
-    .eyebrow { color:#d88b94; font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
-    h1 { margin:8px 0 10px; max-width:780px; font:700 clamp(38px,7vw,76px)/.94 Georgia,serif; }
-    header p { margin:0; max-width:740px; color:var(--muted); font-size:17px; }
-    .access { padding:14px 16px; border:1px solid var(--line); background:#121216; min-width:230px; }
-    .access strong,.access span { display:block; }
-    .access span { color:var(--muted); font-size:12px; margin-top:4px; }
-    .panel { background:var(--panel); border:1px solid var(--line); padding:24px; margin-top:28px; }
-    .panel h2 { margin:0 0 18px; font:700 27px/1.1 Georgia,serif; }
-    .panel > p { color:var(--muted); max-width:760px; }
-    .login { width:min(520px,100%); margin:48px auto 0; }
-    .login form { display:grid; gap:14px; }
-    .app[hidden],.login[hidden] { display:none; }
-    form.import-form { display:grid; grid-template-columns:1fr 150px auto; gap:12px; align-items:end; }
-    label { display:grid; gap:7px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
-    input[type=text],input[type=password],input[type=url],input[type=number] { width:100%; min-height:48px; border:1px solid #44444d; background:#0f0f13; color:var(--paper); padding:0 14px; font:inherit; }
-    input:focus { outline:2px solid #b4414f; outline-offset:2px; }
-    button { min-height:48px; border:1px solid #b4414f; background:var(--red); color:white; padding:0 20px; font:800 14px/1 inherit; cursor:pointer; }
-    button:hover { background:#b43142; }
-    button:disabled { opacity:.45; cursor:not-allowed; }
-    .secondary { background:#202027; border-color:#45454e; }
-    .top-actions { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:28px 0 0; }
-    .top-actions p { margin:0; color:var(--muted); }
-    .steps { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); margin:26px 0; }
-    .steps article { padding:18px; min-height:112px; border-right:1px solid var(--line); }
-    .steps article:last-child { border-right:0; }
-    .steps i { color:#d88b94; font-style:normal; font-weight:800; }
-    .steps h2 { margin:8px 0 3px; font:800 16px/1.2 inherit; }
-    .steps p { margin:0; color:var(--muted); font-size:13px; }
-    .status { display:none; margin-top:16px; padding:14px 16px; background:#101014; border-left:4px solid var(--red); white-space:pre-wrap; overflow-wrap:anywhere; }
-    .status.show { display:block; }
-    .status.good { border-color:var(--good); }
-    .status.bad { border-color:var(--danger); }
-    .summary { display:none; grid-template-columns:1fr repeat(2,140px); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:22px; }
-    .summary.show { display:grid; }
-    .summary div { background:#111115; padding:16px; }
-    .summary small { display:block; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
-    .summary strong { display:block; margin-top:5px; font-size:20px; overflow-wrap:anywhere; }
-    .preview-head { display:none; align-items:center; justify-content:space-between; gap:16px; margin-top:34px; }
-    .preview-head.show { display:flex; }
-    .preview-head h2 { margin:0; }
-    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px; margin-top:16px; }
-    .page { margin:0; background:#101014; border:1px solid var(--line); }
-    .page img { display:block; width:100%; aspect-ratio:2/3; object-fit:contain; background:#08080a; }
-    .page figcaption { padding:10px 12px; display:flex; justify-content:space-between; gap:8px; color:var(--muted); font-size:12px; }
-    .page figcaption span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-    .confirm { display:none; margin-top:24px; padding-top:22px; border-top:1px solid var(--line); }
-    .confirm.show { display:grid; gap:14px; }
-    .check { display:flex; align-items:flex-start; gap:10px; color:var(--muted); text-transform:none; letter-spacing:0; font-size:14px; font-weight:500; }
-    .check input { margin-top:4px; }
-    .actions { display:flex; gap:12px; flex-wrap:wrap; }
-    code { background:#0c0c0f; border:1px solid #33333a; padding:2px 6px; }
-    a { color:#e3a4aa; }
-    @media (max-width:760px) { header{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.steps article{border-right:0;border-bottom:1px solid var(--line)}form.import-form{grid-template-columns:1fr}.summary.show{grid-template-columns:1fr}.preview-head.show,.top-actions{align-items:flex-start;flex-direction:column} }
+    :root{color-scheme:dark;--bg:#0d0d10;--panel:#17171c;--line:#34343d;--paper:#eee8dc;--muted:#aaa49b;--red:#a12a38;--good:#7caf8b;--danger:#e08a94;--gold:#c9aa72}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(circle at 20% 0%,#24181b 0,transparent 34%),var(--bg);color:var(--paper);font:15px/1.5 Inter,ui-sans-serif,system-ui,sans-serif}main{width:min(1240px,calc(100% - 32px));margin:0 auto;padding:48px 0 80px}
+    header{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:end;padding-bottom:28px;border-bottom:1px solid var(--line)}.eyebrow{color:#d88b94;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}h1{margin:8px 0 10px;max-width:820px;font:700 clamp(38px,7vw,76px)/.94 Georgia,serif}header p,.muted{color:var(--muted)}header p{margin:0;max-width:760px;font-size:17px}.access{padding:14px 16px;border:1px solid var(--line);background:#121216;min-width:250px}.access strong,.access span{display:block}.access span{color:var(--muted);font-size:12px;margin-top:4px}
+    .panel{background:var(--panel);border:1px solid var(--line);padding:24px;margin-top:28px}.panel h2{margin:0 0 10px;font:700 28px/1.1 Georgia,serif}.login{width:min(520px,100%);margin:48px auto 0}.login form{display:grid;gap:14px}.app[hidden],.login[hidden],[hidden]{display:none!important}.top-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:28px 0 0}.top-actions p{margin:0;color:var(--muted)}
+    label{display:grid;gap:7px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}input,select{width:100%;min-height:46px;border:1px solid #44444d;background:#0f0f13;color:var(--paper);padding:0 13px;font:inherit}input:focus,select:focus{outline:2px solid #b4414f;outline-offset:2px}button{min-height:44px;border:1px solid #b4414f;background:var(--red);color:white;padding:0 18px;font:800 14px/1 inherit;cursor:pointer}button:hover{background:#b43142}button:disabled{opacity:.45;cursor:not-allowed}.secondary{background:#202027;border-color:#45454e}.quiet{background:transparent;border-color:#45454e}.danger{background:#67202a}.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .status{display:none;margin-top:16px;padding:14px 16px;background:#101014;border-left:4px solid var(--red);white-space:pre-wrap;overflow-wrap:anywhere}.status.show{display:block}.status.good{border-color:var(--good)}.status.bad{border-color:var(--danger)}
+    .stats{display:grid;grid-template-columns:repeat(5,minmax(120px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:20px}.stats div{background:#111115;padding:16px}.stats small{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.stats strong{display:block;margin-top:4px;font-size:24px}
+    .bank-tools{display:grid;grid-template-columns:1fr 210px auto;gap:12px;align-items:end;margin-top:22px}.table-wrap{overflow:auto;margin-top:18px;border:1px solid var(--line)}table{width:100%;border-collapse:collapse;min-width:850px}th,td{padding:13px 14px;text-align:left;border-bottom:1px solid #292930}th{position:sticky;top:0;background:#101014;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em}tbody tr{cursor:pointer}tbody tr:hover,tbody tr.is-selected{background:#21161a}.pill{display:inline-flex;align-items:center;min-height:26px;padding:0 9px;border:1px solid #4a4a53;border-radius:99px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}.pill.published{border-color:#557760;color:#a6d4b2}.pill.empty{color:#aaa49b}.pill.needs-repair{border-color:#89525a;color:#f0a5ad}.chapter-link{font-weight:900;color:var(--paper)}
+    .detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}.detail-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:18px}.detail-meta div{background:#111115;padding:14px}.detail-meta small{display:block;color:var(--muted)}.detail-meta strong{display:block;margin-top:4px;overflow-wrap:anywhere}.pages{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-top:18px}.page{margin:0;background:#101014;border:1px solid var(--line)}.page img{display:block;width:100%;aspect-ratio:2/3;object-fit:contain;background:#08080a}.page figcaption{padding:12px}.page h3{margin:0 0 7px}.page dl{margin:0;display:grid;gap:4px;color:var(--muted);font-size:12px}.page dl div{display:flex;justify-content:space-between;gap:10px}.page dd{margin:0;text-align:right;overflow-wrap:anywhere}.history{display:grid;gap:9px;margin-top:16px}.history article{border:1px solid var(--line);background:#101014;padding:12px 14px}.history p{margin:4px 0 0;color:var(--muted)}
+    .import-form{display:grid;grid-template-columns:1fr 150px auto;gap:12px;align-items:end}.summary{display:none;grid-template-columns:1fr repeat(2,140px);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:22px}.summary.show{display:grid}.summary div{background:#111115;padding:16px}.summary small{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.summary strong{display:block;margin-top:5px;font-size:20px;overflow-wrap:anywhere}.preview-head{display:none;align-items:center;justify-content:space-between;gap:16px;margin-top:28px}.preview-head.show{display:flex}.preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-top:16px}.preview{margin:0;background:#101014;border:1px solid var(--line)}.preview img{display:block;width:100%;aspect-ratio:2/3;object-fit:contain;background:#08080a}.preview figcaption{padding:10px 12px;display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:12px}.confirm{display:none;margin-top:24px;padding-top:22px;border-top:1px solid var(--line)}.confirm.show{display:grid;gap:14px}.check{display:flex;align-items:flex-start;gap:10px;color:var(--muted);text-transform:none;letter-spacing:0;font-size:14px;font-weight:500}.check input{width:auto;min-height:0;margin-top:4px}code{background:#0c0c0f;border:1px solid #33333a;padding:2px 6px}a{color:#e3a4aa}
+    @media(max-width:850px){header{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.bank-tools,.import-form{grid-template-columns:1fr}.detail-meta{grid-template-columns:1fr 1fr}.top-actions,.detail-head,.preview-head.show{align-items:flex-start;flex-direction:column}}@media(max-width:520px){.stats,.detail-meta{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
 <main>
   <header>
-    <div><span class="eyebrow">Hunter Archive administration</span><h1>Import chapter pages from the website.</h1><p>Sign in, inspect the source URL, review every detected page, then create one GitHub commit containing the normalized chapter folder and updated reader manifest.</p></div>
-    <div class="access"><strong>Server-protected route</strong><span>HttpOnly session · CSRF protection · GitHub token stays server-side</span><span>Admin build 2026-07-23.1</span></div>
+    <div><span class="eyebrow">Hunter Archive administration</span><h1>Chapter Bank and page storage.</h1><p>Manage Chapters 339–414, inspect an external chapter URL, review every detected page, and publish one atomic GitHub commit containing the chapter folder, enriched page records, bank manifest, and import history.</p></div>
+    <div class="access"><strong>Server-protected route</strong><span>HttpOnly session · CSRF · server-side source fetch</span><span>Chapter Bank build 2026-07-23.2</span></div>
   </header>
 
   <section id="login" class="panel login">
-    <span class="eyebrow">Administrator login</span>
-    <h2>Open the chapter importer</h2>
-    <p>The username and password are checked by the Worker. They are never included in this page or stored in browser storage.</p>
-    <form id="login-form">
-      <label>Username<input id="username" type="text" autocomplete="username" required /></label>
-      <label>Password<input id="password" type="password" autocomplete="current-password" required /></label>
-      <button id="login-button" type="submit">Sign in</button>
-    </form>
+    <span class="eyebrow">Administrator login</span><h2>Open the Chapter Bank</h2>
+    <p class="muted">Credentials are checked by the Worker and are never stored in this page.</p>
+    <form id="login-form"><label>Username<input id="username" autocomplete="username" required /></label><label>Password<input id="password" type="password" autocomplete="current-password" required /></label><button id="login-button" type="submit">Sign in</button></form>
     <div id="login-status" class="status" role="status" aria-live="polite"></div>
   </section>
 
   <section id="app" class="app" hidden>
-    <div class="top-actions"><p>Signed in as <strong id="signed-in-user">administrator</strong>.</p><button id="logout-button" class="secondary" type="button">Sign out</button></div>
-    <section class="steps" aria-label="Import steps">
-      <article><i>01</i><h2>Inspect</h2><p>Fetch the source page and detect likely manga pages.</p></article>
-      <article><i>02</i><h2>Preview</h2><p>Confirm the page count, order and complete visual preview.</p></article>
-      <article><i>03</i><h2>Publish</h2><p>Validate images and commit the chapter folder and manifest to GitHub.</p></article>
+    <div class="top-actions"><p>Signed in as <strong id="signed-in-user">administrator</strong>.</p><div class="actions"><button id="refresh-bank" class="secondary" type="button">Refresh bank</button><button id="logout-button" class="secondary" type="button">Sign out</button></div></div>
+
+    <section class="panel" aria-labelledby="bank-title">
+      <span class="eyebrow">Permanent storage index</span><h2 id="bank-title">Chapter Bank · 339–414</h2>
+      <p class="muted">Every chapter has a stable record. Imported files are stored by chapter; every page has a stable ID, <code>p.N</code> label, sequential filename, dimensions, format, size, checksum, source and status.</p>
+      <div class="stats"><div><small>Chapters</small><strong id="stat-chapters">76</strong></div><div><small>Stored</small><strong id="stat-stored">—</strong></div><div><small>Empty</small><strong id="stat-empty">—</strong></div><div><small>Pages</small><strong id="stat-pages">—</strong></div><div><small>Needs repair</small><strong id="stat-repair">—</strong></div></div>
+      <div class="bank-tools"><label>Search<input id="bank-search" placeholder="414, p.7, missing…" /></label><label>Status<select id="bank-filter"><option value="all">All chapters</option><option value="published">Published</option><option value="empty">Empty</option><option value="needs-repair">Needs repair</option></select></label><button id="clear-bank-filter" class="secondary" type="button">Clear filters</button></div>
+      <div id="bank-status" class="status" role="status" aria-live="polite"></div>
+      <div class="table-wrap"><table><thead><tr><th>Chapter</th><th>Pages</th><th>Storage</th><th>Status</th><th>Source</th><th>Last updated</th></tr></thead><tbody id="bank-body"></tbody></table></div>
     </section>
 
-    <section class="panel">
-      <h2>Source chapter</h2>
-      <form id="inspect-form" class="import-form">
-        <label>Chapter URL<input id="source-url" type="url" required placeholder="https://3asq.online/manga/hunter-x-hunter/414/" /></label>
-        <label>Chapter<input id="chapter" type="number" min="338" max="414" placeholder="Auto" /></label>
-        <button id="inspect-button" type="submit">Inspect pages</button>
-      </form>
+    <section id="chapter-detail" class="panel" hidden aria-labelledby="detail-title">
+      <div class="detail-head"><div><span class="eyebrow">Chapter record</span><h2 id="detail-title">Chapter —</h2><p id="detail-description" class="muted"></p></div><div class="actions"><button id="inspect-selected" type="button">Inspect/replace this chapter</button><button id="close-detail" class="secondary" type="button">Close</button></div></div>
+      <div class="detail-meta"><div><small>Status</small><strong id="detail-status">—</strong></div><div><small>Stored pages</small><strong id="detail-pages">—</strong></div><div><small>Source</small><strong id="detail-source">—</strong></div><div><small>Last updated</small><strong id="detail-updated">—</strong></div></div>
+      <h3>Page Bank</h3><div id="detail-page-grid" class="pages"></div>
+      <h3>Import history</h3><div id="detail-history" class="history"></div>
+    </section>
+
+    <section id="import-panel" class="panel" aria-labelledby="import-title">
+      <span class="eyebrow">Inspect · review · publish</span><h2 id="import-title">Import chapter pages from 3asq</h2>
+      <form id="inspect-form" class="import-form"><label>Chapter URL<input id="source-url" type="url" required placeholder="https://3asq.online/manga/hunter-x-hunter/414/" /></label><label>Chapter<input id="chapter" type="number" min="339" max="414" placeholder="Auto" /></label><button id="inspect-button" type="submit">Inspect pages</button></form>
       <div id="status" class="status" role="status" aria-live="polite"></div>
-      <div id="summary" class="summary">
-        <div><small>Source title</small><strong id="source-title">—</strong></div>
-        <div><small>Chapter</small><strong id="source-chapter">—</strong></div>
-        <div><small>Pages</small><strong id="page-count">—</strong></div>
-      </div>
-      <div id="preview-head" class="preview-head"><div><span class="eyebrow">Detected reading order</span><h2>Page preview</h2></div><button id="clear-button" class="secondary" type="button">Clear preview</button></div>
-      <div id="preview-grid" class="grid"></div>
-      <div id="confirm" class="confirm">
-        <label class="check"><input id="authorized" type="checkbox" /> <span>I confirm that I am permitted to store and publish the detected media.</span></label>
-        <label class="check"><input id="replace" type="checkbox" /> <span>Replace the existing Chapter <b id="replace-chapter">—</b> folder and manifest entry if present.</span></label>
-        <div class="actions"><button id="import-button" type="button" disabled>Confirm and publish</button></div>
-        <p>The Worker creates one GitHub commit containing <code>public/media/succession-contest/chapters/&lt;chapter&gt;/</code> and <code>src/data/successionChapterMedia.generated.js</code>. Deployment begins after GitHub accepts the commit.</p>
-      </div>
+      <div id="summary" class="summary"><div><small>Source title</small><strong id="source-title">—</strong></div><div><small>Chapter</small><strong id="source-chapter">—</strong></div><div><small>Pages</small><strong id="page-count">—</strong></div></div>
+      <div id="preview-head" class="preview-head"><div><span class="eyebrow">Detected reading order</span><h2>Page preview</h2></div><button id="clear-preview" class="secondary" type="button">Clear preview</button></div>
+      <div id="preview-grid" class="preview-grid"></div>
+      <div id="confirm" class="confirm"><label class="check"><input id="authorized" type="checkbox" /><span>I confirm that I am permitted to store and publish these media files.</span></label><label class="check"><input id="replace" type="checkbox" /><span>Replace the existing Chapter <b id="replace-chapter">—</b> folder and bank record if present.</span></label><div class="actions"><button id="import-button" type="button" disabled>Confirm and publish to bank</button></div><p class="muted">The Worker writes sequential files under <code>public/media/succession-contest/chapters/&lt;chapter&gt;/</code>, updates the page manifest, appends import history, and advances the configured GitHub branch without force.</p></div>
     </section>
   </section>
 </main>
 <script>
-  let csrf = '';
-  let inspection = null;
-  const $ = (id) => document.getElementById(id);
-  const showStatus = (element, message, kind = '') => { element.textContent = message; element.className = `status show${kind ? ` ${kind}` : ''}`; };
-  const api = async (url, options = {}) => {
-    const headers = { ...(options.body ? { 'content-type':'application/json' } : {}), ...(csrf ? { 'x-csrf-token':csrf } : {}), ...(options.headers || {}) };
-    const response = await fetch(url, { credentials:'same-origin', ...options, headers });
-    const text = await response.text();
-    let payload;
-    try { payload = text ? JSON.parse(text) : {}; }
-    catch { payload = { error:text.trim() || `HTTP ${response.status}` }; }
-    if (!response.ok) {
-      if (response.status === 401) showLogin();
-      const error = new Error(payload.error || `HTTP ${response.status}`);
-      error.status = response.status;
-      throw error;
-    }
-    return payload;
+  let csrf='';let inspection=null;let bank=null;let selectedChapter=null;
+  const $=(id)=>document.getElementById(id);
+  const showStatus=(element,message,kind='')=>{element.textContent=message;element.className=`status show${kind?` ${kind}`:''}`};
+  const hideStatus=(element)=>{element.className='status';element.textContent=''};
+  const api=async(url,options={})=>{
+    const headers={...(options.body?{'content-type':'application/json'}:{}),...(csrf?{'x-csrf-token':csrf}:{}),...(options.headers||{})};
+    const response=await fetch(url,{credentials:'same-origin',...options,headers});const text=await response.text();let payload;
+    try{payload=text?JSON.parse(text):{}}catch{const looksHtml=/^\s*</.test(text);payload={error:looksHtml?'The server returned the Hunter Archive webpage instead of the chapter-bank API response. The Worker backend is not mounted for this route.':(text.trim()||`HTTP ${response.status}`)}}
+    if(!response.ok){if(response.status===401)showLogin();const error=new Error(payload.error||`HTTP ${response.status}`);error.status=response.status;throw error}return payload;
   };
-  const requireInspectionPayload = (payload) => {
-    if (!payload || !Array.isArray(payload.pages)) {
-      throw new Error(payload?.error || 'The chapter inspector returned an invalid response without a pages list.');
-    }
-    return payload;
+  const requireInspection=(payload)=>{if(!payload||!Array.isArray(payload.pages))throw new Error(payload?.error||'The inspector returned an invalid response without a pages list.');return payload};
+  const showLogin=()=>{csrf='';inspection=null;bank=null;$('app').hidden=true;$('login').hidden=false};
+  const showApp=(payload)=>{csrf=payload.csrfToken||'';$('signed-in-user').textContent=payload.username||'administrator';$('login').hidden=true;$('app').hidden=false;loadBank()};
+  const formatBytes=(value)=>Number.isFinite(value)?new Intl.NumberFormat('en',{style:'unit',unit:'byte',notation:value>999999?'compact':'standard'}).format(value):'—';
+  const formatDate=(value)=>value?new Date(value).toLocaleString():'—';
+  const statusLabel=(value)=>String(value||'empty').replaceAll('-',' ');
+
+  const renderBank=()=>{
+    if(!bank)return;const query=$('bank-search').value.trim().toLowerCase();const filter=$('bank-filter').value;
+    $('stat-chapters').textContent=bank.chapterCount;$('stat-stored').textContent=bank.storedChapterCount;$('stat-empty').textContent=bank.emptyChapterCount;$('stat-pages').textContent=bank.pageCount;$('stat-repair').textContent=bank.needsRepairCount;
+    const records=bank.chapters.filter((record)=>{if(filter!=='all'&&record.status!==filter)return false;if(!query)return true;return `${record.chapter} chapter ${record.chapter} ${record.status} ${record.sourceUrl||''} ${record.pages.map((page)=>page.label).join(' ')}`.toLowerCase().includes(query)});
+    const fragment=document.createDocumentFragment();for(const record of records){const row=document.createElement('tr');if(record.chapter===selectedChapter)row.className='is-selected';row.tabIndex=0;row.innerHTML=`<td><span class="chapter-link">Chapter ${record.chapter}</span></td><td>${record.pageCount}</td><td>${record.storage}</td><td><span class="pill ${record.status}">${statusLabel(record.status)}</span></td><td>${record.sourceUrl?new URL(record.sourceUrl).hostname:'—'}</td><td>${formatDate(record.lastUpdated)}</td>`;row.addEventListener('click',()=>openChapter(record.chapter));row.addEventListener('keydown',(event)=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openChapter(record.chapter)}});fragment.append(row)}
+    $('bank-body').replaceChildren(fragment);showStatus($('bank-status'),`${records.length} of ${bank.chapterCount} chapter records shown.`,'good');
   };
-  const showLogin = () => { csrf=''; inspection=null; $('app').hidden=true; $('login').hidden=false; };
-  const showApp = (payload) => { csrf=payload.csrfToken || ''; $('signed-in-user').textContent=payload.username || 'administrator'; $('login').hidden=true; $('app').hidden=false; };
-  const clearPreview = () => {
-    inspection=null; $('preview-grid').replaceChildren(); $('summary').classList.remove('show'); $('preview-head').classList.remove('show'); $('confirm').classList.remove('show'); $('authorized').checked=false; $('replace').checked=false; $('import-button').disabled=true;
-  };
-  const inspectChapter = async () => {
-    const sourceUrl = $('source-url').value;
-    const chapter = $('chapter').value || null;
-    try {
-      return requireInspectionPayload(await api('/api/admin/chapter/inspect',{method:'POST',body:JSON.stringify({sourceUrl,chapter})}));
-    } catch (error) {
-      if (error.status !== 405) throw error;
-      const query = new URLSearchParams({ sourceUrl, ...(chapter ? { chapter } : {}) });
-      return requireInspectionPayload(await api(`/api/admin/chapter/inspect?${query}`,{method:'GET'}));
-    }
-  };
+  const loadBank=async()=>{showStatus($('bank-status'),'Loading Chapter Bank…');try{bank=await api('/api/admin/chapter/bank');renderBank()}catch(error){showStatus($('bank-status'),error.message,'bad')}};
+  const openChapter=async(chapter)=>{selectedChapter=chapter;renderBank();$('chapter-detail').hidden=false;showStatus($('bank-status'),`Loading Chapter ${chapter} bank record…`);try{const record=await api(`/api/admin/chapter/bank/${chapter}`);$('detail-title').textContent=`Chapter ${chapter}`;$('detail-description').textContent=record.pageCount?`${record.pageCount} stored page records in reading order.`:'This chapter has a permanent bank record but no stored pages yet.';$('detail-status').textContent=statusLabel(record.status);$('detail-pages').textContent=`${record.storedPageCount}${record.expectedPageCount?` / ${record.expectedPageCount}`:''}`;$('detail-source').textContent=record.sourceUrl||'—';$('detail-updated').textContent=formatDate(record.lastUpdated);
+    const pages=document.createDocumentFragment();if(record.pages.length){for(const page of record.pages){const figure=document.createElement('figure');figure.className='page';figure.innerHTML=`<img loading="lazy" src="${page.src}" alt="Chapter ${chapter} ${page.label}" width="${page.width||''}" height="${page.height||''}"><figcaption><h3>${page.label}</h3><dl><div><dt>File</dt><dd>${page.filename||'—'}</dd></div><div><dt>Dimensions</dt><dd>${page.width&&page.height?`${page.width}×${page.height}`:'—'}</dd></div><div><dt>Format</dt><dd>${page.format||'—'}</dd></div><div><dt>Size</dt><dd>${formatBytes(page.byteSize)}</dd></div><div><dt>Checksum</dt><dd title="${page.checksum||''}">${page.checksum?page.checksum.slice(0,19)+'…':'—'}</dd></div><div><dt>Status</dt><dd>${page.status}</dd></div></dl></figcaption>`;pages.append(figure)}}else{const empty=document.createElement('p');empty.className='muted';empty.textContent='No page files are stored for this chapter.';pages.append(empty)}$('detail-page-grid').replaceChildren(pages);
+    const history=document.createDocumentFragment();if(record.history.length){for(const entry of record.history){const article=document.createElement('article');article.innerHTML=`<strong>${statusLabel(entry.action)} · ${entry.newPageCount} pages</strong><p>${formatDate(entry.timestamp)} · ${entry.sourceUrl||entry.sourceType||'unknown source'}</p>`;history.append(article)}}else{const empty=document.createElement('p');empty.className='muted';empty.textContent='No import history yet.';history.append(empty)}$('detail-history').replaceChildren(history);hideStatus($('bank-status'));$('chapter-detail').scrollIntoView({behavior:'smooth',block:'start'})}catch(error){showStatus($('bank-status'),error.message,'bad')}};
 
-  $('login-form').addEventListener('submit', async (event) => {
-    event.preventDefault(); const button=$('login-button'); button.disabled=true; showStatus($('login-status'),'Signing in…');
-    try {
-      const payload=await api('/api/admin/chapter/login',{method:'POST',body:JSON.stringify({username:$('username').value,password:$('password').value})});
-      $('password').value=''; showApp(payload); $('login-status').className='status';
-    } catch (error) { showStatus($('login-status'),error.message,'bad'); }
-    finally { button.disabled=false; }
-  });
+  const clearPreview=()=>{inspection=null;$('preview-grid').replaceChildren();$('summary').classList.remove('show');$('preview-head').classList.remove('show');$('confirm').classList.remove('show');$('authorized').checked=false;$('replace').checked=false;$('import-button').disabled=true};
+  const inspectChapter=async()=>{const sourceUrl=$('source-url').value;const chapter=$('chapter').value||null;try{return requireInspection(await api('/api/admin/chapter/inspect',{method:'POST',body:JSON.stringify({sourceUrl,chapter})}))}catch(error){if(error.status!==405)throw error;const query=new URLSearchParams({sourceUrl,...(chapter?{chapter}:{})});return requireInspection(await api(`/api/admin/chapter/inspect?${query}`,{method:'GET'}))}};
 
-  $('logout-button').addEventListener('click', async () => { try { await api('/api/admin/chapter/logout',{method:'POST',body:'{}'}); } catch {} showLogin(); });
-
-  $('inspect-form').addEventListener('submit', async (event) => {
-    event.preventDefault(); clearPreview(); const button=$('inspect-button'); button.disabled=true; showStatus($('status'),'Inspecting source page and detecting chapter images…');
-    try {
-      const payload=await inspectChapter();
-      inspection=payload; $('source-title').textContent=payload.title || 'Untitled chapter page'; $('source-chapter').textContent=payload.chapter; $('page-count').textContent=payload.pages.length; $('replace-chapter').textContent=payload.chapter; $('summary').classList.add('show'); $('preview-head').classList.add('show'); $('confirm').classList.add('show');
-      const fragment=document.createDocumentFragment();
-      payload.pages.forEach((page) => { const figure=document.createElement('figure'); figure.className='page'; const image=document.createElement('img'); image.loading='lazy'; image.alt=`Detected Chapter ${payload.chapter} page ${page.page}`; image.src=page.previewUrl; const caption=document.createElement('figcaption'); const number=document.createElement('strong'); number.textContent=`Page ${page.page}`; const source=document.createElement('span'); source.textContent=new URL(page.sourceUrl).pathname.split('/').pop() || 'image'; caption.append(number,source); figure.append(image,caption); fragment.append(figure); });
-      $('preview-grid').append(fragment); showStatus($('status'),`Detected ${payload.pages.length} pages. Review every preview before publishing.`,'good');
-    } catch (error) { showStatus($('status'),error.message,'bad'); }
-    finally { button.disabled=false; }
-  });
-
-  $('authorized').addEventListener('change',()=>{ $('import-button').disabled=!$('authorized').checked || !inspection; });
-  $('clear-button').addEventListener('click',()=>{ clearPreview(); $('status').className='status'; });
-  $('import-button').addEventListener('click',async()=>{
-    if(!inspection || !$('authorized').checked) return; const button=$('import-button'); button.disabled=true; showStatus($('status'),`Downloading, validating and publishing ${inspection.pages.length} pages…`);
-    try {
-      const payload=await api('/api/admin/chapter/import',{method:'POST',body:JSON.stringify({importToken:inspection.importToken,authorized:true,replace:$('replace').checked})});
-      const link=payload.commitUrl ? `\n${payload.commitUrl}` : ''; showStatus($('status'),`Chapter ${payload.chapter} was committed successfully (${payload.pageCount} pages).${link}\nThe hosted reader will update after deployment completes.`,'good'); clearPreview();
-    } catch(error) { showStatus($('status'),error.message,'bad'); button.disabled=false; }
-  });
-
+  $('login-form').addEventListener('submit',async(event)=>{event.preventDefault();const button=$('login-button');button.disabled=true;showStatus($('login-status'),'Signing in…');try{const payload=await api('/api/admin/chapter/login',{method:'POST',body:JSON.stringify({username:$('username').value,password:$('password').value})});$('password').value='';hideStatus($('login-status'));showApp(payload)}catch(error){showStatus($('login-status'),error.message,'bad')}finally{button.disabled=false}});
+  $('logout-button').addEventListener('click',async()=>{try{await api('/api/admin/chapter/logout',{method:'POST',body:'{}'})}catch{}showLogin()});$('refresh-bank').addEventListener('click',loadBank);$('bank-search').addEventListener('input',renderBank);$('bank-filter').addEventListener('change',renderBank);$('clear-bank-filter').addEventListener('click',()=>{$('bank-search').value='';$('bank-filter').value='all';renderBank()});$('close-detail').addEventListener('click',()=>{$('chapter-detail').hidden=true;selectedChapter=null;renderBank()});$('inspect-selected').addEventListener('click',()=>{$('chapter').value=selectedChapter||'';$('source-url').focus();$('import-panel').scrollIntoView({behavior:'smooth'})});
+  $('inspect-form').addEventListener('submit',async(event)=>{event.preventDefault();clearPreview();const button=$('inspect-button');button.disabled=true;showStatus($('status'),'Fetching the supplied 3asq chapter page and detecting manga images…');try{const payload=await inspectChapter();inspection=payload;$('source-title').textContent=payload.title||'Untitled chapter page';$('source-chapter').textContent=payload.chapter;$('page-count').textContent=payload.pages.length;$('replace-chapter').textContent=payload.chapter;$('summary').classList.add('show');$('preview-head').classList.add('show');$('confirm').classList.add('show');const fragment=document.createDocumentFragment();for(const page of payload.pages){const figure=document.createElement('figure');figure.className='preview';const filename=new URL(page.sourceUrl).pathname.split('/').pop()||'image';figure.innerHTML=`<img loading="lazy" alt="Detected Chapter ${payload.chapter} ${page.label}" src="${page.previewUrl}"><figcaption><strong>${page.label}</strong><span>${filename}</span></figcaption>`;fragment.append(figure)}$('preview-grid').append(fragment);showStatus($('status'),`Detected ${payload.pages.length} pages from ${new URL(payload.sourceUrl).hostname}. Review every preview before publishing.`,'good')}catch(error){showStatus($('status'),error.message,'bad')}finally{button.disabled=false}});
+  $('authorized').addEventListener('change',()=>{$('import-button').disabled=!$('authorized').checked||!inspection});$('clear-preview').addEventListener('click',()=>{clearPreview();hideStatus($('status'))});$('import-button').addEventListener('click',async()=>{if(!inspection||!$('authorized').checked)return;const button=$('import-button');button.disabled=true;showStatus($('status'),`Downloading, validating, checksumming and publishing ${inspection.pages.length} pages…`);try{const result=await api('/api/admin/chapter/import',{method:'POST',body:JSON.stringify({importToken:inspection.importToken,authorized:true,replace:$('replace').checked})});showStatus($('status'),`Chapter ${result.chapter} was published to the bank (${result.pageCount} pages).\n${result.commitUrl}\nThe public reader updates after the hosting deployment publishes that commit.`,'good');const chapter=result.chapter;clearPreview();await loadBank();await openChapter(chapter)}catch(error){showStatus($('status'),error.message,'bad');button.disabled=false}});
   api('/api/admin/chapter/session').then(showApp).catch(showLogin);
 </script>
 </body>

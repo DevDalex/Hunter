@@ -1,4 +1,4 @@
-# Hosted chapter administration
+# Hosted Chapter Bank administration
 
 The deployed administrator route is:
 
@@ -6,28 +6,31 @@ The deployed administrator route is:
 /admin/chapters
 ```
 
-It is intentionally absent from the public navigation and carries `noindex`, `nofollow`, and `noarchive` directives.
+It is intentionally absent from public navigation and carries `noindex`, `nofollow`, and `noarchive` directives.
+
+The complete storage schema is documented in `docs/SUCCESSION-CHAPTER-BANK.md`.
 
 ## What the hosted workflow does
 
 After authentication, the administrator can:
 
-1. paste an allowlisted chapter URL;
-2. provide a chapter number or infer it from the URL;
-3. inspect the source page;
-4. preview every detected page through the authenticated Worker;
-5. confirm publication authorization;
-6. optionally replace an existing chapter;
-7. download and validate the images server-side;
-8. create Git blobs for every normalized page;
-9. create one Git tree and one commit containing the chapter folder and generated manifest;
-10. advance the configured GitHub branch only as a non-forced fast-forward.
+1. inspect all permanent Chapter Bank records from Chapter 339 through Chapter 414;
+2. search and filter empty, published, and repair-needed chapters;
+3. open a chapter detail view with every `p.N` page record and import-history entry;
+4. paste an allowlisted external chapter URL;
+5. provide a chapter number or infer it from the URL;
+6. fetch the supplied chapter page server-side;
+7. preview every detected page through the authenticated Worker;
+8. confirm publication authorization;
+9. optionally replace an existing chapter;
+10. download and validate all approved images;
+11. calculate page IDs, `p.N` labels, dimensions, formats, byte sizes, SHA-256 checksums, source URLs, and timestamps;
+12. create one Git tree and one commit containing the chapter folder, generated page manifest, and import history;
+13. advance the configured GitHub branch only as a non-forced fast-forward.
 
 The browser never receives the GitHub token, administrator password, or session-signing secret.
 
 ## Required Worker secrets
-
-The hosted feature refuses login until all required secrets are configured:
 
 ```text
 ADMIN_USERNAME
@@ -36,11 +39,11 @@ ADMIN_SESSION_SECRET
 GITHUB_ADMIN_TOKEN
 ```
 
-Use the hosting provider's encrypted secret facility. Do not place these values in source files, `hosting.json`, frontend JavaScript, or ordinary plaintext environment variables.
+Use the hosting provider's encrypted secret facility. Do not place these values in source files, `.openai/hosting.json`, frontend JavaScript, or ordinary plaintext configuration.
 
 `ADMIN_SESSION_SECRET` must be a separate long random value. It must not match the administrator password.
 
-`GITHUB_ADMIN_TOKEN` should be a fine-grained token restricted to this repository with **Contents: read and write** permission. Do not grant unrelated account or repository permissions.
+`GITHUB_ADMIN_TOKEN` should be a fine-grained token restricted to this repository with **Contents: read and write** permission.
 
 ## Optional Worker configuration
 
@@ -53,10 +56,6 @@ CHAPTER_IMAGE_HOSTS=3asq.online
 
 `GITHUB_REPOSITORY` and `GITHUB_BRANCH` default to the values above. Source and image hosts are comma-separated allowlists. The source allowlist defaults to `3asq.online`; the image allowlist automatically includes the final source-page host and can be extended for a separate trusted CDN.
 
-## Temporary login requested for development
-
-The currently requested temporary username and password should be configured through encrypted Worker secrets rather than committed to the repository. Because those temporary values are weak, change both before making the route broadly discoverable or sharing the site with anyone else.
-
 ## Authentication and request protections
 
 - credentials are compared server-side;
@@ -66,39 +65,75 @@ The currently requested temporary username and password should be configured thr
 - state-changing requests require the session's CSRF token;
 - requests with a foreign `Origin` are rejected;
 - inspection and preview tokens expire after thirty minutes;
-- remote fetches use strict source/image hostname allowlists;
+- source and image hosts are allowlisted;
 - redirects are revalidated;
 - HTML, per-image, and total-chapter byte limits are enforced;
 - JPG, PNG, and WebP signatures and dimensions are validated;
-- branch publication uses a non-forced reference update so a concurrent branch change causes a conflict instead of being overwritten.
+- page checksums use SHA-256;
+- branch publication uses a non-forced reference update.
 
-## GitHub publication
+## Chapter Bank endpoints
 
-The Worker reads the current configured branch head, tree, and generated chapter manifest. It creates image blobs, replaces the selected chapter's manifest entry, deletes stale page files during an explicit replacement, creates a new tree and commit, then attempts a non-forced fast-forward branch update.
+```text
+POST /api/admin/chapter/login
+GET  /api/admin/chapter/session
+POST /api/admin/chapter/logout
+GET  /api/admin/chapter/bank
+GET  /api/admin/chapter/bank/<chapter>
+POST /api/admin/chapter/inspect
+GET  /api/admin/chapter/preview?token=...
+POST /api/admin/chapter/import
+```
 
-If the branch changes while an import is running, publication fails safely and the branch is not overwritten. The administrator should inspect the source again and retry.
+The bank endpoints read the configured GitHub branch's generated manifest and history. They return all 76 chapter records or one chapter with its complete page list and history.
 
-A successful GitHub commit does not prove that deployment has completed. The hosted reader updates only after the configured deployment pipeline builds and publishes the new branch commit.
+The inspection endpoint accepts:
 
-## Development fallback
+```json
+{
+  "sourceUrl": "https://3asq.online/manga/hunter-x-hunter/414/",
+  "chapter": 414
+}
+```
 
-The existing local tools remain available:
+It must return JSON with a `pages` array. If it returns the Hunter Archive homepage HTML, the deployed host has fallen through to the static SPA instead of mounting the Worker backend.
+
+## Atomic GitHub publication
+
+The Worker reads the current branch reference, commit, tree, page manifest, and import history. It then:
+
+1. downloads and validates every approved page;
+2. creates image blobs;
+3. builds enriched page records;
+4. removes stale paths only during explicit replacement;
+5. creates the next page-manifest blob;
+6. creates the next history blob;
+7. creates one tree containing images, manifest, and history;
+8. creates one commit;
+9. advances the branch with `force: false`.
+
+If the branch changes during import, publication fails safely instead of overwriting the newer branch state.
+
+A successful GitHub commit does not prove that deployment completed. The live reader updates only after the hosting project builds and publishes that commit.
+
+## Local fallback and recovery
 
 ```bash
 npm run admin:chapters
 npm run import:succession-chapter:url -- <chapter-url> [chapter]
 npm run import:succession-chapter -- <chapter> <source-directory>
+npm run rebuild:succession-bank
 ```
 
-These are useful when hosted secrets are unavailable or when the maintainer wants to inspect repository changes locally before pushing.
+The rebuild command reconstructs enriched page records from stored files and preserves existing provenance where possible.
 
 ## Verification
 
-Run:
-
 ```bash
 npm run audit:hosted-admin
+npm run audit:chapter-bank
+npm run audit:succession-media
 npm run qa:browser
 ```
 
-The hosted-admin audit verifies parsing and natural page ordering, image dimensions, manifest round-tripping, the secret boundary, secure cookie flags, CSRF enforcement, hostname allowlists, atomic GitHub Git-data publication, non-forced branch updates, deployed admin endpoints, and recursive Worker packaging.
+The audits verify source parsing and natural order, signatures and dimensions, stable page identities, `p.N` labels, byte sizes and checksums, manifest/history round-tripping, authentication, CSRF, allowlists, bank endpoints, one-tree Git publication, non-forced branch updates, SPA-fallback diagnostics, and recursive Worker packaging.
