@@ -37,7 +37,7 @@ jobs:
           test -f dist/server/chapter-admin.js
           test -f dist/client/index.html
           test -f dist/.openai/hosting.json
-          node -e "const c=require('./wrangler.jsonc'); if(c.main!=='dist/server/index.js'||c.assets?.directory!=='dist/client'||c.assets?.binding!=='ASSETS'||c.assets?.run_worker_first!==true) process.exit(1)"
+          node -e "const fs=require('node:fs'); const c=JSON.parse(fs.readFileSync('wrangler.jsonc','utf8')); if(c.main!=='dist/server/index.js'||c.assets?.directory!=='dist/client'||c.assets?.binding!=='ASSETS'||c.assets?.run_worker_first!==true) process.exit(1)"
 
       - name: Verify chapter-admin Worker routing
         run: node scripts/verify-sites-worker.mjs
