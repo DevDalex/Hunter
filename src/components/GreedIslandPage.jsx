@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
-  FileText,
   GraduationCap,
   Home,
   LibraryBig,
@@ -15,6 +14,7 @@ import {
 import './GreedIslandPage.css';
 import './GreedIslandPageResponsive.css';
 import './GreedIslandShell.css';
+import './greed-island/GreedIslandModulePolish.css';
 
 const GreedIslandHub = lazy(() => import('./greed-island/GreedIslandHub'));
 const EtaTutorial = lazy(() => import('./greed-island/EtaTutorial'));
@@ -24,7 +24,6 @@ const GreedIslandCardLibraries = lazy(() => import('./greed-island/GreedIslandCa
 const GreedIslandSystems = lazy(() => import('./greed-island/GreedIslandSystems'));
 const GreedIslandTacticalRecords = lazy(() => import('./greed-island/GreedIslandTacticalRecords'));
 const GreedIslandCompletionArchive = lazy(() => import('./greed-island/GreedIslandCompletionArchive'));
-const GreedIslandSources = lazy(() => import('./greed-island/GreedIslandSources'));
 
 const modules = Object.freeze([
   { id: 'home', label: 'Home', note: 'Choose a system', icon: Home },
@@ -34,7 +33,6 @@ const modules = Object.freeze([
   { id: 'island', label: 'Island', note: 'Map and systems', icon: MapIcon },
   { id: 'tactics', label: 'Tactics', note: 'Training and battles', icon: Activity },
   { id: 'completion', label: 'Completion', note: 'Endgame records', icon: CheckCircle2 },
-  { id: 'sources', label: 'Sources', note: 'Research registry', icon: FileText },
 ]);
 
 const moduleById = new Map(modules.map((item) => [item.id, item]));
@@ -76,7 +74,6 @@ const moduleDescriptions = Object.freeze({
   island: 'Map, quests, player systems, and Game Master controls are separated into individual views.',
   tactics: 'Training, Razor, Bombers, and final battles remain isolated tactical views.',
   completion: 'Quiz, rewards, route fork, and adaptation records are separated from the rest of the archive.',
-  sources: 'The complete source registry is no longer appended below every other Greed Island system.',
 });
 
 function ModuleLoading({ label }) {
@@ -118,7 +115,7 @@ export default function GreedIslandPage({ onNavigate, routeParams = {} }) {
       return <GreedIslandTacticalRecords requestedCollection={collection} onCollectionChange={(next) => navigateModule('tactics', next === 'bomber' ? 'bombers' : next === 'battles' ? 'final-battles' : next)} />;
     }
     if (activeModule === 'completion') return <GreedIslandCompletionArchive requestedCollection={activeSubview} onCollectionChange={(next) => navigateModule('completion', next)} />;
-    return <GreedIslandSources />;
+    return null;
   }, [activeModule, activeSubview, summoned]);
 
   return <article className="gi-app greed-island-page" data-greed-island-active-module={activeModule} data-greed-island-active-subview={activeSubview || ''}>
