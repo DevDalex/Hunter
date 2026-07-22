@@ -124,14 +124,17 @@ try {
     await openSystems(desktop, base, 'map');
     const systems = desktop.locator('.gi-systems');
     if (await systems.locator('.gi-systems-map button').count() !== 9) throw new Error('Island map does not expose 9 locations/facilities');
-    if (await systems.locator('.gi-systems-quests, .gi-systems-player, .gi-systems-gm').count()) throw new Error('Inactive island system views remain mounted on the map route');
+    if (await systems.locator('.gi-systems-locations, .gi-systems-quests, .gi-systems-player, .gi-systems-gm').count()) throw new Error('Inactive island system views remain mounted on the map route');
     const metrics = await systems.locator('.gi-systems__metrics').innerText();
     if (!metrics.includes('9') || !metrics.includes('8') || !metrics.includes('6')) throw new Error('Island system metrics are incomplete');
+    if (await systems.locator('.gi-systems-overview .safe-image, .gi-systems-overview .safe-image-placeholder').count() < 1) throw new Error('Island overview visual is missing');
+    if (await systems.locator('.gi-systems-map__connections line').count() < 8) throw new Error('Island map connection layer is incomplete');
     await assertMapGeometry(systems, 'desktop');
 
     await systems.locator('[data-location-id="port"]').click();
     const portText = (await systems.locator('.gi-systems-location-card').innerText()).toLowerCase();
     if (!portText.includes('only port') || !portText.includes('transport ticket')) throw new Error('Port location record is incomplete');
+    if (await systems.locator('.gi-systems-location-card__visual .safe-image, .gi-systems-location-card__visual .safe-image-placeholder').count() < 1) throw new Error('Selected location visual is missing');
 
     await systems.locator('.gi-systems__search input').fill('love');
     const header = await systems.locator('.gi-systems__map-header').innerText();
@@ -139,14 +142,36 @@ try {
   });
   await desktop.close();
 
+  const locations = await browser.newPage({ viewport: { width: 1366, height: 920 } });
+  await record('Visual location directory route', locations, async () => {
+    await openSystems(locations, base, 'locations');
+    const systems = locations.locator('.gi-systems');
+    if (await systems.locator('[data-location-directory-id]').count() !== 9) throw new Error('Location directory does not expose 9 verified records');
+    if (await systems.locator('.gi-systems-map, .gi-systems-quests, .gi-systems-player, .gi-systems-gm').count()) throw new Error('Inactive island system views remain mounted on the locations route');
+    if (await systems.locator('.gi-systems-locations__grid .safe-image, .gi-systems-locations__grid .safe-image-placeholder').count() !== 9) throw new Error('Location directory does not expose one visual per record');
+
+    await systems.locator('[data-location-directory-id="masadora"]').click();
+    let panelText = (await systems.locator('.gi-systems-location-card').innerText()).toLowerCase();
+    if (!panelText.includes('masadora') || !panelText.includes('magic city') || !panelText.includes('spell card')) throw new Error('Masadora location detail is incomplete');
+
+    await systems.locator('.gi-systems__search input').fill('love');
+    if (await systems.locator('[data-location-directory-id]').count() !== 1) throw new Error('Location directory search did not narrow to one record');
+    if (await systems.locator('[data-location-directory-id="aiai"]').count() !== 1) throw new Error('Location directory search did not expose Aiai');
+    await systems.locator('[data-location-directory-id="aiai"]').click();
+    panelText = (await systems.locator('.gi-systems-location-card').innerText()).toLowerCase();
+    if (!panelText.includes('aiai') || !panelText.includes('city of love')) throw new Error('Aiai location detail is incomplete');
+  });
+  await locations.close();
+
   const quests = await browser.newPage({ viewport: { width: 1366, height: 920 } });
   await record('Quest route isolation and source records', quests, async () => {
     await openSystems(quests, base, 'quests');
     const systems = quests.locator('.gi-systems');
-    if (await systems.locator('.gi-systems-map, .gi-systems-player, .gi-systems-gm').count()) throw new Error('Map, players, or Game Master controls remain mounted on the quest route');
+    if (await systems.locator('.gi-systems-map, .gi-systems-locations, .gi-systems-player, .gi-systems-gm').count()) throw new Error('Map, locations, players, or Game Master controls remain mounted on the quest route');
     await systems.locator('[data-quest-id="soufrabi-plot-of-beach"]').click();
     const questText = (await systems.locator('.gi-systems-quest-record').innerText()).toLowerCase();
     if (!questText.includes('plot of beach') || !questText.includes('razor') || !questText.includes('soufrabi')) throw new Error('Soufrabi quest record is incomplete');
+    if (await systems.locator('.gi-systems-quest-record__visual .safe-image, .gi-systems-quest-record__visual .safe-image-placeholder').count() < 1) throw new Error('Quest location visual is missing');
     if (await systems.locator('a', { hasText: 'Open quest source' }).count() < 1) throw new Error('Quest source link is missing');
   });
   await quests.close();
@@ -155,7 +180,7 @@ try {
   await record('Player Binder and Game Master direct routes', desktopControls, async () => {
     await openSystems(desktopControls, base, 'players');
     let systems = desktopControls.locator('.gi-systems');
-    if (await systems.locator('.gi-systems-map, .gi-systems-quests, .gi-systems-gm').count()) throw new Error('Inactive island systems remain mounted on the players route');
+    if (await systems.locator('.gi-systems-map, .gi-systems-locations, .gi-systems-quests, .gi-systems-gm').count()) throw new Error('Inactive island systems remain mounted on the players route');
     await systems.locator('.gi-systems-player__controls label').filter({ hasText: 'Known record' }).locator('select').selectOption('genthru');
     await systems.locator('.gi-systems-player__controls label').filter({ hasText: 'Binder system' }).locator('select').selectOption('attack-risk');
     const playerText = (await systems.locator('.gi-systems-player').innerText()).toLowerCase();
@@ -168,7 +193,7 @@ try {
     await desktopControls.goto(`${base}/#/series/greed-island/island/game-masters`, { waitUntil: 'domcontentloaded' });
     await desktopControls.waitForSelector('.gi-systems[data-island-system-view="game-masters"]');
     systems = desktopControls.locator('.gi-systems');
-    if (await systems.locator('.gi-systems-map, .gi-systems-quests, .gi-systems-player').count()) throw new Error('Inactive island systems remain mounted on the Game Masters route');
+    if (await systems.locator('.gi-systems-map, .gi-systems-locations, .gi-systems-quests, .gi-systems-player').count()) throw new Error('Inactive island systems remain mounted on the Game Masters route');
     await systems.locator('[data-gm-control="negative-card-console"]').click();
     const gmText = (await systems.locator('.gi-systems-gm__record').innerText()).toLowerCase();
     if (!gmText.includes('game master-only') || !gmText.includes('eliminate') || !gmText.includes('-003')) throw new Error('GM-only negative card console is incomplete');
@@ -206,6 +231,19 @@ try {
     if (durations.some((duration) => duration > 0.001)) throw new Error(`systems transition remains ${state.transition} under reduced motion`);
   });
   await mobile.close();
+
+  const mobileLocations = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+  await record('Location directory mobile containment', mobileLocations, async () => {
+    await openSystems(mobileLocations, base, 'locations');
+    const systems = mobileLocations.locator('.gi-systems');
+    if (await systems.locator('[data-location-directory-id]').count() !== 9) throw new Error('Mobile location directory is incomplete');
+    await systems.locator('[data-location-directory-id="starting-point"]').click();
+    const panelText = (await systems.locator('.gi-systems-location-card').innerText()).toLowerCase();
+    if (!panelText.includes('starting point') || !panelText.includes('entry zone')) throw new Error('Mobile Starting Point detail is incomplete');
+    const overflow = await mobileLocations.evaluate(() => Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth);
+    if (overflow > 1) throw new Error(`location directory overflowed mobile viewport by ${overflow}px`);
+  });
+  await mobileLocations.close();
 } finally {
   await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));
