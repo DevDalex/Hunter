@@ -43,10 +43,13 @@ jobs:
         run: node scripts/verify-sites-worker.mjs
 
       - name: Publish complete dist artifact
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: hunter-sites-dist
-          path: dist
+          path: |
+            dist
+            sites-worker-diagnostic.json
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 7
