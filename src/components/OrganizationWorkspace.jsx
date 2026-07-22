@@ -96,7 +96,7 @@ export default function OrganizationWorkspace({
 
     <div className="organization-workspace__boundary" role="note">
       <div><strong>Clear ownership boundaries</strong><p>Ability rules and conditions belong to Nen. Conflict anatomy belongs to Fights. Object custody and state belong to object records.</p></div>
-      <div><button type="button" onClick={onOpenNen}>Open Nen</button><button type="button" onClick={onOpenFights}>Open Fights</button><button type="button" onClick={onOpenObjects}>Open object records</button></div>
+      <div><button type="button" onClick={() => onOpenNen?.()}>Open Nen</button><button type="button" onClick={() => onOpenFights?.()}>Open Fights</button><button type="button" onClick={() => onOpenObjects?.()}>Open object records</button></div>
     </div>
 
     {view !== 'overview' && <div className="organization-workspace__toolbar">
@@ -106,7 +106,7 @@ export default function OrganizationWorkspace({
 
     {view === 'overview' && <div className="organization-workspace__overview">
       <section><header><span>Series-wide institutions</span><h2>Authority is not the same as loyalty.</h2><p>Formal command, family hierarchy, contracts, sponsorship, temporary alliance, and personal allegiance remain visibly distinct.</p></header><div>{institutionCharts.map((item) => <button type="button" onClick={() => { setSelectedInstitutionId(item.id); navigate({ view: 'institutions' }); }} key={item.id}><small>{item.scope}</small><strong>{item.name}</strong><span>{item.summary}</span><ArrowRight size={14} /></button>)}</div></section>
-      <section><header><span>Current underworld</span><h2>Kakin’s three-family balance.</h2><p>The three sponsored communities share a national system without sharing objectives, methods, or loyalty.</p></header><div>{mafiaDossiers.map((item) => <button type="button" onClick={() => navigate({ view: 'factions', family: item.family })} key={item.family}><small>{familyMeta[item.family]?.tier}</small><strong>{item.family}</strong><span>{familyMeta[item.family]?.principle}</span><ArrowRight size={14} /></button>)}</div><footer><button type="button" onClick={onOpenBlackWhale}>Open Black Whale territory</button><button type="button" onClick={onOpenSuccession}>Open Succession power blocs</button></footer></section>
+      <section><header><span>Current underworld</span><h2>Kakin’s three-family balance.</h2><p>The three sponsored communities share a national system without sharing objectives, methods, or loyalty.</p></header><div>{mafiaDossiers.map((item) => <button type="button" onClick={() => navigate({ view: 'factions', family: item.family })} key={item.family}><small>{familyMeta[item.family]?.tier}</small><strong>{item.family}</strong><span>{familyMeta[item.family]?.principle}</span><ArrowRight size={14} /></button>)}</div><footer><button type="button" onClick={() => onOpenBlackWhale?.()}>Open Black Whale territory</button><button type="button" onClick={() => onOpenSuccession?.()}>Open Succession power blocs</button></footer></section>
     </div>}
 
     {view === 'institutions' && selectedInstitution && <div className="organization-workspace__institutions">
