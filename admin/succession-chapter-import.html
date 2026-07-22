@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter Import · Hunter Archive Admin</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0d0d10; --panel:#17171c; --line:#33333b; --paper:#eee8dc; --muted:#aaa49b; --red:#a12a38; --red2:#731c29; --good:#7caf8b; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:radial-gradient(circle at 20% 0%,#24181b 0,transparent 34%),var(--bg); color:var(--paper); font:15px/1.5 Inter,ui-sans-serif,system-ui,sans-serif; }
+    main { width:min(1180px,calc(100% - 32px)); margin:0 auto; padding:52px 0 80px; }
+    header { display:grid; grid-template-columns:1fr auto; gap:32px; align-items:end; padding-bottom:28px; border-bottom:1px solid var(--line); }
+    .eyebrow { color:#d88b94; font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
+    h1 { margin:8px 0 10px; max-width:760px; font:700 clamp(38px,7vw,76px)/.94 Georgia,serif; }
+    header p { margin:0; max-width:720px; color:var(--muted); font-size:17px; }
+    .local { padding:14px 16px; border:1px solid var(--line); background:#121216; min-width:220px; }
+    .local strong,.local span { display:block; }
+    .local span { color:var(--muted); font-size:12px; margin-top:4px; }
+    .steps { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); margin:30px 0; }
+    .steps article { padding:18px; min-height:112px; border-right:1px solid var(--line); }
+    .steps article:last-child { border-right:0; }
+    .steps i { color:#d88b94; font-style:normal; font-weight:800; }
+    .steps h2 { margin:8px 0 3px; font-size:16px; }
+    .steps p { margin:0; color:var(--muted); font-size:13px; }
+    .panel { background:var(--panel); border:1px solid var(--line); padding:24px; margin-top:20px; }
+    .panel h2 { margin:0 0 18px; font:700 27px/1.1 Georgia,serif; }
+    form { display:grid; grid-template-columns:1fr 150px auto; gap:12px; align-items:end; }
+    label { display:grid; gap:7px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+    input[type=url],input[type=number] { width:100%; min-height:48px; border:1px solid #44444d; background:#0f0f13; color:var(--paper); padding:0 14px; font:inherit; }
+    button { min-height:48px; border:1px solid #b4414f; background:var(--red); color:white; padding:0 20px; font:800 14px/1 inherit; cursor:pointer; }
+    button:hover { background:#b43142; }
+    button:disabled { opacity:.45; cursor:not-allowed; }
+    .secondary { background:#202027; border-color:#45454e; }
+    .status { display:none; margin-top:16px; padding:14px 16px; background:#101014; border-left:4px solid var(--red); white-space:pre-wrap; }
+    .status.show { display:block; }
+    .status.good { border-color:var(--good); }
+    .summary { display:none; grid-template-columns:1fr repeat(2,140px); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:22px; }
+    .summary.show { display:grid; }
+    .summary div { background:#111115; padding:16px; }
+    .summary small { display:block; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
+    .summary strong { display:block; margin-top:5px; font-size:20px; overflow-wrap:anywhere; }
+    .preview-head { display:none; align-items:center; justify-content:space-between; gap:16px; margin-top:34px; }
+    .preview-head.show { display:flex; }
+    .preview-head h2 { margin:0; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px; margin-top:16px; }
+    .page { margin:0; background:#101014; border:1px solid var(--line); }
+    .page img { display:block; width:100%; aspect-ratio:2/3; object-fit:contain; background:#08080a; }
+    .page figcaption { padding:10px 12px; display:flex; justify-content:space-between; color:var(--muted); font-size:12px; }
+    .confirm { display:none; margin-top:24px; padding-top:22px; border-top:1px solid var(--line); }
+    .confirm.show { display:grid; gap:14px; }
+    .check { display:flex; align-items:flex-start; gap:10px; color:var(--muted); text-transform:none; letter-spacing:0; font-size:14px; font-weight:500; }
+    .check input { margin-top:4px; }
+    .actions { display:flex; gap:12px; flex-wrap:wrap; }
+    code { background:#0c0c0f; border:1px solid #33333a; padding:2px 6px; }
+    @media (max-width:760px) { header{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.steps article{border-right:0;border-bottom:1px solid var(--line)} form{grid-template-columns:1fr}.summary.show{grid-template-columns:1fr}.preview-head.show{align-items:flex-start;flex-direction:column} }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div><span class="eyebrow">Local maintainer tool</span><h1>Import a chapter from its source URL.</h1><p>Inspect the page, review every detected image, then confirm the import. Files are written directly into your checked-out Hunter repository.</p></div>
+    <div class="local"><strong>Local access only</strong><span>Bound to 127.0.0.1 with a temporary admin token</span></div>
+  </header>
+
+  <section class="steps" aria-label="Import steps">
+    <article><i>01</i><h2>Inspect</h2><p>Fetch the source page and detect likely manga pages.</p></article>
+    <article><i>02</i><h2>Preview</h2><p>Confirm count, order and every image before writing files.</p></article>
+    <article><i>03</i><h2>Import</h2><p>Download, validate, normalize, store and update the manifest.</p></article>
+  </section>
+
+  <section class="panel">
+    <h2>Source chapter</h2>
+    <form id="inspect-form">
+      <label>Chapter URL<input id="source-url" type="url" required placeholder="https://example.com/manga/hunter-x-hunter/414/" /></label>
+      <label>Chapter<input id="chapter" type="number" min="338" max="414" placeholder="Auto" /></label>
+      <button id="inspect-button" type="submit">Inspect pages</button>
+    </form>
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+    <div id="summary" class="summary">
+      <div><small>Source title</small><strong id="source-title">—</strong></div>
+      <div><small>Chapter</small><strong id="source-chapter">—</strong></div>
+      <div><small>Pages</small><strong id="page-count">—</strong></div>
+    </div>
+
+    <div id="preview-head" class="preview-head"><div><span class="eyebrow">Detected reading order</span><h2>Page preview</h2></div><button id="clear-button" class="secondary" type="button">Clear preview</button></div>
+    <div id="preview-grid" class="grid"></div>
+
+    <div id="confirm" class="confirm">
+      <label class="check"><input id="authorized" type="checkbox" /> <span>I have authorization to store and publish the detected media in this repository.</span></label>
+      <label class="check"><input id="replace" type="checkbox" /> <span>Replace the existing chapter folder and manifest entry if Chapter <b id="replace-chapter">—</b> is already present.</span></label>
+      <div class="actions"><button id="import-button" type="button" disabled>Confirm and import</button></div>
+      <p>Successful imports write to <code>public/media/succession-contest/chapters/&lt;chapter&gt;/</code> and update <code>src/data/successionChapterMedia.generated.js</code>.</p>
+    </div>
+  </section>
+</main>
+<script>
+  const token = new URLSearchParams(location.search).get('token') || '';
+  let session = null;
+  const $ = (id) => document.getElementById(id);
+  const status = $('status');
+  const setStatus = (message, good = false) => { status.textContent = message; status.className = `status show${good ? ' good' : ''}`; };
+  const request = async (url, options = {}) => {
+    const response = await fetch(url, { ...options, headers: { 'content-type':'application/json', 'x-admin-token':token, ...(options.headers || {}) } });
+    const payload = await response.json().catch(() => ({ error: `HTTP ${response.status}` }));
+    if (!response.ok) throw new Error(payload.error || `HTTP ${response.status}`);
+    return payload;
+  };
+  const clear = () => {
+    session = null;
+    $('preview-grid').replaceChildren();
+    $('summary').classList.remove('show');
+    $('preview-head').classList.remove('show');
+    $('confirm').classList.remove('show');
+    $('authorized').checked = false;
+    $('replace').checked = false;
+    $('import-button').disabled = true;
+  };
+
+  $('inspect-form').addEventListener('submit', async (event) => {
+    event.preventDefault(); clear();
+    const button = $('inspect-button'); button.disabled = true;
+    setStatus('Inspecting source page and detecting chapter images…');
+    try {
+      const payload = await request('/api/inspect', { method:'POST', body:JSON.stringify({ sourceUrl:$('source-url').value, chapter:$('chapter').value || null }) });
+      session = payload;
+      $('source-title').textContent = payload.title || 'Untitled chapter page';
+      $('source-chapter').textContent = payload.chapter;
+      $('page-count').textContent = payload.pages.length;
+      $('replace-chapter').textContent = payload.chapter;
+      $('summary').classList.add('show');
+      $('preview-head').classList.add('show');
+      $('confirm').classList.add('show');
+      const fragment = document.createDocumentFragment();
+      payload.pages.forEach((page) => {
+        const figure = document.createElement('figure'); figure.className = 'page';
+        const image = document.createElement('img'); image.loading = 'lazy'; image.alt = `Detected Chapter ${payload.chapter} page ${page.page}`; image.src = `${page.previewUrl}?token=${encodeURIComponent(token)}`;
+        const caption = document.createElement('figcaption');
+        const number = document.createElement('strong'); number.textContent = `Page ${page.page}`;
+        const source = document.createElement('span'); source.textContent = new URL(page.sourceUrl).pathname.split('/').pop() || 'image';
+        caption.append(number, source); figure.append(image, caption); fragment.append(figure);
+      });
+      $('preview-grid').append(fragment);
+      setStatus(`Detected ${payload.pages.length} pages. Review the complete preview before confirming.`, true);
+    } catch (error) { setStatus(error.message); }
+    finally { button.disabled = false; }
+  });
+
+  $('authorized').addEventListener('change', () => { $('import-button').disabled = !$('authorized').checked || !session; });
+  $('clear-button').addEventListener('click', () => { clear(); status.className = 'status'; });
+  $('import-button').addEventListener('click', async () => {
+    if (!session || !$('authorized').checked) return;
+    const button = $('import-button'); button.disabled = true;
+    setStatus(`Downloading and importing ${session.pages.length} pages…`);
+    try {
+      const payload = await request('/api/import', { method:'POST', body:JSON.stringify({ sessionId:session.sessionId, replace:$('replace').checked }) });
+      setStatus(payload.output || `Chapter ${session.chapter} imported successfully.`, true);
+    } catch (error) { setStatus(error.message); button.disabled = false; }
+  });
+</script>
+</body>
+</html>
