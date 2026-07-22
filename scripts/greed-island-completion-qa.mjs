@@ -145,7 +145,7 @@ try {
 
     await completion.locator('.gi-completion__search input').fill('87');
     const filtered = (await completion.locator('.gi-completion__filters').innerText()).toLowerCase();
-    if (!filtered.includes('matching completion quiz records')) throw new Error(`Quiz search did not remain scoped to the quiz route: ${filtered}`);
+    if (!filtered.includes('matching quiz boundary records')) throw new Error(`Quiz search did not remain scoped to the quiz route: ${filtered}`);
 
     const state = await mobile.evaluate(() => {
       const completion = document.querySelector('.gi-completion');
