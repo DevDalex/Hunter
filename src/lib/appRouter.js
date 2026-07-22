@@ -23,7 +23,6 @@ const successionPathToTarget = {
   'royal-family': { target: 'family-tree' },
   cast: { target: 'succession-roster' },
   timeline: { target: 'succession-timeline' },
-  chapters: { target: 'chapters', panel: 'reader' },
   'black-whale': { target: 'black-whale' },
   'nen-and-beasts': { target: 'beasts' },
   'power-blocs': { target: 'mafia' },
@@ -34,7 +33,7 @@ const targetToSuccessionPath = new Map([
   ['family-tree', 'succession-contest/royal-family'],
   ['succession-roster', 'succession-contest/cast'],
   ['succession-timeline', 'succession-contest/timeline'],
-  ['chapters', 'succession-contest/chapters'],
+  ['chapters', 'succession-contest/records'],
   ['black-whale', 'succession-contest/black-whale'],
   ['beasts', 'succession-contest/nen-and-beasts'],
   ['mafia', 'succession-contest/power-blocs'],
@@ -81,6 +80,10 @@ export const routeIsLegacyHash = (hash = '') => String(hash || '').startsWith('#
 export function normalizeDestination(view, target = '', params = {}) {
   if (view === 'series' && target === 'research') return { view, target: 'chapters', params };
   if (view === 'succession' && (!target || target === 'overview')) return { view: 'series', target: 'succession-contest', params };
+  if (view === 'succession' && target === 'chapters' && (!params.panel || params.panel === 'reader')) {
+    const { panel: _panel, ...readerParams } = params;
+    return { view: 'series', target: 'succession-contest', params: { section: 'chapters', ...readerParams } };
+  }
   if (view === 'succession' && successionAliases[target]) {
     const alias = successionAliases[target];
     if (alias.target === 'overview') return { view: 'series', target: 'succession-contest', params };
@@ -117,13 +120,19 @@ export function routeToCleanPath(view, target = '', params = {}, hash = '') {
       const { view: _view, ...rest } = normalized.params || {};
       return cleanUrl('/story', { view: normalized.target, ...rest }, hash);
     }
+    if (normalized.target === 'succession-contest' && normalized.params?.section === 'chapters') {
+      const { section: _section, ...readerParams } = normalized.params;
+      return cleanUrl('/story/succession-contest/chapters', readerParams, hash);
+    }
     if (cleanStoryTargets.has(normalized.target)) return cleanUrl(`/story/${normalized.target}`, normalized.params, hash);
     return cleanUrl('/story', { view: normalized.target, ...(normalized.params || {}) }, hash);
   }
 
   if (normalized.view === 'succession') {
     const successionPath = targetToSuccessionPath.get(normalized.target);
-    return cleanUrl(`/story/${successionPath || 'succession-contest'}`, normalized.params, hash);
+    const successionParams = { ...(normalized.params || {}) };
+    if (normalized.target === 'chapters' && successionParams.panel === 'chapters') delete successionParams.panel;
+    return cleanUrl(`/story/${successionPath || 'succession-contest'}`, successionParams, hash);
   }
 
   if (normalized.view === 'reference') {
@@ -168,6 +177,9 @@ export function parseCleanRoute(pathname = '/', search = '') {
 
     if (parts[1] === 'succession-contest') {
       if (parts.length === 2) return normalizeDestination('series', 'succession-contest', params);
+      if (parts.length === 3 && parts[2] === 'chapters') {
+        return normalizeDestination('series', 'succession-contest', { section: 'chapters', ...params });
+      }
       const destination = successionPathToTarget[parts[2]];
       if (!destination || parts.length > 3) return { view: 'not-found', target: '', params: { attemptedPath: pathnameClean } };
       return normalizeDestination('succession', destination.target, { ...(destination.panel ? { panel: destination.panel } : {}), ...params });
