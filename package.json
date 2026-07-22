@@ -20,7 +20,7 @@
     "audit:accessibility": "node scripts/run-css-aware-audit.mjs audit-accessibility.mjs",
     "audit:performance": "node scripts/audit-performance.mjs",
     "audit:polish": "node scripts/run-css-aware-audit.mjs audit-polish.mjs",
-    "audit:succession-media": "node scripts/audit-succession-chapter-media.mjs",
+    "audit:succession-media": "node --check scripts/import-succession-chapter.mjs && node scripts/audit-succession-chapter-media.mjs",
     "qa:visual": "node scripts/visual-qa.mjs",
     "qa:accessibility": "node scripts/accessibility-qa.mjs",
     "qa:performance": "node scripts/audit-performance.mjs && node scripts/performance-qa.mjs",
