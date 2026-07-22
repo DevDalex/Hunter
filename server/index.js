@@ -1,4 +1,4 @@
-import { handleHostedChapterAdmin, isHostedChapterAdminRequest } from './chapter-admin.js';
+import { handleHostedChapterAdmin, isHostedChapterAdminRequest } from './chapter-admin-v2.js';
 
 const INSPECT_PATH = '/api/admin/chapter/inspect';
 const ADMIN_PATHS = new Set(['/admin/chapters', '/admin/chapters/']);
