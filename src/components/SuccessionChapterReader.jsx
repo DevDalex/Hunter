@@ -15,6 +15,7 @@ import {
   successionChapterReaderByNumber,
   successionChapterReaderRecords,
 } from '../data/successionChapterReader.js';
+import { writeStoredJson } from '../lib/browserStorage.js';
 import './SuccessionChapterReader.css';
 
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
@@ -60,11 +61,7 @@ export default function SuccessionChapterReader({ requestedChapter, requestedPag
   }, [requestedChapter, requestedMode, requestedPage]);
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem('hxh-succession-reader-progress', JSON.stringify({ chapter, page: safePageIndex + 1, mode }));
-    } catch {
-      // Reader progress remains optional when storage is unavailable.
-    }
+    writeStoredJson('hxh-succession-reader-progress', { chapter, page: safePageIndex + 1, mode });
   }, [chapter, mode, safePageIndex]);
 
   const filteredChapters = useMemo(() => {
