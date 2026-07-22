@@ -15,6 +15,7 @@ import './GreedIslandPage.css';
 import './GreedIslandPageResponsive.css';
 import './GreedIslandShell.css';
 import './greed-island/GreedIslandModulePolish.css';
+import './greed-island/GreedIslandSystemsVisual.css';
 
 const GreedIslandHub = lazy(() => import('./greed-island/GreedIslandHub'));
 const EtaTutorial = lazy(() => import('./greed-island/EtaTutorial'));
