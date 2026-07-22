@@ -37,8 +37,8 @@ export const successionPages = [
     description: 'A multi-track chronology organized by voyage day, story time, chapter, location, plot thread, and factual confidence.',
   },
   {
-    id: 'chapter-reader', label: 'Chapter reader', kicker: 'Sequential chapter archive', title: 'Succession chapter reader',
-    description: 'A chapter index from 338 through 414 with continuous and single-page reading modes ready for authorized local chapter media.',
+    id: 'chapters', label: 'Chapters', kicker: 'Sequential chapter archive', title: 'Succession chapters and records',
+    description: `A reader index from Chapter 338 through 414, plus the maintained chapter ledger, deaths, objects, and unresolved questions through Chapter ${ARCHIVE_BOUNDARY}.`,
   },
   {
     id: 'black-whale', label: 'Black Whale', kicker: 'Interactive ship atlas', title: 'Inside Black Whale 1',
@@ -51,10 +51,6 @@ export const successionPages = [
   {
     id: 'mafia', label: 'Power blocs', kicker: 'Organizations and operations', title: 'Mafia, Justice and operations',
     description: 'Xi-Yu, Cha-R, Heil-Ly, the Phantom Troupe, military authority, investigations, assassinations, escapes, and political relationships.',
-  },
-  {
-    id: 'chapters', label: 'Records', kicker: 'Chapters and changing states', title: 'Chapters, deaths and mysteries',
-    description: `Current-arc chapter records, deaths, possession and body states, consequential objects, and unresolved questions through Chapter ${ARCHIVE_BOUNDARY}.`,
   },
 ];
 
