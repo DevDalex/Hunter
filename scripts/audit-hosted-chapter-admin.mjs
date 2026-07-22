@@ -36,10 +36,11 @@ const manifest = { 414: [{ page: 1, src: '/media/succession-contest/chapters/414
 const serialized = serializeGeneratedManifest(manifest);
 assert(JSON.stringify(parseGeneratedManifest(serialized)) === JSON.stringify(manifest), 'generated manifest serialization must round-trip');
 
-const [worker, serverIndex, adminPage, prepareHosting, packageJson] = await Promise.all([
+const [worker, serverIndex, adminPage, inspectContract, prepareHosting, packageJson] = await Promise.all([
   read('server/chapter-admin.js'),
   read('server/index.js'),
   read('public/admin/chapters/index.html'),
+  read('public/admin/chapters/inspect-contract.js'),
   read('scripts/prepare-hosting.mjs'),
   read('package.json'),
 ]);
@@ -56,9 +57,13 @@ assert(worker.includes('force: false'), 'branch update must reject non-fast-forw
 assert(adminPage.includes('/api/admin/chapter/login') && adminPage.includes('/api/admin/chapter/import'), 'deployed admin page must use authenticated Worker endpoints');
 assert(adminPage.includes("error.status !== 405") && adminPage.includes("method:'GET'"), 'read-only inspection must retry through GET after an HTTP 405');
 assert(adminPage.includes("credentials:'same-origin'"), 'administrator requests must send the HttpOnly session cookie only to the same origin');
-assert(serverIndex.includes("url.pathname === '/api/admin/chapter/inspect' && request.method === 'GET'"), 'Worker entry must normalize the GET inspection fallback');
+assert(serverIndex.includes('normalizeInspectionGet') && serverIndex.includes('validateInspectionResponse'), 'Worker entry must normalize and validate the GET inspection fallback');
+assert(serverIndex.includes('Array.isArray(payload.pages)'), 'Worker must reject successful inspection responses without a pages array');
+assert(serverIndex.includes('/admin/chapters/inspect-contract.js'), 'protected admin HTML must load the browser-side inspection contract guard');
+assert(inspectContract.includes("requestUrl.pathname !== '/api/admin/chapter/inspect'") && inspectContract.includes('Array.isArray(payload.pages)'), 'browser inspection guard must validate the API response shape');
+assert(inspectContract.includes('rewritten to a webpage'), 'browser inspection guard must explain an HTML route rewrite');
 assert(prepareHosting.includes("cp('server', 'dist/server', { recursive: true })"), 'hosting preparation must copy Worker modules recursively');
 assert(prepareHosting.includes('Mozilla/5.0') && prepareHosting.includes('Hosted chapter admin fetch profile marker is missing.'), 'deployed chapter fetch must use the guarded browser request profile');
 assert(packageJson.includes('audit:hosted-admin'), 'hosted administrator audit must remain registered in package scripts');
 
-console.log('Hosted chapter admin audit passed: login/session boundary, CSRF, allowlisted remote fetches, resilient 405 inspection fallback, browser fetch profile, image parsing, manifest round-trip, atomic GitHub publication, and recursive Worker packaging are intact.');
+console.log('Hosted chapter admin audit passed: login/session boundary, CSRF, allowlisted remote fetches, resilient 405 fallback, strict inspection response contracts, browser fetch profile, image parsing, manifest round-trip, atomic GitHub publication, and recursive Worker packaging are intact.');
