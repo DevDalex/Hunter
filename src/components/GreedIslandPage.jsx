@@ -45,7 +45,8 @@ const subviews = Object.freeze({
     { id: 'game-master', label: 'Game Master' },
   ],
   island: [
-    { id: 'map', label: 'Map & locations' },
+    { id: 'map', label: 'Map' },
+    { id: 'locations', label: 'Locations' },
     { id: 'quests', label: 'Quests' },
     { id: 'players', label: 'Player systems' },
     { id: 'game-masters', label: 'Game Masters' },
@@ -71,7 +72,7 @@ const moduleDescriptions = Object.freeze({
   eta: 'The animated tutorial room, old-game dialogue, twelve lessons, and lesson-specific demonstrations.',
   binder: 'The working Book renders only its current ten-card spread and preserves stored Binder progress.',
   cards: 'Open one card collection at a time instead of mounting every archive and library together.',
-  island: 'Map, quests, player systems, and Game Master controls are separated into individual views.',
+  island: 'Explore the verified island map, illustrated location directory, quests, player systems, and Game Master controls.',
   tactics: 'Training, Razor, Bombers, and final battles remain isolated tactical views.',
   completion: 'Quiz, rewards, route fork, and adaptation records are separated from the rest of the archive.',
 });
