@@ -37,6 +37,10 @@ export const successionPages = [
     description: 'A multi-track chronology organized by voyage day, story time, chapter, location, plot thread, and factual confidence.',
   },
   {
+    id: 'chapter-reader', label: 'Chapter reader', kicker: 'Sequential chapter archive', title: 'Succession chapter reader',
+    description: 'A chapter index from 338 through 414 with continuous and single-page reading modes ready for authorized local chapter media.',
+  },
+  {
     id: 'black-whale', label: 'Black Whale', kicker: 'Interactive ship atlas', title: 'Inside Black Whale 1',
     description: 'Explore the canonical cross-section through clickable locations, tier and room inspectors, access rules, occupants, and movement routes.',
   },
