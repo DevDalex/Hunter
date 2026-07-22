@@ -7,6 +7,7 @@ export const routeModuleLoaders = {
   familyTree: () => import('../components/FamilyTree'),
   successionRoster: () => import('../components/SuccessionRoster'),
   successionTimeline: () => import('../components/SuccessionTimeline'),
+  successionChapterReader: () => import('../components/SuccessionChapterReader'),
   successionConnections: () => import('../components/SuccessionConnectionBoard'),
   blackWhale: () => import('../components/BlackWhaleGuide'),
   successionDossier: () => import('../components/SuccessionDossier'),
@@ -30,6 +31,7 @@ const loaderForRoute = (view, target = '') => {
     if (target === 'family-tree') return routeModuleLoaders.familyTree;
     if (target === 'succession-roster') return routeModuleLoaders.successionRoster;
     if (target === 'succession-timeline') return routeModuleLoaders.successionTimeline;
+    if (target === 'chapter-reader') return routeModuleLoaders.successionChapterReader;
     if (target === 'black-whale') return routeModuleLoaders.blackWhale;
     if (successionDossierTargets.has(target)) return routeModuleLoaders.successionDossier;
     return null;
