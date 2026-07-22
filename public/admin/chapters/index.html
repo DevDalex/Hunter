@@ -125,10 +125,15 @@
   const api = async (url, options = {}) => {
     const headers = { ...(options.body ? { 'content-type':'application/json' } : {}), ...(csrf ? { 'x-csrf-token':csrf } : {}), ...(options.headers || {}) };
     const response = await fetch(url, { credentials:'same-origin', ...options, headers });
-    const payload = await response.json().catch(() => ({ error:`HTTP ${response.status}` }));
+    const text = await response.text();
+    let payload;
+    try { payload = text ? JSON.parse(text) : {}; }
+    catch { payload = { error:text.trim() || `HTTP ${response.status}` }; }
     if (!response.ok) {
       if (response.status === 401) showLogin();
-      throw new Error(payload.error || `HTTP ${response.status}`);
+      const error = new Error(payload.error || `HTTP ${response.status}`);
+      error.status = response.status;
+      throw error;
     }
     return payload;
   };
@@ -136,6 +141,17 @@
   const showApp = (payload) => { csrf=payload.csrfToken || ''; $('signed-in-user').textContent=payload.username || 'administrator'; $('login').hidden=true; $('app').hidden=false; };
   const clearPreview = () => {
     inspection=null; $('preview-grid').replaceChildren(); $('summary').classList.remove('show'); $('preview-head').classList.remove('show'); $('confirm').classList.remove('show'); $('authorized').checked=false; $('replace').checked=false; $('import-button').disabled=true;
+  };
+  const inspectChapter = async () => {
+    const sourceUrl = $('source-url').value;
+    const chapter = $('chapter').value || null;
+    try {
+      return await api('/api/admin/chapter/inspect',{method:'POST',body:JSON.stringify({sourceUrl,chapter})});
+    } catch (error) {
+      if (error.status !== 405) throw error;
+      const query = new URLSearchParams({ sourceUrl, ...(chapter ? { chapter } : {}) });
+      return api(`/api/admin/chapter/inspect?${query}`,{method:'GET'});
+    }
   };
 
   $('login-form').addEventListener('submit', async (event) => {
@@ -152,7 +168,7 @@
   $('inspect-form').addEventListener('submit', async (event) => {
     event.preventDefault(); clearPreview(); const button=$('inspect-button'); button.disabled=true; showStatus($('status'),'Inspecting source page and detecting chapter images…');
     try {
-      const payload=await api('/api/admin/chapter/inspect',{method:'POST',body:JSON.stringify({sourceUrl:$('source-url').value,chapter:$('chapter').value || null})});
+      const payload=await inspectChapter();
       inspection=payload; $('source-title').textContent=payload.title || 'Untitled chapter page'; $('source-chapter').textContent=payload.chapter; $('page-count').textContent=payload.pages.length; $('replace-chapter').textContent=payload.chapter; $('summary').classList.add('show'); $('preview-head').classList.add('show'); $('confirm').classList.add('show');
       const fragment=document.createDocumentFragment();
       payload.pages.forEach((page) => { const figure=document.createElement('figure'); figure.className='page'; const image=document.createElement('img'); image.loading='lazy'; image.alt=`Detected Chapter ${payload.chapter} page ${page.page}`; image.src=page.previewUrl; const caption=document.createElement('figcaption'); const number=document.createElement('strong'); number.textContent=`Page ${page.page}`; const source=document.createElement('span'); source.textContent=new URL(page.sourceUrl).pathname.split('/').pop() || 'image'; caption.append(number,source); figure.append(image,caption); fragment.append(figure); });
