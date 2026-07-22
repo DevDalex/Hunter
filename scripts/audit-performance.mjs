@@ -33,6 +33,7 @@ const directBoundaryKeys = [
   'src/components/FamilyTree.jsx',
   'src/components/SuccessionRoster.jsx',
   'src/components/SuccessionTimeline.jsx',
+  'src/components/SuccessionChapterReader.jsx',
   'src/components/SuccessionConnectionBoard.jsx',
   'src/components/BlackWhaleGuide.jsx',
   'src/components/SuccessionDossier.jsx',
@@ -63,9 +64,9 @@ assert(entryJs <= budgets.entryJs, `startup application chunk is ${entryJs} byte
 assert(startupJs <= budgets.startupJs, `startup JavaScript closure is ${startupJs} bytes; budget is ${formatPerformanceBudget(budgets.startupJs)}`);
 assert(startupCss <= budgets.startupCss, `startup stylesheet is ${startupCss} bytes; budget is ${formatPerformanceBudget(budgets.startupCss)}`);
 assert(largestJavascript.bytes <= budgets.javascriptChunk, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is ${formatPerformanceBudget(budgets.javascriptChunk)}`);
-assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 16 route/search UI boundaries must remain dynamic entries');
+assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 17 route/search UI boundaries must remain dynamic entries');
 assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Story directory, standard arc renderer, Volume 0, and Hunter Exam must remain separate on-demand chunks');
-assert(dynamicEntries.length === 23, `expected 16 direct boundaries, four Story experience boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
+assert(dynamicEntries.length === 24, `expected 17 direct boundaries, four Story experience boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
 assert(searchShardKeys.every((key) => manifest[key]?.isDynamicEntry), 'the story, Succession, and reference search indexes must remain separate dynamic entries');
 
 const homeHighlights = await readFile(path.join(root, 'src/data/homeHighlights.js'), 'utf8');
@@ -81,7 +82,7 @@ const packageJson = await readFile(path.join(root, 'package.json'), 'utf8');
 assert(!/from ['"]\.\/characters['"]/.test(homeHighlights), 'the homepage must not import the complete character registry');
 assert(!/priorityMedia\.generated/.test(homeHighlights), 'the homepage must not import the complete priority-media registry');
 assert(!/from ['"].*\/(chapters|encyclopedia|successionDossier|successionRoster|seriesResearch)['"]/.test(app), 'App.jsx imports a heavy research dataset');
-assert((routePreload.match(/\(\) => import\(/g) || []).length === 16, 'the route loader registry must own 16 direct dynamic module boundaries');
+assert((routePreload.match(/\(\) => import\(/g) || []).length === 17, 'the route loader registry must own 17 direct dynamic module boundaries');
 assert(
   seriesWorkspace.includes("lazy(() => import('./StoryHub'))")
     && seriesWorkspace.includes("lazy(() => import('./ArcPage'))")
