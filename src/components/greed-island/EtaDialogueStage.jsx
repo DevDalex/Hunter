@@ -141,7 +141,7 @@ export default function EtaDialogueStage({ lesson, announcement, onAdvance }) {
       <span className="gi-eta-scene__name">ETA</span>
       <span className="gi-eta-scene__lesson">LESSON {lesson.number} · {lesson.title}</span>
       <span className="gi-eta-scene__text" aria-hidden="true">{visibleText}<i className={isTyping ? 'is-typing' : ''} /></span>
-      <span className="sr-only" aria-live="polite">{isComplete ? fullText : ''}</span>
+      <span className="gi-eta-course__announcement sr-only" aria-live="polite">{isComplete ? fullText : ''}</span>
       <span className={`gi-eta-scene__prompt${isComplete ? ' is-ready' : ''}`} aria-hidden="true">▼ PRESS A</span>
     </button>
 
