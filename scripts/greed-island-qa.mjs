@@ -75,12 +75,6 @@ const openLesson = async (page, title) => {
   await page.locator('.gi-eta-course__lesson h3').filter({ hasText: title }).waitFor();
 };
 
-const readProgress = async (page) => {
-  const label = await page.locator('.gi-progress').getAttribute('aria-label');
-  const match = label?.match(/^(\d+)\s+of\s+100/);
-  return match ? Number(match[1]) : Number.NaN;
-};
-
 const transitionSeconds = (value) => value
   .split(',')
   .map((duration) => Number.parseFloat(duration.trim()))
@@ -171,60 +165,59 @@ try {
   await tutorial.close();
 
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await record('Greed Island Binder direct route keyboard, sections, and persistence', desktop, async () => {
+  await record('Greed Island Binder card-filled layout and navigation', desktop, async () => {
     await openGreedIsland(desktop, base, 'binder');
     await desktop.waitForSelector('.gi-binder-section');
     if (await desktop.locator('[data-eta-scene], .gi-card-archive, .gi-systems, .gi-tactical, .gi-completion').count()) throw new Error('Inactive Greed Island modules remain mounted on the Binder route');
     const binder = desktop.locator('.gi-binder-section');
-    await binder.locator('.gi-book[data-book-state="open"]').waitFor();
+    const device = binder.locator('.gi-binder-device[data-book-state="open"]');
+    await device.waitFor();
 
-    await binder.getByRole('button', { name: 'Close Greed Island Book' }).click();
-    await binder.locator('.gi-book[data-book-state="closed"]').waitFor();
-    await binder.getByRole('button', { name: 'Open Greed Island Book' }).click();
-    await binder.locator('.gi-book[data-book-state="open"]').waitFor();
+    if (await binder.locator('[data-binder-card-id]').count() !== 9) throw new Error('First Binder page does not contain nine inserted cards');
+    if (await binder.locator('.gi-binder-page-rail button').count() !== 12) throw new Error('Binder does not expose all twelve Specified Slot pages');
+    if (await binder.locator('.gi-card-tray').count()) throw new Error('Legacy external card tray is still mounted');
+    if (await device.getAttribute('data-binder-page') !== '1') throw new Error('Binder did not open on page 1');
+    if (await device.getAttribute('data-binder-selected-card') !== '004') throw new Error('Binder did not highlight the middle card on page 1');
+    const defaultScreen = (await binder.locator('.gi-binder-screen').innerText()).toLowerCase();
+    if (!defaultScreen.includes('skin care hot springs') || !defaultScreen.includes('materialized form')) throw new Error('Default selected-card explanation is incomplete');
 
-    await binder.getByRole('button', { name: 'Free Slots', exact: true }).click();
-    await binder.getByRole('img', { name: 'Free Slot 01, empty' }).waitFor();
-    for (let turn = 0; turn < 4; turn += 1) await binder.getByRole('button', { name: /Next/i }).click();
-    await binder.getByRole('img', { name: 'Free Slot 45, empty' }).waitFor();
-    await binder.getByRole('button', { name: 'Specified', exact: true }).click();
+    await binder.getByRole('button', { name: 'Close Greed Island Binder' }).click();
+    await binder.getByRole('button', { name: 'Open Greed Island Binder' }).waitFor();
+    await binder.getByRole('button', { name: 'Open Greed Island Binder' }).click();
+    await binder.locator('.gi-binder-device[data-book-state="open"]').waitFor();
 
-    const book = binder.locator('.gi-book[data-book-state="open"]');
-    await book.focus();
-    await desktop.keyboard.press('ArrowRight');
-    await binder.locator('.gi-book__pages > header b').filter({ hasText: '010–019' }).waitFor();
+    await binder.getByRole('button', { name: 'Move highlight right' }).click();
+    if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '005') throw new Error('Right control did not select card 005');
+    if (!(await binder.locator('.gi-binder-screen').innerText()).includes('Spirited Away Hollow')) throw new Error('Right-side explanation did not update for card 005');
+
+    await binder.getByRole('button', { name: 'Move highlight down' }).click();
+    if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '008') throw new Error('Down control did not select card 008');
+    await binder.getByRole('button', { name: 'Move highlight right' }).click();
+    if (await binder.locator('.gi-binder-device').getAttribute('data-binder-page') !== '2') throw new Error('Directional navigation did not cross into page 2');
+    if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '009') throw new Error('Directional page crossing did not land on card 009');
+
+    await binder.locator('.gi-binder-device').focus();
     await desktop.keyboard.press('ArrowLeft');
-    await binder.locator('.gi-book__pages > header b').filter({ hasText: '000–009' }).waitFor();
+    if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '008') throw new Error('Keyboard ArrowLeft did not return to card 008');
+    await desktop.keyboard.press('ArrowRight');
+    if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '009') throw new Error('Keyboard ArrowRight did not return to card 009');
 
-    const lockedReward = binder.getByRole('button', { name: /Specified Slot 000 locked/i });
-    if (await lockedReward.count() !== 1) throw new Error('Specified Slot 000 is not visibly locked at initial state');
+    await binder.getByRole('button', { name: 'Open Binder page 10' }).click();
+    if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '085') throw new Error('Direct page selection did not highlight the middle available card');
+    await binder.locator('.gi-binder-search input').fill('Blue Planet');
+    await binder.locator('.gi-binder-search button').click();
+    if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '081') throw new Error('Binder search did not select Blue Planet');
+    if (await binder.locator('.gi-binder-device').getAttribute('data-binder-page') !== '10') throw new Error('Binder search did not open Blue Planet’s page');
 
-    const plotOfBeach = binder.locator('.gi-card-tray .gi-card').filter({ hasText: 'Plot of Beach' });
-    await plotOfBeach.focus();
-    await desktop.keyboard.press('Enter');
-    const slot002 = binder.getByRole('button', { name: 'Insert held card into Specified Slot 002' });
-    await slot002.focus();
-    await desktop.keyboard.press('Enter');
-    await binder.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
-    if (await readProgress(desktop) !== 1) throw new Error('Binder progress did not advance to 1 of 100');
+    await binder.getByRole('button', { name: 'Open extended selected-card record' }).click();
+    const deepRecord = binder.locator('.gi-binder-screen__deep.is-open');
+    await deepRecord.waitFor();
+    const deepText = (await deepRecord.innerText()).toLowerCase();
+    if (!deepText.includes('acquisition') || !deepText.includes('story record')) throw new Error('Center red button did not reveal the extended card record');
 
-    const card003 = binder.locator('.gi-card-tray .gi-card').filter({ hasText: 'Pitcher of Eternal Water' });
-    await card003.click();
-    await binder.getByRole('button', { name: 'Insert held card into Specified Slot 004' }).click();
-    const etaText = await binder.locator('.gi-eta-status').innerText();
-    if (!etaText.includes('belongs in Specified Slot 003, not 004')) throw new Error('Eta did not reject the mismatched slot');
-    if (await readProgress(desktop) !== 1) throw new Error('Invalid insertion changed Binder progress');
-
-    await binder.locator('.gi-binder-toolbar input').fill('Blue Planet');
-    await binder.locator('.gi-binder-toolbar form button').click();
-    await binder.locator('.gi-book__pages > header b').filter({ hasText: '080–089' }).waitFor();
-
-    await desktop.reload({ waitUntil: 'domcontentloaded' });
-    await desktop.waitForSelector('.gi-binder-section');
-    const reloadedBinder = desktop.locator('.gi-binder-section');
-    await reloadedBinder.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
-    await reloadedBinder.getByRole('button', { name: /Reset simulation/i }).click();
-    if (await readProgress(desktop) !== 0) throw new Error('Reset did not clear Binder progress');
+    await binder.getByRole('button', { name: 'Open Binder page 1' }).click();
+    await binder.getByRole('button', { name: /Card 002, Plot of Beach/ }).click();
+    if (!(await binder.locator('.gi-binder-screen').innerText()).includes('Plot of Beach')) throw new Error('Direct card selection did not update the right-hand display');
   });
   await desktop.close();
 
@@ -250,31 +243,34 @@ try {
     if (tutorialState.tutorialLiveRegion !== 'polite') throw new Error('Eta tutorial status is not exposed as a polite live region');
 
     await mobile.goto(`${base}/#/series/greed-island/binder`, { waitUntil: 'domcontentloaded' });
-    await mobile.waitForSelector('.gi-binder-section');
+    await mobile.waitForSelector('.gi-binder-device[data-book-state="open"]');
     const binder = mobile.locator('.gi-binder-section');
-    await binder.getByRole('button', { name: 'Free Slots', exact: true }).click();
-    await binder.getByRole('img', { name: 'Free Slot 01, empty' }).waitFor();
+    if (await binder.locator('[data-binder-card-id]').count() !== 9) throw new Error('Mobile Binder first page does not contain nine cards');
+    if (await binder.locator('.gi-binder-dpad button').count() !== 5) throw new Error('Mobile Binder does not expose five functioning red controls');
+    await binder.getByRole('button', { name: 'Move highlight right' }).click();
+    if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '005') throw new Error('Mobile red control did not update the selected card');
+    await binder.getByRole('button', { name: 'Open extended selected-card record' }).click();
+    await binder.locator('.gi-binder-screen__deep.is-open').waitFor();
+    await binder.getByRole('button', { name: 'Open Binder page 12' }).click();
+    if (await binder.locator('[data-binder-card-id="099"]').count() !== 1) throw new Error('Final Binder page does not expose card 099');
+    if (await binder.locator('.gi-binder-card--empty').count() !== 8) throw new Error('Final Binder page does not retain eight deliberate empty pockets');
+
     const state = await mobile.evaluate(() => {
-      const card = document.querySelector('.gi-card');
-      const book = document.querySelector('.gi-book');
+      const card = document.querySelector('.gi-binder-card');
+      const device = document.querySelector('.gi-binder-device');
       return {
         overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-        transitionDuration: card ? getComputedStyle(card).transitionDuration : '',
-        bookTransitionDuration: book ? getComputedStyle(book).transitionDuration : '',
-        liveRegion: document.querySelector('.gi-eta-status')?.getAttribute('aria-live'),
+        cardTransition: card ? getComputedStyle(card).transitionDuration : '',
+        deviceTransition: device ? getComputedStyle(device).transitionDuration : '',
+        liveRegion: document.querySelector('.gi-binder-status')?.getAttribute('aria-live'),
+        deviceWidth: device?.getBoundingClientRect().width || 0,
       };
     });
-    if (state.overflow > 1) throw new Error(`mobile page overflowed horizontally by ${state.overflow}px`);
-    const durations = transitionSeconds(state.transitionDuration);
-    if (!durations.length || durations.some((duration) => duration > 0.001)) throw new Error(`card transition remains ${state.transitionDuration} under reduced motion`);
-    const bookDurations = transitionSeconds(state.bookTransitionDuration);
-    if (bookDurations.some((duration) => duration > 0.001)) throw new Error(`Book transition remains ${state.bookTransitionDuration} under reduced motion`);
-    if (state.liveRegion !== 'polite') throw new Error('Eta status is not exposed as a polite live region');
-
-    await binder.getByRole('button', { name: 'Specified', exact: true }).click();
-    await binder.locator('.gi-card-tray .gi-card').filter({ hasText: 'Plot of Beach' }).click();
-    await binder.getByRole('button', { name: 'Insert held card into Specified Slot 002' }).click();
-    await binder.getByRole('button', { name: /Lift 002, Plot of Beach/i }).waitFor();
+    if (state.overflow > 1) throw new Error(`mobile Binder overflowed horizontally by ${state.overflow}px`);
+    if (state.deviceWidth > 390.5) throw new Error(`mobile Binder device exceeds the viewport at ${state.deviceWidth}px`);
+    if (transitionSeconds(state.cardTransition).some((duration) => duration > 0.001)) throw new Error(`Binder card transition remains ${state.cardTransition} under reduced motion`);
+    if (transitionSeconds(state.deviceTransition).some((duration) => duration > 0.001)) throw new Error(`Binder device transition remains ${state.deviceTransition} under reduced motion`);
+    if (state.liveRegion !== 'polite') throw new Error('Binder status is not exposed as a polite live region');
   });
   await mobile.close();
 } finally {
