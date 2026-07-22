@@ -188,7 +188,7 @@ export default function GreedIslandBinder() {
         data-book-state="open"
         data-binder-page={page + 1}
         data-binder-selected-card={selectedCard.id}
-        tabIndex="0"
+        tabIndex={0}
         aria-label={`Greed Island Binder, page ${page + 1} of ${PAGE_COUNT}, selected card ${selectedCard.id}, ${selectedCard.name}`}
         aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown PageUp PageDown Home End Enter Space"
         onKeyDown={handleBookKeys}
@@ -201,7 +201,7 @@ export default function GreedIslandBinder() {
               <div><b>Page {String(page + 1).padStart(2, '0')}</b><small>100 / 100 loaded</small></div>
             </header>
 
-            <div className="gi-binder-pocket-grid" role="grid" aria-label={`Cards on Binder page ${page + 1}`}>
+            <div className="gi-binder-pocket-grid" aria-label={`Cards on Binder page ${page + 1}`}>
               {pockets.map((card, index) => card ? <button
                 type="button"
                 key={card.id}
@@ -210,7 +210,6 @@ export default function GreedIslandBinder() {
                 aria-pressed={selectedIndex === page * PAGE_SIZE + index}
                 aria-label={`Card ${card.id}, ${card.name}${selectedIndex === page * PAGE_SIZE + index ? ', highlighted' : ''}`}
                 data-binder-card-id={card.id}
-                role="gridcell"
               >
                 <InteractiveCard card={card} inserted displayOnly />
                 <span className="gi-binder-card__number">{card.id}</span>
@@ -218,7 +217,7 @@ export default function GreedIslandBinder() {
                 key={emptyPocketKey(page, index)}
                 className="gi-binder-card gi-binder-card--empty"
                 aria-label="Unused Binder pocket"
-                role="gridcell"
+                role="img"
               ><i /></span>)}
             </div>
 
