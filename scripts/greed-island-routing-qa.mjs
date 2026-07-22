@@ -56,7 +56,7 @@ const record = async (name, page, test) => {
   }
 };
 
-const activeHeavySelectors = '.gi-eta-course, .gi-binder-section, .gi-card-archive, .gi-card-libraries, .gi-systems, .gi-tactical, .gi-completion, .gi-sources';
+const activeHeavySelectors = '.gi-eta-course, .gi-binder-section, .gi-card-archive, .gi-card-libraries, .gi-systems, .gi-tactical, .gi-completion';
 const waitForModule = async (page, module) => {
   await page.waitForSelector(`.greed-island-page[data-greed-island-active-module="${module}"]`, { timeout: 15_000 });
   await page.waitForFunction(() => !document.querySelector('.route-loading') && !document.querySelector('.gi-app__loading'), null, { timeout: 15_000 }).catch(() => {});
@@ -76,7 +76,8 @@ try {
     await waitForModule(page, 'home');
     if (await page.locator('.gi-hub').count() !== 1) throw new Error('Lightweight Greed Island hub is missing.');
     if (await page.locator(activeHeavySelectors).count()) throw new Error('The hub mounted a heavy Greed Island module.');
-    if (await page.locator('[data-gi-open-module]').count() !== 7) throw new Error('The hub does not expose seven module choices.');
+    if (await page.locator('[data-gi-open-module]').count() !== 6) throw new Error('The hub does not expose six module choices.');
+    if (await page.locator('[data-gi-open-module="sources"], [data-gi-module-nav="sources"]').count()) throw new Error('The removed Sources module is still visible.');
   });
 
   await record('Module navigation unmounts previous experience', page, async () => {
@@ -108,7 +109,6 @@ try {
       ['island/game-masters', 'island', 'game-masters', '.gi-systems[data-island-system-view="game-masters"]'],
       ['tactics/final-battles', 'tactics', 'final-battles', '.gi-tactical[data-tactical-collection="battles"]'],
       ['completion/route', 'completion', 'route', '.gi-completion[data-completion-collection="route"]'],
-      ['sources', 'sources', '', '.gi-sources[data-greed-island-module="sources"]'],
     ];
     for (const [route, module, subview, selector] of cases) {
       await direct.goto(`${base}/story/greed-island/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
