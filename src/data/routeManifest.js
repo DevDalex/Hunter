@@ -37,8 +37,8 @@ export const successionPages = [
     description: 'A multi-track chronology organized by voyage day, story time, chapter, location, plot thread, and factual confidence.',
   },
   {
-    id: 'chapters', label: 'Chapters', kicker: 'Sequential chapter archive', title: 'Succession chapters and records',
-    description: `A reader index from Chapter 338 through 414, plus the maintained chapter ledger, deaths, objects, and unresolved questions through Chapter ${ARCHIVE_BOUNDARY}.`,
+    id: 'chapters', label: 'Records', kicker: 'Chapters and changing states', title: 'Chapters, deaths and mysteries',
+    description: `Current-arc chapter records, deaths, possession and body states, consequential objects, and unresolved questions through Chapter ${ARCHIVE_BOUNDARY}.`,
   },
   {
     id: 'black-whale', label: 'Black Whale', kicker: 'Interactive ship atlas', title: 'Inside Black Whale 1',
