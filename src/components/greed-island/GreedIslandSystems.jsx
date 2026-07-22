@@ -3,13 +3,19 @@ import {
   BookOpen,
   ExternalLink,
   Filter,
+  ImageOff,
+  Layers3,
+  List,
   Map,
   MapPin,
+  Navigation,
+  RotateCcw,
   Route,
   Search,
   ShieldCheck,
   Users,
 } from 'lucide-react';
+import SafeImage from '../SafeImage';
 import {
   greedIslandGameMasterControls,
   greedIslandLocationById,
@@ -19,13 +25,17 @@ import {
   greedIslandSystemStats,
   resolveGreedIslandSystemSource,
 } from '../../data/greed-island/islandSystems.js';
+import {
+  greedIslandOverviewMedia,
+  resolveGreedIslandLocationMedia,
+} from '../../data/greed-island/islandMedia.js';
 import { gameMasterCardById, spellCardsById } from '../../data/greed-island/cardLibraries.js';
 import { enrichedSpecifiedCardById } from '../../data/greed-island/specifiedCardsEnriched.js';
 import './GreedIslandSystems.css';
 
 const titleCase = (value) => String(value || '').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 const statusLabel = (status) => status === 'archive-simulation' ? 'Archive simulation' : titleCase(status);
-const systemViews = new Set(['map', 'quests', 'players', 'game-masters']);
+const systemViews = new Set(['map', 'locations', 'quests', 'players', 'game-masters']);
 
 const mapLayoutPositions = Object.freeze({
   'starting-point': Object.freeze({ x: 57, y: 90 }),
@@ -40,6 +50,26 @@ const mapLayoutPositions = Object.freeze({
 });
 
 const mapLayoutPosition = (location) => mapLayoutPositions[location.id] || location;
+
+const mapConnections = (() => {
+  const seen = new Set();
+  const connections = [];
+  greedIslandLocations.forEach((location) => {
+    location.connections.forEach((targetId) => {
+      const target = greedIslandLocationById.get(targetId);
+      if (!target) return;
+      const key = [location.id, target.id].sort().join(':');
+      if (seen.has(key)) return;
+      seen.add(key);
+      connections.push({
+        key,
+        from: mapLayoutPosition(location),
+        to: mapLayoutPosition(target),
+      });
+    });
+  });
+  return Object.freeze(connections);
+})();
 
 const samplePlayers = Object.freeze([
   Object.freeze({ id: 'gon', name: 'Gon Freecss', relation: 'Player', metAt: 'Starting Point / story route', usefulFor: 'Completion routing and card archive examples' }),
@@ -66,10 +96,49 @@ function cardLabel(id) {
   return id;
 }
 
+function IslandOverview() {
+  return <section className="gi-systems-overview" aria-labelledby="gi-systems-overview-title">
+    <div className="gi-systems-overview__visual">
+      <SafeImage
+        src={greedIslandOverviewMedia.src}
+        fallbackSrc={greedIslandOverviewMedia.fallbackSrc}
+        fallbackLabel="Greed Island map"
+        alt={greedIslandOverviewMedia.alt}
+        media={greedIslandOverviewMedia}
+        eager
+      />
+      <span>Hunterpedia map reference</span>
+    </div>
+    <div className="gi-systems-overview__copy">
+      <span>Island and location archive</span>
+      <h2 id="gi-systems-overview-title">Explore the places where Greed Island’s rules become a world.</h2>
+      <p>The source map, location artwork, quest records, player systems, and Game Master controls are presented separately. The source image is authentic Hunterpedia media; interactive marker spacing remains an archive navigation aid rather than a canonical distance claim.</p>
+      <div className="gi-systems-overview__facts" aria-label="Island archive summary">
+        <div><b>{greedIslandSystemStats.locations}</b><span>documented places</span></div>
+        <div><b>{greedIslandSystemStats.quests}</b><span>location-linked quests</span></div>
+        <div><b>9</b><span>verified visual records</span></div>
+      </div>
+    </div>
+  </section>;
+}
+
 function IslandMap({ selectedId, onSelect, filteredLocations }) {
   const visibleIds = new Set(filteredLocations.map((location) => location.id));
-  return <div className="gi-systems-map" aria-label="Greed Island verified location map">
-    <div className="gi-systems-map__grid" aria-hidden="true"><i /><i /><i /><i /><i /><i /></div>
+  return <div className="gi-systems-map" aria-label="Greed Island location navigation map">
+    <SafeImage
+      src={greedIslandOverviewMedia.src}
+      fallbackSrc={greedIslandOverviewMedia.fallbackSrc}
+      fallbackLabel="Greed Island map"
+      alt=""
+      aria-hidden="true"
+      className="gi-systems-map__image"
+      media={greedIslandOverviewMedia}
+      eager
+    />
+    <div className="gi-systems-map__shade" aria-hidden="true" />
+    <svg className="gi-systems-map__connections" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      {mapConnections.map((connection) => <line key={connection.key} x1={connection.from.x} y1={connection.from.y} x2={connection.to.x} y2={connection.to.y} />)}
+    </svg>
     {greedIslandLocations.map((location) => {
       const position = mapLayoutPosition(location);
       return <button
@@ -79,28 +148,75 @@ function IslandMap({ selectedId, onSelect, filteredLocations }) {
         style={{ '--x': `${position.x}%`, '--y': `${position.y}%` }}
         onClick={() => onSelect(location.id)}
         aria-pressed={selectedId === location.id}
+        aria-label={`${location.name}, ${titleCase(location.type)}, ${location.region}`}
         data-location-id={location.id}
       >
+        <MapPin size={14} aria-hidden="true" />
         <span>{location.name}</span><small>{titleCase(location.type)}</small>
       </button>;
     })}
+    <div className="gi-systems-map__legend" aria-hidden="true"><Navigation size={15} /><span>Source map + archive markers</span></div>
   </div>;
 }
 
 function LocationPanel({ selected }) {
   const source = resolveGreedIslandSystemSource(selected.sourceId);
   const position = mapLayoutPosition(selected);
-  return <article className="gi-systems-location-card" aria-live="polite">
+  const locationMedia = resolveGreedIslandLocationMedia(selected.id);
+  const quests = greedIslandQuestRecords.filter((quest) => quest.locationId === selected.id);
+  return <article className="gi-systems-location-card" aria-live="polite" data-location-panel={selected.id}>
+    <div className="gi-systems-location-card__visual">
+      <SafeImage
+        src={locationMedia.src}
+        fallbackSrc={locationMedia.fallbackSrc}
+        fallbackLabel={selected.name}
+        alt={locationMedia.alt}
+        media={locationMedia}
+      />
+      <span>{locationMedia.storage === 'remote-verified' ? 'Verified Hunterpedia visual' : 'Archive visual'}</span>
+    </div>
     <header><MapPin size={20} /><div><span>{titleCase(selected.type)} · {selected.region}</span><h3>{selected.name}</h3></div></header>
     <p>{selected.role}</p>
     <div className="gi-systems-tags"><SystemBadge tone="verified">{statusLabel(selected.status)}</SystemBadge>{selected.tags.map((tag) => <SystemBadge key={tag}>{titleCase(tag)}</SystemBadge>)}</div>
     <dl>
-      <div><dt>Map point</dt><dd>{Math.round(position.x)} / {Math.round(position.y)}</dd></div>
+      <div><dt>Archive point</dt><dd>{Math.round(position.x)} / {Math.round(position.y)}</dd></div>
       <div><dt>Connections</dt><dd>{selected.connections.map((id) => greedIslandLocationById.get(id)?.name || id).join(', ')}</dd></div>
+      <div><dt>Quests</dt><dd>{quests.length ? quests.map((quest) => quest.title).join(', ') : 'No dedicated quest record'}</dd></div>
       <div><dt>Source</dt><dd>{source.label}</dd></div>
     </dl>
     <SourceLink sourceId={selected.sourceId}>Open location source</SourceLink>
   </article>;
+}
+
+function LocationDirectory({ filteredLocations, selectedId, onSelect }) {
+  if (!filteredLocations.length) return <section className="gi-systems-locations-empty" role="status"><ImageOff size={24} /><h3>No locations match this search.</h3><p>Clear the search or choose another location type.</p></section>;
+
+  return <section className="gi-systems-locations" aria-labelledby="gi-systems-locations-title">
+    <header><List size={20} /><div><span>Location directory</span><h3 id="gi-systems-locations-title">Verified places, shown as places—not database rows.</h3></div></header>
+    <div className="gi-systems-locations__grid">
+      {filteredLocations.map((location) => {
+        const locationMedia = resolveGreedIslandLocationMedia(location.id);
+        return <button
+          type="button"
+          key={location.id}
+          className={selectedId === location.id ? 'is-active' : ''}
+          onClick={() => onSelect(location.id)}
+          aria-pressed={selectedId === location.id}
+          data-location-directory-id={location.id}
+        >
+          <span className="gi-systems-locations__image">
+            <SafeImage src={locationMedia.src} fallbackSrc={locationMedia.fallbackSrc} fallbackLabel={location.name} alt={locationMedia.alt} media={locationMedia} />
+          </span>
+          <span className="gi-systems-locations__body">
+            <small>{titleCase(location.type)} · {location.region}</small>
+            <strong>{location.name}</strong>
+            <span>{location.role}</span>
+            <i>{location.connections.length} connected records</i>
+          </span>
+        </button>;
+      })}
+    </div>
+  </section>;
 }
 
 function QuestDirectory({ selectedLocationId }) {
@@ -108,6 +224,8 @@ function QuestDirectory({ selectedLocationId }) {
   const questsForLocation = greedIslandQuestRecords.filter((quest) => quest.locationId === selectedLocationId);
   const activeQuest = greedIslandQuestRecords.find((quest) => quest.id === questId) || questsForLocation[0] || greedIslandQuestRecords[0];
   const source = resolveGreedIslandSystemSource(activeQuest.sourceId);
+  const activeLocation = greedIslandLocationById.get(activeQuest.locationId);
+  const locationMedia = resolveGreedIslandLocationMedia(activeQuest.locationId);
 
   return <section className="gi-systems-quests" aria-labelledby="gi-systems-quests-title">
     <header><Route size={20} /><div><span>Quest directory</span><h3 id="gi-systems-quests-title">Acquisition paths stay tied to locations.</h3></div></header>
@@ -125,11 +243,12 @@ function QuestDirectory({ selectedLocationId }) {
         </button>)}
       </div>
       <article className="gi-systems-quest-record">
+        <div className="gi-systems-quest-record__visual"><SafeImage src={locationMedia.src} fallbackSrc={locationMedia.fallbackSrc} fallbackLabel={activeLocation?.name || 'Quest location'} alt={locationMedia.alt} media={locationMedia} /></div>
         <span>{statusLabel(activeQuest.status)} · {source.label}</span>
         <h4>{activeQuest.title}</h4>
         <p>{activeQuest.summary}</p>
         <dl>
-          <div><dt>Location</dt><dd>{greedIslandLocationById.get(activeQuest.locationId)?.name || activeQuest.locationId}</dd></div>
+          <div><dt>Location</dt><dd>{activeLocation?.name || activeQuest.locationId}</dd></div>
           <div><dt>Card focus</dt><dd>{activeQuest.cardFocus}</dd></div>
           <div><dt>Rewards</dt><dd>{activeQuest.rewards.join(', ')}</dd></div>
         </dl>
@@ -200,15 +319,24 @@ export default function GreedIslandSystems({ requestedView = 'map' }) {
     return greedIslandLocations.filter((location) => {
       if (locationType !== 'all' && location.type !== locationType) return false;
       if (!normalized) return true;
-      return [location.name, location.type, location.region, location.role, ...location.tags].some((value) => String(value || '').toLowerCase().includes(normalized));
+      const questText = greedIslandQuestRecords.filter((quest) => quest.locationId === location.id).flatMap((quest) => [quest.title, quest.summary, quest.cardFocus]);
+      return [location.name, location.type, location.region, location.role, ...location.tags, ...questText].some((value) => String(value || '').toLowerCase().includes(normalized));
     });
   }, [locationType, query]);
 
+  const resetLocations = () => {
+    setQuery('');
+    setLocationType('all');
+    setSelectedLocationId('soufrabi');
+  };
+
   return <section className="gi-systems" id="island-systems" aria-labelledby="gi-systems-title" data-island-system-view={view}>
+    {(view === 'map' || view === 'locations') && <IslandOverview />}
+
     <header className="gi-section-heading">
       <span>Stage 07 · Island systems</span>
-      <h2 id="gi-systems-title">Map, quests, player targeting, and Game Master controls now load separately.</h2>
-      <p>Only the selected island system exists in the document. Leaving a view unmounts its controls and interactive state.</p>
+      <h2 id="gi-systems-title">The Island now opens with its map and verified location imagery.</h2>
+      <p>Map, location directory, quests, player targeting, and Game Master controls remain separate views so the section stays usable and source-bounded.</p>
     </header>
 
     <div className="gi-systems__metrics" aria-label="Greed Island system verification summary">
@@ -218,21 +346,26 @@ export default function GreedIslandSystems({ requestedView = 'map' }) {
       <div><b>{greedIslandSystemStats.gameMasterControls}</b><span>GM control records</span></div>
     </div>
 
-    {view === 'map' && <>
-      <div className="gi-systems__filters">
-        <label className="gi-systems__search"><Search size={16} /><span className="sr-only">Search Greed Island locations</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search locations, tags, roles…" /></label>
-        <label><Filter size={15} /><span>Location type</span><select value={locationType} onChange={(event) => setLocationType(event.target.value)}><option value="all">All types</option>{locationTypes.map((type) => <option key={type} value={type}>{titleCase(type)}</option>)}</select></label>
-      </div>
-      <div className="gi-systems__map-layout">
-        <div><div className="gi-systems__map-header"><Map size={19} /><span>{filteredLocations.length} matching map records</span></div><IslandMap selectedId={selectedLocation.id} onSelect={setSelectedLocationId} filteredLocations={filteredLocations} /></div>
-        <LocationPanel selected={selectedLocation} />
-      </div>
+    {(view === 'map' || view === 'locations') && <div className="gi-systems__filters">
+      <label className="gi-systems__search"><Search size={16} /><span className="sr-only">Search Greed Island locations</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search locations, quests, tags, roles…" /></label>
+      <label><Filter size={15} /><span>Location type</span><select value={locationType} onChange={(event) => setLocationType(event.target.value)}><option value="all">All types</option>{locationTypes.map((type) => <option key={type} value={type}>{titleCase(type)}</option>)}</select></label>
+      <button type="button" className="gi-systems__reset" onClick={resetLocations}><RotateCcw size={15} /> Reset</button>
+    </div>}
+
+    {view === 'map' && <div className="gi-systems__map-layout">
+      <div><div className="gi-systems__map-header"><Map size={19} /><span>{filteredLocations.length} matching map records</span><small><Layers3 size={14} /> Source map / editorial markers</small></div><IslandMap selectedId={selectedLocation.id} onSelect={setSelectedLocationId} filteredLocations={filteredLocations} /></div>
+      <LocationPanel selected={selectedLocation} />
+    </div>}
+
+    {view === 'locations' && <>
+      <LocationDirectory filteredLocations={filteredLocations} selectedId={selectedLocation.id} onSelect={setSelectedLocationId} />
+      <LocationPanel selected={selectedLocation} />
     </>}
 
     {view === 'quests' && <QuestDirectory selectedLocationId={selectedLocation.id} />}
     {view === 'players' && <PlayerBinderSystem />}
     {view === 'game-masters' && <GameMasterRoom />}
 
-    <p className="gi-systems__provenance"><BookOpen size={15} /> Island systems use Hunterpedia location, card, and Game Master pages. Map coordinates are original archive layout positions, not canonical distances. <SourceLink sourceId="locations">Open location category</SourceLink></p>
+    <p className="gi-systems__provenance"><BookOpen size={15} /> Location visuals and facts use Hunterpedia/Fandom pages. The base map is a verified Hunterpedia image; marker coordinates and connection lines are archive navigation aids, not canonical distances. <SourceLink sourceId="locations">Open location category</SourceLink></p>
   </section>;
 }
