@@ -26,7 +26,7 @@
     "qa:performance": "node scripts/audit-performance.mjs && node scripts/performance-qa.mjs",
     "stabilize:media": "node scripts/stabilize-media.mjs",
     "stabilize:rooms": "node scripts/stabilize-room-media.mjs",
-    "audit:media": "node scripts/stabilize-media.mjs --verify-only && node scripts/stabilize-room-media.mjs --verify-only && node scripts/audit-media.mjs",
+    "audit:media": "node scripts/stabilize-media.mjs --verify-only && node scripts/stabilize-room-media.mjs --verify-only && node scripts/audit-media.mjs && npm run audit:succession-media",
     "package:release": "node scripts/package-release.mjs",
     "audit:release": "node scripts/run-css-aware-audit.mjs audit-release.mjs",
     "audit:gaps": "node scripts/report-gaps.mjs",
