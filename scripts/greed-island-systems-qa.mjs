@@ -67,6 +67,39 @@ const openSystems = async (page, base, view = 'map') => {
   await page.locator('.gi-systems').scrollIntoViewIfNeeded();
 };
 
+const assertMapGeometry = async (systems, viewportLabel) => {
+  const geometry = await systems.locator('.gi-systems-map').evaluate((map) => {
+    const mapRect = map.getBoundingClientRect();
+    const labels = [...map.querySelectorAll('button[data-location-id]')].map((button) => {
+      const rect = button.getBoundingClientRect();
+      return {
+        id: button.dataset.locationId,
+        left: rect.left,
+        right: rect.right,
+        top: rect.top,
+        bottom: rect.bottom,
+      };
+    });
+    const collisions = [];
+    for (let first = 0; first < labels.length; first += 1) {
+      for (let second = first + 1; second < labels.length; second += 1) {
+        const a = labels[first];
+        const b = labels[second];
+        const overlapX = Math.min(a.right, b.right) - Math.max(a.left, b.left);
+        const overlapY = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (overlapX > 1 && overlapY > 1) collisions.push(`${a.id}/${b.id}`);
+      }
+    }
+    const clipped = labels
+      .filter((label) => label.left < mapRect.left - 1 || label.right > mapRect.right + 1 || label.top < mapRect.top - 1 || label.bottom > mapRect.bottom + 1)
+      .map((label) => label.id);
+    return { collisions, clipped };
+  });
+
+  if (geometry.collisions.length) throw new Error(`${viewportLabel} map labels overlap: ${geometry.collisions.join(', ')}`);
+  if (geometry.clipped.length) throw new Error(`${viewportLabel} map labels are clipped: ${geometry.clipped.join(', ')}`);
+};
+
 await mkdir(output, { recursive: true });
 const executablePath = await firstAvailable([
   requestedExecutable,
@@ -94,6 +127,7 @@ try {
     if (await systems.locator('.gi-systems-quests, .gi-systems-player, .gi-systems-gm').count()) throw new Error('Inactive island system views remain mounted on the map route');
     const metrics = await systems.locator('.gi-systems__metrics').innerText();
     if (!metrics.includes('9') || !metrics.includes('8') || !metrics.includes('6')) throw new Error('Island system metrics are incomplete');
+    await assertMapGeometry(systems, 'desktop');
 
     await systems.locator('[data-location-id="port"]').click();
     const portText = (await systems.locator('.gi-systems-location-card').innerText()).toLowerCase();
@@ -149,6 +183,7 @@ try {
   await record('Island map mobile containment and reduced motion', mobile, async () => {
     await openSystems(mobile, base, 'map');
     const systems = mobile.locator('.gi-systems');
+    await assertMapGeometry(systems, 'mobile');
     await systems.locator('.gi-systems__search input').fill('limeiro');
     await systems.locator('[data-location-id="limeiro"]').click();
     const mobileText = (await systems.innerText()).toLowerCase();
