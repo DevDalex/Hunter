@@ -86,7 +86,7 @@ const base = `http://127.0.0.1:${server.address().port}`;
 
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await record('Card library Binder search, controls, classes, and spell lab', desktop, async () => {
+  await record('Card library Binder search, controls, classes, imagery, and spell lab', desktop, async () => {
     await openLibraries(desktop, base, 'spells');
     const library = desktop.locator('.gi-card-libraries');
     if ((await library.getAttribute('data-card-library')) !== 'spell') throw new Error('Spell route did not select the Spell Card collection');
@@ -97,6 +97,12 @@ try {
     if (await library.locator('[data-library-card]').count() !== 9) throw new Error('Spell Binder first page does not contain nine cards');
     if (await library.getAttribute('data-library-selected-card') !== '1006') throw new Error('Spell Binder did not keep Pickpocket highlighted');
     if (await library.locator('.gi-library-book__dpad button').count() !== 5) throw new Error('Spell Binder does not expose five red controls');
+
+    await library.locator('[data-library-card="1001"] [data-library-media="verified-file"]').waitFor();
+    if (await library.locator('[data-library-card] .gi-library-card-face.has-verified-image').count() !== 9) throw new Error('Spell Binder first page does not use nine verified card scans');
+    const spellImageSources = await library.locator('[data-library-card] .gi-library-card-face__image').evaluateAll((images) => images.map((image) => image.getAttribute('src') || ''));
+    if (spellImageSources.some((source) => !source.includes('hunterxhunter.fandom.com/wiki/Special:Redirect/file/'))) throw new Error('Spell Binder uses a non-verified or guessed image source');
+    if (await library.locator('.gi-card-libraries__source-links a', { hasText: 'Open image source' }).count() !== 1) throw new Error('Selected Spell Card image attribution is missing');
 
     await library.getByRole('button', { name: 'Move library highlight right' }).click();
     if (await library.getAttribute('data-library-selected-card') !== '1007') throw new Error('Right red control did not select Thief');
@@ -111,6 +117,7 @@ try {
     await library.getByRole('button', { name: /Spell Card 1021, Mug/ }).click();
     const mug = (await library.locator('.gi-card-libraries__record').innerText()).toLowerCase();
     if (!mug.includes('take one chosen card') || !mug.includes('attack spell')) throw new Error('Mug record is missing attack details');
+    if (await library.locator('[data-library-card="1021"] .gi-library-card-face__image').count() !== 1) throw new Error('Mug lost its verified Hunterpedia scan');
 
     await library.getByRole('button', { name: 'Open extended library record' }).click();
     const expanded = (await library.locator('.gi-card-libraries__extended.is-open').innerText()).toLowerCase();
@@ -137,7 +144,7 @@ try {
   await desktop.close();
 
   const freeAndGm = await browser.newPage({ viewport: { width: 1280, height: 940 } });
-  await record('Free Slot and Game Master card-filled Binder boundaries', freeAndGm, async () => {
+  await record('Free Slot and Game Master verified-image Binder boundaries', freeAndGm, async () => {
     await openLibraries(freeAndGm, base, 'free-slot');
     let library = freeAndGm.locator('.gi-card-libraries');
     if ((await library.getAttribute('data-card-library')) !== 'free') throw new Error('Free Slot route did not select the documented Free Slot collection');
@@ -145,10 +152,15 @@ try {
     if (await library.getAttribute('data-library-page-count') !== '3') throw new Error('Free Slot Binder does not expose three pages');
     if (await library.locator('[data-library-card]').count() !== 9) throw new Error('Free Slot Binder first page does not contain nine cards');
     if (await library.locator('.gi-card-libraries__lab').count()) throw new Error('Spell lab remained mounted on the Free Slot route');
+    await library.locator('[data-library-card="100"] [data-library-media="verified-file"]').waitFor();
+    if (await library.locator('[data-library-card] [data-library-media="verified-file"]').count() < 7) throw new Error('Free Slot Binder lost one or more exact audited card images');
+    if (await library.locator('[data-library-card="266"] img[src*="Special:Redirect/file"]').count() !== 1) throw new Error('Transport Ticket verified scan is missing');
+
     await library.locator('.gi-card-libraries__search input').fill('Chidon');
     await library.getByRole('button', { name: /Documented Free Slot Card 7018, Chidon/ }).click();
     const chidon = (await library.locator('.gi-card-libraries__record').innerText()).toLowerCase();
     if (!chidon.includes('chapter 172') || !chidon.includes('fish')) throw new Error('Chidon record lost its documented debut/effect boundary');
+    if (await library.locator('[data-library-card="7018"] [data-library-media="designed-fallback"]').count() !== 1) throw new Error('Chidon does not use the deliberate no-verified-image fallback');
 
     await freeAndGm.goto(`${base}/#/series/greed-island/cards/game-master`, { waitUntil: 'domcontentloaded' });
     await freeAndGm.waitForSelector('.gi-card-libraries[data-card-library="gm"]');
@@ -158,17 +170,21 @@ try {
     if (await library.locator('[data-library-card]').count() !== 4) throw new Error('GM Binder page does not contain four cards');
     if (await library.locator('.gi-library-book__card.is-empty').count() !== 5) throw new Error('GM Binder page does not preserve five empty pockets');
     if (await library.locator('.gi-card-libraries__lab').count()) throw new Error('Spell lab remained mounted on the Game Master route');
+    await library.locator('[data-library-card="-000"] [data-library-media="verified-file"]').waitFor();
+    if (await library.locator('[data-library-card="-003"] img[src*="Special:Redirect/file"]').count() !== 1) throw new Error('Eliminate verified artwork is missing');
     await library.getByRole('button', { name: /Game Master-only Card -003, Eliminate/ }).click();
     const eliminate = (await library.locator('.gi-card-libraries__record').innerText()).toLowerCase();
     if (!eliminate.includes('game master only') || !eliminate.includes('azian continent')) throw new Error('Eliminate record lost restricted-access boundary');
     if (await library.locator('a', { hasText: 'Open table source' }).count() < 1) throw new Error('Library source link is missing');
+    if (await library.locator('a', { hasText: 'Open image source' }).count() < 1) throw new Error('GM image source link is missing');
   });
   await freeAndGm.close();
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Card library Binders mobile containment and reduced motion', mobile, async () => {
+  await record('Card library Binders mobile image containment and reduced motion', mobile, async () => {
     await openLibraries(mobile, base, 'spells');
     const library = mobile.locator('.gi-card-libraries');
+    await library.locator('[data-library-card="1001"] .gi-library-card-face__image').waitFor();
     await library.getByRole('button', { name: 'Move library highlight right' }).click();
     if (await library.getAttribute('data-library-selected-card') !== '1007') throw new Error('Mobile red control did not update the Spell Binder');
     await library.getByRole('button', { name: 'Open Spell Cards page 5', exact: true }).click();
@@ -179,6 +195,7 @@ try {
       const library = document.querySelector('.gi-card-libraries');
       const book = document.querySelector('.gi-library-book');
       const card = document.querySelector('.gi-library-book__card');
+      const image = document.querySelector('.gi-library-card-face__image');
       const recordPanel = document.querySelector('.gi-card-libraries__record');
       return {
         overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
@@ -186,6 +203,8 @@ try {
         libraryWidth: library?.getBoundingClientRect().width || 0,
         bookWidth: book?.getBoundingClientRect().width || 0,
         recordWidth: recordPanel?.getBoundingClientRect().width || 0,
+        imageWidth: image?.getBoundingClientRect().width || 0,
+        cardWidth: card?.getBoundingClientRect().width || 0,
         cardTransition: card ? getComputedStyle(card).transitionDuration : '',
         liveRegion: document.querySelector('.gi-card-libraries__status')?.getAttribute('aria-live'),
       };
@@ -193,6 +212,7 @@ try {
     if (state.overflow > 1) throw new Error(`card library Binders overflowed mobile viewport by ${state.overflow}px`);
     if (!state.reducedMotion) throw new Error('reduced-motion emulation was not active');
     if (state.libraryWidth > 390.5 || state.bookWidth > 390.5 || state.recordWidth > 390.5) throw new Error(`library panels exceed mobile width: ${JSON.stringify(state)}`);
+    if (state.imageWidth > state.cardWidth + 1) throw new Error(`card artwork exceeds its mobile pocket: ${JSON.stringify(state)}`);
     if (state.cardTransition.split(',').map(Number.parseFloat).some((duration) => duration > 0.001)) throw new Error(`library card transition remains ${state.cardTransition} under reduced motion`);
     if (state.liveRegion !== 'polite') throw new Error('Library Binder status is not exposed as a polite live region');
   });
