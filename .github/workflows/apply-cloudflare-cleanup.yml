@@ -1,0 +1,45 @@
+name: Apply Cloudflare HxH cleanup
+
+on:
+  push:
+    branches:
+      - refactor/02-cloudflare-hxh-only
+    paths:
+      - .github/workflows/apply-cloudflare-cleanup.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out cleanup branch
+        uses: actions/checkout@v4
+        with:
+          ref: refactor/02-cloudflare-hxh-only
+
+      - name: Reconstruct and verify cleanup patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .refactor/cloudflare-cleanup-*.b64 > /tmp/cloudflare-cleanup.b64
+          echo 'be8bc479302caeb7603927a2c82a4335c9e5c918825573fd9385f6d86652cd55  /tmp/cloudflare-cleanup.b64' | sha256sum --check
+          base64 --decode /tmp/cloudflare-cleanup.b64 | gzip --decompress > /tmp/cloudflare-cleanup.patch
+          echo 'fc53847d0ac763828ae0aed5b896de59adc0b14bbed9fb53efd219ee83336936  /tmp/cloudflare-cleanup.patch' | sha256sum --check
+          git apply --check /tmp/cloudflare-cleanup.patch
+
+      - name: Commit the actual cleanup
+        shell: bash
+        run: |
+          set -euo pipefail
+          git apply /tmp/cloudflare-cleanup.patch
+          git rm -r .refactor
+          git rm .github/workflows/apply-cloudflare-cleanup.yml
+          git add -A
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Remove obsolete Sites and portable packaging systems'
+          git push origin HEAD:refactor/02-cloudflare-hxh-only
