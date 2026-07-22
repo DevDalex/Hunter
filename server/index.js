@@ -11,6 +11,24 @@ export default {
       return Response.redirect(url, 302);
     }
 
+    // Some hosting/proxy layers reject the inspector POST before it reaches the
+    // Worker. Inspection is read-only, so the admin page may retry it as GET.
+    // Normalize that request back into the existing authenticated JSON handler.
+    if (url.pathname === '/api/admin/chapter/inspect' && request.method === 'GET') {
+      const headers = new Headers(request.headers);
+      headers.set('content-type', 'application/json');
+      const body = JSON.stringify({
+        sourceUrl: url.searchParams.get('sourceUrl') || '',
+        chapter: url.searchParams.get('chapter') || null,
+      });
+      const normalized = new Request(request.url, {
+        method: 'POST',
+        headers,
+        body,
+      });
+      return handleHostedChapterAdmin(normalized, env);
+    }
+
     if (isHostedChapterAdminRequest(url)) {
       return handleHostedChapterAdmin(request, env);
     }
