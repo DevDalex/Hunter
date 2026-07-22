@@ -6,8 +6,11 @@ on:
       - feature/greed-island-binder-foundation
     paths:
       - scripts/stabilize-greed-island-card-media.mjs
+      - scripts/stabilize-greed-island-library-media.mjs
       - src/data/greed-island/specifiedCardMedia.js
       - src/data/greed-island/specifiedCardLocalMedia.generated.js
+      - src/data/greed-island/cardLibraryMedia.js
+      - src/data/greed-island/cardLibraryLocalMedia.generated.js
       - .github/workflows/stabilize-greed-island-card-media.yml
 
 permissions:
@@ -39,17 +42,23 @@ jobs:
       - name: Stabilize all Specified Slot scans
         run: node scripts/stabilize-greed-island-card-media.mjs
 
-      - name: Verify generated media
+      - name: Verify Specified Slot media
         run: node scripts/stabilize-greed-island-card-media.mjs --verify-only
 
-      - name: Commit generated WebPs and manifest
+      - name: Stabilize Spell, Free Slot, and Game Master scans
+        run: node scripts/stabilize-greed-island-library-media.mjs
+
+      - name: Verify card library media
+        run: node scripts/stabilize-greed-island-library-media.mjs --verify-only
+
+      - name: Commit generated WebPs and manifests
         run: |
-          if git diff --quiet -- public/media/greed-island/cards src/data/greed-island/specifiedCardLocalMedia.generated.js; then
+          if git diff --quiet -- public/media/greed-island/cards public/media/greed-island/library-cards src/data/greed-island/specifiedCardLocalMedia.generated.js src/data/greed-island/cardLibraryLocalMedia.generated.js; then
             echo "Generated media is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add public/media/greed-island/cards src/data/greed-island/specifiedCardLocalMedia.generated.js
-          git commit -m "Stabilize Greed Island card WebPs [skip ci]"
+          git add public/media/greed-island/cards public/media/greed-island/library-cards src/data/greed-island/specifiedCardLocalMedia.generated.js src/data/greed-island/cardLibraryLocalMedia.generated.js
+          git commit -m "Stabilize Greed Island card WebPs"
           git push origin HEAD:${GITHUB_REF_NAME}
