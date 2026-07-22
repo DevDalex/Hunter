@@ -1,8 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "hunter-archive-sites",
+  "name": "hunter",
   "main": "dist/server/index.js",
-  "compatibility_date": "2026-07-23",
+  "compatibility_date": "2026-07-22",
   "assets": {
     "directory": "dist/client",
     "binding": "ASSETS",
