@@ -23,22 +23,21 @@ const successionPathToTarget = {
   'royal-family': { target: 'family-tree' },
   cast: { target: 'succession-roster' },
   timeline: { target: 'succession-timeline' },
-  chapters: { target: 'chapter-reader' },
+  chapters: { target: 'chapters', panel: 'reader' },
   'black-whale': { target: 'black-whale' },
   'nen-and-beasts': { target: 'beasts' },
   'power-blocs': { target: 'mafia' },
-  records: { target: 'chapters' },
+  records: { target: 'chapters', panel: 'chapters' },
 };
 
 const targetToSuccessionPath = new Map([
   ['family-tree', 'succession-contest/royal-family'],
   ['succession-roster', 'succession-contest/cast'],
   ['succession-timeline', 'succession-contest/timeline'],
-  ['chapter-reader', 'succession-contest/chapters'],
+  ['chapters', 'succession-contest/chapters'],
   ['black-whale', 'succession-contest/black-whale'],
   ['beasts', 'succession-contest/nen-and-beasts'],
   ['mafia', 'succession-contest/power-blocs'],
-  ['chapters', 'succession-contest/records'],
 ]);
 
 const referenceTargetToPath = new Map([
@@ -171,7 +170,7 @@ export function parseCleanRoute(pathname = '/', search = '') {
       if (parts.length === 2) return normalizeDestination('series', 'succession-contest', params);
       const destination = successionPathToTarget[parts[2]];
       if (!destination || parts.length > 3) return { view: 'not-found', target: '', params: { attemptedPath: pathnameClean } };
-      return normalizeDestination('succession', destination.target, params);
+      return normalizeDestination('succession', destination.target, { ...(destination.panel ? { panel: destination.panel } : {}), ...params });
     }
 
     const storyTarget = parts[1];
