@@ -76,7 +76,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     if (!successionChaptersPage) return undefined;
     const timer = window.setTimeout(() => scrollToSection('arc-chapters'), 80);
     return () => window.clearTimeout(timer);
-  }, [successionChaptersPage]);
+  }, [successionChaptersPage, routeParams.chapter, routeParams.page, routeParams.mode]);
 
   const updateChapterRoute = (chapter) => {
     setSelectedChapter(chapter);
