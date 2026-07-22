@@ -21,7 +21,12 @@ import {
   spellCards,
   spellCardsById,
 } from '../../data/greed-island/cardLibraries.js';
+import {
+  getDirectCardLibraryMedia,
+  resolveHunterpediaCardMedia,
+} from '../../data/greed-island/cardLibraryMedia.js';
 import './GreedIslandCardLibraries.css';
+import './GreedIslandCardLibraryMedia.css';
 
 const PAGE_SIZE = 9;
 const titleCase = (value) => String(value || '').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -52,7 +57,8 @@ function CardClassBadges({ card }) {
   </div>;
 }
 
-function LibraryCardFace({ card }) {
+function LibraryCardFace({ card, media }) {
+  const [imageFailed, setImageFailed] = useState(false);
   const number = card.displayNumber || card.id;
   const code = card.category === 'spell' ? card.range : card.category === 'free' ? card.rank : '*S';
   const secondary = card.category === 'spell'
@@ -60,16 +66,33 @@ function LibraryCardFace({ card }) {
     : card.category === 'free'
       ? `${titleCase(card.kind)} · ${card.rank}-${card.limitLabel}`
       : 'LR · Game Master';
+  const showImage = Boolean(media?.src && !imageFailed);
 
-  return <span className={`gi-library-card-face is-${card.category}`} aria-hidden="true">
-    <span className="gi-library-card-face__top"><b>{number}</b><i>{code}</i></span>
-    <span className="gi-library-card-face__sigil"><i>{card.category === 'spell' ? 'S' : card.category === 'free' ? 'F' : 'GM'}</i></span>
-    <strong>{card.name}</strong>
-    <small>{secondary}</small>
+  useEffect(() => setImageFailed(false), [media?.src]);
+
+  return <span
+    className={`gi-library-card-face is-${card.category}${showImage ? ' has-verified-image' : ''}`}
+    aria-hidden="true"
+    data-library-media={showImage ? media.status : media ? 'image-fallback' : 'designed-fallback'}
+  >
+    {showImage && <img
+      className="gi-library-card-face__image"
+      src={media.src}
+      alt=""
+      loading="lazy"
+      decoding="async"
+      onError={() => setImageFailed(true)}
+    />}
+    <span className="gi-library-card-face__design">
+      <span className="gi-library-card-face__top"><b>{number}</b><i>{code}</i></span>
+      <span className="gi-library-card-face__sigil"><i>{card.category === 'spell' ? 'S' : card.category === 'free' ? 'F' : 'GM'}</i></span>
+      <strong>{card.name}</strong>
+      <small>{secondary}</small>
+    </span>
   </span>;
 }
 
-function LibraryRecord({ card, expanded }) {
+function LibraryRecord({ card, expanded, media }) {
   return <article className={`gi-card-libraries__record is-${card.category}`} aria-live="polite">
     <header>
       <span>{collectionNouns[card.category === 'game-master' ? 'gm' : card.category]}</span>
@@ -98,10 +121,13 @@ function LibraryRecord({ card, expanded }) {
       <section>
         <h4><BookOpen size={16} /> Archive note</h4>
         <p>{collectionSummaries[card.category === 'game-master' ? 'gm' : card.category]}</p>
-        <small>Verified {card.verifiedAt}</small>
+        <small>{media ? `Hunterpedia image verified ${media.verifiedAt}` : `Designed fallback · record verified ${card.verifiedAt}`}</small>
       </section>
     </div>
-    <a href={card.source || GREED_ISLAND_LIBRARY_SOURCE.href} target="_blank" rel="noreferrer noopener">Open table source <ExternalLink size={13} /></a>
+    <div className="gi-card-libraries__source-links">
+      <a href={card.source || GREED_ISLAND_LIBRARY_SOURCE.href} target="_blank" rel="noreferrer noopener">Open table source <ExternalLink size={13} /></a>
+      {media?.sourcePage && <a href={media.sourcePage} target="_blank" rel="noreferrer noopener">Open image source <ExternalLink size={13} /></a>}
+    </div>
   </article>;
 }
 
@@ -144,6 +170,7 @@ export default function GreedIslandCardLibraries({ requestedCollection, onCollec
   const [pageByCollection, setPageByCollection] = useState({ spell: 0, free: 0, gm: 0 });
   const [expanded, setExpanded] = useState(false);
   const [announcement, setAnnouncement] = useState('Spell Card Binder opened. Pickpocket is highlighted.');
+  const [mediaById, setMediaById] = useState({});
   const active = collections[collection];
   const cards = active.cards;
 
@@ -155,6 +182,18 @@ export default function GreedIslandCardLibraries({ requestedCollection, onCollec
     setPageByCollection((state) => ({ ...state, [collection]: 0 }));
     setAnnouncement(`${collections[collection].label} Binder opened. ${remembered.name} is highlighted.`);
   }, [collection]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const direct = Object.fromEntries(cards.map((card) => [card.id, getDirectCardLibraryMedia(card)]).filter(([, media]) => media));
+    setMediaById(direct);
+    resolveHunterpediaCardMedia(cards, controller.signal)
+      .then((resolved) => setMediaById((current) => ({ ...current, ...resolved })))
+      .catch((error) => {
+        if (error.name !== 'AbortError') setAnnouncement(`${active.label} loaded with designed fallbacks where Hunterpedia imagery could not be resolved.`);
+      });
+    return () => controller.abort();
+  }, [active.label, cards]);
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -275,11 +314,12 @@ export default function GreedIslandCardLibraries({ requestedCollection, onCollec
     data-library-page={page + 1}
     data-library-page-count={pageCount}
     data-library-selected-card={selected?.id || ''}
+    data-library-media-count={Object.keys(mediaById).length}
   >
     <header className="gi-section-heading">
       <span>Stage 06 · Card library Binders</span>
       <h2 id="gi-card-libraries-title">Spell, Free Slot, and Game Master cards now live inside their own Books.</h2>
-      <p>Each collection uses physical card pockets, page controls, red directional buttons, keyboard navigation, search, and a right-hand explanation display.</p>
+      <p>Each collection uses verified Hunterpedia imagery where available, physical card pockets, page controls, red directional buttons, keyboard navigation, search, and a right-hand explanation display.</p>
     </header>
 
     <p className="gi-card-libraries__status" role="status" aria-live="polite">{announcement}</p>
@@ -327,7 +367,7 @@ export default function GreedIslandCardLibraries({ requestedCollection, onCollec
             aria-pressed={selected?.id === card.id}
             aria-label={`${collectionNouns[collection]} ${card.displayNumber || card.id}, ${card.name}${selected?.id === card.id ? ', highlighted' : ''}`}
             data-library-card={card.id}
-          ><LibraryCardFace card={card} /></button> : <span key={`empty-${collection}-${page}-${index}`} className="gi-library-book__card is-empty" role="img" aria-label="Unused card pocket"><i /></span>)}
+          ><LibraryCardFace card={card} media={mediaById[card.id]} /></button> : <span key={`empty-${collection}-${page}-${index}`} className="gi-library-book__card is-empty" role="img" aria-label="Unused card pocket"><i /></span>)}
         </div>
 
         <nav className="gi-library-book__pages" aria-label={`${active.label} pages`}>
@@ -356,7 +396,7 @@ export default function GreedIslandCardLibraries({ requestedCollection, onCollec
             </select></label>
           </div>
 
-          {selected ? <LibraryRecord card={selected} expanded={expanded} /> : <p className="gi-card-libraries__empty">No cards match the current search and class filters.</p>}
+          {selected ? <LibraryRecord card={selected} expanded={expanded} media={mediaById[selected.id]} /> : <p className="gi-card-libraries__empty">No cards match the current search and class filters.</p>}
 
           <footer><span><BookOpen size={14} /> {collectionSummaries[collection]}</span></footer>
         </div>
@@ -364,7 +404,7 @@ export default function GreedIslandCardLibraries({ requestedCollection, onCollec
         <div className="gi-library-book__controls">
           <div className="gi-library-book__active-card" aria-label={selected ? `Active card: ${selected.name}` : 'No active card'}>
             <span>Active card</span>
-            {selected ? <LibraryCardFace card={selected} /> : <i />}
+            {selected ? <LibraryCardFace card={selected} media={mediaById[selected.id]} /> : <i />}
           </div>
           <div className="gi-library-book__dpad" aria-label="Red card-library directional controls">
             <button type="button" className="is-up" onClick={() => moveSelection('up')} aria-label="Move library highlight up"><ArrowUp aria-hidden="true" /></button>
@@ -385,6 +425,6 @@ export default function GreedIslandCardLibraries({ requestedCollection, onCollec
 
     {collection === 'spell' && <SpellLab />}
 
-    <p className="gi-card-libraries__provenance"><Users size={15} /> Library effects are concise archive paraphrases of the Hunterpedia table. Free Slot coverage means the table’s documented Free Slot examples, not every possible Greed Island object. <a href={GREED_ISLAND_LIBRARY_SOURCE.href} target="_blank" rel="noreferrer noopener">Open shared source <ExternalLink size={12} /></a></p>
+    <p className="gi-card-libraries__provenance"><Users size={15} /> Card imagery is loaded from exact Hunterpedia files or article page images and falls back to a designed card face when no verified image resolves. Free Slot coverage means the table’s documented examples, not every possible Greed Island object. <a href={GREED_ISLAND_LIBRARY_SOURCE.href} target="_blank" rel="noreferrer noopener">Open shared source <ExternalLink size={12} /></a></p>
   </section>;
 }
