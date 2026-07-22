@@ -8,7 +8,7 @@ import {
   GraduationCap,
   Home,
   LibraryBig,
-  Map,
+  Map as MapIcon,
   Menu,
   NotebookTabs,
 } from 'lucide-react';
@@ -31,7 +31,7 @@ const modules = Object.freeze([
   { id: 'eta', label: 'Eta', note: 'Tutorial room', icon: GraduationCap },
   { id: 'binder', label: 'Binder', note: 'Working Book', icon: NotebookTabs },
   { id: 'cards', label: 'Cards', note: 'Card archives', icon: LibraryBig },
-  { id: 'island', label: 'Island', note: 'Map and systems', icon: Map },
+  { id: 'island', label: 'Island', note: 'Map and systems', icon: MapIcon },
   { id: 'tactics', label: 'Tactics', note: 'Training and battles', icon: Activity },
   { id: 'completion', label: 'Completion', note: 'Endgame records', icon: CheckCircle2 },
   { id: 'sources', label: 'Sources', note: 'Research registry', icon: FileText },
