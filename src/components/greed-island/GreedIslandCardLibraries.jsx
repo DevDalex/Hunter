@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   ArrowDown,
   ArrowLeft,
@@ -146,6 +146,15 @@ export default function GreedIslandCardLibraries({ requestedCollection, onCollec
   const [announcement, setAnnouncement] = useState('Spell Card Binder opened. Pickpocket is highlighted.');
   const active = collections[collection];
   const cards = active.cards;
+
+  useEffect(() => {
+    const remembered = collections[collection].cards.find((card) => card.id === selectedByCollection[collection]) || collections[collection].cards[0];
+    setQuery('');
+    setClassFilter('all');
+    setExpanded(false);
+    setPageByCollection((state) => ({ ...state, [collection]: 0 }));
+    setAnnouncement(`${collections[collection].label} Binder opened. ${remembered.name} is highlighted.`);
+  }, [collection]);
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
