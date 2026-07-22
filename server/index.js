@@ -6,6 +6,11 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.pathname === '/admin/chapters/index.html') {
+      url.pathname = '/admin/chapters';
+      return Response.redirect(url, 302);
+    }
+
     if (isHostedChapterAdminRequest(url)) {
       return handleHostedChapterAdmin(request, env);
     }
