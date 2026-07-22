@@ -40,7 +40,8 @@
     "qa:search": "node scripts/search-qa.mjs",
     "qa:interaction": "node scripts/interaction-qa.mjs",
     "qa:succession-reader": "node scripts/succession-reader-qa.mjs",
-    "qa:browser": "npm run build && npm run qa:search && npm run qa:visual && npm run qa:accessibility && npm run qa:interaction && npm run qa:succession-reader && npm run qa:performance"
+    "qa:architecture": "node scripts/architecture-navigation-qa.mjs",
+    "qa:browser": "npm run build && npm run qa:search && npm run qa:visual && npm run qa:accessibility && npm run qa:interaction && npm run qa:succession-reader && npm run qa:architecture && npm run qa:performance"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

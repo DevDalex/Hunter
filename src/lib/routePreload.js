@@ -3,6 +3,7 @@ import { preloadArchiveSearchIndex } from '../data/archiveSearch';
 export const routeModuleLoaders = {
   archiveSearch: () => import('../components/ArchiveSearch'),
   series: () => import('../components/SeriesWorkspace'),
+  timeline: () => import('../components/TimelineWorkspace'),
   successionOverview: () => import('../components/SuccessionOverview'),
   familyTree: () => import('../components/FamilyTree'),
   successionRoster: () => import('../components/SuccessionRoster'),
@@ -15,8 +16,7 @@ export const routeModuleLoaders = {
   nen: () => import('../components/NenEncyclopedia'),
   hisokaChrollo: () => import('../components/HisokaChrolloDossier'),
   worldAtlas: () => import('../components/WorldAtlas'),
-  systems: () => import('../components/SystemsDesk'),
-  organizations: () => import('../components/OrganizationArchive'),
+  organizationWorkspace: () => import('../components/OrganizationWorkspace'),
   conflictArchive: () => import('../components/ConflictArchive'),
 };
 
@@ -26,11 +26,12 @@ const successionDossierTargets = new Set([
 
 const loaderForRoute = (view, target = '') => {
   if (view === 'series') return routeModuleLoaders.series;
+  if (view === 'timeline') return routeModuleLoaders.timeline;
   if (view === 'succession') {
     if (!target || target === 'overview') return routeModuleLoaders.successionOverview;
     if (target === 'family-tree') return routeModuleLoaders.familyTree;
     if (target === 'succession-roster') return routeModuleLoaders.successionRoster;
-    if (target === 'succession-timeline') return routeModuleLoaders.successionTimeline;
+    if (target === 'succession-timeline') return routeModuleLoaders.timeline;
     if (target === 'black-whale') return routeModuleLoaders.blackWhale;
     if (successionDossierTargets.has(target)) return routeModuleLoaders.successionDossier;
     return null;
@@ -41,7 +42,7 @@ const loaderForRoute = (view, target = '') => {
     if (target === 'conflicts') return routeModuleLoaders.conflictArchive;
     if (target === 'hisoka-chrollo') return routeModuleLoaders.hisokaChrollo;
     if (target === 'atlas') return routeModuleLoaders.worldAtlas;
-    if (target === 'systems') return routeModuleLoaders.organizations;
+    if (target === 'systems') return routeModuleLoaders.organizationWorkspace;
   }
   return null;
 };

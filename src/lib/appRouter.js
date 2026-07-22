@@ -51,7 +51,7 @@ const cleanReferencePaths = new Map([
   ['characters', { target: 'encyclopedia', params: { category: 'characters' } }],
   ['world', { target: 'atlas' }],
   ['nen', { target: 'nen' }],
-  ['organizations', { target: 'systems', params: { view: 'mafia' } }],
+  ['organizations', { target: 'systems', params: { view: 'overview' } }],
   ['fights', { target: 'conflicts' }],
 ]);
 
@@ -79,7 +79,14 @@ export const routeIsLegacyHash = (hash = '') => String(hash || '').startsWith('#
 
 export function normalizeDestination(view, target = '', params = {}) {
   if (view === 'series' && target === 'research') return { view, target: 'chapters', params };
+  if (view === 'series' && target === 'chronology') {
+    const { arc, ...rest } = params || {};
+    return { view: 'timeline', target: '', params: { ...(arc ? { arc, scope: 'arc' } : { scope: 'overview' }), ...rest } };
+  }
   if (view === 'succession' && (!target || target === 'overview')) return { view: 'series', target: 'succession-contest', params };
+  if (view === 'succession' && target === 'succession-timeline') {
+    return { view: 'timeline', target: '', params: { arc: 'succession-contest', scope: 'events', ...params } };
+  }
   if (view === 'succession' && target === 'chapters' && (!params.panel || params.panel === 'reader')) {
     const { panel: _panel, ...readerParams } = params;
     return { view: 'series', target: 'succession-contest', params: { section: 'chapters', ...readerParams } };
@@ -87,19 +94,29 @@ export function normalizeDestination(view, target = '', params = {}) {
   if (view === 'succession' && successionAliases[target]) {
     const alias = successionAliases[target];
     if (alias.target === 'overview') return { view: 'series', target: 'succession-contest', params };
-    return { view, target: alias.target, params: { ...params, ...(alias.panel ? { panel: alias.panel } : {}) } };
+    return normalizeDestination(view, alias.target, { ...params, ...(alias.panel ? { panel: alias.panel } : {}) });
   }
   if (view === 'reference' && referenceAliases[target]) {
     const alias = referenceAliases[target];
-    return {
-      view,
-      target: alias.target,
-      params: { ...params, ...(alias.category ? { category: alias.category } : {}), ...(alias.view ? { view: alias.view } : {}), ...(alias.case ? { case: alias.case } : {}) },
-    };
+    return normalizeDestination(view, alias.target, {
+      ...params,
+      ...(alias.category ? { category: alias.category } : {}),
+      ...(alias.view ? { view: alias.view } : {}),
+      ...(alias.case ? { case: alias.case } : {}),
+    });
+  }
+  if (view === 'reference' && target === 'systems' && params.view === 'conflicts') {
+    const { view: _view, ...rest } = params;
+    return { view: 'reference', target: 'conflicts', params: rest };
+  }
+  if (view === 'reference' && target === 'systems' && params.view === 'objects') {
+    const { view: _view, ...rest } = params;
+    return { view: 'reference', target: 'encyclopedia', params: { category: 'objects', ...rest } };
   }
   if (view === 'reference' && !referencePrimary.includes(target || 'encyclopedia')) {
     return { view: 'not-found', target: '', params: { attemptedPath: `/reference/${target}` } };
   }
+  if (view === 'timeline') return { view: 'timeline', target: '', params };
   return { view, target, params };
 }
 
@@ -113,6 +130,7 @@ export function routeToCleanPath(view, target = '', params = {}, hash = '') {
   const normalized = normalizeDestination(view, target, params);
 
   if (normalized.view === 'home') return cleanUrl('/', {}, hash);
+  if (normalized.view === 'timeline') return cleanUrl('/timeline', normalized.params, hash);
 
   if (normalized.view === 'series') {
     if (!normalized.target) return cleanUrl('/story', normalized.params, hash);
@@ -164,6 +182,7 @@ export function parseCleanRoute(pathname = '/', search = '') {
   const parts = pathnameClean.split('/').filter(Boolean);
 
   if (!parts.length || pathnameClean === '/index.html') return { view: 'home', target: '', params: {} };
+  if (parts[0] === 'timeline' && parts.length === 1) return normalizeDestination('timeline', '', params);
 
   if (parts[0] === 'story') {
     if (parts.length === 1) {
@@ -177,6 +196,9 @@ export function parseCleanRoute(pathname = '/', search = '') {
 
     if (parts[1] === 'succession-contest') {
       if (parts.length === 2) return normalizeDestination('series', 'succession-contest', params);
+      if (parts.length === 3 && parts[2] === 'timeline') {
+        return { view: 'succession', target: 'succession-timeline', params };
+      }
       if (parts.length === 3 && parts[2] === 'chapters') {
         return normalizeDestination('series', 'succession-contest', { section: 'chapters', ...params });
       }
@@ -220,5 +242,6 @@ export function readBrowserRoute() {
     return legacyRoute;
   }
 
-  return parseCleanRoute(window.location.pathname, window.location.search);
+  const cleanRoute = parseCleanRoute(window.location.pathname, window.location.search);
+  return normalizeDestination(cleanRoute.view, cleanRoute.target, cleanRoute.params);
 }
