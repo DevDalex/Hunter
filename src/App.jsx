@@ -28,6 +28,7 @@ const SuccessionOverview = lazy(routeModuleLoaders.successionOverview);
 const FamilyTree = lazy(routeModuleLoaders.familyTree);
 const SuccessionRoster = lazy(routeModuleLoaders.successionRoster);
 const SuccessionTimeline = lazy(routeModuleLoaders.successionTimeline);
+const SuccessionChapterReader = lazy(routeModuleLoaders.successionChapterReader);
 const SuccessionConnectionBoard = lazy(routeModuleLoaders.successionConnections);
 const BlackWhaleGuide = lazy(routeModuleLoaders.blackWhale);
 const SuccessionDossier = lazy(routeModuleLoaders.successionDossier);
@@ -221,7 +222,7 @@ export default function App() {
 
         {activeView === 'succession' && <>
           <PageIntro kicker={successionPage.kicker} title={successionPage.title} description={successionPage.description}>
-            <dl className="page-intro__facts"><div><dt>Arc</dt><dd>Ch. 340–{ARCHIVE_BOUNDARY}</dd></div><div><dt>Contest</dt><dd>Begins Ch. 359</dd></div><div><dt>Reading boundary</dt><dd>Ch. {spoilerLimit}</dd></div></dl>
+            <dl className="page-intro__facts"><div><dt>{successionPage.id === 'chapter-reader' ? 'Reader' : 'Arc'}</dt><dd>{successionPage.id === 'chapter-reader' ? 'Ch. 338–414' : <>Ch. 340–{ARCHIVE_BOUNDARY}</>}</dd></div><div><dt>Contest</dt><dd>Begins Ch. 359</dd></div><div><dt>Reading boundary</dt><dd>Ch. {spoilerLimit}</dd></div></dl>
           </PageIntro>
           <WorkspaceNav items={successionPages} activeId={successionPage.id} onSelect={(id) => navigate('succession', id)} onIntent={(id) => preloadRoute('succession', id)} primaryIds={successionPrimary} label="Succession sections" />
           <SpoilerSettings value={spoilerLimit} onChange={changeSpoilerLimit} />
@@ -236,6 +237,7 @@ export default function App() {
             {successionPage.id === 'succession-roster' && activePanel === 'relationships' && <SuccessionConnectionBoard />}
             {successionPage.id === 'succession-roster' && activePanel === 'assignments' && renderEmbeddedDossier('assignments')}
             {successionPage.id === 'succession-timeline' && <SuccessionTimeline spoilerLimit={spoilerLimit} initialQuery={routeParams.search || ''} onOpenLocation={(room) => navigate('succession', 'black-whale', { room })} />}
+            {successionPage.id === 'chapter-reader' && <SuccessionChapterReader requestedChapter={routeParams.chapter} requestedPage={routeParams.page} requestedMode={routeParams.mode} onNavigate={(chapter, page, mode) => navigate('succession', 'chapter-reader', { chapter, page, mode })} />}
             {successionPage.id === 'black-whale' && <BlackWhaleGuide initialQuery={routeParams.room || ''} onOpenWorldMap={() => navigate('reference', 'atlas', { mode: 'succession', location: 'black-whale-voyage' })} />}
             {successionPage.id === 'beasts' && renderEmbeddedDossier(activePanel)}
             {successionPage.id === 'mafia' && renderEmbeddedDossier(activePanel)}
