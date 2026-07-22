@@ -48,10 +48,43 @@
   border-top-right-radius: 1.35rem;
 }
 
+.gi-app .gi-app__topbar button {
+  min-height: 44px;
+}
+
+.gi-app .gi-app__topbar small,
+.gi-app .gi-app__nav button small {
+  font-size: .75rem;
+}
+
 @media (max-width: 900px) {
   .gi-app .gi-systems,
   .gi-app .gi-tactical,
   .gi-app .gi-completion {
     gap: 1rem;
+  }
+}
+
+@media (max-width: 860px) {
+  .gi-app .gi-app__nav {
+    display: none;
+    transform: none;
+  }
+
+  .gi-app .gi-app__nav.is-open {
+    display: block;
+  }
+
+  .gi-app .gi-app__topbar > div:last-child {
+    min-width: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 520px) {
+  .gi-app .gi-app__topbar > div:last-child button:first-child,
+  .gi-app .gi-app__topbar > div:last-child button:last-child {
+    display: none;
   }
 }
