@@ -23,7 +23,7 @@ const greedIslandSubviews = Object.freeze({
   eta: new Set(),
   binder: new Set(),
   cards: new Set(['specified', 'spells', 'free-slot', 'game-master']),
-  island: new Set(['map', 'quests', 'players', 'game-masters']),
+  island: new Set(['map', 'locations', 'quests', 'players', 'game-masters']),
   tactics: new Set(['training', 'razor', 'bombers', 'final-battles']),
   completion: new Set(['quiz', 'rewards', 'route', 'adaptation']),
   sources: new Set(),
