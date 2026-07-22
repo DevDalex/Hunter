@@ -1,0 +1,11 @@
+.succession-reader__heading dt,
+.succession-reader__chapter-grid small,
+.succession-reader__toolbar span,
+.succession-reader__toolbar small {
+  font-size: .7rem;
+}
+
+.succession-reader__mode button,
+.succession-reader__controls button {
+  min-height: 44px;
+}

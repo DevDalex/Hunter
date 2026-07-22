@@ -7,9 +7,9 @@ const primaryNav = [
   { id: 'characters', view: 'reference', target: 'encyclopedia', params: { category: 'characters' }, label: 'Characters' },
   { id: 'world', view: 'reference', target: 'atlas', label: 'World' },
   { id: 'nen', view: 'reference', target: 'nen', label: 'Nen' },
-  { id: 'organizations', view: 'reference', target: 'systems', params: { view: 'mafia' }, label: 'Organizations' },
+  { id: 'organizations', view: 'reference', target: 'systems', params: { view: 'overview' }, label: 'Organizations' },
   { id: 'conflicts', view: 'reference', target: 'conflicts', label: 'Fights' },
-  { id: 'timeline', view: 'succession', target: 'succession-timeline', label: 'Timeline' },
+  { id: 'timeline', view: 'timeline', label: 'Timeline' },
 ];
 
 export default function Header({ activeView, routeTarget, onNavigate, onOpenSearch, onOpenDownloads, onPrefetch, onPrefetchSearch }) {
@@ -57,7 +57,8 @@ export default function Header({ activeView, routeTarget, onNavigate, onOpenSear
   };
 
   const itemIsActive = (item) => {
-    if (item.id === 'story') return activeView === 'series' || (activeView === 'succession' && routeTarget !== 'succession-timeline');
+    if (item.id === 'story') return activeView === 'series' || activeView === 'succession';
+    if (item.id === 'timeline') return activeView === 'timeline';
     if (activeView !== item.view) return false;
     if (item.id === 'characters') return routeTarget === 'encyclopedia' || !routeTarget;
     return routeTarget === item.target;

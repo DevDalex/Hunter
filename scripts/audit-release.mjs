@@ -40,10 +40,10 @@ assert(PHASE_6G_VERSION.includes('Phase 6G'), 'release label must identify Phase
 assert(PHASE_8A_VERSION.includes('Phase 8A'), 'release label must identify Phase 8A');
 assert(CURRENT_RELEASE_VERSION === PHASE_8A_VERSION, 'current release label must identify Phase 8A');
 assert(phaseSixSequence.length === 7 && phaseSixSequence.at(-1)?.[0] === '6G', 'Phase 6 must contain the recorded 6A–6G sequence');
-assert(viewIds.length === 4 && unique(viewIds), 'top-level views must be unique');
+assert(viewIds.length === 5 && unique(viewIds) && viewIds.includes('timeline'), 'top-level views must include one unique global Timeline');
 assert(routeManifest.length === 26 && routeManifestStats.screens === routeManifest.length, 'reader-facing route inventory must contain 26 purposeful screens');
 assert(unique(routeManifest.map((route) => `${route.view}/${route.target}`)), 'reader-facing route destinations must be unique');
-assert(successionPages.length === 8 && referencePages.length === 5, 'workspace route totals must remain eight Succession and five Reference screens after Notebook removal');
+assert(successionPages.length === 7 && referencePages.length === 5 && routeManifestStats.timeline === 1, 'workspace route totals must remain seven Succession screens, five Reference screens, and one global Timeline');
 assert(!routeManifest.some((route) => /source/i.test(`${route.target} ${route.label}`)), 'the removed Sources section returned to the public route manifest');
 assert(!routeManifest.some((route) => route.view === 'reference' && route.target === 'notebook'), 'the retired Notebook route returned to the public route manifest');
 assert(successionPrimary.every((id) => successionPages.some((page) => page.id === id)), 'Succession primary navigation contains an unknown page');

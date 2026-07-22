@@ -38,6 +38,7 @@ const successionDeepLinks = [
   ['Royal family', 'family-tree'],
   ['Cast & assignments', 'succession-roster'],
   ['Voyage timeline', 'succession-timeline'],
+  ['Chapters', 'story-chapters'],
   ['Black Whale', 'black-whale'],
   ['Nen & Spirit Beasts', 'beasts'],
   ['Power blocs', 'mafia'],
@@ -128,7 +129,7 @@ function ChapterDirectory({ arc, onNavigate }) {
   </>;
 }
 
-export default function ArcPage({ arcId, onNavigate }) {
+export default function ArcPage({ arcId, onNavigate, extraSection = null }) {
   const arc = storyArcPageById.get(arcId);
   if (!arc) return null;
   const style = {
@@ -138,10 +139,22 @@ export default function ArcPage({ arcId, onNavigate }) {
     '--arc-secondary': arc.visual.secondary,
   };
 
+  const openSuccessionDeepLink = (target) => {
+    if (target === 'story-chapters') {
+      onNavigate('series', 'succession-contest', { section: 'chapters' });
+      return;
+    }
+    if (target === 'chapters') {
+      onNavigate('succession', 'chapters', { panel: 'chapters' });
+      return;
+    }
+    onNavigate('succession', target);
+  };
+
   return <article className={`arc-page arc-page--${arc.visual.className}`} style={style}>
     <ArcHero arc={arc} onNavigate={onNavigate} />
     <ArcNavigation />
-    {arc.id === 'succession-contest' && <nav className="arc-page__deep-links" aria-label="Succession Contest deep pages">{successionDeepLinks.map(([label, target]) => <button type="button" onClick={() => onNavigate('succession', target)} key={target}>{label}<ArrowRight size={13} /></button>)}</nav>}
+    {arc.id === 'succession-contest' && <nav className="arc-page__deep-links" aria-label="Succession Contest deep pages">{successionDeepLinks.map(([label, target]) => <button type="button" onClick={() => openSuccessionDeepLink(target)} key={target}>{label}<ArrowRight size={13} /></button>)}</nav>}
     <div className="arc-page__canvas">
       <ArcSection id="context" number={1} kicker="Before the arc" title="Why the story arrives here."><div className="arc-reading-block"><p>{arc.context}</p><aside><span>Transition in</span><p>{arc.previousId ? `This page follows ${storyArcPageById.get(arc.previousId)?.title}.` : 'This is the chronological beginning of the Story archive.'}</p></aside></div></ArcSection>
       <ArcSection id="premise" number={2} kicker="Central conflict" title="What the arc is asking."><div className="arc-premise-grid"><article><span>Objective</span><p>{arc.objective}</p></article><article><span>Stakes</span><p>{arc.stakes}</p></article><article><span>Narrative structure</span><p>{arc.structure}</p></article><article><span>Central question</span><p>{arc.question}</p></article></div></ArcSection>
@@ -157,8 +170,9 @@ export default function ArcPage({ arcId, onNavigate }) {
       <ArcSection id="ending" number={12} kicker="Arc ending" title="How the central conflict closes."><div className="arc-ending"><p>{arc.ending}</p></div></ArcSection>
       <ArcSection id="transition" number={13} kicker="Connection forward" title={arc.nextId ? `From ${arc.shortTitle} to ${storyArcPageById.get(arc.nextId)?.shortTitle}.` : 'Where the story currently stops.'}><div className="arc-transition"><p>{arc.transition}</p>{arc.nextId ? <ArcRouteButton arcId={arc.nextId} onNavigate={onNavigate}>Continue to {storyArcPageById.get(arc.nextId)?.shortTitle} <ArrowRight size={15} /></ArcRouteButton> : <button type="button" onClick={() => onNavigate('succession', 'succession-timeline')}>Open the current voyage timeline <ArrowRight size={15} /></button>}</div></ArcSection>
       <ArcSection id="adaptation" number={14} kicker="Manga and 2011 anime" title="What medium carries this page."><div className="arc-adaptation"><dl><div><dt>Manga</dt><dd>{rangeText(arc.manga?.pageRange, 'Ch.')}</dd></div><div><dt>2011 anime</dt><dd>{arc.anime2011 ? rangeText(arc.anime2011.pageRange, 'Ep.') : 'Manga-only'}</dd></div></dl><ul>{arc.adaptation.map((item) => <li key={item}>{item}</li>)}</ul></div></ArcSection>
-      <ArcSection id="records" number={15} kicker="Scoped directory" title="Chapters belonging to this page."><ChapterDirectory arc={arc} onNavigate={onNavigate} /></ArcSection>
-      <ArcSection id="sources" number={16} kicker="Hunterpedia / Fandom boundary" title="Sources attached to this arc."><div className="arc-source-list">{arc.sources.map((item) => <a href={item.href} target="_blank" rel="noreferrer noopener" key={item.href}><span>{item.label}</span><ExternalLink size={14} /></a>)}</div></ArcSection>
+      {extraSection}
+      <ArcSection id="records" number={extraSection ? 16 : 15} kicker="Scoped directory" title="Chapters belonging to this page."><ChapterDirectory arc={arc} onNavigate={onNavigate} /></ArcSection>
+      <ArcSection id="sources" number={extraSection ? 17 : 16} kicker="Hunterpedia / Fandom boundary" title="Sources attached to this arc."><div className="arc-source-list">{arc.sources.map((item) => <a href={item.href} target="_blank" rel="noreferrer noopener" key={item.href}><span>{item.label}</span><ExternalLink size={14} /></a>)}</div></ArcSection>
     </div>
   </article>;
 }
