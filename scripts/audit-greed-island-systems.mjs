@@ -9,6 +9,11 @@ import {
   greedIslandSystemStats,
   resolveGreedIslandSystemSource,
 } from '../src/data/greed-island/islandSystems.js';
+import {
+  greedIslandLocationMedia,
+  greedIslandOverviewMedia,
+  resolveGreedIslandLocationMedia,
+} from '../src/data/greed-island/islandMedia.js';
 import { documentedFreeSlotCardById, gameMasterCardById, spellCardsById } from '../src/data/greed-island/cardLibraries.js';
 import { enrichedSpecifiedCardById } from '../src/data/greed-island/specifiedCardsEnriched.js';
 
@@ -32,10 +37,19 @@ const cardExists = (rawId) => {
   return false;
 };
 
+const assertMedia = (record, label) => {
+  assert(record?.src?.startsWith('https://static.wikia.nocookie.net/hunterxhunter/images/'), `${label} visual is outside the Hunterpedia media host`);
+  assert(record?.fallbackSrc, `${label} visual needs a fallback`);
+  assert(record?.sourcePage?.startsWith('https://hunterxhunter.fandom.com/wiki/'), `${label} visual source is outside Hunterpedia/Fandom`);
+  assert(record?.alt?.length >= 20, `${label} visual needs descriptive alternative text`);
+  assert(record?.verifiedAt === '2026-07-22', `${label} visual verification date drifted`);
+};
+
 assert(greedIslandLocations.length === 9, `expected 9 locations/facilities, found ${greedIslandLocations.length}`);
 assert(greedIslandQuestRecords.length === 8, `expected 8 quest records, found ${greedIslandQuestRecords.length}`);
 assert(greedIslandPlayerSystems.length === 6, `expected 6 player systems, found ${greedIslandPlayerSystems.length}`);
 assert(greedIslandGameMasterControls.length === 6, `expected 6 Game Master controls, found ${greedIslandGameMasterControls.length}`);
+assert(Object.keys(greedIslandLocationMedia).length === 9, `expected 9 location visual records, found ${Object.keys(greedIslandLocationMedia).length}`);
 assert(greedIslandSystemStats.locations === greedIslandLocations.length, 'location stat drifted');
 assert(greedIslandSystemStats.quests === greedIslandQuestRecords.length, 'quest stat drifted');
 assert(greedIslandSystemStats.playerSystems === greedIslandPlayerSystems.length, 'player-system stat drifted');
@@ -52,12 +66,15 @@ for (const [key, source] of Object.entries(GREED_ISLAND_SYSTEM_SOURCES)) {
   assert(source.href.startsWith('https://hunterxhunter.fandom.com/wiki/'), `source ${key} is outside Hunterpedia/Fandom`);
 }
 
+assertMedia(greedIslandOverviewMedia, 'Greed Island overview');
+
 for (const location of greedIslandLocations) {
   assert(location.name && location.role.length >= 40, `${location.id} needs a readable role`);
   assert(location.status === 'verified', `${location.id} must remain a verified location/facility`);
   assert(Number.isFinite(location.x) && location.x >= 0 && location.x <= 100, `${location.id} has invalid map x`);
   assert(Number.isFinite(location.y) && location.y >= 0 && location.y <= 100, `${location.id} has invalid map y`);
   assert(resolveGreedIslandSystemSource(location.sourceId).href, `${location.id} has an unresolved source`);
+  assertMedia(resolveGreedIslandLocationMedia(location.id), location.id);
   for (const connection of location.connections) {
     assert(greedIslandLocationById.has(connection), `${location.id} links to unknown location ${connection}`);
   }
@@ -94,4 +111,4 @@ assert(greedIslandLocations.some((location) => location.id === 'port' && locatio
 assert(greedIslandGameMasterControls.some((control) => control.cards.includes('-003') && control.summary.includes('Eliminate')), 'Eliminate GM control is missing');
 assert(greedIslandPlayerSystems.some((system) => system.tags.includes('defense-window')), 'player-system defense window record is missing');
 
-console.log(`Greed Island systems audit passed: ${greedIslandLocations.length} locations, ${greedIslandQuestRecords.length} quests, ${greedIslandPlayerSystems.length} player systems, ${greedIslandGameMasterControls.length} GM controls.`);
+console.log(`Greed Island systems audit passed: ${greedIslandLocations.length} locations, ${Object.keys(greedIslandLocationMedia).length} visuals, ${greedIslandQuestRecords.length} quests, ${greedIslandPlayerSystems.length} player systems, ${greedIslandGameMasterControls.length} GM controls.`);
