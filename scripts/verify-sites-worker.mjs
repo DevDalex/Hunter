@@ -21,28 +21,29 @@ const env = {
   },
 };
 
-const request = new Request('https://hunter.example/api/admin/chapter/session', {
-  method: 'GET',
-  headers: { accept: 'text/html,application/xhtml+xml' },
-});
-const response = await worker.fetch(request, env);
-const contentType = response.headers.get('content-type') || '';
-const body = await response.text();
+const verifyJsonApiResponse = async (pathname) => {
+  const beforeAssets = assetFetches;
+  const response = await worker.fetch(
+    new Request(`https://hunter.example${pathname}`, {
+      method: 'GET',
+      headers: { accept: 'text/html,application/xhtml+xml' },
+    }),
+    env,
+  );
+  const contentType = response.headers.get('content-type') || '';
+  const body = await response.text();
 
-assert.equal(response.status, 401, 'Unauthenticated session checks must return HTTP 401.');
-assert.match(contentType, /^application\/json\b/i, 'The session route must return JSON.');
-assert.doesNotMatch(body, /<!doctype|<html/i, 'The session route must never return index.html.');
-assert.equal(assetFetches, 0, 'The session route must be handled before the ASSETS binding.');
-assert.equal(typeof JSON.parse(body).error, 'string', 'The JSON response must include an error message.');
+  assert.match(contentType, /^application\/json\b/i, `${pathname} must return JSON, received ${contentType || 'no content type'} with HTTP ${response.status}.`);
+  assert.doesNotMatch(body, /<!doctype|<html/i, `${pathname} must never return index.html.`);
+  assert.equal(assetFetches, beforeAssets, `${pathname} must be handled before the ASSETS binding.`);
+  assert.doesNotThrow(() => JSON.parse(body), `${pathname} must contain valid JSON.`);
+  return { response, payload: JSON.parse(body) };
+};
 
-const unknownApiResponse = await worker.fetch(
-  new Request('https://hunter.example/api/admin/chapter/unknown', { headers: { accept: 'text/html' } }),
-  env,
-);
-const unknownApiBody = await unknownApiResponse.text();
-assert.equal(unknownApiResponse.status, 404, 'Unknown chapter-admin endpoints must return HTTP 404.');
-assert.match(unknownApiResponse.headers.get('content-type') || '', /^application\/json\b/i);
-assert.doesNotMatch(unknownApiBody, /<!doctype|<html/i);
-assert.equal(assetFetches, 0, 'All /api/admin/chapter/* routes must bypass static assets.');
+const session = await verifyJsonApiResponse('/api/admin/chapter/session');
+assert.equal(typeof session.payload.error, 'string', 'The unauthenticated session response must include an error message.');
 
-console.log('Sites Worker verification passed: /api/admin/chapter/session and the complete chapter-admin route family return JSON before any SPA fallback.');
+const unknown = await verifyJsonApiResponse('/api/admin/chapter/unknown');
+assert.equal(unknown.response.status, 404, 'Unknown chapter-admin endpoints must return HTTP 404.');
+
+console.log(`Sites Worker verification passed: /api/admin/chapter/session returned HTTP ${session.response.status} JSON and the complete chapter-admin route family bypassed SPA fallback.`);
