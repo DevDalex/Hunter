@@ -91,7 +91,7 @@ npm run audit:succession-media
 
 This audit is included in the normal build preflight. It checks sequential page numbers, normalized paths, supported file extensions, positive dimensions, duplicate paths, missing files, and chapter directories that are not registered in the manifest.
 
-The dedicated browser QA also verifies that the chapter route keeps the illustrated Story arc shell, mounts the reader inside `#arc-chapters`, and does not fall back to the generic Succession records workspace.
+The dedicated browser QA also verifies that the chapter route keeps the illustrated Story arc shell, mounts the reader inside `#arc-chapters`, keeps chapter/page navigation on the Story route, and does not fall back to the generic Succession records workspace.
 
 ## Commit boundary
 
