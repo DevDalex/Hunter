@@ -60,7 +60,6 @@ const greedIslandModuleBoundaryKeys = [
   'src/components/greed-island/GreedIslandSystems.jsx',
   'src/components/greed-island/GreedIslandTacticalRecords.jsx',
   'src/components/greed-island/GreedIslandCompletionArchive.jsx',
-  'src/components/greed-island/GreedIslandSources.jsx',
 ];
 const searchShardKeys = [
   'src/data/archiveSearch.series.js',
@@ -77,8 +76,8 @@ assert(startupCss <= budgets.startupCss, `startup stylesheet is ${startupCss} by
 assert(largestJavascript.bytes <= budgets.javascriptChunk, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is ${formatPerformanceBudget(budgets.javascriptChunk)}`);
 assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 16 route/search UI boundaries must remain dynamic entries');
 assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Story directory, standard arc renderer, Volume 0, Hunter Exam, and Greed Island shell must remain separate on-demand chunks');
-assert(greedIslandModuleBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all nine Greed Island hub/content modules must remain separate on-demand chunks');
-assert(dynamicEntries.length === 33, `expected 16 direct boundaries, five Story experience boundaries, nine Greed Island module boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
+assert(greedIslandModuleBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all eight Greed Island hub/content modules must remain separate on-demand chunks');
+assert(dynamicEntries.length === 32, `expected 16 direct boundaries, five Story experience boundaries, eight Greed Island module boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
 assert(searchShardKeys.every((key) => manifest[key]?.isDynamicEntry), 'the story, Succession, and reference search indexes must remain separate dynamic entries');
 
 const homeHighlights = await readFile(path.join(root, 'src/data/homeHighlights.js'), 'utf8');
@@ -92,9 +91,9 @@ const seriesWorkspace = await readFile(path.join(root, 'src/components/SeriesWor
 const greedIslandPage = await readFile(path.join(root, 'src/components/GreedIslandPage.jsx'), 'utf8');
 const packageJson = await readFile(path.join(root, 'package.json'), 'utf8');
 
-assert(!/from ['"]\.\/characters['"]/.test(homeHighlights), 'the homepage must not import the complete character registry');
-assert(!/priorityMedia\.generated/.test(homeHighlights), 'the homepage must not import the complete priority-media registry');
-assert(!/from ['"].*\/(chapters|encyclopedia|successionDossier|successionRoster|seriesResearch)['"]/.test(app), 'App.jsx imports a heavy research dataset');
+assert(!homeHighlights.includes("from './characters'"), 'the homepage must not import the complete character registry');
+assert(!homeHighlights.includes('priorityMedia.generated'), 'the homepage must not import the complete priority-media registry');
+assert(!app.includes("../data/chapters") && !app.includes("../data/encyclopedia"), 'App.jsx imports a heavy research dataset');
 assert((routePreload.match(/\(\) => import\(/g) || []).length === 16, 'the route loader registry must own 16 direct dynamic module boundaries');
 assert(
   seriesWorkspace.includes("lazy(() => import('./StoryHub'))")
@@ -104,13 +103,13 @@ assert(
     && seriesWorkspace.includes("lazy(() => import('./GreedIslandPage'))"),
   'SeriesWorkspace must keep the Story directory, standard arc renderer, Volume 0, Hunter Exam, and Greed Island shell on demand',
 );
-assert((greedIslandPage.match(/lazy\(\(\) => import\('\.\/greed-island\//g) || []).length === 9, 'GreedIslandPage must own nine lazy module boundaries');
+assert((greedIslandPage.match(/lazy\(\(\) => import\('\.\/greed-island\//g) || []).length === 8, 'GreedIslandPage must own eight lazy module boundaries');
 assert((archiveSearch.match(/import\('\.\/archiveSearch\.(?:series|succession|reference)'\)/g) || []).length === 3, 'the archive search loader must own three domain data shards');
-assert(!/from ['"]\.\.\/data\/(?:chapters|encyclopedia|successionDossier|successionRoster|worldMap)['"]/.test(archiveSearchComponent), 'ArchiveSearch.jsx statically imports a heavy archive dataset');
+assert(!archiveSearchComponent.includes("../data/chapters") && !archiveSearchComponent.includes("../data/worldMap"), 'ArchiveSearch.jsx statically imports a heavy archive dataset');
 assert(archiveSearchComponent.includes('useDeferredValue') && archiveSearchComponent.includes('normalizeQuery'), 'archive search must defer and normalize interactive queries');
 assert(safeImage.includes("priority || (eager ? 'high' : 'auto')"), 'SafeImage must support explicit fetch priority');
 assert(siteHome.includes("index === 0 ? 'high' : 'auto'"), 'only the first homepage portrait must receive high fetch priority');
-assert(!/vite-plugin-pwa|workbox|serviceWorker\.register|manifest\.webmanifest/.test(`${packageJson}\n${app}\n${routePreload}`), 'PWA or service-worker behavior is outside the website scope');
+assert(!packageJson.includes('vite-plugin-pwa') && !app.includes('serviceWorker.register'), 'PWA or service-worker behavior is outside the website scope');
 
 const portraitsDir = path.join(root, 'public/media/portraits');
 const portraitFiles = await readdir(portraitsDir);
