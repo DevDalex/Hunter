@@ -17,6 +17,7 @@ import {
 } from '../data/successionChapterReader.js';
 import { writeStoredJson } from '../lib/browserStorage.js';
 import './SuccessionChapterReader.css';
+import './SuccessionChapterReaderPolish.css';
 
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
 const numeric = (value, fallback) => {
