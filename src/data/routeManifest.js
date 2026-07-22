@@ -1,6 +1,6 @@
 import { ARCHIVE_BOUNDARY } from './archiveMeta.js';
 
-export const viewIds = ['home', 'series', 'succession', 'reference'];
+export const viewIds = ['home', 'series', 'succession', 'reference', 'timeline'];
 export const views = new Set(viewIds);
 
 export const seriesRoutes = [
@@ -22,7 +22,7 @@ export const seriesRoutes = [
 export const successionPages = [
   {
     id: 'overview', label: 'Arc overview', kicker: 'The current story', title: 'Succession Contest',
-    description: 'The dedicated Succession Contest arc page, with the deep royal, cast, timeline, ship, Nen, power-bloc, and record pages preserved beneath it.',
+    description: 'The dedicated Succession Contest arc page, with royal, cast, ship, Nen, power-bloc, chapter-reader, and record pages preserved beneath it. Its voyage chronology opens in the global Timeline.',
   },
   {
     id: 'family-tree', label: 'Royal family', kicker: 'King, queens and princes', title: 'The Kakin royal family',
@@ -31,10 +31,6 @@ export const successionPages = [
   {
     id: 'succession-roster', label: 'Cast & assignments', kicker: 'People and loyalties', title: 'Cast, guards and assignments',
     description: `Royalty, guards, servants, Hunters, soldiers, mafia, Justice, the Troupe, and expedition personnel indexed through Chapter ${ARCHIVE_BOUNDARY}.`,
-  },
-  {
-    id: 'succession-timeline', label: 'Timeline', kicker: 'Voyage chronology', title: 'The voyage, event by event',
-    description: 'A multi-track chronology organized by voyage day, story time, chapter, location, plot thread, and factual confidence.',
   },
   {
     id: 'chapters', label: 'Records', kicker: 'Chapters and changing states', title: 'Chapters, deaths and mysteries',
@@ -101,8 +97,8 @@ export const referencePages = [
     description: 'Explore the Known World on an interactive geographic map, trace curated story and Succession routes, then connect places to their people, factions, events, and nested records.',
   },
   {
-    id: 'systems', label: 'Organizations', kicker: 'Power, territory and relationships', title: 'Organizations and the underworld',
-    description: 'Explore Yorknew and Kakin mafia structures, members, territory, operations, royal sponsorship, institutions, typed relationships, and consequential objects.',
+    id: 'systems', label: 'Organizations', kicker: 'Authority, membership and operations', title: 'Organizations and institutions',
+    description: 'Explore institutions, factions, members, sponsorship, typed relationships, territory, and operations in one stable workspace.',
   },
   {
     id: 'conflicts', label: 'Fights', kicker: 'Battles, games and operations', title: 'Fights and conflicts',
@@ -118,11 +114,12 @@ export const referenceAliases = {
   people: { target: 'encyclopedia', category: 'characters' },
   world: { target: 'atlas' },
   locations: { target: 'atlas' },
-  factions: { target: 'systems', view: 'mafia' },
-  mafia: { target: 'systems', view: 'mafia' },
+  factions: { target: 'systems', view: 'factions' },
+  mafia: { target: 'systems', view: 'factions' },
   institutions: { target: 'systems', view: 'institutions' },
   relationships: { target: 'systems', view: 'relations' },
-  objects: { target: 'systems', view: 'objects' },
+  operations: { target: 'systems', view: 'operations' },
+  objects: { target: 'encyclopedia', category: 'objects' },
   'hisoka-chrollo': { target: 'conflicts', case: 'hisoka-chrollo' },
   'research-library': { target: 'atlas' },
   'study-layers': { target: 'atlas' },
@@ -133,6 +130,7 @@ export const referenceAliases = {
 
 export const routeManifest = [
   { view: 'home', target: '', label: 'Hunter Archive home' },
+  { view: 'timeline', target: '', label: 'Global timeline' },
   ...seriesRoutes.map((route) => ({ view: 'series', target: route.target, label: route.label })),
   ...successionPages.filter((route) => route.id !== 'overview').map((route) => ({ view: 'succession', target: route.id, label: route.title })),
   ...referencePages.map((route) => ({ view: 'reference', target: route.id, label: route.title })),
@@ -140,6 +138,7 @@ export const routeManifest = [
 
 export const routeManifestStats = {
   screens: routeManifest.length,
+  timeline: 1,
   succession: successionPages.length - 1,
   reference: referencePages.length,
   aliases: Object.keys(referenceAliases).length + Object.keys(successionAliases).length,
