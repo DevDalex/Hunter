@@ -82,7 +82,12 @@ try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
   await record('Succession chapter reader route and ordered index', desktop, async () => {
     await desktop.goto(`${base}/story/succession-contest/chapters?chapter=338&page=1&mode=continuous`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await desktop.waitForSelector('.succession-reader[data-reader-chapter], .succession-reader__reader[data-reader-chapter]', { timeout: 15_000 });
+    await desktop.waitForSelector('#arc-chapters .succession-reader__reader[data-reader-chapter="338"]', { timeout: 15_000 });
+    if (await desktop.locator('.arc-page').count() !== 1) throw new Error('Chapter reader route is not rendered inside the Succession Story arc page');
+    if (await desktop.locator('.arc-page__hero h1', { hasText: 'Succession Contest' }).count() !== 1) throw new Error('Succession Story hero is missing from the chapter route');
+    if (await desktop.locator('main > .page-intro').count()) throw new Error('Generic Succession workspace introduction leaked into the Story chapter route');
+    if (await desktop.locator('#arc-chapters .succession-reader').count() !== 1) throw new Error('Reader is not mounted in the arc-chapters section');
+
     const reader = desktop.locator('.succession-reader');
     const workspace = reader.locator('.succession-reader__reader');
     if (await reader.locator('.succession-reader__chapter-grid button').count() !== 77) throw new Error('Reader does not expose chapters 338–414 inclusively');
@@ -96,7 +101,7 @@ try {
 
     await reader.getByRole('button', { name: /Next chapter/ }).click();
     if (await workspace.getAttribute('data-reader-chapter') !== '339') throw new Error('Next chapter control did not open 339');
-    if (!desktop.url().includes('chapter=339')) throw new Error('Chapter navigation did not update the route');
+    if (!desktop.url().includes('/story/succession-contest/chapters') || !desktop.url().includes('chapter=339')) throw new Error('Chapter navigation left the Story chapter route');
 
     await workspace.focus();
     await desktop.keyboard.press('PageDown');
@@ -108,14 +113,14 @@ try {
     if (await reader.locator('.succession-reader__chapter-grid button').count() !== 1) throw new Error('Chapter search did not isolate 414');
     await reader.getByRole('button', { name: /414/ }).click();
     if (await workspace.getAttribute('data-reader-chapter') !== '414') throw new Error('Chapter directory did not open 414');
-    if (!desktop.url().includes('chapter=414')) throw new Error('Chapter 414 route was not preserved');
+    if (!desktop.url().includes('/story/succession-contest/chapters') || !desktop.url().includes('chapter=414')) throw new Error('Chapter 414 Story route was not preserved');
   });
   await desktop.close();
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   await record('Succession chapter reader mobile containment and reduced motion', mobile, async () => {
     await mobile.goto(`${base}/story/succession-contest/chapters?chapter=414`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await mobile.waitForSelector('.succession-reader__reader[data-reader-chapter="414"]', { timeout: 15_000 });
+    await mobile.waitForSelector('#arc-chapters .succession-reader__reader[data-reader-chapter="414"]', { timeout: 15_000 });
     const state = await mobile.evaluate(() => {
       const reader = document.querySelector('.succession-reader');
       const workspace = document.querySelector('.succession-reader__reader');
@@ -127,8 +132,10 @@ try {
         reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
         transition: chapterButton ? getComputedStyle(chapterButton).transitionDuration : '',
         liveRegion: document.querySelector('.succession-reader__status')?.getAttribute('aria-live'),
+        arcPage: Boolean(document.querySelector('.arc-page')),
       };
     });
+    if (!state.arcPage) throw new Error('Mobile chapter route lost the Succession Story arc shell');
     if (state.overflow > 1) throw new Error(`Reader overflowed mobile viewport by ${state.overflow}px`);
     if (state.readerWidth > 390.5 || state.workspaceWidth > 390.5) throw new Error(`Reader panels exceed mobile width: ${JSON.stringify(state)}`);
     if (!state.reducedMotion) throw new Error('Reduced-motion emulation was not active');
