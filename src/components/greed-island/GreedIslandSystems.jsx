@@ -27,6 +27,20 @@ const titleCase = (value) => String(value || '').replaceAll('-', ' ').replace(/\
 const statusLabel = (status) => status === 'archive-simulation' ? 'Archive simulation' : titleCase(status);
 const systemViews = new Set(['map', 'quests', 'players', 'game-masters']);
 
+const mapLayoutPositions = Object.freeze({
+  'starting-point': Object.freeze({ x: 57, y: 90 }),
+  masadora: Object.freeze({ x: 62, y: 73 }),
+  'spell-card-shop': Object.freeze({ x: 70, y: 60 }),
+  'trade-shops': Object.freeze({ x: 39, y: 47 }),
+  badlands: Object.freeze({ x: 29, y: 66 }),
+  port: Object.freeze({ x: 22, y: 82 }),
+  soufrabi: Object.freeze({ x: 79, y: 46 }),
+  aiai: Object.freeze({ x: 68, y: 30 }),
+  limeiro: Object.freeze({ x: 48, y: 17 }),
+});
+
+const mapLayoutPosition = (location) => mapLayoutPositions[location.id] || location;
+
 const samplePlayers = Object.freeze([
   Object.freeze({ id: 'gon', name: 'Gon Freecss', relation: 'Player', metAt: 'Starting Point / story route', usefulFor: 'Completion routing and card archive examples' }),
   Object.freeze({ id: 'killua', name: 'Killua Zoldyck', relation: 'Player', metAt: 'Starting Point / party route', usefulFor: 'Exit-route and Transport Ticket examples' }),
@@ -56,28 +70,32 @@ function IslandMap({ selectedId, onSelect, filteredLocations }) {
   const visibleIds = new Set(filteredLocations.map((location) => location.id));
   return <div className="gi-systems-map" aria-label="Greed Island verified location map">
     <div className="gi-systems-map__grid" aria-hidden="true"><i /><i /><i /><i /><i /><i /></div>
-    {greedIslandLocations.map((location) => <button
-      type="button"
-      key={location.id}
-      className={`${selectedId === location.id ? 'is-active' : ''}${visibleIds.has(location.id) ? '' : ' is-dimmed'}`}
-      style={{ '--x': `${location.x}%`, '--y': `${location.y}%` }}
-      onClick={() => onSelect(location.id)}
-      aria-pressed={selectedId === location.id}
-      data-location-id={location.id}
-    >
-      <span>{location.name}</span><small>{titleCase(location.type)}</small>
-    </button>)}
+    {greedIslandLocations.map((location) => {
+      const position = mapLayoutPosition(location);
+      return <button
+        type="button"
+        key={location.id}
+        className={`${selectedId === location.id ? 'is-active' : ''}${visibleIds.has(location.id) ? '' : ' is-dimmed'}`}
+        style={{ '--x': `${position.x}%`, '--y': `${position.y}%` }}
+        onClick={() => onSelect(location.id)}
+        aria-pressed={selectedId === location.id}
+        data-location-id={location.id}
+      >
+        <span>{location.name}</span><small>{titleCase(location.type)}</small>
+      </button>;
+    })}
   </div>;
 }
 
 function LocationPanel({ selected }) {
   const source = resolveGreedIslandSystemSource(selected.sourceId);
+  const position = mapLayoutPosition(selected);
   return <article className="gi-systems-location-card" aria-live="polite">
     <header><MapPin size={20} /><div><span>{titleCase(selected.type)} · {selected.region}</span><h3>{selected.name}</h3></div></header>
     <p>{selected.role}</p>
     <div className="gi-systems-tags"><SystemBadge tone="verified">{statusLabel(selected.status)}</SystemBadge>{selected.tags.map((tag) => <SystemBadge key={tag}>{titleCase(tag)}</SystemBadge>)}</div>
     <dl>
-      <div><dt>Map point</dt><dd>{Math.round(selected.x)} / {Math.round(selected.y)}</dd></div>
+      <div><dt>Map point</dt><dd>{Math.round(position.x)} / {Math.round(position.y)}</dd></div>
       <div><dt>Connections</dt><dd>{selected.connections.map((id) => greedIslandLocationById.get(id)?.name || id).join(', ')}</dd></div>
       <div><dt>Source</dt><dd>{source.label}</dd></div>
     </dl>
