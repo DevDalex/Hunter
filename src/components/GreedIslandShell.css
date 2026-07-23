@@ -1,0 +1,250 @@
+.gi-app {
+  min-height: 100vh;
+  color: #171c19;
+  background: #edf3ef;
+}
+
+.gi-app__topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 58px;
+  border-bottom: 1px solid rgba(23, 41, 31, .2);
+  padding: 8px clamp(12px, 3vw, 34px);
+  background: rgba(244, 249, 246, .94);
+  backdrop-filter: blur(14px);
+}
+
+.gi-app__topbar > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.gi-app__topbar button {
+  min-height: 40px;
+  border: 1px solid rgba(25, 54, 38, .22);
+  padding: 0 13px;
+  color: #203128;
+  background: #fff;
+  font: 800 .78rem/1 inherit;
+  cursor: pointer;
+}
+
+.gi-app__topbar strong,
+.gi-app__topbar small {
+  display: block;
+}
+
+.gi-app__topbar strong {
+  font-size: .82rem;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.gi-app__topbar small {
+  margin-top: 2px;
+  color: #66736c;
+  font-size: .68rem;
+}
+
+.gi-app__layout {
+  display: grid;
+  grid-template-columns: 230px minmax(0, 1fr);
+  min-height: calc(100vh - 58px);
+}
+
+.gi-app__nav {
+  position: sticky;
+  top: 58px;
+  align-self: start;
+  height: calc(100vh - 58px);
+  overflow-y: auto;
+  border-right: 1px solid rgba(24, 49, 35, .16);
+  padding: 18px 12px;
+  background: #17231d;
+}
+
+.gi-app__nav button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 25px 1fr;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  border: 0;
+  border-left: 3px solid transparent;
+  padding: 8px 11px;
+  color: #bfd0c6;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.gi-app__nav button:hover,
+.gi-app__nav button:focus-visible {
+  color: #fff;
+  background: rgba(255, 255, 255, .07);
+}
+
+.gi-app__nav button.is-active {
+  border-left-color: #65d69d;
+  color: #effff6;
+  background: rgba(101, 214, 157, .12);
+}
+
+.gi-app__nav button span {
+  display: grid;
+  gap: 2px;
+}
+
+.gi-app__nav button strong {
+  font-size: .82rem;
+}
+
+.gi-app__nav button small {
+  color: #8da397;
+  font-size: .65rem;
+}
+
+.gi-app__main {
+  min-width: 0;
+  overflow: clip;
+}
+
+.gi-app__module-head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px clamp(16px, 3vw, 38px);
+  border-bottom: 1px solid rgba(27, 55, 40, .15);
+  background: rgba(255, 255, 255, .68);
+}
+
+.gi-app__module-head span,
+.gi-app__module-head h1,
+.gi-app__module-head p {
+  margin: 0;
+}
+
+.gi-app__module-head span {
+  color: #367857;
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.gi-app__module-head h1 {
+  margin-top: 4px;
+  font-size: clamp(1.55rem, 3vw, 2.5rem);
+}
+
+.gi-app__module-head p {
+  max-width: 650px;
+  color: #59675f;
+  font-size: .84rem;
+  line-height: 1.5;
+}
+
+.gi-app__subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 12px clamp(16px, 3vw, 38px);
+  border-bottom: 1px solid rgba(27, 55, 40, .12);
+  background: #f7faf8;
+}
+
+.gi-app__subnav button {
+  border: 1px solid rgba(32, 67, 47, .2);
+  padding: 8px 12px;
+  color: #435149;
+  background: #fff;
+  font: 800 .72rem/1 inherit;
+  cursor: pointer;
+}
+
+.gi-app__subnav button.is-active {
+  border-color: #2e8b5d;
+  color: #fff;
+  background: #226e49;
+}
+
+.gi-app__outlet {
+  min-height: 70vh;
+}
+
+.gi-app__loading {
+  min-height: 64vh;
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  color: #345343;
+  background: #eef5f1;
+}
+
+.gi-app__loading span {
+  width: 36px;
+  height: 36px;
+  border: 4px solid rgba(54, 117, 84, .18);
+  border-top-color: #367554;
+  border-radius: 50%;
+  animation: gi-app-spin .7s linear infinite;
+}
+
+.gi-app__mobile-menu {
+  display: none;
+}
+
+@keyframes gi-app-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 860px) {
+  .gi-app__layout {
+    display: block;
+  }
+
+  .gi-app__mobile-menu {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .gi-app__nav {
+    position: fixed;
+    top: 58px;
+    left: 0;
+    z-index: 50;
+    width: min(310px, 86vw);
+    height: calc(100vh - 58px);
+    transform: translateX(-105%);
+    transition: transform 180ms ease;
+    box-shadow: 20px 0 50px rgba(0, 0, 0, .2);
+  }
+
+  .gi-app__nav.is-open {
+    transform: translateX(0);
+  }
+
+  .gi-app__module-head {
+    align-items: start;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gi-app__nav {
+    transition: none;
+  }
+
+  .gi-app__loading span {
+    animation: none;
+  }
+}

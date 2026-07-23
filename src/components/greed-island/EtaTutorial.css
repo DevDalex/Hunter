@@ -1,0 +1,657 @@
+.gi-eta-course {
+  min-width: 0;
+}
+
+.gi-eta-course__progress {
+  max-width: 760px;
+  margin: -1rem 0 1.4rem;
+}
+
+.gi-eta-course__progress > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  color: #5e4828;
+  font-size: .76rem;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.gi-eta-course__progress b {
+  color: var(--gi-green-dark);
+  font-size: 1.15rem;
+}
+
+.gi-eta-course__progress > i {
+  display: block;
+  height: 8px;
+  margin-top: .45rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #c9b991;
+}
+
+.gi-eta-course__progress > i span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #77519a, #b68c4c);
+  transition: width .28s ease;
+}
+
+.gi-eta-course__layout {
+  display: grid;
+  grid-template-columns: minmax(210px, .55fr) minmax(0, 2.25fr);
+  gap: 1.2rem;
+  align-items: start;
+}
+
+.gi-eta-course__chapters {
+  position: sticky;
+  top: 74px;
+  max-height: calc(100vh - 92px);
+  overflow: auto;
+  border: 1px solid #a99168;
+  border-radius: 18px;
+  background: #d7c69f;
+  box-shadow: 0 14px 28px rgba(68, 52, 28, .13);
+}
+
+.gi-eta-course__chapters ol {
+  margin: 0;
+  padding: .65rem;
+  list-style: none;
+  display: grid;
+  gap: .38rem;
+}
+
+.gi-eta-course__chapters button {
+  width: 100%;
+  min-height: 50px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  padding: .45rem .55rem;
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  gap: .55rem;
+  color: #2c382b;
+  background: rgba(255, 250, 229, .46);
+  text-align: left;
+  cursor: pointer;
+}
+
+.gi-eta-course__chapters button:hover,
+.gi-eta-course__chapters button:focus-visible {
+  background: #f7efd8;
+}
+
+.gi-eta-course__chapters button.is-active {
+  color: #fff8dd;
+  border-color: #d2ad63;
+  background: #283f31;
+}
+
+.gi-eta-course__chapters button > i {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-style: normal;
+  font-size: .68rem;
+}
+
+.gi-eta-course__chapters button > span {
+  font-size: .78rem;
+  font-weight: 800;
+}
+
+.gi-eta-course__lesson {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #9e8962;
+  border-radius: 22px;
+  background: #f8efd8;
+  box-shadow: 0 25px 55px rgba(62, 47, 23, .15);
+}
+
+.gi-eta-course__lesson > .gi-eta-course__eta,
+.gi-eta-course__lesson > .gi-eta-course__dialogue {
+  display: inline-flex;
+}
+
+.gi-eta-course__eta {
+  position: relative;
+  vertical-align: top;
+  width: 190px;
+  height: 190px;
+  margin: 1.35rem 0 1.35rem 1.35rem;
+  border: 3px solid #b88a40;
+  border-radius: 42% 42% 18px 18px;
+  background:
+    radial-gradient(circle at 50% 43%, #f1d993 0 10%, #697f6c 11% 23%, #20392a 24% 41%, transparent 42%),
+    linear-gradient(155deg, #536e59, #1c3527);
+  box-shadow: inset 0 0 34px rgba(0, 0, 0, .48);
+}
+
+.gi-eta-course__eta span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #263c2d;
+  font-weight: 900;
+  letter-spacing: .12em;
+}
+
+.gi-eta-course__eta i {
+  position: absolute;
+  top: 45%;
+  width: 31%;
+  height: 7px;
+  background: #c79a4c;
+}
+
+.gi-eta-course__eta i:first-child { right: 68%; transform: rotate(18deg); }
+.gi-eta-course__eta i:nth-child(3) { left: 68%; transform: rotate(-18deg); }
+.gi-eta-course__eta b {
+  position: absolute;
+  left: 21%;
+  bottom: 7%;
+  width: 58%;
+  height: 18%;
+  border: 2px solid #d6af61;
+  border-radius: 50%;
+}
+
+.gi-eta-course__dialogue {
+  width: calc(100% - 235px);
+  min-height: 190px;
+  padding: 1.6rem;
+  vertical-align: top;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.gi-eta-course__dialogue > span,
+.gi-rule-demo > div > span,
+.gi-rule-demo > span,
+.gi-rank-readout > span {
+  color: #76521c;
+  font-size: .68rem;
+  font-weight: 900;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.gi-eta-course__dialogue h3 {
+  margin: .35rem 0 .55rem;
+  font-family: Georgia, serif;
+  font-size: clamp(2.1rem, 4vw, 3.8rem);
+  line-height: .98;
+}
+
+.gi-eta-course__dialogue > p {
+  max-width: 70ch;
+  margin: 0;
+  line-height: 1.65;
+}
+
+.gi-eta-course__announcement {
+  margin-top: 1rem !important;
+  border-left: 4px solid #b28a43;
+  padding: .7rem .85rem;
+  color: #f8efd7;
+  background: #293f31;
+  font-size: .85rem;
+}
+
+.gi-eta-course__practice {
+  min-width: 0;
+  border-block: 1px solid #bca981;
+  padding: clamp(1rem, 3vw, 2rem);
+  background:
+    linear-gradient(rgba(255, 251, 235, .93), rgba(237, 224, 193, .96)),
+    repeating-linear-gradient(45deg, transparent 0 12px, rgba(99, 75, 37, .05) 12px 13px);
+}
+
+.gi-rule-demo {
+  min-width: 0;
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+}
+
+.gi-rule-demo h4 {
+  margin: .35rem 0 .55rem;
+  font-family: Georgia, serif;
+  font-size: clamp(1.55rem, 3vw, 2.45rem);
+}
+
+.gi-rule-demo p {
+  line-height: 1.6;
+}
+
+.gi-rule-demo button,
+.gi-eta-course__controls button,
+.gi-eta-course__controls a {
+  min-height: 42px;
+  border: 1px solid #795d34;
+  border-radius: 8px;
+  padding: .58rem .82rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .42rem;
+  color: #fff9e8;
+  background: #2a4432;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.gi-rule-demo button:hover,
+.gi-rule-demo button:focus-visible,
+.gi-eta-course__controls button:hover,
+.gi-eta-course__controls button:focus-visible,
+.gi-eta-course__controls a:hover,
+.gi-eta-course__controls a:focus-visible {
+  background: #3c6247;
+}
+
+.gi-rule-demo button:disabled,
+.gi-eta-course__controls button:disabled {
+  opacity: .38;
+  cursor: default;
+}
+
+.gi-rule-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+}
+
+.gi-rule-demo label {
+  min-width: 0;
+  display: grid;
+  gap: .42rem;
+  color: #5b4425;
+  font-size: .75rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.gi-rule-demo select,
+.gi-rule-demo input[type='text'],
+.gi-rule-demo input:not([type]) {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid #9f8a62;
+  border-radius: 7px;
+  padding: .55rem .65rem;
+  color: #263229;
+  background: #fffbed;
+  font: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.gi-rule-demo fieldset {
+  min-width: 0;
+  margin: 0;
+  border: 1px solid #aa956e;
+  border-radius: 10px;
+  padding: 1rem;
+  display: grid;
+  gap: .55rem;
+}
+
+.gi-rule-demo fieldset:disabled { opacity: .48; }
+.gi-rule-demo legend { padding: 0 .45rem; font-weight: 900; }
+.gi-rule-demo fieldset label {
+  display: flex;
+  grid-template-columns: none;
+  align-items: center;
+  gap: .55rem;
+  font-size: .83rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.gi-rule-demo--ring,
+.gi-rule-demo--book {
+  grid-template-columns: minmax(160px, .52fr) minmax(0, 1.6fr);
+}
+
+.gi-rule-ring {
+  position: relative;
+  width: 150px;
+  aspect-ratio: 1;
+  margin-inline: auto;
+  display: grid;
+  place-items: center;
+  border: 18px solid #d5aa50;
+  border-radius: 50%;
+  color: #f5df9e;
+  background: radial-gradient(circle, #284a36 0 42%, #182f23 43% 100%);
+  box-shadow: 0 15px 28px rgba(41, 48, 31, .26), inset 0 0 0 4px #80612f;
+}
+
+.gi-rule-ring i {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 5px solid #e3c06c;
+  border-radius: 50%;
+  background: #396044;
+}
+
+.gi-rule-ring i:first-child { top: -24px; left: 30px; }
+.gi-rule-ring i:last-child { right: -22px; bottom: 26px; }
+.gi-rule-ring b { font-family: Georgia, serif; font-size: 1.4rem; }
+
+.gi-rule-book {
+  position: relative;
+  width: min(250px, 100%);
+  aspect-ratio: 1.38;
+  margin-inline: auto;
+  border: 7px solid #9f9a9f;
+  border-radius: 7px 15px 15px 7px;
+  background: linear-gradient(145deg, #1b1628, #4b355e 48%, #20192d);
+  box-shadow: 0 18px 30px rgba(36, 27, 43, .3), inset 0 0 0 3px #493c52;
+  opacity: .48;
+  transform: translateY(5px) scale(.96);
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+.gi-rule-book.is-active { opacity: 1; transform: none; }
+.gi-rule-book::before,
+.gi-rule-book::after {
+  content: '';
+  position: absolute;
+  inset-block: 9%;
+  width: 12px;
+  background: repeating-linear-gradient(#bbb5b9 0 15px, #5d585f 15px 23px);
+}
+.gi-rule-book::before { left: -11px; }
+.gi-rule-book::after { right: -11px; }
+.gi-rule-book i,
+.gi-rule-book span,
+.gi-rule-book b {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+.gi-rule-book i { width: 45%; aspect-ratio: 1; border: 8px solid #a49ca5; }
+.gi-rule-book span { width: 29%; aspect-ratio: 1; border: 5px solid #4d4850; background: #a9a4a8; }
+.gi-rule-book b { width: 9%; aspect-ratio: 1; background: #30283a; }
+
+.gi-rule-demo--binder {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.gi-rule-demo--binder > button { grid-column: 1 / -1; justify-self: start; }
+
+.gi-rule-stat {
+  min-height: 150px;
+  border: 1px solid #a38b61;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #f7eed6;
+}
+.gi-rule-stat b { color: #674a7b; font-family: Georgia, serif; font-size: 2.6rem; }
+.gi-rule-stat span { margin-top: .25rem; font-weight: 900; }
+.gi-rule-stat small { margin-top: .35rem; color: #6a5c43; }
+
+.gi-rule-demo--anatomy {
+  grid-template-columns: minmax(210px, .62fr) minmax(0, 1.5fr);
+  align-items: start;
+}
+
+.gi-anatomy-visual {
+  position: relative;
+  width: min(290px, 100%);
+  margin-inline: auto;
+}
+.gi-anatomy-visual .gi-card { width: 100%; min-height: 390px; }
+.gi-anatomy-visual .gi-card__media,
+.gi-anatomy-visual .gi-card__fallback { min-height: 382px; }
+
+.gi-anatomy-marker {
+  position: absolute;
+  z-index: 5;
+  width: 29px;
+  height: 29px;
+  border: 2px solid #fff7d8;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: #2a4432;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .35);
+  font-size: .72rem;
+  font-weight: 900;
+  transition: transform .18s ease, background .18s ease;
+}
+.gi-anatomy-marker.is-active { background: #a83f3f; transform: scale(1.18); }
+.gi-anatomy-marker--number { left: 5%; top: 3%; }
+.gi-anatomy-marker--name { left: 47%; top: 3%; }
+.gi-anatomy-marker--rank-limit { right: 4%; top: 3%; }
+.gi-anatomy-marker--illustration { right: 7%; top: 43%; }
+.gi-anatomy-marker--description { right: 7%; bottom: 5%; }
+
+.gi-anatomy-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .45rem;
+}
+.gi-anatomy-list button {
+  min-height: 48px;
+  justify-content: flex-start;
+  color: #28382c;
+  border-color: #a5926b;
+  background: #eee1c0;
+  text-align: left;
+}
+.gi-anatomy-list button.is-active { color: #fff; background: #2a4432; }
+.gi-anatomy-list i {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-style: normal;
+}
+
+.gi-rule-demo--slots {
+  grid-template-columns: minmax(180px, .6fr) minmax(210px, .75fr) minmax(0, 1fr);
+}
+.gi-slot-switch { display: grid; gap: .5rem; }
+.gi-slot-switch button { color: #29372c; background: #eee2c2; }
+.gi-slot-switch button.is-active { color: #fff; background: #2a4432; }
+.gi-slot-comparison {
+  min-height: 190px;
+  border: 9px solid #4c424a;
+  border-radius: 7px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #ded8ca;
+  box-shadow: inset 0 0 0 3px #9a9385;
+}
+.gi-slot-comparison--free { border-color: #9b7d2d; background: #f1e5ad; }
+.gi-slot-comparison i { font-family: Georgia, serif; font-size: 2.4rem; font-style: normal; }
+.gi-slot-comparison strong { margin: .35rem 0; }
+.gi-slot-comparison span { font-size: .75rem; }
+
+.gi-rule-demo--ranks { grid-template-columns: minmax(130px, .35fr) minmax(0, 1.65fr); align-items: stretch; }
+.gi-rank-ladder { display: grid; grid-template-columns: repeat(2, 1fr); gap: .4rem; }
+.gi-rank-ladder button { min-height: 52px; font-family: Georgia, serif; font-size: 1.1rem; color: #2f382e; background: #e9ddbe; }
+.gi-rank-ladder button.is-active { color: #fff; background: #714d86; }
+.gi-rank-readout { border-left: 5px solid #714d86; padding: 1rem 1.25rem; background: #f8f0da; }
+.gi-rank-readout > b { display: block; margin: .2rem 0 .6rem; color: #714d86; font-family: Georgia, serif; font-size: 4rem; }
+.gi-rank-readout dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; }
+.gi-rank-readout dl div { border-top: 1px solid #aa9670; padding-top: .5rem; }
+.gi-rank-readout dt { color: #735c38; font-size: .65rem; text-transform: uppercase; }
+.gi-rank-readout dd { margin: .25rem 0 0; font-weight: 900; }
+
+.gi-rule-demo--limits { grid-template-columns: minmax(210px, .7fr) minmax(0, 1.3fr); }
+.gi-limit-meter { display: grid; gap: .55rem; }
+.gi-limit-meter > div { display: flex; justify-content: space-between; gap: 1rem; }
+.gi-limit-meter input { width: 100%; }
+.gi-limit-meter > i { height: 12px; overflow: hidden; border-radius: 99px; background: #cbbd9b; }
+.gi-limit-meter > i span { display: block; height: 100%; background: #714d86; transition: width .2s ease; }
+.gi-limit-result { grid-column: 1 / -1; border-left: 5px solid #4e7554; padding: .9rem 1rem; display: grid; gap: .25rem; background: #e7efd8; }
+.gi-limit-result.is-full { border-left-color: #9e3636; color: #fff; background: #7b2e2e; }
+.gi-rule-demo--limits > button { grid-column: 1 / -1; justify-self: start; }
+
+.gi-rule-demo--gain { grid-template-columns: minmax(145px, .42fr) minmax(170px, .52fr) minmax(0, 1.2fr); }
+.gi-gain-card { width: min(190px, 100%); transition: opacity .25s ease, transform .25s ease; }
+.gi-gain-card.is-converted { opacity: .18; transform: scale(.86) rotateY(75deg); }
+.gi-gain-object {
+  min-height: 190px;
+  border: 2px dashed #9d8253;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: .38;
+  transform: scale(.92);
+  transition: opacity .25s ease, transform .25s ease;
+}
+.gi-gain-object.is-visible { opacity: 1; transform: none; background: radial-gradient(circle, #fff4c7, #d6c396); box-shadow: 0 0 28px rgba(201, 157, 65, .4); }
+.gi-gain-object strong { margin: .5rem; font-family: Georgia, serif; }
+
+.gi-rule-demo--spell { grid-template-columns: minmax(200px, .6fr) minmax(220px, .8fr) minmax(0, 1fr); align-items: start; }
+.gi-spell-card {
+  grid-row: span 3;
+  min-height: 255px;
+  border: 7px solid #315a86;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(145deg, #f5edcf, #d8c498);
+  box-shadow: inset 0 0 0 2px #8f794f;
+}
+.gi-spell-card > span { font-family: Georgia, serif; }
+.gi-spell-card b { margin: .55rem 0 .25rem; font-family: Georgia, serif; font-size: 1.5rem; }
+.gi-spell-card small { color: #315a86; font-weight: 900; }
+.gi-spell-card p { margin-top: auto; font-size: .85rem; }
+.gi-spell-outcome { min-height: 66px; margin: 0; border-left: 4px solid #315a86; padding: .7rem; background: #e5edf4; }
+.gi-rule-demo--spell > small { grid-column: 2 / -1; }
+
+.gi-rule-demo--protection { grid-template-columns: minmax(0, 1.2fr) minmax(210px, .75fr); }
+.gi-attack-flow { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr auto auto 1fr; align-items: center; gap: .6rem; }
+.gi-attack-flow span { min-height: 80px; border: 1px solid #a58d64; border-radius: 10px; display: grid; place-items: center; background: #f0e4c5; font-weight: 900; }
+.gi-attack-flow i { display: none; }
+.gi-attack-flow b { font-size: 1.8rem; }
+.gi-protection-result { min-height: 100px; border-left: 5px solid #3c7048; padding: .9rem; display: flex; align-items: center; gap: .8rem; background: #dfead5; }
+.gi-protection-result div { display: grid; gap: .3rem; }
+.gi-rule-demo--protection > p { grid-column: 1 / -1; }
+
+.gi-rule-demo--completion { align-items: stretch; }
+.gi-completion-sequence { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; }
+.gi-completion-sequence div { min-height: 115px; border: 1px solid #aa956d; border-radius: 10px; padding: .8rem; display: grid; grid-template-columns: 32px 1fr; align-items: center; gap: .35rem .6rem; background: #e4d8ba; opacity: .58; }
+.gi-completion-sequence div.is-complete { border-color: #476b4f; background: #dce8d4; opacity: 1; }
+.gi-completion-sequence i { grid-row: span 2; width: 30px; height: 30px; border: 1px solid currentColor; border-radius: 50%; display: grid; place-items: center; font-style: normal; }
+.gi-completion-sequence span { font-size: .75rem; }
+.gi-rule-demo--completion input[type='range'] { width: 100%; }
+.gi-rule-demo--completion > button { justify-self: start; }
+
+.gi-review-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+.gi-review-grid span { min-height: 58px; border: 1px solid #aa956c; border-radius: 8px; padding: .7rem; display: flex; align-items: center; gap: .55rem; background: #f4ead0; font-weight: 800; }
+.gi-rule-demo--review > p { margin: 0; padding: .75rem; background: #e2d5b5; }
+.gi-rule-demo--review > p.is-correct { color: #fff; background: #34543c; }
+
+.gi-eta-course__controls {
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  background: #d3c099;
+}
+.gi-eta-course__controls > div { display: flex; flex-wrap: wrap; gap: .45rem; }
+.gi-eta-course__controls button,
+.gi-eta-course__controls a { color: #29382d; border-color: #8d754d; background: #eee3c6; }
+.gi-eta-course__controls button.is-primary { color: #fff; background: #2a4432; }
+
+@media (max-width: 1050px) {
+  .gi-eta-course__layout { grid-template-columns: 1fr; }
+  .gi-eta-course__chapters { position: static; max-height: none; overflow-x: auto; }
+  .gi-eta-course__chapters ol { grid-template-columns: repeat(12, minmax(145px, 1fr)); width: max-content; }
+  .gi-rule-demo--slots,
+  .gi-rule-demo--spell { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .gi-rule-demo--slots > p { grid-column: 1 / -1; }
+  .gi-rule-demo--spell > small { grid-column: 1 / -1; }
+}
+
+@media (max-width: 760px) {
+  .gi-eta-course__lesson > .gi-eta-course__eta,
+  .gi-eta-course__lesson > .gi-eta-course__dialogue { display: flex; }
+  .gi-eta-course__eta { width: 150px; height: 150px; margin: 1rem auto 0; }
+  .gi-eta-course__dialogue { width: 100%; min-height: auto; padding: 1.2rem; }
+  .gi-rule-demo--ring,
+  .gi-rule-demo--book,
+  .gi-rule-demo--binder,
+  .gi-rule-demo--anatomy,
+  .gi-rule-demo--slots,
+  .gi-rule-demo--ranks,
+  .gi-rule-demo--limits,
+  .gi-rule-demo--gain,
+  .gi-rule-demo--spell,
+  .gi-rule-demo--protection { grid-template-columns: 1fr; }
+  .gi-rule-demo--binder > button,
+  .gi-rule-demo--limits > button,
+  .gi-limit-result,
+  .gi-rule-demo--spell > small,
+  .gi-rule-demo--protection > p { grid-column: auto; }
+  .gi-rule-stat { min-height: 110px; }
+  .gi-anatomy-list,
+  .gi-rank-readout dl,
+  .gi-completion-sequence,
+  .gi-review-grid { grid-template-columns: 1fr; }
+  .gi-spell-card { grid-row: auto; }
+  .gi-attack-flow { grid-column: auto; grid-template-columns: 1fr auto 1fr; }
+  .gi-eta-course__controls { flex-direction: column; }
+  .gi-eta-course__controls > div { width: 100%; }
+  .gi-eta-course__controls button,
+  .gi-eta-course__controls a { flex: 1; }
+}
+
+@media (max-width: 460px) {
+  .gi-eta-course__practice { padding-inline: .72rem; }
+  .gi-eta-course__chapters ol { grid-template-columns: repeat(12, minmax(125px, 1fr)); }
+  .gi-anatomy-visual { width: 235px; }
+  .gi-anatomy-visual .gi-card { min-height: 320px; }
+  .gi-anatomy-visual .gi-card__media,
+  .gi-anatomy-visual .gi-card__fallback { min-height: 312px; }
+  .gi-rule-actions,
+  .gi-eta-course__controls > div { display: grid; grid-template-columns: 1fr; }
+  .gi-eta-course__controls button,
+  .gi-eta-course__controls a { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gi-eta-course__progress > i span,
+  .gi-rule-book,
+  .gi-anatomy-marker,
+  .gi-limit-meter > i span,
+  .gi-gain-card,
+  .gi-gain-object { transition: none; }
+}
