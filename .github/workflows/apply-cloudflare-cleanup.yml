@@ -31,7 +31,14 @@ jobs:
           test "$(git hash-object .refactor/cloudflare-cleanup-00.b64)" = "b696a953fb251ca3947a810b4145430b2a64f28b"
           test "$(git hash-object .refactor/cloudflare-cleanup-01.b64)" = "f485c900a92e065ba4a37649fb017389bb126376"
           test "$(git hash-object .refactor/cloudflare-cleanup-02.b64)" = "124e5482149d183aa9b602ecda324997669cabe8"
-          test "$(git hash-object .refactor/cloudflare-rem-00.b64)" = "7b52ee4f9ab369ca5cd237acbd8e6cd523c84a54"
+          test "$(git hash-object .refactor/cloudflare-rem00-00.b64)" = "0e140bb1b070def1cbec8d51624c27adac93ee45"
+          test "$(git hash-object .refactor/cloudflare-rem00-01.b64)" = "f63c581db42b416b1328c4e24007b4ed647208f9"
+          test "$(git hash-object .refactor/cloudflare-rem00-02.b64)" = "957b762520b87ad5ca6ed40dfddc67fdae015e01"
+          test "$(git hash-object .refactor/cloudflare-rem00-03.b64)" = "e62aaeb81a751537434cf0478fe17e8d89c8c791"
+          test "$(git hash-object .refactor/cloudflare-rem00-04.b64)" = "c75ba3a1600f152595fda807c2a738a27e4bfedd"
+          test "$(git hash-object .refactor/cloudflare-rem00-05.b64)" = "d4cae64562378e3ea9f6668a274a44e48bb43cf5"
+          test "$(git hash-object .refactor/cloudflare-rem00-06.b64)" = "6f4b931aa0c2141655188dcc16e006b5dc915bc8"
+          test "$(git hash-object .refactor/cloudflare-rem00-07.b64)" = "916c9ff9d0a92ad4c3c3a4e6de494582d61f2a17"
           test "$(git hash-object .refactor/cloudflare-rem-01.b64)" = "5a1f8f09e7b0933fc63a6ed4e1f3a881aef07e7c"
           test "$(git hash-object .refactor/cloudflare-rem-02.b64)" = "032f751156ed10175788129bd82ce839a9c591da"
           test "$(git hash-object .refactor/cloudflare-rem-03.b64)" = "faf3d948313b045f8423dfa71fd53ae3dc248c62"
@@ -44,7 +51,14 @@ jobs:
             .refactor/cloudflare-cleanup-00.b64 \
             .refactor/cloudflare-cleanup-01.b64 \
             .refactor/cloudflare-cleanup-02.b64 \
-            .refactor/cloudflare-rem-00.b64 \
+            .refactor/cloudflare-rem00-00.b64 \
+            .refactor/cloudflare-rem00-01.b64 \
+            .refactor/cloudflare-rem00-02.b64 \
+            .refactor/cloudflare-rem00-03.b64 \
+            .refactor/cloudflare-rem00-04.b64 \
+            .refactor/cloudflare-rem00-05.b64 \
+            .refactor/cloudflare-rem00-06.b64 \
+            .refactor/cloudflare-rem00-07.b64 \
             .refactor/cloudflare-rem-01.b64 \
             .refactor/cloudflare-rem-02.b64 \
             .refactor/cloudflare-rem-03.b64 \
