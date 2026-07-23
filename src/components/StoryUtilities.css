@@ -13,6 +13,19 @@
 .story-utility-shell > .spoiler-settings { width: 100%; }
 .story-utility-shell > :is(.index-section, .series-research, .adaptation-desk) { width: 100%; }
 
+.story-utility-shell--succession-reader {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: #090b0e;
+}
+
+.story-utility-shell--succession-reader > .route-loading {
+  min-height: calc(100dvh - 60px);
+}
+
 @media (max-width: 720px) {
   .story-utility-shell { width: min(calc(100% - 28px), var(--wide)); }
+  .story-utility-shell--succession-reader { width: 100%; }
 }
