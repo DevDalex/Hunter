@@ -142,11 +142,16 @@ export const referenceAliases = {
   sources: { target: 'encyclopedia' },
 };
 
+// The release matrix remains a deliberately curated set of public entry screens.
+// The complete 25-route Succession hierarchy is validated separately by the archive shell audit.
+export const successionReleaseRouteIds = Object.freeze(['story', 'timeline', 'characters', 'black-whale', 'nen', 'research']);
+export const successionReleaseRoutes = successionReleaseRouteIds.map((id) => successionArchiveRoutes.find((route) => route.id === id));
+
 export const routeManifest = [
   { view: 'home', target: '', label: 'Hunter Archive home' },
   { view: 'timeline', target: '', label: 'Global timeline' },
   ...seriesRoutes.map((route) => ({ view: 'series', target: route.target, label: route.label })),
-  ...successionArchiveRoutes.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
+  ...successionReleaseRoutes.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
   ...referencePages.map((route) => ({ view: 'reference', target: route.id, label: route.title })),
 ];
 
@@ -154,6 +159,7 @@ export const routeManifestStats = {
   screens: routeManifest.length,
   timeline: 1,
   succession: successionArchiveRoutes.length,
+  successionReleaseScreens: successionReleaseRoutes.length + 1,
   reference: referencePages.length,
   aliases: Object.keys(referenceAliases).length + Object.keys(successionAliases).length,
 };
