@@ -1,4 +1,4 @@
-name: Sites full-stack build
+name: Cloudflare full-stack build
 
 on:
   pull_request:
@@ -27,7 +27,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build complete Sites distribution
+      - name: Build Cloudflare application
         run: npm run build
 
       - name: Verify full-stack artifact shape
@@ -36,20 +36,21 @@ jobs:
           test -f dist/server/index.js
           test -f dist/server/chapter-admin.js
           test -f dist/client/index.html
-          test -f dist/.openai/hosting.json
-          node -e "const fs=require('node:fs'); const c=JSON.parse(fs.readFileSync('wrangler.jsonc','utf8')); if(c.main!=='dist/server/index.js'||c.assets?.directory!=='dist/client'||c.assets?.binding!=='ASSETS'||c.assets?.run_worker_first!==true) process.exit(1)"
+          test ! -e dist/.openai
+          ! find dist/client -maxdepth 1 -type f -name 'hxh-archive-phase-*.zip' | grep -q .
+          node -e "const fs=require('node:fs'); const c=JSON.parse(fs.readFileSync('wrangler.jsonc','utf8')); if(c.name!=='hunter'||c.main!=='dist/server/index.js'||c.assets?.directory!=='dist/client'||c.assets?.binding!=='ASSETS'||c.assets?.run_worker_first!==true) process.exit(1)"
 
       - name: Verify chapter-admin Worker routing
-        run: node scripts/verify-sites-worker.mjs
+        run: node scripts/verify-cloudflare-worker.mjs
 
       - name: Publish complete dist artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: hunter-sites-dist
+          name: hunter-cloudflare-dist
           path: |
             dist
-            sites-worker-diagnostic.json
+            cloudflare-worker-diagnostic.json
           include-hidden-files: true
           if-no-files-found: error
           retention-days: 7
