@@ -1,0 +1,60 @@
+.gi-library-card-face {
+  position: relative;
+  overflow: hidden;
+}
+
+.gi-library-card-face__design {
+  display: contents;
+}
+
+.gi-library-card-face.has-verified-image {
+  display: block;
+  padding: 0;
+  border-color: var(--card-accent);
+  background: #111820;
+}
+
+.gi-library-card-face.has-verified-image .gi-library-card-face__design {
+  visibility: hidden;
+}
+
+.gi-library-card-face__image {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  background: linear-gradient(145deg, #f3ecda, #bcb39f);
+}
+
+.gi-library-card-face.is-game-master .gi-library-card-face__image {
+  background: linear-gradient(145deg, #353946, #0c0d13);
+}
+
+.gi-library-book__card.is-selected .gi-library-card-face__image {
+  filter: saturate(1.04) contrast(1.02);
+}
+
+.gi-library-book__active-card .gi-library-card-face__image {
+  object-fit: contain;
+}
+
+.gi-card-libraries__source-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .45rem .75rem;
+}
+
+.gi-card-libraries__source-links a {
+  margin: 0;
+}
+
+@media (max-width: 620px) {
+  .gi-library-card-face__image {
+    image-rendering: auto;
+  }
+}

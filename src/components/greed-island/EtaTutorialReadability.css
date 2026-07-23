@@ -1,0 +1,7 @@
+/* Route-owned readability correction: keep tutorial eyebrow labels above the visual-QA minimum. */
+.gi-eta-course__dialogue > span,
+.gi-rule-demo > div > span,
+.gi-rule-demo > span,
+.gi-rank-readout > span {
+  font-size: .75rem;
+}
