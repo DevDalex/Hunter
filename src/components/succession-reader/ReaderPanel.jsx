@@ -18,7 +18,7 @@ export default function ReaderPanel({ open, title, label, side = 'left', onClose
     const panel = panelRef.current;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    const first = panel?.querySelector(focusableSelector);
+    const first = panel?.querySelector('[data-reader-autofocus]') || panel?.querySelector(focusableSelector);
     window.setTimeout(() => first?.focus(), 0);
 
     const onKeyDown = (event) => {
