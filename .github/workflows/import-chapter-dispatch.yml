@@ -84,6 +84,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+          path = Path('scripts/lib/succession-chapter-url-source.mjs')
+          source = path.read_text()
+          source = source.replace(
+              "const USER_AGENT = 'Hunter-Archive-Chapter-Importer/1.0 (+local maintainer tool)';",
+              "const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36';",
+          )
+          path.write_text(source)
+          PY
           args=("$SOURCE_URL" "$CHAPTER" --confirm --image-list-file .chapter-import-selected-images.json)
           if [[ "$REPLACE" == "true" ]]; then args+=(--replace); fi
           node scripts/import-succession-chapter-url.mjs "${args[@]}"
