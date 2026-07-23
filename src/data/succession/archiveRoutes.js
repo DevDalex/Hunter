@@ -16,26 +16,26 @@ export const successionArchiveRoutes = Object.freeze([
   route('search', 'search', 'Global Search', 'Overview', 'Search the archive', 'Search canonical Succession Contest entities and open the relevant workspace.', 'active'),
 
   route('characters', 'characters', 'Characters', 'People', 'Character archive', 'Canonical character records, current state, affiliations, sources, and connected entities.', 'active'),
-  route('princes', 'princes', 'Princes', 'People', 'Princes of Kakin', 'Prince records and the preserved royal-family workspace.', 'migration'),
-  route('queens', 'queens', 'Queens', 'People', 'Queens of Kakin', 'Queen records separated from prince and household material.', 'active'),
+  route('princes', 'princes', 'Princes', 'People', 'Princes of Kakin', 'Fourteen ordered prince records with an optional royal-family diagram.', 'active'),
+  route('queens', 'queens', 'Queens', 'People', 'Queens of Kakin', 'Eight queen records separated from prince and household material.', 'active'),
   route('bodyguards', 'bodyguards', 'Bodyguards', 'People', 'Bodyguards', 'Royal guards, contracted protectors, assignments, and current affiliations.', 'active'),
   route('hunters', 'hunters', 'Hunters', 'People', 'Hunters aboard the voyage', 'Hunter Association members and contracted Hunters active in the Succession Contest.', 'active'),
 
-  route('mafia', 'mafia', 'Mafia', 'Power', 'Kakin mafia', 'Mafia families, members, objectives, and active operations.', 'migration'),
-  route('military', 'military', 'Military', 'Power', 'Kakin military', 'Military authority, personnel, custody, and security operations.', 'migration'),
+  route('mafia', 'mafia', 'Mafia', 'Power', 'Kakin mafia', 'The Xi-Yu, Heil-Ly, and Cha-R families, their named members, leaders, and active operations.', 'active'),
+  route('military', 'military', 'Military', 'Power', 'Kakin military', 'Military authority, Justice Bureau personnel, custody, and royal security operations.', 'active'),
   route('organizations', 'organizations', 'Organizations', 'Power', 'Organizations', 'Canonical organizations and their memberships, leadership, objectives, and relationships.', 'active'),
-  route('politics', 'politics', 'Politics', 'Power', 'Political archive', 'Royal authority, alliances, pressure, and political relationships kept distinct from faction summaries.', 'foundation'),
+  route('politics', 'politics', 'Politics', 'Power', 'Political archive', 'Royal authority, parentage, institutions, alliances, and political relationships.', 'active'),
 
   route('black-whale', 'black-whale', 'Black Whale', 'World', 'Black Whale 1', 'The preserved ship atlas inside the dedicated archive shell.', 'migration'),
   route('locations', 'locations', 'Locations', 'World', 'Location archive', 'Canonical ship locations, hierarchy, occupants, and chapter-bounded location history.', 'active'),
 
   route('nen', 'nen', 'Nen', 'Systems', 'Nen archive', 'Succession-specific abilities, instruction, conditions, and known classifications without speculative filling.', 'migration'),
-  route('guardian-spirit-beasts', 'guardian-spirit-beasts', 'Guardian Spirit Beasts', 'Systems', 'Guardian Spirit Beasts', 'Guardian Spirit Beast records separated from the general Nen workspace.', 'migration'),
+  route('guardian-spirit-beasts', 'guardian-spirit-beasts', 'Guardian Spirit Beasts', 'Systems', 'Guardian Spirit Beasts', 'King Nasubi and all fourteen prince Guardian Spirit Beast records, with unknowns left explicit.', 'active'),
 
   route('events', 'events', 'Events', 'Records', 'Event archive', 'Canonical events, participants, locations, consequences, and chapter ranges.', 'active'),
-  route('deaths', 'deaths', 'Deaths', 'Records', 'Deaths and body states', 'Confirmed deaths and exceptional body states, bounded by source chapter and certainty.', 'migration'),
-  route('relationships', 'relationships', 'Relationships', 'Records', 'Relationship archive', 'Typed family, professional, protective, political, allied, and hostile links.', 'migration'),
-  route('chapters', 'chapter-records', 'Chapters', 'Records', 'Chapter records', 'Research records and entity links for Succession Contest chapters, separate from the image reader.', 'migration'),
+  route('deaths', 'deaths', 'Deaths', 'Records', 'Deaths and body states', 'Confirmed deaths and exceptional body states, bounded by maintained status records.', 'active'),
+  route('relationships', 'relationships', 'Relationships', 'Records', 'Relationship archive', 'Typed family, professional, protective, political, allied, and hostile links.', 'active'),
+  route('chapters', 'chapter-records', 'Chapters', 'Records', 'Chapter records', 'Research records for Chapters 340–413, separate from the image reader.', 'active'),
 
   route('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, evidence notes, provenance, and chapter-bounded research material.', 'active'),
   route('glossary', 'glossary', 'Glossary', 'Library', 'Glossary', 'A future controlled vocabulary for archive terms and names.', 'foundation'),
