@@ -47,7 +47,7 @@
     "import:succession-chapter:url": "node scripts/import-succession-chapter-url.mjs",
     "qa:search": "node scripts/search-qa.mjs",
     "qa:interaction": "node scripts/interaction-qa.mjs",
-    "qa:succession-reader": "node scripts/succession-reader-qa.mjs",
+    "qa:succession-reader": "node scripts/succession-reader-qa.mjs && node scripts/succession-reader-enhancements-qa.mjs",
     "qa:succession-shell": "node scripts/succession-archive-shell-qa.mjs",
     "qa:architecture": "node scripts/architecture-navigation-qa.mjs",
     "qa:browser:verify": "npm run qa:search && npm run qa:visual && npm run qa:accessibility && npm run qa:interaction && npm run qa:succession-shell && npm run qa:succession-reader && npm run qa:architecture && npm run qa:greed-island && node scripts/performance-qa.mjs",
