@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
+import ReaderPanelEnhancements from './ReaderPanelEnhancements.jsx';
 
 const focusableSelector = [
   'a[href]',
@@ -57,7 +58,10 @@ export default function ReaderPanel({ open, title, label, side = 'left', onClose
         <div><span>Succession reader</span><h2>{title}</h2></div>
         <button type="button" onClick={onClose} aria-label={`Close ${label || title}`}><X aria-hidden="true" /></button>
       </header>
-      <div className="succession-reader-panel__body">{children}</div>
+      <div className="succession-reader-panel__body">
+        {children}
+        <ReaderPanelEnhancements title={title} onClose={onClose} />
+      </div>
     </section>
   </div>;
 }
