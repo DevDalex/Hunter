@@ -81,7 +81,7 @@ const base = `http://127.0.0.1:${server.address().port}`;
 try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 
-  await record('Global Timeline owns series and Succession chronology', page, async () => {
+  await record('Global Timeline remains available for cross-arc chronology', page, async () => {
     await page.goto(`${base}/timeline`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
     await page.waitForSelector('.timeline-workspace', { timeout: 15_000 });
     const active = await page.locator('.header-links a[aria-current="page"]').innerText();
@@ -95,11 +95,12 @@ try {
     if (await page.locator('.timeline-workspace').count() !== 1) throw new Error('Detailed events replaced the global Timeline shell');
   });
 
-  await record('Legacy Succession timeline route resolves into global Timeline', page, async () => {
+  await record('Succession voyage route belongs to the dedicated archive shell', page, async () => {
     await page.goto(`${base}/story/succession-contest/timeline`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await page.waitForSelector('.timeline-workspace .timeline-section', { timeout: 15_000 });
+    await page.waitForSelector('.succession-archive[data-archive-route="timeline"] .timeline-workspace', { timeout: 15_000 });
     const active = await page.locator('.header-links a[aria-current="page"]').innerText();
-    if (active.trim() !== 'Timeline') throw new Error('Legacy voyage route still presents itself as Story');
+    if (active.trim() !== 'Story') throw new Error(`Succession Archive should remain under Story, not ${active}`);
+    if (await page.locator('.succession-archive').count() !== 1) throw new Error('Succession Archive shell is missing or duplicated');
   });
 
   await record('Organizations retains one shell across domain views', page, async () => {
