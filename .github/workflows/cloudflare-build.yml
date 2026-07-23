@@ -28,7 +28,11 @@ jobs:
         run: npm ci
 
       - name: Build Cloudflare application
-        run: npm run build
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p .ci
+          npm run build 2>&1 | tee .ci/build.log
 
       - name: Verify full-stack artifact shape
         shell: bash
@@ -51,6 +55,7 @@ jobs:
           path: |
             dist
             cloudflare-worker-diagnostic.json
+            .ci/build.log
           include-hidden-files: true
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 7
