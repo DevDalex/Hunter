@@ -1,0 +1,291 @@
+name: Restore complete Greed Island archive
+
+on:
+  push:
+    branches:
+      - recovery/restore-complete-greed-island
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out current main-based recovery branch
+        uses: actions/checkout@v4
+        with:
+          ref: recovery/restore-complete-greed-island
+          fetch-depth: 0
+
+      - name: Restore exact Greed Island source and binary assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin feature/greed-island-binder-foundation
+
+          mapfile -t restore_paths < <(
+            git ls-tree -r --name-only origin/feature/greed-island-binder-foundation | grep -E '^((\.eta-assets/)|(public/media/greed-island/)|(src/components/greed-island/)|(src/data/greed-island/)|(src/components/GreedIsland(Page|Shell))|(scripts/(audit-greed-island|greed-island|install-eta|prepare-eta|stabilize-greed-island))|(docs/greed-island-implementation-plan\.md$)|(\.github/workflows/stabilize-greed-island-card-media\.yml$))'
+          )
+          test "${#restore_paths[@]}" -gt 200
+          git checkout origin/feature/greed-island-binder-foundation -- "${restore_paths[@]}"
+
+      - name: Integrate current routing, build, and performance contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+          import json
+
+          def replace_once(text, old, new, label):
+              if old not in text:
+                  raise SystemExit(f'Missing integration anchor: {label}')
+              return text.replace(old, new, 1)
+
+          # Route the full page while retaining current Succession reader behavior.
+          path = Path('src/components/SeriesWorkspace.jsx')
+          text = path.read_text()
+          text = replace_once(
+              text,
+              "const GreedIslandPrototypePage = lazy(() => import('./GreedIslandPrototypePage'));",
+              "const GreedIslandPage = lazy(() => import('./GreedIslandPage'));",
+              'SeriesWorkspace lazy import',
+          )
+          text = replace_once(
+              text,
+              "if (routeTarget === 'greed-island') return <Suspense fallback={<StoryLoading label=\"Greed Island card binder\" />}><GreedIslandPrototypePage onNavigate={onNavigate} /></Suspense>;",
+              "if (routeTarget === 'greed-island') return <Suspense fallback={<StoryLoading label=\"Greed Island\" />}><GreedIslandPage onNavigate={onNavigate} routeParams={routeParams} /></Suspense>;",
+              'SeriesWorkspace Greed Island route',
+          )
+          path.write_text(text)
+
+          # Preserve current clean routing while restoring Greed Island module/subview paths.
+          path = Path('src/lib/appRouter.js')
+          text = path.read_text()
+          utility = "const storyUtilityTargets = new Set(['chronology', 'chapters', 'adaptation']);\n"
+          subviews = """
+
+          const greedIslandSubviews = Object.freeze({
+            eta: new Set(),
+            binder: new Set(),
+            cards: new Set(['specified', 'spells', 'free-slot', 'game-master']),
+            island: new Set(['map', 'locations', 'quests', 'players', 'game-masters']),
+            tactics: new Set(['training', 'razor', 'bombers', 'final-battles']),
+            completion: new Set(['quiz', 'rewards', 'route', 'adaptation']),
+            sources: new Set(),
+          });
+          """
+          if 'const greedIslandSubviews' not in text:
+              text = replace_once(text, utility, utility + subviews, 'Greed Island subview registry')
+
+          normalizer = """
+          const normalizeGreedIslandParams = (params = {}) => {
+            const module = String(params.module || '');
+            const subview = String(params.subview || '');
+            const { module: _module, subview: _subview, ...rest } = params;
+            if (!module) return { ...rest };
+            if (!Object.hasOwn(greedIslandSubviews, module)) return null;
+            if (subview && !greedIslandSubviews[module].has(subview)) return null;
+            return { ...rest, module, ...(subview ? { subview } : {}) };
+          };
+
+          """
+          marker = "export const routeIsLegacyHash"
+          if 'const normalizeGreedIslandParams' not in text:
+              text = replace_once(text, marker, normalizer + marker, 'Greed Island param normalizer')
+
+          destination_anchor = "  if (view === 'series' && target === 'research') return { view, target: 'chapters', params };\n"
+          destination = """  if (view === 'series' && target === 'greed-island') {
+            const normalizedParams = normalizeGreedIslandParams(params);
+            if (!normalizedParams) return { view: 'not-found', target: '', params: { attemptedPath: '/story/greed-island' } };
+            return { view, target, params: normalizedParams };
+          }
+          """
+          if "target === 'greed-island'" not in text.split('export function normalizeDestination',1)[1].split('export function routeToLegacyHash',1)[0]:
+              text = replace_once(text, destination_anchor, destination_anchor + destination, 'normalizeDestination Greed Island')
+
+          legacy_old = """export function routeToLegacyHash(view, target = '', params = {}) {
+            const normalized = normalizeDestination(view, target, params);
+            const query = stringifyQuery(normalized.params);
+            return `#/${normalized.view}${normalized.target ? `/${normalized.target}` : ''}${query ? `?${query}` : ''}`;
+          }
+          """
+          legacy_new = """export function routeToLegacyHash(view, target = '', params = {}) {
+            const normalized = normalizeDestination(view, target, params);
+            if (normalized.view === 'series' && normalized.target === 'greed-island') {
+              const { module, subview, ...rest } = normalized.params;
+              const path = `#/series/greed-island${module ? `/${module}` : ''}${subview ? `/${subview}` : ''}`;
+              const query = stringifyQuery(rest);
+              return `${path}${query ? `?${query}` : ''}`;
+            }
+            const query = stringifyQuery(normalized.params);
+            return `#/${normalized.view}${normalized.target ? `/${normalized.target}` : ''}${query ? `?${query}` : ''}`;
+          }
+          """
+          if "#/series/greed-island" not in text:
+              text = replace_once(text, legacy_old, legacy_new, 'legacy Greed Island path')
+
+          clean_anchor = """    if (normalized.target === 'succession-contest' && normalized.params?.section === 'chapters') {
+          """
+          clean_gi = """    if (normalized.target === 'greed-island') {
+              const { module, subview, ...rest } = normalized.params || {};
+              const path = `/story/greed-island${module ? `/${module}` : ''}${subview ? `/${subview}` : ''}`;
+              return cleanUrl(path, rest, hash);
+            }
+          """
+          if "const path = `/story/greed-island" not in text:
+              text = replace_once(text, clean_anchor, clean_gi + clean_anchor, 'clean Greed Island path')
+
+          legacy_parse_old = """export function parseLegacyHashRoute(hash = '') {
+            if (!routeIsLegacyHash(hash)) return null;
+            const [path, queryString = ''] = hash.replace(/^#\\/?/, '').split('?');
+            const [candidate = 'home', target = ''] = path.split('/');
+            const view = views.has(candidate) ? candidate : 'home';
+            return normalizeDestination(view, target, readQuery(queryString));
+          }
+          """
+          legacy_parse_new = """export function parseLegacyHashRoute(hash = '') {
+            if (!routeIsLegacyHash(hash)) return null;
+            const [path, queryString = ''] = hash.replace(/^#\\/?/, '').split('?');
+            const [candidate = 'home', target = '', module = '', subview = ''] = path.split('/');
+            const view = views.has(candidate) ? candidate : 'home';
+            const params = readQuery(queryString);
+            if (view === 'series' && target === 'greed-island') {
+              return normalizeDestination(view, target, { ...params, ...(module ? { module } : {}), ...(subview ? { subview } : {}) });
+            }
+            return normalizeDestination(view, target, params);
+          }
+          """
+          if "const [candidate = 'home', target = '', module" not in text:
+              text = replace_once(text, legacy_parse_old, legacy_parse_new, 'legacy parser Greed Island modules')
+
+          parse_anchor = """    if (parts[1] === 'succession-contest') {
+          """
+          parse_gi = """    if (parts[1] === 'greed-island') {
+              if (parts.length > 4) return { view: 'not-found', target: '', params: { attemptedPath: pathnameClean } };
+              return normalizeDestination('series', 'greed-island', {
+                ...params,
+                ...(parts[2] ? { module: parts[2] } : {}),
+                ...(parts[3] ? { subview: parts[3] } : {}),
+              });
+            }
+
+          """
+          if "if (parts[1] === 'greed-island')" not in text:
+              text = replace_once(text, parse_anchor, parse_gi + parse_anchor, 'clean parser Greed Island modules')
+          path.write_text(text)
+
+          # Add the complete archive scripts without disturbing pinned dependencies or CI composition.
+          path = Path('package.json')
+          package = json.loads(path.read_text())
+          scripts = package['scripts']
+          scripts['prepare:eta-assets'] = 'node scripts/prepare-eta-tutorial-component.mjs && node scripts/install-eta-tutorial-assets.mjs'
+          scripts['dev'] = 'npm run prepare:eta-assets && vite --host 0.0.0.0'
+          scripts['audit:greed-island-archive'] = 'node scripts/audit-greed-island-archive.mjs'
+          scripts['audit:greed-island-libraries'] = 'node scripts/audit-greed-island-libraries.mjs'
+          scripts['audit:greed-island-systems'] = 'node scripts/audit-greed-island-systems.mjs'
+          scripts['audit:greed-island-tactics'] = 'node scripts/audit-greed-island-tactics.mjs'
+          scripts['audit:greed-island-completion'] = 'node scripts/audit-greed-island-completion.mjs'
+          scripts['audit:greed-island-eta-scene'] = 'node scripts/audit-greed-island-eta-scene.mjs'
+          scripts['stabilize:greed-island-cards'] = 'node scripts/stabilize-greed-island-card-media.mjs'
+          gi_audits = 'npm run audit:greed-island-eta-scene && npm run audit:greed-island-archive && npm run audit:greed-island-libraries && npm run audit:greed-island-systems && npm run audit:greed-island-tactics && npm run audit:greed-island-completion'
+          scripts['qa:greed-island'] = 'npm run prepare:eta-assets && ' + gi_audits + ' && node scripts/stabilize-greed-island-card-media.mjs --verify-only && node scripts/audit-greed-island-media.mjs && node scripts/greed-island-routing-qa.mjs && node scripts/greed-island-qa.mjs && node scripts/greed-island-archive-qa.mjs && node scripts/greed-island-libraries-qa.mjs && node scripts/greed-island-systems-qa.mjs && node scripts/greed-island-tactics-qa.mjs && node scripts/greed-island-completion-qa.mjs && node scripts/greed-island-eta-scene-qa.mjs'
+          runtime = scripts['build:runtime']
+          prefix = 'npm run prepare:eta-assets && ' + gi_audits + ' && '
+          if not runtime.startswith('npm run prepare:eta-assets'):
+              scripts['build:runtime'] = prefix + runtime
+          verify = scripts['qa:browser:verify']
+          if 'npm run qa:greed-island' not in verify:
+              scripts['qa:browser:verify'] = verify.replace(' && node scripts/performance-qa.mjs', ' && npm run qa:greed-island && node scripts/performance-qa.mjs')
+          path.write_text(json.dumps(package, indent=2) + '\n')
+
+          # Update the route regression guard from the small prototype to the complete archive.
+          Path('scripts/audit-greed-island-route.mjs').write_text("""#!/usr/bin/env node
+
+          import { access, readFile } from 'node:fs/promises';
+
+          const workspace = await readFile('src/components/SeriesWorkspace.jsx', 'utf8');
+          const page = await readFile('src/components/GreedIslandPage.jsx', 'utf8');
+          const eta = await readFile('src/components/greed-island/EtaDialogueStage.jsx', 'utf8');
+          const fail = (message) => { throw new Error(`Greed Island audit failed: ${message}`); };
+          const dedicated = \"if (routeTarget === 'greed-island')\";
+          const generic = 'if (storyArcIds.has(routeTarget))';
+
+          if (!workspace.includes(\"const GreedIslandPage = lazy(() => import('./GreedIslandPage'))\")) fail('complete page is not lazy-loaded');
+          if (!workspace.includes(dedicated)) fail('dedicated route is missing');
+          if (workspace.indexOf(dedicated) > workspace.indexOf(generic)) fail('generic arc route captures Greed Island first');
+          if (!workspace.includes('<GreedIslandPage onNavigate={onNavigate} routeParams={routeParams} />')) fail('complete page is not rendered');
+          if ((page.match(/lazy\\(\\(\\) => import\\('\.\\/greed-island\\//g) || []).length !== 8) fail('the eight archive modules are not preserved');
+          for (const token of ['EtaTutorial', 'GreedIslandBinder', 'SpecifiedCardArchive', 'GreedIslandCardLibraries', 'GreedIslandSystems', 'GreedIslandTacticalRecords', 'GreedIslandCompletionArchive']) if (!page.includes(token)) fail(`${token} is missing`);
+          for (const asset of ['eta-tutorial-room.webp', 'eta-closed.webp', 'eta-mouth-open-patch.webp', 'eta-blink-patch.webp', 'eta-dialogue-bubble.webp']) {
+            if (!eta.includes(asset)) fail(`${asset} is not wired into the Eta scene`);
+            await access(`public/media/greed-island/eta/${asset}`);
+          }
+          console.log('Greed Island audit passed: complete archive, Eta scene, Binder, media, systems, tactics, and completion route are live before the generic renderer.');
+          """)
+
+          # Expand the current performance contract for the full shell plus eight nested modules.
+          path = Path('scripts/audit-performance.mjs')
+          text = path.read_text()
+          text = text.replace("'src/components/GreedIslandPrototypePage.jsx',", "'src/components/GreedIslandPage.jsx',")
+          story_end = """  'src/components/GreedIslandPage.jsx',
+          ];
+          """
+          module_block = """  'src/components/GreedIslandPage.jsx',
+          ];
+          const greedIslandModuleBoundaryKeys = [
+            'src/components/greed-island/GreedIslandHub.jsx',
+            'src/components/greed-island/EtaTutorial.jsx',
+            'src/components/greed-island/GreedIslandBinder.jsx',
+            'src/components/greed-island/SpecifiedCardArchive.jsx',
+            'src/components/greed-island/GreedIslandCardLibraries.jsx',
+            'src/components/greed-island/GreedIslandSystems.jsx',
+            'src/components/greed-island/GreedIslandTacticalRecords.jsx',
+            'src/components/greed-island/GreedIslandCompletionArchive.jsx',
+          ];
+          """
+          if 'const greedIslandModuleBoundaryKeys' not in text:
+              text = replace_once(text, story_end, module_block, 'performance Greed Island module boundaries')
+          text = text.replace("'the Story directory, standard arc renderer, Volume 0, Hunter Exam, and Greed Island Binder must remain separate on-demand chunks'", "'the Story directory, standard arc renderer, Volume 0, Hunter Exam, and complete Greed Island shell must remain separate on-demand chunks'")
+          dynamic_assert = "assert(dynamicEntries.length === 25, `expected 17 direct boundaries, five Story experience boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);"
+          dynamic_new = "assert(greedIslandModuleBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all eight Greed Island modules must remain separate on-demand chunks');\nassert(dynamicEntries.length === 33, `expected 17 direct boundaries, five Story experience boundaries, eight Greed Island module boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);"
+          text = replace_once(text, dynamic_assert, dynamic_new, 'performance dynamic-entry total')
+          text = text.replace("seriesWorkspace.includes(\"lazy(() => import('./GreedIslandPrototypePage'))\")", "seriesWorkspace.includes(\"lazy(() => import('./GreedIslandPage'))\")")
+          text = text.replace('Greed Island Binder on demand', 'complete Greed Island shell on demand')
+          package_line = "const packageJson = await readFile(path.join(root, 'package.json'), 'utf8');"
+          if "const greedIslandPage =" not in text:
+              text = replace_once(text, package_line, "const greedIslandPage = await readFile(path.join(root, 'src/components/GreedIslandPage.jsx'), 'utf8');\n" + package_line, 'performance page source')
+          archive_assert = "assert((archiveSearch.match(/import\\('\\.\\/archiveSearch\\.(?:series|succession|reference)'\\)/g) || []).length === 3, 'the archive search loader must own three domain data shards');"
+          if 'GreedIslandPage must own eight lazy module boundaries' not in text:
+              text = replace_once(text, archive_assert, "assert((greedIslandPage.match(/lazy\\(\\(\\) => import\\('\\.\\/greed-island\\//g) || []).length === 8, 'GreedIslandPage must own eight lazy module boundaries');\n" + archive_assert, 'performance nested lazy assertion')
+          text = text.replace('${storyDetailBoundaryKeys.length} Story experience chunks, ${searchShardKeys.length}', '${storyDetailBoundaryKeys.length} Story experience chunks, ${greedIslandModuleBoundaryKeys.length} Greed Island module chunks, ${searchShardKeys.length}')
+          path.write_text(text)
+          PY
+
+      - name: Materialize and verify the exact Eta assets
+        run: |
+          set -euo pipefail
+          npm ci
+          npm run prepare:eta-assets
+          npm run audit:greed-island-route
+          npm run audit:greed-island-eta-scene
+          npm run audit:greed-island-archive
+          npm run audit:greed-island-libraries
+          npm run audit:greed-island-systems
+          npm run audit:greed-island-tactics
+          npm run audit:greed-island-completion
+          node scripts/stabilize-greed-island-card-media.mjs --verify-only
+          node scripts/audit-greed-island-media.mjs
+
+      - name: Commit recovered archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .github/workflows/restore-complete-greed-island.yml
+          git add -A
+          git commit -m "Restore complete Greed Island archive and Eta assets"
+          git push origin HEAD:recovery/restore-complete-greed-island
