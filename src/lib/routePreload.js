@@ -5,7 +5,6 @@ export const routeModuleLoaders = {
   series: () => import('../components/SeriesWorkspace'),
   timeline: () => import('../components/TimelineWorkspace'),
   successionArchive: () => import('../components/succession/SuccessionArchiveApp'),
-  successionOverview: () => import('../components/SuccessionOverview'),
   familyTree: () => import('../components/FamilyTree'),
   successionRoster: () => import('../components/SuccessionRoster'),
   successionTimeline: () => import('../components/SuccessionTimeline'),
