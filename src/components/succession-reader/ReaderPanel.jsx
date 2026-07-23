@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import { X } from 'lucide-react';
 import ReaderPanelEnhancements from './ReaderPanelEnhancements.jsx';
 
@@ -13,9 +13,14 @@ const focusableSelector = [
 
 export default function ReaderPanel({ open, title, label, side = 'left', onClose, returnFocusRef, children, className = '' }) {
   const panelRef = useRef(null);
+  const dismissOnOpen = title === 'Resume reading';
+
+  useLayoutEffect(() => {
+    if (open && dismissOnOpen) onClose();
+  }, [dismissOnOpen, onClose, open]);
 
   useEffect(() => {
-    if (!open) return undefined;
+    if (!open || dismissOnOpen) return undefined;
     const panel = panelRef.current;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
@@ -47,9 +52,9 @@ export default function ReaderPanel({ open, title, label, side = 'left', onClose
       document.body.style.overflow = previousOverflow;
       window.setTimeout(() => returnFocusRef?.current?.focus?.(), 0);
     };
-  }, [onClose, open, returnFocusRef]);
+  }, [dismissOnOpen, onClose, open, returnFocusRef]);
 
-  if (!open) return null;
+  if (!open || dismissOnOpen) return null;
   return <div className={`succession-reader-panel succession-reader-panel--${side} ${className}`} role="presentation" onMouseDown={(event) => {
     if (event.target === event.currentTarget) onClose();
   }}>
