@@ -1,5 +1,6 @@
 import { ArrowRight, BookOpen, ExternalLink, Link2 } from 'lucide-react';
 import { EvidenceBadge, StatusPill } from '../ArchiveUI';
+import SafeImage from '../SafeImage';
 import {
   getEntityById,
   getRelatedEntities,
@@ -7,6 +8,7 @@ import {
 } from '../../data/succession/successionData';
 
 const cx = (...parts) => parts.filter(Boolean).join(' ');
+const initials = (name = '') => name.split(/\s+/).filter(Boolean).map((part) => part[0]).slice(0, 2).join('').toUpperCase() || '?';
 
 const evidenceState = (level) => {
   if (level === 'inference') return 'inferred';
@@ -18,8 +20,8 @@ export const entityWorkspaceTarget = (entity) => {
   if (!entity) return 'archive';
   if (entity.entityType === 'character') {
     const roles = entity.roles || [];
-    if (roles.some((role) => role.includes('prince'))) return 'princes';
-    if (roles.some((role) => role.includes('queen') || role === 'royal-parent')) return 'queens';
+    if (roles.includes('prince')) return 'princes';
+    if (roles.includes('queen')) return 'queens';
     if (roles.includes('bodyguard')) return 'bodyguards';
     if (roles.includes('hunter') || roles.includes('zodiac')) return 'hunters';
     return 'characters';
@@ -53,6 +55,22 @@ export function ArchivePageHeader({ kicker, title, description, meta = [], actio
   </header>;
 }
 
+export function EntityVisual({ entity: suppliedEntity, entityId, compact = false, eager = false }) {
+  const entity = suppliedEntity || getEntityById(entityId);
+  if (!entity) return null;
+  const label = entity.name || entity.id;
+  const portrait = entity.media?.portrait || null;
+  return <span className={cx('succession-entity-visual', compact && 'is-compact')} data-has-visual={portrait ? 'true' : 'false'}>
+    <SafeImage
+      src={portrait}
+      media={entity.media}
+      fallbackLabel={initials(label)}
+      alt={`${label} archive visual`}
+      eager={eager}
+    />
+  </span>;
+}
+
 export function EntityBadge({ entity: suppliedEntity, entityId, compact = false }) {
   const entity = suppliedEntity || getEntityById(entityId);
   if (!entity) return null;
@@ -81,18 +99,23 @@ export function EntityHeader({ entity, onNavigate }) {
   const sources = getSourcesForEntity(entity.id);
   const chapterBoundary = entity.status?.asOfChapter || entity.chapterRange?.end || entity.chapter || null;
   return <header className="succession-entity-header">
-    <div>
+    <EntityVisual entity={entity} eager />
+    <div className="succession-entity-header__copy">
       <span>{entity.entityType.replaceAll('-', ' ')}</span>
       <h2>{entity.name || entity.id}</h2>
       {entity.summary && <p>{entity.summary}</p>}
+      <div className="succession-entity-header__badges">
+        <EvidenceBadge state={evidenceState(entity.canonLevel)}>{entity.canonLevel || 'canon'}</EvidenceBadge>
+        {entity.status?.life && <StatusPill tone="neutral">{entity.status.life}</StatusPill>}
+        {chapterBoundary && <StatusPill tone="neutral">As of Ch. {chapterBoundary}</StatusPill>}
+        <StatusPill tone="neutral">{sources.length} source{sources.length === 1 ? '' : 's'}</StatusPill>
+      </div>
+      {!!(entity.aliases || []).length && <div className="succession-entity-header__aliases"><b>Aliases</b><span>{entity.aliases.join(' · ')}</span></div>}
+      <div className="succession-entity-header__actions">
+        {entity.referenceUrl && <a className="succession-button succession-button--quiet" href={entity.referenceUrl} target="_blank" rel="noreferrer noopener">Hunterpedia <ExternalLink size={13} aria-hidden="true" /></a>}
+        {onNavigate && <button type="button" className="succession-button succession-button--quiet" onClick={() => onNavigate(entityWorkspaceTarget(entity), {})}>Back to workspace</button>}
+      </div>
     </div>
-    <div className="succession-entity-header__badges">
-      <EvidenceBadge state={evidenceState(entity.canonLevel)}>{entity.canonLevel || 'canon'}</EvidenceBadge>
-      {chapterBoundary && <StatusPill tone="neutral">As of Ch. {chapterBoundary}</StatusPill>}
-      <StatusPill tone="neutral">{sources.length} source{sources.length === 1 ? '' : 's'}</StatusPill>
-    </div>
-    {!!(entity.aliases || []).length && <div className="succession-entity-header__aliases"><b>Aliases</b><span>{entity.aliases.join(' · ')}</span></div>}
-    {onNavigate && <button type="button" className="succession-button succession-button--quiet" onClick={() => onNavigate(entityWorkspaceTarget(entity), {})}>Back to workspace</button>}
   </header>;
 }
 
@@ -107,7 +130,10 @@ export function SourceReference({ source: suppliedSource, sourceId, onNavigate }
       <strong>{chapter ? `Chapter ${chapter}` : source.name || source.id}</strong>
       {source.note && <p>{source.note}</p>}
     </div>
-    {chapter && <button type="button" onClick={() => onNavigate?.('reader', { chapter })}>Open reader <ExternalLink size={12} aria-hidden="true" /></button>}
+    <div className="succession-source-reference__actions">
+      {chapter && <button type="button" onClick={() => onNavigate?.('reader', { chapter })}>Open reader <BookOpen size={12} aria-hidden="true" /></button>}
+      {source.url && <a href={source.url} target="_blank" rel="noreferrer noopener">Open source <ExternalLink size={12} aria-hidden="true" /></a>}
+    </div>
   </article>;
 }
 
