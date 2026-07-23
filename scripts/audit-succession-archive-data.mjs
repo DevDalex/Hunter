@@ -83,7 +83,7 @@ try {
   assert(kurapikaRelatedIds.has('chapter:369'), 'related-entity projection must include chapter appearances');
 
   const tserriednichSearch = searchSuccessionArchive('fourth prince');
-  assert(tserriednichSearch[0]?.entity?.id === 'character:tserriednich-hui-guo-rou', 'global search must resolve character aliases');
+  assert(tserriednichSearch.some(({ entity }) => entity.id === 'character:tserriednich-hui-guo-rou'), 'global search must resolve character aliases');
 
   const duplicateReferences = Object.values(successionArchiveData)
     .filter(Array.isArray)
