@@ -4,6 +4,7 @@ export const routeModuleLoaders = {
   archiveSearch: () => import('../components/ArchiveSearch'),
   series: () => import('../components/SeriesWorkspace'),
   timeline: () => import('../components/TimelineWorkspace'),
+  successionArchive: () => import('../components/succession/SuccessionArchiveApp'),
   successionOverview: () => import('../components/SuccessionOverview'),
   familyTree: () => import('../components/FamilyTree'),
   successionRoster: () => import('../components/SuccessionRoster'),
@@ -20,22 +21,10 @@ export const routeModuleLoaders = {
   conflictArchive: () => import('../components/ConflictArchive'),
 };
 
-const successionDossierTargets = new Set([
-  'beasts', 'mafia', 'chapters',
-]);
-
 const loaderForRoute = (view, target = '') => {
   if (view === 'series') return routeModuleLoaders.series;
   if (view === 'timeline') return routeModuleLoaders.timeline;
-  if (view === 'succession') {
-    if (!target || target === 'overview') return routeModuleLoaders.successionOverview;
-    if (target === 'family-tree') return routeModuleLoaders.familyTree;
-    if (target === 'succession-roster') return routeModuleLoaders.successionRoster;
-    if (target === 'succession-timeline') return routeModuleLoaders.timeline;
-    if (target === 'black-whale') return routeModuleLoaders.blackWhale;
-    if (successionDossierTargets.has(target)) return routeModuleLoaders.successionDossier;
-    return null;
-  }
+  if (view === 'succession') return routeModuleLoaders.successionArchive;
   if (view === 'reference') {
     if (!target || target === 'encyclopedia') return routeModuleLoaders.encyclopedia;
     if (target === 'nen') return routeModuleLoaders.nen;
@@ -48,7 +37,6 @@ const loaderForRoute = (view, target = '') => {
 };
 
 const inFlight = new WeakMap();
-
 const preload = (loader) => {
   if (!loader) return Promise.resolve(null);
   if (!inFlight.has(loader)) {
