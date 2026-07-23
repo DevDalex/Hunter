@@ -77,9 +77,12 @@ try {
   assert.equal(login.response.status, 404, 'The removed login endpoint must return HTTP 404.');
   assert.match(login.payload.error || '', /does not use account login/i, 'The removed login endpoint must explain that login is disabled.');
 
-  const publish = await verifyJsonApiResponse('/api/admin/chapter/import', { method: 'POST', body: '{}' });
-  assert.notEqual(publish.response.status, 410, 'Direct Worker publishing must remain enabled.');
-  assert.match(publish.payload.error || '', /inspection expired|inspect the chapter again/i, 'The active publish endpoint must validate an inspection token.');
+  const publish = await verifyJsonApiResponse('/api/admin/chapter/import', {
+    method: 'POST',
+    body: JSON.stringify({ authorized: true }),
+  });
+  assert.notEqual(publish.response.status, 410, 'Website chapter submission must remain enabled.');
+  assert.match(publish.payload.error || '', /inspection expired|inspect the chapter again/i, 'The active submit endpoint must validate an inspection token before dispatching work.');
 
   const unknown = await verifyJsonApiResponse('/api/admin/chapter/unknown');
   assert.equal(unknown.response.status, 404, 'Unknown chapter-import endpoints must return HTTP 404.');
@@ -100,7 +103,7 @@ try {
 
   diagnostic.passed = true;
   await writeFile(diagnosticPath, `${JSON.stringify(diagnostic, null, 2)}\n`, 'utf8');
-  console.log('Cloudflare Worker verification passed: login is disabled, direct publishing is active behind a hidden Worker credential, the importer page loads, and chapter APIs bypass the SPA fallback.');
+  console.log('Cloudflare Worker verification passed: login is disabled, website submission validates inspected pages and queues background GitHub work, the importer page loads, and chapter APIs bypass the SPA fallback.');
 } catch (error) {
   diagnostic.error = {
     name: error?.name || 'Error',
