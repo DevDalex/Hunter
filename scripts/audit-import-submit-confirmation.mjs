@@ -10,6 +10,11 @@ assert(page.includes('Accepted: Chapter ${payload.chapter} was queued'), 'inline
 assert(page.includes('Open GitHub import job'), 'GitHub Actions link is missing');
 assert(page.includes('Import was not accepted'), 'inline failure state is missing');
 assert(page.includes("document.querySelectorAll('.page-choice input[type=checkbox], #reviewed, #replace')"), 'submitted controls are not locked after acceptance');
-assert(!page.includes("showStatus(`Chapter ${payload.chapter} import was queued with ${payload.pageCount} selected pictures.\\nGitHub is downloading") || page.includes("$('reviewed').checked=false;\n    } catch(error)"), 'old ambiguous success behavior is still present');
+assert(!page.includes("showStatus(`Chapter ${payload.chapter} import was queued with ${payload.pageCount} selected pictures.\\nGitHub is downloading"), 'old off-screen-only success message is still present');
+
+const submitStart = page.indexOf("const payload=await api('/api/admin/chapter/import'");
+const submitEnd = page.indexOf('} catch(error)', submitStart);
+const successBlock = submitStart >= 0 && submitEnd > submitStart ? page.slice(submitStart, submitEnd) : '';
+assert(successBlock && !successBlock.includes("$('reviewed').checked=false"), 'successful submission must not silently uncheck the review confirmation');
 
 console.log('Import submit confirmation audit passed.');
