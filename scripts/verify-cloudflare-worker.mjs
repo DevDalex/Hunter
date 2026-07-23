@@ -22,7 +22,6 @@ try {
   assert.equal(typeof worker?.fetch, 'function', 'The built Worker must export a fetch handler.');
 
   const env = {
-    GITHUB_ADMIN_TOKEN: 'worker-build-verification-token',
     ASSETS: {
       async fetch(request) {
         diagnostic.assetFetches += 1;
@@ -34,7 +33,7 @@ try {
           });
         }
         if (pathname === '/admin/chapters/direct.html') {
-          return new Response('<!doctype html><html><body>Direct chapter importer</body></html>', {
+          return new Response('<!doctype html><html><body>Temporary chapter importer</body></html>', {
             status: 200,
             headers: { 'content-type': 'text/html; charset=utf-8' },
           });
@@ -44,12 +43,13 @@ try {
     },
   };
 
-  const verifyJsonApiResponse = async (pathname) => {
+  const verifyJsonApiResponse = async (pathname, init = {}) => {
     const beforeAssets = diagnostic.assetFetches;
     const response = await worker.fetch(
       new Request(`https://hunter.example${pathname}`, {
-        method: 'GET',
-        headers: { accept: 'text/html,application/xhtml+xml' },
+        method: init.method || 'GET',
+        headers: { accept: 'application/json', ...(init.body ? { 'content-type': 'application/json' } : {}) },
+        ...(init.body ? { body: init.body } : {}),
       }),
       env,
     );
@@ -76,6 +76,10 @@ try {
   assert.equal(login.response.status, 404, 'The removed login endpoint must return HTTP 404.');
   assert.match(login.payload.error || '', /does not use account login/i, 'The removed login endpoint must explain that login is disabled.');
 
+  const publish = await verifyJsonApiResponse('/api/admin/chapter/import', { method: 'POST', body: '{}' });
+  assert.equal(publish.response.status, 410, 'Direct Worker publishing must remain removed.');
+  assert.match(publish.payload.error || '', /GitHub import request/i, 'The retired publish endpoint must direct the page to the GitHub request flow.');
+
   const unknown = await verifyJsonApiResponse('/api/admin/chapter/unknown');
   assert.equal(unknown.response.status, 404, 'Unknown chapter-import endpoints must return HTTP 404.');
 
@@ -89,13 +93,13 @@ try {
     assetFetchesBefore: assetsBeforePage,
     assetFetchesAfter: diagnostic.assetFetches,
   });
-  assert.equal(page.status, 200, 'The direct chapter importer page must load.');
-  assert.match(pageBody, /Direct chapter importer/i, 'The direct importer asset must be served instead of the login page.');
-  assert.equal(diagnostic.assetFetches, assetsBeforePage + 1, 'The direct importer page must use exactly one ASSETS fetch.');
+  assert.equal(page.status, 200, 'The temporary chapter importer page must load without any configured token.');
+  assert.match(pageBody, /Temporary chapter importer/i, 'The temporary importer asset must be served instead of the login page.');
+  assert.equal(diagnostic.assetFetches, assetsBeforePage + 1, 'The importer page must use exactly one ASSETS fetch.');
 
   diagnostic.passed = true;
   await writeFile(diagnosticPath, `${JSON.stringify(diagnostic, null, 2)}\n`, 'utf8');
-  console.log('Cloudflare Worker verification passed: login is disabled, the direct importer page loads, and chapter-import APIs bypass the SPA fallback.');
+  console.log('Cloudflare Worker verification passed: no token is configured, login and direct publishing are disabled, the temporary importer page loads, and chapter inspection APIs bypass the SPA fallback.');
 } catch (error) {
   diagnostic.error = {
     name: error?.name || 'Error',

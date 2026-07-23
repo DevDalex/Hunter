@@ -7,6 +7,8 @@ const LOGIN_PATHS = new Set([
   '/api/admin/chapter/logout',
 ]);
 const API_PREFIX = '/api/admin/chapter/';
+const IMPORT_PATH = '/api/admin/chapter/import';
+const TEMPORARY_PREVIEW_KEY = 'hunter-temporary-chapter-preview-v1';
 const encoder = new TextEncoder();
 
 const bytesToBase64Url = (bytes) => {
@@ -30,33 +32,24 @@ const signSession = async (payload, secret) => {
   return `${body}.${bytesToBase64Url(signature)}`;
 };
 
-const directAdminRequest = async (request, env) => {
-  const secret = String(env.GITHUB_ADMIN_TOKEN || '').trim();
-  if (!secret) {
-    return new Response(JSON.stringify({ error: 'Chapter importing is not configured. Missing GITHUB_ADMIN_TOKEN.' }), {
-      status: 503,
-      headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
-    });
-  }
-
+const previewRequest = async (request, env) => {
   const now = Math.floor(Date.now() / 1000);
   const csrf = crypto.randomUUID();
   const token = await signSession({
     purpose: 'admin-session',
-    sub: 'private-importer',
+    sub: 'temporary-import-preview',
     csrf,
     iat: now,
     exp: now + (10 * 60),
-  }, secret);
+  }, TEMPORARY_PREVIEW_KEY);
 
   const headers = new Headers(request.headers);
   headers.set('cookie', `hxh_admin_session=${encodeURIComponent(token)}`);
   if (!['GET', 'HEAD'].includes(request.method)) headers.set('x-csrf-token', csrf);
 
-  const authenticated = new Request(request, { headers });
-  return handleHostedChapterAdmin(authenticated, {
+  return handleHostedChapterAdmin(new Request(request, { headers }), {
     ...env,
-    ADMIN_SESSION_SECRET: secret,
+    ADMIN_SESSION_SECRET: TEMPORARY_PREVIEW_KEY,
   });
 };
 
@@ -74,6 +67,11 @@ const routeDirectPage = async (request, env) => {
   return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
 };
 
+const json = (status, error) => new Response(JSON.stringify({ error }), {
+  status,
+  headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
+});
+
 export const isDirectChapterImportRequest = (url) => ADMIN_PAGE_PATHS.has(url.pathname)
   || url.pathname.startsWith(API_PREFIX);
 
@@ -81,16 +79,9 @@ export async function handleDirectChapterImport(request, env) {
   const url = new URL(request.url);
 
   if (request.method === 'GET' && ADMIN_PAGE_PATHS.has(url.pathname)) return routeDirectPage(request, env);
-  if (LOGIN_PATHS.has(url.pathname)) {
-    return new Response(JSON.stringify({ error: 'This private importer does not use account login.' }), {
-      status: 404,
-      headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
-    });
-  }
-  if (url.pathname.startsWith(API_PREFIX)) return directAdminRequest(request, env);
+  if (LOGIN_PATHS.has(url.pathname)) return json(404, 'This temporary importer does not use account login.');
+  if (url.pathname === IMPORT_PATH) return json(410, 'Direct Worker publishing was removed. Submit the generated GitHub import request instead.');
+  if (url.pathname.startsWith(API_PREFIX)) return previewRequest(request, env);
 
-  return new Response(JSON.stringify({ error: 'Unknown chapter import endpoint.' }), {
-    status: 404,
-    headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
-  });
+  return json(404, 'Unknown chapter import endpoint.');
 }
