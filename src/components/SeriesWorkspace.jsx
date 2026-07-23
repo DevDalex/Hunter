@@ -73,12 +73,6 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     if (routeParams.arc && preSuccessionArcs.some((arc) => arc.id === routeParams.arc)) setActiveArc(routeParams.arc);
   }, [routeParams.arc]);
 
-  useEffect(() => {
-    if (!successionChaptersPage) return undefined;
-    const timer = window.setTimeout(() => scrollToSection('arc-chapters'), 80);
-    return () => window.clearTimeout(timer);
-  }, [successionChaptersPage, routeParams.chapter, routeParams.page, routeParams.mode]);
-
   const updateChapterRoute = (chapter) => {
     setSelectedChapter(chapter);
     onNavigate('series', 'chapters', { ...routeParams, chapter: chapter?.number || undefined });
@@ -102,11 +96,13 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     if (next) updateChapterRoute(next);
   };
 
-  const successionReaderSection = successionChaptersPage ? <section id="arc-chapters" className="arc-page__section arc-page__section--chapter-reader" aria-labelledby="arc-chapters-title">
-    <header className="arc-page__section-heading">
-      <i>15</i>
-      <div><span>Chapter reader</span><h2 id="arc-chapters-title">Read the Succession Contest chapters.</h2></div>
-    </header>
+  if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
+  if (routeTarget === 'volume-0') return <Suspense fallback={<StoryLoading label="Kurapika’s Memories" />}><VolumeZeroPage onNavigate={onNavigate} /></Suspense>;
+  if (routeTarget === 'hunter-exam') return <Suspense fallback={<StoryLoading label="287th Hunter Examination" />}><HunterExamPage onNavigate={onNavigate} /></Suspense>;
+  if (routeTarget === 'greed-island') return <Suspense fallback={<StoryLoading label="Greed Island" />}><GreedIslandPage onNavigate={onNavigate} routeParams={routeParams} /></Suspense>;
+  if (successionChaptersPage) return <section className="story-utility-shell story-utility-shell--succession-reader">
+    <nav className="story-utility-shell__back" aria-label="Succession reader navigation"><button type="button" onClick={() => onNavigate('succession', 'archive')}>← Succession Archive</button></nav>
+    <h1 className="sr-only">Succession Contest chapter reader</h1>
     <Suspense fallback={<StoryLoading label="Succession chapter reader" />}>
       <SuccessionChapterReader
         requestedChapter={routeParams.chapter}
@@ -115,13 +111,8 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
         onNavigate={(chapter, page, mode) => onNavigate('series', 'succession-contest', { section: 'chapters', chapter, page, mode })}
       />
     </Suspense>
-  </section> : null;
-
-  if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
-  if (routeTarget === 'volume-0') return <Suspense fallback={<StoryLoading label="Kurapika’s Memories" />}><VolumeZeroPage onNavigate={onNavigate} /></Suspense>;
-  if (routeTarget === 'hunter-exam') return <Suspense fallback={<StoryLoading label="287th Hunter Examination" />}><HunterExamPage onNavigate={onNavigate} /></Suspense>;
-  if (routeTarget === 'greed-island') return <Suspense fallback={<StoryLoading label="Greed Island" />}><GreedIslandPage onNavigate={onNavigate} routeParams={routeParams} /></Suspense>;
-  if (storyArcIds.has(routeTarget)) return <Suspense fallback={<StoryLoading label="dedicated arc page" />}><ArcPage arcId={routeTarget} onNavigate={onNavigate} extraSection={successionReaderSection} /></Suspense>;
+  </section>;
+  if (storyArcIds.has(routeTarget)) return <Suspense fallback={<StoryLoading label="dedicated arc page" />}><ArcPage arcId={routeTarget} onNavigate={onNavigate} /></Suspense>;
 
   const pageIntro = adaptationPage
     ? { kicker: '2011 television anime', title: 'The adaptation guide', description: 'Map all 148 episodes to the completed manga arcs and their source ranges without mixing the adaptation reference into any individual arc page.' }
