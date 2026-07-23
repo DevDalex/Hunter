@@ -32,6 +32,7 @@
     button { min-height:48px; border:1px solid #b4414f; background:var(--red); color:white; padding:0 20px; font:800 14px/1 inherit; cursor:pointer; }
     button:hover { background:#b43142; }
     button:disabled { opacity:.45; cursor:not-allowed; }
+    button.queued { background:#315e40; border-color:var(--good); opacity:1; }
     .secondary { background:#202027; border-color:#45454e; }
     .status { display:none; margin-top:16px; padding:14px 16px; background:#101014; border-left:4px solid var(--red); white-space:pre-wrap; overflow-wrap:anywhere; }
     .status.show { display:block; }
@@ -59,6 +60,13 @@
     .confirm.show { display:grid; gap:14px; }
     .check { display:flex; align-items:flex-start; gap:10px; color:var(--muted); text-transform:none; letter-spacing:0; font-size:14px; font-weight:500; }
     .check input { margin-top:4px; }
+    .submit-result { display:none; padding:16px 18px; background:#101014; border:1px solid var(--line); border-left:5px solid var(--red); }
+    .submit-result.show { display:grid; gap:6px; }
+    .submit-result.good { border-left-color:var(--good); }
+    .submit-result.bad { border-left-color:var(--danger); }
+    .submit-result strong { font-size:18px; }
+    .submit-result p { margin:0; color:var(--muted); }
+    .submit-result a { color:#badcc4; font-weight:800; }
     code { background:#0c0c0f; border:1px solid #33333a; padding:2px 6px; }
     @media (max-width:760px) { header{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.steps article{border-right:0;border-bottom:1px solid var(--line)}form.import-form{grid-template-columns:1fr}.summary.show{grid-template-columns:1fr}.preview-head.show{align-items:flex-start;flex-direction:column} }
   </style>
@@ -103,14 +111,44 @@
       <label class="check"><input id="reviewed" type="checkbox" /> <span>I reviewed the selected pictures and their displayed order.</span></label>
       <label class="check"><input id="replace" type="checkbox" /> <span>Replace the existing Chapter <b id="replace-chapter">—</b> folder and manifest entry if present.</span></label>
       <div class="actions"><button id="import-button" type="button" disabled>Submit import</button></div>
+      <div id="submit-result" class="submit-result" role="status" aria-live="assertive"></div>
       <p>Submitting queues a GitHub job. It writes the selected pages to <code>public/media/succession-contest/chapters/&lt;chapter&gt;/</code>, updates <code>src/data/successionChapterMedia.generated.js</code>, commits to <code>main</code>, and starts deployment.</p>
     </div>
   </section>
 </main>
 <script>
   let inspection = null;
+  let submissionLocked = false;
   const $ = (id) => document.getElementById(id);
   const showStatus = (message, kind = '') => { const element=$('status'); element.textContent=message; element.className=`status show${kind ? ` ${kind}` : ''}`; };
+  const clearSubmitResult = () => {
+    const result=$('submit-result');
+    result.replaceChildren();
+    result.className='submit-result';
+    submissionLocked=false;
+    $('import-button').classList.remove('queued');
+    $('import-button').textContent='Submit import';
+    document.querySelectorAll('.page-choice input[type=checkbox], #reviewed, #replace').forEach((control)=>{ control.disabled=false; });
+  };
+  const showSubmitResult = ({ title, message, kind, actionsUrl='' }) => {
+    const result=$('submit-result');
+    result.replaceChildren();
+    const heading=document.createElement('strong');
+    heading.textContent=title;
+    const copy=document.createElement('p');
+    copy.textContent=message;
+    result.append(heading,copy);
+    if(actionsUrl){
+      const link=document.createElement('a');
+      link.href=actionsUrl;
+      link.target='_blank';
+      link.rel='noopener noreferrer';
+      link.textContent='Open GitHub import job';
+      result.append(link);
+    }
+    result.className=`submit-result show ${kind}`;
+    result.scrollIntoView({behavior:'smooth',block:'center'});
+  };
   const api = async (url, options = {}) => {
     const headers = { ...(options.body ? { 'content-type':'application/json' } : {}), ...(options.headers || {}) };
     const response = await fetch(url, { credentials:'same-origin', ...options, headers });
@@ -129,6 +167,8 @@
     ? inspection.pages.filter((page, index) => $(`page-choice-${index}`)?.checked)
     : [];
   const updateSelection = () => {
+    if(submissionLocked) return;
+    clearSubmitResult();
     const selected=selectedPages();
     $('selected-count').textContent=selected.length;
     $('reviewed').checked=false;
@@ -140,10 +180,12 @@
     if (inspection) showStatus(`${selected.length} of ${inspection.pages.length} pictures selected. Review the highlighted pictures before submitting.`, selected.length ? 'good' : 'bad');
   };
   const setAllPages = (checked) => {
+    if(submissionLocked) return;
     document.querySelectorAll('.page-choice input[type=checkbox]').forEach((checkbox)=>{ checkbox.checked=checked; });
     updateSelection();
   };
   const clearPreview = () => {
+    clearSubmitResult();
     inspection=null;
     $('preview-grid').replaceChildren();
     $('summary').classList.remove('show');
@@ -218,17 +260,21 @@
   });
 
   $('reviewed').addEventListener('change',()=>{
+    if(submissionLocked) return;
+    clearSubmitResult();
     $('import-button').disabled=!$('reviewed').checked || selectedPages().length===0;
   });
+  $('replace').addEventListener('change',()=>{ if(!submissionLocked) clearSubmitResult(); });
   $('select-all-button').addEventListener('click',()=>setAllPages(true));
   $('clear-selection-button').addEventListener('click',()=>setAllPages(false));
   $('clear-button').addEventListener('click',()=>{ clearPreview(); $('status').className='status'; });
   $('import-button').addEventListener('click',async()=>{
     const selected=selectedPages();
-    if(!inspection || !$('reviewed').checked || selected.length===0) return;
+    if(!inspection || !$('reviewed').checked || selected.length===0 || submissionLocked) return;
     const button=$('import-button');
     button.disabled=true;
     button.textContent='Submitting…';
+    showSubmitResult({title:'Submitting import…',message:`Sending Chapter ${inspection.chapter} with ${selected.length} selected pictures to GitHub.`,kind:'good'});
     showStatus(`Queuing ${selected.length} selected pictures for Chapter ${inspection.chapter}…`);
     try {
       const payload=await api('/api/admin/chapter/import',{
@@ -240,13 +286,24 @@
           replace:$('replace').checked
         })
       });
-      showStatus(`Chapter ${payload.chapter} import was queued with ${payload.pageCount} selected pictures.\nGitHub is downloading and committing them in the background. Deployment starts automatically when the job finishes.\n${payload.actionsUrl || ''}`,'good');
-      $('reviewed').checked=false;
+      submissionLocked=true;
+      document.querySelectorAll('.page-choice input[type=checkbox], #reviewed, #replace').forEach((control)=>{ control.disabled=true; });
+      button.disabled=true;
+      button.textContent='Accepted — import queued ✓';
+      button.classList.add('queued');
+      showSubmitResult({
+        title:`Accepted: Chapter ${payload.chapter} was queued`,
+        message:`GitHub accepted ${payload.pageCount} selected pictures. It is downloading, validating and committing them in the background. Deployment begins after the commit finishes.`,
+        kind:'good',
+        actionsUrl:payload.actionsUrl || ''
+      });
+      showStatus(`Chapter ${payload.chapter} import was accepted and queued with ${payload.pageCount} selected pictures. GitHub is processing it in the background.`,'good');
     } catch(error) {
-      showStatus(error.message,'bad');
+      submissionLocked=false;
       button.disabled=false;
-    } finally {
       button.textContent='Submit import';
+      showSubmitResult({title:'Import was not accepted',message:error.message,kind:'bad'});
+      showStatus(error.message,'bad');
     }
   });
 </script>
