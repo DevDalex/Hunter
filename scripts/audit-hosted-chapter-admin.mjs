@@ -65,6 +65,9 @@ assert(workflow.includes('repository_dispatch') && workflow.includes('hunter-cha
 assert(workflow.includes('contents: write') && workflow.includes('selected_images'), 'the workflow must have commit permission and consume selected image URLs');
 assert(workflow.includes('--image-list-file') && workflow.includes('git push origin HEAD:main'), 'the workflow must import the exact selected images and commit them to main');
 assert(workflow.includes('Mozilla/5.0'), 'the action must use a browser-like fetch profile for the source host');
+const restoreIndex = workflow.indexOf('git restore --worktree scripts/lib/succession-chapter-url-source.mjs');
+const rebaseIndex = workflow.indexOf('git pull --rebase origin main');
+assert(restoreIndex !== -1 && rebaseIndex !== -1 && restoreIndex < rebaseIndex, 'the runtime user-agent edit must be restored before the commit step rebases main');
 assert(importScript.includes("'--image-list-file'") && importScript.includes('readSelectedImageUrls'), 'the local importer must accept an ordered selected-image JSON file');
 assert(engine.includes('CHAPTER_SOURCE_HOSTS') && engine.includes('CHAPTER_IMAGE_HOSTS'), 'remote source and image hosts must remain allowlisted');
 assert(serverIndex.includes("from './direct-chapter-import.js'"), 'the Worker entry must route through the temporary importer');
@@ -78,4 +81,4 @@ assert(prepareHosting.includes("cp('server', 'dist/server', { recursive: true })
 assert(prepareHosting.includes('Mozilla/5.0') && prepareHosting.includes('Hosted chapter admin fetch profile marker is missing.'), 'deployed inspection must use the guarded browser request profile');
 assert(packageJson.includes('audit:hosted-admin'), 'hosted importer audit must remain registered in package scripts');
 
-console.log('Hosted chapter importer audit passed: one-button submission, exact picture selection, lightweight Worker dispatch, background GitHub importing, manifest updates, and blocked legacy login endpoints are intact.');
+console.log('Hosted chapter importer audit passed: one-button submission, exact picture selection, lightweight Worker dispatch, background GitHub importing, manifest updates, clean commit rebases, and blocked legacy login endpoints are intact.');

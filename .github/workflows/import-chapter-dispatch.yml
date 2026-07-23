@@ -99,6 +99,7 @@ jobs:
           node scripts/import-succession-chapter-url.mjs "${args[@]}"
           rm -f .chapter-import-selected-images.json
           node scripts/audit-succession-chapter-media.mjs
+          git restore --worktree scripts/lib/succession-chapter-url-source.mjs
 
       - name: Commit imported chapter
         env:
