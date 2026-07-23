@@ -101,14 +101,18 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   if (routeTarget === 'hunter-exam') return <Suspense fallback={<StoryLoading label="287th Hunter Examination" />}><HunterExamPage onNavigate={onNavigate} /></Suspense>;
   if (routeTarget === 'greed-island') return <Suspense fallback={<StoryLoading label="Greed Island" />}><GreedIslandPage onNavigate={onNavigate} routeParams={routeParams} /></Suspense>;
   if (successionChaptersPage) return <section className="story-utility-shell story-utility-shell--succession-reader">
-    <nav className="story-utility-shell__back" aria-label="Succession reader navigation"><button type="button" onClick={() => onNavigate('succession', 'archive')}>← Succession Archive</button></nav>
     <h1 className="sr-only">Succession Contest chapter reader</h1>
     <Suspense fallback={<StoryLoading label="Succession chapter reader" />}>
       <SuccessionChapterReader
         requestedChapter={routeParams.chapter}
         requestedPage={routeParams.page}
         requestedMode={routeParams.mode}
-        onNavigate={(chapter, page, mode) => onNavigate('series', 'succession-contest', { section: 'chapters', chapter, page, mode })}
+        requestedFit={routeParams.fit}
+        requestedDirection={routeParams.direction}
+        requestedPanel={routeParams.panel}
+        onNavigate={(readerRoute) => onNavigate('series', 'succession-contest', { section: 'chapters', ...readerRoute })}
+        onExitArchive={() => onNavigate('succession', 'archive')}
+        onOpenChapterRecord={(chapter) => onNavigate('succession', 'chapters', { entity: `chapter:${chapter}` })}
       />
     </Suspense>
   </section>;
