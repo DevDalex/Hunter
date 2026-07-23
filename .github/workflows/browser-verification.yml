@@ -33,7 +33,7 @@ jobs:
         run: npm ci
 
       - name: Install Chromium and system dependencies
-        run: playwright install --with-deps chromium
+        run: npm exec playwright -- install --with-deps chromium
 
       - name: Build runtime and run browser verification
         shell: bash
