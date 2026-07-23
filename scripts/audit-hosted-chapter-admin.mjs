@@ -36,17 +36,34 @@ const manifest = { 414: [{ page: 1, src: '/media/succession-contest/chapters/414
 const serialized = serializeGeneratedManifest(manifest);
 assert(JSON.stringify(parseGeneratedManifest(serialized)) === JSON.stringify(manifest), 'generated manifest serialization must round-trip');
 
-const [engine, direct, serverIndex, directPage, inspectContract, workflow, importScript, prepareHosting, packageJson] = await Promise.all([
+const [
+  engine,
+  direct,
+  serverIndex,
+  directPage,
+  inspectContract,
+  workflow,
+  batchWorkflow,
+  batchScript,
+  batchQueueText,
+  importScript,
+  prepareHosting,
+  packageJson,
+] = await Promise.all([
   read('server/chapter-admin.js'),
   read('server/direct-chapter-import.js'),
   read('server/index.js'),
   read('public/admin/chapters/direct.html'),
   read('public/admin/chapters/inspect-contract.js'),
   read('.github/workflows/import-chapter-dispatch.yml'),
+  read('.github/workflows/import-chapter-batch.yml'),
+  read('scripts/run-succession-chapter-batch.mjs'),
+  read('.github/chapter-import-batch.json'),
   read('scripts/import-succession-chapter-url.mjs'),
   read('scripts/prepare-hosting.mjs'),
   read('package.json'),
 ]);
+const batchQueue = JSON.parse(batchQueueText);
 
 assert(direct.includes('TEMPORARY_SESSION_KEY'), 'inspection, preview and submit must use a short-lived built-in session');
 assert(direct.includes('prepareSelectedImport') && direct.includes('selectedImageUrls'), 'the submit route must validate the exact selected picture list');
@@ -68,6 +85,21 @@ assert(workflow.includes('Mozilla/5.0'), 'the action must use a browser-like fet
 const restoreIndex = workflow.indexOf('git restore --worktree scripts/lib/succession-chapter-url-source.mjs');
 const rebaseIndex = workflow.indexOf('git pull --rebase origin main');
 assert(restoreIndex !== -1 && rebaseIndex !== -1 && restoreIndex < rebaseIndex, 'the runtime user-agent edit must be restored before the commit step rebases main');
+
+assert(batchQueue.version === 1 && String(batchQueue.sourceTemplate).includes('{chapter}'), 'the automatic queue contract is invalid');
+assert(Number.isInteger(batchQueue.batchSize) && batchQueue.batchSize >= 1 && batchQueue.batchSize <= 5, 'the automatic batch size must stay bounded');
+assert(Number.isInteger(batchQueue.maxAttempts) && batchQueue.maxAttempts >= 1 && batchQueue.maxAttempts <= 5, 'the automatic retry limit must stay bounded');
+assert(Array.isArray(batchQueue.pending) && Array.isArray(batchQueue.completed), 'the automatic queue must track pending and completed chapters');
+assert(batchQueue.pending.every((chapter) => Number.isInteger(chapter) && chapter >= 338 && chapter <= 414), 'the automatic queue contains an invalid chapter');
+assert(batchWorkflow.includes('hunter-chapter-batch-continue') && batchWorkflow.includes('group: chapter-import'), 'the automatic workflow must self-continue while sharing the manual import lock');
+assert(batchWorkflow.includes('github.actor != \'github-actions[bot]\''), 'action-authored queue commits must not start duplicate push runs');
+assert(batchWorkflow.includes('restore_helper') && batchWorkflow.indexOf('restore_helper') < batchWorkflow.indexOf('git pull --rebase origin main'), 'the automatic workflow must restore its runtime helper edit before rebasing');
+assert(batchWorkflow.includes('/dispatches') && batchWorkflow.includes("steps.batch.outputs.continue == 'true'"), 'the automatic workflow must dispatch the next batch only while work remains');
+assert(batchScript.includes('maxAttempts') && batchScript.includes('queued for retry'), 'the automatic runner must retry temporary chapter failures');
+assert(batchScript.includes('writeFile(MANIFEST_PATH, beforeManifest)') && batchScript.includes('rm(chapterDirectory'), 'failed automatic imports must roll back their manifest and chapter folder');
+assert(batchScript.includes('MIN_PAGES') && batchScript.includes('MAX_PAGES'), 'automatic imports must enforce a conservative page-count sanity range');
+assert(batchScript.includes("writeOutput('continue'") && batchScript.includes("writeOutput('remaining'"), 'the automatic runner must expose continuation state to GitHub Actions');
+
 assert(importScript.includes("'--image-list-file'") && importScript.includes('readSelectedImageUrls'), 'the local importer must accept an ordered selected-image JSON file');
 assert(engine.includes('CHAPTER_SOURCE_HOSTS') && engine.includes('CHAPTER_IMAGE_HOSTS'), 'remote source and image hosts must remain allowlisted');
 assert(serverIndex.includes("from './direct-chapter-import.js'"), 'the Worker entry must route through the temporary importer');
@@ -81,4 +113,4 @@ assert(prepareHosting.includes("cp('server', 'dist/server', { recursive: true })
 assert(prepareHosting.includes('Mozilla/5.0') && prepareHosting.includes('Hosted chapter admin fetch profile marker is missing.'), 'deployed inspection must use the guarded browser request profile');
 assert(packageJson.includes('audit:hosted-admin'), 'hosted importer audit must remain registered in package scripts');
 
-console.log('Hosted chapter importer audit passed: one-button submission, exact picture selection, lightweight Worker dispatch, background GitHub importing, manifest updates, clean commit rebases, and blocked legacy login endpoints are intact.');
+console.log('Hosted chapter importer audit passed: one-button manual submission, exact picture selection, resumable automatic batching, retries, rollback, clean commit rebases, and blocked legacy login endpoints are intact.');
