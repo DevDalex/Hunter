@@ -32,11 +32,13 @@
     "audit:release": "node scripts/audit-release.mjs",
     "audit:gaps": "node scripts/report-gaps.mjs",
     "preflight:build": "node scripts/run-build-preflight.mjs",
-    "build": "npm run generate:build-info && npm run preflight:build && node scripts/clean-hosting.mjs && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs && npm run audit:release",
-    "preview": "vite preview --host 0.0.0.0",
     "generate:build-info": "node scripts/generate-build-info.mjs",
-    "browser:deps": "npm install --no-save --save-exact playwright@1.61.1 axe-core@4.12.1",
-    "browser:install": "npx playwright install chromium",
+    "check": "npm run generate:build-info && npm run preflight:build",
+    "build:runtime": "node scripts/clean-hosting.mjs && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs && npm run audit:release",
+    "build": "npm run check && npm run build:runtime",
+    "deploy": "npm run build && wrangler deploy",
+    "preview": "vite preview --host 0.0.0.0",
+    "browser:install": "playwright install chromium",
     "admin:chapters": "node scripts/succession-chapter-admin.mjs",
     "import:succession-chapter": "node scripts/import-succession-chapter.mjs",
     "import:succession-chapter:url": "node scripts/import-succession-chapter-url.mjs",
@@ -44,16 +46,22 @@
     "qa:interaction": "node scripts/interaction-qa.mjs",
     "qa:succession-reader": "node scripts/succession-reader-qa.mjs",
     "qa:architecture": "node scripts/architecture-navigation-qa.mjs",
-    "qa:browser": "npm run build && npm run qa:search && npm run qa:visual && npm run qa:accessibility && npm run qa:interaction && npm run qa:succession-reader && npm run qa:architecture && npm run qa:performance"
+    "qa:browser:verify": "npm run qa:search && npm run qa:visual && npm run qa:accessibility && npm run qa:interaction && npm run qa:succession-reader && npm run qa:architecture && node scripts/performance-qa.mjs",
+    "qa:browser:ci": "npm run generate:build-info && npm run build:runtime && npm run qa:browser:verify",
+    "qa:browser": "npm run build && npm run qa:browser:verify"
   },
   "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "lucide-react": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "vite": "latest"
+    "lucide-react": "1.24.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@vitejs/plugin-react": "6.0.3",
+    "axe-core": "4.12.1",
+    "playwright": "1.61.1",
+    "vite": "8.1.4",
+    "wrangler": "4.113.0"
+  },
   "engines": {
     "node": "^20.19.0 || >=22.12.0"
   }
