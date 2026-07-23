@@ -74,6 +74,7 @@ const zodiacNames = new Set(['Botobai Gigante', 'Cheadle Yorkshire', 'Cluck', 'G
 const troupeNames = new Set(['Chrollo Lucilfer', 'Nobunaga Hazama', 'Feitan Portor', 'Machi Komacine', 'Phinks Magcub', 'Franklin Bordeau', 'Shizuku Murasaki', 'Bonolenov Ndongo', 'Illumi Zoldyck', 'Kalluto Zoldyck']);
 const mafiaBosses = new Set(['Onior Longbao', 'Morena Prudo', 'Brocco Li']);
 const mafiaUnderbosses = new Set(['Hinrigh Biganduffno', "Ken'i Wang"]);
+const mafiaBenefactors = new Set(['Zhang Lei Hui Guo Rou', 'Tserriednich Hui Guo Rou', 'Luzurus Hui Guo Rou']);
 const aliasesByName = new Map([
   ['Nasubi Hui Guo Rou', ['King Nasubi']],
   ['Salé-salé Hui Guo Rou', ['Sale-sale Hui Guo Rou', 'Prince Salé-salé', 'Eighth Prince Salé-salé']],
@@ -114,7 +115,7 @@ const rolesFor = (name, groupIds) => {
   if (groupIds.includes('justice-bureau')) roles.push('justice-official');
   if (groupIds.includes('benjamin-guard')) roles.push('military', 'bodyguard', 'benjamin-soldier');
   if (groupIds.includes('camilla-guard')) roles.push('bodyguard', 'camilla-soldier');
-  if (groupIds.some((id) => ['xi-yu', 'heil-ly', 'cha-r'].includes(id))) roles.push('mafia-member');
+  if (groupIds.some((id) => ['xi-yu', 'heil-ly', 'cha-r'].includes(id))) roles.push(mafiaBenefactors.has(name) ? 'mafia-benefactor' : 'mafia-member');
   if (mafiaBosses.has(name)) roles.push('mafia-boss');
   if (mafiaUnderbosses.has(name)) roles.push('mafia-underboss');
   if (hunterNames.has(name)) roles.push('hunter');
@@ -134,9 +135,9 @@ const affiliationsFor = (name, groupIds, roles) => {
   if (groupIds.includes('justice-bureau')) add('kakin-justice-bureau', 'Justice Bureau official');
   if (groupIds.includes('benjamin-guard')) add('benjamin-private-army', 'Private soldier');
   if (groupIds.includes('camilla-guard')) add('camilla-private-guard', 'Private guard');
-  if (groupIds.includes('xi-yu')) add('xi-yu', mafiaBosses.has(name) ? 'Boss' : mafiaUnderbosses.has(name) ? 'Underboss' : 'Member');
-  if (groupIds.includes('heil-ly')) add('heil-ly', name === 'Morena Prudo' ? 'Boss' : 'Member');
-  if (groupIds.includes('cha-r')) add('cha-r', mafiaBosses.has(name) ? 'Boss' : mafiaUnderbosses.has(name) ? 'Underboss' : 'Member');
+  if (groupIds.includes('xi-yu')) add('xi-yu', name === 'Zhang Lei Hui Guo Rou' ? 'Royal beneficiary' : mafiaBosses.has(name) ? 'Boss' : mafiaUnderbosses.has(name) ? 'Underboss' : 'Member');
+  if (groupIds.includes('heil-ly')) affiliations.push({ organizationId: organizationId('heil-ly'), role: name === 'Tserriednich Hui Guo Rou' ? 'Former royal benefactor' : name === 'Morena Prudo' ? 'Boss' : 'Member', status: name === 'Tserriednich Hui Guo Rou' ? 'former' : 'active' });
+  if (groupIds.includes('cha-r')) add('cha-r', name === 'Luzurus Hui Guo Rou' ? 'Royal beneficiary' : mafiaBosses.has(name) ? 'Boss' : mafiaUnderbosses.has(name) ? 'Underboss' : 'Member');
   if (troupeNames.has(name)) add('phantom-troupe', name === 'Chrollo Lucilfer' ? 'Leader' : 'Member');
   return affiliations;
 };
@@ -222,9 +223,17 @@ export const events = Object.freeze([{
   causes: ['Kurapika needs to expose and balance Nen knowledge among the princes’ bodyguards.'], outcomes: ['Multiple bodyguards begin learning Nen under Kurapika’s supervision.'], consequenceEventIds: [], status: 'ongoing',
 }]);
 
+const chapterAppearances = new Map([
+  [358, [['Kurapika', 'major'], ['Woble Hui Guo Rou', 'major'], ['Oito Hui Guo Rou', 'major'], ['Bill', 'supporting']]],
+  [369, [['Kurapika', 'major'], ['Bill', 'supporting']]],
+  [381, [['Kurapika', 'major'], ['Bill', 'supporting'], ['Tserriednich Hui Guo Rou', 'major']]],
+  [400, [['Morena Prudo', 'major']]],
+  [410, [['Morena Prudo', 'supporting'], ['Borksen', 'major']]],
+]);
+
 export const chapters = Object.freeze(successionChapterResearch.map((record) => ({
   ...base({ id: `chapter:${record.number}`, entityType: 'chapter', slug: String(record.number), name: record.title ? `Chapter ${record.number} · ${record.title}` : `Chapter ${record.number}`, summary: record.focus || `Research record for Chapter ${record.number}.`, sourceIds: [chapterSourceId(record.number)] }),
-  number: record.number, storyPhaseIds: [slugify(record.phase)], appearanceRecords: [], eventIds: record.number >= 369 && record.number <= 413 ? ['event:room-1014-nen-classes'] : [],
+  number: record.number, storyPhaseIds: [slugify(record.phase)], appearanceRecords: (chapterAppearances.get(record.number) || []).map(([name, role]) => ({ characterId: characterId(name), role })), eventIds: record.number >= 369 && record.number <= 413 ? ['event:room-1014-nen-classes'] : [],
   locationIds: record.number >= 358 ? ['location:black-whale'] : [], abilityIds: record.number === 369 ? ['ability:emperor-time'] : record.number === 385 ? ['ability:parallel-future'] : [], organizationIds: [],
   reader: { manifestChapter: record.number }, voyageDay: record.voyageDay, lanes: record.lanes, referenceUrl: record.source,
 })));
