@@ -10,6 +10,7 @@ export default function ArchiveSearch({ open, spoilerLimit = Number.MAX_SAFE_INT
   const dialogRef = useRef(null);
   const inputRef = useRef(null);
   const resultRefs = useRef([]);
+  const restoreFocusRef = useRef(typeof document === 'undefined' ? null : document.activeElement);
   const [query, setQuery] = useState('');
   const [type, setType] = useState('all');
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -63,7 +64,7 @@ export default function ArchiveSearch({ open, spoilerLimit = Number.MAX_SAFE_INT
 
   useLayoutEffect(() => {
     if (!open) return undefined;
-    const previousFocus = document.activeElement;
+    const previousFocus = restoreFocusRef.current;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const focusInput = () => inputRef.current?.focus({ preventScroll: true });
@@ -84,7 +85,7 @@ export default function ArchiveSearch({ open, spoilerLimit = Number.MAX_SAFE_INT
       window.cancelAnimationFrame(frame);
       window.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = previousOverflow;
-      previousFocus?.focus?.({ preventScroll: true });
+      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };
   }, [open, onClose]);
 
