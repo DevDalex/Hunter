@@ -22,13 +22,19 @@ try {
   assert.equal(typeof worker?.fetch, 'function', 'The built Worker must export a fetch handler.');
 
   const env = {
-    ADMIN_SESSION_SECRET: 'sites-build-verification-secret',
+    GITHUB_ADMIN_TOKEN: 'worker-build-verification-token',
     ASSETS: {
       async fetch(request) {
         diagnostic.assetFetches += 1;
         const pathname = new URL(request.url).pathname;
         if (pathname === '/index.html') {
           return new Response('<!doctype html><html><body>Hunter Archive</body></html>', {
+            status: 200,
+            headers: { 'content-type': 'text/html; charset=utf-8' },
+          });
+        }
+        if (pathname === '/admin/chapters/direct.html') {
+          return new Response('<!doctype html><html><body>Direct chapter importer</body></html>', {
             status: 200,
             headers: { 'content-type': 'text/html; charset=utf-8' },
           });
@@ -66,15 +72,30 @@ try {
     return { response, payload: JSON.parse(body) };
   };
 
-  const session = await verifyJsonApiResponse('/api/admin/chapter/session');
-  assert.equal(typeof session.payload.error, 'string', 'The unauthenticated session response must include an error message.');
+  const login = await verifyJsonApiResponse('/api/admin/chapter/login');
+  assert.equal(login.response.status, 404, 'The removed login endpoint must return HTTP 404.');
+  assert.match(login.payload.error || '', /does not use account login/i, 'The removed login endpoint must explain that login is disabled.');
 
   const unknown = await verifyJsonApiResponse('/api/admin/chapter/unknown');
-  assert.equal(unknown.response.status, 404, 'Unknown chapter-admin endpoints must return HTTP 404.');
+  assert.equal(unknown.response.status, 404, 'Unknown chapter-import endpoints must return HTTP 404.');
+
+  const assetsBeforePage = diagnostic.assetFetches;
+  const page = await worker.fetch(new Request('https://hunter.example/admin/chapters', { headers: { accept: 'text/html' } }), env);
+  const pageBody = await page.text();
+  record('direct-import-page', {
+    status: page.status,
+    contentType: page.headers.get('content-type') || '',
+    bodyPreview: pageBody.slice(0, 300),
+    assetFetchesBefore: assetsBeforePage,
+    assetFetchesAfter: diagnostic.assetFetches,
+  });
+  assert.equal(page.status, 200, 'The direct chapter importer page must load.');
+  assert.match(pageBody, /Direct chapter importer/i, 'The direct importer asset must be served instead of the login page.');
+  assert.equal(diagnostic.assetFetches, assetsBeforePage + 1, 'The direct importer page must use exactly one ASSETS fetch.');
 
   diagnostic.passed = true;
   await writeFile(diagnosticPath, `${JSON.stringify(diagnostic, null, 2)}\n`, 'utf8');
-  console.log(`Cloudflare Worker verification passed: /api/admin/chapter/session returned HTTP ${session.response.status} JSON and the complete chapter-admin route family bypassed SPA fallback.`);
+  console.log('Cloudflare Worker verification passed: login is disabled, the direct importer page loads, and chapter-import APIs bypass the SPA fallback.');
 } catch (error) {
   diagnostic.error = {
     name: error?.name || 'Error',

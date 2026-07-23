@@ -1,4 +1,4 @@
-import { handleHostedChapterAdmin, isHostedChapterAdminRequest } from './chapter-admin.js';
+import { handleDirectChapterImport, isDirectChapterImportRequest } from './direct-chapter-import.js';
 
 const INSPECT_PATH = '/api/admin/chapter/inspect';
 const ADMIN_PATHS = new Set(['/admin/chapters', '/admin/chapters/']);
@@ -13,16 +13,15 @@ const jsonError = (status, message) => new Response(JSON.stringify({ error: mess
   },
 });
 
-// Some chapter-admin route branches return async handlers directly from their
-// own try/catch. Await them at the Worker boundary so rejected handler promises
-// are still normalized into JSON instead of escaping as an unhandled exception.
-const runHostedChapterAdmin = async (request, env) => {
+// Await importer handlers at the Worker boundary so rejected promises are
+// normalized into JSON instead of escaping as unhandled exceptions.
+const runDirectChapterImport = async (request, env) => {
   try {
-    return await handleHostedChapterAdmin(request, env);
+    return await handleDirectChapterImport(request, env);
   } catch (error) {
     const status = Number.isInteger(error?.status) ? error.status : 500;
-    console.error('Hosted chapter administration boundary error', error);
-    return jsonError(status, status >= 500 ? (error?.message || 'Chapter administration failed.') : error.message);
+    console.error('Direct chapter importer boundary error', error);
+    return jsonError(status, status >= 500 ? (error?.message || 'Chapter importing failed.') : error.message);
   }
 };
 
@@ -70,7 +69,7 @@ const normalizeInspectionGet = async (request, env) => {
     }),
   });
 
-  return validateInspectionResponse(await runHostedChapterAdmin(normalized, env));
+  return validateInspectionResponse(await runDirectChapterImport(normalized, env));
 };
 
 const inlineInspectionContract = `<script data-inspection-contract="inline">
@@ -99,8 +98,8 @@ const inlineInspectionContract = `<script data-inspection-contract="inline">
     const looksLikeHtml = /^\\s*</.test(text);
     const message = payload?.error
       || (looksLikeHtml
-        ? 'The inspection request was rewritten to a webpage instead of reaching the chapter-admin API.'
-        : 'The chapter-admin API returned an invalid inspection response without a pages list.');
+        ? 'The inspection request was rewritten to a webpage instead of reaching the chapter-import API.'
+        : 'The chapter-import API returned an invalid inspection response without a pages list.');
 
     return new Response(JSON.stringify({ error: message }), {
       status: 502,
@@ -142,29 +141,29 @@ const injectInspectionContract = async (response) => {
 };
 
 // Full-stack Cloudflare Worker. Vite's built assets are exposed through the ASSETS
-// binding; all chapter-admin routes execute before any client-side SPA fallback.
+// binding; all private chapter-import routes execute before the client-side fallback.
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    if (url.pathname === '/admin/chapters/index.html') {
+    if (url.pathname === '/admin/chapters/index.html' || url.pathname === '/admin/chapters/direct.html') {
       url.pathname = '/admin/chapters';
       return Response.redirect(url, 302);
     }
 
     // Inspection is read-only. Some hosting/proxy layers reject its JSON POST,
-    // so the admin page retries it as GET. Normalize both possible GET paths
-    // into the same authenticated JSON handler, then validate its response.
+    // so the import page retries it as GET. Normalize both possible GET paths
+    // into the same direct JSON handler, then validate its response.
     if (request.method === 'GET' && (url.pathname === INSPECT_PATH || url.pathname === '/admin/chapters/inspect')) {
       return normalizeInspectionGet(request, env);
     }
 
     if (request.method === 'GET' && ADMIN_PATHS.has(url.pathname)) {
-      return injectInspectionContract(await runHostedChapterAdmin(request, env));
+      return injectInspectionContract(await runDirectChapterImport(request, env));
     }
 
-    if (isHostedChapterAdminRequest(url)) {
-      const response = await runHostedChapterAdmin(request, env);
+    if (isDirectChapterImportRequest(url)) {
+      const response = await runDirectChapterImport(request, env);
       return url.pathname === INSPECT_PATH ? validateInspectionResponse(response) : response;
     }
 
