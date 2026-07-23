@@ -60,7 +60,7 @@
     "audit:greed-island-tactics": "node scripts/audit-greed-island-tactics.mjs",
     "audit:greed-island-completion": "node scripts/audit-greed-island-completion.mjs",
     "audit:greed-island-eta-scene": "node scripts/audit-greed-island-eta-scene.mjs",
-    "stabilize:greed-island-cards": "node scripts/stabilize-greed-island-card-media.mjs --verify-only",
+    "stabilize:greed-island-cards": "node scripts/stabilize-greed-island-card-media.mjs",
     "qa:greed-island": "npm run prepare:eta-assets && npm run audit:greed-island-eta-scene && npm run audit:greed-island-archive && npm run audit:greed-island-libraries && npm run audit:greed-island-systems && npm run audit:greed-island-tactics && npm run audit:greed-island-completion && node scripts/stabilize-greed-island-card-media.mjs --verify-only && node scripts/audit-greed-island-media.mjs && node scripts/greed-island-routing-qa.mjs && node scripts/greed-island-qa.mjs && node scripts/greed-island-archive-qa.mjs && node scripts/greed-island-libraries-qa.mjs && node scripts/greed-island-systems-qa.mjs && node scripts/greed-island-tactics-qa.mjs && node scripts/greed-island-completion-qa.mjs && node scripts/greed-island-eta-scene-qa.mjs"
   },
   "dependencies": {
