@@ -11,7 +11,7 @@ import {
 } from '../server/chapter-admin.js';
 
 const root = process.cwd();
-const assert = (condition, message) => { if (!condition) throw new Error(`Hosted chapter admin audit failed: ${message}`); };
+const assert = (condition, message) => { if (!condition) throw new Error(`Hosted chapter importer audit failed: ${message}`); };
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
 
 const wpHtml = `
@@ -36,34 +36,36 @@ const manifest = { 414: [{ page: 1, src: '/media/succession-contest/chapters/414
 const serialized = serializeGeneratedManifest(manifest);
 assert(JSON.stringify(parseGeneratedManifest(serialized)) === JSON.stringify(manifest), 'generated manifest serialization must round-trip');
 
-const [worker, serverIndex, adminPage, inspectContract, prepareHosting, packageJson] = await Promise.all([
+const [engine, direct, serverIndex, directPage, inspectContract, prepareHosting, packageJson] = await Promise.all([
   read('server/chapter-admin.js'),
+  read('server/direct-chapter-import.js'),
   read('server/index.js'),
-  read('public/admin/chapters/index.html'),
+  read('public/admin/chapters/direct.html'),
   read('public/admin/chapters/inspect-contract.js'),
   read('scripts/prepare-hosting.mjs'),
   read('package.json'),
 ]);
 
-for (const secret of ['ADMIN_USERNAME', 'ADMIN_PASSWORD', 'ADMIN_SESSION_SECRET', 'GITHUB_ADMIN_TOKEN']) {
-  assert(worker.includes(secret), `Worker must require ${secret}`);
-}
-assert(!worker.includes("ADMIN_PASSWORD || '12345'") && !adminPage.includes('value="12345"'), 'temporary credentials must never be hard-coded into deployed source');
-assert(worker.includes('HttpOnly; Secure; SameSite=Strict'), 'administrator session cookie must remain HttpOnly, Secure, and SameSite Strict');
-assert(worker.includes("request.headers.get('x-csrf-token')"), 'mutating administrator endpoints must retain CSRF validation');
-assert(worker.includes('CHAPTER_SOURCE_HOSTS') && worker.includes('CHAPTER_IMAGE_HOSTS'), 'remote source and image hosts must remain allowlisted');
-assert(worker.includes('/git/blobs') && worker.includes('/git/trees') && worker.includes('/git/commits') && worker.includes('/git/refs/heads/'), 'GitHub publication must remain one Git-data commit flow');
-assert(worker.includes('force: false'), 'branch update must reject non-fast-forward publication races');
-assert(adminPage.includes('/api/admin/chapter/login') && adminPage.includes('/api/admin/chapter/import'), 'deployed admin page must use authenticated Worker endpoints');
-assert(adminPage.includes("error.status !== 405") && adminPage.includes("method:'GET'"), 'read-only inspection must retry through GET after an HTTP 405');
-assert(adminPage.includes("credentials:'same-origin'"), 'administrator requests must send the HttpOnly session cookie only to the same origin');
+assert(direct.includes("String(env.GITHUB_ADMIN_TOKEN || '').trim()"), 'direct importer must derive its private request session from the server-side GitHub token');
+assert(direct.includes("ADMIN_SESSION_SECRET: secret"), 'direct importer must inject the internal session secret without browser credentials');
+assert(direct.includes("'/api/admin/chapter/login'") && direct.includes("does not use account login"), 'legacy account endpoints must be blocked');
+assert(direct.includes("assetUrl.pathname = '/admin/chapters/direct.html'"), 'the direct route must serve the login-free page');
+assert(!directPage.includes('type="password"') && !directPage.includes('login-form') && !directPage.includes('Sign in'), 'the visible importer must not contain a login form');
+assert(directPage.includes('No username or password'), 'the page must clearly describe direct access');
+assert(directPage.includes('/api/admin/chapter/inspect') && directPage.includes('/api/admin/chapter/import'), 'the direct page must retain inspect and publish actions');
+assert(serverIndex.includes("from './direct-chapter-import.js'"), 'the Worker entry must route through the direct importer');
+assert(serverIndex.includes('isDirectChapterImportRequest') && !serverIndex.includes('isHostedChapterAdminRequest'), 'the legacy authenticated router must not remain exposed at the Worker boundary');
+assert(engine.includes('CHAPTER_SOURCE_HOSTS') && engine.includes('CHAPTER_IMAGE_HOSTS'), 'remote source and image hosts must remain allowlisted');
+assert(engine.includes('/git/blobs') && engine.includes('/git/trees') && engine.includes('/git/commits') && engine.includes('/git/refs/heads/'), 'GitHub publication must remain one Git-data commit flow');
+assert(engine.includes('force: false'), 'branch update must reject non-fast-forward publication races');
+assert(directPage.includes("credentials:'same-origin'"), 'import requests must stay on the same origin');
 assert(serverIndex.includes('normalizeInspectionGet') && serverIndex.includes('validateInspectionResponse'), 'Worker entry must normalize and validate the GET inspection fallback');
 assert(serverIndex.includes('Array.isArray(payload.pages)'), 'Worker must reject successful inspection responses without a pages array');
-assert(serverIndex.includes('/admin/chapters/inspect-contract.js'), 'protected admin HTML must load the browser-side inspection contract guard');
+assert(serverIndex.includes('/admin/chapters/inspect-contract.js'), 'direct import HTML must load the browser-side inspection contract guard');
 assert(inspectContract.includes("requestUrl.pathname !== '/api/admin/chapter/inspect'") && inspectContract.includes('Array.isArray(payload.pages)'), 'browser inspection guard must validate the API response shape');
 assert(inspectContract.includes('rewritten to a webpage'), 'browser inspection guard must explain an HTML route rewrite');
 assert(prepareHosting.includes("cp('server', 'dist/server', { recursive: true })"), 'hosting preparation must copy Worker modules recursively');
 assert(prepareHosting.includes('Mozilla/5.0') && prepareHosting.includes('Hosted chapter admin fetch profile marker is missing.'), 'deployed chapter fetch must use the guarded browser request profile');
-assert(packageJson.includes('audit:hosted-admin'), 'hosted administrator audit must remain registered in package scripts');
+assert(packageJson.includes('audit:hosted-admin'), 'hosted importer audit must remain registered in package scripts');
 
-console.log('Hosted chapter admin audit passed: login/session boundary, CSRF, allowlisted remote fetches, resilient 405 fallback, strict inspection response contracts, browser fetch profile, image parsing, manifest round-trip, atomic GitHub publication, and recursive Worker packaging are intact.');
+console.log('Hosted chapter importer audit passed: direct access without a visible login, internal short-lived request signing, blocked legacy account endpoints, allowlisted remote fetches, strict inspection contracts, image parsing, manifest round-trip, and atomic GitHub publication are intact.');
