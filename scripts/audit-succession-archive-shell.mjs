@@ -52,7 +52,7 @@ assert(workspace.includes('canonLevel') && workspace.includes('SourceReference')
 assert(workspace.includes('SuccessionChapterReader') === false, 'the archive application must not embed the manga reader');
 
 assert(router.includes("'/story/succession-contest/chapters'"), 'legacy reader URL must remain authoritative');
-assert(router.includes("target === 'reader'"), 'new reader navigation must resolve to the existing reader');
+assert(router.includes("nextTarget === 'reader'"), 'new reader navigation must resolve to the existing reader');
 assert(router.includes('successionArchivePathToTarget') && router.includes('successionArchiveTargetToPath'), 'router must use the canonical archive route registry');
 assert(preload.includes('successionArchive'), 'route preloading must include the archive application chunk');
 assert(main.includes("./styles/succession-archive.css"), 'main entry must load the scoped archive design layer');
