@@ -1,11 +1,31 @@
-.succession-reader__heading dt,
-.succession-reader__chapter-grid small,
-.succession-reader__toolbar span,
-.succession-reader__toolbar small {
-  font-size: .7rem;
-}
+.succession-reader__identity > span { font-size: 11px !important; }
+.succession-reader__identity > small { font-size: 11px !important; }
+.succession-reader__zoom span { font-size: 11px !important; }
+.succession-reader__page figcaption { font-size: 11px !important; }
+.succession-reader__empty > span { font-size: 11px !important; }
+.succession-reader__page-jump > span { font-size: 11px !important; }
+.succession-reader-panel > section > header span { font-size: 11px !important; }
+.succession-reader__chapter-tools > div button { font-size: 11px !important; }
+.succession-reader__chapter-summary span { font-size: 11px !important; }
+.succession-reader__chapter-groups > section > header span { font-size: 11px !important; }
+.succession-reader__chapter-groups > section > header p { font-size: 11px !important; }
+.succession-reader__chapter-copy small { font-size: 11px !important; }
+.succession-reader__chapter-state small { font-size: 11px !important; }
+.succession-reader__thumbnails span { font-size: 11px !important; }
+.succession-reader__chapter-info > span { font-size: 11px !important; }
+.succession-reader__resume-card > span { font-size: 11px !important; }
+.succession-reader__bookmark-current > span { font-size: 11px !important; }
+.succession-reader__chapter-info dt { font-size: 11px !important; }
+.succession-reader__chapter-info section span { font-size: 11px !important; }
+.succession-reader__settings legend { font-size: 11px !important; }
+.succession-reader__setting-grid button { font-size: 11px !important; }
+.succession-reader__bookmark-list footer button { font-size: 11px !important; }
+.succession-reader__shortcuts kbd { font-size: 11px !important; }
 
 .succession-reader__mode button,
-.succession-reader__controls button {
+.succession-reader__controls button,
+.succession-reader__icon-button,
+.succession-reader__chapter-trigger,
+.succession-reader__bottombar button {
   min-height: 44px;
 }
