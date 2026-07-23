@@ -203,7 +203,7 @@ try {
 
 const failedRoutes = routeResults.filter((row) => row.error || row.violations.length);
 const failedInteractions = interactionResults.filter((row) => row.status === 'failed');
-const contrastWarningCount = routeResults.reduce((total, row) => total + (row.contrastWarnings || []).reduce((nodes, item) => total + item.nodes.length, 0), 0);
+const contrastWarningCount = routeResults.reduce((total, row) => total + (row.contrastWarnings || []).reduce((nodes, item) => nodes + item.nodes.length, 0), 0);
 const contrastWarningRoutes = routeResults.filter((row) => row.contrastWarnings?.length).length;
 const summary = {
   generatedAt: new Date().toISOString(),
