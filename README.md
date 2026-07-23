@@ -65,6 +65,12 @@ A successful build or GitHub commit is not proof of a hosted release. Record dep
 - Route inventory: `src/data/routeManifest.js`.
 - Cloudflare Worker: `server/index.js`, `server/chapter-admin.js`, `wrangler.jsonc`.
 
+## Batch 12 design system
+
+Batch 12 is the current reusable archive UI foundation. `src/data/archiveDesignSystem.js` owns the primitive and semantic-tone contracts, `src/components/ArchiveUI.jsx` implements the shared components, and `src/styles/archive-system.css` owns their styling.
+
+Use `ArchiveSection`, `ArchiveCard`, `EvidenceBadge`, `StatusPill`, `SourceStack`, and `ArchiveLedger` before creating one-off equivalents. The design-system audit remains part of the 15 independent pre-build audits, while the old reader-facing demonstration remains removed.
+
 ## Media ownership
 
 `src/data/characters.js` owns portrait provenance and `src/data/priorityMedia.generated.js` is its generated projection. `src/data/blackWhale.js` owns room-image provenance and `src/data/blackWhaleMedia.generated.js` is its generated projection.
