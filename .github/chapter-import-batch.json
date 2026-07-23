@@ -4,8 +4,6 @@
   "batchSize": 2,
   "maxAttempts": 3,
   "pending": [
-    338,
-    339,
     340,
     341,
     342,
@@ -73,6 +71,8 @@
     409
   ],
   "completed": [
+    338,
+    339,
     400,
     401,
     404,
@@ -85,5 +85,19 @@
     414
   ],
   "attempts": {},
-  "failed": {}
+  "failed": {},
+  "lastRun": {
+    "at": "2026-07-23T05:00:39.193Z",
+    "selected": [
+      338,
+      339
+    ],
+    "succeeded": [
+      338,
+      339
+    ],
+    "retried": [],
+    "failed": []
+  },
+  "status": "running"
 }
