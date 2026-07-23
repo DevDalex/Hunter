@@ -1,0 +1,235 @@
+name: Remove importer login
+
+on:
+  push:
+    branches:
+      - fix/remove-importer-login
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: fix/remove-importer-login
+          fetch-depth: 0
+
+      - name: Remove login and retain direct import safeguards
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+          import re
+
+          worker_path = Path('server/chapter-admin.js')
+          worker = worker_path.read_text()
+
+          worker = worker.replace('const encoder = new TextEncoder();\n', '')
+          for line in [
+              "const SESSION_COOKIE = 'hxh_admin_session';\n",
+              'const SESSION_TTL_SECONDS = 2 * 60 * 60;\n',
+              'const INSPECTION_TTL_SECONDS = 30 * 60;\n',
+              'const LOGIN_WINDOW_MS = 15 * 60 * 1000;\n',
+              'const LOGIN_MAX_ATTEMPTS = 8;\n',
+              'const loginAttempts = new Map();\n',
+          ]:
+              worker = worker.replace(line, '')
+
+          patterns = [
+              r"const bytesToBase64Url = .*?;\n",
+              r"const textToBase64Url = .*?;\n",
+              r"const base64UrlToBytes = \(value\) => \{.*?\n\};\n",
+              r"const randomToken = \(bytes = 24\) => \{.*?\n\};\n",
+              r"const importHmacKey = \(secret\) => crypto\.subtle\.importKey\(.*?\n\);\n",
+              r"const signToken = async \(payload, secret\) => \{.*?\n\};\n",
+              r"const verifyToken = async \(token, secret, purpose\) => \{.*?\n\};\n",
+              r"const hashText = async \(value\) => .*?;\nconst secureTextEqual = async \(left, right\) => \{.*?\n\};\n",
+              r"const parseCookies = \(request\) => Object\.fromEntries\(.*?\n\);\n",
+              r"const sessionCookie = .*?;\nconst clearSessionCookie = .*?;\n",
+              r"const clientKey = \(request\) => .*?\nconst checkLoginRate = \(request\) => \{.*?\nconst requireSession = async \(request, env, \{ csrf = false \} = \{\}\) => \{.*?\n\};\n",
+          ]
+          for pattern in patterns:
+              worker, count = re.subn(pattern, '', worker, flags=re.S)
+              if count != 1:
+                  raise SystemExit(f'Expected one auth block for pattern {pattern!r}, found {count}')
+
+          worker = worker.replace('Cross-origin administrator requests are not allowed.', 'Cross-origin chapter import requests are not allowed.')
+          worker = worker.replace('Administrator requests must use application/json.', 'Chapter import requests must use application/json.')
+          worker = worker.replace('Administrator request body is too large.', 'Chapter import request body is too large.')
+          worker = worker.replace('Administrator request body must be valid JSON.', 'Chapter import request body must be valid JSON.')
+
+          worker, count = re.subn(
+              r"const handleLogin = async \(request, env\) => \{.*?\n\};\n\nconst handleInspect = async \(request, env\) => \{.*?\n\};\n",
+              """const resolveChapter = (requested, inferred) => {
+            const chapter = requested === null || requested === undefined || requested === ''
+              ? inferred
+              : Number.parseInt(requested, 10);
+            if (!Number.isInteger(chapter) || chapter < READER_START || chapter > READER_END) {
+              throw new HttpError(400, `Chapter must be from ${READER_START} through ${READER_END}.`);
+            }
+            return chapter;
+          };
+
+          const handleInspect = async (request, env) => {
+            requireSameOrigin(request);
+            const body = await readJson(request);
+            if (!body.sourceUrl) throw new HttpError(400, 'A chapter source URL is required.');
+            const inspection = await inspectSource(body.sourceUrl, env);
+            const chapter = resolveChapter(body.chapter, inspection.inferredChapter);
+            const pages = inspection.imageUrls.map((sourceUrl, index) => {
+              const query = new URLSearchParams({ sourceUrl: inspection.sourceUrl, imageUrl: sourceUrl });
+              return { page: index + 1, sourceUrl, previewUrl: `/api/admin/chapter/preview?${query}` };
+            });
+            return jsonResponse(200, { chapter, title: inspection.title, sourceUrl: inspection.sourceUrl, pages });
+          };
+""",
+              worker,
+              flags=re.S,
+          )
+          if count != 1:
+              raise SystemExit(f'Expected login/session/inspect block once, found {count}')
+
+          worker, count = re.subn(
+              r"const handlePreview = async \(request, env\) => \{.*?\n\};\n",
+              """const handlePreview = async (request, env) => {
+            const params = new URL(request.url).searchParams;
+            const sourceUrl = params.get('sourceUrl') || '';
+            const imageUrl = params.get('imageUrl') || '';
+            if (!sourceUrl || !imageUrl) throw new HttpError(400, 'Preview requires sourceUrl and imageUrl.');
+            const image = await fetchImage(imageUrl, sourceUrl, env);
+            return new Response(image.bytes, {
+              status: 200,
+              headers: {
+                'content-type': image.contentType,
+                'content-length': String(image.bytes.byteLength),
+                'cache-control': 'private, max-age=300',
+                'x-content-type-options': 'nosniff',
+                'content-security-policy': \"default-src 'none'\",
+              },
+            });
+          };
+""",
+              worker,
+              flags=re.S,
+          )
+          if count != 1:
+              raise SystemExit(f'Expected preview handler once, found {count}')
+
+          worker, count = re.subn(
+              r"const handleImport = async \(request, env\) => \{.*?\n\};\n",
+              """const handleImport = async (request, env) => {
+            requireSameOrigin(request);
+            requireConfig(env, ['GITHUB_ADMIN_TOKEN']);
+            const body = await readJson(request);
+            if (body.authorized !== true) throw new HttpError(400, 'Authorization confirmation is required before publishing chapter media.');
+            if (!body.sourceUrl) throw new HttpError(400, 'A chapter source URL is required.');
+            const inspection = await inspectSource(body.sourceUrl, env);
+            const chapter = resolveChapter(body.chapter, inspection.inferredChapter);
+            const result = await publishChapter({ chapter, sourceUrl: inspection.sourceUrl, imageUrls: inspection.imageUrls, replace: body.replace === true }, env);
+            return jsonResponse(200, result);
+          };
+""",
+              worker,
+              flags=re.S,
+          )
+          if count != 1:
+              raise SystemExit(f'Expected import handler once, found {count}')
+
+          for route in [
+              "    if (request.method === 'POST' && url.pathname === '/api/admin/chapter/login') return handleLogin(request, env);\n",
+              "    if (request.method === 'GET' && url.pathname === '/api/admin/chapter/session') return handleSession(request, env);\n",
+              "    if (request.method === 'POST' && url.pathname === '/api/admin/chapter/logout') return handleLogout(request, env);\n",
+          ]:
+              worker = worker.replace(route, '')
+
+          forbidden = ['ADMIN_USERNAME', 'ADMIN_PASSWORD', 'hxh_admin_session', 'requireSession(', '/api/admin/chapter/login', '/api/admin/chapter/session', '/api/admin/chapter/logout']
+          for token in forbidden:
+              if token in worker:
+                  raise SystemExit(f'Login token remained in Worker: {token}')
+          worker_path.write_text(worker)
+
+          page_path = Path('public/admin/chapters/index.html')
+          page = page_path.read_text()
+          page = page.replace('<title>Chapter Import · Hunter Archive Admin</title>', '<title>Chapter Import · Hunter Archive</title>')
+          page = page.replace('<div><span class="eyebrow">Hunter Archive administration</span><h1>Import chapter pages from the website.</h1><p>Sign in, inspect the source URL, review every detected page, then create one GitHub commit containing the normalized chapter folder and updated reader manifest.</p></div>', '<div><span class="eyebrow">Hunter Archive import tools</span><h1>Import chapter pages from the website.</h1><p>Inspect the source URL, review every detected page, then create one GitHub commit containing the normalized chapter folder and updated reader manifest.</p></div>')
+          page = page.replace('<div class="access"><strong>Server-protected route</strong><span>HttpOnly session · CSRF protection · GitHub token stays server-side</span><span>Admin build 2026-07-23.1</span></div>', '<div class="access"><strong>Private server tool</strong><span>No account login · GitHub token stays server-side</span><span>Import build 2026-07-23.2</span></div>')
+          page, count = re.subn(r'\n  <section id="login" class="panel login">.*?</section>\n', '\n', page, flags=re.S)
+          if count != 1:
+              raise SystemExit(f'Expected one login section, found {count}')
+          page = page.replace('<section id="app" class="app" hidden>', '<section id="app" class="app">')
+          page, count = re.subn(r'\n    <div class="top-actions">.*?</div>', '', page, flags=re.S)
+          if count != 1:
+              raise SystemExit(f'Expected one signed-in toolbar, found {count}')
+          page = page.replace("  let csrf = '';\n", '')
+          page = page.replace("    const headers = { ...(options.body ? { 'content-type':'application/json' } : {}), ...(csrf ? { 'x-csrf-token':csrf } : {}), ...(options.headers || {}) };", "    const headers = { ...(options.body ? { 'content-type':'application/json' } : {}), ...(options.headers || {}) };")
+          page = page.replace("      if (response.status === 401) showLogin();\n", '')
+          page = re.sub(r"  const showLogin = .*?\n  const showApp = .*?\n", '', page)
+          page, count = re.subn(r"\n  \$\('login-form'\)\.addEventListener\('submit'.*?\n  \$\('logout-button'\)\.addEventListener.*?\n", '\n', page, flags=re.S)
+          if count != 1:
+              raise SystemExit(f'Expected login/logout script block once, found {count}')
+          page = page.replace("body:JSON.stringify({importToken:inspection.importToken,authorized:true,replace:$('replace').checked})", "body:JSON.stringify({sourceUrl:inspection.sourceUrl,chapter:inspection.chapter,authorized:true,replace:$('replace').checked})")
+          page = page.replace("\n  api('/api/admin/chapter/session').then(showApp).catch(showLogin);", '')
+          page = page.replace('input[type=text],input[type=password],input[type=url],input[type=number]', 'input[type=text],input[type=url],input[type=number]')
+          page = page.replace('    .login { width:min(520px,100%); margin:48px auto 0; }\n    .login form { display:grid; gap:14px; }\n    .app[hidden],.login[hidden] { display:none; }\n', '')
+          for token in ['Administrator login', 'login-form', 'login-button', 'logout-button', '/api/admin/chapter/login', '/api/admin/chapter/session', '/api/admin/chapter/logout', 'type="password"', 'Signed in as']:
+              if token in page:
+                  raise SystemExit(f'Login token remained in page: {token}')
+          page_path.write_text(page)
+
+          server_index = Path('server/index.js')
+          entry = server_index.read_text().replace('into the same authenticated JSON handler', 'into the same chapter-import JSON handler')
+          server_index.write_text(entry)
+
+          audit_path = Path('scripts/audit-hosted-chapter-admin.mjs')
+          audit = audit_path.read_text()
+          audit = re.sub(
+              r"for \(const secret of \['ADMIN_USERNAME'.*?console\.log\('Hosted chapter admin audit passed:.*?\);",
+              """assert(worker.includes('GITHUB_ADMIN_TOKEN'), 'Worker must keep the GitHub write token server-side');
+          for (const removed of ['ADMIN_USERNAME', 'ADMIN_PASSWORD', 'hxh_admin_session', 'requireSession(', '/api/admin/chapter/login', '/api/admin/chapter/session', '/api/admin/chapter/logout']) {
+            assert(!worker.includes(removed), `Worker must not retain login/session code: ${removed}`);
+          }
+          assert(worker.includes('CHAPTER_SOURCE_HOSTS') && worker.includes('CHAPTER_IMAGE_HOSTS'), 'remote source and image hosts must remain allowlisted');
+          assert(worker.includes('/git/blobs') && worker.includes('/git/trees') && worker.includes('/git/commits') && worker.includes('/git/refs/heads/'), 'GitHub publication must remain one Git-data commit flow');
+          assert(worker.includes('force: false'), 'branch update must reject non-fast-forward publication races');
+          assert(worker.includes('const inspection = await inspectSource(body.sourceUrl, env);'), 'publication must re-inspect the submitted source URL before writing');
+          assert(worker.includes("requireConfig(env, ['GITHUB_ADMIN_TOKEN'])"), 'publication must still require the server-side GitHub token');
+          assert(!adminPage.includes('type=\"password\"') && !adminPage.includes('login-form') && !adminPage.includes('/api/admin/chapter/login'), 'import page must open directly without a login form');
+          assert(adminPage.includes('/api/admin/chapter/inspect') && adminPage.includes('/api/admin/chapter/import'), 'deployed import page must use the inspection and publication endpoints');
+          assert(adminPage.includes("error.status !== 405") && adminPage.includes("method:'GET'"), 'read-only inspection must retry through GET after an HTTP 405');
+          assert(serverIndex.includes('normalizeInspectionGet') && serverIndex.includes('validateInspectionResponse'), 'Worker entry must normalize and validate the GET inspection fallback');
+          assert(serverIndex.includes('Array.isArray(payload.pages)'), 'Worker must reject successful inspection responses without a pages array');
+          assert(serverIndex.includes('/admin/chapters/inspect-contract.js'), 'import HTML must load the browser-side inspection contract guard');
+          assert(inspectContract.includes("requestUrl.pathname !== '/api/admin/chapter/inspect'") && inspectContract.includes('Array.isArray(payload.pages)'), 'browser inspection guard must validate the API response shape');
+          assert(inspectContract.includes('rewritten to a webpage'), 'browser inspection guard must explain an HTML route rewrite');
+          assert(prepareHosting.includes("cp('server', 'dist/server', { recursive: true })"), 'hosting preparation must copy Worker modules recursively');
+          assert(prepareHosting.includes('Mozilla/5.0') && prepareHosting.includes('Hosted chapter admin fetch profile marker is missing.'), 'deployed chapter fetch must use the guarded browser request profile');
+          assert(packageJson.includes('audit:hosted-admin'), 'hosted importer audit must remain registered in package scripts');
+
+          console.log('Hosted chapter importer audit passed: direct access without login, allowlisted remote fetches, source re-inspection before publication, strict inspection response contracts, image parsing, manifest round-trip, atomic GitHub publication, and recursive Worker packaging are intact.');""",
+              audit,
+              flags=re.S,
+          )
+          audit_path.write_text(audit)
+          PY
+
+      - name: Verify importer and full build
+        run: |
+          npm ci
+          npm run audit:hosted-admin
+          npm run build
+
+      - name: Commit login-free importer
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f .github/workflows/remove-importer-login.yml
+          git add -A
+          git commit -m "Remove chapter importer login"
+          git push origin HEAD:fix/remove-importer-login
