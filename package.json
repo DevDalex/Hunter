@@ -13,7 +13,7 @@
     "audit:final": "node scripts/audit-final-polish.mjs",
     "audit:governance": "node scripts/audit-archive-governance.mjs",
     "audit:design-system": "node scripts/audit-design-system.mjs",
-    "audit:schema": "node scripts/audit-data-schema.mjs",
+    "audit:schema": "node scripts/audit-data-schema.mjs && node scripts/audit-succession-archive-data.mjs",
     "audit:css": "node scripts/audit-css.mjs",
     "audit:readability": "node scripts/run-css-aware-audit.mjs audit-readability.mjs",
     "audit:layout": "node scripts/run-css-aware-audit.mjs audit-layout.mjs",
