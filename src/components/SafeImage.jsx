@@ -30,6 +30,16 @@ const localPortraitBySubject = new Map([
   ['isaac netero', '/media/portraits/isaac-netero.webp'],
 ]);
 
+const approvedExternalMediaHosts = new Set(['hunterxhunter.fandom.com', 'static.wikia.nocookie.net']);
+const isApprovedExternalMedia = (value = '') => {
+  try {
+    const url = new URL(value, window.location.href);
+    return url.protocol === 'https:' && approvedExternalMediaHosts.has(url.hostname);
+  } catch {
+    return false;
+  }
+};
+
 const inferLocalPortraitFallback = ({ fallbackLabel, alt }) => {
   const candidates = [fallbackLabel, String(alt || '').split(',')[0]];
   for (const candidate of candidates) {
@@ -64,17 +74,50 @@ export default function SafeImage({
   const [sourceIndex, setSourceIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
+  const [nearViewport, setNearViewport] = useState(eager);
   const availabilityCallback = useRef(onAvailabilityChange);
+  const imageRef = useRef(null);
 
   useEffect(() => { availabilityCallback.current = onAvailabilityChange; }, [onAvailabilityChange]);
   useEffect(() => {
     setSourceIndex(0);
     setLoaded(false);
     setUnavailable(false);
+    setNearViewport(eager);
     availabilityCallback.current?.(Boolean(sources[0]));
-  }, [sources]);
+  }, [eager, sources]);
 
   const activeSrc = sources[sourceIndex] || '';
+
+  useEffect(() => {
+    const image = imageRef.current;
+    if (!image || nearViewport || eager) return undefined;
+    if (typeof IntersectionObserver !== 'function') {
+      setNearViewport(true);
+      return undefined;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      setNearViewport(true);
+      observer.disconnect();
+    }, { rootMargin: '480px 0px' });
+    observer.observe(image);
+    return () => observer.disconnect();
+  }, [activeSrc, eager, nearViewport]);
+
+  useEffect(() => {
+    if (!activeSrc || loaded || unavailable || !nearViewport || !isApprovedExternalMedia(activeSrc)) return undefined;
+    const timer = window.setTimeout(() => {
+      setLoaded(false);
+      if (sourceIndex < sources.length - 1) setSourceIndex((index) => index + 1);
+      else {
+        setUnavailable(true);
+        availabilityCallback.current?.(false);
+      }
+    }, 2_200);
+    return () => window.clearTimeout(timer);
+  }, [activeSrc, loaded, nearViewport, sourceIndex, sources.length, unavailable]);
+
   if (!activeSrc || unavailable) {
     return fallbackLabel ? <span className={`safe-image-placeholder${className ? ` ${className}` : ''}`} role="img" aria-label={alt || fallbackLabel}><b>{fallbackLabel}</b><small>Visual unavailable</small></span> : null;
   }
@@ -82,6 +125,7 @@ export default function SafeImage({
   return (
     <img
       {...props}
+      ref={imageRef}
       className={`safe-image${className ? ` ${className}` : ''}`}
       src={activeSrc}
       alt={alt}
