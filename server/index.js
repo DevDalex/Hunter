@@ -141,7 +141,7 @@ const injectInspectionContract = async (response) => {
   });
 };
 
-// Full-stack Sites Worker. Vite's built assets are exposed through the ASSETS
+// Full-stack Cloudflare Worker. Vite's built assets are exposed through the ASSETS
 // binding; all chapter-admin routes execute before any client-side SPA fallback.
 export default {
   async fetch(request, env) {

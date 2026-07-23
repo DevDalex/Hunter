@@ -21,7 +21,7 @@ import { homeHighlights } from './homeHighlights';
 import { archiveDesignSystemStats } from './archiveDesignSystem';
 import { completionCriteria, implementationSections, maintenanceMatrix, releaseChecklist } from './implementationNotes';
 import { routeManifest, routeManifestStats } from './routeManifest';
-import { phaseSixSequence, releaseGates, releaseStats } from './releaseReadiness';
+import { releaseGates, releaseStats } from './releaseReadiness';
 
 const allowedHosts = new Set(['hunterxhunter.fandom.com', 'static.wikia.nocookie.net']);
 const validUrl = (value) => {
@@ -221,8 +221,8 @@ export const integrityChecks = [
     detail: `${implementationSections.length} system notes, ${maintenanceMatrix.length} maintenance runbooks, ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks, ${completionCriteria.length} completion criteria, and ${archiveDesignSystemStats.primitives} Batch 12 primitives form the current handoff.`,
   },
   {
-    id: 'phase6g-release-contract', label: 'Final release contract', status: phaseSixSequence.length === 7 && releaseGates.length === 10 && routeManifest.length === 26 && routeManifestStats.screens === releaseStats.routes && releaseStats.chapterBoundary === ARCHIVE_BOUNDARY ? 'pass' : 'fail',
-    detail: `${phaseSixSequence.length} recorded build stages culminate in ${releaseGates.length} final gates across ${routeManifest.length} focused reader-facing screens and two portable editions.`,
+    id: 'cloudflare-release-contract', label: 'Cloudflare release contract', status: releaseGates.length === 10 && routeManifest.length === 26 && routeManifestStats.screens === releaseStats.routes && releaseStats.chapterBoundary === ARCHIVE_BOUNDARY ? 'pass' : 'fail',
+    detail: `${releaseGates.length} active release gates cover ${routeManifest.length} focused reader-facing screens and the Worker-first Cloudflare deployment contract.`,
   },
 ];
 

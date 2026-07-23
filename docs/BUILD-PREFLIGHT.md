@@ -1,14 +1,12 @@
 # Aggregate build preflight
 
-Status: active build contract
-Date: 2026-07-20
+Status: active Cloudflare build contract  
+Date: 2026-07-23  
 Owner: `scripts/run-build-preflight.mjs`
 
-## Problem solved
+## Purpose
 
-The previous `npm run build` command chained independent audits with `&&`. A deployment stopped at the first failure, so several stale contracts appeared across several Cloudflare attempts instead of one report.
-
-The aggregate runner executes all 15 independent pre-build audits, records every failure, and exits unsuccessfully only after the full list has run.
+The aggregate runner executes all 15 independent pre-build audits, records every failure, and exits unsuccessfully only after the complete list has run. One Cloudflare build therefore reports the full repository repair list instead of revealing one stale contract per attempt.
 
 ## Included audits
 
@@ -30,28 +28,27 @@ The aggregate runner executes all 15 independent pre-build audits, records every
 
 ## Ordering rules
 
-- Story → Reference → Characters → Final preserves the Batch 7–10 lock sequence.
-- Final → Governance → Design System → Schema preserves the Batch 11–12 integration point.
-- CSS ownership runs before the CSS-aware readability, layout, accessibility, and polish audits.
+- Story → Reference → Characters → Final preserves the established content lock sequence.
+- Final → Governance → Design System → Schema preserves the governance and reusable-UI integration point.
+- CSS ownership runs before CSS-aware readability, layout, accessibility, and polish checks.
 - Media verification runs before polish.
 
-## Later build stages
+## Later Cloudflare build stages
 
-These stages remain outside the aggregate runner because they require generated artifacts or a completed production build:
+These ordered stages require generated output and therefore run after the aggregate preflight:
 
-1. `package:release`
-2. `audit:release`
-3. hosting cleanup
-4. Vite production build
-5. `audit:performance`
-6. hosting preparation
+1. hosting cleanup;
+2. Vite production build into `dist/client/`;
+3. `audit:performance`;
+4. Worker preparation into `dist/server/`;
+5. Cloudflare release audit.
 
-A failure in one of those stages is still a single ordered dependency failure, not an independent pre-build audit that can safely continue.
+The retired portable ZIP and standalone build stages are intentionally absent.
 
 ## Failure behavior
 
-Each audit keeps its original stdout/stderr. At the end, the runner lists every failing script. Do not weaken factual or structural assertions merely to make the summary green; correct stale data, contracts, paths, or code.
+Each audit keeps its original output. At the end, the runner lists every failing script. Correct stale data, paths, documentation, or code; do not weaken a factual or structural assertion merely to make the summary green.
 
 ## Verification boundary
 
-Aggregate preflight passing proves only that its 15 repository-side audits passed for that source state. It does not prove release-package generation, Vite output, performance, browser QA, GitHub Actions, or Cloudflare deployment succeeded.
+Aggregate preflight proves only that its 15 repository-side audits passed for that source state. A full `npm run build` additionally proves the Vite, performance, Worker preparation, and Cloudflare artifact checks passed. Neither proves that Cloudflare deployed successfully; hosted success requires a terminal Cloudflare result and direct live-route verification.
