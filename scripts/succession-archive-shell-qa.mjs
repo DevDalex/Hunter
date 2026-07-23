@@ -86,7 +86,9 @@ try {
     if (!desktop.url().endsWith('/story/succession-contest/characters')) throw new Error(`Characters route did not become canonical: ${desktop.url()}`);
     const cardCount = await desktop.locator('.succession-entity-grid > article').count();
     if (!cardCount) throw new Error('Canonical character cards did not render');
-    await desktop.locator('.succession-entity-grid .succession-entity-link').first().click();
+    const billCard = desktop.locator('.succession-entity-grid > article').filter({ hasText: 'Bill' }).first();
+    if (!await billCard.count()) throw new Error('Bill canonical record is missing from the character workspace');
+    await billCard.locator('.succession-entity-link').click();
     await desktop.waitForSelector('.succession-entity-header', { timeout: 15_000 });
     if (!desktop.url().includes('entity=character%3A')) throw new Error('Entity detail did not preserve the stable namespaced ID in the route');
   });
@@ -101,9 +103,10 @@ try {
   await record('Mobile archive uses an intentional keyboard-safe drawer', mobile, async () => {
     await mobile.goto(`${base}/story/succession-contest/locations`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
     await mobile.waitForSelector('.succession-archive__mobile-bar', { timeout: 15_000 });
-    await mobile.getByRole('button', { name: 'Archive' }).click();
+    const trigger = mobile.getByRole('button', { name: 'Archive', exact: true });
+    await trigger.click();
     await mobile.waitForSelector('.succession-drawer [role="dialog"]', { timeout: 10_000 });
-    const expanded = await mobile.getByRole('button', { name: 'Archive' }).getAttribute('aria-expanded');
+    const expanded = await trigger.getAttribute('aria-expanded');
     if (expanded !== 'true') throw new Error('Mobile archive button did not expose expanded state');
     await mobile.keyboard.press('Escape');
     await mobile.waitForSelector('.succession-drawer', { state: 'detached', timeout: 10_000 });
