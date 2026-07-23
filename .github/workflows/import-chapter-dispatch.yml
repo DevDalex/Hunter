@@ -1,0 +1,118 @@
+name: Import chapter from website
+run-name: Import Chapter ${{ github.event.client_payload.chapter }} · ${{ github.event.client_payload.request_id }}
+
+on:
+  repository_dispatch:
+    types: [hunter-chapter-import]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chapter-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate website import request
+        id: request
+        env:
+          IMPORT_PAYLOAD: ${{ toJson(github.event.client_payload) }}
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const payload = JSON.parse(process.env.IMPORT_PAYLOAD || '{}');
+          const sourceUrl = String(payload.source_url || '').trim();
+          const chapter = Number.parseInt(payload.chapter, 10);
+          const replace = payload.replace === true;
+          const selectedImages = Array.isArray(payload.selected_images) ? payload.selected_images : [];
+          const requestId = String(payload.request_id || '').trim();
+
+          const allowedHost = (hostname) => hostname === '3asq.online' || hostname.endsWith('.3asq.online');
+          let source;
+          try { source = new URL(sourceUrl); } catch { throw new Error('The queued source URL is invalid.'); }
+          if (!['http:', 'https:'].includes(source.protocol) || !allowedHost(source.hostname.toLowerCase())) {
+            throw new Error('The queued source URL is not on the allowed chapter host.');
+          }
+          if (!Number.isInteger(chapter) || chapter < 338 || chapter > 414) {
+            throw new Error('Chapter must be from 338 through 414.');
+          }
+          if (!requestId || requestId.length > 100) throw new Error('The import request ID is missing or invalid.');
+          if (selectedImages.length < 1 || selectedImages.length > 120) {
+            throw new Error('The import must contain 1 through 120 selected image URLs.');
+          }
+
+          const normalized = selectedImages.map((value, index) => {
+            let url;
+            try { url = new URL(String(value || '').trim()); }
+            catch { throw new Error(`Selected image URL ${index + 1} is invalid.`); }
+            if (!['http:', 'https:'].includes(url.protocol) || !allowedHost(url.hostname.toLowerCase())) {
+              throw new Error(`Selected image URL ${index + 1} is not on the allowed image host.`);
+            }
+            return url.href;
+          });
+          if (new Set(normalized).size !== normalized.length) throw new Error('The selected image list contains duplicate URLs.');
+
+          fs.writeFileSync('.chapter-import-selected-images.json', `${JSON.stringify(normalized, null, 2)}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `source_url<<EOF\n${source.href}\nEOF\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `chapter=${chapter}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `replace=${replace}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `selected_count=${normalized.length}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `request_id=${requestId}\n`);
+          NODE
+
+      - name: Download and import selected chapter pages
+        env:
+          SOURCE_URL: ${{ steps.request.outputs.source_url }}
+          CHAPTER: ${{ steps.request.outputs.chapter }}
+          REPLACE: ${{ steps.request.outputs.replace }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python <<'PY'
+          from pathlib import Path
+          path = Path('scripts/lib/succession-chapter-url-source.mjs')
+          source = path.read_text()
+          source = source.replace(
+              "const USER_AGENT = 'Hunter-Archive-Chapter-Importer/1.0 (+local maintainer tool)';",
+              "const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36';",
+          )
+          path.write_text(source)
+          PY
+          args=("$SOURCE_URL" "$CHAPTER" --confirm --image-list-file .chapter-import-selected-images.json)
+          if [[ "$REPLACE" == "true" ]]; then args+=(--replace); fi
+          node scripts/import-succession-chapter-url.mjs "${args[@]}"
+          rm -f .chapter-import-selected-images.json
+          node scripts/audit-succession-chapter-media.mjs
+
+      - name: Commit imported chapter
+        env:
+          CHAPTER: ${{ steps.request.outputs.chapter }}
+          SELECTED_COUNT: ${{ steps.request.outputs.selected_count }}
+          REQUEST_ID: ${{ steps.request.outputs.request_id }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "public/media/succession-contest/chapters/$CHAPTER" src/data/successionChapterMedia.generated.js
+          git diff --cached --quiet && { echo "No repository changes were produced."; exit 1; }
+          git commit -m "Import Succession Chapter $CHAPTER selected pages"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          echo "Imported Chapter $CHAPTER with $SELECTED_COUNT selected pictures. Request: $REQUEST_ID" >> "$GITHUB_STEP_SUMMARY"

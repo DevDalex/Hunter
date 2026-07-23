@@ -66,14 +66,14 @@
 <body>
 <main>
   <header>
-    <div><span class="eyebrow">Temporary Hunter Archive importer</span><h1>Select and import the chapter pictures.</h1><p>Paste a chapter link, inspect the detected images, exclude anything that does not belong, then submit the import. The server downloads the selected pictures and commits them to GitHub.</p></div>
-    <div class="access"><strong>One-button publishing</strong><span>No username or password</span><span>GitHub credential stays server-side</span></div>
+    <div><span class="eyebrow">Temporary Hunter Archive importer</span><h1>Select and import the chapter pictures.</h1><p>Paste a chapter link, inspect the detected images, exclude anything that does not belong, then submit the import. GitHub downloads and commits the selected pictures in the background.</p></div>
+    <div class="access"><strong>One-button publishing</strong><span>No username or password</span><span>Heavy work runs on GitHub</span></div>
   </header>
 
   <section class="steps" aria-label="Import steps">
     <article><i>01</i><h2>Inspect</h2><p>Fetch the source chapter and detect likely manga pages.</p></article>
     <article><i>02</i><h2>Select</h2><p>Keep or exclude each picture while preserving the displayed order.</p></article>
-    <article><i>03</i><h2>Submit</h2><p>Download the selected pages, update the manifest and commit to GitHub.</p></article>
+    <article><i>03</i><h2>Submit</h2><p>Queue the download, manifest update and GitHub commit.</p></article>
   </section>
 
   <section class="panel">
@@ -103,7 +103,7 @@
       <label class="check"><input id="reviewed" type="checkbox" /> <span>I reviewed the selected pictures and their displayed order.</span></label>
       <label class="check"><input id="replace" type="checkbox" /> <span>Replace the existing Chapter <b id="replace-chapter">—</b> folder and manifest entry if present.</span></label>
       <div class="actions"><button id="import-button" type="button" disabled>Submit import</button></div>
-      <p>The server writes the selected pages to <code>public/media/succession-contest/chapters/&lt;chapter&gt;/</code> and updates <code>src/data/successionChapterMedia.generated.js</code> in the same GitHub commit.</p>
+      <p>Submitting queues a GitHub job. It writes the selected pages to <code>public/media/succession-contest/chapters/&lt;chapter&gt;/</code>, updates <code>src/data/successionChapterMedia.generated.js</code>, commits to <code>main</code>, and starts deployment.</p>
     </div>
   </section>
 </main>
@@ -228,8 +228,8 @@
     if(!inspection || !$('reviewed').checked || selected.length===0) return;
     const button=$('import-button');
     button.disabled=true;
-    button.textContent='Importing…';
-    showStatus(`Downloading and publishing ${selected.length} selected pictures for Chapter ${inspection.chapter}…`);
+    button.textContent='Submitting…';
+    showStatus(`Queuing ${selected.length} selected pictures for Chapter ${inspection.chapter}…`);
     try {
       const payload=await api('/api/admin/chapter/import',{
         method:'POST',
@@ -240,7 +240,7 @@
           replace:$('replace').checked
         })
       });
-      showStatus(`Chapter ${payload.chapter} imported successfully with ${payload.pageCount} pictures.\n${payload.commitUrl || ''}\nThe website will update after deployment finishes.`,'good');
+      showStatus(`Chapter ${payload.chapter} import was queued with ${payload.pageCount} selected pictures.\nGitHub is downloading and committing them in the background. Deployment starts automatically when the job finishes.\n${payload.actionsUrl || ''}`,'good');
       $('reviewed').checked=false;
     } catch(error) {
       showStatus(error.message,'bad');
