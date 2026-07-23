@@ -29,3 +29,98 @@
 .succession-reader__bottombar button {
   min-height: 44px;
 }
+
+.succession-reader__panel-enhancement {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--reader-border);
+  border-radius: 10px;
+  background: var(--reader-bg-soft);
+}
+
+.succession-reader__panel-enhancement > div {
+  min-width: 0;
+}
+
+.succession-reader__panel-enhancement span,
+.succession-reader__command-syntax small {
+  display: block;
+  color: var(--reader-muted);
+  font-size: 11px;
+}
+
+.succession-reader__panel-enhancement strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--reader-ink);
+}
+
+.succession-reader__panel-enhancement button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 13px;
+  border: 1px solid var(--reader-border-strong);
+  border-radius: 8px;
+  background: var(--reader-bg-elevated);
+  color: var(--reader-ink);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.succession-reader__panel-enhancement button.is-completed {
+  border-color: var(--reader-gold);
+  color: var(--reader-gold);
+}
+
+.succession-reader__panel-enhancement.is-danger button {
+  border-color: rgba(194, 74, 86, .6);
+  color: #f6a7af;
+}
+
+.succession-reader__panel-enhancement button:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+.succession-reader__command-syntax {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--reader-border);
+  border-radius: 9px;
+  background: var(--reader-bg-soft);
+}
+
+.succession-reader__command-syntax > span {
+  color: var(--reader-muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.succession-reader__command-syntax code {
+  padding: 2px 5px;
+  border: 1px solid var(--reader-border);
+  border-radius: 5px;
+  background: var(--reader-bg-elevated);
+  color: var(--reader-gold);
+  font-size: 11px;
+}
+
+@media (max-width: 620px) {
+  .succession-reader__panel-enhancement {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-reader__panel-enhancement button {
+    width: 100%;
+  }
+}
