@@ -1,0 +1,95 @@
+name: Import chapter from request
+
+on:
+  issues:
+    types: [opened, reopened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: chapter-import
+  cancel-in-progress: false
+
+jobs:
+  import:
+    if: github.event.issue.user.login == github.repository_owner && startsWith(github.event.issue.title, '[Chapter Import]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Parse import request
+        id: request
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const body = process.env.ISSUE_BODY || '';
+          const read = (name) => body.match(new RegExp(`^${name}=(.*)$`, 'm'))?.[1]?.trim() || '';
+          const sourceUrl = read('source_url');
+          const chapter = Number.parseInt(read('chapter'), 10);
+          const replace = read('replace') === 'true';
+          let parsed;
+          try { parsed = new URL(sourceUrl); } catch { throw new Error('The import request contains an invalid source_url.'); }
+          if (!['http:', 'https:'].includes(parsed.protocol)) throw new Error('The source URL must use HTTP or HTTPS.');
+          if (!Number.isInteger(chapter) || chapter < 338 || chapter > 414) throw new Error('Chapter must be from 338 through 414.');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `source_url<<EOF\n${sourceUrl}\nEOF\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `chapter=${chapter}\n`);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `replace=${replace}\n`);
+          NODE
+
+      - name: Import chapter pages
+        env:
+          SOURCE_URL: ${{ steps.request.outputs.source_url }}
+          CHAPTER: ${{ steps.request.outputs.chapter }}
+          REPLACE: ${{ steps.request.outputs.replace }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          args=("$SOURCE_URL" "$CHAPTER" --confirm)
+          if [[ "$REPLACE" == "true" ]]; then args+=(--replace); fi
+          node scripts/import-succession-chapter-url.mjs "${args[@]}"
+          node scripts/audit-succession-chapter-media.mjs
+
+      - name: Commit imported chapter
+        env:
+          CHAPTER: ${{ steps.request.outputs.chapter }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "public/media/succession-contest/chapters/$CHAPTER" src/data/successionChapterMedia.generated.js
+          git diff --cached --quiet && { echo "No repository changes were produced."; exit 1; }
+          git commit -m "Import Succession Chapter $CHAPTER pages"
+          git push origin HEAD:main
+
+      - name: Mark request complete
+        if: success()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+          CHAPTER: ${{ steps.request.outputs.chapter }}
+        run: |
+          gh issue comment "$ISSUE" --body "Chapter $CHAPTER was imported, committed to main, and queued for deployment."
+          gh issue close "$ISSUE" --reason completed
+
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: gh issue comment "$ISSUE" --body "The chapter import failed. Open the failed GitHub Actions run attached to this issue for the exact detection or download error."
