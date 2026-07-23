@@ -26,9 +26,8 @@ const routePath = ({ view, target }) => view === 'home' ? 'home/' : view === 'se
 const routes = routeManifest.map((route) => ({ ...route, path: routePath(route) }))
   .filter((route) => !selectedRoute || route.path === selectedRoute.replace(/^#?\/?/, ''));
 const mime = {
-  '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8',
-  '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.js': 'text/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml',
+  '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
+  '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml',
   '.webp': 'image/webp', '.zip': 'application/zip',
 };
 
@@ -171,13 +170,14 @@ try {
       if (await page.locator('#tree-tab-biological').getAttribute('aria-selected') !== 'true') throw new Error('biological tree did not activate');
       if (!await page.locator('#tree-tab-biological').evaluate((node) => node === document.activeElement)) throw new Error('focus did not move with the family-tree tab');
     });
-    await recordInteraction('grouped Succession sections support arrow keys', { width: 1440, height: 1000 }, 'succession/beasts', async (page) => {
-      const tabs = page.locator('.section-tabs button');
-      await tabs.nth(0).focus();
-      await page.keyboard.press('ArrowRight');
-      await page.waitForSelector('.section-tabs button[aria-current="page"]');
-      if (await tabs.nth(1).getAttribute('aria-current') !== 'page') throw new Error('the next grouped view did not activate');
-      if (!await tabs.nth(1).evaluate((node) => node === document.activeElement)) throw new Error('focus did not move with the grouped view');
+    await recordInteraction('Succession Archive navigation activates with keyboard', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
+      const timelineLink = page.locator('#succession-desktop-navigation a').filter({ hasText: 'Timeline' });
+      await timelineLink.focus();
+      if (!await timelineLink.evaluate((node) => node === document.activeElement)) throw new Error('archive navigation link did not receive focus');
+      await page.keyboard.press('Enter');
+      await page.waitForSelector('.succession-archive[data-archive-route="timeline"]', { timeout: 10_000 });
+      const activeLink = page.locator('#succession-desktop-navigation a[aria-current="page"]');
+      if ((await activeLink.innerText()).trim() !== 'Timeline') throw new Error('keyboard activation did not open the Timeline workspace');
     });
     await recordInteraction('chapter drawer traps and restores focus', { width: 1440, height: 1000 }, 'series/chapters', async (page) => {
       const opener = page.locator('.chapter-row').first();
@@ -203,7 +203,7 @@ try {
 
 const failedRoutes = routeResults.filter((row) => row.error || row.violations.length);
 const failedInteractions = interactionResults.filter((row) => row.status === 'failed');
-const contrastWarningCount = routeResults.reduce((total, row) => total + (row.contrastWarnings || []).reduce((nodes, item) => nodes + item.nodes.length, 0), 0);
+const contrastWarningCount = routeResults.reduce((total, row) => total + (row.contrastWarnings || []).reduce((nodes, item) => total + item.nodes.length, 0), 0);
 const contrastWarningRoutes = routeResults.filter((row) => row.contrastWarnings?.length).length;
 const summary = {
   generatedAt: new Date().toISOString(),
