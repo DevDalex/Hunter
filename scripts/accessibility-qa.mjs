@@ -164,7 +164,8 @@ try {
       if (await trigger.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close the menu');
       if (!await trigger.evaluate((node) => node === document.activeElement)) throw new Error('menu trigger did not regain focus');
     });
-    await recordInteraction('family-tree tabs support arrow keys', { width: 1440, height: 1000 }, 'succession/family-tree', async (page) => {
+    await recordInteraction('family-tree tabs support arrow keys', { width: 1440, height: 1000 }, 'succession/princes?view=tree', async (page) => {
+      await page.waitForSelector('#tree-tab-legal', { timeout: 10_000 });
       await page.locator('#tree-tab-legal').focus();
       await page.keyboard.press('ArrowRight');
       if (await page.locator('#tree-tab-biological').getAttribute('aria-selected') !== 'true') throw new Error('biological tree did not activate');
