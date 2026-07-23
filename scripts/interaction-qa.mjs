@@ -156,6 +156,13 @@ try {
   await run('Nen advanced gallery renders every visual', { width: 1440, height: 1000 }, 'reference/nen', async (page) => {
     await page.getByRole('button', { name: /Advanced techniques/i }).click();
     await page.waitForSelector('.nen-technique-gallery article');
+    const images = page.locator('.nen-technique-gallery article img');
+    const imageCount = await images.count();
+    for (let index = 0; index < imageCount; index += 1) await images.nth(index).scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => {
+      const galleryImages = [...document.querySelectorAll('.nen-technique-gallery article img')];
+      return galleryImages.length === 7 && galleryImages.every((image) => image.complete && image.naturalWidth > 0);
+    }, null, { timeout: 15_000 });
     const gallery = await page.evaluate(() => {
       const visible = (element) => {
         const style = getComputedStyle(element);
