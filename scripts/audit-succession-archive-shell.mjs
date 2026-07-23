@@ -25,14 +25,16 @@ for (const id of [
   'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'research', 'glossary', 'media', 'search',
 ]) assert(successionArchiveRouteIds.has(id), `missing primary route ${id}`);
 
-const [app, shell, workspace, primitives, router, preload, css, main, packageJson] = await Promise.all([
+const [app, entry, shell, workspace, primitives, router, preload, css, contrast, main, packageJson] = await Promise.all([
   read('src/App.jsx'),
+  read('src/components/succession/SuccessionArchiveEntry.jsx'),
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionArchiveApp.jsx'),
   read('src/components/succession/SuccessionArchivePrimitives.jsx'),
   read('src/lib/appRouter.js'),
   read('src/lib/routePreload.js'),
   read('src/styles/succession-archive.css'),
+  read('src/components/succession/SuccessionArchiveContrast.css'),
   read('src/main.jsx'),
   read('package.json'),
 ]);
@@ -54,8 +56,10 @@ assert(workspace.includes('SuccessionChapterReader') === false, 'the archive app
 assert(router.includes("'/story/succession-contest/chapters'"), 'legacy reader URL must remain authoritative');
 assert(router.includes("nextTarget === 'reader'"), 'new reader navigation must resolve to the existing reader');
 assert(router.includes('successionArchivePathToTarget') && router.includes('successionArchiveTargetToPath'), 'router must use the canonical archive route registry');
-assert(preload.includes('successionArchive'), 'route preloading must include the archive application chunk');
-assert(main.includes("./styles/succession-archive.css"), 'main entry must load the scoped archive design layer');
+assert(preload.includes('successionArchive') && preload.includes('SuccessionArchiveEntry'), 'route preloading must include the scoped archive application chunk');
+assert(entry.includes("../../styles/succession-archive.css") && entry.includes('SuccessionArchiveContrast.css'), 'the archive entry must own its scoped design and readability layers');
+assert(!main.includes("./styles/succession-archive.css"), 'the scoped archive stylesheet must not alter the locked global CSS import order');
+assert(contrast.includes('font-size: 11px !important'), 'archive readability overrides must preserve the 11px text floor');
 
 for (const selector of ['.succession-archive__layout', '.succession-archive__sidebar', '.succession-page-header', '.succession-entity-link', '.succession-state', '.succession-drawer']) {
   assert(css.includes(selector), `design layer is missing ${selector}`);
@@ -64,4 +68,4 @@ assert(css.includes('@media (max-width: 860px)') && css.includes('@media (prefer
 assert(css.includes(':focus-visible'), 'accessible focus styling is required');
 assert(packageJson.includes('"audit:succession-shell"') && packageJson.includes('"qa:succession-shell"'), 'package scripts must expose archive audit and browser QA');
 
-console.log(`Succession Archive shell audit passed: ${successionArchiveRoutes.length} routes across ${successionArchiveGroups.length} navigation groups, canonical selector access, preserved reader routing, desktop/mobile shells, and accessibility states verified.`);
+console.log(`Succession Archive shell audit passed: ${successionArchiveRoutes.length} routes across ${successionArchiveGroups.length} navigation groups, canonical selector access, preserved reader routing, scoped design ownership, desktop/mobile shells, and accessibility states verified.`);
