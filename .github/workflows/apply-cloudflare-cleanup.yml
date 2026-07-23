@@ -28,8 +28,10 @@ jobs:
           echo 'fc53847d0ac763828ae0aed5b896de59adc0b14bbed9fb53efd219ee83336936  /tmp/cleanup.patch' | sha256sum --check
           git apply --check /tmp/cleanup.patch
           git apply /tmp/cleanup.patch
+          git checkout HEAD -- .github/workflows/sites-fullstack-build.yml
+          rm -f .github/workflows/cloudflare-build.yml
 
-      - name: Commit and push cleanup
+      - name: Commit and push application cleanup
         shell: bash
         run: |
           set -euxo pipefail
