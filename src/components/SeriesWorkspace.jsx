@@ -19,6 +19,7 @@ const StoryHub = lazy(() => import('./StoryHub'));
 const VolumeZeroPage = lazy(() => import('./VolumeZeroPage'));
 const HunterExamPage = lazy(() => import('./HunterExamPage'));
 const SuccessionChapterReader = lazy(() => import('./SuccessionChapterReader'));
+const GreedIslandPrototypePage = lazy(() => import('./GreedIslandPrototypePage'));
 
 const utilityPages = [
   { id: 'chronology', label: 'Chronology' },
@@ -119,6 +120,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
   if (routeTarget === 'volume-0') return <Suspense fallback={<StoryLoading label="Kurapika’s Memories" />}><VolumeZeroPage onNavigate={onNavigate} /></Suspense>;
   if (routeTarget === 'hunter-exam') return <Suspense fallback={<StoryLoading label="287th Hunter Examination" />}><HunterExamPage onNavigate={onNavigate} /></Suspense>;
+  if (routeTarget === 'greed-island') return <Suspense fallback={<StoryLoading label="Greed Island card binder" />}><GreedIslandPrototypePage onNavigate={onNavigate} /></Suspense>;
   if (storyArcIds.has(routeTarget)) return <Suspense fallback={<StoryLoading label="dedicated arc page" />}><ArcPage arcId={routeTarget} onNavigate={onNavigate} extraSection={successionReaderSection} /></Suspense>;
 
   const pageIntro = adaptationPage
