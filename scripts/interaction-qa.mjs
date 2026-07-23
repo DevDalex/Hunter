@@ -9,9 +9,8 @@ const output = path.resolve(root, process.env.INTERACTION_QA_OUTPUT || '.interac
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
 
 const mime = {
-  '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8',
-  '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.js': 'text/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml',
+  '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
+  '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml',
   '.webp': 'image/webp', '.zip': 'application/zip',
 };
 
@@ -187,25 +186,35 @@ try {
     if (health.unavailable.length) throw new Error(`mobile unavailable visuals: ${health.unavailable.join(', ')}`);
   });
 
-  await run('Relationship map filters remain readable', { width: 1440, height: 1000 }, 'succession/mafia?panel=relationships', async (page) => {
-    await page.waitForSelector('.relationship-map');
-    const filterButtons = page.locator('.relationship-map__toolbar button');
-    const filterCount = await filterButtons.count();
-    if (filterCount < 2) throw new Error('relationship filters did not render');
-    for (let index = 0; index < filterCount; index += 1) {
-      await filterButtons.nth(index).click();
+  await run('Relationship workspace filters remain readable', { width: 1440, height: 1000 }, 'succession/relationships', async (page) => {
+    await page.waitForSelector('.connection-atlas-section');
+    const directoryButtons = page.locator('.connection-atlas-lanes button');
+    const directoryCount = await directoryButtons.count();
+    if (directoryCount < 2) throw new Error('relationship directories did not render');
+    const checks = Math.min(directoryCount, 6);
+    for (let index = 0; index < checks; index += 1) {
+      await directoryButtons.nth(index).click();
       await page.waitForTimeout(60);
-      const graph = await page.evaluate(() => {
-        const network = document.querySelector('.relationship-network');
-        const rect = network?.getBoundingClientRect();
-        const visibleSpokes = [...document.querySelectorAll('.relationship-network__spokes a')].filter((element) => {
+      const workspace = await page.evaluate(() => {
+        const root = document.querySelector('.connection-atlas-workspace');
+        const rect = root?.getBoundingClientRect();
+        const selected = document.querySelector('.connection-atlas-lanes button.is-active');
+        const visibleMembers = [...document.querySelectorAll('.connection-atlas-person')].filter((element) => {
           const style = getComputedStyle(element); const box = element.getBoundingClientRect();
           return style.display !== 'none' && style.visibility !== 'hidden' && box.width > 0 && box.height > 0;
         });
-        return { width: rect?.width || 0, height: rect?.height || 0, spokes: visibleSpokes.length, overflow: network ? network.scrollWidth - network.clientWidth : 0 };
+        return {
+          width: rect?.width || 0,
+          height: rect?.height || 0,
+          members: visibleMembers.length,
+          selected: selected?.textContent.trim() || '',
+          overflow: root ? root.scrollWidth - root.clientWidth : 0,
+        };
       });
-      if (graph.width < 300 || graph.height < 120) throw new Error(`relationship graph collapsed under filter ${index + 1}`);
-      if (graph.overflow > 2) throw new Error(`relationship graph overflowed by ${graph.overflow}px under filter ${index + 1}`);
+      if (!workspace.selected) throw new Error(`relationship directory ${index + 1} did not become active`);
+      if (workspace.width < 300 || workspace.height < 120) throw new Error(`relationship workspace collapsed under directory ${index + 1}`);
+      if (!workspace.members) throw new Error(`relationship directory ${index + 1} displayed no members`);
+      if (workspace.overflow > 2) throw new Error(`relationship workspace overflowed by ${workspace.overflow}px under directory ${index + 1}`);
     }
   });
 } finally {
