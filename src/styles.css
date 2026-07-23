@@ -15,7 +15,6 @@
 @import './styles/experiences.css';
 @import './styles/accessibility-contrast.css';
 @import './styles/archive-system.css';
-@import './components/SuccessionReaderPerformance.css';
 
 .site-header { grid-template-columns: minmax(0, 1fr) auto; }
 .site-footer { display: none !important; }
