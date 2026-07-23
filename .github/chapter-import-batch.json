@@ -3,9 +3,7 @@
   "sourceTemplate": "https://3asq.online/manga/hunter-x-hunter/{chapter}/",
   "batchSize": 2,
   "maxAttempts": 3,
-  "pending": [
-    409
-  ],
+  "pending": [],
   "completed": [
     338,
     339,
@@ -78,6 +76,7 @@
     406,
     407,
     408,
+    409,
     410,
     411,
     412,
@@ -87,17 +86,15 @@
   "attempts": {},
   "failed": {},
   "lastRun": {
-    "at": "2026-07-23T05:37:19.253Z",
+    "at": "2026-07-23T05:38:43.149Z",
     "selected": [
-      405,
-      406
+      409
     ],
     "succeeded": [
-      405,
-      406
+      409
     ],
     "retried": [],
     "failed": []
   },
-  "status": "running"
+  "status": "completed"
 }
