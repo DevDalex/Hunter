@@ -30,6 +30,29 @@
   grid-template-columns: minmax(0, 1fr) minmax(68px, 0.6fr) !important;
 }
 
+.succession-archive .succession-entity-grid,
+.succession-archive .succession-entity-grid > article,
+.succession-archive .succession-entity-grid > article > *,
+.succession-archive .succession-entity-grid footer,
+.succession-archive .succession-entity-grid footer > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.succession-archive .succession-entity-grid > article {
+  width: 100%;
+  overflow: hidden;
+}
+
+.succession-archive .succession-entity-grid footer code {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.succession-archive .succession-entity-grid footer .succession-entity-link {
+  flex: 0 0 auto;
+}
+
 @media (max-width: 860px) {
   .succession-archive .timeline-workspace__controls {
     grid-template-columns: minmax(0, 1fr) !important;
@@ -44,6 +67,20 @@
 }
 
 @media (max-width: 620px) {
+  .succession-archive .succession-entity-grid {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .succession-archive .succession-entity-grid > article > div,
+  .succession-archive .succession-entity-grid footer {
+    flex-wrap: wrap;
+  }
+
+  .succession-archive .succession-entity-grid code {
+    overflow-wrap: anywhere;
+  }
+
   .succession-archive .lesson-ledger,
   .succession-archive .lesson-ledger > article {
     width: 100% !important;
