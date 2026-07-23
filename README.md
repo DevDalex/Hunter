@@ -21,28 +21,30 @@ npm run dev
 
 ## Validate and build
 
+Run the complete repository gate:
+
 ```bash
 npm run build
 ```
 
-The build:
+The build is composed from two explicit stages:
 
-1. writes `public/build-info.json` with the exact commit identity;
-2. runs 15 independent pre-build audits;
-3. clears stale hosting output and retired portable archives;
-4. builds the Vite client into `dist/client/`;
-5. validates performance budgets;
-6. prepares the Worker in `dist/server/`;
-7. runs the Cloudflare release audit.
+```bash
+npm run check
+npm run build:runtime
+```
+
+`npm run check` writes `public/build-info.json` and runs all 15 independent pre-build audits. `npm run build:runtime` clears stale hosting output, builds Vite into `dist/client/`, validates performance budgets, prepares the Worker in `dist/server/`, and runs the Cloudflare release audit.
+
+This split lets browser CI rebuild and test the exact runtime without running the same 15 static audits twice. The Cloudflare full-stack job remains the authoritative complete gate for every revision.
 
 ## Deploy to Cloudflare
 
 ```bash
-npm run build
-npx wrangler deploy
+npm run deploy
 ```
 
-`wrangler.jsonc` must retain:
+The deploy command runs the complete build before invoking the repository-pinned Wrangler version. `wrangler.jsonc` must retain:
 
 - Worker name `hunter`;
 - entry `dist/server/index.js`;
@@ -52,6 +54,10 @@ npx wrangler deploy
 - disabled automatic HTML and not-found rewriting.
 
 A successful build or GitHub commit is not proof of a hosted release. Record deployment success only after Cloudflare reaches terminal success and the live API returns JSON.
+
+## Locked toolchain
+
+The direct application and build dependencies use exact versions in `package.json` and `package-lock.json`. React, React DOM, Lucide, Vite, the Vite React plugin, Playwright, Axe, and Wrangler must be updated deliberately in one reviewed lockfile change rather than through `latest` or transient CI installs.
 
 ## Core HxH content owners
 
@@ -100,13 +106,16 @@ Required Worker secrets and variables are documented in `docs/HOSTED-CHAPTER-ADM
 
 ## Browser verification
 
+Install Chromium once for local browser work, then run the full local gate:
+
 ```bash
-npm run browser:deps
 npm run browser:install
 npm run qa:browser
 ```
 
-Browser QA remains separate from the normal Cloudflare build because it is substantially heavier. Use it for UI, routing, accessibility, and interaction checkpoints.
+`npm run qa:browser` retains the complete build and all browser checks. GitHub browser CI uses `npm run qa:browser:ci`: it performs the runtime build, release/performance validation, search, visual, accessibility, interaction, reader, architecture, and browser performance checks without duplicating aggregate preflight already enforced by the Cloudflare job.
+
+Both CI workflows cancel superseded runs for the same branch so obsolete commits do not continue consuming runner time.
 
 ## Maintainer documentation
 
