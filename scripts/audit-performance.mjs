@@ -50,6 +50,7 @@ const storyDetailBoundaryKeys = [
   'src/components/ArcPage.jsx',
   'src/components/VolumeZeroPage.jsx',
   'src/components/HunterExamPage.jsx',
+  'src/components/GreedIslandPrototypePage.jsx',
 ];
 const searchShardKeys = [
   'src/data/archiveSearch.series.js',
@@ -65,8 +66,8 @@ assert(startupJs <= budgets.startupJs, `startup JavaScript closure is ${startupJ
 assert(startupCss <= budgets.startupCss, `startup stylesheet is ${startupCss} bytes; budget is ${formatPerformanceBudget(budgets.startupCss)}`);
 assert(largestJavascript.bytes <= budgets.javascriptChunk, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is ${formatPerformanceBudget(budgets.javascriptChunk)}`);
 assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 17 route/search UI boundaries must remain dynamic entries');
-assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Story directory, standard arc renderer, Volume 0, and Hunter Exam must remain separate on-demand chunks');
-assert(dynamicEntries.length === 24, `expected 17 direct boundaries, four Story experience boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
+assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Story directory, standard arc renderer, Volume 0, Hunter Exam, and Greed Island Binder must remain separate on-demand chunks');
+assert(dynamicEntries.length === 25, `expected 17 direct boundaries, five Story experience boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
 assert(searchShardKeys.every((key) => manifest[key]?.isDynamicEntry), 'the story, Succession, and reference search indexes must remain separate dynamic entries');
 
 const homeHighlights = await readFile(path.join(root, 'src/data/homeHighlights.js'), 'utf8');
@@ -87,8 +88,9 @@ assert(
   seriesWorkspace.includes("lazy(() => import('./StoryHub'))")
     && seriesWorkspace.includes("lazy(() => import('./ArcPage'))")
     && seriesWorkspace.includes("lazy(() => import('./VolumeZeroPage'))")
-    && seriesWorkspace.includes("lazy(() => import('./HunterExamPage'))"),
-  'SeriesWorkspace must keep the Story directory, standard arc renderer, Volume 0, and Hunter Exam on demand',
+    && seriesWorkspace.includes("lazy(() => import('./HunterExamPage'))")
+    && seriesWorkspace.includes("lazy(() => import('./GreedIslandPrototypePage'))"),
+  'SeriesWorkspace must keep the Story directory, standard arc renderer, Volume 0, Hunter Exam, and Greed Island Binder on demand',
 );
 assert((archiveSearch.match(/import\('\.\/archiveSearch\.(?:series|succession|reference)'\)/g) || []).length === 3, 'the archive search loader must own three domain data shards');
 assert(!/from ['"]\.\.\/data\/(?:chapters|encyclopedia|successionDossier|successionRoster|worldMap)['"]/.test(archiveSearchComponent), 'ArchiveSearch.jsx statically imports a heavy archive dataset');
