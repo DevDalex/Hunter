@@ -11,6 +11,7 @@ import {
 } from 'react';
 import { X } from 'lucide-react';
 import ReaderPanelEnhancements from './ReaderPanelEnhancements.jsx';
+import '../SuccessionReaderPerformance.css';
 
 const focusableSelector = [
   'a[href]',
