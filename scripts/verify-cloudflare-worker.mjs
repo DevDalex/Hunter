@@ -22,6 +22,7 @@ try {
   assert.equal(typeof worker?.fetch, 'function', 'The built Worker must export a fetch handler.');
 
   const env = {
+    GITHUB_ADMIN_TOKEN: 'worker-build-verification-token',
     ASSETS: {
       async fetch(request) {
         diagnostic.assetFetches += 1;
@@ -77,8 +78,8 @@ try {
   assert.match(login.payload.error || '', /does not use account login/i, 'The removed login endpoint must explain that login is disabled.');
 
   const publish = await verifyJsonApiResponse('/api/admin/chapter/import', { method: 'POST', body: '{}' });
-  assert.equal(publish.response.status, 410, 'Direct Worker publishing must remain removed.');
-  assert.match(publish.payload.error || '', /GitHub import request/i, 'The retired publish endpoint must direct the page to the GitHub request flow.');
+  assert.notEqual(publish.response.status, 410, 'Direct Worker publishing must remain enabled.');
+  assert.match(publish.payload.error || '', /inspection expired|inspect the chapter again/i, 'The active publish endpoint must validate an inspection token.');
 
   const unknown = await verifyJsonApiResponse('/api/admin/chapter/unknown');
   assert.equal(unknown.response.status, 404, 'Unknown chapter-import endpoints must return HTTP 404.');
@@ -93,13 +94,13 @@ try {
     assetFetchesBefore: assetsBeforePage,
     assetFetchesAfter: diagnostic.assetFetches,
   });
-  assert.equal(page.status, 200, 'The temporary chapter importer page must load without any configured token.');
+  assert.equal(page.status, 200, 'The temporary chapter importer page must load.');
   assert.match(pageBody, /Temporary chapter importer/i, 'The temporary importer asset must be served instead of the login page.');
   assert.equal(diagnostic.assetFetches, assetsBeforePage + 1, 'The importer page must use exactly one ASSETS fetch.');
 
   diagnostic.passed = true;
   await writeFile(diagnosticPath, `${JSON.stringify(diagnostic, null, 2)}\n`, 'utf8');
-  console.log('Cloudflare Worker verification passed: no token is configured, login and direct publishing are disabled, the temporary importer page loads, and chapter inspection APIs bypass the SPA fallback.');
+  console.log('Cloudflare Worker verification passed: login is disabled, direct publishing is active behind a hidden Worker credential, the importer page loads, and chapter APIs bypass the SPA fallback.');
 } catch (error) {
   diagnostic.error = {
     name: error?.name || 'Error',
