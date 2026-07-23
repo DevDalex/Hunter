@@ -212,7 +212,7 @@ export function parseCleanRoute(pathname = '/', search = '') {
       return normalizeDestination('series', 'greed-island', { ...params, ...(parts[2] ? { module: parts[2] } : {}), ...(parts[3] ? { subview: parts[3] } : {}) });
     }
     if (parts[1] === 'succession-contest') {
-      if (parts.length === 2) return normalizeDestination('series', 'succession-contest', params);
+      if (parts.length === 2) return { view: 'series', target: 'succession-contest', params };
       if (parts.length !== 3) return { view: 'not-found', target: '', params: { attemptedPath: pathnameClean } };
       if (parts[2] === 'chapters') return normalizeDestination('series', 'succession-contest', { section: 'chapters', ...params });
       const target = successionArchivePathToTarget.get(parts[2]) || legacySuccessionPathToTarget.get(parts[2]);
