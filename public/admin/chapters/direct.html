@@ -13,7 +13,7 @@
     header { display:grid; grid-template-columns:1fr auto; gap:32px; align-items:end; padding-bottom:28px; border-bottom:1px solid var(--line); }
     .eyebrow { color:#d88b94; font-size:12px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; }
     h1 { margin:8px 0 10px; max-width:780px; font:700 clamp(38px,7vw,76px)/.94 Georgia,serif; }
-    header p { margin:0; max-width:740px; color:var(--muted); font-size:17px; }
+    header p { margin:0; max-width:760px; color:var(--muted); font-size:17px; }
     .access { padding:14px 16px; border:1px solid var(--line); background:#121216; min-width:245px; }
     .access strong,.access span { display:block; }
     .access span { color:var(--muted); font-size:12px; margin-top:4px; }
@@ -27,8 +27,10 @@
     .steps p { margin:0; color:var(--muted); font-size:13px; }
     form.import-form { display:grid; grid-template-columns:1fr 150px auto; gap:12px; align-items:end; }
     label { display:grid; gap:7px; font-size:12px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
-    input[type=url],input[type=number] { width:100%; min-height:48px; border:1px solid #44444d; background:#0f0f13; color:var(--paper); padding:0 14px; font:inherit; }
-    input:focus { outline:2px solid #b4414f; outline-offset:2px; }
+    input[type=url],input[type=number],textarea { width:100%; border:1px solid #44444d; background:#0f0f13; color:var(--paper); padding:0 14px; font:inherit; }
+    input[type=url],input[type=number] { min-height:48px; }
+    textarea { min-height:220px; padding:14px; resize:vertical; font:13px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace; }
+    input:focus,textarea:focus { outline:2px solid #b4414f; outline-offset:2px; }
     button { min-height:48px; border:1px solid #b4414f; background:var(--red); color:white; padding:0 20px; font:800 14px/1 inherit; cursor:pointer; }
     button:hover { background:#b43142; }
     button:disabled { opacity:.45; cursor:not-allowed; }
@@ -37,7 +39,7 @@
     .status.show { display:block; }
     .status.good { border-color:var(--good); }
     .status.bad { border-color:var(--danger); }
-    .summary { display:none; grid-template-columns:1fr repeat(2,140px); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:22px; }
+    .summary { display:none; grid-template-columns:1fr repeat(3,140px); gap:1px; background:var(--line); border:1px solid var(--line); margin-top:22px; }
     .summary.show { display:grid; }
     .summary div { background:#111115; padding:16px; }
     .summary small { display:block; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
@@ -45,16 +47,22 @@
     .preview-head { display:none; align-items:center; justify-content:space-between; gap:16px; margin-top:34px; }
     .preview-head.show { display:flex; }
     .preview-head h2 { margin:0; }
+    .selection-actions,.actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .selection-actions button { min-height:40px; padding:0 14px; }
     .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:14px; margin-top:16px; }
-    .page { margin:0; background:#101014; border:1px solid var(--line); }
+    .page { position:relative; margin:0; background:#101014; border:2px solid var(--good); transition:opacity .15s,border-color .15s; }
+    .page.excluded { opacity:.42; border-color:var(--line); }
     .page img { display:block; width:100%; aspect-ratio:2/3; object-fit:contain; background:#08080a; }
     .page figcaption { padding:10px 12px; display:flex; justify-content:space-between; gap:8px; color:var(--muted); font-size:12px; }
     .page figcaption span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .page-choice { position:absolute; z-index:2; top:9px; left:9px; display:flex; align-items:center; gap:7px; padding:7px 9px; background:rgba(10,10,13,.9); border:1px solid #555560; color:var(--paper); font-size:11px; letter-spacing:.04em; text-transform:none; cursor:pointer; }
+    .page-choice input { width:17px; height:17px; margin:0; accent-color:var(--good); }
     .confirm { display:none; margin-top:24px; padding-top:22px; border-top:1px solid var(--line); }
     .confirm.show { display:grid; gap:14px; }
     .check { display:flex; align-items:flex-start; gap:10px; color:var(--muted); text-transform:none; letter-spacing:0; font-size:14px; font-weight:500; }
     .check input { margin-top:4px; }
-    .actions { display:flex; gap:12px; flex-wrap:wrap; }
+    .request-output { display:none; gap:10px; margin-top:4px; }
+    .request-output.show { display:grid; }
     code { background:#0c0c0f; border:1px solid #33333a; padding:2px 6px; }
     @media (max-width:760px) { header{grid-template-columns:1fr}.steps{grid-template-columns:1fr}.steps article{border-right:0;border-bottom:1px solid var(--line)}form.import-form{grid-template-columns:1fr}.summary.show{grid-template-columns:1fr}.preview-head.show{align-items:flex-start;flex-direction:column} }
   </style>
@@ -62,14 +70,14 @@
 <body>
 <main>
   <header>
-    <div><span class="eyebrow">Temporary Hunter Archive importer</span><h1>Import chapter pictures into GitHub.</h1><p>Paste a chapter link, inspect every detected image, then open a prefilled GitHub request. GitHub Actions downloads the pages, updates the reader manifest, commits to main and starts deployment.</p></div>
-    <div class="access"><strong>No configured token</strong><span>No username or password</span><span>GitHub Actions performs the commit</span></div>
+    <div><span class="eyebrow">Temporary Hunter Archive importer</span><h1>Select the chapter pictures to import.</h1><p>Paste a chapter link, inspect the detected images, exclude anything that does not belong, then copy the final request into our ChatGPT conversation. I will submit and run the GitHub import for you.</p></div>
+    <div class="access"><strong>No GitHub step for you</strong><span>No username, password or token</span><span>You choose the exact pictures</span></div>
   </header>
 
   <section class="steps" aria-label="Import steps">
     <article><i>01</i><h2>Inspect</h2><p>Fetch the source chapter and detect likely manga pages.</p></article>
-    <article><i>02</i><h2>Preview</h2><p>Verify the page count, order and complete visual preview.</p></article>
-    <article><i>03</i><h2>Request import</h2><p>Open the generated GitHub request and press Submit new issue.</p></article>
+    <article><i>02</i><h2>Select</h2><p>Keep or exclude each picture while preserving the displayed order.</p></article>
+    <article><i>03</i><h2>Send to ChatGPT</h2><p>Copy the generated request and paste it into this conversation.</p></article>
   </section>
 
   <section class="panel">
@@ -83,15 +91,27 @@
     <div id="summary" class="summary">
       <div><small>Source title</small><strong id="source-title">—</strong></div>
       <div><small>Chapter</small><strong id="source-chapter">—</strong></div>
-      <div><small>Pages</small><strong id="page-count">—</strong></div>
+      <div><small>Detected</small><strong id="page-count">—</strong></div>
+      <div><small>Selected</small><strong id="selected-count">—</strong></div>
     </div>
-    <div id="preview-head" class="preview-head"><div><span class="eyebrow">Detected reading order</span><h2>Page preview</h2></div><button id="clear-button" class="secondary" type="button">Clear preview</button></div>
+    <div id="preview-head" class="preview-head">
+      <div><span class="eyebrow">Displayed reading order</span><h2>Choose the pages</h2></div>
+      <div class="selection-actions">
+        <button id="select-all-button" class="secondary" type="button">Select all</button>
+        <button id="clear-selection-button" class="secondary" type="button">Clear selection</button>
+        <button id="clear-button" class="secondary" type="button">Clear preview</button>
+      </div>
+    </div>
     <div id="preview-grid" class="grid"></div>
     <div id="confirm" class="confirm">
-      <label class="check"><input id="reviewed" type="checkbox" /> <span>I reviewed the detected page count, pictures and reading order.</span></label>
+      <label class="check"><input id="reviewed" type="checkbox" /> <span>I reviewed the selected pictures and their displayed order.</span></label>
       <label class="check"><input id="replace" type="checkbox" /> <span>Replace the existing Chapter <b id="replace-chapter">—</b> folder and manifest entry if present.</span></label>
-      <div class="actions"><button id="import-button" type="button" disabled>Open GitHub import request</button></div>
-      <p>GitHub will open with the chapter details already filled in. Press <strong>Submit new issue</strong>; the repository workflow then writes <code>public/media/succession-contest/chapters/&lt;chapter&gt;/</code> and updates <code>src/data/successionChapterMedia.generated.js</code>.</p>
+      <div class="actions"><button id="import-button" type="button" disabled>Copy request for ChatGPT</button></div>
+      <p>Paste the copied request into our conversation. I will create the owner-only GitHub import request, and the workflow will download only your selected image URLs, save them under <code>public/media/succession-contest/chapters/&lt;chapter&gt;/</code>, and update <code>src/data/successionChapterMedia.generated.js</code>.</p>
+      <div id="request-output" class="request-output">
+        <label>Generated import request<textarea id="request-text" readonly></textarea></label>
+        <div class="actions"><button id="copy-again-button" class="secondary" type="button">Copy again</button></div>
+      </div>
     </div>
   </section>
 </main>
@@ -113,11 +133,40 @@
     if (!payload || !Array.isArray(payload.pages)) throw new Error(payload?.error || 'The chapter inspector returned no pages list.');
     return payload;
   };
+  const selectedPages = () => inspection
+    ? inspection.pages.filter((page, index) => $(`page-choice-${index}`)?.checked)
+    : [];
+  const updateSelection = () => {
+    const selected=selectedPages();
+    $('selected-count').textContent=selected.length;
+    $('reviewed').checked=false;
+    $('import-button').disabled=true;
+    $('request-output').classList.remove('show');
+    document.querySelectorAll('.page').forEach((card)=>{
+      const checkbox=card.querySelector('input[type=checkbox]');
+      card.classList.toggle('excluded', !checkbox.checked);
+    });
+    if (inspection) showStatus(`${selected.length} of ${inspection.pages.length} pictures selected. Review the highlighted pictures before copying the request.`, selected.length ? 'good' : 'bad');
+  };
+  const setAllPages = (checked) => {
+    document.querySelectorAll('.page-choice input[type=checkbox]').forEach((checkbox)=>{ checkbox.checked=checked; });
+    updateSelection();
+  };
   const clearPreview = () => {
-    inspection=null; $('preview-grid').replaceChildren(); $('summary').classList.remove('show'); $('preview-head').classList.remove('show'); $('confirm').classList.remove('show'); $('reviewed').checked=false; $('replace').checked=false; $('import-button').disabled=true;
+    inspection=null;
+    $('preview-grid').replaceChildren();
+    $('summary').classList.remove('show');
+    $('preview-head').classList.remove('show');
+    $('confirm').classList.remove('show');
+    $('request-output').classList.remove('show');
+    $('request-text').value='';
+    $('reviewed').checked=false;
+    $('replace').checked=false;
+    $('import-button').disabled=true;
   };
   const inspectChapter = async () => {
-    const sourceUrl=$('source-url').value; const chapter=$('chapter').value || null;
+    const sourceUrl=$('source-url').value;
+    const chapter=$('chapter').value || null;
     try { return requireInspection(await api('/api/admin/chapter/inspect',{method:'POST',body:JSON.stringify({sourceUrl,chapter})})); }
     catch (error) {
       if (!String(error.message).includes('405')) throw error;
@@ -125,36 +174,103 @@
       return requireInspection(await api(`/api/admin/chapter/inspect?${query}`,{method:'GET'}));
     }
   };
-
-  $('inspect-form').addEventListener('submit',async(event)=>{
-    event.preventDefault(); clearPreview(); const button=$('inspect-button'); button.disabled=true; showStatus('Inspecting source page and detecting chapter images…');
+  const copyText = async (text) => {
     try {
-      const payload=await inspectChapter(); inspection=payload; $('source-title').textContent=payload.title || 'Untitled chapter page'; $('source-chapter').textContent=payload.chapter; $('page-count').textContent=payload.pages.length; $('replace-chapter').textContent=payload.chapter; $('summary').classList.add('show'); $('preview-head').classList.add('show'); $('confirm').classList.add('show');
-      const fragment=document.createDocumentFragment();
-      payload.pages.forEach((page)=>{ const figure=document.createElement('figure'); figure.className='page'; const image=document.createElement('img'); image.loading='lazy'; image.alt=`Detected Chapter ${payload.chapter} page ${page.page}`; image.src=page.previewUrl; const caption=document.createElement('figcaption'); const number=document.createElement('strong'); number.textContent=`Page ${page.page}`; const source=document.createElement('span'); source.textContent=new URL(page.sourceUrl).pathname.split('/').pop() || 'image'; caption.append(number,source); figure.append(image,caption); fragment.append(figure); });
-      $('preview-grid').append(fragment); showStatus(`Detected ${payload.pages.length} pages. Review every preview before requesting the GitHub import.`,'good');
-    } catch(error) { showStatus(error.message,'bad'); }
-    finally { button.disabled=false; }
-  });
-
-  $('reviewed').addEventListener('change',()=>{ $('import-button').disabled=!$('reviewed').checked || !inspection; });
-  $('clear-button').addEventListener('click',()=>{ clearPreview(); $('status').className='status'; });
-  $('import-button').addEventListener('click',()=>{
-    if(!inspection || !$('reviewed').checked) return;
-    const replace=$('replace').checked;
-    const title=`[Chapter Import] ${inspection.chapter}`;
-    const body=[
-      '<!-- hunter-chapter-import -->',
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch {
+      const field=$('request-text');
+      field.focus();
+      field.select();
+      return document.execCommand('copy');
+    }
+  };
+  const buildRequest = () => {
+    const selected=selectedPages();
+    return [
+      'HUNTER_CHAPTER_IMPORT_REQUEST_V2',
       `source_url=${inspection.sourceUrl}`,
       `chapter=${inspection.chapter}`,
-      `replace=${replace}`,
-      '',
-      `Previewed pages: ${inspection.pages.length}`,
-      'Submitted from the temporary Hunter Archive chapter importer after visual review.'
+      `replace=${$('replace').checked}`,
+      'selected_images_begin',
+      ...selected.map((page)=>page.sourceUrl),
+      'selected_images_end'
     ].join('\n');
-    const requestUrl=`https://github.com/DevDalex/Hunter/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
-    window.open(requestUrl,'_blank','noopener,noreferrer');
-    showStatus('GitHub opened in a new tab. Press “Submit new issue” there to start the import workflow.','good');
+  };
+
+  $('inspect-form').addEventListener('submit',async(event)=>{
+    event.preventDefault();
+    clearPreview();
+    const button=$('inspect-button');
+    button.disabled=true;
+    showStatus('Inspecting source page and detecting chapter images…');
+    try {
+      const payload=await inspectChapter();
+      inspection=payload;
+      $('source-title').textContent=payload.title || 'Untitled chapter page';
+      $('source-chapter').textContent=payload.chapter;
+      $('page-count').textContent=payload.pages.length;
+      $('selected-count').textContent=payload.pages.length;
+      $('replace-chapter').textContent=payload.chapter;
+      $('summary').classList.add('show');
+      $('preview-head').classList.add('show');
+      $('confirm').classList.add('show');
+      const fragment=document.createDocumentFragment();
+      payload.pages.forEach((page,index)=>{
+        const figure=document.createElement('figure');
+        figure.className='page';
+        const choice=document.createElement('label');
+        choice.className='page-choice';
+        const checkbox=document.createElement('input');
+        checkbox.type='checkbox';
+        checkbox.id=`page-choice-${index}`;
+        checkbox.checked=true;
+        checkbox.addEventListener('change',updateSelection);
+        const choiceText=document.createElement('span');
+        choiceText.textContent='Include';
+        choice.append(checkbox,choiceText);
+        const image=document.createElement('img');
+        image.loading='lazy';
+        image.alt=`Detected Chapter ${payload.chapter} page ${page.page}`;
+        image.src=page.previewUrl;
+        const caption=document.createElement('figcaption');
+        const number=document.createElement('strong');
+        number.textContent=`Page ${page.page}`;
+        const source=document.createElement('span');
+        source.textContent=new URL(page.sourceUrl).pathname.split('/').pop() || 'image';
+        caption.append(number,source);
+        figure.append(choice,image,caption);
+        fragment.append(figure);
+      });
+      $('preview-grid').append(fragment);
+      showStatus(`Detected ${payload.pages.length} pictures. All are selected initially; uncheck anything that should not be imported.`,'good');
+    } catch(error) {
+      showStatus(error.message,'bad');
+    } finally {
+      button.disabled=false;
+    }
+  });
+
+  $('reviewed').addEventListener('change',()=>{
+    $('import-button').disabled=!$('reviewed').checked || selectedPages().length===0;
+  });
+  $('select-all-button').addEventListener('click',()=>setAllPages(true));
+  $('clear-selection-button').addEventListener('click',()=>setAllPages(false));
+  $('clear-button').addEventListener('click',()=>{ clearPreview(); $('status').className='status'; });
+  $('import-button').addEventListener('click',async()=>{
+    if(!inspection || !$('reviewed').checked || selectedPages().length===0) return;
+    const request=buildRequest();
+    $('request-text').value=request;
+    $('request-output').classList.add('show');
+    const copied=await copyText(request);
+    showStatus(copied
+      ? `Copied a request containing ${selectedPages().length} selected pictures. Paste it into our ChatGPT conversation.`
+      : 'The request is ready below. Copy it and paste it into our ChatGPT conversation.',
+      copied ? 'good' : 'bad');
+  });
+  $('copy-again-button').addEventListener('click',async()=>{
+    const copied=await copyText($('request-text').value);
+    showStatus(copied ? 'Import request copied again.' : 'Copy failed. Select the request text manually.', copied ? 'good' : 'bad');
   });
 </script>
 </body>
