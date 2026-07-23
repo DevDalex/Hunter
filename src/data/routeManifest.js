@@ -1,4 +1,17 @@
 import { ARCHIVE_BOUNDARY } from './archiveMeta.js';
+import { successionArchiveRoutes } from './succession/archiveRoutes.js';
+
+export {
+  getSuccessionArchiveRoute,
+  successionArchiveGroups,
+  successionArchiveLegacyTargets,
+  successionArchivePathToTarget,
+  successionArchivePrimary,
+  successionArchiveRouteById,
+  successionArchiveRouteIds,
+  successionArchiveRoutes,
+  successionArchiveTargetToPath,
+} from './succession/archiveRoutes.js';
 
 export const viewIds = ['home', 'series', 'succession', 'reference', 'timeline'];
 export const views = new Set(viewIds);
@@ -19,10 +32,11 @@ export const seriesRoutes = [
   { id: 'adaptation', target: 'adaptation', label: '2011 anime guide' },
 ];
 
+// Retained during incremental migration so legacy components and deep links remain valid.
 export const successionPages = [
   {
     id: 'overview', label: 'Arc overview', kicker: 'The current story', title: 'Succession Contest',
-    description: 'The dedicated Succession Contest arc page, with royal, cast, ship, Nen, power-bloc, chapter-reader, and record pages preserved beneath it. Its voyage chronology opens in the global Timeline.',
+    description: 'Legacy entry point retained as an alias to the dedicated Succession Contest Archive.',
   },
   {
     id: 'family-tree', label: 'Royal family', kicker: 'King, queens and princes', title: 'The Kakin royal family',
@@ -132,14 +146,14 @@ export const routeManifest = [
   { view: 'home', target: '', label: 'Hunter Archive home' },
   { view: 'timeline', target: '', label: 'Global timeline' },
   ...seriesRoutes.map((route) => ({ view: 'series', target: route.target, label: route.label })),
-  ...successionPages.filter((route) => route.id !== 'overview').map((route) => ({ view: 'succession', target: route.id, label: route.title })),
+  ...successionArchiveRoutes.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
   ...referencePages.map((route) => ({ view: 'reference', target: route.id, label: route.title })),
 ];
 
 export const routeManifestStats = {
   screens: routeManifest.length,
   timeline: 1,
-  succession: successionPages.length - 1,
+  succession: successionArchiveRoutes.length,
   reference: referencePages.length,
   aliases: Object.keys(referenceAliases).length + Object.keys(successionAliases).length,
 };
