@@ -84,6 +84,26 @@ export function withReaderProgress(state, { chapter, page, pageCount, mode, fit,
   };
 }
 
+export function setChapterCompleted(state, chapter, completed = true) {
+  const previous = chapterProgressFor(state, chapter);
+  return {
+    ...state,
+    chapters: {
+      ...state.chapters,
+      [chapter]: {
+        ...previous,
+        completed: Boolean(completed),
+        percent: completed ? 100 : previous.percent,
+        updatedAt: new Date().toISOString(),
+      },
+    },
+  };
+}
+
+export function clearReaderBookmarks(state) {
+  return { ...state, bookmarks: [] };
+}
+
 export function toggleReaderBookmark(state, chapter, page, note = '') {
   const existing = state.bookmarks.find((bookmark) => bookmark.chapter === chapter && bookmark.page === page);
   if (existing) return { ...state, bookmarks: state.bookmarks.filter((bookmark) => bookmark !== existing) };
