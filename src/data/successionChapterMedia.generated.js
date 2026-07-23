@@ -7587,6 +7587,256 @@ export const authorizedSuccessionChapterMedia = Object.freeze({
       "height": 2920
     }
   ],
+  "402": [
+    {
+      "page": 1,
+      "src": "/media/succession-contest/chapters/402/001.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 2,
+      "src": "/media/succession-contest/chapters/402/002.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 3,
+      "src": "/media/succession-contest/chapters/402/003.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 4,
+      "src": "/media/succession-contest/chapters/402/004.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 5,
+      "src": "/media/succession-contest/chapters/402/005.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 6,
+      "src": "/media/succession-contest/chapters/402/006.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 7,
+      "src": "/media/succession-contest/chapters/402/007.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 8,
+      "src": "/media/succession-contest/chapters/402/008.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 9,
+      "src": "/media/succession-contest/chapters/402/009.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 10,
+      "src": "/media/succession-contest/chapters/402/010.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 11,
+      "src": "/media/succession-contest/chapters/402/011.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 12,
+      "src": "/media/succession-contest/chapters/402/012.png",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 13,
+      "src": "/media/succession-contest/chapters/402/013.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 14,
+      "src": "/media/succession-contest/chapters/402/014.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 15,
+      "src": "/media/succession-contest/chapters/402/015.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 16,
+      "src": "/media/succession-contest/chapters/402/016.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 17,
+      "src": "/media/succession-contest/chapters/402/017.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 18,
+      "src": "/media/succession-contest/chapters/402/018.png",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 19,
+      "src": "/media/succession-contest/chapters/402/019.png",
+      "width": 2000,
+      "height": 2919
+    },
+    {
+      "page": 20,
+      "src": "/media/succession-contest/chapters/402/020.png",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 21,
+      "src": "/media/succession-contest/chapters/402/021.png",
+      "width": 2000,
+      "height": 2920
+    }
+  ],
+  "403": [
+    {
+      "page": 1,
+      "src": "/media/succession-contest/chapters/403/001.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 2,
+      "src": "/media/succession-contest/chapters/403/002.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 3,
+      "src": "/media/succession-contest/chapters/403/003.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 4,
+      "src": "/media/succession-contest/chapters/403/004.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 5,
+      "src": "/media/succession-contest/chapters/403/005.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 6,
+      "src": "/media/succession-contest/chapters/403/006.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 7,
+      "src": "/media/succession-contest/chapters/403/007.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 8,
+      "src": "/media/succession-contest/chapters/403/008.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 9,
+      "src": "/media/succession-contest/chapters/403/009.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 10,
+      "src": "/media/succession-contest/chapters/403/010.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 11,
+      "src": "/media/succession-contest/chapters/403/011.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 12,
+      "src": "/media/succession-contest/chapters/403/012.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 13,
+      "src": "/media/succession-contest/chapters/403/013.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 14,
+      "src": "/media/succession-contest/chapters/403/014.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 15,
+      "src": "/media/succession-contest/chapters/403/015.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 16,
+      "src": "/media/succession-contest/chapters/403/016.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 17,
+      "src": "/media/succession-contest/chapters/403/017.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 18,
+      "src": "/media/succession-contest/chapters/403/018.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 19,
+      "src": "/media/succession-contest/chapters/403/019.jpg",
+      "width": 2000,
+      "height": 2920
+    },
+    {
+      "page": 20,
+      "src": "/media/succession-contest/chapters/403/020.jpg",
+      "width": 2000,
+      "height": 2920
+    }
+  ],
   "404": [
     {
       "page": 1,
