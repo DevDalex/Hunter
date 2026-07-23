@@ -13,8 +13,7 @@ import { formatPerformanceBudget, performanceBudgets } from '../src/data/perform
 const assert = (condition, message) => { if (!condition) throw new Error(`Implementation notes audit failed: ${message}`); };
 const unique = (values) => new Set(values).size === values.length;
 
-assert(IMPLEMENTATION_NOTES_VERSION.includes('Phase 6F'), 'version label must retain the Phase 6F handoff history');
-assert(IMPLEMENTATION_NOTES_VERSION.includes('Batch 12') && IMPLEMENTATION_NOTES_VERSION.includes('July 20, 2026'), 'version label must identify the current Batch 12 maintenance contract');
+assert(IMPLEMENTATION_NOTES_VERSION.includes('Cloudflare') && IMPLEMENTATION_NOTES_VERSION.includes('Batch 12') && IMPLEMENTATION_NOTES_VERSION.includes('July 23, 2026'), 'version label must identify the current Cloudflare and Batch 12 maintenance contract');
 assert(implementationSections.length >= 9 && unique(implementationSections.map((item) => item.id)), 'nine unique implementation sections are required after Batch 12');
 assert(implementationSections.every((item) => item.title && item.summary && item.owner && item.files.length >= 3 && item.decisions.length >= 3 && item.checks.length >= 3), 'every section needs a complete owner, decision, file, and verification contract');
 assert(maintenanceMatrix.length >= 13 && unique(maintenanceMatrix.map((item) => item.id)), 'thirteen unique maintenance runbooks are required after Batch 12');
@@ -64,10 +63,9 @@ const currentContractPhrases = [
   '106 character portraits and 29 Black Whale derivatives',
   '21 dynamic entries',
   '15 independent pre-build audits',
-  'hxh-archive-phase-8a-sites-source.zip',
-  'architecture/',
-  'docs/',
-  '.github/',
+  'Cloudflare Worker',
+  'dist/server/index.js',
+  'dist/client/',
   'src/data/performanceBudgets.js',
   'src/data/archiveDesignSystem.js',
   'src/components/ArchiveUI.jsx',
@@ -83,7 +81,7 @@ for (const value of documentedCodeBudgets) {
   assert(readme.includes(phrase), `README is missing canonical performance budget ${phrase}`);
 }
 
-for (const phrase of ['15 independent pre-build audits', 'Story → Reference → Characters → Final', 'Final → Governance → Design System → Schema', 'package:release', 'audit:performance']) {
+for (const phrase of ['15 independent pre-build audits', 'Story → Reference → Characters → Final', 'Final → Governance → Design System → Schema', 'Cloudflare release audit', 'audit:performance']) {
   assert(preflightDoc.includes(phrase), `preflight runbook is missing “${phrase}”`);
 }
 for (const phrase of ['Batch 12', 'ArchiveSection', 'ArchiveCard', 'EvidenceBadge', 'SourceStack']) {
@@ -96,4 +94,4 @@ assert(preflight.includes("'audit:design-system'"), 'aggregate preflight must in
 assert(packageJson.includes('"preflight:build"') && packageJson.includes('npm run generate:build-info && npm run preflight:build'), 'package build must invoke aggregate preflight immediately after build identity generation');
 assert(packageJson.includes('"audit:design-system"') && packageJson.includes('node scripts/audit-design-system.mjs'), 'package.json must expose audit:design-system');
 
-console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; 15-audit aggregate preflight; route, media, design-system, canonical performance-budget, and package contracts synchronized.`);
+console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; 15-audit aggregate preflight; route, media, design-system, performance-budget, and Cloudflare contracts synchronized.`);

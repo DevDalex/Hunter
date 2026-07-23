@@ -1,4 +1,4 @@
-import { Download, Menu, Search, X } from 'lucide-react';
+import { Menu, Search, X } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { routeToHref } from '../lib/appRouter';
 
@@ -12,7 +12,7 @@ const primaryNav = [
   { id: 'timeline', view: 'timeline', label: 'Timeline' },
 ];
 
-export default function Header({ activeView, routeTarget, onNavigate, onOpenSearch, onOpenDownloads, onPrefetch, onPrefetchSearch }) {
+export default function Header({ activeView, routeTarget, onNavigate, onOpenSearch, onPrefetch, onPrefetchSearch }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const headerRef = useRef(null);
   const menuButtonRef = useRef(null);
@@ -74,7 +74,6 @@ export default function Header({ activeView, routeTarget, onNavigate, onOpenSear
         })}
       </nav>
       <div className="header-actions">
-        <button className="header-download-button" onClick={() => { setMenuOpen(false); onOpenDownloads?.(); }} aria-label="Download the complete website" title="Download archive"><Download size={16} /><span>Download</span></button>
         <button className="header-search-button" onPointerEnter={onPrefetchSearch} onFocus={onPrefetchSearch} onClick={() => { setMenuOpen(false); onOpenSearch(); }} aria-label="Search the complete archive"><Search size={16} /><span>Search</span><kbd>Ctrl K</kbd></button>
         <button ref={menuButtonRef} className="mobile-menu-button" onClick={() => setMenuOpen((current) => !current)} aria-expanded={menuOpen} aria-controls="primary-navigation" aria-label={`${menuOpen ? 'Close' : 'Open'} primary navigation`}>
           {menuOpen ? <X size={20} /> : <Menu size={20} />}

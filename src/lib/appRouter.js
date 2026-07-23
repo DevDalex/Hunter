@@ -163,8 +163,6 @@ export function routeToCleanPath(view, target = '', params = {}, hash = '') {
 }
 
 export function routeToHref(view, target = '', params = {}, options = {}) {
-  if (options.preferHash) return routeToLegacyHash(view, target, params);
-  if (typeof window !== 'undefined' && window.__HXH_STANDALONE_BUILD__ === true) return routeToLegacyHash(view, target, params);
   return routeToCleanPath(view, target, params, options.hash || '');
 }
 
@@ -236,7 +234,7 @@ export function readBrowserRoute() {
   const legacyRoute = parseLegacyHashRoute(window.location.hash);
   if (legacyRoute) {
     const clean = routeToCleanPath(legacyRoute.view, legacyRoute.target, legacyRoute.params);
-    if (window.__HXH_STANDALONE_BUILD__ !== true && clean !== `${window.location.pathname}${window.location.search}`) {
+    if (clean !== `${window.location.pathname}${window.location.search}`) {
       window.history.replaceState({ hxhRoute: clean }, '', clean);
     }
     return legacyRoute;

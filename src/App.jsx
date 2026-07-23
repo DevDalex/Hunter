@@ -7,7 +7,6 @@ import PageIntro from './components/PageIntro';
 import WorkspaceNav from './components/WorkspaceNav';
 import SectionTabs from './components/SectionTabs';
 import SpoilerControl from './components/SpoilerControl';
-import ArchiveDownloadDialog from './components/ArchiveDownloadDialog';
 import { ARCHIVE_BOUNDARY, SITE_STATS } from './data/archiveMeta';
 import { homeHighlights } from './data/homeHighlights';
 import {
@@ -95,12 +94,10 @@ function SpoilerSettings({ value, onChange }) {
 
 export default function App() {
   const initialRoute = readBrowserRoute();
-  const standaloneBuild = typeof window !== 'undefined' && window.__HXH_STANDALONE_BUILD__ === true;
   const [activeView, setActiveView] = useState(initialRoute.view);
   const [routeTarget, setRouteTarget] = useState(initialRoute.target);
   const [routeParams, setRouteParams] = useState(initialRoute.params);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [downloadsOpen, setDownloadsOpen] = useState(false);
   const [spoilerLimit, setSpoilerLimit] = useState(readSpoilerLimit);
 
   const successionPage = successionPages.find((page) => page.id === routeTarget) || successionPages[0];
@@ -127,15 +124,9 @@ export default function App() {
 
   const navigate = (view, target = '', params = {}) => {
     const normalized = normalizeDestination(view, target, params);
-    const nextHref = routeToHref(normalized.view, normalized.target, normalized.params, { preferHash: standaloneBuild });
-    const sameHash = nextHref.startsWith('#/') && window.location.hash === nextHref;
-    const samePath = !nextHref.startsWith('#/') && `${window.location.pathname}${window.location.search}` === nextHref;
-    if (sameHash || samePath) {
-      applyRoute(normalized);
-      return;
-    }
-    if (nextHref.startsWith('#/')) {
-      window.location.hash = nextHref;
+    const nextHref = routeToHref(normalized.view, normalized.target, normalized.params);
+    const samePath = `${window.location.pathname}${window.location.search}` === nextHref;
+    if (samePath) {
       applyRoute(normalized);
       return;
     }
@@ -210,13 +201,12 @@ export default function App() {
   return (
     <div id="top" className={`app-shell view-${activeView}`}>
       <button type="button" className="skip-link" onClick={() => { const main = document.getElementById('main-content'); main?.focus(); main?.scrollIntoView({ block: 'start', behavior: reducedMotion() ? 'auto' : 'smooth' }); }}>Skip to content</button>
-      <Header activeView={activeView} routeTarget={routeTarget} onNavigate={navigate} onOpenSearch={() => setSearchOpen(true)} onOpenDownloads={() => setDownloadsOpen(true)} onPrefetch={preloadRoute} onPrefetchSearch={preloadArchiveSearch} />
-      {standaloneBuild && <aside className="standalone-banner" role="note"><b>You are viewing the standalone edition.</b><span>This copy runs independently of the hosted website; keep its media folder beside the start file.</span></aside>}
+      <Header activeView={activeView} routeTarget={routeTarget} onNavigate={navigate} onOpenSearch={() => setSearchOpen(true)} onPrefetch={preloadRoute} onPrefetchSearch={preloadArchiveSearch} />
 
       <main id="main-content" tabIndex="-1">
         <p className="sr-only" role="status" aria-live="polite">Opened {routeTitle}</p>
 
-        {activeView === 'home' && <SiteHome onNavigate={navigate} onPrefetch={preloadRoute} onOpenSearch={() => setSearchOpen(true)} onOpenDownloads={() => setDownloadsOpen(true)} latestChapter={ARCHIVE_BOUNDARY} stats={SITE_STATS} heroCharacters={homeHighlights} />}
+        {activeView === 'home' && <SiteHome onNavigate={navigate} onPrefetch={preloadRoute} latestChapter={ARCHIVE_BOUNDARY} stats={SITE_STATS} heroCharacters={homeHighlights} />}
 
         {activeView === 'series' && <Suspense fallback={<RouteLoading label="story library" />}><SeriesWorkspace routeTarget={routeTarget} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={changeSpoilerLimit} onNavigate={navigate} onPrefetch={preloadRoute} /></Suspense>}
 
@@ -276,11 +266,10 @@ export default function App() {
 
       <footer className="site-footer">
         <div><b>Hunter × Hunter Archive</b><p>An independent, non-commercial visual encyclopedia. Manga facts and displayed media are linked to Hunterpedia/Fandom; Hunter × Hunter belongs to Yoshihiro Togashi and its rights holders.</p></div>
-        <nav aria-label="Footer links"><button onClick={() => navigate('series')}>Story</button><button onClick={() => navigate('timeline')}>Timeline</button><button onClick={() => navigate('reference', 'encyclopedia')}>Encyclopedia</button><button onClick={() => navigate('succession', 'overview')}>Succession</button><button onClick={() => setDownloadsOpen(true)}>Download website</button></nav>
+        <nav aria-label="Footer links"><button onClick={() => navigate('series')}>Story</button><button onClick={() => navigate('timeline')}>Timeline</button><button onClick={() => navigate('reference', 'encyclopedia')}>Encyclopedia</button><button onClick={() => navigate('succession', 'overview')}>Succession</button></nav>
         <a href="https://hunterxhunter.fandom.com/" target="_blank" rel="noreferrer">Hunterpedia <ExternalLink size={11} /></a>
       </footer>
 
-      <ArchiveDownloadDialog open={downloadsOpen} onClose={() => setDownloadsOpen(false)} />
       {searchOpen && <Suspense fallback={<RouteLoading label="archive search" />}><ArchiveSearch open spoilerLimit={spoilerLimit} onClose={() => setSearchOpen(false)} onSelect={openSearchResult} /></Suspense>}
     </div>
   );

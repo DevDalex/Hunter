@@ -101,7 +101,7 @@ The router provides:
 7. redirects from existing Story and Succession hash URLs where a clean destination exists;
 8. updated primary navigation hrefs;
 9. route-level lazy loading preserved through the existing preload registry;
-10. a standalone-build escape hatch that can continue using hashes when `window.__HXH_STANDALONE_BUILD__` is true.
+10. migration support for previously shared legacy hash URLs, which are upgraded to clean Cloudflare-hosted paths.
 
 The route adapter is deliberately compatibility-focused: it changes URLs before replacing the existing Story page components. The actual page redesign and page ownership begin in later batches.
 
@@ -291,7 +291,7 @@ Batch 2 is complete when:
 - unknown paths show a not-found route instead of silently opening home;
 - the static worker retains the `index.html` fallback required for direct reload;
 - primary navigation uses generated route hrefs rather than hard-coded hashes;
-- standalone builds can continue to prefer legacy hashes;
+- previously shared legacy hashes continue to migrate to clean paths;
 - `npm run audit:story` verifies the route adapter;
 - existing route-level lazy loading remains in place.
 

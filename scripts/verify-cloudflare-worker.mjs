@@ -3,7 +3,7 @@
 import assert from 'node:assert/strict';
 import { writeFile } from 'node:fs/promises';
 
-const diagnosticPath = 'sites-worker-diagnostic.json';
+const diagnosticPath = 'cloudflare-worker-diagnostic.json';
 const diagnostic = {
   generatedAt: new Date().toISOString(),
   node: process.version,
@@ -74,7 +74,7 @@ try {
 
   diagnostic.passed = true;
   await writeFile(diagnosticPath, `${JSON.stringify(diagnostic, null, 2)}\n`, 'utf8');
-  console.log(`Sites Worker verification passed: /api/admin/chapter/session returned HTTP ${session.response.status} JSON and the complete chapter-admin route family bypassed SPA fallback.`);
+  console.log(`Cloudflare Worker verification passed: /api/admin/chapter/session returned HTTP ${session.response.status} JSON and the complete chapter-admin route family bypassed SPA fallback.`);
 } catch (error) {
   diagnostic.error = {
     name: error?.name || 'Error',

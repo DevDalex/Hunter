@@ -1,15 +1,15 @@
 import { archiveDesignSystemStats } from './archiveDesignSystem.js';
 import { formatPerformanceBudget, performanceBudgets } from './performanceBudgets.js';
 
-export const IMPLEMENTATION_NOTES_VERSION = 'Phase 6F handoff · Phase 8A current release · Batch 12 design system · July 20, 2026';
+export const IMPLEMENTATION_NOTES_VERSION = 'Cloudflare HxH maintenance contract · Batch 12 design system · July 23, 2026';
 
 export const implementationSections = [
   {
     id: 'architecture', label: 'Architecture', title: 'Four workspaces, one lightweight shell',
-    summary: 'Home, Series, Succession, and Reference share one route shell, while large research datasets load only when a reader opens that workspace.',
+    summary: 'Home, Series, Succession, and Reference share one Cloudflare-hosted route shell, while large research datasets load only when a reader opens that workspace.',
     owner: 'Navigation and route composition',
     files: ['src/data/routeManifest.js', 'src/lib/appRouter.js', 'src/App.jsx', 'src/components/WorkspaceNav.jsx'],
-    decisions: [['Clean history routes', 'Reader-facing pages use clean paths with direct-reload fallback; legacy hash routes remain parseable.'], ['Route boundaries', 'Chapter, Succession, search, and encyclopedia systems stay lazy-loaded.'], ['Compact navigation', 'High-frequency destinations stay visible while less common pages remain in workspace navigation.']],
+    decisions: [['Clean history routes', 'Reader-facing pages use clean paths with Cloudflare Worker direct-reload fallback; legacy hash routes remain parseable for old links.'], ['Route boundaries', 'Chapter, Succession, search, and encyclopedia systems stay lazy-loaded.'], ['Compact navigation', 'High-frequency destinations stay visible while less common pages remain in workspace navigation.']],
     checks: ['A clean route resolves after direct reload.', 'Query parameters preserve selected records.', 'Legacy hashes upgrade safely.', 'No large research dataset enters the startup shell.'],
   },
   {
@@ -66,14 +66,14 @@ export const implementationSections = [
     owner: 'Ongoing archive maintenance',
     files: ['public/implementation-notes.md', 'README.md', 'scripts/audit-implementation.mjs', 'scripts/run-build-preflight.mjs'],
     decisions: [['Trigger-based review', 'Maintenance starts from a source, route, media, UI, taxonomy, or audit-contract change.'], ['Canonical first', 'Update the central record before consumers.'], ['Aggregate preflight', 'All fifteen independent pre-build audits run even when one fails.']],
-    checks: ['Follow the relevant matrix row.', 'Update review date/change log when applicable.', 'Run aggregate preflight before packaging.'],
+    checks: ['Follow the relevant matrix row.', 'Update review date/change log when applicable.', 'Run aggregate preflight before deployment.'],
   },
   {
     id: 'release', label: 'Release gate', title: 'Definition of done for every archive checkpoint',
     summary: 'A change is complete only when facts, images, links, responsive presentation, accessibility, performance, documentation, and hosted artifact agree.',
     owner: 'QA and release discipline',
-    files: ['src/data/releaseReadiness.js', 'scripts/run-build-preflight.mjs', 'scripts/audit-release.mjs', 'scripts/visual-qa.mjs', 'scripts/performance-qa.mjs', 'scripts/package-release.mjs'],
-    decisions: [['Automated gate', 'Schema, ranges, IDs, sources, media, layout, packages, and handbook structure fail when inconsistent.'], ['Browser matrix', 'All 26 routes render at desktop, tablet, and phone widths.'], ['Immutable checkpoint', 'The deployed version must match the validated source state.']],
+    files: ['src/data/releaseReadiness.js', 'scripts/run-build-preflight.mjs', 'scripts/audit-release.mjs', 'scripts/prepare-hosting.mjs', 'wrangler.jsonc', 'scripts/performance-qa.mjs'],
+    decisions: [['Automated gate', 'Schema, ranges, IDs, sources, media, layout, Worker output, assets, and handbook structure fail when inconsistent.'], ['Browser matrix', 'All maintained routes render at desktop, tablet, and phone widths.'], ['Immutable checkpoint', 'The Cloudflare deployment must match the validated source state.']],
     checks: ['All fifteen independent pre-build audits pass.', 'Visual and accessibility browser matrices pass when required.', 'The final hosted deployment reaches terminal success.'],
   },
 ];
@@ -110,7 +110,7 @@ export const completionCriteria = [
   ['Accessible shell', 'Keyboard, touch, focus, reduced-motion, and nonvisual alternatives have explicit rules.'],
   ['Performance boundary', 'Large research collections remain separate from the startup shell under explicit budgets.'],
   ['Build gate', 'Fifteen independent audits run through one aggregate preflight before packaging.'],
-  ['Public handoff', 'The maintainable source ZIP includes source, scripts, architecture, documentation, hosting identity, and current maintenance instructions.'],
+  ['Cloudflare artifact', 'The production build contains the Worker entry and client assets, excludes retired portable packages, and preserves Worker-first API routing.'],
 ];
 
 export const implementationStats = {
