@@ -33,17 +33,33 @@ The aggregate runner executes all 15 independent pre-build audits, records every
 - CSS ownership runs before CSS-aware readability, layout, accessibility, and polish checks.
 - Media verification runs before polish.
 
-## Later Cloudflare build stages
+## Build composition
 
-These ordered stages require generated output and therefore run after the aggregate preflight:
+`npm run build` is intentionally composed from two independently useful stages:
 
-1. hosting cleanup;
-2. Vite production build into `dist/client/`;
-3. `audit:performance`;
-4. Worker preparation into `dist/server/`;
-5. Cloudflare release audit.
+1. `npm run check`
+   - generates `public/build-info.json`;
+   - runs the complete 15-audit aggregate preflight.
+2. `npm run build:runtime`
+   - clears stale hosting output;
+   - builds Vite into `dist/client/`;
+   - runs `audit:performance`;
+   - prepares the Worker in `dist/server/`;
+   - runs the Cloudflare release audit.
 
 The retired portable ZIP and standalone build stages are intentionally absent.
+
+## Browser CI boundary
+
+The Cloudflare full-stack workflow is the authoritative complete repository gate. Browser CI uses `npm run qa:browser:ci`, which regenerates build identity, runs `build:runtime`, and then performs rendered search, visual, accessibility, interaction, reader, architecture, and browser-performance verification.
+
+Browser CI does not rerun aggregate preflight because the Cloudflare job already runs those same 15 independent pre-build audits for the identical revision. Local `npm run qa:browser` still begins with the complete `npm run build` gate.
+
+Both workflows cancel superseded runs on the same branch. A newer commit therefore stops obsolete CI work instead of allowing multiple stale browser/build matrices to consume runner time.
+
+## Dependency boundary
+
+Direct runtime and build dependencies are exact-versioned in `package.json` and synchronized through `package-lock.json`. Playwright, Axe, Vite, the React plugin, and Wrangler are repository devDependencies; CI must not install alternate transient versions.
 
 ## Failure behavior
 
@@ -51,4 +67,4 @@ Each audit keeps its original output. At the end, the runner lists every failing
 
 ## Verification boundary
 
-Aggregate preflight proves only that its 15 repository-side audits passed for that source state. A full `npm run build` additionally proves the Vite, performance, Worker preparation, and Cloudflare artifact checks passed. Neither proves that Cloudflare deployed successfully; hosted success requires a terminal Cloudflare result and direct live-route verification.
+Aggregate preflight proves only that its 15 repository-side audits passed for that source state. A full `npm run build` additionally proves the Vite, performance, Worker preparation, and Cloudflare artifact checks passed. Browser QA proves rendered behavior for that built revision. None proves that Cloudflare deployed successfully; hosted success requires a terminal Cloudflare result and direct live-route verification.

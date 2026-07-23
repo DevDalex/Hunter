@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: browser-verification-${{ github.ref }}
-  cancel-in-progress: false
+  group: browser-verification-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -29,23 +29,20 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install project dependencies
+      - name: Install locked dependencies
         run: npm ci
 
-      - name: Install pinned browser QA dependencies
-        run: npm run browser:deps
-
       - name: Install Chromium and system dependencies
-        run: npx playwright install --with-deps chromium
+        run: npm exec playwright -- install --with-deps chromium
 
-      - name: Run production build and browser verification
+      - name: Build runtime and run browser verification
         shell: bash
         env:
           VISUAL_QA_SCREENSHOTS: failures
         run: |
           set -o pipefail
           mkdir -p .browser-qa
-          npm run qa:browser 2>&1 | tee .browser-qa/console.log
+          npm run qa:browser:ci 2>&1 | tee .browser-qa/console.log
 
       - name: Upload browser QA reports
         if: always()
