@@ -1,22 +1,19 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import Header from './components/Header';
 import ReferenceBackbonePanel from './components/ReferenceBackbonePanel';
 import SiteHome from './components/SiteHome';
 import PageIntro from './components/PageIntro';
 import WorkspaceNav from './components/WorkspaceNav';
-import SectionTabs from './components/SectionTabs';
 import SpoilerControl from './components/SpoilerControl';
 import { ARCHIVE_BOUNDARY, SITE_STATS } from './data/archiveMeta';
 import { homeHighlights } from './data/homeHighlights';
 import {
-  dossierTabRoutes,
   referencePages,
   referencePrimary,
   seriesRoutes,
-  successionPages,
-  successionPrimary,
 } from './data/routeManifest';
+import { getSuccessionArchiveRoute } from './data/succession/archiveRoutes';
 import { readStoredNumber, writeStoredString } from './lib/browserStorage';
 import { normalizeDestination, readBrowserRoute, routeIsLegacyHash, routeToHref } from './lib/appRouter';
 import { preloadArchiveSearch, preloadRoute, routeModuleLoaders } from './lib/routePreload';
@@ -24,61 +21,13 @@ import { preloadArchiveSearch, preloadRoute, routeModuleLoaders } from './lib/ro
 const ArchiveSearch = lazy(routeModuleLoaders.archiveSearch);
 const SeriesWorkspace = lazy(routeModuleLoaders.series);
 const TimelineWorkspace = lazy(routeModuleLoaders.timeline);
-const SuccessionOverview = lazy(routeModuleLoaders.successionOverview);
-const FamilyTree = lazy(routeModuleLoaders.familyTree);
-const SuccessionRoster = lazy(routeModuleLoaders.successionRoster);
-const SuccessionConnectionBoard = lazy(routeModuleLoaders.successionConnections);
-const BlackWhaleGuide = lazy(routeModuleLoaders.blackWhale);
-const SuccessionDossier = lazy(routeModuleLoaders.successionDossier);
+const SuccessionArchiveApp = lazy(routeModuleLoaders.successionArchive);
 const EntityEncyclopedia = lazy(routeModuleLoaders.encyclopedia);
 const NenEncyclopedia = lazy(routeModuleLoaders.nen);
 const HisokaChrolloDossier = lazy(routeModuleLoaders.hisokaChrollo);
 const WorldAtlas = lazy(routeModuleLoaders.worldAtlas);
 const OrganizationWorkspace = lazy(routeModuleLoaders.organizationWorkspace);
 const ConflictArchive = lazy(routeModuleLoaders.conflictArchive);
-
-const successionPanels = {
-  'family-tree': [
-    { id: 'tree', label: 'Family tree', note: 'Bloodline graphic' },
-    { id: 'princes', label: 'Prince dossiers', note: 'Fourteen profiles' },
-  ],
-  'succession-roster': [
-    { id: 'roster', label: 'Character archive', note: 'Filterable cast' },
-    { id: 'assignments', label: 'Guard assignments', note: 'Rooms and loyalties' },
-    { id: 'relationships', label: 'Relationship map', note: 'Focused connections' },
-  ],
-  beasts: [
-    { id: 'beasts', label: 'Spirit Beasts', note: 'Hosts and mechanics' },
-    { id: 'abilities', label: 'Abilities', note: 'Conditions and costs' },
-    { id: 'classes', label: 'Nen classes', note: 'Students and results' },
-    { id: 'rules', label: 'Contest rules', note: 'Ritual and law' },
-  ],
-  mafia: [
-    { id: 'mafia', label: 'Mafia families', note: 'Xi-Yu, Cha-R, Heil-Ly' },
-    { id: 'justice', label: 'Justice & military', note: 'Authority and custody' },
-    { id: 'operations', label: 'Operations', note: 'Plans and confrontations' },
-    { id: 'relationships', label: 'Political links', note: 'Typed relationships' },
-  ],
-  chapters: [
-    { id: 'chapters', label: 'Chapter ledger', note: `Ch. 340–${ARCHIVE_BOUNDARY}` },
-    { id: 'deaths', label: 'Deaths & body states', note: 'Confirmed and exceptional' },
-    { id: 'objects', label: 'Objects & evidence', note: 'Custody and effects' },
-    { id: 'mysteries', label: 'Open mysteries', note: 'Evidence boundaries' },
-  ],
-};
-
-const panelToDossierTab = {
-  princes: 'royal', assignments: 'assignments', beasts: 'beasts', abilities: 'abilities', classes: 'abilities', rules: 'rules',
-  mafia: 'mafia', justice: 'justice', operations: 'operations', relationships: 'relations', chapters: 'chapters',
-  deaths: 'status', objects: 'objects', mysteries: 'mysteries',
-};
-
-const dossierPanelForTab = {
-  royal: 'princes', assignments: 'assignments', guards: 'assignments', beasts: 'beasts', abilities: 'abilities', rules: 'rules',
-  mafia: 'mafia', factions: 'mafia', troupe: 'mafia', institutions: 'justice', justice: 'justice', expedition: 'justice',
-  operations: 'operations', relations: 'relationships', relationships: 'relationships', status: 'deaths', objects: 'objects',
-  chapters: 'chapters', mysteries: 'mysteries', links: 'mysteries', overview: 'tree', core: 'chapters', routes: 'chapters',
-};
 
 function readSpoilerLimit() {
   const stored = readStoredNumber('hxh-spoiler-limit', ARCHIVE_BOUNDARY);
@@ -100,7 +49,7 @@ export default function App() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [spoilerLimit, setSpoilerLimit] = useState(readSpoilerLimit);
 
-  const successionPage = successionPages.find((page) => page.id === routeTarget) || successionPages[0];
+  const successionPage = getSuccessionArchiveRoute(routeTarget);
   const referencePage = referencePages.find((page) => page.id === routeTarget) || referencePages[0];
   const seriesPage = seriesRoutes.find((page) => page.target === routeTarget) || seriesRoutes[0];
   const seriesTitle = routeTarget === 'zoldyck-family' ? 'Zoldyck Family' : seriesPage.label;
@@ -159,19 +108,17 @@ export default function App() {
     const handleKey = (event) => {
       const editing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName);
       if ((event.key === '/' || (event.key.toLowerCase() === 'k' && (event.ctrlKey || event.metaKey))) && !editing) {
-        event.preventDefault(); setSearchOpen(true);
+        event.preventDefault();
+        setSearchOpen(true);
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, []);
 
-  const changeSpoilerLimit = (number) => { setSpoilerLimit(number); writeStoredString('hxh-spoiler-limit', String(number)); };
-
-  const routeDossierTab = (tab = 'overview', prince) => {
-    const target = dossierTabRoutes[tab] || 'overview';
-    const panel = dossierPanelForTab[tab];
-    navigate('succession', target, { panel, prince });
+  const changeSpoilerLimit = (number) => {
+    setSpoilerLimit(number);
+    writeStoredString('hxh-spoiler-limit', String(number));
   };
 
   const openSearchResult = (result) => {
@@ -179,24 +126,6 @@ export default function App() {
     if (result.route) navigate(result.route.view, result.route.target, result.route.params);
     else if (result.source) window.open(result.source, '_blank', 'noopener,noreferrer');
   };
-
-  const activePanel = useMemo(() => {
-    const panels = successionPanels[routeTarget];
-    if (!panels) return '';
-    return panels.some((item) => item.id === routeParams.panel) ? routeParams.panel : panels[0].id;
-  }, [routeParams.panel, routeTarget]);
-
-  const renderEmbeddedDossier = (panel) => (
-    <SuccessionDossier
-      embedded
-      spoilerLimit={spoilerLimit}
-      requestedTab={panelToDossierTab[panel] || panel}
-      requestedPrince={routeParams.prince}
-      requestedFocus={routeParams.focus}
-      onNavigate={(target, params) => navigate('succession', target, params)}
-      onRouteTab={routeDossierTab}
-    />
-  );
 
   return (
     <div id="top" className={`app-shell view-${activeView}`}>
@@ -212,28 +141,18 @@ export default function App() {
 
         {activeView === 'timeline' && <Suspense fallback={<RouteLoading label="global timeline" />}><TimelineWorkspace requestedArc={routeParams.arc || 'all'} requestedScope={routeParams.scope || 'overview'} requestedSearch={routeParams.search || ''} spoilerLimit={spoilerLimit} onNavigate={(params) => navigate('timeline', '', params)} onOpenLocation={(room) => navigate('succession', 'black-whale', { room })} /></Suspense>}
 
-        {activeView === 'succession' && <>
-          <PageIntro kicker={successionPage.kicker} title={successionPage.title} description={successionPage.description}>
-            <dl className="page-intro__facts"><div><dt>Arc</dt><dd>Ch. 340–{ARCHIVE_BOUNDARY}</dd></div><div><dt>Contest</dt><dd>Begins Ch. 359</dd></div><div><dt>Reading boundary</dt><dd>Ch. {spoilerLimit}</dd></div></dl>
-          </PageIntro>
-          <WorkspaceNav items={successionPages} activeId={successionPage.id} onSelect={(id) => navigate('succession', id)} onIntent={(id) => preloadRoute('succession', id)} primaryIds={successionPrimary} label="Succession sections" />
-          <SpoilerSettings value={spoilerLimit} onChange={changeSpoilerLimit} />
-
-          {successionPanels[successionPage.id] && <SectionTabs items={successionPanels[successionPage.id]} activeId={activePanel} onSelect={(panel) => navigate('succession', successionPage.id, { panel })} label={`${successionPage.label} views`} />}
-
-          <Suspense fallback={<RouteLoading label={successionPage.label.toLowerCase()} />}>
-            {successionPage.id === 'overview' && <SuccessionOverview spoilerLimit={spoilerLimit} onNavigate={(target, params) => navigate('succession', target, params)} onOpenPrince={(prince) => navigate('succession', 'family-tree', { panel: 'princes', prince })} onOpenDossier={routeDossierTab} onOpenWorldMap={() => navigate('reference', 'atlas', { mode: 'succession', location: 'kakin-empire' })} onOpenSearch={() => setSearchOpen(true)} />}
-            {successionPage.id === 'family-tree' && activePanel === 'tree' && <FamilyTree spoilerLimit={spoilerLimit} onOpenPrince={(prince) => navigate('succession', 'family-tree', { panel: 'princes', prince })} />}
-            {successionPage.id === 'family-tree' && activePanel === 'princes' && renderEmbeddedDossier('princes')}
-            {successionPage.id === 'succession-roster' && activePanel === 'roster' && <SuccessionRoster spoilerLimit={spoilerLimit} initialQuery={routeParams.search || ''} />}
-            {successionPage.id === 'succession-roster' && activePanel === 'relationships' && <SuccessionConnectionBoard />}
-            {successionPage.id === 'succession-roster' && activePanel === 'assignments' && renderEmbeddedDossier('assignments')}
-            {successionPage.id === 'black-whale' && <BlackWhaleGuide initialQuery={routeParams.room || ''} onOpenWorldMap={() => navigate('reference', 'atlas', { mode: 'succession', location: 'black-whale-voyage' })} />}
-            {successionPage.id === 'beasts' && renderEmbeddedDossier(activePanel)}
-            {successionPage.id === 'mafia' && renderEmbeddedDossier(activePanel)}
-            {successionPage.id === 'chapters' && renderEmbeddedDossier(activePanel)}
-          </Suspense>
-        </>}
+        {activeView === 'succession' && <Suspense fallback={<RouteLoading label="Succession Contest Archive" />}>
+          <SuccessionArchiveApp
+            routeTarget={routeTarget}
+            routeParams={routeParams}
+            spoilerLimit={spoilerLimit}
+            onSpoilerChange={changeSpoilerLimit}
+            onNavigate={(target, params) => navigate('succession', target, params)}
+            onExitArchive={() => navigate('series')}
+            onOpenSearch={() => setSearchOpen(true)}
+            onIntent={(target) => preloadRoute('succession', target)}
+          />
+        </Suspense>}
 
         {activeView === 'reference' && referencePage.id === 'systems' && <Suspense fallback={<RouteLoading label="organizations" />}><OrganizationWorkspace requestedView={routeParams.view || 'overview'} requestedFamily={routeParams.family || 'all'} requestedSearch={routeParams.search || ''} onNavigate={(params) => navigate('reference', 'systems', params)} onOpenRecord={(category, record, search) => navigate('reference', 'encyclopedia', { category, record, search })} onOpenSuccession={() => navigate('succession', 'mafia')} onOpenBlackWhale={() => navigate('succession', 'black-whale')} onOpenNen={(search) => navigate('reference', 'nen', search ? { search } : {})} onOpenFights={() => navigate('reference', 'conflicts')} onOpenObjects={() => navigate('reference', 'encyclopedia', { category: 'objects' })} /></Suspense>}
 
@@ -248,7 +167,7 @@ export default function App() {
           <Suspense fallback={<RouteLoading label={referencePage.label.toLowerCase()} />}>
             {referencePage.id === 'encyclopedia' && <EntityEncyclopedia key={`encyclopedia-${routeParams.category || ''}-${routeParams.search || ''}-${routeParams.record || ''}`} initialCategory={routeParams.category || 'characters'} initialQuery={routeParams.search || ''} initialRecord={routeParams.record || ''} spoilerLimit={spoilerLimit} />}
             {referencePage.id === 'nen' && <NenEncyclopedia initialQuery={routeParams.search || ''} spoilerLimit={spoilerLimit} />}
-            {referencePage.id === 'atlas' && <WorldAtlas initialLocation={routeParams.location || routeParams.search || ''} initialMode={routeParams.mode || 'explore'} initialRoute={routeParams.route || ''} onOpenBlackWhale={() => navigate('succession', 'black-whale')} onOpenEncyclopedia={(search) => navigate('reference', 'encyclopedia', { category: 'locations', search })} onOpenTimeline={(search) => navigate('timeline', '', { arc: 'succession-contest', scope: 'events', search })} />}
+            {referencePage.id === 'atlas' && <WorldAtlas initialLocation={routeParams.location || routeParams.search || ''} initialMode={routeParams.mode || 'explore'} initialRoute={routeParams.route || ''} onOpenBlackWhale={() => navigate('succession', 'black-whale')} onOpenEncyclopedia={(search) => navigate('reference', 'encyclopedia', { category: 'locations', search })} onOpenTimeline={(search) => navigate('succession', 'timeline', { search })} />}
             {referencePage.id === 'conflicts' && (routeParams.case === 'hisoka-chrollo' ? <HisokaChrolloDossier initialChapter={routeParams.chapter} initialAbility={routeParams.ability} /> : <ConflictArchive initialQuery={routeParams.search || ''} onOpenEntity={(search) => navigate('reference', 'encyclopedia', { search })} onOpenHisokaDossier={() => navigate('reference', 'conflicts', { case: 'hisoka-chrollo' })} />)}
           </Suspense>
         </>}
@@ -266,7 +185,7 @@ export default function App() {
 
       <footer className="site-footer">
         <div><b>Hunter × Hunter Archive</b><p>An independent, non-commercial visual encyclopedia. Manga facts and displayed media are linked to Hunterpedia/Fandom; Hunter × Hunter belongs to Yoshihiro Togashi and its rights holders.</p></div>
-        <nav aria-label="Footer links"><button onClick={() => navigate('series')}>Story</button><button onClick={() => navigate('timeline')}>Timeline</button><button onClick={() => navigate('reference', 'encyclopedia')}>Encyclopedia</button><button onClick={() => navigate('succession', 'overview')}>Succession</button></nav>
+        <nav aria-label="Footer links"><button onClick={() => navigate('series')}>Story</button><button onClick={() => navigate('timeline')}>Timeline</button><button onClick={() => navigate('reference', 'encyclopedia')}>Encyclopedia</button><button onClick={() => navigate('succession', 'archive')}>Succession</button></nav>
         <a href="https://hunterxhunter.fandom.com/" target="_blank" rel="noreferrer">Hunterpedia <ExternalLink size={11} /></a>
       </footer>
 
