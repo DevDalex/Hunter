@@ -193,36 +193,56 @@ try {
     if (health.unavailable.length) throw new Error(`mobile unavailable visuals: ${health.unavailable.join(', ')}`);
   });
 
-  await run('Relationship workspace filters remain readable', { width: 1440, height: 1000 }, 'succession/relationships', async (page) => {
-    await page.waitForSelector('.connection-atlas-section');
-    const directoryButtons = page.locator('.connection-atlas-lanes button');
-    const directoryCount = await directoryButtons.count();
-    if (directoryCount < 2) throw new Error('relationship directories did not render');
-    const checks = Math.min(directoryCount, 6);
-    for (let index = 0; index < checks; index += 1) {
-      await directoryButtons.nth(index).click();
-      await page.waitForTimeout(60);
-      const workspace = await page.evaluate(() => {
-        const root = document.querySelector('.connection-atlas-workspace');
-        const rect = root?.getBoundingClientRect();
-        const selected = document.querySelector('.connection-atlas-lanes button.is-active');
-        const visibleMembers = [...document.querySelectorAll('.connection-atlas-person')].filter((element) => {
-          const style = getComputedStyle(element); const box = element.getBoundingClientRect();
-          return style.display !== 'none' && style.visibility !== 'hidden' && box.width > 0 && box.height > 0;
+  await run('Canonical relationship directory filters remain readable', { width: 1440, height: 1000 }, 'succession/relationships', async (page) => {
+    await page.waitForSelector('.succession-directory .succession-entity-grid');
+    const root = page.locator('.succession-directory');
+    const cards = root.locator('.succession-entity-grid > article');
+    const initialCount = await cards.count();
+    if (initialCount < 20) throw new Error(`canonical relationship directory is incomplete: ${initialCount} records`);
+
+    const filter = root.getByPlaceholder('Filter this workspace…');
+    const cases = [
+      { query: 'Kurapika', minimum: 2, label: 'Kurapika relationships' },
+      { query: 'Morena', minimum: 1, label: 'Morena relationships' },
+      { query: 'father-child', minimum: 14, label: 'royal father-child relationships' },
+    ];
+
+    for (const item of cases) {
+      await filter.fill(item.query);
+      await page.waitForTimeout(80);
+      const state = await page.evaluate(() => {
+        const directory = document.querySelector('.succession-directory');
+        const grid = directory?.querySelector('.succession-entity-grid');
+        const visibleCards = [...(grid?.querySelectorAll(':scope > article') || [])].filter((element) => {
+          const style = getComputedStyle(element);
+          const rect = element.getBoundingClientRect();
+          return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
         });
+        const malformed = visibleCards.map((element) => {
+          const rect = element.getBoundingClientRect();
+          return { width: rect.width, height: rect.height, title: element.querySelector('h3')?.textContent.trim() || '' };
+        }).filter((card) => card.width < 220 || card.height < 210);
         return {
-          width: rect?.width || 0,
-          height: rect?.height || 0,
-          members: visibleMembers.length,
-          selected: selected?.textContent.trim() || '',
-          overflow: root ? root.scrollWidth - root.clientWidth : 0,
+          count: visibleCards.length,
+          malformed,
+          gridOverflow: grid ? grid.scrollWidth - grid.clientWidth : 0,
+          bodyOverflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+          status: directory?.querySelector('h2')?.textContent.trim() || '',
         };
       });
-      if (!workspace.selected) throw new Error(`relationship directory ${index + 1} did not become active`);
-      if (workspace.width < 300 || workspace.height < 120) throw new Error(`relationship workspace collapsed under directory ${index + 1}`);
-      if (!workspace.members) throw new Error(`relationship directory ${index + 1} displayed no members`);
-      if (workspace.overflow > 2) throw new Error(`relationship workspace overflowed by ${workspace.overflow}px under directory ${index + 1}`);
+      if (state.count < item.minimum) throw new Error(`${item.label} returned ${state.count}; expected at least ${item.minimum}`);
+      if (state.malformed.length) throw new Error(`${item.label} produced collapsed cards: ${JSON.stringify(state.malformed)}`);
+      if (state.gridOverflow > 2 || state.bodyOverflow > 2) throw new Error(`${item.label} overflowed: grid ${state.gridOverflow}px, body ${state.bodyOverflow}px`);
+      if (!state.status.startsWith(`${state.count} of`)) throw new Error(`${item.label} did not update the visible record count`);
     }
+
+    await filter.fill('Kurapika');
+    const firstRecord = cards.first().locator('.succession-entity-link');
+    await firstRecord.click();
+    await page.waitForSelector('.succession-entity-detail .succession-entity-header');
+    if (!page.url().includes('entity=relationship%3A')) throw new Error('relationship record detail did not preserve a namespaced canonical ID');
+    const health = await pageHealth(page, '.succession-entity-detail');
+    if (health.bodyOverflow > 1) throw new Error(`relationship record detail overflowed by ${health.bodyOverflow}px`);
   });
 } finally {
   await browser.close().catch(() => {});
