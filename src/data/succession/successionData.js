@@ -1,4 +1,4 @@
-import { successionArchiveData } from './entitiesLocationFoundation.js';
+import { successionArchiveData } from './entitiesAssignmentFoundation.js';
 import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
@@ -35,7 +35,15 @@ export const {
   getAssignmentsForSubject,
   getAssignmentsForPrincipal,
   getAssignmentsAtLocation,
+  getAssignmentsForAllegiance,
+  getAssignmentsReportingTo,
+  getAssignmentsForEvent,
+  getAssignmentsForChapter,
   getActiveAssignmentsForSubject,
+  getActiveAssignmentsAtChapter,
+  getAssignmentTimelineForCharacter,
+  getAssignmentChain,
+  getAssignmentSnapshot,
   getLocationHistoryForCharacter,
   getLocationHistoryForLocation,
   getMovementHistoryForCharacter,
