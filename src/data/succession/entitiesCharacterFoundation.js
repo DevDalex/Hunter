@@ -14,6 +14,13 @@ const characterIds = new Set([
   ...Object.keys(characterStateInstitutionClosureExpansionProfiles),
 ]);
 
+const normalizeStateRecord = (record) => record.id === 'character-state:borksen:408'
+  ? Object.freeze({
+    ...record,
+    chapterRange: Object.freeze({ ...record.chapterRange, end: 409 }),
+  })
+  : record;
+
 const mergedCharacterStateProfiles = Object.freeze(Object.fromEntries(
   [...characterIds].map((characterId) => [
     characterId,
@@ -23,7 +30,8 @@ const mergedCharacterStateProfiles = Object.freeze(Object.fromEntries(
       ...(characterStateRoyalExpansionProfiles[characterId] || []),
       ...(characterStateInstitutionExpansionProfiles[characterId] || []),
       ...(characterStateInstitutionClosureExpansionProfiles[characterId] || []),
-    ].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id))),
+    ].map(normalizeStateRecord)
+      .sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id))),
   ]),
 ));
 
