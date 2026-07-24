@@ -108,5 +108,5 @@ export const SOURCE_TYPES = Object.freeze([
 
 export const SUCCESSION_CHAPTER_RANGE = Object.freeze({
   start: 338,
-  end: 414,
+  end: 9999,
 });
