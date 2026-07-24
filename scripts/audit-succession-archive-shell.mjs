@@ -31,17 +31,19 @@ for (const id of [
   'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'research', 'glossary', 'media', 'search',
 ]) assert(successionArchiveRouteIds.has(id), `missing primary route ${id}`);
 
-for (const id of ['glossary', 'media']) {
+for (const id of ['glossary', 'media', 'nen', 'guardian-spirit-beasts']) {
   assert(successionArchiveRoutes.find((route) => route.id === id)?.status === 'active', `${id} must be a completed active route`);
 }
 assert(successionArchiveRoutes.find((route) => route.id === 'chapters')?.description.includes('latest imported reader chapter'), 'Chapter Records route must follow imported chapter availability');
 
-const [app, entry, shell, workspace, organizationWorkspace, extendedWorkspace, deepWorkspace, workspaces, primitives, entities, extendedEntities, research, router, preload, css, contrast, catalogue, extendedCss, main, packageJson] = await Promise.all([
+const [app, entry, shell, workspace, organizationWorkspace, nenWorkspace, beastWorkspace, extendedWorkspace, deepWorkspace, workspaces, primitives, entities, extendedEntities, research, router, preload, css, contrast, catalogue, extendedCss, main, packageJson] = await Promise.all([
   read('src/App.jsx'),
   read('src/components/succession/SuccessionArchiveEntry.jsx'),
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionArchiveApp.jsx'),
   read('src/components/succession/SuccessionArchiveOrganizationWorkspace.jsx'),
+  read('src/components/succession/SuccessionArchiveNenWorkspace.jsx'),
+  read('src/components/succession/SuccessionArchiveGuardianBeastWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveExtendedWorkspaces.jsx'),
   read('src/components/succession/SuccessionArchiveDeepWorkspaces.jsx'),
   read('src/components/succession/SuccessionArchiveWorkspaces.jsx'),
@@ -72,9 +74,8 @@ assert(workspace.includes("from '../../data/succession/successionData'"), 'works
 assert(!workspace.includes("from '../../data/succession/entities'"), 'workspaces must not import canonical entity records directly');
 assert(workspace.includes('EntityVisual') && workspace.includes('media?.portrait'), 'canonical directories must render maintained visuals and report visual coverage');
 assert(workspace.includes("routeParams.view === 'tree'"), 'the family tree must be optional rather than replacing canonical prince records');
-for (const routeId of ['black-whale', 'timeline', 'nen']) {
-  assert(declarationIncludesLiteral(workspace, 'preserved', routeId), `${routeId} must remain a preserved companion workspace`);
-}
+for (const routeId of ['black-whale', 'timeline']) assert(declarationIncludesLiteral(workspace, 'preserved', routeId), `${routeId} must remain a preserved companion workspace`);
+assert(!declarationIncludesLiteral(workspace, 'preserved', 'nen'), 'Nen must remain migrated into its canonical workspace');
 assert(workspace.includes('canonLevel') && workspace.includes('SourceReference'), 'canon separation and source references must be visible in entity workspaces');
 assert(workspace.includes('SuccessionChapterReader') === false, 'the archive application must not embed the manga reader');
 
@@ -82,19 +83,20 @@ for (const component of [
   'HuntersWorkspace', 'MilitaryWorkspace', 'PoliticsWorkspace',
   'GlossaryWorkspace', 'MediaWorkspace', 'DomainEntityDetail', 'ChapterRecordsWorkspaceV2',
 ]) assert(extendedWorkspace.includes(`export function ${component}`), `missing completed workspace ${component}`);
-for (const component of ['QueensWorkspace', 'GuardianBeastsWorkspace', 'BodyStatesWorkspace']) {
-  assert(deepWorkspace.includes(`export function ${component}`), `missing active deep workspace ${component}`);
-}
-for (const component of ['SuccessionStoryWorkspace', 'PrincesWorkspace', 'MafiaWorkspace']) {
-  assert(workspaces.includes(`export function ${component}`), `missing specialized workspace ${component}`);
-}
+for (const component of ['QueensWorkspace', 'BodyStatesWorkspace']) assert(deepWorkspace.includes(`export function ${component}`), `missing active deep workspace ${component}`);
+assert(deepWorkspace.includes('export function GuardianBeastsWorkspace'), 'legacy Guardian Beast workspace must remain identifiable as inactive migration code');
+for (const component of ['SuccessionStoryWorkspace', 'PrincesWorkspace', 'MafiaWorkspace']) assert(workspaces.includes(`export function ${component}`), `missing specialized workspace ${component}`);
 assert(organizationWorkspace.includes('Organizations as chapter-bounded systems of authority'), 'dedicated organization workspace must own institutional dossiers');
+assert(nenWorkspace.includes('Abilities, contracts, curses, possession, instruction, and royal ritual'), 'dedicated Nen workspace must own system dossiers');
+assert(beastWorkspace.includes('Fifteen Guardian Spirit Beasts as changing ritual records'), 'dedicated beast workspace must own royal beast dossiers');
 
 for (const [routeId, componentName, modulePath] of [
   ['characters', 'CharactersWorkspace', './SuccessionArchiveCharacterWorkspace'],
   ['bodyguards', 'AssignmentsWorkspace', './SuccessionArchiveAssignmentWorkspace'],
   ['events', 'EventsWorkspace', './SuccessionArchiveEventWorkspace'],
+  ['guardian-spirit-beasts', 'GuardianBeastsWorkspace', './SuccessionArchiveGuardianBeastWorkspace'],
   ['locations', 'LocationsWorkspace', './SuccessionArchiveLocationWorkspace'],
+  ['nen', 'NenWorkspace', './SuccessionArchiveNenWorkspace'],
   ['organizations', 'OrganizationsWorkspace', './SuccessionArchiveOrganizationWorkspace'],
   ['relationships', 'RelationshipsWorkspace', './SuccessionArchiveRelationshipWorkspace'],
   ['research', 'EvidenceWorkspace', './SuccessionArchiveEvidenceWorkspace'],
@@ -103,7 +105,7 @@ for (const [routeId, componentName, modulePath] of [
   assert(sourceRendersRouteWith(workspace, routeId, componentName), `route ${routeId} must render ${componentName}`);
 }
 
-for (const route of ['characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']) {
+for (const route of ['characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'nen', 'guardian-spirit-beasts', 'research', 'glossary', 'media']) {
   assert(workspace.includes(`route.id === '${route}'`), `route ${route} is not wired into a dedicated workspace`);
 }
 assert(workspace.includes('DomainEntityDetail') && workspace.includes('selectedEntity'), 'canonical entity links must open domain-specific dossiers');
@@ -125,12 +127,10 @@ assert(contrast.includes('font-size: 11px !important'), 'archive readability ove
 assert(catalogue.includes('.succession-entity-visual') && catalogue.includes('data-has-visual'), 'catalogue design must provide portrait and fallback visual frames');
 assert(extendedCss.includes('.succession-extended-hero') && extendedCss.includes('.succession-domain-dossier') && extendedCss.includes('@media (max-width: 620px)'), 'extended workspaces require owned desktop and mobile design');
 
-for (const selector of ['.succession-archive__layout', '.succession-archive__sidebar', '.succession-page-header', '.succession-entity-link', '.succession-state', '.succession-drawer']) {
-  assert(css.includes(selector), `design layer is missing ${selector}`);
-}
+for (const selector of ['.succession-archive__layout', '.succession-archive__sidebar', '.succession-page-header', '.succession-entity-link', '.succession-state', '.succession-drawer']) assert(css.includes(selector), `design layer is missing ${selector}`);
 assert(css.includes('@media (max-width: 860px)') && css.includes('@media (prefers-reduced-motion: reduce)'), 'responsive and reduced-motion rules are required');
 assert(catalogue.includes('@media (max-width: 620px)'), 'catalogue visuals must include a mobile layout');
 assert(css.includes(':focus-visible'), 'accessible focus styling is required');
-assert(packageJson.includes('"audit:succession-shell"') && packageJson.includes('"qa:succession-shell"'), 'package scripts must expose archive audit and browser QA');
+assert(packageJson.includes('"audit:succession-shell"') && packageJson.includes('"qa:succession-shell"') && packageJson.includes('"audit:succession-nen-systems"'), 'package scripts must expose archive and Nen audits');
 
-console.log(`Succession Archive shell audit passed through imported Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}: ${successionArchiveRoutes.length} active routes, dedicated subject workspaces, type-aware dossiers, automatic pending research records, glossary and media libraries, canonical roster generation, scoped design ownership, desktop/mobile shells, and accessibility states verified.`);
+console.log(`Succession Archive shell audit passed through imported Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}: ${successionArchiveRoutes.length} active routes, dedicated people, institution, Nen, and Guardian Beast dossiers, automatic pending research records, scoped design ownership, desktop/mobile shells, and accessibility states verified.`);
