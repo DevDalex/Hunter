@@ -13,7 +13,7 @@ const manifestEntries = Object.entries(authorizedSuccessionChapterMedia);
 
 for (const [chapterKey, pages] of manifestEntries) {
   const chapter = Number.parseInt(chapterKey, 10);
-  if (!Number.isInteger(chapter) || String(chapter) !== chapterKey || chapter < 338 || chapter > 414) {
+  if (!Number.isInteger(chapter) || String(chapter) !== chapterKey || chapter < 338 || chapter > 9999) {
     errors.push(`Invalid Succession reader chapter key: ${chapterKey}`);
     continue;
   }
