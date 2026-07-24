@@ -19,6 +19,7 @@
     "audit:succession-characters": "node scripts/audit-succession-characters-workspace.mjs",
     "audit:succession-organizations": "node scripts/audit-succession-organizations-workspace.mjs",
     "audit:succession-people-institutions": "node scripts/audit-succession-people-institutions-closure.mjs",
+    "audit:succession-nen-systems": "node scripts/audit-succession-nen-systems-workspace.mjs",
     "audit:succession-events": "node scripts/audit-succession-events-workspace.mjs",
     "audit:succession-locations": "node scripts/audit-succession-locations-workspace.mjs",
     "audit:succession-black-whale": "node scripts/audit-succession-black-whale-bridge.mjs",
