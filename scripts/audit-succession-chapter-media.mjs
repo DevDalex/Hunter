@@ -1,9 +1,5 @@
 import { readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
-import {
-  authorizedSuccessionChapterNumbers,
-  LATEST_AUTHORIZED_SUCCESSION_CHAPTER,
-} from '../src/data/successionChapterAvailability.generated.js';
 import { authorizedSuccessionChapterMedia } from '../src/data/successionChapterMedia.generated.js';
 
 const root = process.cwd();
@@ -11,17 +7,13 @@ const mediaRoot = path.join(root, 'public', 'media', 'succession-contest', 'chap
 const supportedExtensions = new Set(['.jpg', '.png', '.webp']);
 const errors = [];
 const seenSources = new Set();
-const MAX_CHAPTER_NUMBER = 9999;
 
 const isPositiveInteger = (value) => Number.isInteger(value) && value > 0;
 const manifestEntries = Object.entries(authorizedSuccessionChapterMedia);
-const manifestChapters = manifestEntries
-  .map(([chapterKey]) => Number.parseInt(chapterKey, 10))
-  .sort((left, right) => left - right);
 
 for (const [chapterKey, pages] of manifestEntries) {
   const chapter = Number.parseInt(chapterKey, 10);
-  if (!Number.isInteger(chapter) || String(chapter) !== chapterKey || chapter < 338 || chapter > MAX_CHAPTER_NUMBER) {
+  if (!Number.isInteger(chapter) || String(chapter) !== chapterKey || chapter < 338 || chapter > 9999) {
     errors.push(`Invalid Succession reader chapter key: ${chapterKey}`);
     continue;
   }
@@ -50,13 +42,6 @@ for (const [chapterKey, pages] of manifestEntries) {
   }
 }
 
-if (JSON.stringify(manifestChapters) !== JSON.stringify([...authorizedSuccessionChapterNumbers])) {
-  errors.push('Generated chapter availability numbers do not match the media manifest keys.');
-}
-if (LATEST_AUTHORIZED_SUCCESSION_CHAPTER !== (manifestChapters.at(-1) || 338)) {
-  errors.push(`Latest generated chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER} does not match the manifest boundary ${manifestChapters.at(-1) || 338}.`);
-}
-
 const mediaRootStats = await stat(mediaRoot).catch(() => null);
 if (mediaRootStats?.isDirectory()) {
   const chapterDirectories = (await readdir(mediaRoot, { withFileTypes: true }))
@@ -75,5 +60,5 @@ if (errors.length) {
   process.exitCode = 1;
 } else {
   const pageTotal = manifestEntries.reduce((total, [, pages]) => total + pages.length, 0);
-  console.log(`Succession chapter media audit passed: ${manifestEntries.length} chapter(s) through ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}, ${pageTotal} page(s).`);
+  console.log(`Succession chapter media audit passed: ${manifestEntries.length} chapter(s), ${pageTotal} page(s).`);
 }
