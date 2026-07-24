@@ -5,6 +5,14 @@ const append = (map, key, value) => {
   else map.set(key, [value]);
 };
 
+const appendUnique = (map, key, value) => {
+  if (!key || !value) return;
+  const current = map.get(key);
+  if (current) {
+    if (!current.includes(value)) current.push(value);
+  } else map.set(key, [value]);
+};
+
 const freezeMapValues = (map) => {
   for (const [key, values] of map) map.set(key, Object.freeze([...values]));
   return map;
@@ -16,9 +24,13 @@ export const buildSuccessionIndexes = (data) => {
   const byType = new Map();
   const bySlug = new Map();
   const chaptersByNumber = new Map();
+  const chaptersByAbility = new Map();
   const eventsByChapter = new Map();
   const eventsByCharacter = new Map();
   const eventsByLocation = new Map();
+  const eventsByAbility = new Map();
+  const eventsByOrganization = new Map();
+  const locationsByAbility = new Map();
   const appearancesByCharacter = new Map();
   const membersByOrganization = new Map();
   const childrenByLocation = new Map();
@@ -39,6 +51,7 @@ export const buildSuccessionIndexes = (data) => {
 
   for (const chapter of data.chapters) {
     chaptersByNumber.set(chapter.number, chapter.id);
+    for (const abilityId of chapter.abilityIds || []) append(chaptersByAbility, abilityId, chapter.id);
     for (const appearance of chapter.appearanceRecords || []) {
       append(appearancesByCharacter, appearance.characterId, Object.freeze({
         chapterId: chapter.id,
@@ -55,6 +68,11 @@ export const buildSuccessionIndexes = (data) => {
     }
     for (const characterId of event.participantIds || []) append(eventsByCharacter, characterId, event.id);
     for (const locationId of event.locationIds || []) append(eventsByLocation, locationId, event.id);
+    for (const organizationId of event.organizationIds || []) append(eventsByOrganization, organizationId, event.id);
+    for (const abilityId of event.abilityIds || []) {
+      append(eventsByAbility, abilityId, event.id);
+      for (const locationId of event.locationIds || []) appendUnique(locationsByAbility, abilityId, locationId);
+    }
   }
 
   for (const character of data.characters) {
@@ -122,6 +140,10 @@ export const buildSuccessionIndexes = (data) => {
         entity.assignmentType || '',
         entity.subtype || '',
         entity.category || '',
+        ...(entity.causes || []),
+        ...(entity.outcomes || []),
+        ...(entity.stateChanges || []),
+        ...(entity.openQuestions || []),
       ].join(' ').toLocaleLowerCase(),
     })));
 
@@ -130,9 +152,13 @@ export const buildSuccessionIndexes = (data) => {
     byType: freezeMapValues(byType),
     bySlug,
     chaptersByNumber,
+    chaptersByAbility: freezeMapValues(chaptersByAbility),
     eventsByChapter: freezeMapValues(eventsByChapter),
     eventsByCharacter: freezeMapValues(eventsByCharacter),
     eventsByLocation: freezeMapValues(eventsByLocation),
+    eventsByAbility: freezeMapValues(eventsByAbility),
+    eventsByOrganization: freezeMapValues(eventsByOrganization),
+    locationsByAbility: freezeMapValues(locationsByAbility),
     appearancesByCharacter: freezeMapValues(appearancesByCharacter),
     membersByOrganization: freezeMapValues(membersByOrganization),
     childrenByLocation: freezeMapValues(childrenByLocation),
