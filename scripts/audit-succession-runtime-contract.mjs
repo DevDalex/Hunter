@@ -14,6 +14,7 @@ const assert = (condition, message) => {
 
 const auditPaths = Object.freeze([
   'scripts/audit-succession-archive-shell.mjs',
+  'scripts/audit-succession-characters-workspace.mjs',
   'scripts/audit-succession-events-workspace.mjs',
   'scripts/audit-succession-locations-workspace.mjs',
   'scripts/audit-succession-black-whale-bridge.mjs',
@@ -30,16 +31,17 @@ const [app, packageText, ...auditSources] = await Promise.all([
 ]);
 const packageJson = JSON.parse(packageText);
 
-for (const routeId of ['locations', 'bodyguards', 'relationships']) {
+for (const routeId of ['characters', 'locations', 'bodyguards', 'relationships']) {
   assert(declarationIncludesLiteral(app, 'specializedRecordRoute', routeId), `${routeId} must remain a specialized record route`);
 }
 for (const routeId of ['black-whale', 'timeline', 'nen']) {
   assert(declarationIncludesLiteral(app, 'preserved', routeId), `${routeId} must remain a preserved visual workspace`);
 }
-for (const routeId of ['events', 'locations', 'bodyguards', 'relationships', 'research']) {
+for (const routeId of ['characters', 'events', 'locations', 'bodyguards', 'relationships', 'research']) {
   assert(declarationIncludesLiteral(app, 'dedicated', routeId), `${routeId} must remain a dedicated workspace route`);
 }
 for (const [routeId, componentName] of [
+  ['characters', 'CharactersWorkspace'],
   ['events', 'EventsWorkspace'],
   ['locations', 'LocationsWorkspace'],
   ['bodyguards', 'AssignmentsWorkspace'],
@@ -69,6 +71,7 @@ for (let index = 0; index < auditPaths.length; index += 1) {
 
 assert(packageJson.scripts?.['audit:succession-runtime'] === 'node scripts/run-succession-runtime-audits.mjs', 'package scripts must expose the aggregate Succession runtime sweep');
 assert(packageJson.scripts?.['audit:succession-contract'] === 'node scripts/audit-succession-runtime-contract.mjs', 'package scripts must expose this contract audit directly');
+assert(packageJson.scripts?.['audit:succession-characters'] === 'node scripts/audit-succession-characters-workspace.mjs', 'package scripts must expose the Batch 2 character audit');
 assert(packageJson.scripts?.['build:runtime']?.startsWith('npm run audit:succession-runtime &&'), 'build:runtime must collect all Succession failures before continuing');
 
 const vite = await createServer({
@@ -94,8 +97,11 @@ try {
   assert(typeof archive.getAssignmentSnapshot === 'function', 'assignment selectors must remain public');
   assert(typeof archive.getRelationshipSnapshot === 'function', 'relationship selectors must remain public');
   assert(typeof archive.getFoundationClosureReport === 'function', 'evidence closure selectors must remain public');
+  assert(typeof archive.getCharacterStateAtChapter === 'function', 'character state selectors must remain public');
+  assert(typeof archive.getCharacterDossier === 'function', 'character dossier selector must remain public');
+  assert(archive.getCharactersWithStateProfiles().length >= 10, 'Batch 2 must retain explicit state profiles for the high-value cast');
 
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits avoid transient foundation imports, route membership is order-independent, aggregate failure collection is active, and the canonical runtime exposes every Batch 1 graph layer.`);
+  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits avoid transient foundation imports, route membership is order-independent, aggregate failure collection is active, and the canonical runtime exposes every Batch 1 graph layer plus the Batch 2 character state foundation.`);
 } finally {
   await vite.close();
 }
