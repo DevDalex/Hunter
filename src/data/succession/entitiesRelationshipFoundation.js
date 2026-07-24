@@ -4,6 +4,26 @@ import { relationshipFoundationExpansion } from './relationshipFoundationExpansi
 const ARCHIVE_DATE = '2026-07-24';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 
+const legacyRelationshipAliases = Object.freeze({
+  'relationship:kurapika-bill-partnership': 'relationship:kurapika-bill-room-1014-partners',
+  'relationship:kurapika-zhang-lei-alliance': 'relationship:kurapika-zhang-lei-lower-prince-alliance',
+  'relationship:kurapika-longhi-treaty': 'relationship:longhi-kurapika-moonlight-act-treaty',
+  'relationship:benjamin-halkenburg-conflict': 'relationship:benjamin-halkenburg-succession-hostility',
+  'relationship:benjamin-camilla-rivalry': 'relationship:camilla-benjamin-hostile-rivalry',
+  'relationship:tserriednich-theta-deception': 'relationship:theta-tserriednich-conflicted-instructor',
+  'relationship:kacho-fugetsu-twin-protection': 'relationship:kacho-fugetsu-twin-bond',
+  'relationship:zhang-lei-xi-yu-sponsorship': 'relationship:zhang-lei-xi-yu-political-sponsorship',
+  'relationship:luzurus-cha-r-sponsorship': 'relationship:luzurus-cha-r-political-sponsorship',
+  'relationship:morena-borksen-coercive-recruitment': 'relationship:morena-borksen-coerced-recruitment',
+});
+
+const legacyIdsByCanonicalId = new Map();
+for (const [legacyId, canonicalId] of Object.entries(legacyRelationshipAliases)) {
+  const current = legacyIdsByCanonicalId.get(canonicalId) || [];
+  current.push(legacyId);
+  legacyIdsByCanonicalId.set(canonicalId, current);
+}
+
 const relationshipEnrichment = Object.freeze({
   'relationship:kurapika-oito': Object.freeze({
     basis: 'Oito’s bodyguard contract and their shared command of Room 1014’s survival strategy.',
@@ -42,12 +62,16 @@ const normalizeRelationship = (relationship) => {
     certainty: relationship.certainty || enrichment.certainty || 'confirmed',
     relatedEventIds: Object.freeze([...(relationship.relatedEventIds || enrichment.relatedEventIds || [])]),
     evidenceNotes: Object.freeze([...(relationship.evidenceNotes || enrichment.evidenceNotes || [])]),
+    legacyIds: Object.freeze([...(relationship.legacyIds || legacyIdsByCanonicalId.get(relationship.id) || [])]),
     updatedAt: ARCHIVE_DATE,
   });
 };
 
+const retainedRelationships = assignmentFoundationData.relationships
+  .filter((relationship) => !legacyRelationshipAliases[relationship.id]);
+
 const relationships = Object.freeze(uniqueById([
-  ...assignmentFoundationData.relationships,
+  ...retainedRelationships,
   ...relationshipFoundationExpansion,
 ]).map(normalizeRelationship));
 
