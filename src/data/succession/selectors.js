@@ -44,6 +44,19 @@ export const createSuccessionSelectors = (data, indexes) => {
 
   const getEventsAtLocation = (locationId) => resolveMany(indexes.eventsByLocation.get(locationId), indexes);
 
+  const getEventsForAbility = (abilityId) => resolveMany(indexes.eventsByAbility.get(abilityId), indexes);
+
+  const getEventsForOrganization = (organizationId) => resolveMany(indexes.eventsByOrganization.get(organizationId), indexes);
+
+  const getChaptersForAbility = (abilityId) => resolveMany(indexes.chaptersByAbility.get(abilityId), indexes);
+
+  const getLocationsForAbility = (abilityId) => resolveMany(indexes.locationsByAbility.get(abilityId), indexes);
+
+  const getAbilitiesAtLocation = (locationId) => {
+    const abilityIds = new Set(getEventsAtLocation(locationId).flatMap((event) => event.abilityIds || []));
+    return resolveMany([...abilityIds], indexes);
+  };
+
   const getAppearancesForCharacter = (characterId) => indexes.appearancesByCharacter.get(characterId) || Object.freeze([]);
 
   const getOrganizationMembers = (organizationId) => (indexes.membersByOrganization.get(organizationId) || [])
@@ -122,6 +135,13 @@ export const createSuccessionSelectors = (data, indexes) => {
       ]) relatedIds.add(assignment.id);
     }
 
+    if (entity.entityType === 'organization') {
+      for (const membership of getOrganizationMembers(entity.id)) relatedIds.add(membership.character.id);
+      for (const event of getEventsForOrganization(entity.id)) relatedIds.add(event.id);
+      if (entity.parentOrganizationId) relatedIds.add(entity.parentOrganizationId);
+      for (const leaderId of entity.leaderIds || []) relatedIds.add(leaderId);
+    }
+
     if (entity.entityType === 'event') {
       for (const id of [
         ...(entity.participantIds || []),
@@ -146,6 +166,7 @@ export const createSuccessionSelectors = (data, indexes) => {
     if (entity.entityType === 'location') {
       for (const assignment of getAssignmentsAtLocation(entity.id)) relatedIds.add(assignment.id);
       for (const event of getEventsAtLocation(entity.id)) relatedIds.add(event.id);
+      for (const ability of getAbilitiesAtLocation(entity.id)) relatedIds.add(ability.id);
       for (const child of getLocationChildren(entity.id)) relatedIds.add(child.id);
     }
 
@@ -156,6 +177,9 @@ export const createSuccessionSelectors = (data, indexes) => {
 
     if (entity.entityType === 'ability') {
       for (const ownerId of entity.ownerIds || []) relatedIds.add(ownerId);
+      for (const event of getEventsForAbility(entity.id)) relatedIds.add(event.id);
+      for (const chapter of getChaptersForAbility(entity.id)) relatedIds.add(chapter.id);
+      for (const location of getLocationsForAbility(entity.id)) relatedIds.add(location.id);
     }
 
     if (entity.entityType === 'chapter') {
@@ -210,6 +234,11 @@ export const createSuccessionSelectors = (data, indexes) => {
     getEventsForChapter,
     getEventsForCharacter,
     getEventsAtLocation,
+    getEventsForAbility,
+    getEventsForOrganization,
+    getChaptersForAbility,
+    getLocationsForAbility,
+    getAbilitiesAtLocation,
     getAppearancesForCharacter,
     getOrganizationMembers,
     getLocationChildren,
