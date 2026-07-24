@@ -1,7 +1,15 @@
+import {
+  authorizedSuccessionChapterNumbers,
+  LATEST_AUTHORIZED_SUCCESSION_CHAPTER,
+} from './successionChapterAvailability.generated.js';
 import { authorizedSuccessionChapterMedia } from './successionChapterMedia.generated.js';
 
 export const SUCCESSION_READER_START = 338;
-export const SUCCESSION_READER_END = 414;
+export const SUCCESSION_READER_END = Math.max(
+  414,
+  LATEST_AUTHORIZED_SUCCESSION_CHAPTER,
+  ...authorizedSuccessionChapterNumbers,
+);
 
 // Page records are generated from local media by scripts/import-succession-chapter.mjs.
 // Each record provides page, local src, width, and height fields in reading order.
