@@ -43,12 +43,14 @@ try {
   const bodyguards = characterRecords.filter((record) => record.roles?.includes('bodyguard'));
   const hunters = characterRecords.filter((record) => record.roles?.includes('hunter'));
   const placeholders = characterRecords.filter((record) => /^(Unnamed |Stone Wall |V6 Leader |Temp Hunter |Cha-R Associate |Tserriednich Friend |Heil-Ly Associate )/.test(record.name));
+  const bodyguardsWithoutPortraitCandidates = bodyguards.filter((record) => !record.media?.portrait);
   const characterNames = characterRecords.map((record) => record.name);
   const chapterRecords = getEntitiesByType('chapter');
 
   assert(princes.length === 14, `expected 14 princes, found ${princes.length}`);
   assert(queens.length === 8, `expected 8 queens, found ${queens.length}`);
   assert(bodyguards.length >= 85, `expected the expanded bodyguard catalogue, found ${bodyguards.length}`);
+  assert(bodyguardsWithoutPortraitCandidates.length === 0, `every named bodyguard must carry a portrait candidate; missing ${bodyguardsWithoutPortraitCandidates.map((record) => record.name).join(', ')}`);
   assert(hunters.length >= 20, `expected the current-arc Hunter catalogue, found ${hunters.length}`);
   assert(placeholders.length === 0, 'generic unnamed placeholders must not appear as canonical characters');
   assert(new Set(characterNames).size === characterNames.length, 'canonical character names must be deduplicated');
@@ -111,7 +113,7 @@ try {
   console.log(
     `Succession Archive data audit passed: ${successionArchiveValidation.stats.entities} entities, `
     + `${characterRecords.length} named characters, ${princes.length} princes, ${queens.length} queens, `
-    + `${bodyguards.length} bodyguards, ${hunters.length} Hunters, and ${chapterRecords.length} chapter records through ${latestChapter}.`,
+    + `${bodyguards.length} bodyguards with portrait candidates, ${hunters.length} Hunters, and ${chapterRecords.length} chapter records through ${latestChapter}.`,
   );
 } finally {
   await vite.close();
