@@ -18,14 +18,7 @@ const evidenceState = (level) => {
 
 export const entityWorkspaceTarget = (entity) => {
   if (!entity) return 'archive';
-  if (entity.entityType === 'character') {
-    const roles = entity.roles || [];
-    if (roles.includes('prince')) return 'princes';
-    if (roles.includes('queen')) return 'queens';
-    if (roles.includes('bodyguard')) return 'bodyguards';
-    if (roles.includes('hunter') || roles.includes('zodiac')) return 'hunters';
-    return 'characters';
-  }
+  if (entity.entityType === 'character') return 'characters';
   if (entity.entityType === 'organization') {
     if (entity.organizationType === 'mafia-family') return 'mafia';
     if (entity.organizationType === 'military') return 'military';
