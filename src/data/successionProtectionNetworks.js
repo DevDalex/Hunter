@@ -26,6 +26,62 @@ const countFrom = (value) => {
 const roomByPrince = new Map(roomAssignmentLedger.map((record) => [record.order, record]));
 const rosterGroupById = new Map(successionRosterGroups.map((group) => [group.id, group]));
 
+const actor = (name, kind, eyebrow, description, extra = {}) => ({
+  name,
+  kind,
+  eyebrow,
+  description,
+  ...extra,
+});
+
+const categorizedActorsByPrince = new Map([
+  [2, [
+    actor('Musse', 'observer', 'Benjamin surveillance', 'Benjamin soldier embedded around Camilla before she killed him; shown as hostile surveillance, not as Camilla-loyal protection.'),
+  ]],
+  [3, [
+    actor('Coventoba', 'observer', 'Benjamin observer', 'Benjamin soldier assigned to monitor Zhang Lei. He belongs to the surveillance layer rather than Zhang Lei’s loyal guard core.'),
+  ]],
+  [6, [
+    actor('Izunavi', 'kurapika-placement', 'Kurapika-recruited Hunter', 'Hunter recruited by Kurapika and placed in Tyson’s household as part of the wider information and survival network.'),
+    actor('Higher-queen spies', 'spy', 'Royal surveillance group', 'The room record confirms spies from higher-ranked queens embedded in Tyson’s household.', { entity: null, isGroup: true }),
+  ]],
+  [7, [
+    actor('Bashō', 'kurapika-placement', 'Kurapika-recruited Hunter', 'Hunter recruited by Kurapika and placed in Luzurus’s household.'),
+    actor('Satobi', 'observer', 'Household observer', 'Royal guard associated with surveillance and Nen-class reporting around Luzurus’s room.'),
+    actor('Scairt', 'observer', 'Queen surveillance interest', 'Guard representing overlapping queen-household surveillance interests in Luzurus’s room.'),
+    actor('Ridge', 'observer', 'Military surveillance interest', 'Military-linked observer attached to the Luzurus room network.'),
+  ]],
+  [8, [
+    actor('Rihan', 'hostile', 'Benjamin infiltration', 'Benjamin soldier who analyzed and destroyed Sale-sale’s Guardian Spirit Beast.'),
+    actor('Yushohi', 'hostile', 'Benjamin assassination operation', 'Benjamin soldier involved in the operation that completed Sale-sale’s assassination.'),
+    actor('Higher-queen spies', 'spy', 'Royal surveillance group', 'The room record confirms spies from higher-ranked queens inside Sale-sale’s household.', { entity: null, isGroup: true }),
+  ]],
+  [9, [
+    actor('Higher-queen spy', 'spy', 'Royal surveillance group', 'Halkenburg’s original room complement includes one spy from a higher-ranked queen.', { entity: null, isGroup: true }),
+  ]],
+  [10, [
+    actor('Melody', 'kurapika-placement', 'Kurapika-recruited Hunter', 'Hunter recruited by Kurapika and placed in Kacho’s household, later central to the twins’ escape plan.'),
+    actor('Higher-queen spies', 'spy', 'Royal surveillance group', 'The Kacho room record includes spies sent by higher-ranked queens.', { entity: null, isGroup: true }),
+  ]],
+  [11, [
+    actor('Higher-queen spies', 'spy', 'Royal surveillance group', 'The Fugetsu room record includes spies sent by higher-ranked queens.', { entity: null, isGroup: true }),
+  ]],
+  [12, [
+    actor('Hanzo', 'kurapika-placement', 'Kurapika-recruited Hunter', 'Hunter recruited by Kurapika and placed in Momoze’s household before later reassignment.'),
+    actor('Tuffdy', 'hostile', 'Embedded murderer', 'Member of Momoze’s reduced guard detail who murdered her; shown as infiltration, not loyal protection.'),
+  ]],
+  [13, [
+    actor('Biscuit Krueger', 'kurapika-placement', 'Kurapika-recruited Hunter', 'Hunter recruited by Kurapika and placed in Marayam’s household.'),
+    actor('Hanzo', 'ally', 'Reassigned protector', 'Kurapika-recruited Hunter transferred into Marayam’s protection network after Momoze’s death.'),
+  ]],
+  [14, [
+    actor('Babimyna', 'observer', 'Benjamin observer', 'Benjamin soldier stationed in Room 1014 as an observer after Vincent’s failed attack.'),
+    actor('Slakka', 'observer', 'Duazul surveillance', 'Duazul-linked guard reassigned into Room 1014 with mixed protection and reporting interests.'),
+    actor('Sakata', 'ally', 'Zhang Lei reinforcement', 'Guard sent by Zhang Lei’s camp to reinforce Woble under the lower-prince alliance.'),
+    actor('Hashito', 'ally', 'Zhang Lei reinforcement', 'Guard sent by Zhang Lei’s camp to reinforce Woble under the lower-prince alliance.'),
+  ]],
+]);
+
 const complementGroupsFor = (room) => {
   if (!room) return [];
   const records = [];
@@ -43,8 +99,8 @@ const complementGroupsFor = (room) => {
       id: `complement-${room.order}-${key.replace(/[^a-z0-9]+/g, '-')}`,
       name: `${count} ${label}`,
       count,
-      kind: 'complement',
-      eyebrow: 'Documented complement',
+      kind: /spies?/i.test(label) ? 'spy' : 'complement',
+      eyebrow: /spies?/i.test(label) ? 'Royal surveillance group' : 'Documented complement',
       description: `${room.prince}'s original room record lists ${count} ${label}. Named members are shown separately; this node preserves the full documented complement where individual names are not all available.`,
     });
   }
@@ -58,10 +114,10 @@ export function getProtectionNetworkSeed(prince) {
 
   return {
     room,
-    roomText: [room?.original, room?.deployed, room?.current].filter(Boolean).join(' '),
     dedicatedGroupId,
     dedicatedNames: dedicatedGroup?.members.map((member) => member.name) || [],
     teamNames: prince.team || [],
+    categorizedActors: categorizedActorsByPrince.get(prince.order) || [],
     complementGroups: dedicatedGroup ? [] : complementGroupsFor(room),
   };
 }
