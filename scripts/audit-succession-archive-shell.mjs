@@ -6,6 +6,11 @@ import {
   successionArchiveRouteIds,
   successionArchiveRoutes,
 } from '../src/data/succession/archiveRoutes.js';
+import {
+  declarationIncludesLiteral,
+  sourceImportsDefault,
+  sourceRendersRouteWith,
+} from './lib/succession-audit-contracts.mjs';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
@@ -66,20 +71,34 @@ assert(workspace.includes("from '../../data/succession/successionData'"), 'works
 assert(!workspace.includes("from '../../data/succession/entities'"), 'workspaces must not import canonical entity records directly');
 assert(workspace.includes('EntityVisual') && workspace.includes('media?.portrait'), 'canonical directories must render maintained visuals and report visual coverage');
 assert(workspace.includes("routeParams.view === 'tree'"), 'the family tree must be optional rather than replacing canonical prince records');
-assert(workspace.includes("const preserved = ['black-whale', 'timeline', 'nen']"), 'expanded canonical directories must replace obsolete legacy panels');
+for (const routeId of ['black-whale', 'timeline', 'nen']) {
+  assert(declarationIncludesLiteral(workspace, 'preserved', routeId), `${routeId} must remain a preserved companion workspace`);
+}
 assert(workspace.includes('canonLevel') && workspace.includes('SourceReference'), 'canon separation and source references must be visible in entity workspaces');
 assert(workspace.includes('SuccessionChapterReader') === false, 'the archive application must not embed the manga reader');
 
 for (const component of [
   'CharactersWorkspace', 'HuntersWorkspace', 'MilitaryWorkspace', 'OrganizationsWorkspace', 'PoliticsWorkspace',
-  'LocationsWorkspace', 'ResearchWorkspace', 'GlossaryWorkspace', 'MediaWorkspace', 'DomainEntityDetail', 'ChapterRecordsWorkspaceV2',
+  'GlossaryWorkspace', 'MediaWorkspace', 'DomainEntityDetail', 'ChapterRecordsWorkspaceV2',
 ]) assert(extendedWorkspace.includes(`export function ${component}`), `missing completed workspace ${component}`);
-for (const component of ['QueensWorkspace', 'BodyguardsWorkspace', 'GuardianBeastsWorkspace', 'EventsWorkspace', 'BodyStatesWorkspace', 'RelationshipsWorkspace']) {
-  assert(deepWorkspace.includes(`export function ${component}`), `missing deep workspace ${component}`);
+for (const component of ['QueensWorkspace', 'GuardianBeastsWorkspace', 'BodyStatesWorkspace']) {
+  assert(deepWorkspace.includes(`export function ${component}`), `missing active deep workspace ${component}`);
 }
 for (const component of ['SuccessionStoryWorkspace', 'PrincesWorkspace', 'MafiaWorkspace']) {
   assert(workspaces.includes(`export function ${component}`), `missing specialized workspace ${component}`);
 }
+
+for (const [routeId, componentName, modulePath] of [
+  ['bodyguards', 'AssignmentsWorkspace', './SuccessionArchiveAssignmentWorkspace'],
+  ['events', 'EventsWorkspace', './SuccessionArchiveEventWorkspace'],
+  ['locations', 'LocationsWorkspace', './SuccessionArchiveLocationWorkspace'],
+  ['relationships', 'RelationshipsWorkspace', './SuccessionArchiveRelationshipWorkspace'],
+  ['research', 'EvidenceWorkspace', './SuccessionArchiveEvidenceWorkspace'],
+]) {
+  assert(sourceImportsDefault(workspace, componentName, modulePath), `${componentName} must be imported from its dedicated module`);
+  assert(sourceRendersRouteWith(workspace, routeId, componentName), `route ${routeId} must render ${componentName}`);
+}
+
 for (const route of ['characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']) {
   assert(workspace.includes(`route.id === '${route}'`), `route ${route} is not wired into a dedicated workspace`);
 }
