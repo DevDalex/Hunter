@@ -146,8 +146,14 @@ export const isSuccessionEntityAvailableAtChapter = (entityOrId, chapter) => {
     .map((sourceId) => getEntityById(sourceId)?.chapter)
     .filter(Number.isFinite);
   const contextualChapters = [];
-  if (entity.entityType === 'character') contextualChapters.push(...getAppearancesForCharacter(entity.id).map((record) => record.chapter));
-  if (entity.entityType === 'organization') contextualChapters.push(...getEventsForOrganization(entity.id).map((event) => event.chapterRange.start));
+  if (entity.entityType === 'character') {
+    contextualChapters.push(...getAppearancesForCharacter(entity.id).map((record) => record.chapter));
+    contextualChapters.push(...(successionArchiveData.characterStateProfiles?.[entity.id] || []).map((record) => record.chapterRange.start));
+  }
+  if (entity.entityType === 'organization') {
+    contextualChapters.push(...getEventsForOrganization(entity.id).map((event) => event.chapterRange.start));
+    contextualChapters.push(...(successionArchiveData.organizationStateProfiles?.[entity.id] || []).map((record) => record.chapterRange.start));
+  }
   if (entity.entityType === 'location') contextualChapters.push(...getEventsAtLocation(entity.id).map((event) => event.chapterRange.start));
   const firstChapter = earliestChapter([...sourceChapters, ...contextualChapters]);
   return firstChapter === null || firstChapter <= parsedChapter;
@@ -187,13 +193,14 @@ const searchOrganizationStatesAtChapter = (query, chapter, limit) => {
     const dossier = getOrganizationDossier(organization.id, chapter);
     if (!dossier) continue;
     const text = [
+      dossier.state?.status,
       dossier.state?.operationalState,
-      dossier.state?.authorityState,
-      dossier.state?.territoryState,
-      ...(dossier.state?.objectives || []),
-      ...(dossier.state?.risks || []),
-      ...(dossier.state?.openQuestions || []),
-      ...dossier.personnelHistory.flatMap((record) => [record.role, record.status, record.note]),
+      dossier.state?.authority,
+      ...(dossier.state?.objectiveStates || []),
+      ...(dossier.state?.pressure || []),
+      ...(dossier.objectives || []),
+      ...(dossier.pressure || []),
+      ...dossier.personnelHistory.flatMap((record) => [record.role, record.status, record.transitionType, record.note]),
     ].filter(Boolean).join(' ').toLocaleLowerCase();
     if (text.includes(normalized)) matches.push(Object.freeze({ entity: organization, score: 25 }));
   }
