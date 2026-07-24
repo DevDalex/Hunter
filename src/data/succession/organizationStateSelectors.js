@@ -91,7 +91,8 @@ export const createOrganizationStateSelectors = ({ data, archive }) => {
     const state = getOrganizationStateAtChapter(organizationId, parsedChapter);
     const hierarchy = getOrganizationHierarchy(organizationId);
     const canonicalMembers = archive.getOrganizationMembers(organizationId);
-    const personnelHistory = getOrganizationPersonnelTimeline(organizationId);
+    const personnelHistory = Object.freeze(getOrganizationPersonnelTimeline(organizationId)
+      .filter((record) => record.chapterRange.start <= parsedChapter));
     const activePersonnel = getOrganizationPersonnelAtChapter(organizationId, parsedChapter);
     const leaders = uniqueEntities([
       ...(organization.leaderIds || []).map((id) => archive.getEntityById(id)),
