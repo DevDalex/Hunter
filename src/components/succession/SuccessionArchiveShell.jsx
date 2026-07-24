@@ -69,7 +69,8 @@ function ArchiveNavigation({ activeId, onNavigate, onIntent, id }) {
         <div>{routes.map((route) => {
           const Icon = iconByRoute[route.id] || Archive;
           const active = route.id === activeId;
-          const href = routeToHref('succession', route.id);
+          const routeParams = route.id === 'princes' ? { view: 'tree' } : {};
+          const href = routeToHref('succession', route.id, routeParams);
           return <a
             href={href}
             key={route.id}
@@ -77,7 +78,7 @@ function ArchiveNavigation({ activeId, onNavigate, onIntent, id }) {
             aria-current={active ? 'page' : undefined}
             onPointerEnter={() => onIntent?.(route.id)}
             onFocus={() => onIntent?.(route.id)}
-            onClick={(event) => { event.preventDefault(); onNavigate(route.id); }}
+            onClick={(event) => { event.preventDefault(); onNavigate(route.id, routeParams); }}
           >
             <Icon size={16} aria-hidden="true" />
             <span>{route.label}</span>
