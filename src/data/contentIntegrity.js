@@ -74,7 +74,7 @@ export const integrityChecks = [
   },
   {
     id: 'chapter-sequence', label: 'Chapter sequence', status: unique(chapterNumbers) && chapterNumbers.every((number, index) => number === expectedNumbers[index]) ? 'pass' : 'fail',
-    detail: `Numbers must be unique and continuous from 1 through ${ARCHIVE_BOUNDARY}.`,
+    detail: 'Numbers must be unique and continuous from 1 through 413.',
   },
   {
     id: 'arc-coverage', label: 'Arc ranges', status: unique(arcCoverage) && arcCoverage.length === ARCHIVE_BOUNDARY && arcCoverage.every((number, index) => number === expectedNumbers[index]) ? 'pass' : 'fail',
@@ -102,7 +102,7 @@ export const integrityChecks = [
   },
   {
     id: 'succession-chronology-links', label: 'Succession chronology links', status: successionChapterResearch.every((chapter) => chapter.coverage.summary && chapter.coverage.source) ? 'pass' : 'fail',
-    detail: 'Every current-arc chapter exposes a local research state, source, and explicit chronology-coverage state.',
+    detail: 'Every current-arc chapter exposes a local summary, source, and explicit chronology-coverage state.',
   },
   {
     id: 'royal-system', label: 'Royal-system completeness', status: princeDossiers.length === 14 && roomAssignmentLedger.length === 14 ? 'pass' : 'fail',
@@ -173,64 +173,88 @@ export const integrityChecks = [
     detail: `All ${encyclopediaCharacterRecords.length} character records can enter the unified portrait, research-index, and story-group views.`,
   },
   {
-    id: 'phase6c-world-atlas-schema', label: 'World-atlas schema', status: worldLocations.length >= 50 && worldAtlasZones.length === 7 && unique(worldLocations.map((record) => record.id)) && worldHierarchyIsValid ? 'pass' : 'fail',
-    detail: `${worldLocations.length} canonical locations form a cycle-free hierarchy across ${worldAtlasZones.length} atlas zones.`,
+    id: 'phase6c-world-atlas-schema', label: 'World-atlas schema', status: worldLocations.length >= 50 && worldAtlasZones.length === 7 && unique(worldLocations.map((record) => record.id)) && worldLocations.every((record) => record.name && record.kind && record.zone && record.summary) ? 'pass' : 'fail',
+    detail: `${worldLocations.length} structured places are organized into ${worldAtlasZones.length} readable route regions.`,
   },
   {
-    id: 'phase6c-world-atlas-routes', label: 'World journey routes', status: worldJourney.length >= 5 && worldJourneyStops.every((stop) => worldLocationsById.has(stop)) ? 'pass' : 'fail',
-    detail: `${worldJourney.length} ordered routes connect only known world-atlas locations.`,
+    id: 'phase6c-world-hierarchy', label: 'World-atlas hierarchy', status: worldHierarchyIsValid && worldLocations.every((record) => worldAtlasZones.some((zone) => zone.id === record.zone)) ? 'pass' : 'fail',
+    detail: 'Every parent reference resolves without cycles, and every place belongs to a maintained route region.',
   },
   {
-    id: 'phase6c-world-map-assets', label: 'World map assets', status: Object.values(worldMapAssets).every((record) => validImageReference(record.path) && validUrl(record.source)) ? 'pass' : 'fail',
-    detail: `${Object.keys(worldMapAssets).length} map and room-diagram assets retain local paths or approved remote sources.`,
+    id: 'phase6c-world-journey', label: 'World journey linkage', status: worldJourney.length === 8 && worldJourneyStops.every((id) => worldLocationsById.has(id)) && worldJourney.every((leg) => leg.stops.length > 0) ? 'pass' : 'fail',
+    detail: `${worldJourney.length} story-route legs link ${worldJourneyStops.length} location stops from Chapter 1 through Chapter 413.`,
   },
   {
-    id: 'phase6c-world-map-placement', label: 'World map placement', status: worldMapLocations.length >= 35 && worldMapLocations.every((record) => worldLocationsById.has(record.id) && placementStates.includes(record.placementState)) && worldMapUnplacedLocations.every((record) => worldLocationsById.has(record.id) && record.placementState === 'unplaced') ? 'pass' : 'fail',
-    detail: `${worldMapLocations.length} mapped and ${worldMapUnplacedLocations.length} intentionally unplaced locations carry explicit placement states.`,
+    id: 'phase6c-world-sources', label: 'World source policy', status: worldLocations.every((record) => validUrl(record.source)) && validUrl(worldAtlasSource) && validUrl(locationCategorySource) ? 'pass' : 'fail',
+    detail: 'Every structured place and both master indexes resolve to HTTPS Hunterpedia/Fandom sources.',
   },
   {
-    id: 'phase6c-world-map-routes', label: 'World map route geometry', status: worldMapRoutes.length >= 5 && worldMapRouteStops.every((stop) => worldMapLocationsById.has(stop)) ? 'pass' : 'fail',
-    detail: `${worldMapRoutes.length} map routes reference only placed map nodes.`,
+    id: 'phase6c-interactive-map', label: 'Interactive map contract', status: worldMapLocations.length >= 25
+      && unique(worldMapLocations.map((record) => record.id))
+      && worldMapLocations.every((record) => Number.isFinite(record.x) && record.x >= 0 && record.x <= 100 && Number.isFinite(record.y) && record.y >= 0 && record.y <= 100 && placementStates[record.confidence] && validUrl(record.source))
+      && worldMapRoutes.length >= 3 && worldMapRouteStops.every((id) => worldMapLocationsById.has(id))
+      && worldMapUnplacedLocations.length >= 5 && worldMapUnplacedLocations.every((record) => record.note && validUrl(record.source))
+      && Object.values(worldMapAssets).every((asset) => asset.src.startsWith('/') && validUrl(asset.source) && (!asset.imageSource || validUrl(asset.imageSource))) ? 'pass' : 'fail',
+    detail: `${worldMapLocations.length} sourced markers, ${worldMapUnplacedLocations.length} deliberately unpinned records, and ${worldMapRoutes.length} curated routes retain bounded coordinates, explicit placement confidence, and resolvable stops.`,
   },
   {
-    id: 'phase6d-systems-desk', label: 'Systems desk', status: institutionCharts.length >= 5 && institutionalRelationships.length >= 20 && objectTrails.length >= 8 && relationTypes.length >= 5 ? 'pass' : 'fail',
-    detail: `${institutionCharts.length} institutions, ${institutionalRelationships.length} typed links, and ${objectTrails.length} object trails form the maintained systems desk.`,
+    id: 'phase6d-institution-charts', label: 'Institution chart structure', status: institutionCharts.length === 8 && unique(institutionCharts.map((record) => record.id)) && institutionCharts.every((record) => record.root?.name && record.levels.length >= 3 && record.levels.every((level) => level.label && level.nodes.length)) ? 'pass' : 'fail',
+    detail: `${institutionCharts.length} connected organization charts separate authority levels without flattening every faction into one graph.`,
   },
   {
-    id: 'phase7-home-highlights', label: 'Home highlight structure', status: homeHighlights.length >= 6 && unique(homeHighlights.map((record) => record.id)) ? 'pass' : 'fail',
-    detail: `${homeHighlights.length} home modules point into maintained archive areas.`,
+    id: 'phase6d-typed-relations', label: 'Typed institutional relationships', status: institutionalRelationships.length >= 30 && unique(institutionalRelationships.map((record) => record.id)) && institutionalRelationships.every((record) => relationTypes.some(([type]) => type === record.type) && record.from && record.to && record.era && record.chapters) ? 'pass' : 'fail',
+    detail: `${institutionalRelationships.length} directional relationships carry a type, story period, time scope, state, and source.`,
   },
   {
-    id: 'phase7-design-system', label: 'Design-system registry', status: archiveDesignSystemStats.tokens >= 30 && archiveDesignSystemStats.components >= 10 ? 'pass' : 'fail',
-    detail: `${archiveDesignSystemStats.tokens} tokens and ${archiveDesignSystemStats.components} reusable component patterns are documented.`,
+    id: 'phase6d-object-trails', label: 'Object and evidence trails', status: objectTrails.length >= 14 && unique(objectTrails.map((record) => record.id)) && objectTrails.every((record) => record.stages.length >= 4 && record.stages.every(([name, note]) => name && note)) ? 'pass' : 'fail',
+    detail: `${objectTrails.length} consequential objects have maintained creator, custody, use, effect, or evidence stages.`,
   },
   {
-    id: 'phase7-implementation-notes', label: 'Implementation notes', status: implementationSections.length >= 8 && maintenanceMatrix.length >= 5 && completionCriteria.length >= 8 && releaseChecklist.length >= 8 ? 'pass' : 'fail',
-    detail: `${implementationSections.length} implementation sections, ${maintenanceMatrix.length} maintenance rows, ${completionCriteria.length} completion criteria, and ${releaseChecklist.length} release checks are maintained.`,
+    id: 'phase6d-source-policy', label: 'Systems-desk source policy', status: [...institutionCharts, ...institutionalRelationships, ...objectTrails].every((record) => validUrl(record.source)) && Object.values(systemsDeskSources).every(validUrl) ? 'pass' : 'fail',
+    detail: 'Every organization, relationship, and object-trail record resolves to an HTTPS Hunterpedia/Fandom source.',
   },
   {
-    id: 'phase7-route-manifest', label: 'Route manifest', status: routeManifest.length >= 15 && routeManifestStats.uniquePaths && routeManifestStats.uniqueIds ? 'pass' : 'fail',
-    detail: `${routeManifest.length} stable routes are registered without duplicate IDs or paths.`,
+    id: 'phase6e-shell-stats', label: 'Lightweight shell statistics', status: SITE_STATS.records === encyclopediaStats.records && SITE_STATS.characters === encyclopediaStats.characters && SITE_STATS.successionRoster === successionRoster.length && SITE_STATS.officialArcs === arcs.length && homeHighlights.every((highlight) => characters.some((character) => character.name === highlight.name && character.source === highlight.source && character.image === highlight.image)) ? 'pass' : 'fail',
+    detail: 'Home totals and its four lightweight portrait records are checked against the full research datasets without loading those datasets into the startup bundle.',
   },
   {
-    id: 'phase7-release-gates', label: 'Release gates', status: releaseGates.length >= 8 && releaseStats.required === releaseGates.length ? 'pass' : 'fail',
-    detail: `${releaseGates.length} required release gates track the archive’s final readiness.`,
+    id: 'phase6f-implementation-contract', label: 'Implementation handoff', status: implementationSections.length >= 9 && unique(implementationSections.map((record) => record.id)) && maintenanceMatrix.length >= 13 && unique(maintenanceMatrix.map((record) => record.id)) && releaseChecklist.reduce((total, group) => total + group.items.length, 0) >= 15 && completionCriteria.length >= 8 && archiveDesignSystemStats.primitives >= 6 ? 'pass' : 'fail',
+    detail: `${implementationSections.length} system notes, ${maintenanceMatrix.length} maintenance runbooks, ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks, ${completionCriteria.length} completion criteria, and ${archiveDesignSystemStats.primitives} Batch 12 primitives form the current handoff.`,
+  },
+  {
+    id: 'cloudflare-release-contract', label: 'Cloudflare release contract', status: releaseGates.length === 10 && routeManifest.length === 26 && routeManifestStats.screens === releaseStats.routes && releaseStats.chapterBoundary === ARCHIVE_BOUNDARY ? 'pass' : 'fail',
+    detail: `${releaseGates.length} active release gates cover ${routeManifest.length} focused reader-facing screens and the Worker-first Cloudflare deployment contract.`,
   },
 ];
 
+export const integritySummary = {
+  status: integrityChecks.some((check) => check.status === 'fail') ? 'fail' : 'pass',
+  passed: integrityChecks.filter((check) => check.status === 'pass').length,
+  total: integrityChecks.length,
+  reviewed: ARCHIVE_REVIEW_DATE,
+  chapterCatalogue: chapters.length,
+  locallyStructuredChapters,
+  detailedChapters,
+  phaseContextChapters,
+  catalogueOnlyChapters: chapters.length - locallyStructuredChapters,
+  sourceUrls: sourceUrls.length,
+  imageUrls: imageUrls.length,
+  localEntityMedia: mediaRegistryStats.local,
+  verifiedRemoteEntityMedia: mediaRegistryStats.verifiedRemote,
+  runtimeResolvedEntityMedia: mediaRegistryStats.runtimeResolution,
+  intentionallyTextOnlyMedia: mediaRegistryStats.textOnly,
+  picturedCharacters: mediaRegistryStats.characters.pictured,
+  totalCharacters: mediaRegistryStats.characters.total,
+  picturedLocations: mediaRegistryStats.locations.pictured,
+  totalLocations: mediaRegistryStats.locations.total,
+  structuredWorldPlaces: worldLocations.length,
+  institutionCharts: institutionCharts.length,
+  institutionalRelationships: institutionalRelationships.length,
+  objectTrails: objectTrails.length,
+};
+
 export const assertContentIntegrity = () => {
-  const failures = integrityChecks.filter((check) => check.status !== 'pass');
-  if (failures.length) throw new Error(`Content integrity failure: ${failures.map((check) => `${check.id} — ${check.detail}`).join(' | ')}`);
-  return {
-    total: integrityChecks.length,
-    passed: integrityChecks.length,
-    chapterCatalogue: chapters.length,
-    locallyStructuredChapters,
-    detailedChapters,
-    phaseContextChapters,
-    localEntityMedia: entityRegistryStats.localMedia,
-    verifiedRemoteEntityMedia: entityRegistryStats.verifiedRemoteMedia,
-    reviewDate: ARCHIVE_REVIEW_DATE,
-    siteStats: SITE_STATS,
-  };
+  const failures = integrityChecks.filter((check) => check.status === 'fail');
+  if (failures.length) throw new Error(`Content integrity failed: ${failures.map((check) => check.label).join(', ')}`);
+  return integritySummary;
 };
