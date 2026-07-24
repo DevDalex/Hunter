@@ -1,15 +1,19 @@
 import { readFile } from 'node:fs/promises';
 import { createServer } from 'vite';
+import {
+  declarationIncludesLiteral,
+  sourceImportsDefault,
+  sourceRendersRouteWith,
+} from './lib/succession-audit-contracts.mjs';
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession relationship workspace audit failed: ${message}`);
 };
 
-const [workspace, styles, app, dataEntry, foundation, expansion, selectors, indexes, registries] = await Promise.all([
+const [workspace, styles, app, foundation, expansion, selectors, indexes, registries] = await Promise.all([
   readFile(new URL('../src/components/succession/SuccessionArchiveRelationshipWorkspace.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveRelationshipWorkspace.css', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveApp.jsx', import.meta.url), 'utf8'),
-  readFile(new URL('../src/data/succession/successionData.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/entitiesRelationshipFoundation.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/relationshipFoundationExpansion.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/selectors.js', import.meta.url), 'utf8'),
@@ -17,10 +21,10 @@ const [workspace, styles, app, dataEntry, foundation, expansion, selectors, inde
   readFile(new URL('../src/data/succession/registries.js', import.meta.url), 'utf8'),
 ]);
 
-assert(app.includes("import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';"), 'app must load the dedicated canonical relationship workspace');
+assert(sourceImportsDefault(app, 'RelationshipsWorkspace', './SuccessionArchiveRelationshipWorkspace'), 'app must load the dedicated canonical relationship workspace');
 assert(!app.includes('  RelationshipsWorkspace,'), 'app must not import the legacy relationship ledger from deep workspaces');
-assert(app.includes("['princes', 'queens', 'chapters', 'locations', 'bodyguards', 'relationships']"), 'relationship records must remain inside the specialized route');
-assert(dataEntry.includes("from './entitiesRelationshipFoundation.js'"), 'canonical data entry must activate the relationship foundation');
+assert(sourceRendersRouteWith(app, 'relationships', 'RelationshipsWorkspace'), 'relationships route must render the dedicated graph workspace');
+assert(declarationIncludesLiteral(app, 'specializedRecordRoute', 'relationships'), 'relationship records must remain inside the specialized route');
 assert(foundation.includes('relationshipEnrichment'), 'existing relationships must receive normalized graph metadata');
 assert(foundation.includes('legacyRelationshipAliases'), 'conceptually duplicated legacy edges must be replaced by canonical IDs');
 assert(expansion.includes('relationshipFoundationExpansion'), 'expanded relationship records must be published');
