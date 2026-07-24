@@ -35,6 +35,7 @@ export const entityWorkspaceTarget = (entity) => {
   if (entity.entityType === 'guardian-beast') return 'guardian-spirit-beasts';
   if (entity.entityType === 'location' || entity.entityType === 'location-history') return 'locations';
   if (entity.entityType === 'event') return 'events';
+  if (entity.entityType === 'assignment') return 'bodyguards';
   if (entity.entityType === 'chapter') return 'chapters';
   if (entity.entityType === 'relationship') return 'relationships';
   if (entity.entityType === 'source') return 'research';
