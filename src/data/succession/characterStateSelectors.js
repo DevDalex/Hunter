@@ -42,7 +42,21 @@ const timelineEntry = ({ id, kind, chapterRange, label, summary, locationId = nu
 
 export const createCharacterStateSelectors = ({ data, archive }) => {
   const profiles = data.characterStateProfiles || Object.freeze({});
+  const organizationPersonnel = data.organizationPersonnelHistory || Object.freeze({});
   const latestChapter = data.chapters.at(-1)?.number || 414;
+
+  const sourceAtChapter = (sourceId, chapter) => {
+    const source = archive.getEntityById(sourceId);
+    return source?.entityType === 'source' && (!source.chapter || source.chapter <= chapter) ? source : null;
+  };
+
+  const entityAvailableAtChapter = (entity, chapter) => {
+    const chapterSources = (entity?.sourceIds || [])
+      .map((sourceId) => archive.getEntityById(sourceId))
+      .filter((source) => source?.entityType === 'source' && source.chapter)
+      .map((source) => source.chapter);
+    return chapterSources.length === 0 || Math.min(...chapterSources) <= chapter;
+  };
 
   const getCharacterStateTimeline = (characterId) => Object.freeze([
     ...(profiles[characterId] || []),
@@ -82,6 +96,47 @@ export const createCharacterStateSelectors = ({ data, archive }) => {
 
   const getCharacterCurrentState = (characterId) => getCharacterStateAtChapter(characterId, latestChapter);
 
+  const getCharacterAffiliationsAtChapter = (characterId, chapter = null) => {
+    const character = archive.getEntityById(characterId);
+    if (!character || character.entityType !== 'character') return Object.freeze([]);
+    const parsedChapter = chapter === null ? latestChapter : Number(chapter);
+    if (!Number.isFinite(parsedChapter)) return Object.freeze([]);
+
+    const personnelRecords = Object.entries(organizationPersonnel).flatMap(([organizationId, records]) => (records || [])
+      .filter((record) => record.characterId === characterId)
+      .map((record) => ({ ...record, organizationId })));
+    const timedOrganizationIds = new Set(personnelRecords.map((record) => record.organizationId));
+    const activePersonnel = personnelRecords.filter((record) => includesChapter(record.chapterRange, parsedChapter));
+    const affiliations = [];
+
+    for (const affiliation of character.affiliations || []) {
+      if (timedOrganizationIds.has(affiliation.organizationId)) continue;
+      affiliations.push(Object.freeze({
+        ...affiliation,
+        certainty: 'confirmed',
+        sourceIds: Object.freeze([...(character.sourceIds || [])]),
+        derivedFrom: 'canonical-affiliation',
+      }));
+    }
+
+    for (const record of activePersonnel) {
+      affiliations.push(Object.freeze({
+        organizationId: record.organizationId,
+        role: record.role,
+        status: record.status,
+        certainty: record.certainty,
+        sourceIds: Object.freeze([...(record.sourceIds || [])]),
+        transitionId: record.id,
+        derivedFrom: 'organization-personnel-history',
+      }));
+    }
+
+    return Object.freeze([...new Map(affiliations.map((affiliation) => [
+      `${affiliation.organizationId}|${affiliation.role}|${affiliation.status}`,
+      affiliation,
+    ])).values()]);
+  };
+
   const getCharacterRoleProfile = (characterId, chapter = null) => {
     const character = archive.getEntityById(characterId);
     if (!character || character.entityType !== 'character') return null;
@@ -114,7 +169,7 @@ export const createCharacterStateSelectors = ({ data, archive }) => {
       assignmentRoles: Object.freeze(activeRoles),
       responsibilities: Object.freeze([...new Set(responsibilities.filter(Boolean))]),
       vulnerabilities: Object.freeze([...new Set(vulnerabilities.filter(Boolean))]),
-      affiliationIds: Object.freeze([...(character.affiliations || []).map((affiliation) => affiliation.organizationId)]),
+      affiliationIds: Object.freeze(getCharacterAffiliationsAtChapter(characterId, parsedChapter).map((affiliation) => affiliation.organizationId)),
       relationshipCount: relationshipSnapshot?.relationships.length || 0,
       chapter: parsedChapter,
     });
@@ -240,7 +295,8 @@ export const createCharacterStateSelectors = ({ data, archive }) => {
     const relationshipHistory = archive.getRelationshipsForEntity(characterId)
       .filter((relationship) => relationship.chapterRange.start <= parsedChapter)
       .sort(sortByRange);
-    const abilities = archive.getAbilitiesForOwner(characterId);
+    const abilities = archive.getAbilitiesForOwner(characterId)
+      .filter((ability) => entityAvailableAtChapter(ability, parsedChapter));
     const appearances = archive.getAppearancesForCharacter(characterId)
       .filter((appearance) => appearance.chapter <= parsedChapter);
     const threatAssignments = assignmentSnapshot?.byRole.subject.filter((assignment) => [
@@ -249,6 +305,7 @@ export const createCharacterStateSelectors = ({ data, archive }) => {
     const protectionAssignments = assignmentSnapshot?.byRole.subject.filter((assignment) => [
       'protection', 'custody', 'allied-reinforcement', 'transferred-protection',
     ].includes(assignment.assignmentType)) || [];
+    const affiliations = getCharacterAffiliationsAtChapter(characterId, parsedChapter);
     const sourceIds = [...new Set([
       ...(character.sourceIds || []),
       ...(state?.sourceIds || []),
@@ -256,7 +313,10 @@ export const createCharacterStateSelectors = ({ data, archive }) => {
       ...movementHistory.flatMap((record) => record.sourceIds || []),
       ...assignmentHistory.flatMap((assignment) => assignment.sourceIds || []),
       ...relationshipHistory.flatMap((relationship) => relationship.sourceIds || []),
+      ...abilities.flatMap((ability) => ability.sourceIds || []),
+      ...affiliations.flatMap((affiliation) => affiliation.sourceIds || []),
     ])];
+    const sources = sourceIds.map((id) => sourceAtChapter(id, parsedChapter)).filter(Boolean);
 
     return Object.freeze({
       character,
@@ -276,9 +336,9 @@ export const createCharacterStateSelectors = ({ data, archive }) => {
       appearances: Object.freeze(appearances),
       threatAssignments: Object.freeze(threatAssignments),
       protectionAssignments: Object.freeze(protectionAssignments),
-      affiliations: Object.freeze([...(character.affiliations || [])]),
-      sources: Object.freeze(sourceIds.map((id) => archive.getEntityById(id)).filter(Boolean)),
-      timeline: getCharacterStateTimeline(characterId),
+      affiliations,
+      sources: Object.freeze(sources),
+      timeline: Object.freeze(getCharacterStateTimeline(characterId).filter((record) => record.chapterRange.start <= parsedChapter)),
       lifetimeTimeline: getCharacterLifetimeTimeline(characterId, parsedChapter),
     });
   };
@@ -341,6 +401,7 @@ export const createCharacterStateSelectors = ({ data, archive }) => {
     getCharacterStateTimeline,
     getCharacterStateAtChapter,
     getCharacterCurrentState,
+    getCharacterAffiliationsAtChapter,
     getCharacterRoleProfile,
     getCharacterLifetimeTimeline,
     getCharacterDossier,
