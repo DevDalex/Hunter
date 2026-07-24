@@ -23,7 +23,7 @@ export const successionArchiveRoutes = Object.freeze([
 
   route('mafia', 'mafia', 'Mafia', 'Power', 'Kakin mafia', 'Xi-Yu, Heil-Ly, and Cha-R compared through leadership, territory, members, royal sponsorship, objectives, risks, and operations.', 'active'),
   route('military', 'military', 'Military', 'Power', 'Military and Justice authority', 'Command hierarchy, custody, legal procedure, investigations, personnel, active operations, and special martial law.', 'active'),
-  route('organizations', 'organizations', 'Organizations', 'Power', 'Organization hierarchy', 'Canonical institutions shown through parent units, leadership, objectives, membership, and operational type.', 'active'),
+  route('organizations', 'organizations', 'Organizations', 'Power', 'Institution dossiers', 'Chapter-bounded institutional authority, hierarchy, leadership, personnel transitions, territory, objectives, pressure, assignments, relationships, events, and evidence.', 'active'),
   route('politics', 'politics', 'Politics', 'Power', 'Political archive', 'Royal parentage, succession interests, queen branches, sponsorship, alliances, treaties, and competing authority.', 'active'),
 
   route('black-whale', 'black-whale', 'Black Whale', 'World', 'Black Whale 1', 'The ship atlas, room lookup, and tier orientation inside the dedicated archive shell.', 'active'),
