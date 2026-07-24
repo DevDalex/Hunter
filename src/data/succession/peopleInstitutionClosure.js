@@ -4,6 +4,31 @@ const LEADERSHIP_PATTERN = /leader|chair|boss|king|commander|chief adviser|justi
 
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const sourceInsideBoundary = (source, chapter) => source?.entityType === 'source' && (!source.chapter || source.chapter <= chapter);
+const rangeEnd = (range) => range.end ?? Number.POSITIVE_INFINITY;
+
+const inspectStateMapIntegrity = (profiles, entityType) => {
+  const issues = [];
+  for (const [entityId, records] of Object.entries(profiles || {})) {
+    const ids = new Set();
+    const sorted = [...(records || [])].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id));
+    for (let index = 0; index < sorted.length; index += 1) {
+      const record = sorted[index];
+      if (ids.has(record.id)) issues.push(Object.freeze({ entityId, entityType, recordId: record.id, issue: 'duplicate-state-id' }));
+      ids.add(record.id);
+      const previous = sorted[index - 1];
+      if (previous && rangeEnd(previous.chapterRange) >= record.chapterRange.start) {
+        issues.push(Object.freeze({
+          entityId,
+          entityType,
+          recordId: record.id,
+          previousRecordId: previous.id,
+          issue: 'overlapping-state-range',
+        }));
+      }
+    }
+  }
+  return Object.freeze(issues);
+};
 
 export const createPeopleInstitutionClosure = ({ data, archive, characterStates, organizationStates }) => {
   const latestChapter = data.chapters.at(-1)?.number || 414;
@@ -120,6 +145,9 @@ export const createPeopleInstitutionClosure = ({ data, archive, characterStates,
     if (!Number.isFinite(parsedChapter)) return null;
     const characterInspections = characters.map((character) => inspectCharacter(character, parsedChapter));
     const organizationInspections = organizations.map((organization) => inspectOrganization(organization, parsedChapter));
+    const characterStateIntegrityIssues = inspectStateMapIntegrity(data.characterStateProfiles, 'character');
+    const organizationStateIntegrityIssues = inspectStateMapIntegrity(data.organizationStateProfiles, 'organization');
+    const stateIntegrityIssues = Object.freeze([...characterStateIntegrityIssues, ...organizationStateIntegrityIssues]);
     const gaps = getPeopleInstitutionCoverageGaps();
     const routeViolations = [
       ...characters.filter((character) => getCanonicalPeopleInstitutionRoute(character) !== PEOPLE_ROUTE),
@@ -130,6 +158,7 @@ export const createPeopleInstitutionClosure = ({ data, archive, characterStates,
     const explicitPriorityCharacters = [...priorityCharacterIds].filter((characterId) => explicitCharacterIds.has(characterId));
     const closureReady = invalidCharacters.length === 0
       && invalidOrganizations.length === 0
+      && stateIntegrityIssues.length === 0
       && routeViolations.length === 0
       && gaps.priorityCharacterGaps.length === 0
       && explicitOrganizationIds.size === organizations.length;
@@ -160,6 +189,7 @@ export const createPeopleInstitutionClosure = ({ data, archive, characterStates,
       institutionLeadershipIds: Object.freeze(unique([...institutionLeadershipIds])),
       priorityCharacterIds: Object.freeze(unique([...priorityCharacterIds])),
       gaps,
+      stateIntegrityIssues,
       invalidCharacters: Object.freeze(invalidCharacters),
       invalidOrganizations: Object.freeze(invalidOrganizations),
     });
