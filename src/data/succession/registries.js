@@ -6,6 +6,7 @@ export const ENTITY_TYPES = Object.freeze({
   LOCATION: 'location',
   LOCATION_HISTORY: 'location-history',
   EVENT: 'event',
+  ASSIGNMENT: 'assignment',
   CHAPTER: 'chapter',
   RELATIONSHIP: 'relationship',
   SOURCE: 'source',
@@ -52,6 +53,34 @@ export const EVENT_STATUSES = Object.freeze([
   'ongoing',
   'completed',
   'interrupted',
+  'unknown',
+]);
+
+export const ASSIGNMENT_TYPES = Object.freeze([
+  'protection',
+  'service',
+  'surveillance',
+  'infiltration',
+  'allied-reinforcement',
+  'kurapika-placement',
+  'transferred-protection',
+  'assassination',
+  'instruction',
+  'custody',
+  'unknown',
+]);
+
+export const ASSIGNMENT_STATUSES = Object.freeze([
+  'active',
+  'ended',
+  'transferred',
+  'unknown',
+]);
+
+export const ASSIGNMENT_SECRECY_LEVELS = Object.freeze([
+  'public',
+  'covert',
+  'mixed',
   'unknown',
 ]);
 
