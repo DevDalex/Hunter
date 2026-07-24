@@ -23,11 +23,11 @@ import {
   BodyStatesWorkspace,
   GuardianBeastsWorkspace,
   QueensWorkspace,
-  RelationshipsWorkspace,
 } from './SuccessionArchiveDeepWorkspaces';
 import AssignmentsWorkspace from './SuccessionArchiveAssignmentWorkspace';
 import EventsWorkspace from './SuccessionArchiveEventWorkspace';
 import LocationsWorkspace from './SuccessionArchiveLocationWorkspace';
+import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';
 import {
   ChapterRecordsWorkspaceV2,
   CharactersWorkspace,
@@ -209,7 +209,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const preserved = ['black-whale', 'timeline', 'nen'].includes(route.id);
   const dedicated = new Set(['princes', 'queens', 'bodyguards', 'mafia', 'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']);
   const selectedEntity = routeParams.entity ? getEntityById(routeParams.entity) : null;
-  const specializedRecordRoute = ['princes', 'queens', 'chapters', 'locations', 'bodyguards'].includes(route.id);
+  const specializedRecordRoute = ['princes', 'queens', 'chapters', 'locations', 'bodyguards', 'relationships'].includes(route.id);
   const showDomainDetail = Boolean(selectedEntity && !treeView && !specializedRecordRoute);
 
   return <SuccessionArchiveShell activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} onExitArchive={onExitArchive} onOpenSearch={onOpenSearch} onIntent={onIntent}>
