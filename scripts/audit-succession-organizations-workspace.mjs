@@ -10,13 +10,14 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession organization workspace audit failed: ${message}`);
 };
 
-const [workspace, styles, app, primitives, dataEntry, foundation, selectorSource] = await Promise.all([
+const [workspace, styles, app, primitives, dataEntry, foundation, corrections, selectorSource] = await Promise.all([
   readFile(new URL('../src/components/succession/SuccessionArchiveOrganizationWorkspace.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveOrganizationWorkspace.css', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveApp.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchivePrimitives.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/successionData.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/organizationStateFoundation.js', import.meta.url), 'utf8'),
+  readFile(new URL('../src/data/succession/organizationStateCorrections.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/organizationStateSelectors.js', import.meta.url), 'utf8'),
 ]);
 
@@ -34,6 +35,8 @@ assert(foundation.includes('organizationPersonnelHistory'), 'foundation must pub
 assert(foundation.includes("organizationId: 'organization:heil-ly'"), 'Heil-Ly state history must be explicit');
 assert(foundation.includes("organizationId: 'organization:kakin-justice-bureau'"), 'Justice state history must be explicit');
 assert(foundation.includes("organizationId: 'organization:benjamin-private-army'"), 'Benjamin command crisis must be explicit');
+assert(corrections.includes("id: 'organization-personnel:heil-ly:borksen:410'"), 'Borksen’s confirmed Chapter 410 membership transition must override the recruitment-only record');
+assert(corrections.includes('reaches Yes and enters Morena’s community'), 'Heil-Ly correction must align with the canonical recruitment outcome');
 assert(selectorSource.includes('getOrganizationStateAtChapter'), 'selectors must resolve chapter-bounded organization state');
 assert(selectorSource.includes('getOrganizationPersonnelAtChapter'), 'selectors must resolve chapter-bounded personnel state');
 assert(selectorSource.includes('getOrganizationHierarchy'), 'selectors must compose parent and child organizations');
@@ -62,7 +65,6 @@ try {
     getOrganizationPersonnelTimeline,
     getOrganizationStateAtChapter,
     getOrganizationStateCoverageReport,
-    getOrganizationStateTimeline,
     getOrganizationsWithStateProfiles,
     searchSuccessionArchive,
     successionArchiveData,
@@ -111,12 +113,16 @@ try {
 
   const heilLy399 = getOrganizationStateAtChapter('organization:heil-ly', 399);
   assert(heilLy399?.territoryIds.includes('location:black-whale:tier-3:room-3101'), 'Heil-Ly Chapter 399 state must include Room 3101');
-  assert(heilLy399?.objectiveStates.some((objective) => objective.includes('Recruit')), 'Heil-Ly current state must include recruitment objectives');
+  assert(heilLy399?.objectiveStates.some((objective) => /recruit/i.test(objective)), 'Heil-Ly current state must include recruitment or recruit-integration objectives');
 
-  const borksenPersonnel = getOrganizationPersonnelTimeline('organization:heil-ly').find((record) => record.characterId === 'character:borksen');
-  assert(borksenPersonnel?.transitionType === 'recruitment', 'Borksen must be tracked as recruitment rather than assumed membership');
-  assert(borksenPersonnel?.status === 'unresolved', 'Borksen’s allegiance must remain unresolved');
+  const borksenTimeline = getOrganizationPersonnelTimeline('organization:heil-ly').filter((record) => record.characterId === 'character:borksen');
+  const borksenRecruitment = borksenTimeline.find((record) => record.chapterRange.start === 407);
+  const borksenMembership = borksenTimeline.find((record) => record.chapterRange.start === 410);
+  assert(borksenRecruitment?.transitionType === 'recruitment' && borksenRecruitment.chapterRange.end === 409, 'Borksen recruitment phase must end before the final membership outcome');
+  assert(borksenMembership?.transitionType === 'membership' && borksenMembership.status === 'active', 'Borksen must enter Heil-Ly membership at Chapter 410');
   assert(!getOrganizationPersonnelAtChapter('organization:heil-ly', 406).some((record) => record.characterId === 'character:borksen'), 'Borksen must not appear in Heil-Ly personnel before recruitment begins');
+  assert(getOrganizationPersonnelAtChapter('organization:heil-ly', 409).some((record) => record.id === borksenRecruitment.id), 'Borksen must remain a recruitment target at Chapter 409');
+  assert(getOrganizationPersonnelAtChapter('organization:heil-ly', 410).some((record) => record.id === borksenMembership.id), 'Borksen must resolve as a community member at Chapter 410');
 
   const xiYu399 = getOrganizationDossier('organization:xi-yu', 399);
   assert(xiYu399?.territories.some((location) => location.id === 'location:black-whale:tier-3:room-3101'), 'Xi-Yu dossier must include Room 3101 territory at Chapter 399');
@@ -130,7 +136,7 @@ try {
   assert(searchSuccessionArchive('identity and continuity crisis').some(({ entity }) => entity.id === 'organization:benjamin-private-army'), 'global search must resolve organization state language');
   assert(searchSuccessionArchive('rule-bound recruitment').some(({ entity }) => entity.id === 'organization:heil-ly'), 'global search must resolve organization operational language');
 
-  console.log(`Succession organization workspace audit passed: ${organizations.length} organizations, ${coverage.coveragePercent}% explicit state coverage, hierarchy, territory, personnel transitions, assignments, relationships, events, evidence, search, routing, and responsive presentation are wired.`);
+  console.log(`Succession organization workspace audit passed: ${organizations.length} organizations, ${coverage.coveragePercent}% explicit state coverage, hierarchy, territory, confirmed recruitment-to-membership transitions, assignments, relationships, events, evidence, search, routing, and responsive presentation are wired.`);
 } finally {
   await vite.close();
 }
