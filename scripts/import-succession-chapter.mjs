@@ -5,7 +5,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const READER_START = 338;
-const READER_END = 414;
+const READER_END = 9999;
 const SUPPORTED_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.webp']);
 const ROOT = process.cwd();
 const MEDIA_ROOT = path.join(ROOT, 'public', 'media', 'succession-contest', 'chapters');
