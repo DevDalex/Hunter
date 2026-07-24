@@ -165,6 +165,9 @@ export const buildSuccessionIndexes = (data) => {
         entity.summary || '',
         ...(entity.tags || []),
         entity.assignmentType || '',
+        entity.entityType === 'assignment'
+          ? `${entity.assignmentType || ''} ${byId.get(entity.subjectEntityId)?.name || ''}`
+          : '',
         entity.relationshipType || '',
         entity.status || '',
         entity.sentiment || '',
