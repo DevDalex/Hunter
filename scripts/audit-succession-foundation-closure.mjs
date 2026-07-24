@@ -1,16 +1,19 @@
 import { readFile } from 'node:fs/promises';
 import { createServer } from 'vite';
+import {
+  sourceImportsDefault,
+  sourceRendersRouteWith,
+} from './lib/succession-audit-contracts.mjs';
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession foundation closure audit failed: ${message}`);
 };
 
-const [graph, workspace, styles, app, dataEntry, packageJson] = await Promise.all([
+const [graph, workspace, styles, app, packageJson] = await Promise.all([
   readFile(new URL('../src/data/succession/evidenceGraph.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveEvidenceWorkspace.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveEvidenceWorkspace.css', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveApp.jsx', import.meta.url), 'utf8'),
-  readFile(new URL('../src/data/succession/successionData.js', import.meta.url), 'utf8'),
   readFile(new URL('../package.json', import.meta.url), 'utf8'),
 ]);
 
@@ -20,10 +23,8 @@ assert(graph.includes('getEntityEvidenceProfile'), 'entity provenance profiles m
 assert(graph.includes('getFoundationClosureReport'), 'foundation closure report must be exposed');
 assert(graph.includes('missing-primary-chapter-source'), 'chapter source gaps must remain explicit');
 assert(graph.includes('not-linked-to-chapter-evidence'), 'orphaned entity gaps must remain explicit');
-assert(dataEntry.includes("from './evidenceGraph.js'"), 'canonical data entry must activate the evidence graph');
-assert(dataEntry.includes('successionChapterEvidenceProfiles'), 'chapter evidence profiles must be public');
-assert(app.includes("import EvidenceWorkspace from './SuccessionArchiveEvidenceWorkspace';"), 'app must load the dedicated evidence workspace');
-assert(app.includes("route.id === 'research' && <EvidenceWorkspace"), 'research route must render the evidence workspace');
+assert(sourceImportsDefault(app, 'EvidenceWorkspace', './SuccessionArchiveEvidenceWorkspace'), 'app must load the dedicated evidence workspace');
+assert(sourceRendersRouteWith(app, 'research', 'EvidenceWorkspace'), 'research route must render the evidence workspace');
 assert(workspace.includes('Batch 1.6 · Evidence Graph and Foundation Closure'), 'workspace must identify the closure batch');
 assert(workspace.includes('Chapter evidence snapshot'), 'workspace must render chapter evidence profiles');
 assert(workspace.includes('Inspect non-critical coverage debt'), 'workspace must render the gap ledger');
@@ -51,6 +52,10 @@ try {
   } = archiveModule;
 
   assert(successionArchiveValidation.valid, 'canonical data must pass schema validation');
+  assert(typeof getChapterEvidenceProfile === 'function', 'canonical data entry must expose chapter evidence profiles');
+  assert(typeof getEntityEvidenceProfile === 'function', 'canonical data entry must expose entity evidence profiles');
+  assert(typeof getFoundationClosureReport === 'function', 'canonical data entry must expose the closure report');
+  assert(Array.isArray(successionChapterEvidenceProfiles), 'canonical data entry must publish chapter evidence profiles');
   assert(successionChapterEvidenceProfiles.length >= 75, `expected at least 75 chapter evidence profiles, found ${successionChapterEvidenceProfiles.length}`);
   assert(successionChapterEvidenceProfiles.every((profile) => profile.provenance.hasPrimarySource), 'every indexed chapter must retain its primary chapter source');
   assert(successionChapterEvidenceProfiles.every((profile) => profile.provenance.hasReaderBridge), 'every indexed chapter must retain a reader bridge');
