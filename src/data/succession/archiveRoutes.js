@@ -10,36 +10,36 @@ const route = (id, path, label, group, title, description, status = 'foundation'
 
 export const successionArchiveRoutes = Object.freeze([
   route('archive', '', 'Archive Home', 'Overview', 'Succession Contest Archive', 'A dedicated research application for the voyage, its people, institutions, chronology, evidence, and chapter-bounded state.', 'active'),
-  route('story', 'story', 'Story', 'Overview', 'Story workspace', 'A focused narrative orientation that points into the archive without repeating every reference domain on one page.', 'active'),
+  route('story', 'story', 'Story', 'Overview', 'Story workspace', 'The arc mapped through its chronological phases, parallel conflicts, active operations, ritual rules, and power blocs.', 'active'),
   route('timeline', 'timeline', 'Timeline', 'Overview', 'Voyage timeline', 'Chapter-bounded events and movements presented in chronological order.', 'active'),
-  route('reader', 'reader', 'Reader', 'Overview', 'Manga reader', 'The existing chapter image reader, kept separate from research and reference material.', 'active'),
-  route('search', 'search', 'Global Search', 'Overview', 'Search the archive', 'Search canonical Succession Contest entities and open the relevant workspace.', 'active'),
+  route('reader', 'reader', 'Reader', 'Overview', 'Manga reader', 'The chapter image reader, kept separate from research and reference material.', 'active'),
+  route('search', 'search', 'Global Search', 'Overview', 'Search the archive', 'Search canonical Succession Contest entities and open the relevant workspace or domain dossier.', 'active'),
 
-  route('characters', 'characters', 'Characters', 'People', 'Character archive', 'Canonical character records, current state, affiliations, sources, and connected entities.', 'active'),
-  route('princes', 'princes', 'Princes', 'People', 'Princes of Kakin', 'Fourteen ordered prince records with an optional royal-family diagram.', 'active'),
-  route('queens', 'queens', 'Queens', 'People', 'Queens of Kakin', 'Eight queen records separated from prince and household material.', 'active'),
-  route('bodyguards', 'bodyguards', 'Bodyguards', 'People', 'Bodyguards', 'Royal guards, contracted protectors, assignments, and current affiliations.', 'active'),
-  route('hunters', 'hunters', 'Hunters', 'People', 'Hunters aboard the voyage', 'Hunter Association members and contracted Hunters active in the Succession Contest.', 'active'),
+  route('characters', 'characters', 'Characters', 'People', 'Character archive', 'Canonical people organized by role, allegiance, current state, affiliations, evidence, and connected records.', 'active'),
+  route('princes', 'princes', 'Princes', 'People', 'Princes of Kakin', 'Fourteen ordered prince dossiers with strategy, household, Nen, Guardian Spirit Beast, pressure, and family-tree views.', 'active'),
+  route('queens', 'queens', 'Queens', 'People', 'Queens of Kakin', 'Eight maternal households with children, guards, surveillance, residence, political action, and current status.', 'active'),
+  route('bodyguards', 'bodyguards', 'Bodyguards', 'People', 'Bodyguards and room assignments', 'Royal-room protection, embedded observers, reassignment history, loyalty boundaries, and named protectors.', 'active'),
+  route('hunters', 'hunters', 'Hunters', 'People', 'Hunters aboard the voyage', 'Hunter contracts, Zodiac duties, Nen instruction, prince assignments, and expedition responsibilities.', 'active'),
 
-  route('mafia', 'mafia', 'Mafia', 'Power', 'Kakin mafia', 'The Xi-Yu, Heil-Ly, and Cha-R families, their named members, leaders, and active operations.', 'active'),
-  route('military', 'military', 'Military', 'Power', 'Kakin military', 'Military authority, Justice Bureau personnel, custody, and royal security operations.', 'active'),
-  route('organizations', 'organizations', 'Organizations', 'Power', 'Organizations', 'Canonical organizations and their memberships, leadership, objectives, and relationships.', 'active'),
-  route('politics', 'politics', 'Politics', 'Power', 'Political archive', 'Royal authority, parentage, institutions, alliances, and political relationships.', 'active'),
+  route('mafia', 'mafia', 'Mafia', 'Power', 'Kakin mafia', 'Xi-Yu, Heil-Ly, and Cha-R compared through leadership, territory, members, royal sponsorship, objectives, risks, and operations.', 'active'),
+  route('military', 'military', 'Military', 'Power', 'Military and Justice authority', 'Command hierarchy, custody, legal procedure, investigations, personnel, active operations, and special martial law.', 'active'),
+  route('organizations', 'organizations', 'Organizations', 'Power', 'Organization hierarchy', 'Canonical institutions shown through parent units, leadership, objectives, membership, and operational type.', 'active'),
+  route('politics', 'politics', 'Politics', 'Power', 'Political archive', 'Royal parentage, succession interests, queen branches, sponsorship, alliances, treaties, and competing authority.', 'active'),
 
-  route('black-whale', 'black-whale', 'Black Whale', 'World', 'Black Whale 1', 'The preserved ship atlas inside the dedicated archive shell.', 'migration'),
-  route('locations', 'locations', 'Locations', 'World', 'Location archive', 'Canonical ship locations, hierarchy, occupants, and chapter-bounded location history.', 'active'),
+  route('black-whale', 'black-whale', 'Black Whale', 'World', 'Black Whale 1', 'The ship atlas, room lookup, and tier orientation inside the dedicated archive shell.', 'active'),
+  route('locations', 'locations', 'Locations', 'World', 'Location archive', 'Ship hierarchy, royal rooms, access, occupants, incidents, legal routes, criminal passages, and Nen-mediated movement.', 'active'),
 
-  route('nen', 'nen', 'Nen', 'Systems', 'Nen archive', 'Succession-specific abilities, instruction, conditions, and known classifications without speculative filling.', 'migration'),
-  route('guardian-spirit-beasts', 'guardian-spirit-beasts', 'Guardian Spirit Beasts', 'Systems', 'Guardian Spirit Beasts', 'King Nasubi and all fourteen prince Guardian Spirit Beast records, with unknowns left explicit.', 'active'),
+  route('nen', 'nen', 'Nen', 'Systems', 'Nen archive', 'Succession abilities, instruction, conditions, costs, curses, contracts, possession, and known classifications.', 'active'),
+  route('guardian-spirit-beasts', 'guardian-spirit-beasts', 'Guardian Spirit Beasts', 'Systems', 'Guardian Spirit Beasts', 'King Nasubi and all fourteen prince beast records with shared ritual rules, mechanics, knowledge state, and unknowns.', 'active'),
 
-  route('events', 'events', 'Events', 'Records', 'Event archive', 'Canonical events, participants, locations, consequences, and chapter ranges.', 'active'),
-  route('deaths', 'deaths', 'Deaths', 'Records', 'Deaths and body states', 'Confirmed deaths and exceptional body states, bounded by maintained status records.', 'active'),
-  route('relationships', 'relationships', 'Relationships', 'Records', 'Relationship archive', 'Typed family, professional, protective, political, allied, and hostile links.', 'active'),
-  route('chapters', 'chapter-records', 'Chapters', 'Records', 'Chapter records', 'Research records for Chapters 340–413, separate from the image reader.', 'active'),
+  route('events', 'events', 'Events', 'Records', 'Event archive', 'Operations organized by chapter range, participants, location, causes, consequences, and current state.', 'active'),
+  route('deaths', 'deaths', 'Deaths', 'Records', 'Deaths and body states', 'Confirmed deaths and exceptional body, consciousness, possession, custody, and Nen-continuation states.', 'active'),
+  route('relationships', 'relationships', 'Relationships', 'Records', 'Relationship archive', 'Typed family, professional, protective, political, allied, deceptive, command, and hostile links.', 'active'),
+  route('chapters', 'chapter-records', 'Chapters', 'Records', 'Chapter records', 'Research records for Chapters 340–414, separate from the image reader.', 'active'),
 
-  route('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, evidence notes, provenance, and chapter-bounded research material.', 'active'),
-  route('glossary', 'glossary', 'Glossary', 'Library', 'Glossary', 'A future controlled vocabulary for archive terms and names.', 'foundation'),
-  route('media', 'media', 'Media', 'Library', 'Media archive', 'A future media workspace governed by the existing chapter image manifest and provenance rules.', 'foundation'),
+  route('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, provenance, evidence types, confidence, coverage, unresolved claims, and explicit research gaps.', 'active'),
+  route('glossary', 'glossary', 'Glossary', 'Library', 'Succession glossary', 'Controlled ritual, Nen, legal, political, ship, status, and archive vocabulary.', 'active'),
+  route('media', 'media', 'Media', 'Library', 'Media archive', 'Maintained portraits and Guardian Spirit Beast visuals with subjects, availability, and provenance links.', 'active'),
 ]);
 
 export const successionArchiveGroups = Object.freeze(['Overview', 'People', 'Power', 'World', 'Systems', 'Records', 'Library']);
