@@ -27,13 +27,13 @@ import {
   RelationshipsWorkspace,
 } from './SuccessionArchiveDeepWorkspaces';
 import EventsWorkspace from './SuccessionArchiveEventWorkspace';
+import LocationsWorkspace from './SuccessionArchiveLocationWorkspace';
 import {
   ChapterRecordsWorkspaceV2,
   CharactersWorkspace,
   DomainEntityDetail,
   GlossaryWorkspace,
   HuntersWorkspace,
-  LocationsWorkspace,
   MediaWorkspace,
   MilitaryWorkspace,
   OrganizationsWorkspace,
@@ -206,7 +206,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const preserved = ['black-whale', 'timeline', 'nen'].includes(route.id);
   const dedicated = new Set(['princes', 'queens', 'bodyguards', 'mafia', 'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']);
   const selectedEntity = routeParams.entity ? getEntityById(routeParams.entity) : null;
-  const specializedRecordRoute = ['princes', 'queens', 'chapters'].includes(route.id);
+  const specializedRecordRoute = ['princes', 'queens', 'chapters', 'locations'].includes(route.id);
   const showDomainDetail = Boolean(selectedEntity && !treeView && !specializedRecordRoute);
 
   return <SuccessionArchiveShell activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} onExitArchive={onExitArchive} onOpenSearch={onOpenSearch} onIntent={onIntent}>
@@ -224,7 +224,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {!showDomainDetail && route.id === 'military' && <MilitaryWorkspace onNavigate={navigate} />}
     {!showDomainDetail && route.id === 'organizations' && <OrganizationsWorkspace onNavigate={navigate} />}
     {!showDomainDetail && route.id === 'politics' && <PoliticsWorkspace onNavigate={navigate} />}
-    {!showDomainDetail && route.id === 'locations' && <LocationsWorkspace onNavigate={navigate} />}
+    {!showDomainDetail && route.id === 'locations' && <LocationsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {!showDomainDetail && route.id === 'guardian-spirit-beasts' && <GuardianBeastsWorkspace routeParams={routeParams} onNavigate={navigate} />}
     {!showDomainDetail && route.id === 'events' && <EventsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {!showDomainDetail && route.id === 'deaths' && <BodyStatesWorkspace routeParams={routeParams} onNavigate={navigate} />}
