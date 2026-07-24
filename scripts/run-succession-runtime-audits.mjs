@@ -5,6 +5,7 @@ const root = process.cwd();
 const audits = Object.freeze([
   ['contract', 'scripts/audit-succession-runtime-contract.mjs'],
   ['shell', 'scripts/audit-succession-archive-shell.mjs'],
+  ['characters', 'scripts/audit-succession-characters-workspace.mjs'],
   ['events', 'scripts/audit-succession-events-workspace.mjs'],
   ['locations', 'scripts/audit-succession-locations-workspace.mjs'],
   ['black-whale', 'scripts/audit-succession-black-whale-bridge.mjs'],
