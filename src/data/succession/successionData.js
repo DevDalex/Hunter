@@ -1,4 +1,5 @@
 import { successionArchiveData } from './entitiesNenSystemFoundation.js';
+// Active predecessor chain: entitiesNenSystemFoundation imports from './entitiesOrganizationFoundation.js', preserving every Batch 2 character and institution record before Batch 3 systems are added.
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
