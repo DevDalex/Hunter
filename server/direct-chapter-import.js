@@ -1,4 +1,4 @@
-import { handleHostedChapterAdmin } from './chapter-admin.js';
+import { handleHostedChapterAdmin, inferChapterNumber } from './chapter-admin.js';
 
 const ADMIN_PAGE_PATHS = new Set(['/admin/chapters', '/admin/chapters/']);
 const LOGIN_PATHS = new Set([
@@ -7,9 +7,13 @@ const LOGIN_PATHS = new Set([
   '/api/admin/chapter/logout',
 ]);
 const API_PREFIX = '/api/admin/chapter/';
+const INSPECT_PATH = '/api/admin/chapter/inspect';
 const IMPORT_PATH = '/api/admin/chapter/import';
 const TEMPORARY_SESSION_KEY = 'hunter-temporary-chapter-import-v2';
 const DISPATCH_EVENT = 'hunter-chapter-import';
+const READER_START = 338;
+const LEGACY_READER_END = 414;
+const MAX_CHAPTER_NUMBER = 9999;
 const MAX_SELECTED_IMAGES = 120;
 const MAX_IMPORT_BODY_BYTES = 256 * 1024;
 const MAX_DISPATCH_BODY_BYTES = 60 * 1024;
@@ -194,6 +198,68 @@ const directRequest = async (request, env) => {
   });
 };
 
+const inspectionInput = async (request) => {
+  const url = new URL(request.url);
+  if (request.method === 'GET') {
+    const sourceUrl = url.searchParams.get('sourceUrl') || '';
+    const rawChapter = url.searchParams.get('chapter');
+    return {
+      sourceUrl,
+      chapter: rawChapter === null || rawChapter === '' ? inferChapterNumber(sourceUrl) : Number.parseInt(rawChapter, 10),
+      body: null,
+    };
+  }
+  const body = await request.clone().json().catch(() => ({}));
+  const sourceUrl = String(body.sourceUrl || '');
+  return {
+    sourceUrl,
+    chapter: body.chapter === null || body.chapter === undefined || body.chapter === ''
+      ? inferChapterNumber(sourceUrl)
+      : Number.parseInt(body.chapter, 10),
+    body,
+  };
+};
+
+const handleUnboundedInspection = async (request, env) => {
+  const input = await inspectionInput(request);
+  if (!Number.isInteger(input.chapter) || input.chapter < READER_START || input.chapter > MAX_CHAPTER_NUMBER) {
+    throw new DirectImportError(400, `Chapter must be from ${READER_START} through ${MAX_CHAPTER_NUMBER}.`);
+  }
+  if (input.chapter <= LEGACY_READER_END) return directRequest(request, env);
+
+  const url = new URL(request.url);
+  let legacyRequest;
+  if (request.method === 'GET') {
+    url.searchParams.set('chapter', String(LEGACY_READER_END));
+    legacyRequest = new Request(url, request);
+  } else {
+    const headers = new Headers(request.headers);
+    headers.set('content-type', 'application/json');
+    legacyRequest = new Request(url, {
+      method: request.method,
+      headers,
+      body: JSON.stringify({ ...(input.body || {}), chapter: LEGACY_READER_END }),
+    });
+  }
+
+  const legacyResponse = await directRequest(legacyRequest, env);
+  if (!legacyResponse.ok) return legacyResponse;
+  const payload = await legacyResponse.json();
+  const imageUrls = Array.isArray(payload.pages) ? payload.pages.map((page) => page.sourceUrl).filter(Boolean) : [];
+  if (!imageUrls.length) throw new DirectImportError(422, 'The chapter inspector returned no importable chapter pictures.');
+  const now = Math.floor(Date.now() / 1000);
+  const importToken = await signToken({
+    purpose: 'chapter-import',
+    chapter: input.chapter,
+    sourceUrl: payload.sourceUrl,
+    title: payload.title,
+    imageUrls,
+    iat: now,
+    exp: now + (30 * 60),
+  }, TEMPORARY_SESSION_KEY);
+  return json(200, { ...payload, chapter: input.chapter, importToken });
+};
+
 const routeDirectPage = async (request, env) => {
   const assetUrl = new URL(request.url);
   assetUrl.pathname = '/admin/chapters/direct.html';
@@ -205,7 +271,10 @@ const routeDirectPage = async (request, env) => {
   headers.set('x-content-type-options', 'nosniff');
   headers.set('x-frame-options', 'DENY');
   headers.set('x-robots-tag', 'noindex, nofollow, noarchive');
-  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+  const html = (await response.text())
+    .replace(' max="414"', '')
+    .replaceAll('/hunter-x-hunter/414/', '/hunter-x-hunter/415/');
+  return new Response(html, { status: response.status, statusText: response.statusText, headers });
 };
 
 const json = (status, payload) => new Response(JSON.stringify(typeof payload === 'string' ? { error: payload } : payload), {
@@ -222,6 +291,7 @@ export async function handleDirectChapterImport(request, env) {
   try {
     if (request.method === 'GET' && ADMIN_PAGE_PATHS.has(url.pathname)) return routeDirectPage(request, env);
     if (LOGIN_PATHS.has(url.pathname)) return json(404, 'This temporary importer does not use account login.');
+    if (['GET', 'POST'].includes(request.method) && url.pathname === INSPECT_PATH) return handleUnboundedInspection(request, env);
     if (request.method === 'POST' && url.pathname === IMPORT_PATH) {
       const selection = await prepareSelectedImport(request);
       return json(202, await dispatchChapterImport(selection, env));
