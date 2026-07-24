@@ -1,5 +1,5 @@
-import { successionArchiveData } from './entitiesNenSystemFoundation.js';
-// Active predecessor chain: entitiesNenSystemFoundation imports from './entitiesOrganizationFoundation.js', preserving every Batch 2 character and institution record before Batch 3 systems are added.
+import { successionArchiveData } from './entitiesStoryIntelligenceFoundation.js';
+// Active predecessor chain: entitiesStoryIntelligenceFoundation preserves the Batch 3 Nen foundation, which preserves every Batch 2 character and institution record.
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
@@ -7,6 +7,7 @@ import { createCharacterStateSelectors } from './characterStateSelectors.js';
 import { createOrganizationStateSelectors } from './organizationStateSelectors.js';
 import { createPeopleInstitutionClosure } from './peopleInstitutionClosure.js';
 import { createNenSystemSelectors } from './nenSystemSelectors.js';
+import { createStoryIntelligenceSelectors } from './storyIntelligenceSelectors.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
@@ -21,6 +22,7 @@ export const successionPeopleInstitutionClosure = createPeopleInstitutionClosure
   organizationStates: successionOrganizationStates,
 });
 export const successionNenSystems = createNenSystemSelectors({ data: successionArchiveData, archive: successionArchive });
+export const successionStoryIntelligence = createStoryIntelligenceSelectors({ data: successionArchiveData, archive: successionArchive });
 export const successionEvidenceGraph = createSuccessionEvidenceGraph(successionArchiveData);
 
 export { successionArchiveData };
@@ -126,6 +128,25 @@ export const {
   getNenSystemClosureReport,
   searchNenSystems,
 } = successionNenSystems;
+
+export const {
+  getStoryPhaseProfile,
+  getStoryPhaseAtChapter,
+  getStoryPhaseDossier,
+  getStoryLaneProfile,
+  getStoryLanesAtChapter,
+  getStoryLaneDossier,
+  getStoryThreadProfile,
+  getStoryThreadDossier,
+  getStoryThreadsAtChapter,
+  getStoryCausalLink,
+  getStoryCausalLinksAtChapter,
+  getStoryCausalGraphAtChapter,
+  getChapterStoryDossier,
+  getStorySnapshotAtChapter,
+  searchStoryIntelligence,
+  getStoryIntelligenceClosureReport,
+} = successionStoryIntelligence;
 
 const earliestChapter = (values) => {
   const chapters = values.filter(Number.isFinite);
