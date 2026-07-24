@@ -1,4 +1,8 @@
 import { readFile } from 'node:fs/promises';
+import {
+  sourceImportsDefault,
+  sourceRendersRouteWith,
+} from './lib/succession-audit-contracts.mjs';
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession event workspace audit failed: ${message}`);
@@ -10,8 +14,9 @@ const [workspace, styles, app] = await Promise.all([
   readFile(new URL('../src/components/succession/SuccessionArchiveApp.jsx', import.meta.url), 'utf8'),
 ]);
 
-assert(app.includes("import EventsWorkspace from './SuccessionArchiveEventWorkspace';"), 'app must load the dedicated canonical event workspace');
+assert(sourceImportsDefault(app, 'EventsWorkspace', './SuccessionArchiveEventWorkspace'), 'app must load the dedicated canonical event workspace');
 assert(!app.includes('  EventsWorkspace,\n  GuardianBeastsWorkspace,'), 'app must not import the legacy event workspace from deep workspaces');
+assert(sourceRendersRouteWith(app, 'events', 'EventsWorkspace'), 'events route must render the dedicated canonical workspace');
 assert(workspace.includes("getEntitiesByType('event')"), 'workspace must read canonical event entities');
 assert(workspace.includes('event.consequenceEventIds'), 'workspace must render event consequence links');
 assert(workspace.includes('event.causes'), 'workspace must expose canonical causes');
