@@ -9,13 +9,13 @@ const route = (id, path, label, group, title, description, status = 'foundation'
 });
 
 export const successionArchiveRoutes = Object.freeze([
-  route('archive', '', 'Archive Home', 'Overview', 'Succession Contest Archive', 'A dedicated research application for the voyage, its people, institutions, chronology, evidence, and chapter-bounded state.', 'active'),
+  route('archive', '', 'Archive Home', 'Overview', 'Succession Contest Archive', 'A dedicated research application for the voyage, with canonical chapter-bounded people and institution dossiers connected to chronology, evidence, assignments, relationships, and location state.', 'active'),
   route('story', 'story', 'Story', 'Overview', 'Story workspace', 'The arc mapped through its chronological phases, parallel conflicts, active operations, ritual rules, and power blocs.', 'active'),
   route('timeline', 'timeline', 'Timeline', 'Overview', 'Voyage timeline', 'Chapter-bounded events and movements presented in chronological order.', 'active'),
   route('reader', 'reader', 'Reader', 'Overview', 'Manga reader', 'The chapter image reader, kept separate from research and reference material.', 'active'),
-  route('search', 'search', 'Global Search', 'Overview', 'Search the archive', 'Search canonical Succession Contest entities and open the relevant workspace or domain dossier.', 'active'),
+  route('search', 'search', 'Global Search', 'Overview', 'Search the archive', 'Search canonical Succession Contest entities and open every person or institution in its single authoritative dossier route.', 'active'),
 
-  route('characters', 'characters', 'Characters', 'People', 'Character archive', 'Canonical people organized by role, allegiance, current state, affiliations, evidence, and connected records.', 'active'),
+  route('characters', 'characters', 'Characters', 'People', 'Character archive', 'The authoritative people route: every named character resolves a chapter-bounded dossier, priority actors have explicit state profiles, and supporting actors use identified graph-derived fallbacks.', 'active'),
   route('princes', 'princes', 'Royal Family', 'People', 'Kakin Royal Family', 'King Nasubi, the eight queens, all fourteen princes, and each selected prince’s documented protection circle in one visual workspace.', 'active'),
   route('queens', 'queens', 'Queens', 'Legacy', 'Queens of Kakin', 'Legacy deep link retained for existing bookmarks; queen records now belong to the unified Royal Family workspace.', 'active'),
   route('bodyguards', 'bodyguards', 'Assignments', 'People', 'Assignments and reporting chains', 'Canonical protection, surveillance, instruction, custody, infiltration, assassination, allegiance, reporting, transfer, and chapter-snapshot records.', 'active'),
@@ -23,7 +23,7 @@ export const successionArchiveRoutes = Object.freeze([
 
   route('mafia', 'mafia', 'Mafia', 'Power', 'Kakin mafia', 'Xi-Yu, Heil-Ly, and Cha-R compared through leadership, territory, members, royal sponsorship, objectives, risks, and operations.', 'active'),
   route('military', 'military', 'Military', 'Power', 'Military and Justice authority', 'Command hierarchy, custody, legal procedure, investigations, personnel, active operations, and special martial law.', 'active'),
-  route('organizations', 'organizations', 'Organizations', 'Power', 'Institution dossiers', 'Chapter-bounded institutional authority, hierarchy, leadership, personnel transitions, territory, objectives, pressure, assignments, relationships, events, and evidence.', 'active'),
+  route('organizations', 'organizations', 'Organizations', 'Power', 'Institution dossiers', 'The authoritative institution route: every canonical organization has explicit chapter-bounded authority, hierarchy, leadership, personnel transitions, territory, objectives, pressure, assignments, relationships, events, and evidence.', 'active'),
   route('politics', 'politics', 'Politics', 'Power', 'Political archive', 'Royal parentage, succession interests, queen branches, sponsorship, alliances, treaties, and competing authority.', 'active'),
 
   route('black-whale', 'black-whale', 'Black Whale', 'World', 'Black Whale 1', 'The ship atlas, room lookup, and tier orientation inside the dedicated archive shell.', 'active'),
