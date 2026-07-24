@@ -38,6 +38,7 @@ try {
   const hunters = characterRecords.filter((record) => record.roles?.includes('hunter'));
   const placeholders = characterRecords.filter((record) => /^(Unnamed |Stone Wall |V6 Leader |Temp Hunter |Cha-R Associate |Tserriednich Friend |Heil-Ly Associate )/.test(record.name));
   const characterNames = characterRecords.map((record) => record.name);
+  const chapterRecords = getEntitiesByType('chapter');
 
   assert(princes.length === 14, `expected 14 princes, found ${princes.length}`);
   assert(queens.length === 8, `expected 8 queens, found ${queens.length}`);
@@ -46,18 +47,23 @@ try {
   assert(placeholders.length === 0, 'generic unnamed placeholders must not appear as canonical characters');
   assert(new Set(characterNames).size === characterNames.length, 'canonical character names must be deduplicated');
   assert(getEntitiesByType('guardian-beast').length === 15, 'King Nasubi and fourteen prince Guardian Spirit Beast records are required');
-  assert(getEntitiesByType('chapter').length === 74, 'Chapter records must cover 340 through 413');
+  assert(chapterRecords.length === 75, 'Chapter records must cover 340 through 414');
+  assert(chapterRecords[0]?.number === 340 && chapterRecords.at(-1)?.number === 414, 'chapter catalogue boundaries must remain 340–414');
   assert(getEntitiesByType('organization').filter((record) => record.organizationType === 'mafia-family').length === 3, 'all three Kakin mafia families are required');
 
   const kurapika = getCharacter('kurapika');
   assert(kurapika?.id === 'character:kurapika', 'character slug lookup must resolve Kurapika');
   assert(getCharacter('character:kurapika') === kurapika, 'character ID and slug lookup must resolve the same canonical object');
+  assert(kurapika?.status?.asOfChapter === 414, 'maintained character status boundaries must reach Chapter 414');
 
   const woble = getCharacter('woble-hui-guo-rou');
   assert(woble?.princeOrder === 14, 'Woble must resolve as the Fourteenth Prince');
 
   const chapter369 = getChapter(369);
   assert(chapter369?.reader?.manifestChapter === 369, 'chapter metadata must preserve the reader manifest link');
+  const chapter414 = getChapter(414);
+  assert(chapter414?.reader?.manifestChapter === 414, 'Chapter 414 must bridge into the reader manifest');
+  assert(chapter414?.sourceIds?.includes('source:chapter-414'), 'Chapter 414 must preserve its canonical source record');
 
   const kurapikaEvents = getEventsForCharacter('character:kurapika');
   assert(kurapikaEvents.some((event) => event.id === 'event:room-1014-nen-classes'), 'character event index must include the Room 1014 Nen classes');
@@ -84,6 +90,8 @@ try {
 
   const tserriednichSearch = searchSuccessionArchive('fourth prince');
   assert(tserriednichSearch.some(({ entity }) => entity.id === 'character:tserriednich-hui-guo-rou'), 'global search must resolve character aliases');
+  const chapter414Search = searchSuccessionArchive('chapter 414');
+  assert(chapter414Search.some(({ entity }) => entity.id === 'chapter:414'), 'global search must resolve Chapter 414');
 
   const duplicateReferences = Object.values(successionArchiveData)
     .filter(Array.isArray)
@@ -94,7 +102,7 @@ try {
   console.log(
     `Succession Archive data audit passed: ${successionArchiveValidation.stats.entities} entities, `
     + `${characterRecords.length} named characters, ${princes.length} princes, ${queens.length} queens, `
-    + `${bodyguards.length} bodyguards, ${hunters.length} Hunters, and 74 chapter records.`,
+    + `${bodyguards.length} bodyguards, ${hunters.length} Hunters, and ${chapterRecords.length} chapter records through 414.`,
   );
 } finally {
   await vite.close();
