@@ -11,6 +11,7 @@ const assert = (condition, message) => {
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 
 try {
+  const availabilityModule = await vite.ssrLoadModule('/src/data/successionChapterAvailability.generated.js');
   const manifestModule = await vite.ssrLoadModule('/src/data/successionChapterReader.js');
   const catalogueModule = await vite.ssrLoadModule('/src/data/successionReaderCatalog.js');
   const {
@@ -22,12 +23,16 @@ try {
     successionReaderCatalog,
     successionReaderPhaseGroups,
   } = catalogueModule;
+  const { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } = availabilityModule;
+  const expectedTotal = SUCCESSION_READER_END - SUCCESSION_READER_START + 1;
 
-  assert(SUCCESSION_READER_START === 338 && SUCCESSION_READER_END === 414, 'reader chapter boundary must remain 338–414');
-  assert(successionChapterReaderRecords.length === 77, 'reader manifest must contain 77 sequential chapter records');
-  assert(successionReaderCatalog.length === 77, 'enriched reader catalogue must cover every manifest chapter');
+  assert(SUCCESSION_READER_START === 338, 'reader chapter start must remain Chapter 338');
+  assert(SUCCESSION_READER_END === Math.max(414, LATEST_AUTHORIZED_SUCCESSION_CHAPTER), 'reader end must follow the generated imported-chapter boundary');
+  assert(successionChapterReaderRecords.length === expectedTotal, 'reader manifest must contain every sequential chapter through the generated boundary');
+  assert(successionReaderCatalog.length === expectedTotal, 'enriched reader catalogue must cover every manifest chapter');
   assert(successionReaderPhaseGroups.length >= 10, 'chapter drawer requires comprehensive phase grouping');
   assert(successionReaderCatalog.every((record, index) => record.chapter === SUCCESSION_READER_START + index), 'reader catalogue must remain sequential');
+  assert(successionReaderCatalog.at(-1)?.chapter === SUCCESSION_READER_END, 'reader catalogue must expose the latest generated chapter');
   assert(successionReaderCatalog.every((record) => record.title && record.phase && record.mediaStatus), 'reader catalogue records require title, phase, and media status');
 
   const [reader, storage, panel, enhancements, series, router, css, polishCss, shellCss, qa] = await Promise.all([
@@ -70,7 +75,7 @@ try {
 
   for (const check of ['standalone and reading-first', 'complete grouped catalogue', 'modes fit direction', 'Bookmarks persist', 'Keyboard chapter navigation', 'Mobile reader is contained']) assert(qa.includes(check), `browser QA is missing ${check}`);
 
-  console.log(`Succession reader audit passed: ${successionReaderCatalog.length} chapters, ${successionReaderPhaseGroups.length} chapter phases, three reading modes, full route state, progress, manual completion, bookmarks, direct commands, panels, archive bridging, responsive design, and browser QA verified.`);
+  console.log(`Succession reader audit passed: ${successionReaderCatalog.length} chapters through ${SUCCESSION_READER_END}, ${successionReaderPhaseGroups.length} chapter phases, three reading modes, full route state, progress, manual completion, bookmarks, direct commands, panels, archive bridging, responsive design, and browser QA verified.`);
 } finally {
   await vite.close();
 }
