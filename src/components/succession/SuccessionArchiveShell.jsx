@@ -31,6 +31,7 @@ import SpoilerControl from '../SpoilerControl';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveContrastFixes.css';
 import './SuccessionArchiveDeepContrastFixes.css';
+import './SuccessionArchiveNenFixes.css';
 
 const iconByRoute = {
   archive: Archive,
