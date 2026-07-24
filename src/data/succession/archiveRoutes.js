@@ -16,9 +16,9 @@ export const successionArchiveRoutes = Object.freeze([
   route('search', 'search', 'Global Search', 'Overview', 'Search the archive', 'Search canonical Succession Contest entities and open the relevant workspace or domain dossier.', 'active'),
 
   route('characters', 'characters', 'Characters', 'People', 'Character archive', 'Canonical people organized by role, allegiance, current state, affiliations, evidence, and connected records.', 'active'),
-  route('princes', 'princes', 'Princes', 'People', 'Princes of Kakin', 'Fourteen ordered prince dossiers with strategy, household, Nen, Guardian Spirit Beast, pressure, and family-tree views.', 'active'),
-  route('queens', 'queens', 'Queens', 'People', 'Queens of Kakin', 'Eight maternal households with children, guards, surveillance, residence, political action, and current status.', 'active'),
-  route('bodyguards', 'bodyguards', 'Bodyguards', 'People', 'Bodyguards and room assignments', 'Royal-room protection, embedded observers, reassignment history, loyalty boundaries, and named protectors.', 'active'),
+  route('princes', 'princes', 'Royal Family', 'People', 'Kakin Royal Family', 'King Nasubi, the eight queens, all fourteen princes, and each selected prince’s documented protection circle in one visual workspace.', 'active'),
+  route('queens', 'queens', 'Queens', 'Legacy', 'Queens of Kakin', 'Legacy deep link retained for existing bookmarks; queen records now belong to the unified Royal Family workspace.', 'active'),
+  route('bodyguards', 'bodyguards', 'Bodyguards', 'Legacy', 'Bodyguards and room assignments', 'Legacy deep link retained for existing bookmarks; protection networks now belong to the unified Royal Family workspace.', 'active'),
   route('hunters', 'hunters', 'Hunters', 'People', 'Hunters aboard the voyage', 'Hunter contracts, Zodiac duties, Nen instruction, prince assignments, and expedition responsibilities.', 'active'),
 
   route('mafia', 'mafia', 'Mafia', 'Power', 'Kakin mafia', 'Xi-Yu, Heil-Ly, and Cha-R compared through leadership, territory, members, royal sponsorship, objectives, risks, and operations.', 'active'),
@@ -52,6 +52,7 @@ export const successionArchiveTargetToPath = new Map(successionArchiveRoutes.map
 export const successionArchiveLegacyTargets = Object.freeze({
   overview: 'archive',
   'family-tree': 'princes',
+  'royal-family': 'princes',
   'succession-roster': 'characters',
   'succession-timeline': 'timeline',
   beasts: 'guardian-spirit-beasts',
