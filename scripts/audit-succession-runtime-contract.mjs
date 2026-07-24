@@ -61,6 +61,7 @@ assert(app.includes("linkedEntity?.entityType === 'character'") && app.includes(
 assert(app.includes("linkedEntity?.entityType === 'ability'") && app.includes("linkedEntity?.entityType === 'guardian-beast'"), 'system-route navigation must normalize ability and beast links');
 assert(app.includes('showCharacterDossier') && app.includes('showOrganizationDossier'), 'people and institution legacy URLs must resolve dedicated dossiers');
 assert(app.includes('showAbilityDossier') && app.includes('showGuardianBeastDossier'), 'Nen legacy URLs must resolve dedicated dossiers');
+assert(app.includes('chapter: spoilerLimit') && app.includes('SearchWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit}'), 'global search must remain inside the selected chapter boundary');
 assert(primitives.includes("if (entity.entityType === 'character') return 'characters'"), 'shared entity routing must send every character to the character workspace');
 assert(primitives.includes("if (entity.entityType === 'organization') return 'organizations'"), 'shared entity routing must send every organization to the organization workspace');
 assert(primitives.includes("if (entity.entityType === 'ability') return 'nen'"), 'shared entity routing must send every ability to the Nen workspace');
@@ -115,7 +116,7 @@ try {
     'getOrganizationPersonnelAtChapter', 'getOrganizationHierarchy', 'getOrganizationDossier',
     'getOrganizationStateCoverageReport', 'getAbilityKnowledgeAtChapter', 'getAbilitiesKnownAtChapter',
     'getAbilityDossier', 'getNenSystemDossier', 'getGuardianBeastStateAtChapter', 'getGuardianBeastDossier',
-    'getNenSystemClosureReport',
+    'getNenSystemClosureReport', 'isSuccessionEntityAvailableAtChapter', 'searchSuccessionArchive',
   ]) assert(typeof archive[selector] === 'function', `${selector} must remain public`);
 
   assert(archive.getCharactersWithStateProfiles().length >= 42, 'Batch 2 closure must retain complete royal and institution-leader state coverage');
@@ -142,7 +143,20 @@ try {
   assert(nenClosure.systems.total === 8, 'all eight canonical Nen and ritual system profiles must remain active');
   assert(nenClosure.stateIntegrityIssues.length === 0 && nenClosure.missingSystemReferences.length === 0, 'Nen state and graph integrity must remain clean');
 
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph, Batch 2 people and institutions remain closed, and Batch 3 Nen, ritual, ability, and Guardian Spirit Beast systems remain chapter-bounded and closed.`);
+  assert(!archive.isSuccessionEntityAvailableAtChapter('ability:parallel-future', 384), 'Parallel Future must remain unavailable through Chapter 384');
+  assert(archive.isSuccessionEntityAvailableAtChapter('ability:parallel-future', 385), 'Parallel Future must become available at Chapter 385');
+  assert(archive.getGuardianBeastDossier('guardian-beast:woble', 348) === null, 'Guardian Spirit Beast dossiers must remain hidden before Chapter 349');
+  assert(!archive.searchSuccessionArchive('Parallel Future', { types: ['ability'], chapter: 384 }).some(({ entity }) => entity.id === 'ability:parallel-future'), 'global search must hide future abilities');
+  assert(archive.searchSuccessionArchive('Parallel Future', { types: ['ability'], chapter: 385 }).some(({ entity }) => entity.id === 'ability:parallel-future'), 'global search must reveal abilities at their evidence chapter');
+  assert(!archive.searchSuccessionArchive('reached Yes', { chapter: 409 }).some(({ entity }) => ['character:borksen', 'organization:heil-ly'].includes(entity.id)), 'global state search must hide future membership outcomes');
+  assert(archive.searchSuccessionArchive('reached Yes', { chapter: 410 }).some(({ entity }) => ['character:borksen', 'organization:heil-ly'].includes(entity.id)), 'global state search must reveal confirmed membership outcomes');
+
+  const contagion378 = archive.getNenSystemDossier('nen-system:contagion-progression', 378);
+  const contagion410 = archive.getNenSystemDossier('nen-system:contagion-progression', 410);
+  assert(!contagion378?.characters.some((character) => character.id === 'character:borksen'), 'early Contagion dossiers must not expose Borksen');
+  assert(contagion410?.characters.some((character) => character.id === 'character:borksen'), 'Contagion must include Borksen after the recruitment outcome');
+
+  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph, Batch 2 people and institutions remain closed, and Batch 3 Nen, ritual, ability, Guardian Spirit Beast, linked-actor, and global-search knowledge remain chapter-bounded and closed.`);
 } finally {
   await vite.close();
 }
