@@ -28,10 +28,17 @@ export const createNenSystemSelectors = ({ data, archive }) => {
   const entityFirstKnownChapter = (entity) => {
     if (!entity) return null;
     const chapters = sourceChapterNumbers(entity);
-    if (entity.entityType === 'character') chapters.push(...archive.getAppearancesForCharacter(entity.id).map((record) => record.chapter));
-    if (entity.entityType === 'organization') chapters.push(...archive.getEventsForOrganization(entity.id).map((event) => event.chapterRange.start));
+    if (entity.entityType === 'character') {
+      chapters.push(...archive.getAppearancesForCharacter(entity.id).map((record) => record.chapter));
+      chapters.push(...(data.characterStateProfiles?.[entity.id] || []).map((record) => record.chapterRange.start));
+    }
+    if (entity.entityType === 'organization') {
+      chapters.push(...archive.getEventsForOrganization(entity.id).map((event) => event.chapterRange.start));
+      chapters.push(...(data.organizationStateProfiles?.[entity.id] || []).map((record) => record.chapterRange.start));
+    }
     if (entity.entityType === 'location') chapters.push(...archive.getEventsAtLocation(entity.id).map((event) => event.chapterRange.start));
-    return chapters.filter(Number.isFinite).length ? Math.min(...chapters.filter(Number.isFinite)) : null;
+    const finite = chapters.filter(Number.isFinite);
+    return finite.length ? Math.min(...finite) : null;
   };
 
   const entityAvailableAtChapter = (entity, chapter) => {
