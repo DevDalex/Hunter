@@ -10,12 +10,14 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession character workspace audit failed: ${message}`);
 };
 
-const [workspace, styles, app, dataEntry, foundation, selectorSource] = await Promise.all([
+const [workspace, styles, expansionStyles, app, dataEntry, foundation, expansion, selectorSource] = await Promise.all([
   readFile(new URL('../src/components/succession/SuccessionArchiveCharacterWorkspace.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveCharacterWorkspace.css', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/succession/SuccessionArchiveCharacterWorkspaceExpansion.css', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveApp.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/successionData.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/characterStateFoundation.js', import.meta.url), 'utf8'),
+  readFile(new URL('../src/data/succession/characterStateExpansion.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/characterStateSelectors.js', import.meta.url), 'utf8'),
 ]);
 
@@ -24,29 +26,45 @@ assert(sourceRendersRouteWith(app, 'characters', 'CharactersWorkspace'), 'charac
 assert(declarationIncludesLiteral(app, 'specializedRecordRoute', 'characters'), 'character entity routes must stay inside the character dossier');
 assert(dataEntry.includes("from './entitiesCharacterFoundation.js'"), 'public data entry must activate the character state foundation');
 assert(dataEntry.includes('getCharacterDossier'), 'public data entry must expose character dossiers');
+assert(dataEntry.includes('getCharacterRoleProfile'), 'public data entry must expose role-specific character layers');
+assert(dataEntry.includes('getCharacterLifetimeTimeline'), 'public data entry must expose lifetime character timelines');
 assert(foundation.includes('characterStateProfiles'), 'character state profiles must be published');
 assert(foundation.includes("characterId: 'character:kurapika'"), 'Kurapika state history must be explicit');
 assert(foundation.includes("characterId: 'character:kacho-hui-guo-rou'"), 'Kacho body-state split must be explicit');
 assert(foundation.includes("characterId: 'character:balsamilco-might'"), 'Balsamilco identity crisis must be explicit');
 assert(foundation.includes("characterId: 'character:halkenburg-hui-guo-rou'"), 'Halkenburg body-state split must be explicit');
+assert(expansion.includes("characterId: 'character:benjamin-hui-guo-rou'"), 'Benjamin command state must be explicit');
+assert(expansion.includes("characterId: 'character:tserriednich-hui-guo-rou'"), 'Tserriednich training state must be explicit');
+assert(expansion.includes("characterId: 'character:sale-sale-hui-guo-rou'"), 'Sale-sale death transition must be explicit');
+assert(expansion.includes("characterId: 'character:theta'"), 'Theta conflicted-instructor states must be explicit');
+assert(expansion.includes("characterId: 'character:hinrigh-biganduffno'"), 'Xi-Yu field command state must be explicit');
 assert(selectorSource.includes('getCharacterStateAtChapter'), 'selectors must expose chapter state resolution');
-assert(selectorSource.includes('getCharacterDossier'), 'selectors must compose the complete character graph');
-assert(selectorSource.includes('searchCharactersByState'), 'state text must participate in global search');
+assert(selectorSource.includes('getCharacterRoleProfile'), 'selectors must expose role-specific operational layers');
+assert(selectorSource.includes('getCharacterLifetimeTimeline'), 'selectors must compose lifetime chronology');
+assert(selectorSource.includes('getCharacterStateCoverageReport'), 'selectors must report explicit-profile coverage');
+assert(selectorSource.includes('searchCharactersByState'), 'state and role text must participate in global search');
 assert(workspace.includes('Characters as chapter-bounded operational records'), 'workspace must identify the state model');
-assert(workspace.includes('State at chapter'), 'workspace must provide chapter snapshots');
+assert(workspace.includes('Operational layer'), 'workspace must filter by role-specific operational layer');
+assert(workspace.includes('Role-specific operations'), 'workspace must render the role-specific dossier board');
+assert(workspace.includes('Lifetime chronology'), 'workspace must render combined lifetime chronology');
 assert(workspace.includes('Protection and threats'), 'workspace must expose active protection and threat assignments');
-assert(workspace.includes('Explicit chapter-bounded records'), 'workspace must render state history');
+assert(workspace.includes('Explicit chapter-bounded state records'), 'workspace must render state history');
 assert(workspace.includes('SourceReference'), 'workspace must render evidence sources');
 assert(styles.includes('.succession-character-state-board'), 'styles must own the character state board');
-assert(styles.includes('@media(max-width:620px)'), 'workspace must include mobile handling');
-assert(styles.includes('@media(prefers-reduced-motion:reduce)'), 'workspace must include reduced-motion handling');
+assert(expansionStyles.includes('.succession-character-role-board'), 'expanded styles must own role-specific presentation');
+assert(expansionStyles.includes('.succession-character-lifetime'), 'expanded styles must own lifetime chronology');
+assert(expansionStyles.includes('@media(max-width:620px)'), 'expanded workspace must include mobile handling');
+assert(expansionStyles.includes('@media(prefers-reduced-motion:reduce)'), 'expanded workspace must include reduced-motion handling');
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {
   const archive = await vite.ssrLoadModule('/src/data/succession/successionData.js');
   const {
     getCharacterDossier,
+    getCharacterLifetimeTimeline,
+    getCharacterRoleProfile,
     getCharacterStateAtChapter,
+    getCharacterStateCoverageReport,
     getCharacterStateTimeline,
     getCharactersWithStateProfiles,
     searchSuccessionArchive,
@@ -54,8 +72,13 @@ try {
   } = archive;
 
   assert(successionArchiveValidation.valid, 'character foundation must preserve canonical schema validity');
-  assert(getCharactersWithStateProfiles().length >= 10, 'at least ten high-value characters must have explicit state profiles');
+  assert(getCharactersWithStateProfiles().length >= 28, 'at least twenty-eight major characters must have explicit state profiles after Batch 2.2');
   assert(getCharacterStateTimeline('character:kurapika').length >= 2, 'Kurapika must have pre- and post-treaty states');
+
+  const coverage = getCharacterStateCoverageReport();
+  assert(coverage.explicitCharacters >= 28, 'coverage report must count expanded explicit profiles');
+  assert(coverage.roleLayers.some((layer) => layer.id === 'royal-candidate' && layer.explicit >= 8), 'royal-candidate coverage must include at least eight princes');
+  assert(coverage.roleLayers.some((layer) => layer.id === 'hunter-operations' && layer.explicit >= 5), 'Hunter operations must include explicit state coverage');
 
   const kacho383 = getCharacterStateAtChapter('character:kacho-hui-guo-rou', 383);
   assert(kacho383?.life === 'dead', 'Kacho must remain deceased from Chapter 383 onward');
@@ -69,15 +92,31 @@ try {
   assert(halkenburg413?.bodyState.includes('original body'), 'Halkenburg state must distinguish original body from transferred consciousness');
   assert(halkenburg413?.certainty === 'probable', 'Halkenburg transfer interpretation must retain its evidence certainty');
 
-  const kurapika411 = getCharacterDossier('character:kurapika', 411);
-  assert(kurapika411?.character?.id === 'character:kurapika', 'character dossier must resolve its subject');
-  assert(kurapika411?.assignments?.assignments.length > 0, 'Kurapika dossier must include active assignments');
-  assert(kurapika411?.relationships?.relationships.length > 0, 'Kurapika dossier must include active relationships');
-  assert(kurapika411?.location?.id === 'location:black-whale:tier-1:room-1014', 'Kurapika Chapter 411 dossier must resolve Room 1014');
+  const saleSale382 = getCharacterStateAtChapter('character:sale-sale-hui-guo-rou', 382);
+  assert(saleSale382?.life === 'dead', 'Sale-sale must transition to deceased after the assassination chain');
+  assert(saleSale382?.bodyState.includes('assassination'), 'Sale-sale death state must retain the operational cause');
 
+  const benjamin411 = getCharacterDossier('character:benjamin-hui-guo-rou', 411);
+  assert(benjamin411?.roleProfile?.id === 'royal-candidate', 'Benjamin dossier must render the royal-candidate layer');
+  assert(benjamin411?.relationshipHistory.length > 0, 'Benjamin dossier must include relationship history');
+
+  const theta386 = getCharacterDossier('character:theta', 386);
+  assert(theta386?.state?.threatLevel === 'existential', 'Theta’s post-attempt state must preserve existential danger');
+  assert(theta386?.assignmentHistory.some((assignment) => assignment.id === 'assignment:theta-instructs-tserriednich'), 'Theta dossier must retain her conflicted instruction assignment');
+
+  const hinrigh399 = getCharacterLifetimeTimeline('character:hinrigh-biganduffno', 399);
+  assert(hinrigh399.some((entry) => entry.kind === 'movement' && entry.locationId === 'location:black-whale:tier-3:room-3101'), 'Hinrigh chronology must include the Room 3101 movement record');
+  assert(hinrigh399.some((entry) => entry.kind === 'state'), 'Hinrigh chronology must include explicit state history');
+
+  const melody411 = getCharacterDossier('character:melody', 411);
+  assert(melody411?.movementHistory.some((record) => record.locationId === 'location:black-whale:tier-1:justice-bureau'), 'Melody dossier must include her Justice transition');
+  assert(melody411?.lifetimeTimeline.some((entry) => entry.kind === 'relationship'), 'Melody lifetime chronology must include relationship records');
+
+  assert(getCharacterRoleProfile('character:tserriednich-hui-guo-rou', 411)?.id === 'royal-candidate', 'Tserriednich must resolve to the prince-specific role layer');
   assert(searchSuccessionArchive('critical identity compromise').some(({ entity }) => entity.id === 'character:balsamilco-might'), 'global search must resolve character state language');
+  assert(searchSuccessionArchive('Mafia command').some(({ entity }) => entity.id === 'character:hinrigh-biganduffno'), 'global search must resolve role-layer language');
 
-  console.log(`Succession character workspace audit passed: ${getCharactersWithStateProfiles().length} explicit character profiles, chapter state resolution, body/consciousness separation, graph-composed dossiers, state search, evidence, and responsive presentation are wired.`);
+  console.log(`Succession character workspace audit passed: ${getCharactersWithStateProfiles().length} explicit character profiles, ${coverage.coveragePercent}% roster coverage, role-specific layers, chapter states, body/consciousness separation, lifetime chronology, graph-composed dossiers, search, evidence, and responsive presentation are wired.`);
 } finally {
   await vite.close();
 }
