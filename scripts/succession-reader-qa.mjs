@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { access, mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
+import { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } from '../src/data/successionChapterAvailability.generated.js';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
@@ -9,6 +10,8 @@ const output = path.resolve(root, process.env.SUCCESSION_READER_QA_OUTPUT || '.s
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
 const results = [];
 const failures = [];
+const LATEST_CHAPTER = Math.max(414, LATEST_AUTHORIZED_SUCCESSION_CHAPTER);
+const EXPECTED_CHAPTER_TOTAL = LATEST_CHAPTER - 338 + 1;
 
 const mime = {
   '.css': 'text/css; charset=utf-8', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -109,15 +112,15 @@ try {
     await reader.getByRole('button', { name: 'Chapters', exact: true }).click();
     await desktop.waitForSelector('.succession-reader-panel [role="dialog"]');
     const chapterButtons = desktop.locator('.succession-reader__chapter-groups > section > div > button');
-    if (await chapterButtons.count() !== 77) throw new Error(`Chapter drawer contains ${await chapterButtons.count()} records instead of 77`);
+    if (await chapterButtons.count() !== EXPECTED_CHAPTER_TOTAL) throw new Error(`Chapter drawer contains ${await chapterButtons.count()} records instead of ${EXPECTED_CHAPTER_TOTAL}`);
     const labels = await chapterButtons.locator('.succession-reader__chapter-number').allInnerTexts();
-    if (Number(labels[0]) !== 338 || Number(labels.at(-1)) !== 414) throw new Error(`Chapter boundaries drifted: ${labels[0]}–${labels.at(-1)}`);
+    if (Number(labels[0]) !== 338 || Number(labels.at(-1)) !== LATEST_CHAPTER) throw new Error(`Chapter boundaries drifted: ${labels[0]}–${labels.at(-1)}`);
     const search = desktop.locator('.succession-reader__chapter-tools input');
-    await search.fill('414');
-    if (await chapterButtons.count() !== 1) throw new Error('Chapter search did not isolate Chapter 414');
+    await search.fill(String(LATEST_CHAPTER));
+    if (await chapterButtons.count() !== 1) throw new Error(`Chapter search did not isolate Chapter ${LATEST_CHAPTER}`);
     await chapterButtons.first().click();
-    await desktop.waitForFunction(() => document.querySelector('.succession-reader')?.dataset.readerChapter === '414');
-    if (!desktop.url().includes('chapter=414')) throw new Error('Chapter selection did not persist in the URL');
+    await desktop.waitForFunction((chapter) => document.querySelector('.succession-reader')?.dataset.readerChapter === String(chapter), LATEST_CHAPTER);
+    if (!desktop.url().includes(`chapter=${LATEST_CHAPTER}`)) throw new Error('Latest chapter selection did not persist in the URL');
   });
 
   await record('Reader modes fit direction and panels preserve URL state', desktop, async () => {
@@ -182,7 +185,7 @@ try {
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce', isMobile: true });
   await record('Mobile reader is contained and uses accessible sheets', mobile, async () => {
-    const reader = await openReader(mobile, base, 'chapter=414&page=1&mode=page');
+    const reader = await openReader(mobile, base, `chapter=${LATEST_CHAPTER}&page=1&mode=page`);
     const state = await mobile.evaluate(() => ({
       overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
       readerWidth: document.querySelector('.succession-reader')?.getBoundingClientRect().width || 0,
