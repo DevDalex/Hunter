@@ -29,6 +29,7 @@ import {
 } from '../../data/succession/archiveRoutes';
 import SpoilerControl from '../SpoilerControl';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
+import './SuccessionArchiveContrastFixes.css';
 
 const iconByRoute = {
   archive: Archive,
