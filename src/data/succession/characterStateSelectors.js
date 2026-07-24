@@ -42,6 +42,7 @@ const timelineEntry = ({ id, kind, chapterRange, label, summary, locationId = nu
 
 export const createCharacterStateSelectors = ({ data, archive }) => {
   const profiles = data.characterStateProfiles || Object.freeze({});
+  const statusKnowledge = data.characterStatusKnowledge || Object.freeze({});
   const organizationPersonnel = data.organizationPersonnelHistory || Object.freeze({});
   const latestChapter = data.chapters.at(-1)?.number || 414;
 
@@ -74,23 +75,43 @@ export const createCharacterStateSelectors = ({ data, archive }) => {
     if (explicit) return explicit;
 
     const locationRecord = archive.getCurrentLocationRecordForCharacter(characterId, parsedChapter);
+    const knowledge = statusKnowledge[characterId] || null;
+    const knowledgeAvailable = Boolean(knowledge && parsedChapter >= knowledge.knownFromChapter);
+    const latestLife = character.status?.life || 'unknown';
+    const life = knowledgeAvailable ? knowledge.life : latestLife === 'dead' ? 'unknown' : latestLife;
+    const bodyState = knowledgeAvailable
+      ? knowledge.bodyState
+      : latestLife === 'dead'
+        ? 'not established at the selected chapter'
+        : 'living body';
+    const consciousnessState = knowledgeAvailable
+      ? knowledge.consciousnessState
+      : latestLife === 'dead'
+        ? 'not established at the selected chapter'
+        : 'active in own body';
+    const derivedSourceIds = [
+      ...(character.sourceIds || []),
+      ...(knowledgeAvailable ? knowledge.sourceIds || [] : []),
+    ];
+
     return Object.freeze({
       id: `character-state:derived:${characterId.replace('character:', '')}:${parsedChapter}`,
       characterId,
       chapterRange: Object.freeze({ start: parsedChapter, end: parsedChapter }),
-      life: character.status?.life || 'unknown',
-      bodyState: character.status?.life === 'dead' ? 'deceased body' : 'living body',
-      consciousnessState: character.status?.life === 'dead' ? 'unknown or ended' : 'active in own body',
+      life,
+      bodyState,
+      consciousnessState,
       operationalState: character.summary || 'No chapter-specific operational override is published.',
       protectionState: 'Derived from active assignments and relationships.',
       threatLevel: 'unknown',
       nenKnowledge: character.nen?.naturalType ? `${character.nen.naturalType} user` : 'unknown',
-      allegianceState: 'Derived from canonical affiliations.',
+      allegianceState: 'Derived from canonical affiliations and chapter-bounded personnel history.',
       locationId: locationRecord?.locationId || character.locationState?.locationId || null,
-      openQuestions: Object.freeze([]),
-      certainty: character.status?.certainty || 'confirmed',
-      sourceIds: Object.freeze([...(character.sourceIds || [])]),
+      openQuestions: Object.freeze(knowledgeAvailable && knowledge.note ? [knowledge.note] : []),
+      certainty: knowledgeAvailable ? character.status?.certainty || 'confirmed' : latestLife === 'dead' ? 'unknown' : character.status?.certainty || 'confirmed',
+      sourceIds: Object.freeze([...new Set(derivedSourceIds)]),
       derived: true,
+      statusKnowledgeFromChapter: knowledgeAvailable ? knowledge.knownFromChapter : null,
     });
   };
 
