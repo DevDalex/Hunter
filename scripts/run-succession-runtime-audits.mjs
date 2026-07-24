@@ -8,6 +8,7 @@ const audits = Object.freeze([
   ['characters', 'scripts/audit-succession-characters-workspace.mjs'],
   ['organizations', 'scripts/audit-succession-organizations-workspace.mjs'],
   ['people-institutions-closure', 'scripts/audit-succession-people-institutions-closure.mjs'],
+  ['nen-systems', 'scripts/audit-succession-nen-systems-workspace.mjs'],
   ['events', 'scripts/audit-succession-events-workspace.mjs'],
   ['locations', 'scripts/audit-succession-locations-workspace.mjs'],
   ['black-whale', 'scripts/audit-succession-black-whale-bridge.mjs'],
