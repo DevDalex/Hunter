@@ -1,11 +1,440 @@
-.succession-reader__heading dt,
-.succession-reader__chapter-grid small,
-.succession-reader__toolbar span,
-.succession-reader__toolbar small {
-  font-size: .7rem;
-}
+.succession-reader__identity > span { font-size: 11px !important; }
+.succession-reader__identity > small { font-size: 11px !important; }
+.succession-reader__zoom span { font-size: 11px !important; }
+.succession-reader__page figcaption { font-size: 11px !important; }
+.succession-reader__empty > span { font-size: 11px !important; }
+.succession-reader__page-jump > span { font-size: 11px !important; }
+.succession-reader-panel > section > header span { font-size: 11px !important; }
+.succession-reader__chapter-tools > div button { font-size: 11px !important; }
+.succession-reader__chapter-summary span { font-size: 11px !important; }
+.succession-reader__chapter-groups > section > header span { font-size: 11px !important; }
+.succession-reader__chapter-groups > section > header p { font-size: 11px !important; }
+.succession-reader__chapter-copy small { font-size: 11px !important; }
+.succession-reader__chapter-state small { font-size: 11px !important; }
+.succession-reader__thumbnails span { font-size: 11px !important; }
+.succession-reader__chapter-info > span { font-size: 11px !important; }
+.succession-reader__resume-card > span { font-size: 11px !important; }
+.succession-reader__bookmark-current > span { font-size: 11px !important; }
+.succession-reader__chapter-info dt { font-size: 11px !important; }
+.succession-reader__chapter-info section span { font-size: 11px !important; }
+.succession-reader__settings legend { font-size: 11px !important; }
+.succession-reader__setting-grid button { font-size: 11px !important; }
+.succession-reader__bookmark-list footer button { font-size: 11px !important; }
+.succession-reader__shortcuts kbd { font-size: 11px !important; }
 
 .succession-reader__mode button,
-.succession-reader__controls button {
+.succession-reader__controls button,
+.succession-reader__icon-button,
+.succession-reader__chapter-trigger,
+.succession-reader__bottombar button {
   min-height: 44px;
+}
+
+.succession-reader__panel-enhancement {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+  padding: 14px;
+  border: 1px solid var(--reader-border);
+  border-radius: 10px;
+  background: var(--reader-bg-soft);
+}
+
+.succession-reader__panel-enhancement > div {
+  min-width: 0;
+}
+
+.succession-reader__panel-enhancement span,
+.succession-reader__command-syntax small {
+  display: block;
+  color: var(--reader-muted);
+  font-size: 11px;
+}
+
+.succession-reader__panel-enhancement strong {
+  display: block;
+  margin-top: 3px;
+  color: var(--reader-ink);
+}
+
+.succession-reader__panel-enhancement button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 44px;
+  padding: 0 13px;
+  border: 1px solid var(--reader-border-strong);
+  border-radius: 8px;
+  background: var(--reader-bg-elevated);
+  color: var(--reader-ink);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.succession-reader__panel-enhancement button.is-completed {
+  border-color: var(--reader-gold);
+  color: var(--reader-gold);
+}
+
+.succession-reader__panel-enhancement.is-danger button {
+  border-color: rgba(194, 74, 86, .6);
+  color: #f6a7af;
+}
+
+.succession-reader__panel-enhancement button:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+.succession-reader__command-syntax {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid var(--reader-border);
+  border-radius: 9px;
+  background: var(--reader-bg-soft);
+}
+
+.succession-reader__command-syntax > span {
+  color: var(--reader-muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.succession-reader__command-syntax code {
+  padding: 2px 5px;
+  border: 1px solid var(--reader-border);
+  border-radius: 5px;
+  background: var(--reader-bg-elevated);
+  color: var(--reader-gold);
+  font-size: 11px;
+}
+
+/* Immersive reading route -------------------------------------------------- */
+html:has(body .story-utility-shell--succession-reader),
+body:has(.story-utility-shell--succession-reader) {
+  height: 100%;
+  overflow: hidden;
+  background: #050608;
+}
+
+body:has(.story-utility-shell--succession-reader) .site-header,
+body:has(.story-utility-shell--succession-reader) .site-footer {
+  display: none !important;
+}
+
+body:has(.story-utility-shell--succession-reader) .app-shell,
+body:has(.story-utility-shell--succession-reader) #main-content {
+  width: 100%;
+  min-height: 100dvh;
+  background: #050608;
+}
+
+body:has(.story-utility-shell--succession-reader) #main-content > .story-utility-shell--succession-reader {
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 100dvh;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.succession-reader {
+  display: block;
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: #050608;
+}
+
+.succession-reader__topbar,
+.succession-reader__bottombar {
+  position: absolute;
+  z-index: 60;
+  left: 50%;
+  border: 1px solid rgba(255, 255, 255, .12);
+  background: rgba(12, 15, 19, .82);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, .34);
+  backdrop-filter: blur(20px) saturate(130%);
+}
+
+.succession-reader__topbar {
+  top: max(10px, env(safe-area-inset-top));
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  width: min(calc(100% - 24px), 1080px);
+  min-height: 54px;
+  padding: 6px;
+  border-radius: 14px;
+  transform: translateX(-50%);
+}
+
+.succession-reader__topbar-progress,
+.succession-reader__topbar-actions .succession-reader__select,
+.succession-reader__topbar-actions .succession-reader__zoom {
+  display: none !important;
+}
+
+.succession-reader__topbar-start {
+  gap: 4px;
+}
+
+.succession-reader__topbar-actions {
+  gap: 2px;
+}
+
+.succession-reader__icon-button,
+.succession-reader__chapter-trigger,
+.succession-reader__topbar-actions button {
+  min-height: 40px;
+  border-color: transparent;
+  border-radius: 10px;
+  background: transparent;
+}
+
+.succession-reader__icon-button {
+  width: 40px;
+}
+
+.succession-reader__chapter-trigger {
+  padding-inline: 10px;
+}
+
+.succession-reader__icon-button:hover,
+.succession-reader__chapter-trigger:hover,
+.succession-reader__topbar-actions button:hover,
+.succession-reader__bottombar button:hover {
+  border-color: rgba(255, 255, 255, .12);
+  background: rgba(255, 255, 255, .08);
+}
+
+.succession-reader__identity {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  margin-left: 5px;
+}
+
+.succession-reader__identity > span {
+  display: none;
+}
+
+.succession-reader__identity > strong {
+  flex: 0 0 auto;
+  margin: 0;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.succession-reader__identity > small {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--reader-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.succession-reader.is-chrome-hidden .succession-reader__topbar {
+  transform: translate(-50%, -150%);
+}
+
+.succession-reader__bottombar {
+  bottom: max(10px, env(safe-area-inset-bottom));
+  grid-template-columns: 44px minmax(180px, 1fr) auto;
+  gap: 4px;
+  width: min(calc(100% - 24px), 720px);
+  min-height: 48px;
+  padding: 4px;
+  border-radius: 14px;
+  transform: translateX(-50%);
+}
+
+.succession-reader.is-chrome-hidden .succession-reader__bottombar {
+  transform: translate(-50%, 150%);
+}
+
+.succession-reader__bottombar > button,
+.succession-reader__bottom-actions > button,
+.succession-reader__page-jump > button {
+  min-height: 40px;
+  border-color: transparent;
+  border-radius: 10px;
+  background: transparent;
+}
+
+.succession-reader__bottombar > button {
+  width: 40px;
+  padding: 0;
+}
+
+.succession-reader__bottombar > button span,
+.succession-reader__bottom-actions > button:last-child span,
+.succession-reader__page-jump > span {
+  display: none;
+}
+
+.succession-reader__page-jump {
+  display: grid;
+  grid-template-columns: auto minmax(110px, 1fr);
+  gap: 8px;
+  justify-content: stretch;
+}
+
+.succession-reader__page-jump > button {
+  padding-inline: 9px;
+  white-space: nowrap;
+}
+
+.succession-reader__page-jump input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  height: 4px;
+}
+
+.succession-reader__bottom-actions {
+  gap: 2px;
+}
+
+.succession-reader__bottom-actions > button:first-child,
+.succession-reader__bottom-actions > button:last-child {
+  width: 40px;
+  padding: 0;
+}
+
+.succession-reader__canvas,
+.succession-reader.is-fullscreen .succession-reader__canvas {
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: auto;
+  background:
+    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, .025), transparent 44%),
+    #050608;
+  scrollbar-color: rgba(194, 74, 86, .72) #090b0e;
+}
+
+.succession-reader__pages.is-page,
+.succession-reader__pages.is-spread {
+  min-height: 100dvh;
+  padding: 8px;
+}
+
+.succession-reader__pages.is-spread {
+  gap: 2px;
+}
+
+.succession-reader__pages.is-scroll {
+  gap: 8px;
+  padding: 8px max(0px, calc((100vw - 1180px) / 2)) 70px;
+}
+
+.succession-reader__pages.is-page .succession-reader__page,
+.succession-reader__pages.is-spread .succession-reader__page {
+  box-shadow: 0 6px 26px rgba(0, 0, 0, .38);
+}
+
+.succession-reader__pages.is-page .succession-reader__page img,
+.succession-reader__pages.is-spread .succession-reader__page img {
+  max-height: calc(100dvh - 16px);
+  object-fit: contain;
+}
+
+.succession-reader__page figcaption {
+  display: none;
+}
+
+.succession-reader__media-notice {
+  top: max(74px, calc(env(safe-area-inset-top) + 64px));
+}
+
+@media (max-width: 820px) {
+  .succession-reader,
+  .succession-reader__canvas,
+  .succession-reader__pages.is-page,
+  .succession-reader__pages.is-spread,
+  .succession-reader__empty {
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  .succession-reader__topbar {
+    min-height: 52px;
+    padding: 5px;
+  }
+
+  .succession-reader__pages.is-spread {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-reader__pages.is-page,
+  .succession-reader__pages.is-spread {
+    padding: 4px;
+  }
+
+  .succession-reader__pages.is-page .succession-reader__page img,
+  .succession-reader__pages.is-spread .succession-reader__page img {
+    max-height: calc(100dvh - 8px);
+  }
+}
+
+@media (max-width: 620px) {
+  .succession-reader__topbar,
+  .succession-reader__bottombar {
+    width: calc(100% - 16px);
+  }
+
+  .succession-reader__topbar {
+    top: max(7px, env(safe-area-inset-top));
+  }
+
+  .succession-reader__chapter-trigger {
+    width: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .succession-reader__chapter-trigger span,
+  .succession-reader__identity > small {
+    display: none;
+  }
+
+  .succession-reader__identity > strong {
+    max-width: 142px;
+  }
+
+  .succession-reader__bottombar {
+    bottom: max(7px, env(safe-area-inset-bottom));
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+  }
+
+  .succession-reader__page-jump {
+    grid-template-columns: auto minmax(70px, 1fr);
+  }
+
+  .succession-reader__bottom-actions > button:first-child {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-reader__topbar,
+  .succession-reader__bottombar {
+    transition: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .succession-reader__panel-enhancement {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-reader__panel-enhancement button {
+    width: 100%;
+  }
 }

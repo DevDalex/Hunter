@@ -76,7 +76,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add .github/chapter-import-batch.json src/data/successionChapterMedia.generated.js public/media/succession-contest/chapters
+          git add .github/chapter-import-batch.json src/data/successionChapterMedia.generated.js src/data/successionChapterAvailability.generated.js public/media/succession-contest/chapters
 
           if git diff --cached --quiet; then
             echo "No batch changes were produced."

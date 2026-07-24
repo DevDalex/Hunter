@@ -1,0 +1,79 @@
+/* Keep the chapter drawer cheap to scroll, especially on mobile browsers. */
+.succession-reader-panel:has(.succession-reader__chapter-tools) {
+  background: rgba(3, 5, 7, .98);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  animation: none;
+}
+
+.succession-reader-panel:has(.succession-reader__chapter-tools) > section {
+  contain: layout paint;
+  box-shadow: none;
+}
+
+.succession-reader-panel:has(.succession-reader__chapter-tools) .succession-reader-panel__body {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-behavior: auto;
+  touch-action: pan-y;
+  contain: layout paint;
+  isolation: isolate;
+}
+
+.succession-reader-panel__body--virtualized {
+  overflow-anchor: none;
+}
+
+.succession-reader__chapter-tools {
+  contain: layout paint;
+}
+
+.succession-reader__chapter-groups.is-virtualized {
+  display: block;
+  gap: 0;
+  contain: layout paint size;
+}
+
+.succession-reader__chapter-groups.is-virtualized > section {
+  width: 100%;
+  margin: 0;
+  contain: layout paint style;
+  content-visibility: visible;
+}
+
+.succession-reader__chapter-groups.is-virtualized > section > div > button {
+  contain: layout paint style;
+  transition: none;
+}
+
+.succession-reader__chapter-copy i,
+.succession-reader__chapter-copy em {
+  contain: strict;
+}
+
+.succession-reader-panel:has(.succession-reader__chapter-tools) :is(button, input) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 820px) {
+  .succession-reader-panel:has(.succession-reader__chapter-tools) {
+    background: var(--reader-bg-elevated);
+  }
+
+  .succession-reader-panel:has(.succession-reader__chapter-tools) > section {
+    border: 0;
+    box-shadow: none;
+  }
+
+  .succession-reader:has(.succession-reader-panel .succession-reader__chapter-tools) > .succession-reader__canvas {
+    content-visibility: hidden;
+  }
+
+  .succession-reader:has(.succession-reader-panel .succession-reader__chapter-tools) > :is(.succession-reader__topbar, .succession-reader__bottombar, .succession-reader__media-notice) {
+    visibility: hidden;
+  }
+
+  .succession-reader__chapter-groups.is-virtualized > section > div > button {
+    box-shadow: none;
+  }
+}

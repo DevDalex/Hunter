@@ -6,6 +6,8 @@ const entryPath = 'src/styles.css';
 const finalPolishPath = 'src/styles/final-polish.css';
 const routePolishPaths = [
   'src/components/HunterExamPageContrast.css',
+  'src/components/SuccessionChapterReaderPolish.css',
+  'src/components/succession/SuccessionArchiveContrast.css',
 ];
 const layerPaths = [
   'src/styles/base.css',

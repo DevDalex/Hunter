@@ -9,9 +9,8 @@ const output = path.resolve(root, process.env.INTERACTION_QA_OUTPUT || '.interac
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
 
 const mime = {
-  '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8',
-  '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.js': 'text/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml',
+  '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
+  '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml',
   '.webp': 'image/webp', '.zip': 'application/zip',
 };
 
@@ -62,7 +61,7 @@ const pageHealth = async (page, selector = 'main') => page.evaluate((rootSelecto
     const rect = element.getBoundingClientRect();
     return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) !== 0 && rect.width > 0 && rect.height > 0;
   };
-  const root = document.querySelector(rootSelector);
+  const rootNode = document.querySelector(rootSelector);
   const brokenImages = [...document.images]
     .filter((image) => visible(image) && image.complete && image.naturalWidth === 0)
     .map((image) => ({ alt: image.alt, src: image.currentSrc || image.src }));
@@ -70,7 +69,7 @@ const pageHealth = async (page, selector = 'main') => page.evaluate((rootSelecto
     .filter(visible)
     .map((element) => element.getAttribute('aria-label') || element.textContent.trim());
   const bodyOverflow = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth;
-  const rootRect = root?.getBoundingClientRect();
+  const rootRect = rootNode?.getBoundingClientRect();
   return { brokenImages, unavailable, bodyOverflow, rootRect: rootRect ? { left: rootRect.left, right: rootRect.right, width: rootRect.width } : null };
 }, selector);
 
@@ -122,7 +121,7 @@ try {
       await node.click();
       await page.waitForTimeout(80);
       if (await node.getAttribute('aria-pressed') !== 'true') throw new Error(`${principle} did not become active`);
-      const state = await page.evaluate(({ principleName, expectedCount }) => {
+      const state = await page.evaluate(({ expectedCount }) => {
         const map = document.querySelector('.nen-principle-map');
         const mapRect = map.getBoundingClientRect();
         const visible = (element) => {
@@ -133,20 +132,15 @@ try {
         const related = [...document.querySelectorAll('.nen-advanced-node.is-related')].filter(visible);
         const malformed = related.map((element) => {
           const rect = element.getBoundingClientRect();
-          return {
-            label: element.textContent.trim().replace(/\s+/g, ' '),
-            width: Math.round(rect.width),
-            height: Math.round(rect.height),
-            outside: rect.left < mapRect.left - 2 || rect.right > mapRect.right + 2 || rect.top < mapRect.top - 2 || rect.bottom > mapRect.bottom + 2,
-          };
+          return { width: Math.round(rect.width), height: Math.round(rect.height), outside: rect.left < mapRect.left - 2 || rect.right > mapRect.right + 2 || rect.top < mapRect.top - 2 || rect.bottom > mapRect.bottom + 2 };
         }).filter((item) => item.width > 180 || item.height > 100 || item.width < 35 || item.height < 24 || item.outside);
-        const inspectorImages = [...document.querySelectorAll('.nen-principle-inspector img')].filter(visible).map((image) => ({ alt: image.alt, complete: image.complete, naturalWidth: image.naturalWidth }));
-        const placeholders = [...document.querySelectorAll('.nen-principle-inspector .safe-image-placeholder')].filter(visible).map((element) => element.textContent.trim());
-        return { principleName, expectedCount, relatedCount: related.length, malformed, inspectorImages, placeholders };
-      }, { principleName: principle, expectedCount: expected });
+        const inspectorImages = [...document.querySelectorAll('.nen-principle-inspector img')].filter(visible).map((image) => ({ complete: image.complete, naturalWidth: image.naturalWidth }));
+        const placeholders = [...document.querySelectorAll('.nen-principle-inspector .safe-image-placeholder')].filter(visible).length;
+        return { expectedCount, relatedCount: related.length, malformed, inspectorImages, placeholders };
+      }, { expectedCount: expected });
       if (state.relatedCount !== expected) throw new Error(`${principle} shows ${state.relatedCount} related techniques; expected ${expected}`);
-      if (state.malformed.length) throw new Error(`${principle} has malformed advanced cards: ${JSON.stringify(state.malformed)}`);
-      if (state.placeholders.length) throw new Error(`${principle} displays unavailable-image placeholders`);
+      if (state.malformed.length) throw new Error(`${principle} has malformed advanced cards`);
+      if (state.placeholders) throw new Error(`${principle} displays unavailable-image placeholders`);
       if (state.inspectorImages.length < 2 || state.inspectorImages.some((image) => !image.complete || image.naturalWidth === 0)) throw new Error(`${principle} inspector images did not render`);
     }
     const health = await pageHealth(page, '.nen-principle-workbench');
@@ -157,26 +151,14 @@ try {
   await run('Nen advanced gallery renders every visual', { width: 1440, height: 1000 }, 'reference/nen', async (page) => {
     await page.getByRole('button', { name: /Advanced techniques/i }).click();
     await page.waitForSelector('.nen-technique-gallery article');
-    const gallery = await page.evaluate(() => {
-      const visible = (element) => {
-        const style = getComputedStyle(element);
-        const rect = element.getBoundingClientRect();
-        return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) !== 0 && rect.width > 0 && rect.height > 0;
-      };
-      const articles = [...document.querySelectorAll('.nen-technique-gallery article')];
-      return {
-        count: articles.length,
-        images: articles.map((article) => {
-          const image = article.querySelector('img');
-          return { title: article.querySelector('h3')?.textContent.trim(), hasImage: Boolean(image), complete: image?.complete, naturalWidth: image?.naturalWidth || 0 };
-        }),
-        placeholders: [...document.querySelectorAll('.nen-technique-gallery .safe-image-placeholder')].filter(visible).length,
-      };
-    });
-    if (gallery.count !== 7) throw new Error(`advanced gallery has ${gallery.count} cards; expected 7`);
-    if (gallery.placeholders) throw new Error(`${gallery.placeholders} unavailable-image placeholders are visible`);
-    const failed = gallery.images.filter((item) => !item.hasImage || !item.complete || item.naturalWidth === 0);
-    if (failed.length) throw new Error(`advanced visuals failed: ${JSON.stringify(failed)}`);
+    const images = page.locator('.nen-technique-gallery article img');
+    for (let index = 0; index < await images.count(); index += 1) await images.nth(index).scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => {
+      const galleryImages = [...document.querySelectorAll('.nen-technique-gallery article img')];
+      return galleryImages.length === 7 && galleryImages.every((image) => image.complete && image.naturalWidth > 0);
+    }, null, { timeout: 15_000 });
+    const health = await pageHealth(page, '.nen-technique-gallery');
+    if (health.unavailable.length) throw new Error('advanced gallery displays unavailable-image placeholders');
   });
 
   await run('Nen mobile state has no horizontal spill', { width: 390, height: 844 }, 'reference/nen', async (page) => {
@@ -187,26 +169,46 @@ try {
     if (health.unavailable.length) throw new Error(`mobile unavailable visuals: ${health.unavailable.join(', ')}`);
   });
 
-  await run('Relationship map filters remain readable', { width: 1440, height: 1000 }, 'succession/mafia?panel=relationships', async (page) => {
-    await page.waitForSelector('.relationship-map');
-    const filterButtons = page.locator('.relationship-map__toolbar button');
-    const filterCount = await filterButtons.count();
-    if (filterCount < 2) throw new Error('relationship filters did not render');
-    for (let index = 0; index < filterCount; index += 1) {
-      await filterButtons.nth(index).click();
-      await page.waitForTimeout(60);
-      const graph = await page.evaluate(() => {
-        const network = document.querySelector('.relationship-network');
-        const rect = network?.getBoundingClientRect();
-        const visibleSpokes = [...document.querySelectorAll('.relationship-network__spokes a')].filter((element) => {
-          const style = getComputedStyle(element); const box = element.getBoundingClientRect();
-          return style.display !== 'none' && style.visibility !== 'hidden' && box.width > 0 && box.height > 0;
-        });
-        return { width: rect?.width || 0, height: rect?.height || 0, spokes: visibleSpokes.length, overflow: network ? network.scrollWidth - network.clientWidth : 0 };
-      });
-      if (graph.width < 300 || graph.height < 120) throw new Error(`relationship graph collapsed under filter ${index + 1}`);
-      if (graph.overflow > 2) throw new Error(`relationship graph overflowed by ${graph.overflow}px under filter ${index + 1}`);
+  await run('Dedicated relationship workspace filters and links remain readable', { width: 1440, height: 1000 }, 'succession/relationships', async (page) => {
+    await page.waitForSelector('.succession-relationships-workspace .succession-relationship-ledger');
+    const rootNode = page.locator('.succession-relationships-workspace');
+    const records = rootNode.locator('.succession-relationship-ledger > article');
+    const initialCount = await records.count();
+    if (initialCount < 20) throw new Error(`relationship ledger is incomplete: ${initialCount} records`);
+
+    const filter = rootNode.getByPlaceholder('Person, organization, relationship, chapter…');
+    for (const item of [
+      { query: 'Kurapika', minimum: 4, label: 'Kurapika relationships' },
+      { query: 'Morena', minimum: 3, label: 'Morena relationships' },
+      { query: 'Halkenburg', minimum: 3, label: 'Halkenburg relationships' },
+    ]) {
+      await filter.fill(item.query);
+      await page.waitForTimeout(80);
+      const count = await records.count();
+      if (count < item.minimum) throw new Error(`${item.label} returned ${count}; expected at least ${item.minimum}`);
+      const health = await pageHealth(page, '.succession-relationships-workspace');
+      if (health.bodyOverflow > 2) throw new Error(`${item.label} overflowed by ${health.bodyOverflow}px`);
     }
+
+    await filter.fill('');
+    const kurapikaFocus = rootNode.locator('.succession-relationship-focus button').filter({ hasText: /^Kurapika/ }).first();
+    await kurapikaFocus.click();
+    await page.waitForTimeout(80);
+    const focusedCount = await records.count();
+    if (focusedCount < 4 || focusedCount >= initialCount) throw new Error(`actor focus did not narrow the ledger: ${focusedCount} of ${initialCount}`);
+
+    const entityLink = rootNode.locator('.succession-deep-entity-button:not([disabled])').first();
+    await entityLink.click();
+    await page.waitForSelector('.succession-domain-dossier .succession-entity-header');
+    if (!page.url().includes('entity=character%3A') && !page.url().includes('entity=organization%3A')) throw new Error('relationship node did not preserve a canonical entity ID');
+    const health = await pageHealth(page, '.succession-domain-dossier');
+    if (health.bodyOverflow > 1) throw new Error(`relationship-linked domain dossier overflowed by ${health.bodyOverflow}px`);
+  });
+
+  await run('Dedicated relationship workspace remains contained on mobile', { width: 390, height: 844 }, 'succession/relationships', async (page) => {
+    await page.waitForSelector('.succession-relationships-workspace .succession-relationship-ledger');
+    const health = await pageHealth(page, '.succession-relationships-workspace');
+    if (health.bodyOverflow > 1) throw new Error(`relationship workspace overflowed horizontally by ${health.bodyOverflow}px`);
   });
 } finally {
   await browser.close().catch(() => {});

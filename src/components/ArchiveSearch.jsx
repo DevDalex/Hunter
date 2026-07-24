@@ -1,4 +1,4 @@
-import { useDeferredValue, useEffect, useMemo, useRef, useState } from 'react';
+import { useDeferredValue, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, ExternalLink, Search, X } from 'lucide-react';
 import { loadArchiveSearchIndex } from '../data/archiveSearch';
 
@@ -10,6 +10,7 @@ export default function ArchiveSearch({ open, spoilerLimit = Number.MAX_SAFE_INT
   const dialogRef = useRef(null);
   const inputRef = useRef(null);
   const resultRefs = useRef([]);
+  const restoreFocusRef = useRef(typeof document === 'undefined' ? null : document.activeElement);
   const [query, setQuery] = useState('');
   const [type, setType] = useState('all');
   const [activeIndex, setActiveIndex] = useState(-1);
@@ -61,12 +62,14 @@ export default function ArchiveSearch({ open, spoilerLimit = Number.MAX_SAFE_INT
     resultRefs.current = resultRefs.current.slice(0, results.length);
   }, [query, type, results.length]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!open) return undefined;
-    const previousFocus = document.activeElement;
+    const previousFocus = restoreFocusRef.current;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    const timer = window.setTimeout(() => inputRef.current?.focus(), 20);
+    const focusInput = () => inputRef.current?.focus({ preventScroll: true });
+    focusInput();
+    const frame = window.requestAnimationFrame(focusInput);
     const onKeyDown = (event) => {
       if (event.key === 'Escape') onClose();
       if (event.key !== 'Tab' || !dialogRef.current) return;
@@ -79,10 +82,10 @@ export default function ArchiveSearch({ open, spoilerLimit = Number.MAX_SAFE_INT
     };
     window.addEventListener('keydown', onKeyDown);
     return () => {
-      window.clearTimeout(timer);
+      window.cancelAnimationFrame(frame);
       window.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = previousOverflow;
-      previousFocus?.focus?.();
+      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
     };
   }, [open, onClose]);
 
@@ -127,7 +130,7 @@ export default function ArchiveSearch({ open, spoilerLimit = Number.MAX_SAFE_INT
           <div><span className="section-kicker">Global archive search</span><h2 id="archive-search-title">Find any maintained record</h2></div>
           <button onClick={onClose} aria-label="Close archive search"><X size={20} /></button>
         </header>
-        <label className="archive-search-input"><span className="sr-only">Search the archive</span><Search size={19} /><input ref={inputRef} role="combobox" value={query} onChange={(event) => { setQuery(event.target.value); setType('all'); }} onKeyDown={handleInputKeyDown} aria-controls="archive-search-results" aria-expanded={Boolean(normalizedQuery && indexState === 'ready')} aria-autocomplete="list" placeholder="Character, mapped place, chapter, room, ability…" /><kbd>Esc</kbd></label>
+        <label className="archive-search-input"><span className="sr-only">Search the archive</span><Search size={19} /><input ref={inputRef} autoFocus role="combobox" value={query} onChange={(event) => { setQuery(event.target.value); setType('all'); }} onKeyDown={handleInputKeyDown} aria-controls="archive-search-results" aria-expanded={Boolean(normalizedQuery && indexState === 'ready')} aria-autocomplete="list" placeholder="Character, mapped place, chapter, room, ability…" /><kbd>Esc</kbd></label>
         <p className="sr-only" role="status" aria-live="polite">{statusMessage}</p>
 
         {!query && <div className="archive-search-empty">

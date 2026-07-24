@@ -38,8 +38,8 @@ export default function FamilyTree({ onOpenPrince, spoilerLimit = Number.MAX_SAF
   const selectedHousehold = queenHouseholdLedger.find((queen) => selectedBranch?.queen.startsWith(queen.name));
   const selectTreeMode = (mode, focus = false) => {
     if (mode === 'biological' && spoilerLimit < 401) return;
+    if (focus) treeTabRefs.current[treeModes.findIndex(([id]) => id === mode)]?.focus();
     setTreeMode(mode);
-    if (focus) window.requestAnimationFrame(() => treeTabRefs.current[treeModes.findIndex(([id]) => id === mode)]?.focus());
   };
 
   useEffect(() => {

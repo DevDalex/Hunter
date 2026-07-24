@@ -30,7 +30,7 @@ const directBoundaryKeys = [
   'src/components/ArchiveSearch.jsx',
   'src/components/SeriesWorkspace.jsx',
   'src/components/TimelineWorkspace.jsx',
-  'src/components/SuccessionOverview.jsx',
+  'src/components/succession/SuccessionArchiveEntry.jsx',
   'src/components/FamilyTree.jsx',
   'src/components/SuccessionRoster.jsx',
   'src/components/SuccessionTimeline.jsx',

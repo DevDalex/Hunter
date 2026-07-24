@@ -1,0 +1,23 @@
+.succession-archive-nav h2,
+.succession-archive-nav a small,
+.succession-page-header__meta dt,
+.succession-button kbd,
+.succession-data-health > div > span,
+.succession-data-health dt,
+.succession-route-matrix button small,
+.succession-story-workspace > section > span,
+.succession-story-workspace aside span,
+.succession-directory > header span,
+.succession-entity-grid code,
+.succession-entity-badge > span,
+.succession-entity-header > div:first-child > span,
+.succession-entity-detail__facts span,
+.succession-entity-detail__facts code,
+.succession-source-list > header span,
+.succession-related header span,
+.succession-source-reference span,
+.succession-search-workspace article footer > span,
+.succession-state > span,
+.succession-drawer header span {
+  font-size: 11px !important;
+}

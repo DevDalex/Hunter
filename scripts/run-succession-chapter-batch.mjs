@@ -6,9 +6,10 @@ import { parseGeneratedManifest } from '../server/chapter-admin.js';
 
 const QUEUE_PATH = '.github/chapter-import-batch.json';
 const MANIFEST_PATH = 'src/data/successionChapterMedia.generated.js';
+const AVAILABILITY_PATH = 'src/data/successionChapterAvailability.generated.js';
 const CHAPTER_ROOT = 'public/media/succession-contest/chapters';
 const MIN_CHAPTER = 338;
-const MAX_CHAPTER = 414;
+const MAX_CHAPTER = 9999;
 const MIN_PAGES = 8;
 const MAX_PAGES = 40;
 
@@ -49,7 +50,10 @@ const newlyFailed = [];
 
 for (const chapter of selected) {
   const sourceUrl = String(queue.sourceTemplate).replaceAll('{chapter}', String(chapter));
-  const beforeManifest = await readFile(MANIFEST_PATH, 'utf8');
+  const [beforeManifest, beforeAvailability] = await Promise.all([
+    readFile(MANIFEST_PATH, 'utf8'),
+    readFile(AVAILABILITY_PATH, 'utf8'),
+  ]);
   const chapterDirectory = `${CHAPTER_ROOT}/${chapter}`;
   console.log(`\n=== Automatic import: Chapter ${chapter} ===`);
 
@@ -88,8 +92,11 @@ for (const chapter of selected) {
     error = compactError(result);
   }
 
-  await writeFile(MANIFEST_PATH, beforeManifest);
-  await rm(chapterDirectory, { recursive: true, force: true });
+  await Promise.all([
+    writeFile(MANIFEST_PATH, beforeManifest),
+    writeFile(AVAILABILITY_PATH, beforeAvailability),
+    rm(chapterDirectory, { recursive: true, force: true }),
+  ]);
 
   const key = String(chapter);
   const nextAttempt = (Number.parseInt(attempts[key], 10) || 0) + 1;

@@ -1,0 +1,259 @@
+.succession-archive .succession-entity-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--sa-border);
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 35% 22%, rgba(255,255,255,.65), transparent 34%),
+    linear-gradient(145deg, #d9d1c2, #b8ad9d);
+  isolation: isolate;
+}
+
+.succession-archive .succession-entity-visual::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 28%;
+  background: linear-gradient(transparent, rgba(9, 13, 18, .36));
+  content: "";
+  pointer-events: none;
+}
+
+.succession-archive .succession-entity-visual > :is(img, .safe-image-placeholder) {
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+}
+
+.succession-archive .succession-entity-visual img {
+  display: block;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.succession-archive .succession-entity-visual .safe-image-placeholder {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 4px;
+  padding: 14px;
+  background:
+    repeating-linear-gradient(135deg, rgba(255,255,255,.15) 0 8px, transparent 8px 16px),
+    linear-gradient(145deg, #313b45, #18212a);
+  color: #fff;
+  text-align: center;
+}
+
+.succession-archive .succession-entity-visual .safe-image-placeholder b {
+  font-family: Georgia, serif;
+  font-size: clamp(28px, 4vw, 50px);
+  letter-spacing: -.04em;
+}
+
+.succession-archive .succession-entity-visual .safe-image-placeholder small {
+  color: #b7c0c9;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.succession-archive .succession-entity-grid > article > .succession-entity-visual {
+  width: calc(100% + 36px);
+  height: 190px;
+  margin: -18px -18px 16px;
+  border: 0;
+  border-bottom: 1px solid var(--sa-border);
+  border-radius: 14px 14px 0 0;
+}
+
+.succession-archive .succession-entity-grid > article[data-has-visual="false"] {
+  background: var(--sa-surface-muted);
+}
+
+.succession-archive .succession-entity-header {
+  display: grid;
+  grid-template-columns: minmax(210px, .34fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 46px);
+  align-items: stretch;
+}
+
+.succession-archive .succession-entity-header > .succession-entity-visual {
+  min-height: 330px;
+  align-self: stretch;
+}
+
+.succession-archive .succession-entity-header__copy {
+  min-width: 0;
+  align-self: center;
+}
+
+.succession-archive .succession-entity-header__copy > span {
+  color: var(--sa-accent);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.succession-archive .succession-entity-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.succession-archive .succession-directory > header > div:first-child > p {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 7px 0 0;
+  color: var(--sa-ink-muted);
+  font-size: 11px;
+}
+
+.succession-archive .succession-directory > header > div:first-child > p i {
+  font-style: normal;
+  opacity: .55;
+}
+
+.succession-archive .succession-directory__tools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.succession-archive .succession-directory__tools > label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: min(360px, 100%);
+  padding: 9px 11px;
+  border: 1px solid var(--sa-border);
+  border-radius: 10px;
+  background: var(--sa-surface-raised);
+}
+
+.succession-archive .succession-directory__tools input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--sa-ink);
+}
+
+.succession-archive .succession-directory__tools label button {
+  border: 0;
+  background: transparent;
+  color: var(--sa-accent);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.succession-archive .succession-search-workspace article {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 10px 14px;
+  align-items: start;
+}
+
+.succession-archive .succession-search-workspace article > .succession-entity-visual {
+  grid-row: 1 / span 3;
+  width: 74px;
+  height: 88px;
+}
+
+.succession-archive .succession-search-workspace article > p,
+.succession-archive .succession-search-workspace article > footer {
+  grid-column: 2;
+}
+
+.succession-archive .succession-source-reference__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.succession-archive .succession-source-reference__actions :is(a, button),
+.succession-archive .succession-migration-note button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 0;
+  background: transparent;
+  color: var(--sa-accent);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.succession-archive .succession-migration-note button {
+  margin-left: auto;
+}
+
+@media (max-width: 860px) {
+  .succession-archive .succession-entity-header {
+    grid-template-columns: minmax(150px, .38fr) minmax(0, 1fr);
+  }
+
+  .succession-archive .succession-entity-header > .succession-entity-visual {
+    min-height: 270px;
+  }
+
+  .succession-archive .succession-directory > header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .succession-archive .succession-directory__tools {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 620px) {
+  .succession-archive .succession-entity-grid > article > .succession-entity-visual {
+    height: 230px;
+  }
+
+  .succession-archive .succession-entity-header {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-archive .succession-entity-header > .succession-entity-visual {
+    width: min(100%, 360px);
+    min-height: 300px;
+  }
+
+  .succession-archive .succession-directory__tools,
+  .succession-archive .succession-directory__tools > label,
+  .succession-archive .succession-directory__tools > .succession-button {
+    width: 100%;
+  }
+
+  .succession-archive .succession-search-workspace article {
+    grid-template-columns: 62px minmax(0, 1fr);
+  }
+
+  .succession-archive .succession-search-workspace article > .succession-entity-visual {
+    width: 62px;
+    height: 76px;
+  }
+
+  .succession-archive .succession-source-reference__actions {
+    grid-column: 2;
+    justify-content: flex-start;
+  }
+
+  .succession-archive .succession-migration-note button {
+    margin-left: 0;
+  }
+}

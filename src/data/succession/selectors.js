@@ -7,6 +7,18 @@ const includesChapter = (range, chapter) => {
   return chapter >= range.start && chapter <= end;
 };
 
+const ordinalSearchAliases = Object.freeze([
+  ['first', '1st'], ['second', '2nd'], ['third', '3rd'], ['fourth', '4th'], ['fifth', '5th'],
+  ['sixth', '6th'], ['seventh', '7th'], ['eighth', '8th'], ['ninth', '9th'], ['tenth', '10th'],
+  ['eleventh', '11th'], ['twelfth', '12th'], ['thirteenth', '13th'], ['fourteenth', '14th'],
+]);
+
+const normalizeSearchText = (value) => {
+  let normalized = String(value || '').trim().toLocaleLowerCase();
+  for (const [word, numeric] of ordinalSearchAliases) normalized = normalized.replace(new RegExp(`\\b${word}\\b`, 'g'), numeric);
+  return normalized;
+};
+
 export const createSuccessionSelectors = (data, indexes) => {
   const getEntityById = (id) => indexes.byId.get(id) || null;
 
@@ -117,22 +129,23 @@ export const createSuccessionSelectors = (data, indexes) => {
   };
 
   const search = (query, { types = null, limit = 20 } = {}) => {
-    const normalized = String(query || '').trim().toLocaleLowerCase();
+    const normalized = normalizeSearchText(query);
     if (!normalized) return [];
     const allowedTypes = types ? new Set(types) : null;
 
     return indexes.searchDocuments
       .filter((document) => !allowedTypes || allowedTypes.has(document.type))
       .map((document) => {
-        const name = document.name.toLocaleLowerCase();
-        const aliases = document.aliases.map((alias) => alias.toLocaleLowerCase());
+        const name = normalizeSearchText(document.name);
+        const aliases = document.aliases.map(normalizeSearchText);
+        const text = normalizeSearchText(document.text);
         let score = 0;
         if (name === normalized) score += 100;
         else if (name.startsWith(normalized)) score += 60;
         else if (name.includes(normalized)) score += 35;
         if (aliases.some((alias) => alias === normalized)) score += 80;
         else if (aliases.some((alias) => alias.includes(normalized))) score += 30;
-        if (document.text.includes(normalized)) score += 10;
+        if (text.includes(normalized)) score += 10;
         return { document, score };
       })
       .filter((result) => result.score > 0)

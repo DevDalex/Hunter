@@ -1,0 +1,178 @@
+.succession-archive__boundary .spoiler-control {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin-inline: 0 !important;
+  padding: 10px !important;
+  overflow: hidden;
+  transform: none !important;
+}
+
+.succession-archive__boundary .spoiler-control,
+.succession-archive__boundary .spoiler-control > *,
+.succession-archive__boundary .spoiler-control label,
+.succession-archive__boundary .spoiler-control select,
+.succession-archive__boundary .spoiler-control input {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.succession-archive__boundary .spoiler-control__label {
+  align-items: flex-start;
+}
+
+.succession-archive__boundary .spoiler-control__label span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.succession-archive__boundary .spoiler-control__number {
+  grid-template-columns: minmax(0, 1fr) minmax(68px, 0.6fr) !important;
+}
+
+.succession-archive .succession-entity-grid,
+.succession-archive .succession-entity-grid > article,
+.succession-archive .succession-entity-grid > article > *,
+.succession-archive .succession-entity-grid footer,
+.succession-archive .succession-entity-grid footer > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.succession-archive .succession-entity-grid > article {
+  width: 100%;
+  overflow: hidden;
+}
+
+.succession-archive .succession-entity-grid footer code {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.succession-archive .succession-entity-grid footer .succession-entity-link {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 860px) {
+  .succession-archive .timeline-workspace__controls {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .succession-archive .timeline-workspace__controls label,
+  .succession-archive .timeline-workspace__controls input {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .succession-archive__workspace,
+  .succession-archive__content,
+  .succession-archive__content > *,
+  .succession-archive__content > * > *,
+  .succession-archive .succession-characters-workspace,
+  .succession-archive .succession-hunters-workspace,
+  .succession-archive .succession-military-workspace,
+  .succession-archive .succession-organizations-workspace,
+  .succession-archive .succession-politics-workspace,
+  .succession-archive .succession-locations-workspace,
+  .succession-archive .succession-research-workspace,
+  .succession-archive .succession-glossary-workspace,
+  .succession-archive .succession-media-workspace,
+  .succession-archive .succession-domain-dossier,
+  .succession-archive .succession-story-map,
+  .succession-archive .succession-prince-board,
+  .succession-archive .succession-prince-dossier,
+  .succession-archive .succession-mafia-workspace,
+  .succession-archive .succession-queen-board,
+  .succession-archive .succession-queen-dossier,
+  .succession-archive .succession-guards-workspace,
+  .succession-archive .succession-beasts-workspace,
+  .succession-archive .succession-events-workspace,
+  .succession-archive .succession-body-states,
+  .succession-archive .succession-relationships-workspace,
+  .succession-archive .succession-chapter-records {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .succession-archive__content {
+    overflow-x: clip;
+  }
+
+  .succession-archive .succession-extended-hero,
+  .succession-archive .succession-extended-tools,
+  .succession-archive .succession-character-ledger,
+  .succession-archive .succession-character-ledger > button,
+  .succession-archive .succession-character-ledger > button > *,
+  .succession-archive .succession-hunter-missions,
+  .succession-archive .succession-authority-chain,
+  .succession-archive .succession-legal-ledger,
+  .succession-archive .succession-military-people,
+  .succession-archive .succession-military-operations,
+  .succession-archive .succession-expedition-layer,
+  .succession-archive .succession-organization-tree,
+  .succession-archive .succession-political-branches,
+  .succession-archive .succession-sponsor-map,
+  .succession-archive .succession-political-links,
+  .succession-archive .succession-location-hierarchy,
+  .succession-archive .succession-room-location-board,
+  .succession-archive .succession-route-systems,
+  .succession-archive .succession-research-grid,
+  .succession-archive .succession-source-catalogue,
+  .succession-archive .succession-evidence-catalogue,
+  .succession-archive .succession-mystery-catalogue,
+  .succession-archive .succession-glossary-list,
+  .succession-archive .succession-media-grid,
+  .succession-archive .succession-domain-dossier__facts,
+  .succession-archive .succession-domain-dossier__split,
+  .succession-archive .succession-domain-dossier__relationships,
+  .succession-archive .succession-domain-dossier__related,
+  .succession-archive .succession-domain-dossier__sources {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .succession-archive .succession-entity-grid {
+    width: 100%;
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .succession-archive .succession-entity-grid > article > div,
+  .succession-archive .succession-entity-grid footer {
+    flex-wrap: wrap;
+  }
+
+  .succession-archive .succession-entity-grid code {
+    overflow-wrap: anywhere;
+  }
+
+  .succession-archive .lesson-ledger,
+  .succession-archive .lesson-ledger > article {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .succession-archive .lesson-ledger {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .succession-archive .lesson-ledger > article,
+  .succession-archive .lesson-ledger > article > *,
+  .succession-archive .lesson-ledger li {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    overflow-wrap: anywhere;
+  }
+
+  .succession-archive .lesson-ledger article > div {
+    flex-wrap: wrap;
+  }
+
+  .succession-archive .lesson-ledger ul {
+    padding-inline-start: 20px;
+  }
+}
