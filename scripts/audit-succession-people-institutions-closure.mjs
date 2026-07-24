@@ -120,7 +120,7 @@ try {
   const characterCoverage = getCharacterStateCoverageReport();
   const organizationCoverage = getOrganizationStateCoverageReport();
   assert(characterCoverage.explicitCharacters >= 42, 'institution leaders must raise explicit character coverage to at least forty-two');
-  assert(organizationCoverage.coveragePercent === 100, 'organization coverage must remain complete');
+  assert(organizationCoverage.coveragePercent === 100, 'organization state coverage must remain complete');
   const gaps = getPeopleInstitutionCoverageGaps();
   assert(gaps.priorityCharacterGaps.length === 0, 'derived character fallbacks may remain only for non-priority supporting records');
   assert(gaps.missingOrganizations.length === 0, 'no organization may rely on a derived fallback at Batch 2 closure');
@@ -204,9 +204,9 @@ try {
     const results = searchSuccessionArchive(entity.name, { types: [entity.entityType], limit: 50 });
     assert(results.some((result) => result.entity.id === entity.id), `global search must resolve ${entity.id}`);
   }
-  assert(searchSuccessionArchive('Hunter Association chair').some((result) => result.entity.id === 'character:cheadle-yorkshire'), 'leader-state search must resolve Cheadle');
+  assert(searchSuccessionArchive('Leads Hunter Association').some((result) => result.entity.id === 'character:cheadle-yorkshire'), 'leader-state search must resolve Cheadle');
   assert(searchSuccessionArchive('mafia cooperation is temporary and non-subordinate').some((result) => result.entity.id === 'character:chrollo-lucilfer'), 'leader-state search must resolve Chrollo');
-  assert(searchSuccessionArchive('entered Morena’s community').some((result) => result.entity.id === 'character:borksen' || result.entity.id === 'organization:heil-ly'), 'cross-domain search must resolve the confirmed Borksen transition');
+  assert(searchSuccessionArchive('reached Yes').some((result) => result.entity.id === 'character:borksen' || result.entity.id === 'organization:heil-ly'), 'cross-domain search must resolve the confirmed Borksen transition');
 
   console.log(`Succession people and institutions closure audit passed: ${characters.length} character dossiers, ${characterCoverage.explicitCharacters} explicit character profiles, ${organizations.length} fully explicit organization dossiers, ${closure.characters.priorityTotal} priority actors, canonical routing, chapter-bounded status, abilities, affiliations, personnel, evidence, and global search close Batch 2.`);
 } finally {
