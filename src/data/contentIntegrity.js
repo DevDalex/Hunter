@@ -34,7 +34,8 @@ const validUrl = (value) => {
 const validImageReference = (value) => String(value || '').startsWith('/media/') || validUrl(value);
 const unique = (values) => new Set(values).size === values.length;
 const chapterNumbers = chapters.map((chapter) => chapter.number);
-const expectedNumbers = Array.from({ length: ARCHIVE_BOUNDARY }, (_, index) => index + 1);
+const expectedNumbers = Array.from({ length: LATEST_CHAPTER }, (_, index) => index + 1);
+const expectedSuccessionResearchTotal = Math.max(0, ARCHIVE_BOUNDARY - 340 + 1);
 const arcCoverage = arcs.flatMap((arc) => Array.from({ length: arc.chapters[1] - arc.chapters[0] + 1 }, (_, index) => arc.chapters[0] + index));
 const sourceUrls = [
   ...chapters.map((record) => record.sourceUrl), ...arcs.map((record) => record.source),
@@ -69,16 +70,16 @@ const worldMapRouteStops = worldMapRoutes.flatMap((route) => route.stops);
 
 export const integrityChecks = [
   {
-    id: 'chapter-boundary', label: 'Chapter boundary', status: LATEST_CHAPTER === ARCHIVE_BOUNDARY && chapters.length === ARCHIVE_BOUNDARY ? 'pass' : 'fail',
-    detail: `${chapters.length} numbered records; configured endpoint Chapter ${LATEST_CHAPTER}.`,
+    id: 'chapter-boundary', label: 'Chapter boundary', status: chapters.length === LATEST_CHAPTER ? 'pass' : 'fail',
+    detail: `${chapters.length} maintained full-series chapter records; current catalogue endpoint Chapter ${LATEST_CHAPTER}.`,
   },
   {
     id: 'chapter-sequence', label: 'Chapter sequence', status: unique(chapterNumbers) && chapterNumbers.every((number, index) => number === expectedNumbers[index]) ? 'pass' : 'fail',
-    detail: 'Numbers must be unique and continuous from 1 through 413.',
+    detail: `Numbers must be unique and continuous from 1 through ${LATEST_CHAPTER}.`,
   },
   {
-    id: 'arc-coverage', label: 'Arc ranges', status: unique(arcCoverage) && arcCoverage.length === ARCHIVE_BOUNDARY && arcCoverage.every((number, index) => number === expectedNumbers[index]) ? 'pass' : 'fail',
-    detail: 'Every numbered chapter must belong to exactly one maintained arc range.',
+    id: 'arc-coverage', label: 'Arc ranges', status: unique(arcCoverage) && arcCoverage.length === LATEST_CHAPTER && arcCoverage.every((number, index) => number === expectedNumbers[index]) ? 'pass' : 'fail',
+    detail: 'Every maintained full-series chapter must belong to exactly one arc range.',
   },
   {
     id: 'source-links', label: 'Source-link structure', status: sourceUrls.every(validUrl) ? 'pass' : 'fail',
@@ -94,11 +95,11 @@ export const integrityChecks = [
   },
   {
     id: 'timeline-boundary', label: 'Timeline boundary', status: successionDays.every((day) => day.events.every((event) => event.chapter <= ARCHIVE_BOUNDARY)) ? 'pass' : 'fail',
-    detail: `${timelineEventCount} selected voyage events contain no chapter beyond the maintained boundary.`,
+    detail: `${timelineEventCount} selected voyage events contain no chapter beyond the imported Succession boundary.`,
   },
   {
-    id: 'succession-chapter-depth', label: 'Succession chapter depth', status: successionChapterResearch.length === 75 && successionChapterResearch.every((chapter, index) => chapter.number === 340 + index && chapter.focus && chapter.source) ? 'pass' : 'fail',
-    detail: `${successionChapterResearch.length} locally indexed records cover Chapters 340–414 continuously; unsupported Chapter 414 scene claims remain explicitly pending.`,
+    id: 'succession-chapter-depth', label: 'Succession chapter depth', status: successionChapterResearch.length === expectedSuccessionResearchTotal && successionChapterResearch.every((chapter, index) => chapter.number === 340 + index && chapter.focus && chapter.source) ? 'pass' : 'fail',
+    detail: `${successionChapterResearch.length} locally indexed records cover Chapters 340–${ARCHIVE_BOUNDARY} continuously; newly imported releases remain explicitly pending until detailed research is verified.`,
   },
   {
     id: 'succession-chronology-links', label: 'Succession chronology links', status: successionChapterResearch.every((chapter) => chapter.coverage.summary && chapter.coverage.source) ? 'pass' : 'fail',
@@ -182,7 +183,7 @@ export const integrityChecks = [
   },
   {
     id: 'phase6c-world-journey', label: 'World journey linkage', status: worldJourney.length === 8 && worldJourneyStops.every((id) => worldLocationsById.has(id)) && worldJourney.every((leg) => leg.stops.length > 0) ? 'pass' : 'fail',
-    detail: `${worldJourney.length} story-route legs link ${worldJourneyStops.length} location stops from Chapter 1 through Chapter 413.`,
+    detail: `${worldJourney.length} story-route legs link ${worldJourneyStops.length} location stops from Chapter 1 through Chapter ${LATEST_CHAPTER}.`,
   },
   {
     id: 'phase6c-world-sources', label: 'World source policy', status: worldLocations.every((record) => validUrl(record.source)) && validUrl(worldAtlasSource) && validUrl(locationCategorySource) ? 'pass' : 'fail',
