@@ -10,6 +10,7 @@ const slugify = (value = '') => String(value)
 
 const characterId = (name) => `character:${slugify(name)}`;
 const chapterSourceId = (number) => `source:chapter-${number}`;
+const directorySourceId = 'source:hunterpedia-current-arc-character-directory';
 
 const deathKnowledge = deathLedger
   .filter((record) => /^\d{3}$/.test(String(record.chapter)) && !/body$/i.test(record.name))
@@ -24,6 +25,21 @@ const deathKnowledge = deathLedger
       sourceIds: Object.freeze([chapterSourceId(Number(record.chapter))]),
     }),
   ]);
+
+const historicalDeathKnowledge = [
+  ['Uvogin', 'Confirmed deceased before the Succession Contest chapter range.'],
+  ['Pakunoda', 'Confirmed deceased before the Succession Contest chapter range.'],
+].map(([name, note]) => [
+  characterId(name),
+  Object.freeze({
+    life: 'dead',
+    knownFromChapter: 340,
+    bodyState: 'deceased before the current arc',
+    consciousnessState: 'ended; no current-arc consciousness continuation is established',
+    note,
+    sourceIds: Object.freeze([directorySourceId]),
+  }),
+]);
 
 const exceptionalKnowledge = [
   ['character:balsamilco-might', 403, 'unknown', 'living body under an apparent possession and identity crisis', 'original consciousness displaced or unresolved'],
@@ -42,5 +58,6 @@ const exceptionalKnowledge = [
 
 export const characterStatusKnowledge = Object.freeze(Object.fromEntries([
   ...deathKnowledge,
+  ...historicalDeathKnowledge,
   ...exceptionalKnowledge,
 ]));
