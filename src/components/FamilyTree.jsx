@@ -1,6 +1,7 @@
 import { princeDossiers } from '../data/successionDossier';
 import { getEntityById } from '../data/succession/successionData';
 import { routeToHref } from '../lib/appRouter';
+import HorizontalScrollHint from './HorizontalScrollHint';
 import RoyalFamilyGuardTree from './succession/RoyalFamilyGuardTree';
 
 export default function FamilyTree({ onOpenPrince, spoilerLimit = Number.MAX_SAFE_INTEGER }) {
@@ -20,5 +21,8 @@ export default function FamilyTree({ onOpenPrince, spoilerLimit = Number.MAX_SAF
     }
   };
 
-  return <RoyalFamilyGuardTree onNavigate={navigate} spoilerLimit={spoilerLimit} initialPrince={14} />;
+  return <>
+    <HorizontalScrollHint>Swipe across the queen branches on smaller screens. Select a queen, then a prince, to update the protection circle below.</HorizontalScrollHint>
+    <RoyalFamilyGuardTree onNavigate={navigate} spoilerLimit={spoilerLimit} initialPrince={14} />
+  </>;
 }
