@@ -35,7 +35,7 @@ export const successionArchiveRoutes = Object.freeze([
   route('events', 'events', 'Events', 'Records', 'Event archive', 'Operations organized by chapter range, participants, location, causes, consequences, and current state.', 'active'),
   route('deaths', 'deaths', 'Deaths', 'Records', 'Deaths and body states', 'Confirmed deaths and exceptional body, consciousness, possession, custody, and Nen-continuation states.', 'active'),
   route('relationships', 'relationships', 'Relationships', 'Records', 'Relationship archive', 'Typed family, professional, protective, political, allied, deceptive, command, and hostile links.', 'active'),
-  route('chapters', 'chapter-records', 'Chapters', 'Records', 'Chapter records', 'Research records for Chapters 340–414, separate from the image reader.', 'active'),
+  route('chapters', 'chapter-records', 'Chapters', 'Records', 'Chapter records', 'Research records from Chapter 340 through the latest imported reader chapter, separate from the image reader.', 'active'),
 
   route('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, provenance, evidence types, confidence, coverage, unresolved claims, and explicit research gaps.', 'active'),
   route('glossary', 'glossary', 'Glossary', 'Library', 'Succession glossary', 'Controlled ritual, Nen, legal, political, ship, status, and archive vocabulary.', 'active'),
