@@ -1,4 +1,4 @@
-import { handleHostedChapterAdmin, inferChapterNumber } from './chapter-admin.js';
+import { handleHostedChapterAdmin } from './chapter-admin.js';
 
 const ADMIN_PAGE_PATHS = new Set(['/admin/chapters', '/admin/chapters/']);
 const LOGIN_PATHS = new Set([
@@ -19,6 +19,18 @@ const MAX_IMPORT_BODY_BYTES = 256 * 1024;
 const MAX_DISPATCH_BODY_BYTES = 60 * 1024;
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
+
+const inferChapterNumber = (value) => {
+  try {
+    const url = new URL(String(value || ''));
+    const candidates = [...url.pathname.matchAll(/(?:chapter[-_/ ]?|\/)(\d{3,4})(?:[/.?_-]|$)/gi)]
+      .map((match) => Number.parseInt(match[1], 10))
+      .filter((number) => Number.isInteger(number));
+    return candidates.at(-1) || null;
+  } catch {
+    return null;
+  }
+};
 
 class DirectImportError extends Error {
   constructor(status, message) {
@@ -231,11 +243,11 @@ const handleUnboundedInspection = async (request, env) => {
   let legacyRequest;
   if (request.method === 'GET') {
     url.searchParams.set('chapter', String(LEGACY_READER_END));
-    legacyRequest = new Request(url, request);
+    legacyRequest = new Request(url.href, { method: 'GET', headers: request.headers });
   } else {
     const headers = new Headers(request.headers);
     headers.set('content-type', 'application/json');
-    legacyRequest = new Request(url, {
+    legacyRequest = new Request(url.href, {
       method: request.method,
       headers,
       body: JSON.stringify({ ...(input.body || {}), chapter: LEGACY_READER_END }),
