@@ -24,6 +24,10 @@ export const buildSuccessionIndexes = (data) => {
   const childrenByLocation = new Map();
   const relationshipsByEntity = new Map();
   const abilitiesByOwner = new Map();
+  const assignmentsByPerson = new Map();
+  const assignmentsBySubject = new Map();
+  const assignmentsByPrincipal = new Map();
+  const assignmentsByLocation = new Map();
   const locationHistoryByLocation = new Map();
   const locationHistoryByCharacter = new Map();
 
@@ -89,6 +93,13 @@ export const buildSuccessionIndexes = (data) => {
     for (const ownerId of ability.ownerIds || []) append(abilitiesByOwner, ownerId, ability.id);
   }
 
+  for (const assignment of data.assignments || []) {
+    append(assignmentsByPerson, assignment.personId, assignment.id);
+    append(assignmentsBySubject, assignment.subjectEntityId, assignment.id);
+    append(assignmentsByPrincipal, assignment.principalEntityId, assignment.id);
+    append(assignmentsByLocation, assignment.locationId, assignment.id);
+  }
+
   for (const record of data.locationHistory) {
     append(locationHistoryByLocation, record.locationId, record.id);
     append(locationHistoryByCharacter, record.characterId, record.id);
@@ -103,9 +114,15 @@ export const buildSuccessionIndexes = (data) => {
       name: entity.name,
       aliases: Object.freeze([...(entity.aliases || [])]),
       summary: entity.summary || '',
-      text: [entity.name, ...(entity.aliases || []), entity.summary || '', ...(entity.tags || [])]
-        .join(' ')
-        .toLocaleLowerCase(),
+      text: [
+        entity.name,
+        ...(entity.aliases || []),
+        entity.summary || '',
+        ...(entity.tags || []),
+        entity.assignmentType || '',
+        entity.subtype || '',
+        entity.category || '',
+      ].join(' ').toLocaleLowerCase(),
     })));
 
   return Object.freeze({
@@ -121,6 +138,10 @@ export const buildSuccessionIndexes = (data) => {
     childrenByLocation: freezeMapValues(childrenByLocation),
     relationshipsByEntity: freezeMapValues(relationshipsByEntity),
     abilitiesByOwner: freezeMapValues(abilitiesByOwner),
+    assignmentsByPerson: freezeMapValues(assignmentsByPerson),
+    assignmentsBySubject: freezeMapValues(assignmentsBySubject),
+    assignmentsByPrincipal: freezeMapValues(assignmentsByPrincipal),
+    assignmentsByLocation: freezeMapValues(assignmentsByLocation),
     locationHistoryByLocation: freezeMapValues(locationHistoryByLocation),
     locationHistoryByCharacter: freezeMapValues(locationHistoryByCharacter),
     searchDocuments,
