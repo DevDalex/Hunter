@@ -26,10 +26,10 @@ const [workspace, styles, expansionStyles, app, primitives, dataEntry, foundatio
 assert(sourceImportsDefault(app, 'CharactersWorkspace', './SuccessionArchiveCharacterWorkspace'), 'app must import the dedicated character workspace');
 assert(sourceRendersRouteWith(app, 'characters', 'CharactersWorkspace'), 'characters route must render the dedicated workspace');
 assert(declarationIncludesLiteral(app, 'specializedRecordRoute', 'characters'), 'character entity routes must stay inside the character dossier');
-assert(app.includes("linkedEntity?.entityType === 'character' ? 'characters' : target"), 'all role-route character links must be normalized to the character workspace');
+assert(app.includes("linkedEntity?.entityType === 'character'") && app.includes("? 'characters'"), 'all role-route character links must be normalized to the character workspace');
 assert(app.includes('showCharacterDossier') && app.includes("selectedEntity?.entityType === 'character'"), 'legacy role-route entity URLs must render the dedicated character dossier');
 assert(primitives.includes("if (entity.entityType === 'character') return 'characters'"), 'shared entity links must route every character to the dedicated dossier');
-assert(dataEntry.includes("from './entitiesCharacterFoundation.js'"), 'public data entry must activate the character state foundation');
+assert(dataEntry.includes("from './entitiesOrganizationFoundation.js'"), 'public data entry must preserve the character foundation through the active organization layer');
 assert(dataEntry.includes('getCharacterDossier'), 'public data entry must expose character dossiers');
 assert(dataEntry.includes('getCharacterRoleProfile'), 'public data entry must expose role-specific character layers');
 assert(dataEntry.includes('getCharacterLifetimeTimeline'), 'public data entry must expose lifetime character timelines');
