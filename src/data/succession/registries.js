@@ -100,6 +100,8 @@ export const RELATIONSHIP_TYPES = Object.freeze([
   'protective',
   'political',
   'alliance',
+  'command',
+  'deception',
   'rivalry',
   'hostile',
   'unknown',
