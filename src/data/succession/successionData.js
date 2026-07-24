@@ -1,4 +1,4 @@
-import { successionArchiveData } from './entitiesAbilityFoundation.js';
+import { successionArchiveData } from './entitiesEventFoundation.js';
 import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
@@ -20,6 +20,11 @@ export const {
   getEventsForChapter,
   getEventsForCharacter,
   getEventsAtLocation,
+  getEventsForAbility,
+  getEventsForOrganization,
+  getChaptersForAbility,
+  getLocationsForAbility,
+  getAbilitiesAtLocation,
   getAppearancesForCharacter,
   getOrganizationMembers,
   getLocationChildren,
