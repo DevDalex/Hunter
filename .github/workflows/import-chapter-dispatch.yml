@@ -42,6 +42,7 @@ jobs:
           const replace = payload.replace === true;
           const selectedImages = Array.isArray(payload.selected_images) ? payload.selected_images : [];
           const requestId = String(payload.request_id || '').trim();
+          const maxChapterNumber = 9999;
 
           const allowedHost = (hostname) => hostname === '3asq.online' || hostname.endsWith('.3asq.online');
           let source;
@@ -49,8 +50,8 @@ jobs:
           if (!['http:', 'https:'].includes(source.protocol) || !allowedHost(source.hostname.toLowerCase())) {
             throw new Error('The queued source URL is not on the allowed chapter host.');
           }
-          if (!Number.isInteger(chapter) || chapter < 338 || chapter > 414) {
-            throw new Error('Chapter must be from 338 through 414.');
+          if (!Number.isInteger(chapter) || chapter < 338 || chapter > maxChapterNumber) {
+            throw new Error(`Chapter must be from 338 through ${maxChapterNumber}.`);
           }
           if (!requestId || requestId.length > 100) throw new Error('The import request ID is missing or invalid.');
           if (selectedImages.length < 1 || selectedImages.length > 120) {
@@ -111,7 +112,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "public/media/succession-contest/chapters/$CHAPTER" src/data/successionChapterMedia.generated.js
+          git add "public/media/succession-contest/chapters/$CHAPTER" src/data/successionChapterMedia.generated.js src/data/successionChapterAvailability.generated.js
           git diff --cached --quiet && { echo "No repository changes were produced."; exit 1; }
           git commit -m "Import Succession Chapter $CHAPTER selected pages"
           git pull --rebase origin main
