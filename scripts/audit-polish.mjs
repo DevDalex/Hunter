@@ -5,7 +5,7 @@ const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(`Polish audit failed: ${message}`); };
 
-const [safeImage, blackWhale, worldAtlas, worldMap, encyclopedia, familyTree, royalTree, royalTreeCss, archiveShell, archiveContrast, timeline, successionDossier, css, visualQa] = await Promise.all([
+const [safeImage, blackWhale, worldAtlas, worldMap, encyclopedia, familyTree, royalTree, royalTreeCss, royalNetworks, archiveShell, archiveContrast, deepContrast, timeline, successionDossier, css, visualQa] = await Promise.all([
   read('src/components/SafeImage.jsx'),
   read('src/components/BlackWhaleGuide.jsx'),
   read('src/components/WorldAtlas.jsx'),
@@ -14,8 +14,10 @@ const [safeImage, blackWhale, worldAtlas, worldMap, encyclopedia, familyTree, ro
   read('src/components/FamilyTree.jsx'),
   read('src/components/succession/RoyalFamilyGuardTree.jsx'),
   read('src/components/succession/RoyalFamilyGuardTree.css'),
+  read('src/data/successionProtectionNetworks.js'),
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionArchiveContrastFixes.css'),
+  read('src/components/succession/SuccessionArchiveDeepContrastFixes.css'),
   read('src/components/SuccessionTimeline.jsx'),
   read('src/components/SuccessionDossier.jsx'),
   read('src/styles.css'),
@@ -29,13 +31,17 @@ assert(blackWhale.includes('routeKind') && blackWhale.includes('ship-hotspot-lay
 assert(timeline.includes("['swimlanes', 'Concurrent lanes'") && timeline.includes('timeline-swimlanes__grid') && timeline.includes("['overview', 'standard', 'complete']"), 'the timeline must provide concurrent lanes and a complete-density view');
 assert(familyTree.includes('RoyalFamilyGuardTree'), 'the family-tree route must mount the unified royal visualization');
 assert(royalTree.includes('HoverCard') && royalTree.includes('lockedGuard') && royalTree.includes('royal-guard-tree__inspector'), 'the royal visualization must retain smooth previews, locked selections, and a focused detail panel');
+assert(royalTree.includes('networkKindLabel') && royalTree.includes('is-${guard.kind}') && royalTree.includes('surveillanceCount'), 'the royal visualization must distinguish protection, placements, and surveillance');
+assert(royalNetworks.includes('categorizedActorsByPrince') && royalNetworks.includes("actor('Izunavi', 'kurapika-placement'") && !royalNetworks.includes('roomText:'), 'royal networks must use explicit assignments instead of prose-based team inference');
 assert(royalTreeCss.includes('.royal-guard-tree__king-stem') && royalTreeCss.includes('.royal-guard-tree__branch-stem') && royalTreeCss.includes('.royal-guard-tree__guard-line') && royalTreeCss.includes('@keyframes royal-guard-tree-panel-in'), 'the royal visualization must retain connected lines and animated visual feedback');
-assert(archiveShell.includes("import './SuccessionArchiveContrastFixes.css';"), 'the archive shell must load the final shared workspace contrast layer');
+assert(archiveShell.includes("import './SuccessionArchiveContrastFixes.css';") && archiveShell.includes("import './SuccessionArchiveDeepContrastFixes.css';"), 'the archive shell must load both shared workspace contrast layers');
 assert(archiveContrast.includes('--succession-dark-text: #f5efe6')
   && archiveContrast.includes('.succession-character-ledger > button')
   && archiveContrast.includes('.succession-extended-hero')
   && archiveContrast.includes('.succession-mafia-workspace__hero')
   && archiveContrast.includes('color: var(--succession-dark-text) !important;'), 'Characters, Hunters, Mafia, Military, Organizations, and related dark workspaces must explicitly own readable foreground colors');
+assert(deepContrast.includes('.deep-dossier--embedded') && deepContrast.includes('.succession-beast-grid > button') && deepContrast.includes('.succession-event-timeline > button'), 'Nen, Guardian Beast, and event cards must own dark-panel contrast');
+assert(deepContrast.includes('.succession-body-state-ledger') && deepContrast.includes('.succession-relationship-ledger > article') && deepContrast.includes('.succession-chapter-record') && deepContrast.includes('.succession-glossary-list > article'), 'death, relationship, chapter, and glossary routes must own dark-panel contrast');
 assert(encyclopedia.includes('<HorizontalScrollHint>Swipe the category shelf'), 'the encyclopedia category shelf needs a mobile scroll cue');
 assert(worldAtlas.includes('worldGalleryIds.length') && !worldAtlas.includes("|| '…'"), 'the World Atlas metric must use an honest settled value');
 assert(worldMap.includes('worldMapAssets.clean.src') && worldMap.includes('fitRoute(activeRoute)') && worldMap.includes('worldMapUnplacedLocations'), 'the geographic atlas must keep its sourced canvas, route fitting, and deliberately unpinned records');
@@ -46,4 +52,4 @@ assert(visualQa.includes('pendingImages') && visualQa.includes('audit.pendingIma
 const readerText = [blackWhale, worldAtlas, worldMap, encyclopedia, familyTree, royalTree, timeline].join('\n');
 assert(!/image placeholder|placeholder image/i.test(readerText), 'reader-facing placeholder-image copy is forbidden');
 
-console.log('Polish audit passed: deterministic media; progressive rooms; clickable ship hotspots; concurrent timeline lanes; unified animated royal family protection network; readable Succession workspace contrast; contained uncropped imagery.');
+console.log('Polish audit passed: deterministic media; progressive rooms; clickable ship hotspots; concurrent timeline lanes; classified royal protection network; complete Succession contrast ownership; contained uncropped imagery.');
