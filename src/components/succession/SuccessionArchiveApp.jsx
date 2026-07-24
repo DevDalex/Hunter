@@ -29,6 +29,7 @@ import CharactersWorkspace from './SuccessionArchiveCharacterWorkspace';
 import EvidenceWorkspace from './SuccessionArchiveEvidenceWorkspace';
 import EventsWorkspace from './SuccessionArchiveEventWorkspace';
 import LocationsWorkspace from './SuccessionArchiveLocationWorkspace';
+import OrganizationsWorkspace from './SuccessionArchiveOrganizationWorkspace';
 import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';
 import {
   ChapterRecordsWorkspaceV2,
@@ -37,7 +38,6 @@ import {
   HuntersWorkspace,
   MediaWorkspace,
   MilitaryWorkspace,
-  OrganizationsWorkspace,
   PoliticsWorkspace,
 } from './SuccessionArchiveExtendedWorkspaces';
 import {
@@ -206,16 +206,22 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const route = getSuccessionArchiveRoute(routeTarget);
   const navigate = (target, params = {}) => {
     const linkedEntity = params.entity ? getEntityById(params.entity) : null;
-    onNavigate(linkedEntity?.entityType === 'character' ? 'characters' : target, params);
+    const canonicalTarget = linkedEntity?.entityType === 'character'
+      ? 'characters'
+      : linkedEntity?.entityType === 'organization'
+        ? 'organizations'
+        : target;
+    onNavigate(canonicalTarget, params);
   };
   const treeView = route.id === 'princes' && routeParams.view === 'tree';
   const preserved = ['black-whale', 'timeline', 'nen'].includes(route.id);
   const dedicated = new Set(['princes', 'queens', 'bodyguards', 'mafia', 'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']);
   const selectedEntity = routeParams.entity ? getEntityById(routeParams.entity) : null;
-  const specializedRecordRoute = ['characters', 'princes', 'queens', 'chapters', 'locations', 'bodyguards', 'relationships'].includes(route.id);
+  const specializedRecordRoute = ['characters', 'princes', 'queens', 'chapters', 'locations', 'bodyguards', 'relationships', 'organizations'].includes(route.id);
   const showCharacterDossier = Boolean(selectedEntity?.entityType === 'character' && !treeView);
-  const showDomainDetail = Boolean(selectedEntity && !showCharacterDossier && !treeView && !specializedRecordRoute);
-  const showRouteWorkspace = !showCharacterDossier && !showDomainDetail;
+  const showOrganizationDossier = Boolean(selectedEntity?.entityType === 'organization' && !treeView);
+  const showDomainDetail = Boolean(selectedEntity && !showCharacterDossier && !showOrganizationDossier && !treeView && !specializedRecordRoute);
+  const showRouteWorkspace = !showCharacterDossier && !showOrganizationDossier && !showDomainDetail;
 
   return <SuccessionArchiveShell activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} onExitArchive={onExitArchive} onOpenSearch={onOpenSearch} onIntent={onIntent}>
     {route.id === 'archive' && <ArchiveHome onNavigate={navigate} />}
@@ -223,6 +229,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {route.id === 'search' && <SearchWorkspace onNavigate={navigate} />}
     {treeView && <FamilyTreeWorkspace spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showCharacterDossier && <CharactersWorkspace routeParams={{ ...routeParams, entity: selectedEntity.id }} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
+    {showOrganizationDossier && <OrganizationsWorkspace routeParams={{ ...routeParams, entity: selectedEntity.id }} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showDomainDetail && <DomainEntityDetail entity={selectedEntity} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'characters' && <CharactersWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'princes' && !treeView && <PrincesWorkspace routeParams={routeParams} onNavigate={navigate} />}
@@ -231,7 +238,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {showRouteWorkspace && route.id === 'hunters' && <HuntersWorkspace onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'mafia' && <MafiaWorkspace routeParams={routeParams} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'military' && <MilitaryWorkspace onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'organizations' && <OrganizationsWorkspace onNavigate={navigate} />}
+    {showRouteWorkspace && route.id === 'organizations' && <OrganizationsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'politics' && <PoliticsWorkspace onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'locations' && <LocationsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'guardian-spirit-beasts' && <GuardianBeastsWorkspace routeParams={routeParams} onNavigate={navigate} />}
