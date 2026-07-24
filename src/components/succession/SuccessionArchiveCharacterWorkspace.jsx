@@ -5,6 +5,8 @@ import {
   ArrowRight,
   BookOpen,
   Building2,
+  Clock3,
+  Crown,
   MapPin,
   Network,
   Search,
@@ -15,6 +17,8 @@ import {
 import {
   getCharacterCurrentState,
   getCharacterDossier,
+  getCharacterRoleProfile,
+  getCharacterStateCoverageReport,
   getCharacterStateTimeline,
   getEntitiesByType,
   getEntityById,
@@ -22,16 +26,17 @@ import {
 import {
   ArchiveState,
   EntityBadge,
-  EntityLink,
   EntityVisual,
   SourceReference,
   entityWorkspaceTarget,
 } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveCharacterWorkspace.css';
+import './SuccessionArchiveCharacterWorkspaceExpansion.css';
 
 const normalize = (value) => String(value || '').trim().toLocaleLowerCase();
 const roleLabel = (value) => String(value || '').replaceAll('-', ' ');
 const rangeLabel = (range) => `Ch. ${range.start}${range.end === null || range.end === undefined ? '–current' : range.end === range.start ? '' : `–${range.end}`}`;
+const timelineKinds = ['all', 'state', 'movement', 'assignment', 'relationship', 'event', 'appearance'];
 
 const StateFact = ({ label, children }) => {
   if (children === null || children === undefined || children === '') return null;
@@ -46,13 +51,29 @@ const EntityButton = ({ entity, onNavigate, note }) => {
   </button>;
 };
 
+const TimelineLink = ({ entry, onNavigate }) => {
+  const linkedEntity = entry.entityId ? getEntityById(entry.entityId) : null;
+  const location = entry.locationId ? getEntityById(entry.locationId) : null;
+  const targetEntity = linkedEntity?.entityType === 'location-history' ? location : linkedEntity || location;
+  if (!targetEntity) return null;
+  return <button type="button" onClick={() => onNavigate(entityWorkspaceTarget(targetEntity), { entity: targetEntity.id, chapter: entry.chapterRange.start })}>Open linked record <ArrowRight size={12} /></button>;
+};
+
 function CharacterDirectory({ characters, onNavigate }) {
   const [query, setQuery] = useState('');
   const [role, setRole] = useState('all');
+  const [layer, setLayer] = useState('all');
+  const coverage = getCharacterStateCoverageReport();
   const roles = useMemo(() => ['all', ...new Set(characters.flatMap((character) => character.roles || []))], [characters]);
+  const layers = useMemo(() => [...new Map(characters.map((character) => {
+    const profile = getCharacterRoleProfile(character.id);
+    return [profile.id, profile];
+  })).values()], [characters]);
   const visible = useMemo(() => characters.filter((character) => {
     const state = getCharacterCurrentState(character.id);
+    const roleProfile = getCharacterRoleProfile(character.id);
     const roleMatch = role === 'all' || (character.roles || []).includes(role);
+    const layerMatch = layer === 'all' || roleProfile?.id === layer;
     const text = normalize([
       character.name,
       character.id,
@@ -63,28 +84,36 @@ function CharacterDirectory({ characters, onNavigate }) {
       state?.bodyState,
       state?.consciousnessState,
       state?.threatLevel,
+      roleProfile?.label,
+      roleProfile?.mandate,
     ].join(' '));
-    return roleMatch && (!query.trim() || text.includes(normalize(query)));
-  }), [characters, query, role]);
-  const explicitProfiles = characters.filter((character) => getCharacterStateTimeline(character.id).length > 0).length;
+    return roleMatch && layerMatch && (!query.trim() || text.includes(normalize(query)));
+  }), [characters, layer, query, role]);
 
   return <div className="succession-character-workspace">
     <section className="succession-character-hero">
-      <div><span><Users size={16} /> Batch 2 · People state graph</span><h2>Characters as chapter-bounded operational records</h2><p>Search the cast by identity, role, body state, threat, protection, allegiance, and current operation. Explicit state timelines remain separate from graph-derived fallback summaries.</p></div>
-      <dl><div><dt>Characters</dt><dd>{characters.length}</dd></div><div><dt>Explicit state profiles</dt><dd>{explicitProfiles}</dd></div><div><dt>Visible</dt><dd>{visible.length}</dd></div></dl>
+      <div><span><Users size={16} /> Batch 2 · People and institution dossiers</span><h2>Characters as chapter-bounded operational records</h2><p>Search the cast by identity, role, body state, threat, protection, allegiance, and operational layer. Explicit timelines remain separate from graph-derived fallback summaries.</p></div>
+      <dl><div><dt>Characters</dt><dd>{characters.length}</dd></div><div><dt>Explicit profiles</dt><dd>{coverage.explicitCharacters}</dd></div><div><dt>Coverage</dt><dd>{coverage.coveragePercent}%</dd></div></dl>
     </section>
 
     <section className="succession-character-filters" aria-label="Character filters">
       <label><Search size={16} /><span className="sr-only">Search characters</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Name, role, state, threat, allegiance…" /></label>
       <label><span>Role</span><select value={role} onChange={(event) => setRole(event.target.value)}>{roles.map((item) => <option value={item} key={item}>{item === 'all' ? 'All roles' : roleLabel(item)}</option>)}</select></label>
+      <label><span>Operational layer</span><select value={layer} onChange={(event) => setLayer(event.target.value)}><option value="all">All layers</option>{layers.map((item) => <option value={item.id} key={item.id}>{item.label}</option>)}</select></label>
+    </section>
+
+    <section className="succession-character-coverage" aria-label="Character state coverage by operational layer">
+      {coverage.roleLayers.map((item) => <article key={item.id}><span>{item.label}</span><b>{item.explicit} / {item.total}</b><small>explicit profiles</small></article>)}
     </section>
 
     <section className="succession-character-grid" aria-label="Canonical character directory">
       {visible.map((character) => {
         const state = getCharacterCurrentState(character.id);
+        const roleProfile = getCharacterRoleProfile(character.id);
         return <article key={character.id}>
           <EntityVisual entity={character} />
           <div className="succession-character-grid__meta"><EntityBadge entity={character} compact /><span>{state?.life || character.status?.life || 'unknown'}</span></div>
+          <small className="succession-character-layer-label">{roleProfile?.label}</small>
           <h3>{character.name}</h3>
           <p>{state?.operationalState || character.summary}</p>
           <dl><StateFact label="Body">{state?.bodyState}</StateFact><StateFact label="Threat">{state?.threatLevel}</StateFact></dl>
@@ -92,11 +121,12 @@ function CharacterDirectory({ characters, onNavigate }) {
         </article>;
       })}
     </section>
-    {!visible.length && <ArchiveState kind="empty" title="No matching characters" description="Clear the state search or choose a different role." />}
+    {!visible.length && <ArchiveState kind="empty" title="No matching characters" description="Clear the state search or choose different role and operational-layer filters." />}
   </div>;
 }
 
 function CharacterDossier({ character, chapter, spoilerLimit, onChapterChange, onNavigate, characters }) {
+  const [timelineKind, setTimelineKind] = useState('all');
   const dossier = getCharacterDossier(character.id, chapter);
   if (!dossier) return <ArchiveState kind="empty" title="Character dossier unavailable" description="The canonical character record could not be resolved." />;
 
@@ -106,16 +136,33 @@ function CharacterDossier({ character, chapter, spoilerLimit, onChapterChange, o
   const assignments = dossier.assignments?.assignments || [];
   const relationships = dossier.relationships?.relationships || [];
   const latestAppearance = dossier.appearances.at(-1)?.chapter;
+  const roleProfile = dossier.roleProfile;
+  const visibleTimeline = timelineKind === 'all' ? dossier.lifetimeTimeline : dossier.lifetimeTimeline.filter((entry) => entry.kind === timelineKind);
+  const timelineCounts = Object.fromEntries(timelineKinds.slice(1).map((kind) => [kind, dossier.lifetimeTimeline.filter((entry) => entry.kind === kind).length]));
 
   return <article className="succession-character-dossier">
     <header className="succession-character-dossier__header">
       <button type="button" className="succession-character-back" onClick={() => onNavigate('characters')}><ArrowLeft size={15} /> Character directory</button>
       <div className="succession-character-dossier__identity">
         <EntityVisual entity={character} />
-        <div><EntityBadge entity={character} /><span>{(character.roles || []).slice(0, 4).map(roleLabel).join(' · ')}</span><h2>{character.name}</h2><p>{character.summary}</p></div>
+        <div><EntityBadge entity={character} /><span>{(character.roles || []).slice(0, 5).map(roleLabel).join(' · ')}</span><h2>{character.name}</h2><p>{character.summary}</p></div>
       </div>
       <label className="succession-character-chapter"><span>State at chapter</span><input type="number" min="338" max={spoilerLimit} value={chapter} onChange={(event) => onChapterChange(Math.min(spoilerLimit, Math.max(338, Number(event.target.value) || spoilerLimit)))} /></label>
     </header>
+
+    <section className="succession-character-role-board">
+      <header><Crown size={18} /><div><span>Role-specific operations</span><h3>{roleProfile.label}</h3></div></header>
+      <div className="succession-character-role-board__grid">
+        <article><span>Mandate</span><p>{roleProfile.mandate}</p></article>
+        <article><span>Authority</span><p>{roleProfile.authority}</p></article>
+        <article><span>Active graph roles</span><p>{roleProfile.assignmentRoles.map(roleLabel).join(' · ') || 'No active assignment role at this chapter.'}</p></article>
+        <article><span>Relationship reach</span><p>{roleProfile.relationshipCount} active relationship edge{roleProfile.relationshipCount === 1 ? '' : 's'} at Chapter {chapter}.</p></article>
+      </div>
+      <div className="succession-character-role-board__lists">
+        <section><h4>Responsibilities</h4>{roleProfile.responsibilities.length ? <ul>{roleProfile.responsibilities.map((item) => <li key={item}>{item}</li>)}</ul> : <p>No direct assignment objective is active at this chapter.</p>}</section>
+        <section><h4>Vulnerabilities and unresolved pressure</h4>{roleProfile.vulnerabilities.length ? <ul>{roleProfile.vulnerabilities.map((item) => <li key={item}>{item}</li>)}</ul> : <p>No structured vulnerability is published at this chapter.</p>}</section>
+      </div>
+    </section>
 
     <section className="succession-character-state-board">
       <div><span>Operational state</span><h3>{dossier.state.operationalState}</h3><p>{dossier.state.allegianceState}</p></div>
@@ -131,21 +178,40 @@ function CharacterDossier({ character, chapter, spoilerLimit, onChapterChange, o
       </dl>
     </section>
 
+    <section className="succession-character-history-summary">
+      <article><Clock3 size={17} /><span><b>{dossier.eventHistory.length}</b><small>events through chapter</small></span></article>
+      <article><MapPin size={17} /><span><b>{dossier.movementHistory.length}</b><small>movement records</small></span></article>
+      <article><Shield size={17} /><span><b>{dossier.assignmentHistory.length}</b><small>assignment records</small></span></article>
+      <article><Network size={17} /><span><b>{dossier.relationshipHistory.length}</b><small>relationship records</small></span></article>
+    </section>
+
     <div className="succession-character-dossier__columns">
-      <section><header><Shield size={17} /><div><span>Assignments</span><h3>Operative, principal, subject, allegiance, and reporting roles</h3></div></header>{assignments.length ? <div>{assignments.map((assignment) => <EntityButton key={assignment.id} entity={assignment} onNavigate={onNavigate} note={`${roleLabel(assignment.assignmentType)} · ${assignment.status}`} />)}</div> : <p>No active assignment intersects Chapter {chapter}.</p>}</section>
+      <section><header><Shield size={17} /><div><span>Assignments</span><h3>Active operative, principal, subject, allegiance, and reporting roles</h3></div></header>{assignments.length ? <div>{assignments.map((assignment) => <EntityButton key={assignment.id} entity={assignment} onNavigate={onNavigate} note={`${roleLabel(assignment.assignmentType)} · ${assignment.status}`} />)}</div> : <p>No active assignment intersects Chapter {chapter}.</p>}</section>
       <section><header><Network size={17} /><div><span>Relationships</span><h3>Active directed and reciprocal edges</h3></div></header>{relationships.length ? <div>{relationships.map((relationship) => {
         const otherId = relationship.sourceEntityId === character.id ? relationship.targetEntityId : relationship.sourceEntityId;
         return <EntityButton key={relationship.id} entity={getEntityById(otherId)} onNavigate={onNavigate} note={`${roleLabel(relationship.relationshipType)} · ${relationship.sentiment}`} />;
       })}</div> : <p>No active relationship edge intersects Chapter {chapter}.</p>}</section>
       <section><header><Sparkles size={17} /><div><span>Nen</span><h3>Known abilities and conscious knowledge</h3></div></header>{dossier.abilities.length ? <div>{dossier.abilities.map((ability) => <EntityButton key={ability.id} entity={ability} onNavigate={onNavigate} note={ability.category || ability.classification?.nenTypes?.join(' · ')} />)}</div> : <p>No canonical ability is linked to this character.</p>}</section>
-      <section><header><Activity size={17} /><div><span>Events</span><h3>Operations active at the selected chapter</h3></div></header>{dossier.events.length ? <div>{dossier.events.map((event) => <EntityButton key={event.id} entity={event} onNavigate={onNavigate} note={rangeLabel(event.chapterRange)} />)}</div> : <p>No event range intersects Chapter {chapter}.</p>}</section>
+      <section><header><Activity size={17} /><div><span>Active events</span><h3>Operations intersecting the selected chapter</h3></div></header>{dossier.events.length ? <div>{dossier.events.map((event) => <EntityButton key={event.id} entity={event} onNavigate={onNavigate} note={rangeLabel(event.chapterRange)} />)}</div> : <p>No event range intersects Chapter {chapter}.</p>}</section>
       <section><header><Building2 size={17} /><div><span>Affiliations</span><h3>Published institutional roles</h3></div></header>{dossier.affiliations.length ? <div>{dossier.affiliations.map((affiliation) => <EntityButton key={`${affiliation.organizationId}-${affiliation.role}`} entity={getEntityById(affiliation.organizationId)} onNavigate={onNavigate} note={`${affiliation.role} · ${affiliation.status}`} />)}</div> : <p>No structured affiliation is published.</p>}</section>
       <section><header><MapPin size={17} /><div><span>Protection and threats</span><h3>Assignments targeting this character</h3></div></header><dl><StateFact label="Protective assignments">{dossier.protectionAssignments.map((item) => item.name).join(' · ') || 'None active'}</StateFact><StateFact label="Threat assignments">{dossier.threatAssignments.map((item) => item.name).join(' · ') || 'None active'}</StateFact></dl></section>
     </div>
 
-    <section className="succession-character-timeline"><header><BookOpen size={17} /><div><span>State history</span><h3>Explicit chapter-bounded records</h3></div></header>{dossier.timeline.length ? <div>{dossier.timeline.map((record) => <article className={record.id === dossier.state.id ? 'is-active' : ''} key={record.id}><span>{rangeLabel(record.chapterRange)} · {record.certainty}</span><h4>{record.operationalState}</h4><p>{record.bodyState} · {record.consciousnessState}</p>{record.openQuestions.length > 0 && <ul>{record.openQuestions.map((question) => <li key={question}>{question}</li>)}</ul>}</article>)}</div> : <p>This character currently uses the graph-derived fallback state.</p>}</section>
+    <section className="succession-character-lifetime">
+      <header><BookOpen size={17} /><div><span>Lifetime chronology</span><h3>State, movement, assignments, relationships, events, and appearances</h3></div></header>
+      <nav aria-label="Filter character lifetime chronology">{timelineKinds.map((kind) => <button type="button" className={timelineKind === kind ? 'is-active' : ''} onClick={() => setTimelineKind(kind)} key={kind}>{kind === 'all' ? `All ${dossier.lifetimeTimeline.length}` : `${roleLabel(kind)} ${timelineCounts[kind]}`}</button>)}</nav>
+      {visibleTimeline.length ? <div>{visibleTimeline.map((entry) => <article key={entry.id}>
+        <span>{entry.kind} · {rangeLabel(entry.chapterRange)} · {entry.certainty}</span>
+        <h4>{entry.label}</h4>
+        <p>{entry.summary}</p>
+        {entry.locationId && <small>{getEntityById(entry.locationId)?.name || entry.locationId}</small>}
+        <TimelineLink entry={entry} onNavigate={onNavigate} />
+      </article>)}</div> : <p>No {timelineKind === 'all' ? '' : `${timelineKind} `}records are available through Chapter {chapter}.</p>}
+    </section>
 
-    {!!dossier.sources.length && <section className="succession-character-sources"><header><BookOpen size={17} /><div><span>Evidence</span><h3>Character and state sources</h3></div></header>{dossier.sources.map((source) => <SourceReference key={source.id} source={source} onNavigate={onNavigate} />)}</section>}
+    <section className="succession-character-timeline"><header><BookOpen size={17} /><div><span>State history</span><h3>Explicit chapter-bounded state records</h3></div></header>{dossier.timeline.length ? <div>{dossier.timeline.map((record) => <article className={record.id === dossier.state.id ? 'is-active' : ''} key={record.id}><span>{rangeLabel(record.chapterRange)} · {record.certainty}</span><h4>{record.operationalState}</h4><p>{record.bodyState} · {record.consciousnessState}</p>{record.openQuestions.length > 0 && <ul>{record.openQuestions.map((question) => <li key={question}>{question}</li>)}</ul>}</article>)}</div> : <p>This character currently uses the graph-derived fallback state.</p>}</section>
+
+    {!!dossier.sources.length && <section className="succession-character-sources"><header><BookOpen size={17} /><div><span>Evidence</span><h3>Character, state, movement, assignment, relationship, and event sources</h3></div></header>{dossier.sources.map((source) => <SourceReference key={source.id} source={source} onNavigate={onNavigate} />)}</section>}
 
     <footer className="succession-character-dossier__footer">
       {previous ? <button type="button" onClick={() => onNavigate('characters', { entity: previous.id, chapter })}><ArrowLeft size={14} /><span><small>Previous</small>{previous.name}</span></button> : <span />}
