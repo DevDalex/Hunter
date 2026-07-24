@@ -34,6 +34,12 @@ export const buildSuccessionIndexes = (data) => {
   const membersByOrganization = new Map();
   const childrenByLocation = new Map();
   const relationshipsByEntity = new Map();
+  const relationshipsBySource = new Map();
+  const relationshipsByTarget = new Map();
+  const relationshipsByType = new Map();
+  const relationshipsBySentiment = new Map();
+  const relationshipsByEvent = new Map();
+  const relationshipsByChapter = new Map();
   const abilitiesByOwner = new Map();
   const assignmentsByPerson = new Map();
   const assignmentsBySubject = new Map();
@@ -105,16 +111,25 @@ export const buildSuccessionIndexes = (data) => {
     if (location.parentId) append(childrenByLocation, location.parentId, location.id);
   }
 
+  const latestChapter = data.chapters.at(-1)?.number || 414;
   for (const relationship of data.relationships) {
     append(relationshipsByEntity, relationship.sourceEntityId, relationship.id);
     append(relationshipsByEntity, relationship.targetEntityId, relationship.id);
+    append(relationshipsBySource, relationship.sourceEntityId, relationship.id);
+    append(relationshipsByTarget, relationship.targetEntityId, relationship.id);
+    append(relationshipsByType, relationship.relationshipType, relationship.id);
+    append(relationshipsBySentiment, relationship.sentiment, relationship.id);
+    for (const relatedEventId of relationship.relatedEventIds || []) append(relationshipsByEvent, relatedEventId, relationship.id);
+    const end = relationship.chapterRange.end ?? latestChapter;
+    for (let chapter = relationship.chapterRange.start; chapter <= end; chapter += 1) {
+      append(relationshipsByChapter, chapter, relationship.id);
+    }
   }
 
   for (const ability of data.abilities) {
     for (const ownerId of ability.ownerIds || []) append(abilitiesByOwner, ownerId, ability.id);
   }
 
-  const latestChapter = data.chapters.at(-1)?.number || 414;
   for (const assignment of data.assignments || []) {
     append(assignmentsByPerson, assignment.personId, assignment.id);
     append(assignmentsBySubject, assignment.subjectEntityId, assignment.id);
@@ -149,11 +164,18 @@ export const buildSuccessionIndexes = (data) => {
         entity.summary || '',
         ...(entity.tags || []),
         entity.assignmentType || '',
+        entity.relationshipType || '',
         entity.status || '',
+        entity.sentiment || '',
         entity.secrecy || '',
+        entity.strength || '',
+        entity.certainty || '',
         entity.objective || '',
         entity.authorityBasis || '',
+        entity.basis || '',
+        entity.operationalState || '',
         ...(entity.operationalNotes || []),
+        ...(entity.evidenceNotes || []),
         entity.subtype || '',
         entity.category || '',
         entity.locationType || '',
@@ -184,6 +206,12 @@ export const buildSuccessionIndexes = (data) => {
     membersByOrganization: freezeMapValues(membersByOrganization),
     childrenByLocation: freezeMapValues(childrenByLocation),
     relationshipsByEntity: freezeMapValues(relationshipsByEntity),
+    relationshipsBySource: freezeMapValues(relationshipsBySource),
+    relationshipsByTarget: freezeMapValues(relationshipsByTarget),
+    relationshipsByType: freezeMapValues(relationshipsByType),
+    relationshipsBySentiment: freezeMapValues(relationshipsBySentiment),
+    relationshipsByEvent: freezeMapValues(relationshipsByEvent),
+    relationshipsByChapter: freezeMapValues(relationshipsByChapter),
     abilitiesByOwner: freezeMapValues(abilitiesByOwner),
     assignmentsByPerson: freezeMapValues(assignmentsByPerson),
     assignmentsBySubject: freezeMapValues(assignmentsBySubject),
