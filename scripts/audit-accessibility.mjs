@@ -5,7 +5,7 @@ const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(`Accessibility audit failed: ${message}`); };
 
-const [app, main, css, contrastCss, accessibilityRuntime, header, familyTree, sectionTabs, blackWhale, worldMap, systemsDesk, search, drawer, packageJson] = await Promise.all([
+const [app, main, css, contrastCss, accessibilityRuntime, header, familyTree, royalTree, sectionTabs, blackWhale, worldMap, systemsDesk, search, drawer, packageJson] = await Promise.all([
   read('src/App.jsx'),
   read('src/main.jsx'),
   read('src/styles.css'),
@@ -13,6 +13,7 @@ const [app, main, css, contrastCss, accessibilityRuntime, header, familyTree, se
   read('src/lib/accessibilityRuntime.js'),
   read('src/components/Header.jsx'),
   read('src/components/FamilyTree.jsx'),
+  read('src/components/succession/RoyalFamilyGuardTree.jsx'),
   read('src/components/SectionTabs.jsx'),
   read('src/components/BlackWhaleGuide.jsx'),
   read('src/components/InteractiveWorldMap.jsx'),
@@ -33,13 +34,16 @@ assert(accessibilityRuntime.includes("['.yn-chain-inspector__menu', 'listbox']")
 assert(accessibilityRuntime.includes("document.querySelectorAll('.ca-table-wrap')") && accessibilityRuntime.includes('node.tabIndex = 0') && accessibilityRuntime.includes("node.setAttribute('aria-label'"), 'the Chimera hierarchy scroll region must be keyboard-focusable and named');
 assert(header.includes("event.key === 'Escape'") && header.includes("event.key !== 'Tab'") && header.includes('.header-links a, .header-actions button'), 'the narrow-browser menu must contain focus and close with Escape');
 assert(sectionTabs.includes("event.key === 'ArrowRight'") && sectionTabs.includes("event.key === 'Home'") && sectionTabs.includes("event.key === 'End'"), 'grouped section navigation needs full keyboard movement');
-assert(familyTree.includes("event.key === 'ArrowRight'") && familyTree.includes('role="tabpanel"') && familyTree.includes('tabIndex={treeMode === id ? 0 : -1}'), 'family-tree modes need roving keyboard focus and named panels');
+assert(familyTree.includes('RoyalFamilyGuardTree'), 'the family-tree route must mount the accessible unified royal visualization');
+assert(royalTree.includes('aria-pressed={active}') && royalTree.includes('aria-pressed={selected}') && royalTree.includes('aria-pressed={locked}'), 'queen, prince, and guard selections must expose their pressed state');
+assert(royalTree.includes('onFocus={() => setHoveredGuard(guard)}') && royalTree.includes('onBlur={() => setHoveredGuard(null)}'), 'guard identity previews must be keyboard accessible');
+assert(royalTree.includes('role="tooltip"') && royalTree.includes('aria-live="polite"'), 'royal previews and inspector changes need tooltip semantics and polite announcements');
+assert(royalTree.includes("status === 'deceased'") && royalTree.includes("? 'Deceased'"), 'the royal visualization must expose a written nonvisual death status');
 assert(blackWhale.includes('aria-label="Black Whale passenger manifest" tabIndex="0"'), 'the scrollable ship manifest must be keyboard-focusable and named');
 assert(worldMap.includes('Skip map and open location list') && worldMap.includes('world-map-inspector__mobile-toggle') && worldMap.includes('aria-label={`${location.name}, ${location.kind}'), 'the world map needs equivalent keyboard, list, and mobile-inspector access');
 assert(systemsDesk.includes('Filter organization charts by story period'), 'the organization-chart period selector needs an accessible name');
 assert(search.includes('role="status" aria-live="polite"'), 'archive-search result changes need a polite live announcement');
 assert(drawer.includes('role="status" aria-live="polite"') && drawer.includes("event.key === 'Escape'"), 'chapter source changes and drawer dismissal must be announced and keyboard-operable');
-assert(familyTree.includes('Confirmed deceased'), 'a written nonvisual death status must accompany the red X treatment');
 assert(packageJson.includes('"qa:accessibility"') && packageJson.includes('"audit:accessibility"'), 'repeatable accessibility commands are missing');
 
-console.log('Accessibility audit passed: semantic contrast layer; legacy ARIA parent-role preservation; skip navigation; contained menus; keyboard section and tree navigation; named scroll regions; live announcements; reduced motion and written status.');
+console.log('Accessibility audit passed: semantic contrast layer; legacy ARIA parent-role preservation; skip navigation; contained menus; keyboard-accessible royal family and guard network; named scroll regions; live announcements; reduced motion and written status.');
