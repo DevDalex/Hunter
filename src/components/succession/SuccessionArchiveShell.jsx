@@ -20,6 +20,7 @@ import {
   Users,
   X,
 } from 'lucide-react';
+import { ARCHIVE_BOUNDARY } from '../../data/archiveMeta';
 import { routeToHref } from '../../lib/appRouter';
 import {
   getSuccessionArchiveRoute,
@@ -157,7 +158,7 @@ export default function SuccessionArchiveShell({
         <ArchiveNavigation id="succession-desktop-navigation" activeId={route.id} onNavigate={navigate} onIntent={onIntent} />
         <details className="succession-archive__boundary">
           <summary>Reading boundary <b>Ch. {spoilerLimit}</b></summary>
-          <SpoilerControl value={spoilerLimit} latestChapter={414} onChange={onSpoilerChange} />
+          <SpoilerControl value={spoilerLimit} latestChapter={ARCHIVE_BOUNDARY} onChange={onSpoilerChange} />
         </details>
       </aside>
 
