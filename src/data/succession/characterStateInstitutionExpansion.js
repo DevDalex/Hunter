@@ -105,7 +105,7 @@ const profiles = [
     threatLevel: 'high',
     nenKnowledge: 'institutional awareness of Nen-enabled criminal conflict; personal ability is not established',
     allegianceState: 'Cha-R Family and Luzurus-linked sponsorship.',
-    locationId: 'location:black-whale:tier-5:cha-r-office',
+    locationId: 'location:black-whale:tier-5',
     openQuestions: ['Whether Cha-R can keep the Troupe directed toward Heil-Ly without losing control of Tier 5 remains unresolved.'],
     sources: [378, 390, 393, 399],
   }),
