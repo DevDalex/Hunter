@@ -176,14 +176,14 @@ function DirectoryWorkspace({ routeId, routeParams, onNavigate }) {
   </section>;
 }
 
-function SearchWorkspace({ onNavigate }) {
+function SearchWorkspace({ onNavigate, spoilerLimit }) {
   const [query, setQuery] = useState('');
-  const results = useMemo(() => query.trim() ? searchSuccessionArchive(query, { limit: 30 }) : [], [query]);
+  const results = useMemo(() => query.trim() ? searchSuccessionArchive(query, { limit: 30, chapter: spoilerLimit }) : [], [query, spoilerLimit]);
   return <section className="succession-search-workspace" aria-labelledby="succession-search-title">
     <label><Search size={20} aria-hidden="true" /><span className="sr-only">Search canonical Succession Archive</span><input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Character, organization, event, location, ability, condition…" /></label>
-    <p role="status" aria-live="polite">{query ? `${results.length} canonical result${results.length === 1 ? '' : 's'}` : 'Enter a term to search the canonical Succession graph.'}</p>
+    <p role="status" aria-live="polite">{query ? `${results.length} canonical result${results.length === 1 ? '' : 's'} through Chapter ${spoilerLimit}` : `Enter a term to search records available through Chapter ${spoilerLimit}.`}</p>
     <div>{results.map(({ entity, score }) => <article key={entity.id}><EntityVisual entity={entity} compact /><EntityBadge entity={entity} /><p>{entity.summary}</p><footer><span>Match {score}</span><EntityLink entity={entity} onNavigate={onNavigate}>Open</EntityLink></footer></article>)}</div>
-    {query && !results.length && <ArchiveState kind="empty" title="No canonical match" description="Try an alias, chapter number, organization, location, ability condition, or Nen cost." />}
+    {query && !results.length && <ArchiveState kind="empty" title="No canonical match inside this chapter boundary" description="Try an alias, organization, location, ability condition, or Nen cost already documented by the selected chapter." />}
   </section>;
 }
 
@@ -231,7 +231,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   return <SuccessionArchiveShell activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} onExitArchive={onExitArchive} onOpenSearch={onOpenSearch} onIntent={onIntent}>
     {route.id === 'archive' && <ArchiveHome onNavigate={navigate} />}
     {route.id === 'story' && <SuccessionStoryWorkspace onNavigate={navigate} />}
-    {route.id === 'search' && <SearchWorkspace onNavigate={navigate} />}
+    {route.id === 'search' && <SearchWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit} />}
     {treeView && <FamilyTreeWorkspace spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showCharacterDossier && <CharactersWorkspace routeParams={{ ...routeParams, entity: selectedEntity.id }} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showOrganizationDossier && <OrganizationsWorkspace routeParams={{ ...routeParams, entity: selectedEntity.id }} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
