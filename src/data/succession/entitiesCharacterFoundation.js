@@ -3,6 +3,7 @@ import { characterStateProfiles } from './characterStateFoundation.js';
 import { characterStateExpansionProfiles } from './characterStateExpansion.js';
 import { characterStateRoyalExpansionProfiles } from './characterStateRoyalExpansion.js';
 import { characterStateInstitutionExpansionProfiles } from './characterStateInstitutionExpansion.js';
+import { characterStatusKnowledge } from './characterStatusKnowledge.js';
 
 const characterIds = new Set([
   ...Object.keys(characterStateProfiles),
@@ -26,4 +27,5 @@ const mergedCharacterStateProfiles = Object.freeze(Object.fromEntries(
 export const successionArchiveData = Object.freeze({
   ...relationshipFoundationData,
   characterStateProfiles: mergedCharacterStateProfiles,
+  characterStatusKnowledge,
 });
