@@ -15,6 +15,7 @@ const assert = (condition, message) => {
 const auditPaths = Object.freeze([
   'scripts/audit-succession-archive-shell.mjs',
   'scripts/audit-succession-characters-workspace.mjs',
+  'scripts/audit-succession-organizations-workspace.mjs',
   'scripts/audit-succession-events-workspace.mjs',
   'scripts/audit-succession-locations-workspace.mjs',
   'scripts/audit-succession-black-whale-bridge.mjs',
@@ -32,17 +33,18 @@ const [app, primitives, packageText, ...auditSources] = await Promise.all([
 ]);
 const packageJson = JSON.parse(packageText);
 
-for (const routeId of ['characters', 'locations', 'bodyguards', 'relationships']) {
+for (const routeId of ['characters', 'organizations', 'locations', 'bodyguards', 'relationships']) {
   assert(declarationIncludesLiteral(app, 'specializedRecordRoute', routeId), `${routeId} must remain a specialized record route`);
 }
 for (const routeId of ['black-whale', 'timeline', 'nen']) {
   assert(declarationIncludesLiteral(app, 'preserved', routeId), `${routeId} must remain a preserved visual workspace`);
 }
-for (const routeId of ['characters', 'events', 'locations', 'bodyguards', 'relationships', 'research']) {
+for (const routeId of ['characters', 'organizations', 'events', 'locations', 'bodyguards', 'relationships', 'research']) {
   assert(declarationIncludesLiteral(app, 'dedicated', routeId), `${routeId} must remain a dedicated workspace route`);
 }
 for (const [routeId, componentName] of [
   ['characters', 'CharactersWorkspace'],
+  ['organizations', 'OrganizationsWorkspace'],
   ['events', 'EventsWorkspace'],
   ['locations', 'LocationsWorkspace'],
   ['bodyguards', 'AssignmentsWorkspace'],
@@ -51,9 +53,11 @@ for (const [routeId, componentName] of [
 ]) {
   assert(sourceRendersRouteWith(app, routeId, componentName), `${routeId} must render ${componentName}`);
 }
-assert(app.includes("linkedEntity?.entityType === 'character' ? 'characters' : target"), 'role-route navigation must normalize character links');
-assert(app.includes('showCharacterDossier') && app.includes("selectedEntity?.entityType === 'character'"), 'legacy role-route entity URLs must resolve the dedicated character dossier');
+assert(app.includes("linkedEntity?.entityType === 'character'") && app.includes("linkedEntity?.entityType === 'organization'"), 'role-route navigation must normalize character and organization links');
+assert(app.includes('showCharacterDossier') && app.includes("selectedEntity?.entityType === 'character'"), 'legacy role-route character URLs must resolve the dedicated character dossier');
+assert(app.includes('showOrganizationDossier') && app.includes("selectedEntity?.entityType === 'organization'"), 'legacy role-route organization URLs must resolve the dedicated organization dossier');
 assert(primitives.includes("if (entity.entityType === 'character') return 'characters'"), 'shared entity routing must send every character to the character workspace');
+assert(primitives.includes("if (entity.entityType === 'organization') return 'organizations'"), 'shared entity routing must send every organization to the organization workspace');
 
 const forbiddenAuditPatterns = Object.freeze([
   {
@@ -76,6 +80,7 @@ for (let index = 0; index < auditPaths.length; index += 1) {
 assert(packageJson.scripts?.['audit:succession-runtime'] === 'node scripts/run-succession-runtime-audits.mjs', 'package scripts must expose the aggregate Succession runtime sweep');
 assert(packageJson.scripts?.['audit:succession-contract'] === 'node scripts/audit-succession-runtime-contract.mjs', 'package scripts must expose this contract audit directly');
 assert(packageJson.scripts?.['audit:succession-characters'] === 'node scripts/audit-succession-characters-workspace.mjs', 'package scripts must expose the Batch 2 character audit');
+assert(packageJson.scripts?.['audit:succession-organizations'] === 'node scripts/audit-succession-organizations-workspace.mjs', 'package scripts must expose the Batch 2 organization audit');
 assert(packageJson.scripts?.['build:runtime']?.startsWith('npm run audit:succession-runtime &&'), 'build:runtime must collect all Succession failures before continuing');
 
 const vite = await createServer({
@@ -88,6 +93,7 @@ try {
   const archive = await vite.ssrLoadModule('/src/data/succession/successionData.js');
   assert(archive.successionArchiveValidation?.valid, 'canonical Succession data must validate');
   for (const [entityType, minimum] of [
+    ['organization', 11],
     ['event', 29],
     ['location', 42],
     ['assignment', 37],
@@ -107,12 +113,22 @@ try {
   assert(typeof archive.getCharacterLifetimeTimeline === 'function', 'lifetime character chronology must remain public');
   assert(typeof archive.getCharacterStateCoverageReport === 'function', 'character state coverage reporting must remain public');
   assert(archive.getCharactersWithStateProfiles().length >= 36, 'Batch 2.3 must retain complete prince and queen state coverage');
-  const coverage = archive.getCharacterStateCoverageReport();
-  assert(coverage.explicitCharacters >= 36, 'Batch 2.3 coverage report must retain complete royal profiles');
-  assert(coverage.roleLayers.some((layer) => layer.id === 'royal-candidate' && layer.explicit === 14), 'all princes must remain explicit');
-  assert(coverage.roleLayers.some((layer) => layer.id === 'royal-household' && layer.explicit === 8), 'all queens must remain explicit');
+  const characterCoverage = archive.getCharacterStateCoverageReport();
+  assert(characterCoverage.explicitCharacters >= 36, 'Batch 2.3 coverage report must retain complete royal profiles');
+  assert(characterCoverage.roleLayers.some((layer) => layer.id === 'royal-candidate' && layer.explicit === 14), 'all princes must remain explicit');
+  assert(characterCoverage.roleLayers.some((layer) => layer.id === 'royal-household' && layer.explicit === 8), 'all queens must remain explicit');
 
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits avoid transient foundation imports, route membership is order-independent, aggregate failure collection is active, character links normalize across role routes, and the canonical runtime exposes every Batch 1 graph layer plus complete Batch 2.3 prince and queen dossiers.`);
+  assert(typeof archive.getOrganizationStateAtChapter === 'function', 'organization state selectors must remain public');
+  assert(typeof archive.getOrganizationPersonnelAtChapter === 'function', 'organization personnel selectors must remain public');
+  assert(typeof archive.getOrganizationHierarchy === 'function', 'organization hierarchy selector must remain public');
+  assert(typeof archive.getOrganizationDossier === 'function', 'organization dossier selector must remain public');
+  assert(typeof archive.getOrganizationStateCoverageReport === 'function', 'organization coverage reporting must remain public');
+  const organizations = archive.getEntitiesByType('organization');
+  assert(archive.getOrganizationsWithStateProfiles().length === organizations.length, 'every organization must retain an explicit state profile');
+  const organizationCoverage = archive.getOrganizationStateCoverageReport();
+  assert(organizationCoverage.explicitOrganizations === organizations.length && organizationCoverage.coveragePercent === 100, 'organization coverage must remain complete');
+
+  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits avoid transient foundation imports, route membership is order-independent, aggregate failure collection is active, character and organization links normalize across role routes, and the canonical runtime exposes every Batch 1 graph layer plus complete Batch 2 people and institution dossiers.`);
 } finally {
   await vite.close();
 }
