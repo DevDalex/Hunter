@@ -34,6 +34,7 @@ assert(indexes.includes('relationshipsByChapter'), 'indexes must support chapter
 assert(indexes.includes('relationshipsByEvent'), 'indexes must connect relationships to events');
 assert(indexes.includes('relationshipsBySource'), 'indexes must preserve directed source roles');
 assert(indexes.includes('relationshipsByTarget'), 'indexes must preserve directed target roles');
+assert(indexes.includes('...(entity.legacyIds || [])'), 'search index must preserve retired relationship IDs');
 assert(selectors.includes('getRelationshipSnapshot'), 'selectors must expose entity relationship snapshots');
 assert(selectors.includes('getRelationshipNeighborhood'), 'selectors must expose local graph neighborhoods');
 assert(selectors.includes('getActiveRelationshipsAtChapter'), 'selectors must expose chapter-specific relationship states');
@@ -129,8 +130,9 @@ try {
 
   assert(searchSuccessionArchive('Moonlight Act treaty partners').some(({ entity }) => entity.id === 'relationship:longhi-kurapika-moonlight-act-treaty'), 'global search must resolve relationship aliases');
   assert(searchSuccessionArchive('coercive and unstable').some(({ entity }) => entity.id === 'relationship:theta-tserriednich-conflicted-instructor'), 'global search must resolve operational relationship states');
+  assert(searchSuccessionArchive('relationship:kurapika-longhi-treaty').some(({ entity }) => entity.id === 'relationship:longhi-kurapika-moonlight-act-treaty'), 'global search must resolve retired relationship IDs');
 
-  console.log(`Succession relationship workspace audit passed: ${relationships.length} deduplicated edges, chapter snapshots, command and deception types, event evidence, directed roles, neighborhoods, search, sources, and responsive presentation are wired.`);
+  console.log(`Succession relationship workspace audit passed: ${relationships.length} deduplicated edges, chapter snapshots, command and deception types, event evidence, directed roles, neighborhoods, legacy-ID search, sources, and responsive presentation are wired.`);
 } finally {
   await vite.close();
 }
