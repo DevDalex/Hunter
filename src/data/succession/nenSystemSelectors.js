@@ -25,6 +25,8 @@ export const createNenSystemSelectors = ({ data, archive }) => {
     return chapters.length ? Math.min(...chapters) : null;
   };
 
+  const systemAvailableAtChapter = (profile, chapter) => Boolean(profile && includesChapter(profile.chapterRange, chapter));
+
   const getAbilityKnowledgeAtChapter = (abilityId, chapter = null) => {
     const ability = archive.getEntityById(abilityId);
     if (!ability || ability.entityType !== 'ability') return null;
@@ -55,7 +57,9 @@ export const createNenSystemSelectors = ({ data, archive }) => {
         duration: ability.duration || 'unknown',
         knownUses: Object.freeze([...(ability.knownUses || [])]),
       }) : null,
-      sources: Object.freeze((ability.sourceIds || []).map((id) => sourceAtChapter(id, parsedChapter)).filter(Boolean)),
+      sources: Object.freeze(known
+        ? (ability.sourceIds || []).map((id) => sourceAtChapter(id, parsedChapter)).filter(Boolean)
+        : []),
     });
   };
 
@@ -78,7 +82,7 @@ export const createNenSystemSelectors = ({ data, archive }) => {
     const parsedChapter = chapter === null ? latestChapter : Number(chapter);
     if (!Number.isFinite(parsedChapter)) return Object.freeze([]);
     return Object.freeze(Object.values(systemProfiles)
-      .filter((profile) => includesChapter(profile.chapterRange, parsedChapter))
+      .filter((profile) => systemAvailableAtChapter(profile, parsedChapter))
       .filter((profile) => !category || profile.category === category)
       .sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.name.localeCompare(right.name)));
   };
@@ -86,7 +90,7 @@ export const createNenSystemSelectors = ({ data, archive }) => {
   const getNenSystemDossier = (systemId, chapter = null) => {
     const profile = getNenSystemProfile(systemId);
     const parsedChapter = chapter === null ? latestChapter : Number(chapter);
-    if (!profile || !Number.isFinite(parsedChapter) || parsedChapter < profile.chapterRange.start) return null;
+    if (!profile || !Number.isFinite(parsedChapter) || !systemAvailableAtChapter(profile, parsedChapter)) return null;
     const abilities = (profile.abilityIds || [])
       .map((abilityId) => getAbilityKnowledgeAtChapter(abilityId, parsedChapter))
       .filter((record) => record?.known);
@@ -155,6 +159,8 @@ export const createNenSystemSelectors = ({ data, archive }) => {
     if (!beast || beast.entityType !== 'guardian-beast') return null;
     const parsedChapter = chapter === null ? latestChapter : Number(chapter);
     if (!Number.isFinite(parsedChapter)) return null;
+    const firstChapter = firstKnownChapter(beast);
+    if (firstChapter !== null && parsedChapter < firstChapter) return null;
     const state = getGuardianBeastStateAtChapter(beastId, parsedChapter);
     const abilityIds = [...new Set([
       ...(state?.knownAbilityIds || []),
@@ -170,7 +176,9 @@ export const createNenSystemSelectors = ({ data, archive }) => {
       chapter: parsedChapter,
       state,
       abilities: Object.freeze(abilities),
-      systems: Object.freeze([...systemIds].map(getNenSystemProfile).filter(Boolean)),
+      systems: Object.freeze([...systemIds]
+        .map(getNenSystemProfile)
+        .filter((profile) => systemAvailableAtChapter(profile, parsedChapter))),
       sources: Object.freeze([...new Set([...(beast.sourceIds || []), ...(state?.sourceIds || [])])]
         .map((id) => sourceAtChapter(id, parsedChapter)).filter(Boolean)),
       timeline: Object.freeze(getGuardianBeastStateTimeline(beastId).filter((record) => record.chapterRange.start <= parsedChapter)),
@@ -185,8 +193,10 @@ export const createNenSystemSelectors = ({ data, archive }) => {
     const parsedChapter = knowledge.chapter;
     const events = archive.getEventsForAbility(ability.id).filter((event) => event.chapterRange.start <= parsedChapter);
     const chapters = archive.getChaptersForAbility(ability.id).filter((record) => record.number <= parsedChapter);
-    const locations = archive.getLocationsForAbility(ability.id);
-    const systems = (abilitySystemLinks[ability.id] || []).map(getNenSystemProfile).filter(Boolean);
+    const locations = uniqueById(events.flatMap((event) => event.locationIds || []).map((id) => archive.getEntityById(id)));
+    const systems = (abilitySystemLinks[ability.id] || [])
+      .map(getNenSystemProfile)
+      .filter((profile) => systemAvailableAtChapter(profile, parsedChapter));
     return Object.freeze({
       ...knowledge,
       owners: Object.freeze(owners),
@@ -243,7 +253,11 @@ export const createNenSystemSelectors = ({ data, archive }) => {
       }
     }
     const missingBeastProfiles = beasts.filter((beast) => !(beastStateProfiles[beast.id] || []).length);
-    const closureReady = invalidAbilities.length === 0 && invalidBeasts.length === 0 && stateIntegrityIssues.length === 0 && missingSystemReferences.length === 0 && missingBeastProfiles.length === 0;
+    const closureReady = invalidAbilities.length === 0
+      && invalidBeasts.length === 0
+      && stateIntegrityIssues.length === 0
+      && missingSystemReferences.length === 0
+      && missingBeastProfiles.length === 0;
     return Object.freeze({
       chapter: parsedChapter,
       status: closureReady ? 'closed' : 'open',
