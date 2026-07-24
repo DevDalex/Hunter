@@ -193,27 +193,26 @@ try {
     if (health.unavailable.length) throw new Error(`mobile unavailable visuals: ${health.unavailable.join(', ')}`);
   });
 
-  await run('Canonical relationship directory filters remain readable', { width: 1440, height: 1000 }, 'succession/relationships', async (page) => {
-    await page.waitForSelector('.succession-directory .succession-entity-grid');
-    const root = page.locator('.succession-directory');
-    const cards = root.locator('.succession-entity-grid > article');
-    const initialCount = await cards.count();
-    if (initialCount < 20) throw new Error(`canonical relationship directory is incomplete: ${initialCount} records`);
+  await run('Dedicated relationship workspace filters and links remain readable', { width: 1440, height: 1000 }, 'succession/relationships', async (page) => {
+    await page.waitForSelector('.succession-relationships-workspace .succession-relationship-ledger');
+    const root = page.locator('.succession-relationships-workspace');
+    const records = root.locator('.succession-relationship-ledger > article');
+    const initialCount = await records.count();
+    if (initialCount < 20) throw new Error(`relationship ledger is incomplete: ${initialCount} records`);
 
-    const filter = root.getByPlaceholder('Filter this workspace…');
+    const filter = root.getByPlaceholder('Person, organization, relationship, chapter…');
     const cases = [
-      { query: 'Kurapika', minimum: 2, label: 'Kurapika relationships' },
-      { query: 'Morena', minimum: 1, label: 'Morena relationships' },
-      { query: 'father-child', minimum: 14, label: 'royal father-child relationships' },
+      { query: 'Kurapika', minimum: 4, label: 'Kurapika relationships' },
+      { query: 'Morena', minimum: 3, label: 'Morena relationships' },
+      { query: 'Halkenburg', minimum: 3, label: 'Halkenburg relationships' },
     ];
 
     for (const item of cases) {
       await filter.fill(item.query);
       await page.waitForTimeout(80);
       const state = await page.evaluate(() => {
-        const directory = document.querySelector('.succession-directory');
-        const grid = directory?.querySelector('.succession-entity-grid');
-        const visibleCards = [...(grid?.querySelectorAll(':scope > article') || [])].filter((element) => {
+        const ledger = document.querySelector('.succession-relationship-ledger');
+        const visibleCards = [...(ledger?.querySelectorAll(':scope > article') || [])].filter((element) => {
           const style = getComputedStyle(element);
           const rect = element.getBoundingClientRect();
           return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
@@ -221,28 +220,38 @@ try {
         const malformed = visibleCards.map((element) => {
           const rect = element.getBoundingClientRect();
           return { width: rect.width, height: rect.height, title: element.querySelector('h3')?.textContent.trim() || '' };
-        }).filter((card) => card.width < 220 || card.height < 210);
+        }).filter((card) => card.width < 420 || card.height < 120);
         return {
           count: visibleCards.length,
           malformed,
-          gridOverflow: grid ? grid.scrollWidth - grid.clientWidth : 0,
+          ledgerOverflow: ledger ? ledger.scrollWidth - ledger.clientWidth : 0,
           bodyOverflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-          status: directory?.querySelector('h2')?.textContent.trim() || '',
         };
       });
       if (state.count < item.minimum) throw new Error(`${item.label} returned ${state.count}; expected at least ${item.minimum}`);
-      if (state.malformed.length) throw new Error(`${item.label} produced collapsed cards: ${JSON.stringify(state.malformed)}`);
-      if (state.gridOverflow > 2 || state.bodyOverflow > 2) throw new Error(`${item.label} overflowed: grid ${state.gridOverflow}px, body ${state.bodyOverflow}px`);
-      if (!state.status.startsWith(`${state.count} of`)) throw new Error(`${item.label} did not update the visible record count`);
+      if (state.malformed.length) throw new Error(`${item.label} produced collapsed records: ${JSON.stringify(state.malformed)}`);
+      if (state.ledgerOverflow > 2 || state.bodyOverflow > 2) throw new Error(`${item.label} overflowed: ledger ${state.ledgerOverflow}px, body ${state.bodyOverflow}px`);
     }
 
-    await filter.fill('Kurapika');
-    const firstRecord = cards.first().locator('.succession-entity-link');
-    await firstRecord.click();
+    await filter.fill('');
+    const kurapikaFocus = root.locator('.succession-relationship-focus button').filter({ hasText: /^Kurapika/ }).first();
+    await kurapikaFocus.click();
+    await page.waitForTimeout(80);
+    const focusedCount = await records.count();
+    if (focusedCount < 4 || focusedCount >= initialCount) throw new Error(`actor focus did not narrow the ledger: ${focusedCount} of ${initialCount}`);
+
+    const entityLink = root.locator('.succession-deep-entity-button:not([disabled])').first();
+    await entityLink.click();
     await page.waitForSelector('.succession-entity-detail .succession-entity-header');
-    if (!page.url().includes('entity=relationship%3A')) throw new Error('relationship record detail did not preserve a namespaced canonical ID');
+    if (!page.url().includes('entity=character%3A') && !page.url().includes('entity=organization%3A')) throw new Error('relationship node did not preserve a canonical entity ID');
     const health = await pageHealth(page, '.succession-entity-detail');
-    if (health.bodyOverflow > 1) throw new Error(`relationship record detail overflowed by ${health.bodyOverflow}px`);
+    if (health.bodyOverflow > 1) throw new Error(`relationship-linked entity detail overflowed by ${health.bodyOverflow}px`);
+  });
+
+  await run('Dedicated relationship workspace remains contained on mobile', { width: 390, height: 844 }, 'succession/relationships', async (page) => {
+    await page.waitForSelector('.succession-relationships-workspace .succession-relationship-ledger');
+    const health = await pageHealth(page, '.succession-relationships-workspace');
+    if (health.bodyOverflow > 1) throw new Error(`relationship workspace overflowed horizontally by ${health.bodyOverflow}px`);
   });
 } finally {
   await browser.close().catch(() => {});
