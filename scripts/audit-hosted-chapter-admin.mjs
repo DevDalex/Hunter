@@ -20,10 +20,10 @@ const wpHtml = `
   <img class="comment-avatar" src="https://3asq.online/avatar.jpg" />
   <img class="wp-manga-chapter-img" data-src="https://3asq.online/wp-content/uploads/WP-manga/data/example/01.jpg" />
 `;
-const detected = extractChapterImageUrls(wpHtml, 'https://3asq.online/manga/hunter-x-hunter/414/');
+const detected = extractChapterImageUrls(wpHtml, 'https://3asq.online/manga/hunter-x-hunter/415/');
 assert(detected.length === 3, 'WP Manga extraction must reject comment/avatar media');
 assert(detected[0].endsWith('/01.jpg') && detected[1].endsWith('/02.jpg') && detected[2].endsWith('/10.jpg'), 'detected chapter pages must use natural numeric order');
-assert(inferChapterNumber('https://3asq.online/manga/hunter-x-hunter/414/') === 414, 'chapter number inference changed');
+assert(inferChapterNumber('https://3asq.online/manga/hunter-x-hunter/415/') === 415, 'future chapter number inference changed');
 
 const png = new Uint8Array(24);
 png.set([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
@@ -32,7 +32,7 @@ new DataView(png.buffer).setUint32(20, 1800, false);
 const pngRecord = detectImage(png, 'image/png', 'https://3asq.online/01.png');
 assert(pngRecord.extension === '.png' && pngRecord.width === 1200 && pngRecord.height === 1800, 'PNG signature and dimension validation changed');
 
-const manifest = { 414: [{ page: 1, src: '/media/succession-contest/chapters/414/001.png', width: 1200, height: 1800 }] };
+const manifest = { 415: [{ page: 1, src: '/media/succession-contest/chapters/415/001.png', width: 1200, height: 1800 }] };
 const serialized = serializeGeneratedManifest(manifest);
 assert(JSON.stringify(parseGeneratedManifest(serialized)) === JSON.stringify(manifest), 'generated manifest serialization must round-trip');
 
@@ -47,6 +47,10 @@ const [
   batchScript,
   batchQueueText,
   importScript,
+  localImportScript,
+  readerSource,
+  researchSource,
+  availabilitySource,
   prepareHosting,
   packageJson,
 ] = await Promise.all([
@@ -60,6 +64,10 @@ const [
   read('scripts/run-succession-chapter-batch.mjs'),
   read('.github/chapter-import-batch.json'),
   read('scripts/import-succession-chapter-url.mjs'),
+  read('scripts/import-succession-chapter.mjs'),
+  read('src/data/successionChapterReader.js'),
+  read('src/data/succession/successionResearch.js'),
+  read('src/data/successionChapterAvailability.generated.js'),
   read('scripts/prepare-hosting.mjs'),
   read('package.json'),
 ]);
@@ -72,6 +80,8 @@ assert(direct.includes('MAX_DISPATCH_BODY_BYTES'), 'the queued request must rema
 assert(direct.includes("request.method === 'POST' && url.pathname === IMPORT_PATH"), 'the direct import endpoint must remain enabled');
 assert(direct.includes("'/api/admin/chapter/login'") && direct.includes('does not use account login'), 'legacy account endpoints must remain blocked');
 assert(direct.includes("assetUrl.pathname = '/admin/chapters/direct.html'"), 'the direct route must serve the temporary import page');
+assert(direct.includes('MAX_CHAPTER_NUMBER = 9999') && direct.includes('handleUnboundedInspection'), 'the hosted inspector must accept future chapter numbers beyond the old release boundary');
+assert(direct.includes('.replace(\' max="414"\', \'\')'), 'the hosted form must remove the obsolete browser-side Chapter 414 maximum');
 assert(!directPage.includes('type="password"') && !directPage.includes('GITHUB_ADMIN_TOKEN'), 'the page must not ask for credentials or configuration');
 assert(directPage.includes('/api/admin/chapter/inspect') && directPage.includes("api('/api/admin/chapter/import'"), 'the page must inspect and submit through the Worker');
 assert(directPage.includes('page-choice-') && directPage.includes('Select all') && directPage.includes('Clear selection'), 'the preview must support individual and bulk picture selection');
@@ -81,6 +91,7 @@ assert(!directPage.includes('ChatGPT') && !directPage.includes('issues/new') && 
 assert(workflow.includes('repository_dispatch') && workflow.includes('hunter-chapter-import'), 'the GitHub workflow must receive website import dispatches');
 assert(workflow.includes('contents: write') && workflow.includes('selected_images'), 'the workflow must have commit permission and consume selected image URLs');
 assert(workflow.includes('--image-list-file') && workflow.includes('git push origin HEAD:main'), 'the workflow must import the exact selected images and commit them to main');
+assert(workflow.includes('maxChapterNumber = 9999') && workflow.includes('successionChapterAvailability.generated.js'), 'the dispatch workflow must accept and commit future chapter availability');
 assert(workflow.includes('Mozilla/5.0'), 'the action must use a browser-like fetch profile for the source host');
 const restoreIndex = workflow.indexOf('git restore --worktree scripts/lib/succession-chapter-url-source.mjs');
 const rebaseIndex = workflow.indexOf('git pull --rebase origin main');
@@ -90,7 +101,7 @@ assert(batchQueue.version === 1 && String(batchQueue.sourceTemplate).includes('{
 assert(Number.isInteger(batchQueue.batchSize) && batchQueue.batchSize >= 1 && batchQueue.batchSize <= 5, 'the automatic batch size must stay bounded');
 assert(Number.isInteger(batchQueue.maxAttempts) && batchQueue.maxAttempts >= 1 && batchQueue.maxAttempts <= 5, 'the automatic retry limit must stay bounded');
 assert(Array.isArray(batchQueue.pending) && Array.isArray(batchQueue.completed), 'the automatic queue must track pending and completed chapters');
-assert(batchQueue.pending.every((chapter) => Number.isInteger(chapter) && chapter >= 338 && chapter <= 414), 'the automatic queue contains an invalid chapter');
+assert(batchQueue.pending.every((chapter) => Number.isInteger(chapter) && chapter >= 338 && chapter <= 9999), 'the automatic queue contains an invalid chapter');
 assert(batchWorkflow.includes('hunter-chapter-batch-continue') && batchWorkflow.includes('group: chapter-import'), 'the automatic workflow must self-continue while sharing the manual import lock');
 assert(batchWorkflow.includes('github.actor != \'github-actions[bot]\''), 'action-authored queue commits must not start duplicate push runs');
 assert(batchWorkflow.includes('restore_helper') && batchWorkflow.indexOf('restore_helper') < batchWorkflow.indexOf('git pull --rebase origin main'), 'the automatic workflow must restore its runtime helper edit before rebasing');
@@ -100,7 +111,12 @@ assert(batchScript.includes('writeFile(MANIFEST_PATH, beforeManifest)') && batch
 assert(batchScript.includes('MIN_PAGES') && batchScript.includes('MAX_PAGES'), 'automatic imports must enforce a conservative page-count sanity range');
 assert(batchScript.includes("writeOutput('continue'") && batchScript.includes("writeOutput('remaining'"), 'the automatic runner must expose continuation state to GitHub Actions');
 
-assert(importScript.includes("'--image-list-file'") && importScript.includes('readSelectedImageUrls'), 'the local importer must accept an ordered selected-image JSON file');
+assert(importScript.includes("'--image-list-file'") && importScript.includes('readSelectedImageUrls'), 'the URL importer must accept an ordered selected-image JSON file');
+assert(importScript.includes('MAX_CHAPTER_NUMBER = 9999'), 'the URL importer must not retain a release-specific maximum');
+assert(localImportScript.includes('AVAILABILITY_PATH') && localImportScript.includes('LATEST_AUTHORIZED_SUCCESSION_CHAPTER'), 'the local importer must regenerate chapter availability with the media manifest');
+assert(readerSource.includes('LATEST_AUTHORIZED_SUCCESSION_CHAPTER'), 'the reader boundary must derive from generated chapter availability');
+assert(researchSource.includes('authorizedSuccessionChapterNumbers') && researchSource.includes('pendingImportedResearch'), 'Chapter Records must auto-index newly imported chapters without inventing scene detail');
+assert(availabilitySource.includes('authorizedSuccessionChapterNumbers') && availabilitySource.includes('LATEST_AUTHORIZED_SUCCESSION_CHAPTER'), 'generated availability contract is missing');
 assert(engine.includes('CHAPTER_SOURCE_HOSTS') && engine.includes('CHAPTER_IMAGE_HOSTS'), 'remote source and image hosts must remain allowlisted');
 assert(serverIndex.includes("from './direct-chapter-import.js'"), 'the Worker entry must route through the temporary importer');
 assert(directPage.includes("credentials:'same-origin'"), 'importer requests must stay on the same origin');
@@ -113,4 +129,4 @@ assert(prepareHosting.includes("cp('server', 'dist/server', { recursive: true })
 assert(prepareHosting.includes('Mozilla/5.0') && prepareHosting.includes('Hosted chapter admin fetch profile marker is missing.'), 'deployed inspection must use the guarded browser request profile');
 assert(packageJson.includes('audit:hosted-admin'), 'hosted importer audit must remain registered in package scripts');
 
-console.log('Hosted chapter importer audit passed: one-button manual submission, exact picture selection, resumable automatic batching, retries, rollback, clean commit rebases, and blocked legacy login endpoints are intact.');
+console.log('Hosted chapter importer audit passed: Chapter 415 and future releases can be inspected, selected, queued, imported, indexed in reader availability, and represented as pending Chapter Records without a release-specific ceiling.');
