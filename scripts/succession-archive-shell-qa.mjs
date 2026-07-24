@@ -59,11 +59,13 @@ const record = async (name, page, test) => {
   }
 };
 
-const openDirectory = async (page, base, route) => {
+const openWorkspace = async (page, base, route, selector) => {
   await page.goto(`${base}/story/succession-contest/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-  await page.waitForSelector('.succession-directory .succession-entity-grid', { timeout: 15_000 });
-  return page.locator('.succession-entity-grid > article');
+  await page.waitForSelector(selector, { timeout: 15_000 });
+  return page.locator(selector);
 };
+
+const horizontalOverflow = (page) => page.evaluate(() => Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth);
 
 await mkdir(output, { recursive: true });
 const executablePath = await firstAvailable([
@@ -86,51 +88,67 @@ try {
     if (await desktop.locator('.arc-page--succession-contest').count()) throw new Error('Legacy grouped arc page is still mounted at the archive root');
   });
 
-  await record('Canonical character catalogue is expanded and visual', desktop, async () => {
-    const cards = await openDirectory(desktop, base, 'characters');
+  await record('Character workspace is expanded visual and dossier-linked', desktop, async () => {
+    const cards = await openWorkspace(desktop, base, 'characters', '.succession-character-ledger > button');
     const cardCount = await cards.count();
     if (cardCount < 150) throw new Error(`Expanded character catalogue is incomplete: ${cardCount} cards`);
     const visualCount = await cards.locator('.succession-entity-visual').count();
     if (visualCount !== cardCount) throw new Error(`Every character card needs a visual frame: ${visualCount}/${cardCount}`);
     const billCard = cards.filter({ hasText: 'Bill' }).first();
     if (!await billCard.count()) throw new Error('Bill canonical record is missing from the character workspace');
-    await billCard.locator('.succession-entity-link').click();
-    await desktop.waitForSelector('.succession-entity-header .succession-entity-visual', { timeout: 15_000 });
-    if (!desktop.url().includes('entity=character%3Abill')) throw new Error('Entity detail did not preserve Bill’s stable namespaced ID');
+    await billCard.click();
+    await desktop.waitForSelector('.succession-domain-dossier .succession-entity-header', { timeout: 15_000 });
+    if (!desktop.url().includes('entity=character%3Abill')) throw new Error('Domain dossier did not preserve Bill’s stable namespaced ID');
   });
 
-  await record('Royal directories contain exactly fourteen princes and eight queens', desktop, async () => {
-    const princeCards = await openDirectory(desktop, base, 'princes');
-    if (await princeCards.count() !== 14) throw new Error(`Prince directory count is ${await princeCards.count()}, expected 14`);
+  await record('Royal workspaces contain fourteen princes and eight queens', desktop, async () => {
+    const princeCards = await openWorkspace(desktop, base, 'princes', '.succession-prince-board__grid > .succession-prince-card');
+    if (await princeCards.count() !== 14) throw new Error(`Prince board count is ${await princeCards.count()}, expected 14`);
     const princeNames = await princeCards.locator('h3').allInnerTexts();
     if (!princeNames[0]?.includes('Benjamin') || !princeNames[13]?.includes('Woble')) throw new Error('Princes are not ordered First through Fourteenth');
-    if (await desktop.locator('.family-tree').count()) throw new Error('Family tree replaced the canonical prince directory');
+    if (await desktop.locator('.family-tree').count()) throw new Error('Family tree replaced the prince board');
     await desktop.getByRole('button', { name: 'Open family tree', exact: true }).click();
     await desktop.waitForSelector('.succession-migration-note', { timeout: 15_000 });
     if (!desktop.url().includes('view=tree')) throw new Error('Family tree did not open as an explicit optional view');
 
-    const queenCards = await openDirectory(desktop, base, 'queens');
-    if (await queenCards.count() !== 8) throw new Error(`Queen directory count is ${await queenCards.count()}, expected 8`);
+    const queenCards = await openWorkspace(desktop, base, 'queens', '.succession-queen-board .succession-queen-card');
+    if (await queenCards.count() !== 8) throw new Error(`Queen board count is ${await queenCards.count()}, expected 8`);
   });
 
-  await record('Bodyguard Hunter mafia and military catalogues use corrected roles', desktop, async () => {
-    const bodyguards = await openDirectory(desktop, base, 'bodyguards');
-    if (await bodyguards.count() < 85) throw new Error(`Bodyguard catalogue is incomplete: ${await bodyguards.count()}`);
-    const hunters = await openDirectory(desktop, base, 'hunters');
-    if (await hunters.count() < 20) throw new Error(`Hunter catalogue is incomplete: ${await hunters.count()}`);
-    const mafia = await openDirectory(desktop, base, 'mafia');
-    if (await mafia.count() < 35) throw new Error(`Mafia catalogue is incomplete: ${await mafia.count()}`);
-    const mafiaText = (await mafia.allInnerTexts()).join(' ');
-    for (const family of ['Xi-Yu Family', 'Heil-Ly Family', 'Cha-R Family']) if (!mafiaText.includes(family)) throw new Error(`${family} organization record is missing`);
-    const military = await openDirectory(desktop, base, 'military');
-    if (await military.count() < 20) throw new Error(`Military catalogue is incomplete: ${await military.count()}`);
+  await record('Guard Hunter mafia and military workspaces expose their specialized structures', desktop, async () => {
+    const rooms = await openWorkspace(desktop, base, 'bodyguards', '.succession-room-matrix .succession-room-card');
+    if (await rooms.count() !== 14) throw new Error(`Room assignment board is incomplete: ${await rooms.count()}`);
+    const bodyguards = desktop.locator('.succession-guard-directory > div > button');
+    if (await bodyguards.count() < 80) throw new Error(`Named bodyguard directory is incomplete: ${await bodyguards.count()}`);
+
+    const hunters = await openWorkspace(desktop, base, 'hunters', '.succession-hunter-missions button');
+    if (await hunters.count() < 20) throw new Error(`Hunter mission workspace is incomplete: ${await hunters.count()}`);
+
+    const mafiaFamilies = await openWorkspace(desktop, base, 'mafia', '.succession-mafia-workspace__families > div > article');
+    if (await mafiaFamilies.count() !== 3) throw new Error(`Mafia comparison has ${await mafiaFamilies.count()} families; expected 3`);
+    const mafiaText = (await mafiaFamilies.allInnerTexts()).join(' ');
+    for (const family of ['Xi-Yu', 'Heil-Ly', 'Cha-R']) if (!mafiaText.includes(family)) throw new Error(`${family} family dossier is missing`);
+
+    const military = await openWorkspace(desktop, base, 'military', '.succession-military-people .succession-extended-entity');
+    if (await military.count() < 20) throw new Error(`Military personnel workspace is incomplete: ${await military.count()}`);
   });
 
-  await record('Guardian Spirit Beast and chapter catalogues are complete', desktop, async () => {
-    const beasts = await openDirectory(desktop, base, 'guardian-spirit-beasts');
+  await record('Beast and chapter workspaces are complete through Chapter 414', desktop, async () => {
+    const beasts = await openWorkspace(desktop, base, 'guardian-spirit-beasts', '.succession-beast-grid > button');
     if (await beasts.count() !== 15) throw new Error(`Guardian Spirit Beast count is ${await beasts.count()}, expected 15`);
-    const chapters = await openDirectory(desktop, base, 'chapter-records');
-    if (await chapters.count() !== 74) throw new Error(`Chapter record count is ${await chapters.count()}, expected 74`);
+    const chapters = await openWorkspace(desktop, base, 'chapter-records', '.succession-chapter-index > div > button');
+    if (await chapters.count() !== 75) throw new Error(`Chapter record count is ${await chapters.count()}, expected 75`);
+    const latest = chapters.filter({ hasText: '414' }).first();
+    if (!await latest.count()) throw new Error('Chapter 414 research record is missing');
+  });
+
+  await record('Research glossary and media routes are active', desktop, async () => {
+    const sources = await openWorkspace(desktop, base, 'research', '.succession-source-catalogue article');
+    if (await sources.count() < 75) throw new Error(`Research source catalogue is incomplete: ${await sources.count()}`);
+    const glossary = await openWorkspace(desktop, base, 'glossary', '.succession-glossary-list > article');
+    if (await glossary.count() < 20) throw new Error(`Glossary is incomplete: ${await glossary.count()} terms`);
+    const media = await openWorkspace(desktop, base, 'media', '.succession-media-grid > article');
+    if (await media.count() < 40) throw new Error(`Media archive is unexpectedly sparse: ${await media.count()} records`);
   });
 
   await record('Existing chapter reader route remains separate and functional', desktop, async () => {
@@ -147,19 +165,18 @@ try {
     const trigger = mobile.getByRole('button', { name: 'Archive', exact: true });
     await trigger.click();
     await mobile.waitForSelector('.succession-drawer [role="dialog"]', { timeout: 10_000 });
-    const expanded = await trigger.getAttribute('aria-expanded');
-    if (expanded !== 'true') throw new Error('Mobile archive button did not expose expanded state');
+    if (await trigger.getAttribute('aria-expanded') !== 'true') throw new Error('Mobile archive button did not expose expanded state');
     await mobile.keyboard.press('Escape');
     await mobile.waitForSelector('.succession-drawer', { state: 'detached', timeout: 10_000 });
   });
 
-  await record('Mobile catalogue keeps cards and visuals inside the viewport', mobile, async () => {
-    const cards = await openDirectory(mobile, base, 'princes');
-    if (await cards.count() !== 14) throw new Error('Mobile prince catalogue did not render all records');
-    const overflow = await mobile.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-    if (overflow > 1) throw new Error(`Mobile catalogue overflows horizontally by ${overflow}px`);
-    const firstVisual = cards.first().locator('.succession-entity-visual');
-    if (!await firstVisual.isVisible()) throw new Error('Mobile record visual is not visible');
+  await record('Mobile dedicated workspaces remain inside the viewport', mobile, async () => {
+    const princeCards = await openWorkspace(mobile, base, 'princes', '.succession-prince-board__grid > .succession-prince-card');
+    if (await princeCards.count() !== 14) throw new Error('Mobile prince board did not render all records');
+    if (await horizontalOverflow(mobile) > 1) throw new Error(`Mobile prince board overflows horizontally by ${await horizontalOverflow(mobile)}px`);
+    const relationships = await openWorkspace(mobile, base, 'relationships', '.succession-relationship-ledger > article');
+    if (await relationships.count() < 20) throw new Error('Mobile relationship ledger is incomplete');
+    if (await horizontalOverflow(mobile) > 1) throw new Error(`Mobile relationship workspace overflows horizontally by ${await horizontalOverflow(mobile)}px`);
   });
 
   await desktop.close();
