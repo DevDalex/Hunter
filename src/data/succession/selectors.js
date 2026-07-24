@@ -80,6 +80,81 @@ export const createSuccessionSelectors = (data, indexes) => {
 
   const getRelationshipsForEntity = (entityId) => resolveMany(indexes.relationshipsByEntity.get(entityId), indexes);
 
+  const getOutgoingRelationships = (entityId) => resolveMany(indexes.relationshipsBySource.get(entityId), indexes);
+
+  const getIncomingRelationships = (entityId) => resolveMany(indexes.relationshipsByTarget.get(entityId), indexes);
+
+  const getRelationshipsForType = (relationshipType) => resolveMany(indexes.relationshipsByType.get(relationshipType), indexes);
+
+  const getRelationshipsForSentiment = (sentiment) => resolveMany(indexes.relationshipsBySentiment.get(sentiment), indexes);
+
+  const getRelationshipsForEvent = (eventId) => resolveMany(indexes.relationshipsByEvent.get(eventId), indexes);
+
+  const getRelationshipsForChapter = (chapter) => resolveMany(indexes.relationshipsByChapter.get(Number(chapter)), indexes);
+
+  const getActiveRelationshipsAtChapter = (chapter, {
+    entityId = null,
+    sourceEntityId = null,
+    targetEntityId = null,
+    relationshipType = null,
+    sentiment = null,
+    status = null,
+  } = {}) => getRelationshipsForChapter(chapter).filter((relationship) => (
+    (!entityId || relationship.sourceEntityId === entityId || relationship.targetEntityId === entityId)
+    && (!sourceEntityId || relationship.sourceEntityId === sourceEntityId)
+    && (!targetEntityId || relationship.targetEntityId === targetEntityId)
+    && (!relationshipType || relationship.relationshipType === relationshipType)
+    && (!sentiment || relationship.sentiment === sentiment)
+    && (!status || relationship.status === status)
+  ));
+
+  const getRelationshipDetail = (relationshipId) => {
+    const relationship = getEntityById(relationshipId);
+    if (!relationship || relationship.entityType !== 'relationship') return null;
+    return Object.freeze({
+      relationship,
+      source: getEntityById(relationship.sourceEntityId),
+      target: getEntityById(relationship.targetEntityId),
+      events: Object.freeze(resolveMany(relationship.relatedEventIds, indexes)),
+    });
+  };
+
+  const getRelationshipSnapshot = (entityId, chapter = null) => {
+    const entity = getEntityById(entityId);
+    if (!entity) return null;
+    const parsedChapter = chapter === null ? data.chapters.at(-1)?.number : Number(chapter);
+    if (!Number.isFinite(parsedChapter)) return null;
+    const outgoing = getOutgoingRelationships(entityId).filter((relationship) => includesChapter(relationship.chapterRange, parsedChapter));
+    const incoming = getIncomingRelationships(entityId).filter((relationship) => includesChapter(relationship.chapterRange, parsedChapter));
+    const relationships = [...new Map([...outgoing, ...incoming].map((relationship) => [relationship.id, relationship])).values()]
+      .sort(byRangeStart);
+    const nodeIds = new Set();
+    for (const relationship of relationships) {
+      nodeIds.add(relationship.sourceEntityId);
+      nodeIds.add(relationship.targetEntityId);
+    }
+    nodeIds.delete(entityId);
+    return Object.freeze({
+      entity,
+      chapter: parsedChapter,
+      relationships: Object.freeze(relationships),
+      outgoing: Object.freeze(outgoing),
+      incoming: Object.freeze(incoming),
+      neighbors: Object.freeze(resolveMany([...nodeIds], indexes)),
+    });
+  };
+
+  const getRelationshipNeighborhood = (entityId, chapter = null) => {
+    const snapshot = getRelationshipSnapshot(entityId, chapter);
+    if (!snapshot) return null;
+    return Object.freeze({
+      center: snapshot.entity,
+      chapter: snapshot.chapter,
+      nodes: Object.freeze([snapshot.entity, ...snapshot.neighbors]),
+      edges: snapshot.relationships,
+    });
+  };
+
   const getAbilitiesForOwner = (entityId) => resolveMany(indexes.abilitiesByOwner.get(entityId), indexes);
 
   const getAssignmentsForPerson = (entityId) => resolveMany(indexes.assignmentsByPerson.get(entityId), indexes);
@@ -282,6 +357,7 @@ export const createSuccessionSelectors = (data, indexes) => {
         ...(entity.consequenceEventIds || []),
       ]) relatedIds.add(id);
       for (const assignment of getAssignmentsForEvent(entity.id)) relatedIds.add(assignment.id);
+      for (const relationship of getRelationshipsForEvent(entity.id)) relatedIds.add(relationship.id);
     }
 
     if (entity.entityType === 'assignment') {
@@ -294,6 +370,14 @@ export const createSuccessionSelectors = (data, indexes) => {
         entity.reportingEntityId,
         entity.supersedesAssignmentId,
         entity.replacedByAssignmentId,
+        ...(entity.relatedEventIds || []),
+      ]) if (id) relatedIds.add(id);
+    }
+
+    if (entity.entityType === 'relationship') {
+      for (const id of [
+        entity.sourceEntityId,
+        entity.targetEntityId,
         ...(entity.relatedEventIds || []),
       ]) if (id) relatedIds.add(id);
     }
@@ -327,6 +411,7 @@ export const createSuccessionSelectors = (data, indexes) => {
         ...(entity.organizationIds || []),
       ]) relatedIds.add(id);
       for (const assignment of getAssignmentsForChapter(entity.number)) relatedIds.add(assignment.id);
+      for (const relationship of getRelationshipsForChapter(entity.number)) relatedIds.add(relationship.id);
     }
 
     relatedIds.delete(entityId);
@@ -381,6 +466,16 @@ export const createSuccessionSelectors = (data, indexes) => {
     getLocationChildren,
     getLocationBreadcrumbs,
     getRelationshipsForEntity,
+    getOutgoingRelationships,
+    getIncomingRelationships,
+    getRelationshipsForType,
+    getRelationshipsForSentiment,
+    getRelationshipsForEvent,
+    getRelationshipsForChapter,
+    getActiveRelationshipsAtChapter,
+    getRelationshipDetail,
+    getRelationshipSnapshot,
+    getRelationshipNeighborhood,
     getAbilitiesForOwner,
     getAssignmentsForPerson,
     getAssignmentsForSubject,
