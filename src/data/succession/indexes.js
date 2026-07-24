@@ -72,9 +72,7 @@ export const buildSuccessionIndexes = (data) => {
 
   for (const event of data.events) {
     const end = event.chapterRange.end ?? event.chapterRange.start;
-    for (let chapter = event.chapterRange.start; chapter <= end; chapter += 1) {
-      append(eventsByChapter, chapter, event.id);
-    }
+    for (let chapter = event.chapterRange.start; chapter <= end; chapter += 1) append(eventsByChapter, chapter, event.id);
     for (const characterId of event.participantIds || []) append(eventsByCharacter, characterId, event.id);
     for (const locationId of event.locationIds || []) append(eventsByLocation, locationId, event.id);
     for (const organizationId of event.organizationIds || []) append(eventsByOrganization, organizationId, event.id);
@@ -107,9 +105,7 @@ export const buildSuccessionIndexes = (data) => {
     }
   }
 
-  for (const location of data.locations) {
-    if (location.parentId) append(childrenByLocation, location.parentId, location.id);
-  }
+  for (const location of data.locations) if (location.parentId) append(childrenByLocation, location.parentId, location.id);
 
   const latestChapter = data.chapters.at(-1)?.number || 414;
   for (const relationship of data.relationships) {
@@ -121,14 +117,10 @@ export const buildSuccessionIndexes = (data) => {
     append(relationshipsBySentiment, relationship.sentiment, relationship.id);
     for (const relatedEventId of relationship.relatedEventIds || []) append(relationshipsByEvent, relatedEventId, relationship.id);
     const end = relationship.chapterRange.end ?? latestChapter;
-    for (let chapter = relationship.chapterRange.start; chapter <= end; chapter += 1) {
-      append(relationshipsByChapter, chapter, relationship.id);
-    }
+    for (let chapter = relationship.chapterRange.start; chapter <= end; chapter += 1) append(relationshipsByChapter, chapter, relationship.id);
   }
 
-  for (const ability of data.abilities) {
-    for (const ownerId of ability.ownerIds || []) append(abilitiesByOwner, ownerId, ability.id);
-  }
+  for (const ability of data.abilities) for (const ownerId of ability.ownerIds || []) append(abilitiesByOwner, ownerId, ability.id);
 
   for (const assignment of data.assignments || []) {
     append(assignmentsByPerson, assignment.personId, assignment.id);
@@ -139,9 +131,7 @@ export const buildSuccessionIndexes = (data) => {
     append(assignmentsByReporting, assignment.reportingEntityId, assignment.id);
     for (const eventId of assignment.relatedEventIds || []) append(assignmentsByEvent, eventId, assignment.id);
     const end = assignment.chapterRange.end ?? latestChapter;
-    for (let chapter = assignment.chapterRange.start; chapter <= end; chapter += 1) {
-      append(assignmentsByChapter, chapter, assignment.id);
-    }
+    for (let chapter = assignment.chapterRange.start; chapter <= end; chapter += 1) append(assignmentsByChapter, chapter, assignment.id);
   }
 
   for (const record of data.locationHistory) {
@@ -165,9 +155,7 @@ export const buildSuccessionIndexes = (data) => {
         entity.summary || '',
         ...(entity.tags || []),
         entity.assignmentType || '',
-        entity.entityType === 'assignment'
-          ? `${entity.assignmentType || ''} ${byId.get(entity.subjectEntityId)?.name || ''}`
-          : '',
+        entity.entityType === 'assignment' ? `${entity.assignmentType || ''} ${byId.get(entity.subjectEntityId)?.name || ''}` : '',
         entity.relationshipType || '',
         entity.status || '',
         entity.sentiment || '',
@@ -187,6 +175,20 @@ export const buildSuccessionIndexes = (data) => {
         entity.zoneRole || '',
         entity.state || '',
         entity.deck ? `tier ${entity.deck}` : '',
+        entity.activation || '',
+        entity.range || '',
+        entity.duration || '',
+        entity.researchStatus || '',
+        entity.knowledge || '',
+        ...(entity.classification?.nenTypes || []),
+        entity.classification?.certainty || '',
+        ...(entity.conditions || []),
+        ...(entity.limitations || []),
+        ...(entity.costs || []),
+        ...(entity.targets || []),
+        ...(entity.knownUses || []),
+        ...(entity.knownAbilityIds || []),
+        ...(entity.suspectedAbilityIds || []),
         ...(entity.causes || []),
         ...(entity.outcomes || []),
         ...(entity.stateChanges || []),
