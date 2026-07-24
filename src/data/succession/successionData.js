@@ -77,8 +77,11 @@ export const {
   getCharacterStateTimeline,
   getCharacterStateAtChapter,
   getCharacterCurrentState,
+  getCharacterRoleProfile,
+  getCharacterLifetimeTimeline,
   getCharacterDossier,
   getCharactersWithStateProfiles,
+  getCharacterStateCoverageReport,
   searchCharactersByState,
 } = successionCharacterStates;
 
