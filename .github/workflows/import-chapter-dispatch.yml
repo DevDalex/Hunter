@@ -49,8 +49,8 @@ jobs:
           if (!['http:', 'https:'].includes(source.protocol) || !allowedHost(source.hostname.toLowerCase())) {
             throw new Error('The queued source URL is not on the allowed chapter host.');
           }
-          if (!Number.isInteger(chapter) || chapter < 338 || chapter > 414) {
-            throw new Error('Chapter must be from 338 through 414.');
+          if (!Number.isInteger(chapter) || chapter < 338 || chapter > 9999) {
+            throw new Error('Chapter must be from 338 through 9999.');
           }
           if (!requestId || requestId.length > 100) throw new Error('The import request ID is missing or invalid.');
           if (selectedImages.length < 1 || selectedImages.length > 120) {
