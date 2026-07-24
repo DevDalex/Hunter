@@ -1,0 +1,236 @@
+/* Final layout ownership for the preserved Nen dossier embedded in the Succession Archive. */
+.succession-archive .deep-dossier--embedded .lesson-ledger {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.succession-archive .deep-dossier--embedded .lesson-ledger > article {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: clamp(18px, 2vw, 26px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.11) !important;
+  border-radius: 18px !important;
+  background:
+    radial-gradient(circle at 92% 5%, rgba(239, 204, 124, 0.09), transparent 30%),
+    linear-gradient(145deg, #181c23, #10141a) !important;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.16);
+}
+
+.succession-archive .deep-dossier--embedded .lesson-ledger > article > span {
+  display: block;
+  color: var(--deep-gold) !important;
+  font-size: 12px !important;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  line-height: 1.35;
+  text-transform: uppercase;
+}
+
+.succession-archive .deep-dossier--embedded .lesson-ledger > article > h3 {
+  margin: 0;
+  color: var(--deep-ivory) !important;
+  font-size: clamp(25px, 2.5vw, 36px) !important;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+}
+
+.succession-archive .deep-dossier--embedded .lesson-ledger > article > p {
+  max-width: 920px;
+  margin: 0;
+  color: var(--deep-muted) !important;
+  font-size: 15px !important;
+  line-height: 1.65;
+}
+
+.succession-archive .deep-dossier--embedded .lesson-ledger > article > div {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  margin-top: 2px;
+  padding-top: 13px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.succession-archive .deep-dossier--embedded .lesson-ledger > article > div > b {
+  flex: 0 0 100%;
+  margin-bottom: 1px;
+  color: var(--deep-gold) !important;
+  font-size: 12px !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.succession-archive .deep-dossier--embedded .lesson-ledger > article > div > small {
+  display: inline-flex;
+  align-items: center;
+  width: auto;
+  max-width: 100%;
+  min-height: 29px;
+  padding: 5px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.045);
+  color: #d7d0c5 !important;
+  font-size: 12px !important;
+  line-height: 1.25;
+  white-space: normal;
+}
+
+.succession-archive .deep-dossier--embedded .lesson-ledger > article > ul {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 20px;
+}
+
+.succession-archive .deep-dossier--embedded .lesson-ledger > article > ul li {
+  color: var(--deep-muted) !important;
+  font-size: 14px !important;
+  line-height: 1.5;
+}
+
+.succession-archive .deep-dossier--embedded .lesson-ledger > article > a {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  color: var(--deep-gold) !important;
+  font-size: 13px !important;
+  font-weight: 700;
+  text-decoration: none !important;
+}
+
+.succession-archive .deep-dossier--embedded .lesson-ledger > article > a:hover,
+.succession-archive .deep-dossier--embedded .lesson-ledger > article > a:focus-visible {
+  color: #ffe3a1 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+
+.succession-archive .deep-dossier--embedded .ability-ledger {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px !important;
+  align-items: stretch;
+}
+
+.succession-archive .deep-dossier--embedded .ability-ledger > a {
+  display: flex !important;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 250px;
+  padding: 19px !important;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.11) !important;
+  border-radius: 16px !important;
+  background:
+    radial-gradient(circle at 88% 2%, rgba(239, 204, 124, 0.07), transparent 30%),
+    linear-gradient(145deg, #181c23, #10141a) !important;
+  color: var(--deep-ivory) !important;
+  text-decoration: none !important;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.14);
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.succession-archive .deep-dossier--embedded .ability-ledger > a:hover,
+.succession-archive .deep-dossier--embedded .ability-ledger > a:focus-visible {
+  transform: translateY(-3px);
+  border-color: rgba(239, 204, 124, 0.5) !important;
+  box-shadow: 0 20px 38px rgba(0, 0, 0, 0.23);
+  outline: none;
+}
+
+.succession-archive .deep-dossier--embedded .ability-ledger > a > span {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--deep-gold) !important;
+  font-size: 11px !important;
+  font-weight: 800;
+  letter-spacing: 0.055em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  text-decoration: none !important;
+}
+
+.succession-archive .deep-dossier--embedded .ability-ledger > a > h3 {
+  margin: 0 0 9px;
+  color: var(--deep-ivory) !important;
+  font-size: clamp(23px, 2vw, 31px) !important;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  overflow-wrap: anywhere;
+  text-decoration: none !important;
+}
+
+.succession-archive .deep-dossier--embedded .ability-ledger > a > b {
+  display: block;
+  margin-bottom: 10px;
+  color: #fff4df !important;
+  font-size: 14px !important;
+  line-height: 1.3;
+  text-decoration: none !important;
+}
+
+.succession-archive .deep-dossier--embedded .ability-ledger > a > p {
+  margin: 0 0 12px;
+  color: var(--deep-muted) !important;
+  font-size: 14px !important;
+  line-height: 1.58;
+  text-decoration: none !important;
+}
+
+.succession-archive .deep-dossier--embedded .ability-ledger > a > small {
+  display: block;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #aaa297 !important;
+  font-size: 12px !important;
+  line-height: 1.5;
+  text-decoration: none !important;
+}
+
+.succession-archive .deep-dossier--embedded .ability-ledger > a :where(span, h3, b, p, small) {
+  text-decoration-line: none !important;
+}
+
+@media (max-width: 1080px) {
+  .succession-archive .deep-dossier--embedded .ability-ledger {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .succession-archive .deep-dossier--embedded .lesson-ledger > article,
+  .succession-archive .deep-dossier--embedded .ability-ledger > a {
+    padding: 16px !important;
+    border-radius: 14px !important;
+  }
+
+  .succession-archive .deep-dossier--embedded .ability-ledger {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .succession-archive .deep-dossier--embedded .ability-ledger > a {
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-archive .deep-dossier--embedded .ability-ledger > a {
+    transition: none;
+  }
+
+  .succession-archive .deep-dossier--embedded .ability-ledger > a:hover,
+  .succession-archive .deep-dossier--embedded .ability-ledger > a:focus-visible {
+    transform: none;
+  }
+}
