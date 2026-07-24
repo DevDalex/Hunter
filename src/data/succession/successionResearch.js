@@ -1,35 +1,45 @@
 import { chapterTitles } from '../chapterTitles.js';
+import {
+  authorizedSuccessionChapterNumbers,
+  LATEST_AUTHORIZED_SUCCESSION_CHAPTER,
+} from '../successionChapterAvailability.generated.js';
 import { successionChapterResearch as maintainedResearch } from '../successionDossier.js';
 
-export const LATEST_SUCCESSION_RESEARCH_CHAPTER = 414;
+const maintainedNumbers = new Set(maintainedResearch.map((record) => record.number));
+const pendingImportedResearch = authorizedSuccessionChapterNumbers
+  .filter((number) => number >= 340 && !maintainedNumbers.has(number))
+  .map((number) => Object.freeze({
+    number,
+    title: chapterTitles[number - 1] || `Chapter ${number}`,
+    phase: number >= 414 ? 'Current releases' : 'Active contest and voyage',
+    voyageDay: number < 359 ? 'Pre-voyage' : 'Unassigned',
+    lanes: [],
+    focus: `Chapter ${number} was added automatically from the authorized reader-media manifest. Detailed scene claims remain intentionally pending until maintained source documentation is available.`,
+    events: [],
+    prelude: [],
+    locations: [],
+    threadLabels: [],
+    confidence: ['chapter media imported', 'detailed scene annotation pending maintained source'],
+    status: 'Reader media indexed; detailed research pending verified chapter documentation',
+    coverage: {
+      summary: true,
+      chronology: false,
+      locations: false,
+      source: true,
+    },
+    lastReviewed: 'Pending maintained research review',
+    source: `https://hunterxhunter.fandom.com/wiki/Chapter_${number}`,
+  }));
 
-const chapter414 = Object.freeze({
-  number: 414,
-  title: chapterTitles[413] || 'Chapter 414',
-  phase: 'Active contest and voyage',
-  voyageDay: 'Voyage Day 12',
-  lanes: ['Royal contest', 'Kurapika / Woble', 'Nen development', 'Military command', 'Funeral operation'],
-  focus: 'The latest reader chapter is indexed as a canonical research record. Detailed scene claims remain intentionally unfilled until the maintained Hunterpedia synopsis and chapter evidence are available.',
-  events: [],
-  prelude: [],
-  locations: [],
-  threadLabels: [],
-  confidence: ['chapter and title indexed', 'scene summary pending maintained source'],
-  status: 'Reader media indexed; detailed research pending verified chapter documentation',
-  coverage: {
-    summary: true,
-    chronology: false,
-    locations: false,
-    source: true,
-  },
-  lastReviewed: 'July 24, 2026',
-  source: 'https://hunterxhunter.fandom.com/wiki/Chapter_414',
-});
+export const LATEST_SUCCESSION_RESEARCH_CHAPTER = Math.max(
+  LATEST_AUTHORIZED_SUCCESSION_CHAPTER,
+  ...maintainedResearch.map((record) => record.number),
+);
 
 export const successionChapterResearch = Object.freeze([
   ...maintainedResearch,
-  ...(maintainedResearch.some((record) => record.number === chapter414.number) ? [] : [chapter414]),
-]);
+  ...pendingImportedResearch,
+].sort((left, right) => left.number - right.number));
 
 export const successionChapterResearchByNumber = new Map(
   successionChapterResearch.map((record) => [record.number, record]),
