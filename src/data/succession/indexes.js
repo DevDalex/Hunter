@@ -39,6 +39,10 @@ export const buildSuccessionIndexes = (data) => {
   const assignmentsBySubject = new Map();
   const assignmentsByPrincipal = new Map();
   const assignmentsByLocation = new Map();
+  const assignmentsByAllegiance = new Map();
+  const assignmentsByReporting = new Map();
+  const assignmentsByEvent = new Map();
+  const assignmentsByChapter = new Map();
   const locationHistoryByLocation = new Map();
   const locationHistoryByCharacter = new Map();
 
@@ -110,11 +114,19 @@ export const buildSuccessionIndexes = (data) => {
     for (const ownerId of ability.ownerIds || []) append(abilitiesByOwner, ownerId, ability.id);
   }
 
+  const latestChapter = data.chapters.at(-1)?.number || 414;
   for (const assignment of data.assignments || []) {
     append(assignmentsByPerson, assignment.personId, assignment.id);
     append(assignmentsBySubject, assignment.subjectEntityId, assignment.id);
     append(assignmentsByPrincipal, assignment.principalEntityId, assignment.id);
     append(assignmentsByLocation, assignment.locationId, assignment.id);
+    append(assignmentsByAllegiance, assignment.allegianceEntityId, assignment.id);
+    append(assignmentsByReporting, assignment.reportingEntityId, assignment.id);
+    for (const eventId of assignment.relatedEventIds || []) append(assignmentsByEvent, eventId, assignment.id);
+    const end = assignment.chapterRange.end ?? latestChapter;
+    for (let chapter = assignment.chapterRange.start; chapter <= end; chapter += 1) {
+      append(assignmentsByChapter, chapter, assignment.id);
+    }
   }
 
   for (const record of data.locationHistory) {
@@ -137,6 +149,11 @@ export const buildSuccessionIndexes = (data) => {
         entity.summary || '',
         ...(entity.tags || []),
         entity.assignmentType || '',
+        entity.status || '',
+        entity.secrecy || '',
+        entity.objective || '',
+        entity.authorityBasis || '',
+        ...(entity.operationalNotes || []),
         entity.subtype || '',
         entity.category || '',
         entity.locationType || '',
@@ -172,6 +189,10 @@ export const buildSuccessionIndexes = (data) => {
     assignmentsBySubject: freezeMapValues(assignmentsBySubject),
     assignmentsByPrincipal: freezeMapValues(assignmentsByPrincipal),
     assignmentsByLocation: freezeMapValues(assignmentsByLocation),
+    assignmentsByAllegiance: freezeMapValues(assignmentsByAllegiance),
+    assignmentsByReporting: freezeMapValues(assignmentsByReporting),
+    assignmentsByEvent: freezeMapValues(assignmentsByEvent),
+    assignmentsByChapter: freezeMapValues(assignmentsByChapter),
     locationHistoryByLocation: freezeMapValues(locationHistoryByLocation),
     locationHistoryByCharacter: freezeMapValues(locationHistoryByCharacter),
     searchDocuments,
