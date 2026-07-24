@@ -5,10 +5,15 @@ import {
 import { authorizedSuccessionChapterMedia } from './successionChapterMedia.generated.js';
 
 export const SUCCESSION_READER_START = 338;
+const importedSuccessionChapterNumbers = Object.keys(authorizedSuccessionChapterMedia)
+  .map((chapter) => Number.parseInt(chapter, 10))
+  .filter(Number.isInteger);
+
 export const SUCCESSION_READER_END = Math.max(
   414,
   LATEST_AUTHORIZED_SUCCESSION_CHAPTER,
   ...authorizedSuccessionChapterNumbers,
+  ...importedSuccessionChapterNumbers,
 );
 
 // Page records are generated from local media by scripts/import-succession-chapter.mjs.
