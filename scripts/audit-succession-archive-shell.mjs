@@ -78,7 +78,7 @@ assert(workspace.includes('canonLevel') && workspace.includes('SourceReference')
 assert(workspace.includes('SuccessionChapterReader') === false, 'the archive application must not embed the manga reader');
 
 for (const component of [
-  'CharactersWorkspace', 'HuntersWorkspace', 'MilitaryWorkspace', 'OrganizationsWorkspace', 'PoliticsWorkspace',
+  'HuntersWorkspace', 'MilitaryWorkspace', 'OrganizationsWorkspace', 'PoliticsWorkspace',
   'GlossaryWorkspace', 'MediaWorkspace', 'DomainEntityDetail', 'ChapterRecordsWorkspaceV2',
 ]) assert(extendedWorkspace.includes(`export function ${component}`), `missing completed workspace ${component}`);
 for (const component of ['QueensWorkspace', 'GuardianBeastsWorkspace', 'BodyStatesWorkspace']) {
@@ -89,6 +89,7 @@ for (const component of ['SuccessionStoryWorkspace', 'PrincesWorkspace', 'MafiaW
 }
 
 for (const [routeId, componentName, modulePath] of [
+  ['characters', 'CharactersWorkspace', './SuccessionArchiveCharacterWorkspace'],
   ['bodyguards', 'AssignmentsWorkspace', './SuccessionArchiveAssignmentWorkspace'],
   ['events', 'EventsWorkspace', './SuccessionArchiveEventWorkspace'],
   ['locations', 'LocationsWorkspace', './SuccessionArchiveLocationWorkspace'],
