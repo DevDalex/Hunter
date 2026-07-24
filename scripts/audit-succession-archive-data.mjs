@@ -11,7 +11,10 @@ const vite = await createServer({
 });
 
 try {
-  const archiveModule = await vite.ssrLoadModule('/src/data/succession/successionData.js');
+  const [archiveModule, availabilityModule] = await Promise.all([
+    vite.ssrLoadModule('/src/data/succession/successionData.js'),
+    vite.ssrLoadModule('/src/data/successionChapterAvailability.generated.js'),
+  ]);
   const {
     getCharacter,
     getChapter,
@@ -26,6 +29,9 @@ try {
     successionArchiveIndexes,
     successionArchiveValidation,
   } = archiveModule;
+  const { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } = availabilityModule;
+  const latestChapter = Math.max(414, LATEST_AUTHORIZED_SUCCESSION_CHAPTER);
+  const expectedChapterRecords = latestChapter - 340 + 1;
 
   assert(successionArchiveValidation.valid, 'canonical data must pass schema validation');
   assert(successionArchiveValidation.stats.entities >= 250, 'canonical graph must contain the expanded current-arc catalogue');
@@ -47,8 +53,9 @@ try {
   assert(placeholders.length === 0, 'generic unnamed placeholders must not appear as canonical characters');
   assert(new Set(characterNames).size === characterNames.length, 'canonical character names must be deduplicated');
   assert(getEntitiesByType('guardian-beast').length === 15, 'King Nasubi and fourteen prince Guardian Spirit Beast records are required');
-  assert(chapterRecords.length === 75, 'Chapter records must cover 340 through 414');
-  assert(chapterRecords[0]?.number === 340 && chapterRecords.at(-1)?.number === 414, 'chapter catalogue boundaries must remain 340–414');
+  assert(chapterRecords.length === expectedChapterRecords, `Chapter records must cover 340 through ${latestChapter}`);
+  assert(chapterRecords[0]?.number === 340 && chapterRecords.at(-1)?.number === latestChapter, `chapter catalogue boundaries must remain 340–${latestChapter}`);
+  assert(chapterRecords.every((record, index) => record.number === 340 + index), 'chapter records must remain sequential');
   assert(getEntitiesByType('organization').filter((record) => record.organizationType === 'mafia-family').length === 3, 'all three Kakin mafia families are required');
 
   const kurapika = getCharacter('kurapika');
@@ -64,6 +71,8 @@ try {
   const chapter414 = getChapter(414);
   assert(chapter414?.reader?.manifestChapter === 414, 'Chapter 414 must bridge into the reader manifest');
   assert(chapter414?.sourceIds?.includes('source:chapter-414'), 'Chapter 414 must preserve its canonical source record');
+  const latestRecord = getChapter(latestChapter);
+  assert(latestRecord?.reader?.manifestChapter === latestChapter, `latest Chapter ${latestChapter} must bridge into the reader manifest`);
 
   const kurapikaEvents = getEventsForCharacter('character:kurapika');
   assert(kurapikaEvents.some((event) => event.id === 'event:room-1014-nen-classes'), 'character event index must include the Room 1014 Nen classes');
@@ -90,8 +99,8 @@ try {
 
   const tserriednichSearch = searchSuccessionArchive('fourth prince');
   assert(tserriednichSearch.some(({ entity }) => entity.id === 'character:tserriednich-hui-guo-rou'), 'global search must resolve character aliases');
-  const chapter414Search = searchSuccessionArchive('chapter 414');
-  assert(chapter414Search.some(({ entity }) => entity.id === 'chapter:414'), 'global search must resolve Chapter 414');
+  const latestChapterSearch = searchSuccessionArchive(`chapter ${latestChapter}`);
+  assert(latestChapterSearch.some(({ entity }) => entity.id === `chapter:${latestChapter}`), `global search must resolve Chapter ${latestChapter}`);
 
   const duplicateReferences = Object.values(successionArchiveData)
     .filter(Array.isArray)
@@ -102,7 +111,7 @@ try {
   console.log(
     `Succession Archive data audit passed: ${successionArchiveValidation.stats.entities} entities, `
     + `${characterRecords.length} named characters, ${princes.length} princes, ${queens.length} queens, `
-    + `${bodyguards.length} bodyguards, ${hunters.length} Hunters, and ${chapterRecords.length} chapter records through 414.`,
+    + `${bodyguards.length} bodyguards, ${hunters.length} Hunters, and ${chapterRecords.length} chapter records through ${latestChapter}.`,
   );
 } finally {
   await vite.close();
