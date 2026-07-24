@@ -13,7 +13,7 @@ import {
 } from './lib/succession-chapter-url-source.mjs';
 
 const READER_START = 338;
-const READER_END = 414;
+const READER_END = 9999;
 const ROOT = process.cwd();
 const MAX_SELECTED_IMAGES = 120;
 
