@@ -131,7 +131,7 @@ try {
 
   const justice402 = getOrganizationDossier('organization:kakin-justice-bureau', 402);
   assert(justice402?.territories.some((location) => location.id === 'location:black-whale:tier-1:justice-bureau:medical-wing'), 'Justice dossier must include the protected medical wing');
-  assert(justice402?.leaders.some((character) => character.id === 'character:kaiser'), 'Justice dossier must resolve Kaiser through active personnel history');
+  assert(justice402?.activePersonnel.some((record) => record.character.id === 'character:kaiser'), 'Justice dossier must resolve Kaiser through active personnel history');
 
   assert(searchSuccessionArchive('identity and continuity crisis').some(({ entity }) => entity.id === 'organization:benjamin-private-army'), 'global search must resolve organization state language');
   assert(searchSuccessionArchive('rule-bound recruitment').some(({ entity }) => entity.id === 'organization:heil-ly'), 'global search must resolve organization operational language');
