@@ -37,11 +37,13 @@ assert(foundation.includes("organizationId: 'organization:kakin-justice-bureau'"
 assert(foundation.includes("organizationId: 'organization:benjamin-private-army'"), 'Benjamin command crisis must be explicit');
 assert(corrections.includes("id: 'organization-personnel:heil-ly:borksen:410'"), 'Borksen’s confirmed Chapter 410 membership transition must override the recruitment-only record');
 assert(corrections.includes('reaches Yes and enters Morena’s community'), 'Heil-Ly correction must align with the canonical recruitment outcome');
+assert(corrections.includes("chapterRange: Object.freeze({ start: 407, end: 409 })"), 'recruitment negotiation must remain separate from the Chapter 410 outcome');
 assert(selectorSource.includes('getOrganizationStateAtChapter'), 'selectors must resolve chapter-bounded organization state');
 assert(selectorSource.includes('getOrganizationPersonnelAtChapter'), 'selectors must resolve chapter-bounded personnel state');
 assert(selectorSource.includes('getOrganizationHierarchy'), 'selectors must compose parent and child organizations');
 assert(selectorSource.includes('getOrganizationDossier'), 'selectors must compose full institutional dossiers');
 assert(selectorSource.includes('getOrganizationStateCoverageReport'), 'selectors must report organization coverage');
+assert(selectorSource.includes('source.chapter <= parsedChapter'), 'organization evidence sources must remain inside the selected spoiler boundary');
 assert(workspace.includes('Organizations as chapter-bounded systems of authority'), 'workspace must identify the institutional state model');
 assert(workspace.includes('Institutional hierarchy'), 'workspace must render parent and subordinate organizations');
 assert(workspace.includes('Personnel history'), 'workspace must render leadership and membership transitions');
@@ -114,6 +116,7 @@ try {
   const heilLy399 = getOrganizationStateAtChapter('organization:heil-ly', 399);
   assert(heilLy399?.territoryIds.includes('location:black-whale:tier-3:room-3101'), 'Heil-Ly Chapter 399 state must include Room 3101');
   assert(heilLy399?.objectiveStates.some((objective) => /recruit/i.test(objective)), 'Heil-Ly current state must include recruitment or recruit-integration objectives');
+  assert(heilLy399?.chapterRange.end === 406, 'Heil-Ly pre-recruitment state must end before the Borksen negotiation begins');
 
   const borksenTimeline = getOrganizationPersonnelTimeline('organization:heil-ly').filter((record) => record.characterId === 'character:borksen');
   const borksenRecruitment = borksenTimeline.find((record) => record.chapterRange.start === 407);
@@ -123,6 +126,16 @@ try {
   assert(!getOrganizationPersonnelAtChapter('organization:heil-ly', 406).some((record) => record.characterId === 'character:borksen'), 'Borksen must not appear in Heil-Ly personnel before recruitment begins');
   assert(getOrganizationPersonnelAtChapter('organization:heil-ly', 409).some((record) => record.id === borksenRecruitment.id), 'Borksen must remain a recruitment target at Chapter 409');
   assert(getOrganizationPersonnelAtChapter('organization:heil-ly', 410).some((record) => record.id === borksenMembership.id), 'Borksen must resolve as a community member at Chapter 410');
+
+  const heilLy409 = getOrganizationDossier('organization:heil-ly', 409);
+  assert(heilLy409?.state?.chapterRange.start === 407 && heilLy409.state.chapterRange.end === 409, 'Chapter 409 dossier must use the unresolved negotiation state');
+  assert(!heilLy409?.state?.operationalState.includes('reaches Yes'), 'Chapter 409 state must not reveal the Chapter 410 outcome');
+  assert(!heilLy409?.personnelHistory.some((record) => record.chapterRange.start > 409), 'Chapter 409 personnel history must exclude future membership transitions');
+  assert(!heilLy409?.sources.some((source) => source.chapter > 409), 'Chapter 409 evidence must exclude future chapter sources');
+
+  const heilLy410 = getOrganizationDossier('organization:heil-ly', 410);
+  assert(heilLy410?.state?.chapterRange.start === 410, 'Chapter 410 dossier must use the confirmed membership state');
+  assert(heilLy410?.activePersonnel.some((record) => record.id === borksenMembership.id), 'Chapter 410 dossier must include Borksen’s membership transition');
 
   const xiYu399 = getOrganizationDossier('organization:xi-yu', 399);
   assert(xiYu399?.territories.some((location) => location.id === 'location:black-whale:tier-3:room-3101'), 'Xi-Yu dossier must include Room 3101 territory at Chapter 399');
@@ -136,7 +149,7 @@ try {
   assert(searchSuccessionArchive('identity and continuity crisis').some(({ entity }) => entity.id === 'organization:benjamin-private-army'), 'global search must resolve organization state language');
   assert(searchSuccessionArchive('rule-bound recruitment').some(({ entity }) => entity.id === 'organization:heil-ly'), 'global search must resolve organization operational language');
 
-  console.log(`Succession organization workspace audit passed: ${organizations.length} organizations, ${coverage.coveragePercent}% explicit state coverage, hierarchy, territory, confirmed recruitment-to-membership transitions, assignments, relationships, events, evidence, search, routing, and responsive presentation are wired.`);
+  console.log(`Succession organization workspace audit passed: ${organizations.length} organizations, ${coverage.coveragePercent}% explicit state coverage, hierarchy, territory, chapter-bounded personnel and evidence, confirmed recruitment-to-membership transitions, assignments, relationships, events, search, routing, and responsive presentation are wired.`);
 } finally {
   await vite.close();
 }
