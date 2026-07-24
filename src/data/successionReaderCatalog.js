@@ -19,7 +19,7 @@ export const successionReaderPhases = Object.freeze([
   { id: 'heil-ly-war', label: 'Heil-Ly war', range: [391, 400], description: 'The lower-tier conflict expands through Contagion, Room 3101, and the Troupe’s history.' },
   { id: 'alliance-convergence', label: 'Alliances and upper-tier convergence', range: [401, 406], description: 'Moonlight Act, Beyond’s curse network, the funeral operation, and Hisoka move toward Tier 1.' },
   { id: 'martial-law', label: 'Martial law and negotiation', range: [407, 413], description: 'Borksen’s recruitment, the funeral procession, the second Nen class, and martial law advance together.' },
-  { id: 'latest', label: 'Latest chapter', range: [414, 414], description: 'The newest indexed chapter in the local reader manifest and canonical research catalogue.' },
+  { id: 'current-releases', label: 'Current releases', range: [414, Number.POSITIVE_INFINITY], description: 'Imported chapters beyond the maintained phase map remain available immediately while detailed research annotation catches up.' },
 ]);
 
 const phaseForChapter = (chapter) => successionReaderPhases.find(({ range }) => chapter >= range[0] && chapter <= range[1]) || successionReaderPhases.at(-1);
@@ -37,7 +37,7 @@ export const successionReaderCatalog = Object.freeze(successionChapterReaderReco
     ...record,
     title: research?.title || chapterTitles[record.chapter - 1] || `Chapter ${record.chapter}`,
     phaseId: phase.id,
-    phase: phase.label,
+    phase: research?.phase || phase.label,
     phaseDescription: phase.description,
     focus: research?.focus || '',
     voyageDay: research?.voyageDay || (record.chapter < 359 ? 'Pre-voyage' : 'Unassigned'),
