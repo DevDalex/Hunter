@@ -1,9 +1,11 @@
+# Registered on main; this follow-up push triggers the restoration run.
 name: Restore Succession section
 
 on:
   push:
     paths:
       - .github/workflows/restore-succession-section.yml
+  workflow_dispatch:
 
 permissions:
   contents: write
