@@ -16,6 +16,7 @@ const auditPaths = Object.freeze([
   'scripts/audit-succession-archive-shell.mjs',
   'scripts/audit-succession-characters-workspace.mjs',
   'scripts/audit-succession-organizations-workspace.mjs',
+  'scripts/audit-succession-people-institutions-closure.mjs',
   'scripts/audit-succession-events-workspace.mjs',
   'scripts/audit-succession-locations-workspace.mjs',
   'scripts/audit-succession-black-whale-bridge.mjs',
@@ -81,6 +82,7 @@ assert(packageJson.scripts?.['audit:succession-runtime'] === 'node scripts/run-s
 assert(packageJson.scripts?.['audit:succession-contract'] === 'node scripts/audit-succession-runtime-contract.mjs', 'package scripts must expose this contract audit directly');
 assert(packageJson.scripts?.['audit:succession-characters'] === 'node scripts/audit-succession-characters-workspace.mjs', 'package scripts must expose the Batch 2 character audit');
 assert(packageJson.scripts?.['audit:succession-organizations'] === 'node scripts/audit-succession-organizations-workspace.mjs', 'package scripts must expose the Batch 2 organization audit');
+assert(packageJson.scripts?.['audit:succession-people-institutions'] === 'node scripts/audit-succession-people-institutions-closure.mjs', 'package scripts must expose the Batch 2 closure audit');
 assert(packageJson.scripts?.['build:runtime']?.startsWith('npm run audit:succession-runtime &&'), 'build:runtime must collect all Succession failures before continuing');
 
 const vite = await createServer({
@@ -109,12 +111,13 @@ try {
   assert(typeof archive.getFoundationClosureReport === 'function', 'evidence closure selectors must remain public');
   assert(typeof archive.getCharacterStateAtChapter === 'function', 'character state selectors must remain public');
   assert(typeof archive.getCharacterDossier === 'function', 'character dossier selector must remain public');
+  assert(typeof archive.getCharacterAffiliationsAtChapter === 'function', 'chapter-bounded character affiliations must remain public');
   assert(typeof archive.getCharacterRoleProfile === 'function', 'role-specific character layers must remain public');
   assert(typeof archive.getCharacterLifetimeTimeline === 'function', 'lifetime character chronology must remain public');
   assert(typeof archive.getCharacterStateCoverageReport === 'function', 'character state coverage reporting must remain public');
-  assert(archive.getCharactersWithStateProfiles().length >= 36, 'Batch 2.3 must retain complete prince and queen state coverage');
+  assert(archive.getCharactersWithStateProfiles().length >= 42, 'Batch 2 closure must retain complete royal and institution-leader state coverage');
   const characterCoverage = archive.getCharacterStateCoverageReport();
-  assert(characterCoverage.explicitCharacters >= 36, 'Batch 2.3 coverage report must retain complete royal profiles');
+  assert(characterCoverage.explicitCharacters >= 42, 'Batch 2 closure must retain at least forty-two explicit character profiles');
   assert(characterCoverage.roleLayers.some((layer) => layer.id === 'royal-candidate' && layer.explicit === 14), 'all princes must remain explicit');
   assert(characterCoverage.roleLayers.some((layer) => layer.id === 'royal-household' && layer.explicit === 8), 'all queens must remain explicit');
 
@@ -128,7 +131,17 @@ try {
   const organizationCoverage = archive.getOrganizationStateCoverageReport();
   assert(organizationCoverage.explicitOrganizations === organizations.length && organizationCoverage.coveragePercent === 100, 'organization coverage must remain complete');
 
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits avoid transient foundation imports, route membership is order-independent, aggregate failure collection is active, character and organization links normalize across role routes, and the canonical runtime exposes every Batch 1 graph layer plus complete Batch 2 people and institution dossiers.`);
+  assert(typeof archive.getCanonicalPeopleInstitutionRoute === 'function', 'canonical people and institution routing must remain public');
+  assert(typeof archive.getPeopleInstitutionRecord === 'function', 'cross-domain dossier resolution must remain public');
+  assert(typeof archive.getPeopleInstitutionCoverageGaps === 'function', 'people and institution gap reporting must remain public');
+  assert(typeof archive.getPeopleInstitutionClosureReport === 'function', 'Batch 2 closure reporting must remain public');
+  const closure = archive.getPeopleInstitutionClosureReport();
+  assert(closure?.closureReady && closure.status === 'closed', 'Batch 2 people and institution closure must remain closed');
+  assert(closure.characters.priorityExplicit === closure.characters.priorityTotal, 'all priority actors must remain explicit');
+  assert(closure.organizations.explicit === closure.organizations.total, 'all institutions must remain explicit');
+  assert(closure.routes.violations.length === 0, 'people and institutions must retain canonical routes');
+
+  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits avoid transient foundation imports, route membership is order-independent, aggregate failure collection is active, every person and institution resolves a canonical dossier, and Batch 2 remains closed with chapter-bounded status, affiliation, evidence, and institutional state.`);
 } finally {
   await vite.close();
 }
