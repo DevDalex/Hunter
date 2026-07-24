@@ -89,7 +89,7 @@ assert(entities.includes('successionRosterGroups') && entities.includes('princeD
 assert(entities.includes('excludedName') && entities.includes('groupsByCharacter'), 'canonical catalogue must filter placeholders and deduplicate names');
 assert(entities.includes("organizationType: 'mafia-family'") && entities.includes("organizationType: 'military'"), 'mafia and military organization records are required');
 assert(entities.includes('dossierGuardianBeasts.map') && entities.includes('successionChapterResearch.map'), 'Guardian Spirit Beasts and chapter records must be generated from maintained sources');
-assert(extendedEntities.includes('source:chapter-414') && extendedEntities.includes('chapter:414'), 'canonical overlay must retain maintained Chapter 414 records');
+assert(extendedEntities.includes('additionalSources') && extendedEntities.includes('additionalChapters') && extendedEntities.includes('successionChapterResearch'), 'canonical overlay must generate every missing imported Chapter Record');
 assert(research.includes('authorizedSuccessionChapterNumbers') && research.includes('detailed research pending verified chapter documentation'), 'new imported chapters must receive explicit pending research records automatically');
 
 assert(router.includes("'/story/succession-contest/chapters'"), 'legacy reader URL must remain authoritative');
