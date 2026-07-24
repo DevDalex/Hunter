@@ -65,6 +65,19 @@ export const createSuccessionSelectors = (data, indexes) => {
 
   const getAbilitiesForOwner = (entityId) => resolveMany(indexes.abilitiesByOwner.get(entityId), indexes);
 
+  const getAssignmentsForPerson = (entityId) => resolveMany(indexes.assignmentsByPerson.get(entityId), indexes);
+
+  const getAssignmentsForSubject = (entityId) => resolveMany(indexes.assignmentsBySubject.get(entityId), indexes);
+
+  const getAssignmentsForPrincipal = (entityId) => resolveMany(indexes.assignmentsByPrincipal.get(entityId), indexes);
+
+  const getAssignmentsAtLocation = (locationId) => resolveMany(indexes.assignmentsByLocation.get(locationId), indexes);
+
+  const getActiveAssignmentsForSubject = (entityId, chapter = null) => getAssignmentsForSubject(entityId)
+    .filter((assignment) => chapter === null
+      ? assignment.status === 'active'
+      : includesChapter(assignment.chapterRange, Number(chapter)));
+
   const getLocationHistoryForCharacter = (characterId) => resolveMany(indexes.locationHistoryByCharacter.get(characterId), indexes);
 
   const getLocationHistoryForLocation = (locationId) => resolveMany(indexes.locationHistoryByLocation.get(locationId), indexes);
@@ -102,6 +115,11 @@ export const createSuccessionSelectors = (data, indexes) => {
       for (const event of getEventsForCharacter(entity.id)) relatedIds.add(event.id);
       for (const appearance of getAppearancesForCharacter(entity.id)) relatedIds.add(appearance.chapterId);
       for (const locationRecord of getLocationHistoryForCharacter(entity.id)) relatedIds.add(locationRecord.locationId);
+      for (const assignment of [
+        ...getAssignmentsForPerson(entity.id),
+        ...getAssignmentsForSubject(entity.id),
+        ...getAssignmentsForPrincipal(entity.id),
+      ]) relatedIds.add(assignment.id);
     }
 
     if (entity.entityType === 'event') {
@@ -112,6 +130,32 @@ export const createSuccessionSelectors = (data, indexes) => {
         ...(entity.abilityIds || []),
         ...(entity.consequenceEventIds || []),
       ]) relatedIds.add(id);
+    }
+
+    if (entity.entityType === 'assignment') {
+      for (const id of [
+        entity.personId,
+        entity.principalEntityId,
+        entity.subjectEntityId,
+        entity.locationId,
+        entity.allegianceEntityId,
+        entity.reportingEntityId,
+      ]) if (id) relatedIds.add(id);
+    }
+
+    if (entity.entityType === 'location') {
+      for (const assignment of getAssignmentsAtLocation(entity.id)) relatedIds.add(assignment.id);
+      for (const event of getEventsAtLocation(entity.id)) relatedIds.add(event.id);
+      for (const child of getLocationChildren(entity.id)) relatedIds.add(child.id);
+    }
+
+    if (entity.entityType === 'guardian-beast') {
+      relatedIds.add(entity.hostCharacterId);
+      for (const abilityId of [...(entity.knownAbilityIds || []), ...(entity.suspectedAbilityIds || [])]) relatedIds.add(abilityId);
+    }
+
+    if (entity.entityType === 'ability') {
+      for (const ownerId of entity.ownerIds || []) relatedIds.add(ownerId);
     }
 
     if (entity.entityType === 'chapter') {
@@ -172,6 +216,11 @@ export const createSuccessionSelectors = (data, indexes) => {
     getLocationBreadcrumbs,
     getRelationshipsForEntity,
     getAbilitiesForOwner,
+    getAssignmentsForPerson,
+    getAssignmentsForSubject,
+    getAssignmentsForPrincipal,
+    getAssignmentsAtLocation,
+    getActiveAssignmentsForSubject,
     getLocationHistoryForCharacter,
     getLocationHistoryForLocation,
     getEntitiesAtLocation,
