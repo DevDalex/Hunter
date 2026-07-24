@@ -38,7 +38,7 @@ try {
   const expectedChapterRecords = latestChapter - 340 + 1;
 
   assert(successionArchiveValidation.valid, 'canonical data must pass schema validation');
-  assert(successionArchiveValidation.stats.entities >= 320, 'canonical graph must contain the Batch 1 expanded current-arc catalogue');
+  assert(successionArchiveValidation.stats.entities >= 330, 'canonical graph must contain the expanded Batch 1 current-arc catalogue');
   assert(successionArchiveIndexes.byId.size === successionArchiveValidation.stats.entities, 'global ID index must include every entity');
 
   const characterRecords = getEntitiesByType('character');
@@ -55,6 +55,7 @@ try {
   const events = getEntitiesByType('event');
   const assignments = getEntitiesByType('assignment');
   const relationships = getEntitiesByType('relationship');
+  const abilityById = new Map(abilities.map((ability) => [ability.id, ability]));
 
   assert(princes.length === 14, `expected 14 princes, found ${princes.length}`);
   assert(queens.length === 8, `expected 8 queens, found ${queens.length}`);
@@ -64,7 +65,7 @@ try {
   assert(placeholders.length === 0, 'generic unnamed placeholders must not appear as canonical characters');
   assert(new Set(characterNames).size === characterNames.length, 'canonical character names must be deduplicated');
   assert(getEntitiesByType('guardian-beast').length === 15, 'King Nasubi and fourteen prince Guardian Spirit Beast records are required');
-  assert(abilities.length >= 22, `Batch 1 must retain at least 22 canonical abilities, found ${abilities.length}`);
+  assert(abilities.length >= 35, `Batch 1 must retain at least 35 canonical abilities, found ${abilities.length}`);
   assert(locations.length >= 30, `Batch 1 must retain at least 30 canonical locations, found ${locations.length}`);
   assert(events.length >= 16, `Batch 1 must retain at least 16 canonical events, found ${events.length}`);
   assert(assignments.length >= 20, `Batch 1 must retain at least 20 canonical assignments, found ${assignments.length}`);
@@ -74,6 +75,12 @@ try {
   assert(chapterRecords.every((record, index) => record.number === 340 + index), 'chapter records must remain sequential');
   assert(getEntitiesByType('organization').filter((record) => record.organizationType === 'mafia-family').length === 3, 'all three Kakin mafia families are required');
 
+  assert(abilityById.has('ability:dowsing-chain'), 'ability foundation must include Dowsing Chain');
+  assert(abilityById.has('ability:steal-chain'), 'ability foundation must include Steal Chain');
+  assert(abilityById.has('ability:hanzo-skill-4'), 'ability foundation must include Hanzo Skill 4');
+  assert(abilityById.has('ability:have-not-curse'), 'ability foundation must include the Have-Not curse system');
+  assert(abilityById.get('ability:woble-guardian-beast-unrevealed')?.researchStatus === 'major-mystery', 'Woble’s unrevealed ability must remain explicitly marked as a major mystery');
+
   const kurapika = getCharacter('kurapika');
   assert(kurapika?.id === 'character:kurapika', 'character slug lookup must resolve Kurapika');
   assert(getCharacter('character:kurapika') === kurapika, 'character ID and slug lookup must resolve the same canonical object');
@@ -82,12 +89,17 @@ try {
   const woble = getCharacter('woble-hui-guo-rou');
   assert(woble?.princeOrder === 14, 'Woble must resolve as the Fourteenth Prince');
 
+  const chapter348 = getChapter(348);
+  assert(chapter348?.abilityIds?.includes('ability:dowsing-chain'), 'Chapter 348 must link the Dowsing Chain screening record');
   const chapter369 = getChapter(369);
   assert(chapter369?.reader?.manifestChapter === 369, 'chapter metadata must preserve the reader manifest link');
   const chapter403 = getChapter(403);
   assert(chapter403?.eventIds?.includes('event:balsamilco-poisoning-operation'), 'Chapter 403 must derive the Balsamilco operation from the event graph');
   assert(chapter403?.locationIds?.includes('location:black-whale:tier-2:courthouse'), 'Chapter 403 must derive the Tier 2 courthouse location');
   assert(chapter403?.abilityIds?.includes('ability:halkenburg-possession-arrow'), 'Chapter 403 must derive the possession-arrow ability link');
+  const chapter413 = getChapter(413);
+  assert(chapter413?.abilityIds?.includes('ability:have-not-curse'), 'Chapter 413 must retain the active Have-Not curse threat');
+  assert(chapter413?.abilityIds?.includes('ability:woble-guardian-beast-unrevealed'), 'Chapter 413 must preserve Woble’s unrevealed Guardian Spirit Beast mystery');
   const chapter414 = getChapter(414);
   assert(chapter414?.reader?.manifestChapter === 414, 'Chapter 414 must bridge into the reader manifest');
   assert(chapter414?.sourceIds?.includes('source:chapter-414'), 'Chapter 414 must preserve its canonical source record');
@@ -126,17 +138,24 @@ try {
 
   const kachoBeast = getEntitiesByType('guardian-beast').find((record) => record.id === 'guardian-beast:kacho');
   assert(kachoBeast?.knownAbilityIds?.includes('ability:without-you'), 'Kacho’s Guardian Spirit Beast must link to Without You');
+  const halkenburgBeast = getEntitiesByType('guardian-beast').find((record) => record.id === 'guardian-beast:halkenburg');
+  assert(halkenburgBeast?.knownAbilityIds?.includes('ability:halkenburg-guardian-marking'), 'Halkenburg’s Guardian Spirit Beast must link to its collective marking system');
+  const wobleBeast = getEntitiesByType('guardian-beast').find((record) => record.id === 'guardian-beast:woble');
+  assert(wobleBeast?.suspectedAbilityIds?.includes('ability:woble-guardian-beast-unrevealed'), 'Woble’s Guardian Spirit Beast must retain its unrevealed ability record');
 
   const kurapikaRelatedIds = new Set(getRelatedEntities('character:kurapika').map((entity) => entity.id));
   assert(kurapikaRelatedIds.has('organization:hunter-association'), 'related-entity projection must include affiliations');
   assert(kurapikaRelatedIds.has('ability:emperor-time'), 'related-entity projection must include abilities');
   assert(kurapikaRelatedIds.has('ability:stealth-dolphin'), 'related-entity projection must include Batch 1 abilities');
+  assert(kurapikaRelatedIds.has('ability:dowsing-chain'), 'related-entity projection must include expanded Kurapika abilities');
+  assert(kurapikaRelatedIds.has('ability:steal-chain'), 'related-entity projection must include Steal Chain');
   assert(kurapikaRelatedIds.has('assignment:kurapika-protects-woble'), 'related-entity projection must include assignments');
   assert(kurapikaRelatedIds.has('chapter:369'), 'related-entity projection must include chapter appearances');
 
   const tserriednichSearch = searchSuccessionArchive('fourth prince');
   assert(tserriednichSearch.some(({ entity }) => entity.id === 'character:tserriednich-hui-guo-rou'), 'global search must resolve character aliases');
   assert(searchSuccessionArchive('Moonlight Act').some(({ entity }) => entity.id === 'ability:moonlight-act'), 'global search must resolve Batch 1 abilities');
+  assert(searchSuccessionArchive('Dowsing Chain').some(({ entity }) => entity.id === 'ability:dowsing-chain'), 'global search must resolve expanded canonical abilities');
   assert(searchSuccessionArchive('surveillance Woble').some(({ entity }) => entity.id === 'assignment:babimyna-observes-woble'), 'global search must resolve assignment type and subject summaries');
   const latestChapterSearch = searchSuccessionArchive(`chapter ${latestChapter}`);
   assert(latestChapterSearch.some(({ entity }) => entity.id === `chapter:${latestChapter}`), `global search must resolve Chapter ${latestChapter}`);
