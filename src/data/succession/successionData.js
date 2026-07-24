@@ -1,4 +1,4 @@
-import { successionArchiveData } from './entitiesExtended.js';
+import { successionArchiveData } from './entitiesAbilityFoundation.js';
 import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
