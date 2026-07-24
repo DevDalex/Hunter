@@ -25,6 +25,20 @@ export const createNenSystemSelectors = ({ data, archive }) => {
     return chapters.length ? Math.min(...chapters) : null;
   };
 
+  const entityFirstKnownChapter = (entity) => {
+    if (!entity) return null;
+    const chapters = sourceChapterNumbers(entity);
+    if (entity.entityType === 'character') chapters.push(...archive.getAppearancesForCharacter(entity.id).map((record) => record.chapter));
+    if (entity.entityType === 'organization') chapters.push(...archive.getEventsForOrganization(entity.id).map((event) => event.chapterRange.start));
+    if (entity.entityType === 'location') chapters.push(...archive.getEventsAtLocation(entity.id).map((event) => event.chapterRange.start));
+    return chapters.filter(Number.isFinite).length ? Math.min(...chapters.filter(Number.isFinite)) : null;
+  };
+
+  const entityAvailableAtChapter = (entity, chapter) => {
+    const firstChapter = entityFirstKnownChapter(entity);
+    return firstChapter === null || chapter >= firstChapter;
+  };
+
   const systemAvailableAtChapter = (profile, chapter) => Boolean(profile && includesChapter(profile.chapterRange, chapter));
 
   const getAbilityKnowledgeAtChapter = (abilityId, chapter = null) => {
@@ -97,7 +111,9 @@ export const createNenSystemSelectors = ({ data, archive }) => {
     const beasts = (profile.guardianBeastIds || [])
       .map((beastId) => getGuardianBeastDossier(beastId, parsedChapter))
       .filter(Boolean);
-    const resolveIds = (ids) => ids.map((id) => archive.getEntityById(id)).filter(Boolean);
+    const resolveIds = (ids) => ids
+      .map((id) => archive.getEntityById(id))
+      .filter((entity) => entityAvailableAtChapter(entity, parsedChapter));
     return Object.freeze({
       profile,
       chapter: parsedChapter,
