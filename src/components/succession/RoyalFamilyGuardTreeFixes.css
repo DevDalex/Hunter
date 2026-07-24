@@ -1,0 +1,169 @@
+.royal-guard-tree__orbit.is-dense {
+  min-height: 680px;
+}
+
+.royal-guard-tree__guard {
+  width: 84px;
+  height: 84px;
+  min-height: 84px;
+  padding: 7px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  text-align: center;
+}
+
+.royal-guard-tree__guard .succession-entity-visual,
+.royal-guard-tree__guard .royal-guard-tree__fallback {
+  grid-row: 1;
+  grid-column: 1;
+  width: 68px !important;
+  height: 68px !important;
+  min-width: 68px;
+  min-height: 68px;
+  max-width: 68px;
+  max-height: 68px;
+  aspect-ratio: 1;
+  margin: 0;
+  border-radius: 50%;
+}
+
+.royal-guard-tree__guard .succession-entity-visual,
+.royal-guard-tree__guard .succession-entity-visual img,
+.royal-guard-tree__guard .safe-image-placeholder {
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.royal-guard-tree__guard .succession-entity-visual img,
+.royal-guard-tree__guard .safe-image,
+.royal-guard-tree__guard .safe-image-placeholder {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  object-fit: cover;
+}
+
+.royal-guard-tree__guard .safe-image-placeholder {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: linear-gradient(145deg, #28232b, #111419);
+}
+
+.royal-guard-tree__guard .safe-image-placeholder small {
+  display: none;
+}
+
+.royal-guard-tree__guard .safe-image-placeholder b {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.royal-guard-tree__guard > span:not(.succession-entity-visual):not(.royal-guard-tree__fallback):not(.royal-guard-tree__hover-card) {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border: 1px solid rgba(242, 216, 147, 0.62);
+  border-radius: 50%;
+  background: #0b0d11;
+  color: var(--royal-gold-bright);
+  font-size: 10px;
+  font-weight: 800;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.42);
+}
+
+.royal-guard-tree__guard > strong {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.royal-guard-tree__guard.is-group {
+  border-style: dashed;
+  background: radial-gradient(circle, rgba(213, 177, 102, 0.12), rgba(12, 14, 18, 0.98) 68%);
+}
+
+.royal-guard-tree__guard:hover,
+.royal-guard-tree__guard:focus-visible,
+.royal-guard-tree__guard.is-locked {
+  z-index: 40;
+}
+
+.royal-guard-tree__guard:hover .succession-entity-visual,
+.royal-guard-tree__guard:focus-visible .succession-entity-visual,
+.royal-guard-tree__guard.is-locked .succession-entity-visual,
+.royal-guard-tree__guard:hover .royal-guard-tree__fallback,
+.royal-guard-tree__guard:focus-visible .royal-guard-tree__fallback,
+.royal-guard-tree__guard.is-locked .royal-guard-tree__fallback {
+  box-shadow: 0 0 0 3px rgba(213, 177, 102, 0.12), 0 0 24px rgba(213, 177, 102, 0.2);
+}
+
+@media (max-width: 760px) {
+  .royal-guard-tree__orbit.is-dense {
+    min-height: 0;
+  }
+
+  .royal-guard-tree__guard {
+    width: 100%;
+    height: auto;
+    min-height: 68px;
+    padding: 7px 10px 7px 7px;
+    border-radius: 38px 15px 15px 38px;
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    grid-template-rows: auto auto;
+    place-items: initial;
+    align-items: center;
+    gap: 2px 9px;
+    text-align: left;
+  }
+
+  .royal-guard-tree__guard .succession-entity-visual,
+  .royal-guard-tree__guard .royal-guard-tree__fallback {
+    grid-row: 1 / 3;
+    grid-column: 1;
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px;
+    min-height: 52px;
+  }
+
+  .royal-guard-tree__guard > span:not(.succession-entity-visual):not(.royal-guard-tree__fallback):not(.royal-guard-tree__hover-card) {
+    position: static;
+    display: block;
+    grid-column: 2;
+    width: auto;
+    height: auto;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    font-size: 11px;
+  }
+
+  .royal-guard-tree__guard > strong {
+    position: static;
+    grid-column: 2;
+    width: auto;
+    height: auto;
+    overflow: hidden;
+    clip: auto;
+    clip-path: none;
+    font-size: 12px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
