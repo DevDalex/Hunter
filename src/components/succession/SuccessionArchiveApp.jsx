@@ -22,11 +22,11 @@ import {
 import {
   BodyguardsWorkspace,
   BodyStatesWorkspace,
-  EventsWorkspace,
   GuardianBeastsWorkspace,
   QueensWorkspace,
   RelationshipsWorkspace,
 } from './SuccessionArchiveDeepWorkspaces';
+import EventsWorkspace from './SuccessionArchiveEventWorkspace';
 import {
   ChapterRecordsWorkspaceV2,
   CharactersWorkspace,
