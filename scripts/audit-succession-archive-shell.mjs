@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } from '../src/data/successionChapterAvailability.generated.js';
 import {
   successionArchiveGroups,
   successionArchiveRouteIds,
@@ -28,7 +29,7 @@ for (const id of [
 for (const id of ['glossary', 'media']) {
   assert(successionArchiveRoutes.find((route) => route.id === id)?.status === 'active', `${id} must be a completed active route`);
 }
-assert(successionArchiveRoutes.find((route) => route.id === 'chapters')?.description.includes('340–414'), 'Chapter Records route must advertise coverage through 414');
+assert(successionArchiveRoutes.find((route) => route.id === 'chapters')?.description.includes('latest imported reader chapter'), 'Chapter Records route must follow imported chapter availability');
 
 const [app, entry, shell, workspace, extendedWorkspace, deepWorkspace, workspaces, primitives, entities, extendedEntities, research, router, preload, css, contrast, catalogue, extendedCss, main, packageJson] = await Promise.all([
   read('src/App.jsx'),
@@ -55,7 +56,7 @@ const [app, entry, shell, workspace, extendedWorkspace, deepWorkspace, workspace
 assert(app.includes('SuccessionArchiveApp') && !app.includes('successionPanels'), 'App must mount the dedicated archive application instead of the grouped panel layout');
 assert(shell.includes('succession-archive__sidebar') && shell.includes('succession-drawer'), 'desktop sidebar and mobile drawer must both exist');
 assert(shell.includes('focusableSelector') && shell.includes("event.key === 'Escape'"), 'mobile navigation must manage keyboard focus and Escape');
-assert(shell.includes('SpoilerControl') && shell.includes('onOpenSearch'), 'shell must retain the reading boundary and global search entry point');
+assert(shell.includes('SpoilerControl') && shell.includes('ARCHIVE_BOUNDARY'), 'shell must retain a generated reading boundary and global search entry point');
 
 for (const name of ['ArchivePageHeader', 'EntityVisual', 'EntityLink', 'EntityBadge', 'EntityHeader', 'SourceReference', 'RelatedEntities', 'ArchiveTabs', 'ArchiveState']) {
   assert(primitives.includes(`export function ${name}`) || primitives.includes(`export const ${name}`), `missing archive primitive ${name}`);
@@ -88,8 +89,8 @@ assert(entities.includes('successionRosterGroups') && entities.includes('princeD
 assert(entities.includes('excludedName') && entities.includes('groupsByCharacter'), 'canonical catalogue must filter placeholders and deduplicate names');
 assert(entities.includes("organizationType: 'mafia-family'") && entities.includes("organizationType: 'military'"), 'mafia and military organization records are required');
 assert(entities.includes('dossierGuardianBeasts.map') && entities.includes('successionChapterResearch.map'), 'Guardian Spirit Beasts and chapter records must be generated from maintained sources');
-assert(extendedEntities.includes('source:chapter-414') && extendedEntities.includes('chapter:414'), 'canonical archive overlay must include Chapter 414 and its source');
-assert(research.includes('LATEST_SUCCESSION_RESEARCH_CHAPTER = 414') && research.includes('detailed research pending verified chapter documentation'), 'Chapter 414 must exist without unsupported scene claims');
+assert(extendedEntities.includes('source:chapter-414') && extendedEntities.includes('chapter:414'), 'canonical overlay must retain maintained Chapter 414 records');
+assert(research.includes('authorizedSuccessionChapterNumbers') && research.includes('detailed research pending verified chapter documentation'), 'new imported chapters must receive explicit pending research records automatically');
 
 assert(router.includes("'/story/succession-contest/chapters'"), 'legacy reader URL must remain authoritative');
 assert(router.includes("nextTarget === 'reader'"), 'new reader navigation must resolve to the existing reader');
@@ -109,4 +110,4 @@ assert(catalogue.includes('@media (max-width: 620px)'), 'catalogue visuals must 
 assert(css.includes(':focus-visible'), 'accessible focus styling is required');
 assert(packageJson.includes('"audit:succession-shell"') && packageJson.includes('"qa:succession-shell"'), 'package scripts must expose archive audit and browser QA');
 
-console.log(`Succession Archive shell audit passed: ${successionArchiveRoutes.length} active routes, dedicated subject workspaces, type-aware dossiers, Chapter 414 research, glossary and media libraries, canonical roster generation, scoped design ownership, desktop/mobile shells, and accessibility states verified.`);
+console.log(`Succession Archive shell audit passed through imported Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}: ${successionArchiveRoutes.length} active routes, dedicated subject workspaces, type-aware dossiers, automatic pending research records, glossary and media libraries, canonical roster generation, scoped design ownership, desktop/mobile shells, and accessibility states verified.`);
