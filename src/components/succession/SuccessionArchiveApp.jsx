@@ -1,5 +1,5 @@
 import { lazy, Suspense, useMemo, useState } from 'react';
-import { ArrowRight, BookOpen, Database, Images, Search, Users } from 'lucide-react';
+import { ArrowRight, Database, Images, Search, Users } from 'lucide-react';
 import { ArchiveCard, ArchiveSection, EvidenceBadge, StatusPill } from '../ArchiveUI';
 import {
   getEntitiesByType,
@@ -19,6 +19,15 @@ import {
   PrincesWorkspace,
   SuccessionStoryWorkspace,
 } from './SuccessionArchiveWorkspaces';
+import {
+  BodyguardsWorkspace,
+  BodyStatesWorkspace,
+  ChapterRecordsWorkspace,
+  EventsWorkspace,
+  GuardianBeastsWorkspace,
+  QueensWorkspace,
+  RelationshipsWorkspace,
+} from './SuccessionArchiveDeepWorkspaces';
 import {
   ArchiveState,
   EntityBadge,
@@ -111,22 +120,6 @@ function ArchiveHome({ onNavigate }) {
   </>;
 }
 
-function StoryWorkspace({ onNavigate }) {
-  return <div className="succession-story-workspace">
-    <section>
-      <span>Archive orientation</span>
-      <h2>The story page explains the conflict, then gets out of the way.</h2>
-      <p>The Succession Contest runs across the royal contest, voyage, Nen instruction, mafia conflict, security operations, and Kurapika’s mission. Focused directories now hold the people and evidence instead of repeating one giant page.</p>
-      <div><button className="succession-button succession-button--primary" onClick={() => onNavigate('timeline')}>Open timeline <ArrowRight size={14} /></button><button className="succession-button succession-button--quiet" onClick={() => onNavigate('reader')}>Read chapters <BookOpen size={14} /></button></div>
-    </section>
-    <aside>
-      <article><span>Royal contest</span><h3>People and politics</h3><p>Princes, Queens, Bodyguards, Military, Politics, and Relationships have independent workspaces.</p><button onClick={() => onNavigate('princes')}>Open Princes</button></article>
-      <article><span>Voyage systems</span><h3>Ship, Nen, and underworld</h3><p>Black Whale, Locations, Nen, Guardian Spirit Beasts, Mafia, and Events remain separate research lenses.</p><button onClick={() => onNavigate('black-whale')}>Open Black Whale</button></article>
-      <article><span>Evidence</span><h3>Chapters and sources</h3><p>Chapter Records and Research hold evidence. The image reader remains a separate tool.</p><button onClick={() => onNavigate('research')}>Open Research</button></article>
-    </aside>
-  </div>;
-}
-
 function EntityDetail({ entity, onNavigate }) {
   const sources = getSourcesForEntity(entity.id);
   return <div className="succession-entity-detail">
@@ -162,7 +155,6 @@ function DirectoryWorkspace({ routeId, routeParams, onNavigate }) {
     <header>
       <div><span>Canonical directory</span><h2 id="succession-directory-title">{visible.length} of {entities.length} records</h2><p><Users size={13} aria-hidden="true" /> Deduplicated named records <i>·</i> <Images size={13} aria-hidden="true" /> {pictured} available visuals</p></div>
       <div className="succession-directory__tools">
-        {routeId === 'princes' && <button type="button" className="succession-button succession-button--quiet" onClick={() => onNavigate('princes', { view: 'tree' })}>Open family tree</button>}
         <label><Search size={16} aria-hidden="true" /><span className="sr-only">Filter current workspace</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Filter this workspace…" />{query && <button type="button" onClick={() => setQuery('')}>Clear</button>}</label>
       </div>
     </header>
@@ -214,7 +206,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const navigate = (target, params = {}) => onNavigate(target, params);
   const treeView = route.id === 'princes' && routeParams.view === 'tree';
   const preserved = ['black-whale', 'timeline', 'nen'].includes(route.id);
-  const dedicated = ['princes', 'mafia'].includes(route.id);
+  const dedicated = new Set(['princes', 'queens', 'bodyguards', 'mafia', 'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters']);
 
   return <SuccessionArchiveShell activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} onExitArchive={onExitArchive} onOpenSearch={onOpenSearch} onIntent={onIntent}>
     {route.id === 'archive' && <ArchiveHome onNavigate={navigate} />}
@@ -222,8 +214,15 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {route.id === 'search' && <SearchWorkspace onNavigate={navigate} />}
     {treeView && <FamilyTreeWorkspace spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {route.id === 'princes' && !treeView && <PrincesWorkspace routeParams={routeParams} onNavigate={navigate} />}
+    {route.id === 'queens' && <QueensWorkspace routeParams={routeParams} onNavigate={navigate} />}
+    {route.id === 'bodyguards' && <BodyguardsWorkspace routeParams={routeParams} onNavigate={navigate} />}
     {route.id === 'mafia' && <MafiaWorkspace routeParams={routeParams} onNavigate={navigate} />}
+    {route.id === 'guardian-spirit-beasts' && <GuardianBeastsWorkspace routeParams={routeParams} onNavigate={navigate} />}
+    {route.id === 'events' && <EventsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
+    {route.id === 'deaths' && <BodyStatesWorkspace routeParams={routeParams} onNavigate={navigate} />}
+    {route.id === 'relationships' && <RelationshipsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
+    {route.id === 'chapters' && <ChapterRecordsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {preserved && <PreservedWorkspace routeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {!['archive', 'story', 'search'].includes(route.id) && !treeView && !preserved && !dedicated && <DirectoryWorkspace routeId={route.id} routeParams={routeParams} onNavigate={navigate} />}
+    {!['archive', 'story', 'search'].includes(route.id) && !treeView && !preserved && !dedicated.has(route.id) && <DirectoryWorkspace routeId={route.id} routeParams={routeParams} onNavigate={navigate} />}
   </SuccessionArchiveShell>;
 }
