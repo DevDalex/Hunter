@@ -161,6 +161,7 @@ export const buildSuccessionIndexes = (data) => {
       text: [
         entity.name,
         ...(entity.aliases || []),
+        ...(entity.legacyIds || []),
         entity.summary || '',
         ...(entity.tags || []),
         entity.assignmentType || '',
