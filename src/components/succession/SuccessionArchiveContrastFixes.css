@@ -1,0 +1,401 @@
+.succession-archive__content {
+  --archive-muted: #c0b9ae;
+  --succession-dark-text: #f5efe6;
+  --succession-dark-muted: #c0b9ae;
+  --succession-dark-dim: #9e978d;
+  --succession-dark-accent: #efcc7c;
+  --succession-dark-surface: #151920;
+  --succession-dark-surface-deep: #0d1117;
+}
+
+/* Dark panels must not inherit the cream workspace's near-black text. */
+.succession-archive :where(
+  .succession-extended-hero,
+  .succession-extended-tools,
+  .succession-character-ledger > button,
+  .succession-hunter-missions > section,
+  .succession-authority-chain,
+  .succession-legal-ledger,
+  .succession-military-people,
+  .succession-military-operations,
+  .succession-expedition-layer,
+  .succession-organization-tree > article,
+  .succession-political-branches,
+  .succession-sponsor-map,
+  .succession-political-links,
+  .succession-location-hierarchy,
+  .succession-room-location-board,
+  .succession-route-systems,
+  .succession-source-catalogue,
+  .succession-evidence-catalogue,
+  .succession-mystery-catalogue,
+  .succession-domain-dossier__split > section,
+  .succession-domain-dossier__relationships,
+  .succession-domain-dossier__related,
+  .succession-domain-dossier__sources,
+  .succession-domain-source,
+  .succession-domain-link,
+  .succession-story-map__hero,
+  .succession-story-map__phases article,
+  .succession-story-map__lanes > div > button,
+  .succession-story-map__operations,
+  .succession-story-map__rules,
+  .succession-story-map__factions,
+  .succession-mafia-workspace__hero,
+  .succession-mafia-workspace__families,
+  .succession-mafia-workspace__dossier,
+  .succession-mafia-workspace__operations,
+  .succession-queen-board > header,
+  .succession-queen-card,
+  .succession-queen-dossier__hero,
+  .succession-queen-dossier__columns > section,
+  .succession-queen-dossier__children,
+  .succession-guards-workspace__hero,
+  .succession-room-matrix,
+  .succession-room-dossier,
+  .succession-transition-ledger,
+  .succession-guard-directory,
+  .succession-beasts-workspace__hero,
+  .succession-events-workspace__hero,
+  .succession-body-states__hero,
+  .succession-relationships-workspace__hero,
+  .succession-chapter-records__hero,
+  .succession-entity-grid > article,
+  .succession-entity-header,
+  .succession-source-reference,
+  .succession-related,
+  .succession-state
+) {
+  color: var(--succession-dark-text) !important;
+}
+
+.succession-archive :where(
+  .succession-extended-hero,
+  .succession-story-map__hero,
+  .succession-mafia-workspace__hero,
+  .succession-queen-board > header,
+  .succession-guards-workspace__hero,
+  .succession-beasts-workspace__hero,
+  .succession-events-workspace__hero,
+  .succession-body-states__hero,
+  .succession-relationships-workspace__hero,
+  .succession-chapter-records__hero
+) {
+  border-color: rgba(224, 190, 111, 0.25) !important;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(224, 190, 111, 0.12), transparent 34%),
+    linear-gradient(135deg, #26181c 0%, #171a21 47%, #10141a 100%) !important;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.2);
+}
+
+.succession-archive :where(
+  .succession-extended-hero,
+  .succession-story-map__hero,
+  .succession-mafia-workspace__hero,
+  .succession-queen-board > header,
+  .succession-guards-workspace__hero,
+  .succession-beasts-workspace__hero,
+  .succession-events-workspace__hero,
+  .succession-body-states__hero,
+  .succession-relationships-workspace__hero,
+  .succession-chapter-records__hero
+) :where(h2, h3, h4, strong, b) {
+  color: var(--succession-dark-text) !important;
+  text-shadow: none !important;
+}
+
+.succession-archive :where(
+  .succession-character-ledger > button,
+  .succession-hunter-missions > section,
+  .succession-authority-chain,
+  .succession-legal-ledger,
+  .succession-military-people,
+  .succession-military-operations,
+  .succession-expedition-layer,
+  .succession-organization-tree > article,
+  .succession-political-branches,
+  .succession-sponsor-map,
+  .succession-political-links,
+  .succession-location-hierarchy,
+  .succession-room-location-board,
+  .succession-route-systems,
+  .succession-source-catalogue,
+  .succession-evidence-catalogue,
+  .succession-mystery-catalogue,
+  .succession-domain-dossier__split > section,
+  .succession-domain-dossier__relationships,
+  .succession-domain-dossier__related,
+  .succession-domain-dossier__sources,
+  .succession-domain-source,
+  .succession-domain-link,
+  .succession-story-map__phases article,
+  .succession-story-map__lanes > div > button,
+  .succession-story-map__operations,
+  .succession-story-map__rules,
+  .succession-story-map__factions,
+  .succession-mafia-workspace__families,
+  .succession-mafia-workspace__dossier,
+  .succession-mafia-workspace__operations,
+  .succession-queen-card,
+  .succession-queen-dossier__hero,
+  .succession-queen-dossier__columns > section,
+  .succession-queen-dossier__children,
+  .succession-room-matrix,
+  .succession-room-dossier,
+  .succession-transition-ledger,
+  .succession-guard-directory,
+  .succession-entity-grid > article,
+  .succession-entity-header,
+  .succession-source-reference,
+  .succession-related,
+  .succession-state
+) :where(h2, h3, h4, h5, h6, strong, b) {
+  color: var(--succession-dark-text) !important;
+  text-shadow: none !important;
+}
+
+.succession-archive :where(
+  .succession-extended-hero,
+  .succession-character-ledger > button,
+  .succession-hunter-missions > section,
+  .succession-authority-chain,
+  .succession-legal-ledger,
+  .succession-military-people,
+  .succession-military-operations,
+  .succession-expedition-layer,
+  .succession-organization-tree > article,
+  .succession-political-branches,
+  .succession-sponsor-map,
+  .succession-political-links,
+  .succession-location-hierarchy,
+  .succession-room-location-board,
+  .succession-route-systems,
+  .succession-source-catalogue,
+  .succession-evidence-catalogue,
+  .succession-mystery-catalogue,
+  .succession-domain-dossier,
+  .succession-story-map,
+  .succession-mafia-workspace,
+  .succession-queen-board,
+  .succession-queen-dossier,
+  .succession-guards-workspace,
+  .succession-beasts-workspace,
+  .succession-events-workspace,
+  .succession-body-states,
+  .succession-relationships-workspace,
+  .succession-chapter-records,
+  .succession-entity-grid > article,
+  .succession-entity-header,
+  .succession-source-reference,
+  .succession-related,
+  .succession-state
+) :where(p, small, dt, li) {
+  color: var(--succession-dark-muted) !important;
+}
+
+.succession-archive :where(
+  .succession-extended-hero,
+  .succession-story-map__hero,
+  .succession-mafia-workspace__hero,
+  .succession-queen-board > header,
+  .succession-guards-workspace__hero,
+  .succession-beasts-workspace__hero,
+  .succession-events-workspace__hero,
+  .succession-body-states__hero,
+  .succession-relationships-workspace__hero,
+  .succession-chapter-records__hero
+) :where(dt, small) {
+  color: #bbb3a8 !important;
+}
+
+.succession-archive :where(
+  .succession-extended-hero,
+  .succession-story-map__hero,
+  .succession-mafia-workspace__hero,
+  .succession-queen-board > header,
+  .succession-guards-workspace__hero,
+  .succession-beasts-workspace__hero,
+  .succession-events-workspace__hero,
+  .succession-body-states__hero,
+  .succession-relationships-workspace__hero,
+  .succession-chapter-records__hero
+) dd {
+  color: #fff8ec !important;
+}
+
+.succession-archive :where(
+  .succession-extended-hero > div > span,
+  .succession-story-map__hero > div > span,
+  .succession-mafia-workspace__hero > div > span,
+  .succession-queen-board > header > div > span,
+  .succession-guards-workspace__hero > div > span,
+  .succession-beasts-workspace__hero > div > span,
+  .succession-events-workspace__hero > div > span,
+  .succession-body-states__hero > div > span,
+  .succession-relationships-workspace__hero > div > span,
+  .succession-chapter-records__hero > div > span,
+  .succession-character-ledger footer b,
+  .succession-hunter-missions > section > header,
+  .succession-mafia-workspace section > header > span
+) {
+  color: var(--succession-dark-accent) !important;
+}
+
+.succession-archive :where(
+  .succession-character-ledger > button,
+  .succession-entity-grid > article
+) {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: linear-gradient(145deg, #1a1e25, #10141a) !important;
+}
+
+.succession-archive :where(
+  .succession-character-ledger > button,
+  .succession-entity-grid > article
+) :where(h3, code) {
+  color: var(--succession-dark-text) !important;
+}
+
+.succession-archive :where(
+  .succession-character-ledger > button,
+  .succession-entity-grid > article
+) p {
+  color: #bcb5aa !important;
+}
+
+.succession-archive :where(
+  .succession-character-ledger > button,
+  .succession-entity-grid > article,
+  .succession-extended-hero,
+  .succession-hunter-missions > section,
+  .succession-authority-chain,
+  .succession-legal-ledger,
+  .succession-military-people,
+  .succession-military-operations,
+  .succession-expedition-layer,
+  .succession-organization-tree > article,
+  .succession-mafia-workspace__families,
+  .succession-mafia-workspace__dossier,
+  .succession-mafia-workspace__operations
+) .succession-entity-badge > span {
+  color: var(--succession-dark-accent) !important;
+}
+
+.succession-archive :where(
+  .succession-character-ledger > button,
+  .succession-entity-grid > article,
+  .succession-extended-hero,
+  .succession-hunter-missions > section,
+  .succession-authority-chain,
+  .succession-legal-ledger,
+  .succession-military-people,
+  .succession-military-operations,
+  .succession-expedition-layer,
+  .succession-organization-tree > article,
+  .succession-mafia-workspace__families,
+  .succession-mafia-workspace__dossier,
+  .succession-mafia-workspace__operations
+) .succession-entity-badge > b {
+  color: var(--succession-dark-text) !important;
+}
+
+.succession-archive :where(
+  .succession-character-ledger > button,
+  .succession-entity-grid > article,
+  .succession-entity-header
+) :where(.status-pill, .evidence-badge) {
+  border-color: rgba(255, 255, 255, 0.13) !important;
+  background: rgba(255, 255, 255, 0.075) !important;
+  color: #eee7dc !important;
+}
+
+.succession-archive :where(
+  .succession-extended-tools,
+  .succession-hunter-missions,
+  .succession-military-workspace,
+  .succession-organizations-workspace,
+  .succession-politics-workspace,
+  .succession-locations-workspace,
+  .succession-research-workspace,
+  .succession-glossary-workspace,
+  .succession-media-workspace,
+  .succession-mafia-workspace,
+  .succession-guards-workspace
+) :where(button, a, input, select, textarea) {
+  color: var(--succession-dark-text);
+}
+
+.succession-archive .succession-extended-tools :where(input, select) {
+  color: #f4eee5 !important;
+}
+
+.succession-archive .succession-extended-tools :where(input, select)::placeholder {
+  color: #918b82;
+  opacity: 1;
+}
+
+.succession-archive :where(
+  .succession-hunter-missions button,
+  .succession-extended-entity,
+  .succession-organization-tree__children button,
+  .succession-military-people button,
+  .succession-location-hierarchy button,
+  .succession-room-location-board button,
+  .succession-domain-link
+) {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  color: var(--succession-dark-text) !important;
+}
+
+.succession-archive :where(
+  .succession-hunter-missions button,
+  .succession-extended-entity,
+  .succession-organization-tree__children button,
+  .succession-military-people button,
+  .succession-location-hierarchy button,
+  .succession-room-location-board button,
+  .succession-domain-link
+) :where(b, strong) {
+  color: var(--succession-dark-text) !important;
+}
+
+.succession-archive :where(
+  .succession-hunter-missions button,
+  .succession-extended-entity,
+  .succession-organization-tree__children button,
+  .succession-military-people button,
+  .succession-location-hierarchy button,
+  .succession-room-location-board button,
+  .succession-domain-link
+) small {
+  color: var(--succession-dark-muted) !important;
+}
+
+.succession-archive :where(
+  .succession-entity-header,
+  .succession-source-reference,
+  .succession-related,
+  .succession-state
+) {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: linear-gradient(145deg, #191d24, #10141a) !important;
+}
+
+@media (prefers-contrast: more) {
+  .succession-archive__content {
+    --succession-dark-text: #ffffff;
+    --succession-dark-muted: #ded8cf;
+    --succession-dark-accent: #ffe09a;
+  }
+
+  .succession-archive :where(
+    .succession-character-ledger > button,
+    .succession-entity-grid > article,
+    .succession-extended-hero,
+    .succession-mafia-workspace__hero,
+    .succession-story-map__hero
+  ) {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+  }
+}
