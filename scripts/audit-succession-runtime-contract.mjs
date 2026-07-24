@@ -24,8 +24,9 @@ const auditPaths = Object.freeze([
   'scripts/audit-succession-reader.mjs',
 ]);
 
-const [app, packageText, ...auditSources] = await Promise.all([
+const [app, primitives, packageText, ...auditSources] = await Promise.all([
   read('src/components/succession/SuccessionArchiveApp.jsx'),
+  read('src/components/succession/SuccessionArchivePrimitives.jsx'),
   read('package.json'),
   ...auditPaths.map(read),
 ]);
@@ -50,6 +51,9 @@ for (const [routeId, componentName] of [
 ]) {
   assert(sourceRendersRouteWith(app, routeId, componentName), `${routeId} must render ${componentName}`);
 }
+assert(app.includes("linkedEntity?.entityType === 'character' ? 'characters' : target"), 'role-route navigation must normalize character links');
+assert(app.includes('showCharacterDossier') && app.includes("selectedEntity?.entityType === 'character'"), 'legacy role-route entity URLs must resolve the dedicated character dossier');
+assert(primitives.includes("if (entity.entityType === 'character') return 'characters'"), 'shared entity routing must send every character to the character workspace');
 
 const forbiddenAuditPatterns = Object.freeze([
   {
@@ -102,10 +106,13 @@ try {
   assert(typeof archive.getCharacterRoleProfile === 'function', 'role-specific character layers must remain public');
   assert(typeof archive.getCharacterLifetimeTimeline === 'function', 'lifetime character chronology must remain public');
   assert(typeof archive.getCharacterStateCoverageReport === 'function', 'character state coverage reporting must remain public');
-  assert(archive.getCharactersWithStateProfiles().length >= 28, 'Batch 2.2 must retain expanded explicit state profiles');
-  assert(archive.getCharacterStateCoverageReport().explicitCharacters >= 28, 'Batch 2.2 coverage report must retain expanded profiles');
+  assert(archive.getCharactersWithStateProfiles().length >= 36, 'Batch 2.3 must retain complete prince and queen state coverage');
+  const coverage = archive.getCharacterStateCoverageReport();
+  assert(coverage.explicitCharacters >= 36, 'Batch 2.3 coverage report must retain complete royal profiles');
+  assert(coverage.roleLayers.some((layer) => layer.id === 'royal-candidate' && layer.explicit === 14), 'all princes must remain explicit');
+  assert(coverage.roleLayers.some((layer) => layer.id === 'royal-household' && layer.explicit === 8), 'all queens must remain explicit');
 
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits avoid transient foundation imports, route membership is order-independent, aggregate failure collection is active, and the canonical runtime exposes every Batch 1 graph layer plus Batch 2.2 role-aware character dossiers and lifetime chronology.`);
+  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits avoid transient foundation imports, route membership is order-independent, aggregate failure collection is active, character links normalize across role routes, and the canonical runtime exposes every Batch 1 graph layer plus complete Batch 2.3 prince and queen dossiers.`);
 } finally {
   await vite.close();
 }
