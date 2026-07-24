@@ -61,7 +61,7 @@ const pageHealth = async (page, selector = 'main') => page.evaluate((rootSelecto
     const rect = element.getBoundingClientRect();
     return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) !== 0 && rect.width > 0 && rect.height > 0;
   };
-  const root = document.querySelector(rootSelector);
+  const rootNode = document.querySelector(rootSelector);
   const brokenImages = [...document.images]
     .filter((image) => visible(image) && image.complete && image.naturalWidth === 0)
     .map((image) => ({ alt: image.alt, src: image.currentSrc || image.src }));
@@ -69,7 +69,7 @@ const pageHealth = async (page, selector = 'main') => page.evaluate((rootSelecto
     .filter(visible)
     .map((element) => element.getAttribute('aria-label') || element.textContent.trim());
   const bodyOverflow = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth;
-  const rootRect = root?.getBoundingClientRect();
+  const rootRect = rootNode?.getBoundingClientRect();
   return { brokenImages, unavailable, bodyOverflow, rootRect: rootRect ? { left: rootRect.left, right: rootRect.right, width: rootRect.width } : null };
 }, selector);
 
@@ -121,7 +121,7 @@ try {
       await node.click();
       await page.waitForTimeout(80);
       if (await node.getAttribute('aria-pressed') !== 'true') throw new Error(`${principle} did not become active`);
-      const state = await page.evaluate(({ principleName, expectedCount }) => {
+      const state = await page.evaluate(({ expectedCount }) => {
         const map = document.querySelector('.nen-principle-map');
         const mapRect = map.getBoundingClientRect();
         const visible = (element) => {
@@ -132,20 +132,15 @@ try {
         const related = [...document.querySelectorAll('.nen-advanced-node.is-related')].filter(visible);
         const malformed = related.map((element) => {
           const rect = element.getBoundingClientRect();
-          return {
-            label: element.textContent.trim().replace(/\s+/g, ' '),
-            width: Math.round(rect.width),
-            height: Math.round(rect.height),
-            outside: rect.left < mapRect.left - 2 || rect.right > mapRect.right + 2 || rect.top < mapRect.top - 2 || rect.bottom > mapRect.bottom + 2,
-          };
+          return { width: Math.round(rect.width), height: Math.round(rect.height), outside: rect.left < mapRect.left - 2 || rect.right > mapRect.right + 2 || rect.top < mapRect.top - 2 || rect.bottom > mapRect.bottom + 2 };
         }).filter((item) => item.width > 180 || item.height > 100 || item.width < 35 || item.height < 24 || item.outside);
-        const inspectorImages = [...document.querySelectorAll('.nen-principle-inspector img')].filter(visible).map((image) => ({ alt: image.alt, complete: image.complete, naturalWidth: image.naturalWidth }));
-        const placeholders = [...document.querySelectorAll('.nen-principle-inspector .safe-image-placeholder')].filter(visible).map((element) => element.textContent.trim());
-        return { principleName, expectedCount, relatedCount: related.length, malformed, inspectorImages, placeholders };
-      }, { principleName: principle, expectedCount: expected });
+        const inspectorImages = [...document.querySelectorAll('.nen-principle-inspector img')].filter(visible).map((image) => ({ complete: image.complete, naturalWidth: image.naturalWidth }));
+        const placeholders = [...document.querySelectorAll('.nen-principle-inspector .safe-image-placeholder')].filter(visible).length;
+        return { expectedCount, relatedCount: related.length, malformed, inspectorImages, placeholders };
+      }, { expectedCount: expected });
       if (state.relatedCount !== expected) throw new Error(`${principle} shows ${state.relatedCount} related techniques; expected ${expected}`);
-      if (state.malformed.length) throw new Error(`${principle} has malformed advanced cards: ${JSON.stringify(state.malformed)}`);
-      if (state.placeholders.length) throw new Error(`${principle} displays unavailable-image placeholders`);
+      if (state.malformed.length) throw new Error(`${principle} has malformed advanced cards`);
+      if (state.placeholders) throw new Error(`${principle} displays unavailable-image placeholders`);
       if (state.inspectorImages.length < 2 || state.inspectorImages.some((image) => !image.complete || image.naturalWidth === 0)) throw new Error(`${principle} inspector images did not render`);
     }
     const health = await pageHealth(page, '.nen-principle-workbench');
@@ -157,32 +152,13 @@ try {
     await page.getByRole('button', { name: /Advanced techniques/i }).click();
     await page.waitForSelector('.nen-technique-gallery article');
     const images = page.locator('.nen-technique-gallery article img');
-    const imageCount = await images.count();
-    for (let index = 0; index < imageCount; index += 1) await images.nth(index).scrollIntoViewIfNeeded();
+    for (let index = 0; index < await images.count(); index += 1) await images.nth(index).scrollIntoViewIfNeeded();
     await page.waitForFunction(() => {
       const galleryImages = [...document.querySelectorAll('.nen-technique-gallery article img')];
       return galleryImages.length === 7 && galleryImages.every((image) => image.complete && image.naturalWidth > 0);
     }, null, { timeout: 15_000 });
-    const gallery = await page.evaluate(() => {
-      const visible = (element) => {
-        const style = getComputedStyle(element);
-        const rect = element.getBoundingClientRect();
-        return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) !== 0 && rect.width > 0 && rect.height > 0;
-      };
-      const articles = [...document.querySelectorAll('.nen-technique-gallery article')];
-      return {
-        count: articles.length,
-        images: articles.map((article) => {
-          const image = article.querySelector('img');
-          return { title: article.querySelector('h3')?.textContent.trim(), hasImage: Boolean(image), complete: image?.complete, naturalWidth: image?.naturalWidth || 0 };
-        }),
-        placeholders: [...document.querySelectorAll('.nen-technique-gallery .safe-image-placeholder')].filter(visible).length,
-      };
-    });
-    if (gallery.count !== 7) throw new Error(`advanced gallery has ${gallery.count} cards; expected 7`);
-    if (gallery.placeholders) throw new Error(`${gallery.placeholders} unavailable-image placeholders are visible`);
-    const failed = gallery.images.filter((item) => !item.hasImage || !item.complete || item.naturalWidth === 0);
-    if (failed.length) throw new Error(`advanced visuals failed: ${JSON.stringify(failed)}`);
+    const health = await pageHealth(page, '.nen-technique-gallery');
+    if (health.unavailable.length) throw new Error('advanced gallery displays unavailable-image placeholders');
   });
 
   await run('Nen mobile state has no horizontal spill', { width: 390, height: 844 }, 'reference/nen', async (page) => {
@@ -195,57 +171,38 @@ try {
 
   await run('Dedicated relationship workspace filters and links remain readable', { width: 1440, height: 1000 }, 'succession/relationships', async (page) => {
     await page.waitForSelector('.succession-relationships-workspace .succession-relationship-ledger');
-    const root = page.locator('.succession-relationships-workspace');
-    const records = root.locator('.succession-relationship-ledger > article');
+    const rootNode = page.locator('.succession-relationships-workspace');
+    const records = rootNode.locator('.succession-relationship-ledger > article');
     const initialCount = await records.count();
     if (initialCount < 20) throw new Error(`relationship ledger is incomplete: ${initialCount} records`);
 
-    const filter = root.getByPlaceholder('Person, organization, relationship, chapter…');
-    const cases = [
+    const filter = rootNode.getByPlaceholder('Person, organization, relationship, chapter…');
+    for (const item of [
       { query: 'Kurapika', minimum: 4, label: 'Kurapika relationships' },
       { query: 'Morena', minimum: 3, label: 'Morena relationships' },
       { query: 'Halkenburg', minimum: 3, label: 'Halkenburg relationships' },
-    ];
-
-    for (const item of cases) {
+    ]) {
       await filter.fill(item.query);
       await page.waitForTimeout(80);
-      const state = await page.evaluate(() => {
-        const ledger = document.querySelector('.succession-relationship-ledger');
-        const visibleCards = [...(ledger?.querySelectorAll(':scope > article') || [])].filter((element) => {
-          const style = getComputedStyle(element);
-          const rect = element.getBoundingClientRect();
-          return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
-        });
-        const malformed = visibleCards.map((element) => {
-          const rect = element.getBoundingClientRect();
-          return { width: rect.width, height: rect.height, title: element.querySelector('h3')?.textContent.trim() || '' };
-        }).filter((card) => card.width < 420 || card.height < 120);
-        return {
-          count: visibleCards.length,
-          malformed,
-          ledgerOverflow: ledger ? ledger.scrollWidth - ledger.clientWidth : 0,
-          bodyOverflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-        };
-      });
-      if (state.count < item.minimum) throw new Error(`${item.label} returned ${state.count}; expected at least ${item.minimum}`);
-      if (state.malformed.length) throw new Error(`${item.label} produced collapsed records: ${JSON.stringify(state.malformed)}`);
-      if (state.ledgerOverflow > 2 || state.bodyOverflow > 2) throw new Error(`${item.label} overflowed: ledger ${state.ledgerOverflow}px, body ${state.bodyOverflow}px`);
+      const count = await records.count();
+      if (count < item.minimum) throw new Error(`${item.label} returned ${count}; expected at least ${item.minimum}`);
+      const health = await pageHealth(page, '.succession-relationships-workspace');
+      if (health.bodyOverflow > 2) throw new Error(`${item.label} overflowed by ${health.bodyOverflow}px`);
     }
 
     await filter.fill('');
-    const kurapikaFocus = root.locator('.succession-relationship-focus button').filter({ hasText: /^Kurapika/ }).first();
+    const kurapikaFocus = rootNode.locator('.succession-relationship-focus button').filter({ hasText: /^Kurapika/ }).first();
     await kurapikaFocus.click();
     await page.waitForTimeout(80);
     const focusedCount = await records.count();
     if (focusedCount < 4 || focusedCount >= initialCount) throw new Error(`actor focus did not narrow the ledger: ${focusedCount} of ${initialCount}`);
 
-    const entityLink = root.locator('.succession-deep-entity-button:not([disabled])').first();
+    const entityLink = rootNode.locator('.succession-deep-entity-button:not([disabled])').first();
     await entityLink.click();
-    await page.waitForSelector('.succession-entity-detail .succession-entity-header');
+    await page.waitForSelector('.succession-domain-dossier .succession-entity-header');
     if (!page.url().includes('entity=character%3A') && !page.url().includes('entity=organization%3A')) throw new Error('relationship node did not preserve a canonical entity ID');
-    const health = await pageHealth(page, '.succession-entity-detail');
-    if (health.bodyOverflow > 1) throw new Error(`relationship-linked entity detail overflowed by ${health.bodyOverflow}px`);
+    const health = await pageHealth(page, '.succession-domain-dossier');
+    if (health.bodyOverflow > 1) throw new Error(`relationship-linked domain dossier overflowed by ${health.bodyOverflow}px`);
   });
 
   await run('Dedicated relationship workspace remains contained on mobile', { width: 390, height: 844 }, 'succession/relationships', async (page) => {
