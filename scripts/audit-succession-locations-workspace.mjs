@@ -1,23 +1,27 @@
 import { readFile } from 'node:fs/promises';
 import { createServer } from 'vite';
+import {
+  declarationIncludesLiteral,
+  sourceImportsDefault,
+  sourceRendersRouteWith,
+} from './lib/succession-audit-contracts.mjs';
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession location workspace audit failed: ${message}`);
 };
 
-const [workspace, styles, app, dataEntry, expansion, selectors] = await Promise.all([
+const [workspace, styles, app, expansion, selectors] = await Promise.all([
   readFile(new URL('../src/components/succession/SuccessionArchiveLocationWorkspace.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveLocationWorkspace.css', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveApp.jsx', import.meta.url), 'utf8'),
-  readFile(new URL('../src/data/succession/successionData.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/locationFoundationExpansion.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/selectors.js', import.meta.url), 'utf8'),
 ]);
 
-assert(app.includes("import LocationsWorkspace from './SuccessionArchiveLocationWorkspace';"), 'app must load the dedicated canonical location workspace');
+assert(sourceImportsDefault(app, 'LocationsWorkspace', './SuccessionArchiveLocationWorkspace'), 'app must load the dedicated canonical location workspace');
 assert(!app.includes('  LocationsWorkspace,\n  MediaWorkspace,'), 'app must not import the legacy location workspace from extended workspaces');
-assert(app.includes("const specializedRecordRoute = ['princes', 'queens', 'chapters', 'locations', 'bodyguards', 'relationships'].includes(route.id);"), 'location entity routes must remain inside the dedicated dossier workspace');
-assert(dataEntry.includes("from './entitiesLocationFoundation.js'"), 'canonical data entry must activate the location foundation');
+assert(sourceRendersRouteWith(app, 'locations', 'LocationsWorkspace'), 'locations route must render the dedicated dossier workspace');
+assert(declarationIncludesLiteral(app, 'specializedRecordRoute', 'locations'), 'location entity routes must remain inside the dedicated dossier workspace');
 assert(expansion.includes('locationFoundationExpansion'), 'location expansion records must be published');
 assert(expansion.includes('locationHistoryExpansion'), 'chapter-bounded occupancy records must be published');
 assert(expansion.includes('room-1013-isolated-space'), 'Room 1013 isolated-space state must remain distinct from the physical room');
