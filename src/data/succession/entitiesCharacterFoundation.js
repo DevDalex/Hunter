@@ -14,6 +14,10 @@ const characterIds = new Set([
   ...Object.keys(characterStateInstitutionClosureExpansionProfiles),
 ]);
 
+const retiredStateIds = new Set([
+  'character-state:chrollo-lucilfer:379',
+]);
+
 const normalizeStateRecord = (record) => record.id === 'character-state:borksen:408'
   ? Object.freeze({
     ...record,
@@ -21,18 +25,26 @@ const normalizeStateRecord = (record) => record.id === 'character-state:borksen:
   })
   : record;
 
+const mergeCharacterRecords = (characterId) => {
+  const records = new Map();
+  for (const layer of [
+    characterStateProfiles,
+    characterStateExpansionProfiles,
+    characterStateRoyalExpansionProfiles,
+    characterStateInstitutionExpansionProfiles,
+    characterStateInstitutionClosureExpansionProfiles,
+  ]) {
+    for (const record of layer[characterId] || []) {
+      if (retiredStateIds.has(record.id)) continue;
+      records.set(record.id, normalizeStateRecord(record));
+    }
+  }
+  return Object.freeze([...records.values()]
+    .sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id)));
+};
+
 const mergedCharacterStateProfiles = Object.freeze(Object.fromEntries(
-  [...characterIds].map((characterId) => [
-    characterId,
-    Object.freeze([
-      ...(characterStateProfiles[characterId] || []),
-      ...(characterStateExpansionProfiles[characterId] || []),
-      ...(characterStateRoyalExpansionProfiles[characterId] || []),
-      ...(characterStateInstitutionExpansionProfiles[characterId] || []),
-      ...(characterStateInstitutionClosureExpansionProfiles[characterId] || []),
-    ].map(normalizeStateRecord)
-      .sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id))),
-  ]),
+  [...characterIds].map((characterId) => [characterId, mergeCharacterRecords(characterId)]),
 ));
 
 export const successionArchiveData = Object.freeze({
