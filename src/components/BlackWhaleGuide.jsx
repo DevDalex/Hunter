@@ -4,13 +4,29 @@ import {
   blackWhaleFacts, blackWhaleGallery, blackWhaleHotspots, blackWhaleImages, blackWhaleManifest,
   blackWhaleMovementRoutes, blackWhaleRooms, blackWhaleSource, blackWhaleTiers, blackWhaleVisualTour, royalRoomPlan,
 } from '../data/blackWhale';
+import {
+  findBlackWhaleHotspotForCanonicalLocation,
+  getBlackWhaleCanonicalBridge,
+  getBlackWhaleRoyalRoomBridge,
+} from '../data/succession/blackWhaleCanonicalMap';
+import {
+  getEntityById,
+  getLocationSnapshot,
+} from '../data/succession/successionData';
 import SafeImage from './SafeImage';
 import HorizontalScrollHint from './HorizontalScrollHint';
 
 const normalize = (value) => String(value || '').toLowerCase().replace(/[’']/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+const titleCase = (value) => String(value || '').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 const ROOM_BATCH = 12;
 
-export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
+export default function BlackWhaleGuide({
+  initialQuery = '',
+  initialLocationId = '',
+  spoilerLimit = 414,
+  onOpenWorldMap,
+  onOpenCanonicalLocation,
+}) {
   const [activeTier, setActiveTier] = useState('all');
   const [roomQuery, setRoomQuery] = useState('');
   const [selectedHotspotId, setSelectedHotspotId] = useState('tier-1');
@@ -21,6 +37,15 @@ export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
   const selectedHotspot = blackWhaleHotspots.find((hotspot) => hotspot.id === selectedHotspotId) || blackWhaleHotspots[0];
   const selectedHotspotIndex = blackWhaleHotspots.findIndex((hotspot) => hotspot.id === selectedHotspot.id);
   const selectedTier = blackWhaleTiers.find((tier) => tier.id === selectedHotspot.tier);
+  const selectedBridge = getBlackWhaleCanonicalBridge({
+    hotspotId: selectedHotspot.id,
+    roomName: selectedHotspot.roomName,
+    tier: selectedHotspot.tier,
+  });
+  const selectedCanonicalLocation = getEntityById(selectedBridge.locationId);
+  const selectedCanonicalSnapshot = selectedCanonicalLocation
+    ? getLocationSnapshot(selectedCanonicalLocation.id, spoilerLimit)
+    : null;
 
   const visibleRooms = useMemo(() => {
     const normalized = roomQuery.trim().toLowerCase();
@@ -33,6 +58,16 @@ export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
   const roomsRemaining = Math.max(0, visibleRooms.length - displayedRooms.length);
 
   useEffect(() => setRoomLimit(ROOM_BATCH), [activeTier, roomQuery]);
+
+  useEffect(() => {
+    if (!initialLocationId) return;
+    const hotspotId = findBlackWhaleHotspotForCanonicalLocation(initialLocationId);
+    const hotspot = blackWhaleHotspots.find((record) => record.id === hotspotId);
+    if (!hotspot) return;
+    setSelectedHotspotId(hotspot.id);
+    setActiveTier(hotspot.tier);
+    setRoomQuery(hotspot.roomName || '');
+  }, [initialLocationId]);
 
   useEffect(() => {
     if (!initialQuery) return;
@@ -49,6 +84,13 @@ export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
       setRoomQuery(initialQuery.replace(/^Tier \d+\s*[·/]\s*/i, ''));
     }
   }, [initialQuery]);
+
+  const openCanonicalLocation = (record) => {
+    if (!record?.locationId) return;
+    const params = { entity: record.locationId, chapter: spoilerLimit };
+    if (onOpenCanonicalLocation) onOpenCanonicalLocation(params);
+    else onOpenWorldMap?.(params);
+  };
 
   const chooseTier = (tier) => {
     setActiveTier(tier);
@@ -83,14 +125,14 @@ export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
     <section className="black-whale-section black-whale-section--atlas" id="black-whale">
       <div className="section-heading">
         <div><span className="section-kicker">Black Whale 1 spatial archive</span><h2>Click through the ship</h2></div>
-        <p>The Hunterpedia cross-section is the navigation surface. Hover for a quick label; select a marker to inspect the location, its access, occupants, routes, events, and source status.</p>
+        <p>The Hunterpedia cross-section is the navigation surface. Every mapped selection now resolves to a canonical location ID and opens a chapter-specific snapshot without pretending approximate markers are exact floor-plan coordinates.</p>
       </div>
 
       <div className="ship-source-banner">
         <ShipWheel size={20} />
-        <div><strong>A canonical image with research overlays</strong><p>Markers indicate a confirmed tier or an approximate location within that tier. They do not claim an exact floor plan where Hunterpedia supplies none.</p></div>
+        <div><strong>Visual atlas connected to the canonical graph</strong><p>Markers distinguish exact, aggregate, approximate, and legacy-ID bridges. Canonical dossiers remain the source of truth for occupants, assignments, events, abilities, and evidence.</p></div>
         <div className="ship-source-banner__actions">
-          {onOpenWorldMap && <button type="button" onClick={onOpenWorldMap}><MapIcon size={13} /> Return to voyage map</button>}
+          {onOpenWorldMap && <button type="button" onClick={() => onOpenWorldMap({ chapter: spoilerLimit })}><MapIcon size={13} /> Canonical spatial archive</button>}
           <a href={blackWhaleSource} target="_blank" rel="noreferrer">Hunterpedia ship record <ExternalLink size={12} /></a>
         </div>
       </div>
@@ -98,7 +140,7 @@ export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
 
       <div className="interactive-ship-atlas">
         <figure className="interactive-ship-map" data-image-frame>
-          <div className="interactive-ship-map__toolbar"><div><span>Click a white marker</span><small>Approximate markers are labeled in the inspector</small></div><div><button type="button" onClick={() => setMapZoom((value) => Math.max(1, Number((value - .25).toFixed(2))))} disabled={mapZoom <= 1} aria-label="Zoom ship map out"><Minus size={14} /></button><b>{Math.round(mapZoom * 100)}%</b><button type="button" onClick={() => setMapZoom((value) => Math.min(1.75, Number((value + .25).toFixed(2))))} disabled={mapZoom >= 1.75} aria-label="Zoom ship map in"><Plus size={14} /></button><button type="button" onClick={() => setMapZoom(1)}>Reset</button></div></div>
+          <div className="interactive-ship-map__toolbar"><div><span>Click a white marker</span><small>Canonical precision appears in the inspector</small></div><div><button type="button" onClick={() => setMapZoom((value) => Math.max(1, Number((value - .25).toFixed(2))))} disabled={mapZoom <= 1} aria-label="Zoom ship map out"><Minus size={14} /></button><b>{Math.round(mapZoom * 100)}%</b><button type="button" onClick={() => setMapZoom((value) => Math.min(1.75, Number((value + .25).toFixed(2))))} disabled={mapZoom >= 1.75} aria-label="Zoom ship map in"><Plus size={14} /></button><button type="button" onClick={() => setMapZoom(1)}>Reset</button></div></div>
           <div className="interactive-ship-map__viewport">
             <div className="interactive-ship-map__canvas" style={{ width: `${mapZoom * 100}%`, minWidth: `${620 * mapZoom}px` }}>
               <SafeImage src={blackWhaleImages.crossSection} alt="Manga cross-section of Black Whale 1 showing its five passenger tiers" eager />
@@ -108,6 +150,7 @@ export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
                   const hovered = hotspot.id === hoveredHotspotId;
                   const tooltipSide = hotspot.x >= 64 ? ' is-tooltip-left' : ' is-tooltip-right';
                   const tooltipEdge = hotspot.y <= 15 ? ' is-tooltip-high' : hotspot.y >= 82 ? ' is-tooltip-low' : '';
+                  const canonicalBridge = getBlackWhaleCanonicalBridge({ hotspotId: hotspot.id, roomName: hotspot.roomName, tier: hotspot.tier });
                   return <button
                     className={`ship-hotspot ship-hotspot--${hotspot.tier}${selected ? ' is-selected' : ''}${tooltipSide}${tooltipEdge}`}
                     style={{ '--hotspot-x': `${hotspot.x}%`, '--hotspot-y': `${hotspot.y}%` }}
@@ -117,7 +160,7 @@ export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
                     key={hotspot.id}
                   >
                     <i />
-                    {hovered && <span className="ship-hotspot__tooltip"><strong>{hotspot.label}</strong><small>{hotspot.subtitle}</small><em>{hotspot.confidence}</em></span>}
+                    {hovered && <span className="ship-hotspot__tooltip"><strong>{hotspot.label}</strong><small>{hotspot.subtitle}</small><em>{titleCase(canonicalBridge.precision)} canonical bridge</em></span>}
                   </button>;
                 })}
               </div>
@@ -139,10 +182,14 @@ export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
             <div><dt>Access</dt><dd>{selectedHotspot.room.access}</dd></div>
             {selectedHotspot.room.connections && <div><dt>Connections</dt><dd>{selectedHotspot.room.connections}</dd></div>}
             <div><dt>Current state</dt><dd>{selectedHotspot.room.status}</dd></div>
+            <div><dt>Canonical bridge</dt><dd>{titleCase(selectedBridge.precision)}</dd></div>
+            <div><dt>Canonical record</dt><dd>{selectedCanonicalLocation?.name || selectedBridge.locationId}</dd></div>
+            <div><dt>Chapter {spoilerLimit}</dt><dd>{selectedCanonicalSnapshot ? `${selectedCanonicalSnapshot.occupants.length} occupants · ${selectedCanonicalSnapshot.events.length} events` : 'Snapshot unavailable'}</dd></div>
           </dl> : <dl>
-            <div><dt>Passengers</dt><dd>{selectedTier?.class}</dd></div><div><dt>Population</dt><dd>{selectedTier?.population}</dd></div><div><dt>Security</dt><dd>{selectedTier?.security}</dd></div><div><dt>Control</dt><dd>{selectedTier?.control}</dd></div>
+            <div><dt>Passengers</dt><dd>{selectedTier?.class}</dd></div><div><dt>Population</dt><dd>{selectedTier?.population}</dd></div><div><dt>Security</dt><dd>{selectedTier?.security}</dd></div><div><dt>Control</dt><dd>{selectedTier?.control}</dd></div><div><dt>Canonical bridge</dt><dd>{titleCase(selectedBridge.precision)}</dd></div><div><dt>Snapshot</dt><dd>{selectedCanonicalLocation?.name || selectedBridge.locationId}</dd></div>
           </dl>}
-          <div className="ship-location-inspector__actions"><button onClick={() => { setActiveTier(selectedHotspot.tier); setRoomQuery(''); document.getElementById('ship-room-index')?.scrollIntoView({ behavior: 'smooth' }); }}><Layers3 size={12} /> Browse this tier</button><a href={selectedHotspot.room?.source || selectedHotspot.source} target="_blank" rel="noreferrer">Location source <ExternalLink size={11} /></a></div>
+          {selectedBridge.note && <p><b>Bridge note:</b> {selectedBridge.note}</p>}
+          <div className="ship-location-inspector__actions"><button type="button" onClick={() => openCanonicalLocation(selectedBridge)}><MapIcon size={12} /> Open Chapter {spoilerLimit} snapshot</button><button type="button" onClick={() => { setActiveTier(selectedHotspot.tier); setRoomQuery(''); document.getElementById('ship-room-index')?.scrollIntoView({ behavior: 'smooth' }); }}><Layers3 size={12} /> Browse this tier</button><a href={selectedHotspot.room?.source || selectedHotspot.source} target="_blank" rel="noreferrer">Location source <ExternalLink size={11} /></a></div>
         </aside>
       </div>
 
@@ -151,7 +198,7 @@ export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
       </nav>
 
       <section className="ship-visual-tour" aria-labelledby="ship-visual-tour-title">
-        <header><div><span className="section-kicker">Hunterpedia location gallery</span><h3 id="ship-visual-tour-title">See the ship before reading the directory</h3></div><p>{blackWhaleVisualTour.length} sourced room and facility images. Select any image to open its full location record, occupants, access, current state, and connections.</p></header>
+        <header><div><span className="section-kicker">Hunterpedia location gallery</span><h3 id="ship-visual-tour-title">See the ship before reading the directory</h3></div><p>{blackWhaleVisualTour.length} sourced room and facility images. Select any image to open its visual record, then continue into the canonical chapter snapshot.</p></header>
         <div>{blackWhaleVisualTour.map((room, index) => {
           const tier = blackWhaleTiers.find((item) => item.id === room.tier);
           return <button type="button" onClick={() => openTourRoom(room)} key={room.name}><figure><SafeImage src={room.image} media={room.media} alt={`${room.name} from Hunterpedia`} /><i>{String(index + 1).padStart(2, '0')}</i></figure><span><small>Tier {tier?.number} · {room.type}</small><strong>{room.name}</strong></span></button>;
@@ -166,12 +213,12 @@ export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
       <div className="ship-fact-ribbon">{blackWhaleFacts.map(([term, value]) => <div key={term}><span>{term}</span><strong>{value}</strong></div>)}</div>
 
       <section className="royal-room-plan royal-room-plan--editorial">
-        <header><div><span>Tier 1 residence plan</span><h3>Fourteen prince rooms</h3></div><p>Two rows of seven, with higher-ranked rooms nearer the banquet hall. This shows the confirmed relationship between rooms, not invented scale.</p></header>
+        <header><div><span>Tier 1 residence plan</span><h3>Fourteen prince rooms</h3></div><p>Two rows of seven, with higher-ranked rooms nearer the banquet hall. Each room button now has a stable canonical location ID.</p></header>
         <div className="royal-room-plan__banquet"><span>North / ceremony route</span><strong>Banquet hall</strong></div>
         <div className="royal-room-plan__rows">
-          <div className="royal-room-plan__side"><span>Even-numbered side</span>{royalRoomPlan.filter((room) => room.side === 'even').map((room) => <button onClick={() => openRoyalRoom(room.roomNumber)} key={room.roomNumber}><i>{room.roomNumber}</i><strong>{room.prince}</strong><small>{room.state}</small></button>)}</div>
+          <div className="royal-room-plan__side"><span>Even-numbered side</span>{royalRoomPlan.filter((room) => room.side === 'even').map((room) => <button onClick={() => openRoyalRoom(room.roomNumber)} onDoubleClick={() => openCanonicalLocation(getBlackWhaleRoyalRoomBridge(room.roomNumber))} title="Click to filter; double-click to open the canonical room snapshot" key={room.roomNumber}><i>{room.roomNumber}</i><strong>{room.prince}</strong><small>{room.state}</small></button>)}</div>
           <div className="royal-room-plan__corridor" aria-hidden="true"><span>Guarded central ring</span><i /><i /><i /><i /><i /><i /><i /></div>
-          <div className="royal-room-plan__side"><span>Odd-numbered side</span>{royalRoomPlan.filter((room) => room.side === 'odd').map((room) => <button onClick={() => openRoyalRoom(room.roomNumber)} key={room.roomNumber}><i>{room.roomNumber}</i><strong>{room.prince}</strong><small>{room.state}</small></button>)}</div>
+          <div className="royal-room-plan__side"><span>Odd-numbered side</span>{royalRoomPlan.filter((room) => room.side === 'odd').map((room) => <button onClick={() => openRoyalRoom(room.roomNumber)} onDoubleClick={() => openCanonicalLocation(getBlackWhaleRoyalRoomBridge(room.roomNumber))} title="Click to filter; double-click to open the canonical room snapshot" key={room.roomNumber}><i>{room.roomNumber}</i><strong>{room.prince}</strong><small>{room.state}</small></button>)}</div>
         </div>
       </section>
 
@@ -194,9 +241,11 @@ export default function BlackWhaleGuide({ initialQuery = '', onOpenWorldMap }) {
         <div className="tier-tabs"><button className={activeTier === 'all' ? 'is-active' : ''} onClick={() => setActiveTier('all')}>All</button>{blackWhaleTiers.map((tier) => <button className={activeTier === tier.id ? 'is-active' : ''} onClick={() => setActiveTier(tier.id)} key={tier.id}>{tier.number}</button>)}</div>
         <div className="room-grid">{displayedRooms.map((room) => {
           const tier = blackWhaleTiers.find((item) => item.id === room.tier);
+          const canonicalBridge = getBlackWhaleCanonicalBridge({ roomName: room.name, tier: room.tier });
+          const canonicalLocation = getEntityById(canonicalBridge.locationId);
           return <article className={`room-card${room.image ? ' has-image' : ''}`} key={`${room.tier}-${room.name}`}>
             {room.image && <figure data-image-frame><SafeImage src={room.image} alt={`${room.name} from Hunterpedia`} loading="eager" /></figure>}
-            <div><span>Tier {tier?.number} · {room.type}</span><h4>{room.name}</h4><p>{room.detail}</p><dl><div><dt>Occupants</dt><dd>{room.occupants}</dd></div><div><dt>Control</dt><dd>{room.control}</dd></div><div><dt>Access</dt><dd>{room.access}</dd></div>{room.connections && <div><dt>Connections</dt><dd>{room.connections}</dd></div>}<div><dt>Status</dt><dd>{room.status}</dd></div></dl><a href={room.source} target="_blank" rel="noreferrer">Room source <ExternalLink size={10} /></a></div>
+            <div><span>Tier {tier?.number} · {room.type}</span><h4>{room.name}</h4><p>{room.detail}</p><dl><div><dt>Occupants</dt><dd>{room.occupants}</dd></div><div><dt>Control</dt><dd>{room.control}</dd></div><div><dt>Access</dt><dd>{room.access}</dd></div>{room.connections && <div><dt>Connections</dt><dd>{room.connections}</dd></div>}<div><dt>Status</dt><dd>{room.status}</dd></div><div><dt>Canonical bridge</dt><dd>{titleCase(canonicalBridge.precision)} · {canonicalLocation?.name || canonicalBridge.locationId}</dd></div></dl><div className="ship-location-inspector__actions"><button type="button" onClick={() => openCanonicalLocation(canonicalBridge)}><MapIcon size={11} /> Chapter {spoilerLimit} snapshot</button><a href={room.source} target="_blank" rel="noreferrer">Room source <ExternalLink size={10} /></a></div></div>
           </article>;
         })}</div>
         {!visibleRooms.length && <div className="empty-state"><h3>No room matches</h3><p>Try another room, person, faction, or access term.</p></div>}
