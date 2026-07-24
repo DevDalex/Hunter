@@ -7,6 +7,10 @@ const includesChapter = (range, chapter) => {
   return chapter >= range.start && chapter <= end;
 };
 
+const byRangeStart = (left, right) => left.chapterRange.start - right.chapterRange.start
+  || (left.chapterRange.end ?? Number.POSITIVE_INFINITY) - (right.chapterRange.end ?? Number.POSITIVE_INFINITY)
+  || left.id.localeCompare(right.id);
+
 const ordinalSearchAliases = Object.freeze([
   ['first', '1st'], ['second', '2nd'], ['third', '3rd'], ['fourth', '4th'], ['fifth', '5th'],
   ['sixth', '6th'], ['seventh', '7th'], ['eighth', '8th'], ['ninth', '9th'], ['tenth', '10th'],
@@ -95,16 +99,70 @@ export const createSuccessionSelectors = (data, indexes) => {
 
   const getLocationHistoryForLocation = (locationId) => resolveMany(indexes.locationHistoryByLocation.get(locationId), indexes);
 
+  const getMovementHistoryForCharacter = (characterId) => [...getLocationHistoryForCharacter(characterId)].sort(byRangeStart);
+
+  const getCurrentLocationRecordForCharacter = (characterId, chapter = null) => {
+    const parsedChapter = chapter === null ? data.chapters.at(-1)?.number : Number(chapter);
+    if (!Number.isFinite(parsedChapter)) return null;
+    return getMovementHistoryForCharacter(characterId)
+      .filter((record) => includesChapter(record.chapterRange, parsedChapter))
+      .sort((left, right) => right.chapterRange.start - left.chapterRange.start)[0] || null;
+  };
+
+  const getLocationsForCharacter = (characterId) => {
+    const ids = [...new Set(getMovementHistoryForCharacter(characterId).map((record) => record.locationId))];
+    return resolveMany(ids, indexes);
+  };
+
+  const getLocationOccupancyTimeline = (locationId) => [...getLocationHistoryForLocation(locationId)].sort(byRangeStart);
+
   const getEntitiesAtLocation = (locationId, chapter = null) => {
     const records = getLocationHistoryForLocation(locationId)
-      .filter((record) => chapter === null || includesChapter(record.chapterRange, Number(chapter)));
+      .filter((record) => chapter === null || includesChapter(record.chapterRange, Number(chapter)))
+      .sort(byRangeStart);
 
-    return records
-      .map((record) => Object.freeze({
-        record,
-        entity: getEntityById(record.characterId),
-      }))
-      .filter((entry) => entry.entity);
+    const byCharacter = new Map();
+    for (const record of records) {
+      const entity = getEntityById(record.characterId);
+      if (!entity) continue;
+      const current = byCharacter.get(entity.id);
+      if (!current) {
+        byCharacter.set(entity.id, { entity, record, records: [record] });
+      } else {
+        current.records.push(record);
+        if (record.chapterRange.start >= current.record.chapterRange.start) current.record = record;
+      }
+    }
+
+    return [...byCharacter.values()].map((entry) => Object.freeze({
+      entity: entry.entity,
+      record: entry.record,
+      records: Object.freeze([...entry.records]),
+    }));
+  };
+
+  const getLocationSnapshot = (locationId, chapter = null) => {
+    const location = getEntityById(locationId);
+    if (!location || location.entityType !== 'location') return null;
+    const parsedChapter = chapter === null ? data.chapters.at(-1)?.number : Number(chapter);
+    const hasChapter = Number.isFinite(parsedChapter);
+    const events = getEventsAtLocation(locationId)
+      .filter((event) => !hasChapter || includesChapter(event.chapterRange, parsedChapter));
+    const assignments = getAssignmentsAtLocation(locationId)
+      .filter((assignment) => !hasChapter || includesChapter(assignment.chapterRange, parsedChapter));
+    const abilityIds = [...new Set(events.flatMap((event) => event.abilityIds || []))];
+
+    return Object.freeze({
+      location,
+      chapter: hasChapter ? parsedChapter : null,
+      breadcrumbs: Object.freeze(getLocationBreadcrumbs(locationId)),
+      children: Object.freeze(getLocationChildren(locationId)),
+      occupants: Object.freeze(getEntitiesAtLocation(locationId, hasChapter ? parsedChapter : null)),
+      assignments: Object.freeze(assignments),
+      events: Object.freeze(events),
+      abilities: Object.freeze(resolveMany(abilityIds, indexes)),
+      history: Object.freeze(getLocationOccupancyTimeline(locationId)),
+    });
   };
 
   const getSourcesForEntity = (entityId) => {
@@ -168,6 +226,7 @@ export const createSuccessionSelectors = (data, indexes) => {
       for (const event of getEventsAtLocation(entity.id)) relatedIds.add(event.id);
       for (const ability of getAbilitiesAtLocation(entity.id)) relatedIds.add(ability.id);
       for (const child of getLocationChildren(entity.id)) relatedIds.add(child.id);
+      for (const record of getLocationHistoryForLocation(entity.id)) relatedIds.add(record.characterId);
     }
 
     if (entity.entityType === 'guardian-beast') {
@@ -252,7 +311,12 @@ export const createSuccessionSelectors = (data, indexes) => {
     getActiveAssignmentsForSubject,
     getLocationHistoryForCharacter,
     getLocationHistoryForLocation,
+    getMovementHistoryForCharacter,
+    getCurrentLocationRecordForCharacter,
+    getLocationsForCharacter,
+    getLocationOccupancyTimeline,
     getEntitiesAtLocation,
+    getLocationSnapshot,
     getSourcesForEntity,
     getRelatedEntities,
     search,
