@@ -17,7 +17,7 @@ const ROOT = process.cwd();
 const HOST = '127.0.0.1';
 const PORT = Number.parseInt(process.env.HXH_CHAPTER_ADMIN_PORT || '4174', 10);
 const READER_START = 338;
-const READER_END = 414;
+const MAX_CHAPTER_NUMBER = 9999;
 const SESSION_TTL = 30 * 60 * 1000;
 const BODY_LIMIT = 24 * 1024;
 const ADMIN_HTML = path.join(ROOT, 'admin', 'succession-chapter-import.html');
@@ -92,7 +92,10 @@ const server = http.createServer(async (request, response) => {
   const url = new URL(request.url || '/', `http://${HOST}:${PORT}`);
   try {
     if (request.method === 'GET' && url.pathname === '/') {
-      const html = await readFile(ADMIN_HTML);
+      const sourceHtml = await readFile(ADMIN_HTML, 'utf8');
+      const html = Buffer.from(sourceHtml
+        .replace(' max="414"', '')
+        .replaceAll('/hunter-x-hunter/414/', '/hunter-x-hunter/415/'));
       response.writeHead(200, {
         'content-type': 'text/html; charset=utf-8',
         'content-length': html.length,
@@ -115,8 +118,8 @@ const server = http.createServer(async (request, response) => {
       const requestedChapter = body.chapter === null || body.chapter === undefined || body.chapter === ''
         ? inspection.inferredChapter || inferChapterNumber(body.sourceUrl)
         : Number.parseInt(body.chapter, 10);
-      if (!Number.isInteger(requestedChapter) || requestedChapter < READER_START || requestedChapter > READER_END) {
-        throw new Error(`Chapter must be from ${READER_START} through ${READER_END}.`);
+      if (!Number.isInteger(requestedChapter) || requestedChapter < READER_START || requestedChapter > MAX_CHAPTER_NUMBER) {
+        throw new Error(`Chapter must be from ${READER_START} through ${MAX_CHAPTER_NUMBER}.`);
       }
       const sessionId = crypto.randomUUID();
       const session = {
@@ -177,7 +180,7 @@ const server = http.createServer(async (request, response) => {
         sendJson(response, 200, {
           chapter: session.chapter,
           pageCount: session.imageUrls.length,
-          output: `${output}\n\nChapter ${session.chapter} was imported. Review and commit the chapter folder and generated manifest.`,
+          output: `${output}\n\nChapter ${session.chapter} was imported. Review and commit the chapter folder, generated media manifest, and generated availability index.`,
         });
       } finally {
         await rm(temporaryDirectory, { recursive: true, force: true });
