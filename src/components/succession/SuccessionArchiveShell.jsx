@@ -30,6 +30,7 @@ import {
 import SpoilerControl from '../SpoilerControl';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveContrastFixes.css';
+import './SuccessionArchiveDeepContrastFixes.css';
 
 const iconByRoute = {
   archive: Archive,
