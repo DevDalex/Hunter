@@ -1,25 +1,29 @@
 import { readFile } from 'node:fs/promises';
 import { createServer } from 'vite';
+import {
+  declarationIncludesLiteral,
+  sourceImportsDefault,
+  sourceRendersRouteWith,
+} from './lib/succession-audit-contracts.mjs';
 
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession assignment workspace audit failed: ${message}`);
 };
 
-const [workspace, styles, app, dataEntry, foundation, expansion, selectors, indexes] = await Promise.all([
+const [workspace, styles, app, foundation, expansion, selectors, indexes] = await Promise.all([
   readFile(new URL('../src/components/succession/SuccessionArchiveAssignmentWorkspace.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveAssignmentWorkspace.css', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveApp.jsx', import.meta.url), 'utf8'),
-  readFile(new URL('../src/data/succession/successionData.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/entitiesAssignmentFoundation.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/assignmentFoundationExpansion.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/selectors.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/indexes.js', import.meta.url), 'utf8'),
 ]);
 
-assert(app.includes("import AssignmentsWorkspace from './SuccessionArchiveAssignmentWorkspace';"), 'app must load the dedicated assignment workspace');
+assert(sourceImportsDefault(app, 'AssignmentsWorkspace', './SuccessionArchiveAssignmentWorkspace'), 'app must load the dedicated assignment workspace');
 assert(!app.includes('  BodyguardsWorkspace,'), 'app must not import the legacy bodyguard matrix into the active route');
-assert(app.includes("['princes', 'queens', 'chapters', 'locations', 'bodyguards']"), 'assignment and personnel entities must remain in the dedicated route');
-assert(dataEntry.includes("from './entitiesAssignmentFoundation.js'"), 'canonical data entry must activate the assignment foundation');
+assert(sourceRendersRouteWith(app, 'bodyguards', 'AssignmentsWorkspace'), 'bodyguards route must render the dedicated assignment workspace');
+assert(declarationIncludesLiteral(app, 'specializedRecordRoute', 'bodyguards'), 'assignment and personnel entities must remain in the dedicated route');
 assert(foundation.includes('assignmentEnrichment'), 'existing assignments must receive normalized objectives and event links');
 assert(expansion.includes('assignmentFoundationExpansion'), 'expanded assignment records must be published');
 assert(expansion.includes('furykov-observes-room-1014-class'), 'Furykov’s class observation must be indexed');
