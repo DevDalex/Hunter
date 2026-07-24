@@ -13,7 +13,7 @@ import {
 } from './lib/succession-chapter-url-source.mjs';
 
 const READER_START = 338;
-const READER_END = 414;
+const MAX_CHAPTER_NUMBER = 9999;
 const ROOT = process.cwd();
 const MAX_SELECTED_IMAGES = 120;
 
@@ -21,9 +21,9 @@ const usage = () => console.log(`Usage:
   npm run import:succession-chapter:url -- <chapter-url> [chapter] [--replace] [--dry-run] [--confirm] [--image-list-file <json-file>]
 
 Examples:
-  npm run import:succession-chapter:url -- https://example.com/manga/hunter-x-hunter/414/
-  npm run import:succession-chapter:url -- https://example.com/chapter/latest 414 --replace --confirm
-  npm run import:succession-chapter:url -- https://example.com/chapter/latest 414 --confirm --image-list-file .chapter-import-selected-images.json
+  npm run import:succession-chapter:url -- https://example.com/manga/hunter-x-hunter/415/
+  npm run import:succession-chapter:url -- https://example.com/chapter/latest 415 --replace --confirm
+  npm run import:succession-chapter:url -- https://example.com/chapter/latest 415 --confirm --image-list-file .chapter-import-selected-images.json
 
 Without --image-list-file, the command inspects the source page and detects likely chapter images.
 With --image-list-file, it imports exactly the ordered JSON array of image URLs in that file.
@@ -104,8 +104,8 @@ if (imageListFile) {
 }
 
 const chapter = Number.parseInt(positional[1] || inspection.inferredChapter || inferChapterNumber(sourceUrl), 10);
-if (!Number.isInteger(chapter) || chapter < READER_START || chapter > READER_END) {
-  throw new Error(`Could not infer a valid reader chapter. Supply a chapter from ${READER_START} through ${READER_END} as the second argument.`);
+if (!Number.isInteger(chapter) || chapter < READER_START || chapter > MAX_CHAPTER_NUMBER) {
+  throw new Error(`Could not infer a valid reader chapter. Supply a chapter from ${READER_START} through ${MAX_CHAPTER_NUMBER} as the second argument.`);
 }
 
 console.log(`\n${inspection.title || `Chapter ${chapter}`}`);
@@ -150,4 +150,4 @@ try {
   await rm(temporaryDirectory, { recursive: true, force: true });
 }
 
-console.log(`\nChapter ${chapter} is ready in the repository. Review the generated folder and manifest before committing.`);
+console.log(`\nChapter ${chapter} is ready in the repository. Review the generated folder, media manifest, and availability index before committing.`);
