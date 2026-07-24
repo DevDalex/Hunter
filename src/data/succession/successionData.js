@@ -4,6 +4,7 @@ import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { createCharacterStateSelectors } from './characterStateSelectors.js';
 import { createOrganizationStateSelectors } from './organizationStateSelectors.js';
+import { createPeopleInstitutionClosure } from './peopleInstitutionClosure.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
@@ -16,6 +17,12 @@ export const successionCharacterStates = createCharacterStateSelectors({
 export const successionOrganizationStates = createOrganizationStateSelectors({
   data: successionArchiveData,
   archive: successionArchive,
+});
+export const successionPeopleInstitutionClosure = createPeopleInstitutionClosure({
+  data: successionArchiveData,
+  archive: successionArchive,
+  characterStates: successionCharacterStates,
+  organizationStates: successionOrganizationStates,
 });
 export const successionEvidenceGraph = createSuccessionEvidenceGraph(successionArchiveData);
 
@@ -82,6 +89,7 @@ export const {
   getCharacterStateTimeline,
   getCharacterStateAtChapter,
   getCharacterCurrentState,
+  getCharacterAffiliationsAtChapter,
   getCharacterRoleProfile,
   getCharacterLifetimeTimeline,
   getCharacterDossier,
@@ -102,6 +110,13 @@ export const {
   getOrganizationStateCoverageReport,
   searchOrganizationsByState,
 } = successionOrganizationStates;
+
+export const {
+  getCanonicalPeopleInstitutionRoute,
+  getPeopleInstitutionRecord,
+  getPeopleInstitutionCoverageGaps,
+  getPeopleInstitutionClosureReport,
+} = successionPeopleInstitutionClosure;
 
 export const searchSuccessionArchive = (query, options = {}) => {
   const limit = Number(options.limit) || 20;
