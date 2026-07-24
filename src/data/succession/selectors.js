@@ -90,10 +90,87 @@ export const createSuccessionSelectors = (data, indexes) => {
 
   const getAssignmentsAtLocation = (locationId) => resolveMany(indexes.assignmentsByLocation.get(locationId), indexes);
 
+  const getAssignmentsForAllegiance = (entityId) => resolveMany(indexes.assignmentsByAllegiance.get(entityId), indexes);
+
+  const getAssignmentsReportingTo = (entityId) => resolveMany(indexes.assignmentsByReporting.get(entityId), indexes);
+
+  const getAssignmentsForEvent = (eventId) => resolveMany(indexes.assignmentsByEvent.get(eventId), indexes);
+
+  const getAssignmentsForChapter = (chapter) => resolveMany(indexes.assignmentsByChapter.get(Number(chapter)), indexes);
+
   const getActiveAssignmentsForSubject = (entityId, chapter = null) => getAssignmentsForSubject(entityId)
     .filter((assignment) => chapter === null
       ? assignment.status === 'active'
       : includesChapter(assignment.chapterRange, Number(chapter)));
+
+  const getActiveAssignmentsAtChapter = (chapter, {
+    personId = null,
+    principalEntityId = null,
+    subjectEntityId = null,
+    locationId = null,
+    allegianceEntityId = null,
+    reportingEntityId = null,
+    assignmentType = null,
+    status = null,
+    secrecy = null,
+  } = {}) => getAssignmentsForChapter(chapter).filter((assignment) => (
+    (!personId || assignment.personId === personId)
+    && (!principalEntityId || assignment.principalEntityId === principalEntityId)
+    && (!subjectEntityId || assignment.subjectEntityId === subjectEntityId)
+    && (!locationId || assignment.locationId === locationId)
+    && (!allegianceEntityId || assignment.allegianceEntityId === allegianceEntityId)
+    && (!reportingEntityId || assignment.reportingEntityId === reportingEntityId)
+    && (!assignmentType || assignment.assignmentType === assignmentType)
+    && (!status || assignment.status === status)
+    && (!secrecy || assignment.secrecy === secrecy)
+  ));
+
+  const getAssignmentTimelineForCharacter = (characterId) => {
+    const ids = new Set([
+      ...(indexes.assignmentsByPerson.get(characterId) || []),
+      ...(indexes.assignmentsByPrincipal.get(characterId) || []),
+      ...(indexes.assignmentsBySubject.get(characterId) || []),
+      ...(indexes.assignmentsByAllegiance.get(characterId) || []),
+      ...(indexes.assignmentsByReporting.get(characterId) || []),
+    ]);
+    return resolveMany([...ids], indexes).sort(byRangeStart);
+  };
+
+  const getAssignmentChain = (assignmentId) => {
+    const assignment = getEntityById(assignmentId);
+    if (!assignment || assignment.entityType !== 'assignment') return null;
+    const predecessor = assignment.supersedesAssignmentId ? getEntityById(assignment.supersedesAssignmentId) : null;
+    const successor = assignment.replacedByAssignmentId ? getEntityById(assignment.replacedByAssignmentId) : null;
+    return Object.freeze({
+      assignment,
+      predecessor: predecessor?.entityType === 'assignment' ? predecessor : null,
+      successor: successor?.entityType === 'assignment' ? successor : null,
+      person: getEntityById(assignment.personId),
+      principal: getEntityById(assignment.principalEntityId),
+      subject: getEntityById(assignment.subjectEntityId),
+      location: getEntityById(assignment.locationId),
+      allegiance: getEntityById(assignment.allegianceEntityId),
+      reporting: getEntityById(assignment.reportingEntityId),
+      events: Object.freeze(resolveMany(assignment.relatedEventIds, indexes)),
+    });
+  };
+
+  const getAssignmentSnapshot = (entityId, chapter = null) => {
+    const entity = getEntityById(entityId);
+    if (!entity) return null;
+    const parsedChapter = chapter === null ? data.chapters.at(-1)?.number : Number(chapter);
+    if (!Number.isFinite(parsedChapter)) return null;
+    const byRole = Object.freeze({
+      person: Object.freeze(getAssignmentsForPerson(entityId).filter((assignment) => includesChapter(assignment.chapterRange, parsedChapter))),
+      principal: Object.freeze(getAssignmentsForPrincipal(entityId).filter((assignment) => includesChapter(assignment.chapterRange, parsedChapter))),
+      subject: Object.freeze(getAssignmentsForSubject(entityId).filter((assignment) => includesChapter(assignment.chapterRange, parsedChapter))),
+      allegiance: Object.freeze(getAssignmentsForAllegiance(entityId).filter((assignment) => includesChapter(assignment.chapterRange, parsedChapter))),
+      reporting: Object.freeze(getAssignmentsReportingTo(entityId).filter((assignment) => includesChapter(assignment.chapterRange, parsedChapter))),
+    });
+    const assignments = [...new Map(Object.values(byRole).flat().map((assignment) => [assignment.id, assignment])).values()]
+      .sort(byRangeStart);
+    return Object.freeze({ entity, chapter: parsedChapter, assignments: Object.freeze(assignments), byRole });
+  };
 
   const getLocationHistoryForCharacter = (characterId) => resolveMany(indexes.locationHistoryByCharacter.get(characterId), indexes);
 
@@ -186,11 +263,7 @@ export const createSuccessionSelectors = (data, indexes) => {
       for (const event of getEventsForCharacter(entity.id)) relatedIds.add(event.id);
       for (const appearance of getAppearancesForCharacter(entity.id)) relatedIds.add(appearance.chapterId);
       for (const locationRecord of getLocationHistoryForCharacter(entity.id)) relatedIds.add(locationRecord.locationId);
-      for (const assignment of [
-        ...getAssignmentsForPerson(entity.id),
-        ...getAssignmentsForSubject(entity.id),
-        ...getAssignmentsForPrincipal(entity.id),
-      ]) relatedIds.add(assignment.id);
+      for (const assignment of getAssignmentTimelineForCharacter(entity.id)) relatedIds.add(assignment.id);
     }
 
     if (entity.entityType === 'organization') {
@@ -208,6 +281,7 @@ export const createSuccessionSelectors = (data, indexes) => {
         ...(entity.abilityIds || []),
         ...(entity.consequenceEventIds || []),
       ]) relatedIds.add(id);
+      for (const assignment of getAssignmentsForEvent(entity.id)) relatedIds.add(assignment.id);
     }
 
     if (entity.entityType === 'assignment') {
@@ -218,6 +292,9 @@ export const createSuccessionSelectors = (data, indexes) => {
         entity.locationId,
         entity.allegianceEntityId,
         entity.reportingEntityId,
+        entity.supersedesAssignmentId,
+        entity.replacedByAssignmentId,
+        ...(entity.relatedEventIds || []),
       ]) if (id) relatedIds.add(id);
     }
 
@@ -249,6 +326,7 @@ export const createSuccessionSelectors = (data, indexes) => {
         ...(entity.abilityIds || []),
         ...(entity.organizationIds || []),
       ]) relatedIds.add(id);
+      for (const assignment of getAssignmentsForChapter(entity.number)) relatedIds.add(assignment.id);
     }
 
     relatedIds.delete(entityId);
@@ -308,7 +386,15 @@ export const createSuccessionSelectors = (data, indexes) => {
     getAssignmentsForSubject,
     getAssignmentsForPrincipal,
     getAssignmentsAtLocation,
+    getAssignmentsForAllegiance,
+    getAssignmentsReportingTo,
+    getAssignmentsForEvent,
+    getAssignmentsForChapter,
     getActiveAssignmentsForSubject,
+    getActiveAssignmentsAtChapter,
+    getAssignmentTimelineForCharacter,
+    getAssignmentChain,
+    getAssignmentSnapshot,
     getLocationHistoryForCharacter,
     getLocationHistoryForLocation,
     getMovementHistoryForCharacter,
