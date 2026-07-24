@@ -19,11 +19,7 @@ const evidenceState = (level) => {
 export const entityWorkspaceTarget = (entity) => {
   if (!entity) return 'archive';
   if (entity.entityType === 'character') return 'characters';
-  if (entity.entityType === 'organization') {
-    if (entity.organizationType === 'mafia-family') return 'mafia';
-    if (entity.organizationType === 'military') return 'military';
-    return 'organizations';
-  }
+  if (entity.entityType === 'organization') return 'organizations';
   if (entity.entityType === 'ability') return 'nen';
   if (entity.entityType === 'guardian-beast') return 'guardian-spirit-beasts';
   if (entity.entityType === 'location' || entity.entityType === 'location-history') return 'locations';
