@@ -6,6 +6,7 @@ import {
 } from './successionResearch.js';
 
 const ARCHIVE_DATE = '2026-07-24';
+// Canonical overlay IDs: source:chapter-414 and chapter:414.
 const chapterNumber = LATEST_SUCCESSION_RESEARCH_CHAPTER;
 const chapterId = `chapter:${chapterNumber}`;
 const sourceId = `source:chapter-${chapterNumber}`;
