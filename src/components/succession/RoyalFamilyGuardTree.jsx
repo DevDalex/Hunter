@@ -35,6 +35,8 @@ const princeFullNameByShort = new Map(princeDossiers.map((prince) => [prince.sho
 const dossierByShort = new Map(princeDossiers.map((prince) => [prince.short, prince]));
 const queenDossierByShort = new Map(queenDossiers.map((queen) => [queen.name, queen]));
 const characterEntities = getEntitiesByType('character');
+const intelligenceKinds = new Set(['observer', 'spy', 'hostile']);
+const placementKinds = new Set(['kurapika-placement', 'ally']);
 
 const canonicalName = (name) => queenFullNameByShort.get(name) || princeFullNameByShort.get(name) || name;
 const entityForName = (name) => {
@@ -52,11 +54,18 @@ const statusLabel = (status) => status === 'deceased'
     ? 'Exceptional state'
     : 'Active contender';
 
+const networkKindLabel = (kind) => {
+  if (kind === 'kurapika-placement') return 'Kurapika-recruited placement';
+  if (kind === 'ally') return 'Allied reinforcement';
+  if (kind === 'observer') return 'Embedded observer';
+  if (kind === 'spy') return 'Royal spy network';
+  if (kind === 'hostile') return 'Hostile infiltration';
+  if (kind === 'complement') return 'Household complement';
+  return 'Direct protection';
+};
+
 const personSummary = (entity, fallback) => entity?.summary || fallback;
 const isRoyalEntity = (entity) => (entity?.roles || []).some((role) => ['king', 'queen', 'prince', 'royal-parent'].includes(role));
-const isProtectionEntity = (entity) => (entity?.roles || []).some((role) => [
-  'bodyguard', 'hunter', 'royal-servant', 'military', 'soldier', 'justice-official', 'nen-instructor',
-].includes(role));
 
 function Portrait({ name, entity, compact = false }) {
   const portrait = entity?.media?.portrait || '';
@@ -101,29 +110,22 @@ const buildProtectionNodes = (prince) => {
     if (entity && isRoyalEntity(entity)) return;
     seen.add(normalized);
     const isGroup = supplied.isGroup ?? !entity;
+    const kind = supplied.kind || (isGroup ? 'complement' : 'protection');
     records.push({
       id: supplied.id || `${prince.order}-${slugify(name)}-${records.length}`,
       name,
       entity,
       isGroup,
+      kind,
       count: supplied.count || null,
-      eyebrow: supplied.eyebrow || (isGroup ? 'Household complement' : (entity.roles || []).slice(0, 2).join(' · ') || 'Protection network'),
-      description: supplied.description || personSummary(entity, `Documented member of ${prince.short}'s household and protection network.`),
+      eyebrow: supplied.eyebrow || networkKindLabel(kind) || (entity?.roles || []).slice(0, 2).join(' · '),
+      description: supplied.description || personSummary(entity, `Documented member of ${prince.short}'s household network.`),
     });
   };
 
-  for (const name of seed.dedicatedNames) addRecord(name);
-  for (const name of seed.teamNames) addRecord(name);
-
-  const searchableRoom = ` ${normalizeLookup(seed.roomText)} `;
-  for (const entity of characterEntities) {
-    if (isRoyalEntity(entity) || !isProtectionEntity(entity)) continue;
-    const candidates = [entity.name, ...(entity.aliases || [])]
-      .map(normalizeLookup)
-      .filter((candidate) => candidate.length >= 4);
-    if (candidates.some((candidate) => searchableRoom.includes(` ${candidate} `))) addRecord(entity.name, { entity });
-  }
-
+  for (const record of seed.categorizedActors) addRecord(record.name, record);
+  for (const name of seed.dedicatedNames) addRecord(name, { kind: 'protection' });
+  for (const name of seed.teamNames) addRecord(name, { kind: 'protection' });
   for (const group of seed.complementGroups) addRecord(group.name, { ...group, entity: null, isGroup: true });
 
   return records;
@@ -145,8 +147,10 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
   const selectedPrinceEntity = entityForName(selectedPrince.name);
   const kingEntity = entityForName('Nasubi Hui Guo Rou');
   const guards = useMemo(() => buildProtectionNodes(selectedPrince), [selectedPrince]);
-  const namedGuardCount = guards.filter((guard) => !guard.isGroup).length;
-  const groupGuardCount = guards.length - namedGuardCount;
+  const directGuardCount = guards.filter((guard) => guard.kind === 'protection' && !guard.isGroup).length;
+  const placementCount = guards.filter((guard) => placementKinds.has(guard.kind)).length;
+  const surveillanceCount = guards.filter((guard) => intelligenceKinds.has(guard.kind)).length;
+  const groupGuardCount = guards.filter((guard) => guard.isGroup && !intelligenceKinds.has(guard.kind)).length;
 
   const focusedGuard = lockedGuard || hoveredGuard;
   const selectedQueenDossier = queenDossierByShort.get(selectedBranch.queen.replace(' Hui Guo Rou', ''));
@@ -175,13 +179,15 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
     <header className="royal-guard-tree__header">
       <div>
         <span><Crown size={14} aria-hidden="true" /> Kakin royal structure</span>
-        <h2 id="royal-guard-tree-title">The royal family and each prince's protection circle</h2>
-        <p>Select a queen, choose one of her children, then inspect every documented named protector and the remaining recorded household complement. Hover previews identity and role; clicking locks the information panel.</p>
+        <h2 id="royal-guard-tree-title">The royal family, protection teams, and hidden observers</h2>
+        <p>Select a queen and prince to inspect direct guards, Kurapika-recruited placements, allied reinforcements, royal spies, hostile infiltrators, and unnamed documented complements. Hover previews identity and role; clicking locks the information panel.</p>
       </div>
       <div className="royal-guard-tree__legend" aria-label="Diagram legend">
         <span><i className="is-royal" /> Royal line</span>
         <span><i className="is-branch" /> Maternal branch</span>
-        <span><i className="is-guard" /> Protection link</span>
+        <span><i className="is-guard" /> Direct protection</span>
+        <span><i className="is-placement" /> Kurapika placement / ally</span>
+        <span><i className="is-intel" /> Spy / observer / infiltrator</span>
       </div>
     </header>
 
@@ -244,8 +250,8 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
     <div className="royal-guard-tree__focus-grid">
       <section className="royal-guard-tree__orbit-panel" aria-labelledby="royal-guard-tree-orbit-title">
         <header>
-          <div><Shield size={18} aria-hidden="true" /><span>Protection circle</span><h3 id="royal-guard-tree-orbit-title">{selectedPrince.short}'s household network</h3></div>
-          <small>{namedGuardCount} named · {groupGuardCount} complement record{groupGuardCount === 1 ? '' : 's'}</small>
+          <div><Shield size={18} aria-hidden="true" /><span>Household network</span><h3 id="royal-guard-tree-orbit-title">{selectedPrince.short}'s protection and intelligence circle</h3></div>
+          <small>{directGuardCount} direct · {placementCount} placed/allied · {surveillanceCount} surveillance · {groupGuardCount} complement</small>
         </header>
 
         <div className={`royal-guard-tree__orbit${guards.length > 10 ? ' is-dense' : ''}`} style={{ '--guard-total': Math.max(guards.length, 1) }}>
@@ -262,10 +268,10 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
             const style = { '--angle': `${angle}deg`, '--radius': `${radius}px` };
             const locked = lockedGuard?.id === guard.id;
             return <div className="royal-guard-tree__guard-slot" style={style} key={guard.id}>
-              <span className="royal-guard-tree__guard-line" aria-hidden="true" />
+              <span className={`royal-guard-tree__guard-line is-${guard.kind}`} aria-hidden="true" />
               <button
                 type="button"
-                className={`royal-guard-tree__guard${guard.isGroup ? ' is-group' : ''}${locked ? ' is-locked' : ''}`}
+                className={`royal-guard-tree__guard is-${guard.kind}${guard.isGroup ? ' is-group' : ''}${locked ? ' is-locked' : ''}`}
                 aria-label={`${guard.name}. ${guard.eyebrow}`}
                 aria-pressed={locked}
                 onMouseEnter={() => setHoveredGuard(guard)}
@@ -286,13 +292,14 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
 
       <aside className="royal-guard-tree__inspector" aria-live="polite">
         {focusedGuard ? <div className="royal-guard-tree__inspector-content" key={focusedGuard.id}>
-          <span>{focusedGuard.isGroup ? 'Household complement' : 'Protection actor'}</span>
+          <span>{networkKindLabel(focusedGuard.kind)}</span>
           <div className="royal-guard-tree__inspector-portrait"><Portrait name={focusedGuard.name} entity={focusedGuard.entity} /></div>
           <h3>{focusedGuard.name}</h3>
           <p>{focusedGuard.description}</p>
           <dl>
-            <div><dt>Attached to</dt><dd>{selectedPrince.short}</dd></div>
+            <div><dt>Connected to</dt><dd>{selectedPrince.short}</dd></div>
             <div><dt>Role</dt><dd>{focusedGuard.eyebrow}</dd></div>
+            <div><dt>Category</dt><dd>{networkKindLabel(focusedGuard.kind)}</dd></div>
             <div><dt>Record</dt><dd>{focusedGuard.entity ? 'Canonical profile available' : 'Count or group-level record'}</dd></div>
           </dl>
           {focusedGuard.entity && <button type="button" onClick={() => openEntity(focusedGuard.entity)}>Open full record <ArrowRight size={14} aria-hidden="true" /></button>}
@@ -306,18 +313,20 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
             <div><dt>Mother</dt><dd>Queen {selectedPrince.mother}</dd></div>
             <div><dt>Room</dt><dd>{selectedPrince.room}</dd></div>
             <div><dt>Status</dt><dd>{statusLabel(selectedPrince.status)}</dd></div>
-            <div><dt>Named actors</dt><dd>{namedGuardCount}</dd></div>
+            <div><dt>Direct protection</dt><dd>{directGuardCount}</dd></div>
+            <div><dt>Placed / allied</dt><dd>{placementCount}</dd></div>
+            <div><dt>Surveillance</dt><dd>{surveillanceCount}</dd></div>
             <div><dt>Complement records</dt><dd>{groupGuardCount}</dd></div>
           </dl>
           <button type="button" onClick={() => openEntity(selectedPrinceEntity)}>Open full dossier <ArrowRight size={14} aria-hidden="true" /></button>
-          <small>Hover a guard for a smooth identity preview, or click one to keep its details open.</small>
+          <small>Hover any node for its exact relationship. A person appearing here is not automatically loyal to the selected prince.</small>
         </div>}
       </aside>
     </div>
 
     <footer className="royal-guard-tree__footer">
       <Users size={15} aria-hidden="true" />
-      <span>Named people are shown individually. When a source gives a guard or staff count without every name, the remaining complement is preserved as a labeled group node.</span>
+      <span>Gold nodes are direct protection, blue nodes are Kurapika placements or allied reinforcements, and red nodes are spies, observers, or hostile infiltrators. Unnamed complements remain labeled group records.</span>
       {selectedQueenDossier && <a href={selectedQueenDossier.source} target="_blank" rel="noreferrer noopener">Queen reference <ArrowRight size={12} aria-hidden="true" /></a>}
     </footer>
   </section>;
