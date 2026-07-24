@@ -1,4 +1,4 @@
-import { successionArchiveData } from './entitiesAssignmentFoundation.js';
+import { successionArchiveData } from './entitiesRelationshipFoundation.js';
 import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
@@ -30,6 +30,16 @@ export const {
   getLocationChildren,
   getLocationBreadcrumbs,
   getRelationshipsForEntity,
+  getOutgoingRelationships,
+  getIncomingRelationships,
+  getRelationshipsForType,
+  getRelationshipsForSentiment,
+  getRelationshipsForEvent,
+  getRelationshipsForChapter,
+  getActiveRelationshipsAtChapter,
+  getRelationshipDetail,
+  getRelationshipSnapshot,
+  getRelationshipNeighborhood,
   getAbilitiesForOwner,
   getAssignmentsForPerson,
   getAssignmentsForSubject,
