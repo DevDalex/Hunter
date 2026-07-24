@@ -25,13 +25,13 @@ import {
   QueensWorkspace,
 } from './SuccessionArchiveDeepWorkspaces';
 import AssignmentsWorkspace from './SuccessionArchiveAssignmentWorkspace';
+import CharactersWorkspace from './SuccessionArchiveCharacterWorkspace';
 import EvidenceWorkspace from './SuccessionArchiveEvidenceWorkspace';
 import EventsWorkspace from './SuccessionArchiveEventWorkspace';
 import LocationsWorkspace from './SuccessionArchiveLocationWorkspace';
 import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';
 import {
   ChapterRecordsWorkspaceV2,
-  CharactersWorkspace,
   DomainEntityDetail,
   GlossaryWorkspace,
   HuntersWorkspace,
@@ -209,7 +209,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const preserved = ['black-whale', 'timeline', 'nen'].includes(route.id);
   const dedicated = new Set(['princes', 'queens', 'bodyguards', 'mafia', 'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']);
   const selectedEntity = routeParams.entity ? getEntityById(routeParams.entity) : null;
-  const specializedRecordRoute = ['princes', 'queens', 'chapters', 'locations', 'bodyguards', 'relationships'].includes(route.id);
+  const specializedRecordRoute = ['characters', 'princes', 'queens', 'chapters', 'locations', 'bodyguards', 'relationships'].includes(route.id);
   const showDomainDetail = Boolean(selectedEntity && !treeView && !specializedRecordRoute);
 
   return <SuccessionArchiveShell activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} onExitArchive={onExitArchive} onOpenSearch={onOpenSearch} onIntent={onIntent}>
@@ -218,7 +218,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {route.id === 'search' && <SearchWorkspace onNavigate={navigate} />}
     {treeView && <FamilyTreeWorkspace spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showDomainDetail && <DomainEntityDetail entity={selectedEntity} onNavigate={navigate} />}
-    {!showDomainDetail && route.id === 'characters' && <CharactersWorkspace onNavigate={navigate} />}
+    {!showDomainDetail && route.id === 'characters' && <CharactersWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {!showDomainDetail && route.id === 'princes' && !treeView && <PrincesWorkspace routeParams={routeParams} onNavigate={navigate} />}
     {!showDomainDetail && route.id === 'queens' && <QueensWorkspace routeParams={routeParams} onNavigate={navigate} />}
     {!showDomainDetail && route.id === 'bodyguards' && <AssignmentsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
