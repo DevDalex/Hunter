@@ -18,7 +18,7 @@ export const successionArchiveRoutes = Object.freeze([
   route('characters', 'characters', 'Characters', 'People', 'Character archive', 'Canonical people organized by role, allegiance, current state, affiliations, evidence, and connected records.', 'active'),
   route('princes', 'princes', 'Royal Family', 'People', 'Kakin Royal Family', 'King Nasubi, the eight queens, all fourteen princes, and each selected prince’s documented protection circle in one visual workspace.', 'active'),
   route('queens', 'queens', 'Queens', 'Legacy', 'Queens of Kakin', 'Legacy deep link retained for existing bookmarks; queen records now belong to the unified Royal Family workspace.', 'active'),
-  route('bodyguards', 'bodyguards', 'Bodyguards', 'Legacy', 'Bodyguards and room assignments', 'Legacy deep link retained for existing bookmarks; protection networks now belong to the unified Royal Family workspace.', 'active'),
+  route('bodyguards', 'bodyguards', 'Assignments', 'People', 'Assignments and reporting chains', 'Canonical protection, surveillance, instruction, custody, infiltration, assassination, allegiance, reporting, transfer, and chapter-snapshot records.', 'active'),
   route('hunters', 'hunters', 'Hunters', 'People', 'Hunters aboard the voyage', 'Hunter contracts, Zodiac duties, Nen instruction, prince assignments, and expedition responsibilities.', 'active'),
 
   route('mafia', 'mafia', 'Mafia', 'Power', 'Kakin mafia', 'Xi-Yu, Heil-Ly, and Cha-R compared through leadership, territory, members, royal sponsorship, objectives, risks, and operations.', 'active'),
