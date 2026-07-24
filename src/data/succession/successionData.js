@@ -1,4 +1,5 @@
 import { successionArchiveData } from './entitiesRelationshipFoundation.js';
+import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
@@ -6,6 +7,7 @@ import { assertValidSuccessionArchiveData } from './schemas.js';
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
 export const successionArchiveIndexes = buildSuccessionIndexes(successionArchiveData);
 export const successionArchive = createSuccessionSelectors(successionArchiveData, successionArchiveIndexes);
+export const successionEvidenceGraph = createSuccessionEvidenceGraph(successionArchiveData);
 
 export {
   successionArchiveData,
@@ -66,3 +68,11 @@ export const {
   getRelatedEntities,
   search: searchSuccessionArchive,
 } = successionArchive;
+
+export const {
+  chapterProfiles: successionChapterEvidenceProfiles,
+  getChapterEvidenceProfile,
+  getEntityEvidenceProfile,
+  getFoundationClosureReport,
+  getEvidenceEntities,
+} = successionEvidenceGraph;
