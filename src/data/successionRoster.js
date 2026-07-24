@@ -1,25 +1,38 @@
 const wikiBase = 'https://hunterxhunter.fandom.com/wiki';
 const directoryUrl = `${wikiBase}/List_of_Hunter_%C3%97_Hunter_Characters/Chapters_340-current`;
 const article = (name) => `${wikiBase}/${encodeURIComponent(name.replaceAll(' ', '_'))}`;
+const portrait = (file) => `${wikiBase}/Special:Redirect/file/${encodeURIComponent(file)}`;
 import { statusNoteOf, statusOf } from './successionStatus';
 import { characters } from './characters';
 
 const verifiedCharacterMedia = new Map(characters.map((character) => [character.name, character]));
+const portraitFilenameOverrides = new Map([
+  ['Bashō', 'Basho SC Portrait.png'],
+  ['Himoncé', 'Himonce SC Portrait.png'],
+  ['Kōbihi', 'Kobihi SC Portrait.png'],
+  ['Naikēru', 'Naikeru SC Portrait.png'],
+  ['Rēuen', 'Reuen SC Portrait.png'],
+  ['Salé-salé Hui Guo Rou', 'Sale-sale Hui Guo Rou SC Portrait.png'],
+]);
+const isGenericRosterName = (name) => name.includes('Unnamed ') || name.startsWith('Stone Wall ')
+  || name.startsWith('V6 Leader ') || name.startsWith('Temp Hunter ')
+  || name.startsWith('Cha-R Associate ') || name.startsWith('Tserriednich Friend ')
+  || name === 'Heil-Ly Associate 9' || name === 'Kakin Announcer';
+const rosterPortraitFor = (name) => isGenericRosterName(name)
+  ? ''
+  : portrait(portraitFilenameOverrides.get(name) || `${name} SC Portrait.png`);
 
 const makeMembers = (group, role, rows) => rows.map(([name, , note]) => {
   const verified = verifiedCharacterMedia.get(name);
+  const image = verified?.image || verified?.imageSource || rosterPortraitFor(name);
   return {
     name,
     group,
     role: note || role,
-    image: verified?.image || '',
-    imageSource: verified?.imageSource || '',
+    image,
+    imageSource: verified?.imageSource || image,
     media: verified?.media || null,
-    source: name.includes('Unnamed ') || name.startsWith('Stone Wall ') || name.startsWith('V6 Leader ')
-      || name.startsWith('Temp Hunter ') || name.startsWith('Cha-R Associate ')
-      || name.startsWith('Tserriednich Friend ') || name === 'Heil-Ly Associate 9'
-      ? directoryUrl
-      : article(name),
+    source: isGenericRosterName(name) ? directoryUrl : article(name),
     status: statusOf(name),
     statusNote: statusNoteOf(name),
   };
