@@ -1,16 +1,15 @@
 const append = (map, key, value) => {
   if (!key) return;
-  const current = map.get(key);
-  if (current) current.push(value);
-  else map.set(key, [value]);
+  const current = map.get(key) || [];
+  current.push(value);
+  map.set(key, current);
 };
 
 const appendUnique = (map, key, value) => {
-  if (!key || !value) return;
-  const current = map.get(key);
-  if (current) {
-    if (!current.includes(value)) current.push(value);
-  } else map.set(key, [value]);
+  if (!key) return;
+  const current = map.get(key) || [];
+  if (!current.includes(value)) current.push(value);
+  map.set(key, current);
 };
 
 const freezeMapValues = (map) => {
@@ -140,6 +139,11 @@ export const buildSuccessionIndexes = (data) => {
         entity.assignmentType || '',
         entity.subtype || '',
         entity.category || '',
+        entity.locationType || '',
+        entity.accessLevel || '',
+        entity.zoneRole || '',
+        entity.state || '',
+        entity.deck ? `tier ${entity.deck}` : '',
         ...(entity.causes || []),
         ...(entity.outcomes || []),
         ...(entity.stateChanges || []),
