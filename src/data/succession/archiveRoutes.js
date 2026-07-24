@@ -9,11 +9,11 @@ const route = (id, path, label, group, title, description, status = 'foundation'
 });
 
 export const successionArchiveRoutes = Object.freeze([
-  route('archive', '', 'Archive Home', 'Overview', 'Succession Contest Archive', 'A dedicated research application for the voyage, with canonical chapter-bounded people and institution dossiers connected to chronology, evidence, assignments, relationships, and location state.', 'active'),
+  route('archive', '', 'Archive Home', 'Overview', 'Succession Contest Archive', 'A dedicated research application for the voyage, with canonical chapter-bounded people, institutions, Nen systems, chronology, evidence, assignments, relationships, and location state.', 'active'),
   route('story', 'story', 'Story', 'Overview', 'Story workspace', 'The arc mapped through its chronological phases, parallel conflicts, active operations, ritual rules, and power blocs.', 'active'),
   route('timeline', 'timeline', 'Timeline', 'Overview', 'Voyage timeline', 'Chapter-bounded events and movements presented in chronological order.', 'active'),
   route('reader', 'reader', 'Reader', 'Overview', 'Manga reader', 'The chapter image reader, kept separate from research and reference material.', 'active'),
-  route('search', 'search', 'Global Search', 'Overview', 'Search the archive', 'Search canonical Succession Contest entities and open every person or institution in its single authoritative dossier route.', 'active'),
+  route('search', 'search', 'Global Search', 'Overview', 'Search the archive', 'Search canonical Succession Contest entities by names, roles, mechanics, conditions, costs, evidence, and operational state.', 'active'),
 
   route('characters', 'characters', 'Characters', 'People', 'Character archive', 'The authoritative people route: every named character resolves a chapter-bounded dossier, priority actors have explicit state profiles, and supporting actors use identified graph-derived fallbacks.', 'active'),
   route('princes', 'princes', 'Royal Family', 'People', 'Kakin Royal Family', 'King Nasubi, the eight queens, all fourteen princes, and each selected prince’s documented protection circle in one visual workspace.', 'active'),
@@ -29,8 +29,8 @@ export const successionArchiveRoutes = Object.freeze([
   route('black-whale', 'black-whale', 'Black Whale', 'World', 'Black Whale 1', 'The ship atlas, room lookup, and tier orientation inside the dedicated archive shell.', 'active'),
   route('locations', 'locations', 'Locations', 'World', 'Location archive', 'Ship hierarchy, royal rooms, access, occupants, incidents, legal routes, criminal passages, and Nen-mediated movement.', 'active'),
 
-  route('nen', 'nen', 'Nen', 'Systems', 'Nen archive', 'Succession abilities, instruction, conditions, costs, curses, contracts, possession, and known classifications.', 'active'),
-  route('guardian-spirit-beasts', 'guardian-spirit-beasts', 'Guardian Spirit Beasts', 'Systems', 'Guardian Spirit Beasts', 'King Nasubi and all fourteen prince beast records with shared ritual rules, mechanics, knowledge state, and unknowns.', 'active'),
+  route('nen', 'nen', 'Nen', 'Systems', 'Nen and ritual systems', 'The authoritative systems route for abilities, activation, restrictions, costs, contracts, curses, possession, instruction, post-mortem Nen, Contagion, and the Seed Urn ritual at a selected chapter.', 'active'),
+  route('guardian-spirit-beasts', 'guardian-spirit-beasts', 'Guardian Spirit Beasts', 'Systems', 'Guardian Spirit Beast dossiers', 'All fifteen royal beasts tracked through chapter-bounded knowledge, host state, demonstrated and suspected abilities, ritual rules, continuation, destruction, and unresolved mechanics.', 'active'),
 
   route('events', 'events', 'Events', 'Records', 'Event archive', 'Operations organized by chapter range, participants, location, causes, consequences, and current state.', 'active'),
   route('deaths', 'deaths', 'Deaths', 'Records', 'Deaths and body states', 'Confirmed deaths and exceptional body, consciousness, possession, custody, and Nen-continuation states.', 'active'),
