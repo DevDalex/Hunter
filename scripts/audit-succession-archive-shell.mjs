@@ -36,11 +36,12 @@ for (const id of ['glossary', 'media']) {
 }
 assert(successionArchiveRoutes.find((route) => route.id === 'chapters')?.description.includes('latest imported reader chapter'), 'Chapter Records route must follow imported chapter availability');
 
-const [app, entry, shell, workspace, extendedWorkspace, deepWorkspace, workspaces, primitives, entities, extendedEntities, research, router, preload, css, contrast, catalogue, extendedCss, main, packageJson] = await Promise.all([
+const [app, entry, shell, workspace, organizationWorkspace, extendedWorkspace, deepWorkspace, workspaces, primitives, entities, extendedEntities, research, router, preload, css, contrast, catalogue, extendedCss, main, packageJson] = await Promise.all([
   read('src/App.jsx'),
   read('src/components/succession/SuccessionArchiveEntry.jsx'),
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionArchiveApp.jsx'),
+  read('src/components/succession/SuccessionArchiveOrganizationWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveExtendedWorkspaces.jsx'),
   read('src/components/succession/SuccessionArchiveDeepWorkspaces.jsx'),
   read('src/components/succession/SuccessionArchiveWorkspaces.jsx'),
@@ -78,7 +79,7 @@ assert(workspace.includes('canonLevel') && workspace.includes('SourceReference')
 assert(workspace.includes('SuccessionChapterReader') === false, 'the archive application must not embed the manga reader');
 
 for (const component of [
-  'HuntersWorkspace', 'MilitaryWorkspace', 'OrganizationsWorkspace', 'PoliticsWorkspace',
+  'HuntersWorkspace', 'MilitaryWorkspace', 'PoliticsWorkspace',
   'GlossaryWorkspace', 'MediaWorkspace', 'DomainEntityDetail', 'ChapterRecordsWorkspaceV2',
 ]) assert(extendedWorkspace.includes(`export function ${component}`), `missing completed workspace ${component}`);
 for (const component of ['QueensWorkspace', 'GuardianBeastsWorkspace', 'BodyStatesWorkspace']) {
@@ -87,12 +88,14 @@ for (const component of ['QueensWorkspace', 'GuardianBeastsWorkspace', 'BodyStat
 for (const component of ['SuccessionStoryWorkspace', 'PrincesWorkspace', 'MafiaWorkspace']) {
   assert(workspaces.includes(`export function ${component}`), `missing specialized workspace ${component}`);
 }
+assert(organizationWorkspace.includes('Organizations as chapter-bounded systems of authority'), 'dedicated organization workspace must own institutional dossiers');
 
 for (const [routeId, componentName, modulePath] of [
   ['characters', 'CharactersWorkspace', './SuccessionArchiveCharacterWorkspace'],
   ['bodyguards', 'AssignmentsWorkspace', './SuccessionArchiveAssignmentWorkspace'],
   ['events', 'EventsWorkspace', './SuccessionArchiveEventWorkspace'],
   ['locations', 'LocationsWorkspace', './SuccessionArchiveLocationWorkspace'],
+  ['organizations', 'OrganizationsWorkspace', './SuccessionArchiveOrganizationWorkspace'],
   ['relationships', 'RelationshipsWorkspace', './SuccessionArchiveRelationshipWorkspace'],
   ['research', 'EvidenceWorkspace', './SuccessionArchiveEvidenceWorkspace'],
 ]) {
