@@ -1,0 +1,428 @@
+.succession-organization-workspace,
+.succession-organization-dossier {
+  display: grid;
+  gap: 20px;
+}
+
+.succession-organization-hero,
+.succession-organization-filters,
+.succession-organization-hierarchy,
+.succession-organization-grid > article,
+.succession-organization-dossier__header,
+.succession-organization-state-board,
+.succession-organization-hierarchy-board,
+.succession-organization-dossier__columns > section,
+.succession-organization-personnel-history,
+.succession-organization-event-history,
+.succession-organization-sources {
+  border: 1px solid var(--succession-line, #313846);
+  background: var(--succession-panel, #111720);
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.succession-organization-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: end;
+}
+
+.succession-organization-hero > div > span,
+.succession-organization-hierarchy header span,
+.succession-organization-dossier__identity > div > span,
+.succession-organization-state-board > div > span,
+.succession-organization-hierarchy-board header span,
+.succession-organization-dossier__columns header span,
+.succession-organization-personnel-history header span,
+.succession-organization-event-history header span,
+.succession-organization-sources header span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+}
+
+.succession-organization-hero h2,
+.succession-organization-dossier h2,
+.succession-organization-state-board h3 {
+  margin: 7px 0;
+}
+
+.succession-organization-hero p,
+.succession-organization-dossier p {
+  color: var(--succession-muted, #aab3c2);
+}
+
+.succession-organization-hero dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(95px, 1fr));
+  gap: 10px;
+}
+
+.succession-organization-hero dl div,
+.succession-organization-grid dl div,
+.succession-organization-state-board dl div {
+  display: grid;
+  gap: 4px;
+}
+
+.succession-organization-hero dt,
+.succession-organization-grid dt,
+.succession-organization-state-board dt {
+  font-size: 11px;
+  color: var(--succession-muted, #aab3c2);
+}
+
+.succession-organization-hero dd {
+  margin: 0;
+  font-size: 24px;
+}
+
+.succession-organization-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(170px, 240px) minmax(170px, 240px);
+  gap: 14px;
+}
+
+.succession-organization-filters label {
+  display: grid;
+  gap: 7px;
+}
+
+.succession-organization-filters label:first-child {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+}
+
+.succession-organization-filters input,
+.succession-organization-filters select,
+.succession-organization-chapter input {
+  width: 100%;
+  border: 1px solid var(--succession-line, #313846);
+  background: var(--succession-surface, #0c1118);
+  color: inherit;
+  border-radius: 10px;
+  padding: 11px;
+}
+
+.succession-organization-coverage {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.succession-organization-coverage article {
+  display: grid;
+  gap: 5px;
+  border: 1px solid var(--succession-line, #313846);
+  background: var(--succession-surface, #0c1118);
+  border-radius: 13px;
+  padding: 12px;
+}
+
+.succession-organization-coverage span,
+.succession-organization-coverage small,
+.succession-organization-grid > article > span,
+.succession-organization-personnel-history article > span {
+  font-size: 11px;
+  color: var(--succession-muted, #aab3c2);
+}
+
+.succession-organization-hierarchy > header,
+.succession-organization-hierarchy-board > header,
+.succession-organization-dossier__columns header,
+.succession-organization-personnel-history > header,
+.succession-organization-event-history > header,
+.succession-organization-sources > header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.succession-organization-hierarchy h3,
+.succession-organization-hierarchy-board h3,
+.succession-organization-dossier__columns h3,
+.succession-organization-personnel-history h3,
+.succession-organization-event-history h3,
+.succession-organization-sources h3 {
+  margin: 3px 0 0;
+}
+
+.succession-organization-hierarchy > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+}
+
+.succession-organization-hierarchy article {
+  display: grid;
+  gap: 9px;
+  border: 1px solid var(--succession-line, #313846);
+  background: var(--succession-surface, #0c1118);
+  border-radius: 14px;
+  padding: 10px;
+}
+
+.succession-organization-hierarchy article > button {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.succession-organization-hierarchy article > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.succession-organization-hierarchy article > div button {
+  border: 1px solid var(--succession-line, #313846);
+  background: transparent;
+  color: inherit;
+  border-radius: 9px;
+  padding: 7px 9px;
+  cursor: pointer;
+}
+
+.succession-organization-hierarchy small {
+  display: block;
+  font-size: 11px;
+  color: var(--succession-muted, #aab3c2);
+}
+
+.succession-organization-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 14px;
+}
+
+.succession-organization-grid > article {
+  display: grid;
+  align-content: start;
+  gap: 11px;
+}
+
+.succession-organization-grid > article > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.succession-organization-grid h3 {
+  margin: 0;
+}
+
+.succession-organization-grid dl,
+.succession-organization-state-board dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.succession-organization-grid dd,
+.succession-organization-state-board dd {
+  margin: 0;
+}
+
+.succession-organization-grid > article > button,
+.succession-organization-back,
+.succession-organization-dossier__footer button,
+.succession-organization-personnel-history .succession-organization-entity {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid var(--succession-line, #313846);
+  background: transparent;
+  color: inherit;
+  border-radius: 10px;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.succession-organization-dossier__header {
+  display: grid;
+  gap: 16px;
+}
+
+.succession-organization-back {
+  width: max-content;
+}
+
+.succession-organization-dossier__identity {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.succession-organization-chapter {
+  display: grid;
+  grid-template-columns: auto 110px;
+  align-items: center;
+  gap: 12px;
+  width: max-content;
+}
+
+.succession-organization-state-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.9fr);
+  gap: 20px;
+}
+
+.succession-organization-hierarchy-board > div,
+.succession-organization-dossier__columns section > div,
+.succession-organization-event-history > div {
+  display: grid;
+  gap: 8px;
+}
+
+.succession-organization-entity {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  text-align: left;
+  border: 1px solid var(--succession-line, #313846);
+  background: var(--succession-surface, #0c1118);
+  color: inherit;
+  border-radius: 12px;
+  padding: 9px;
+  cursor: pointer;
+}
+
+.succession-organization-entity span {
+  display: grid;
+  gap: 3px;
+}
+
+.succession-organization-entity small {
+  font-size: 11px;
+  color: var(--succession-muted, #aab3c2);
+}
+
+.succession-organization-dossier__columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.succession-organization-dossier__columns > section {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.succession-organization-dossier__columns ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.succession-organization-dossier__columns li + li {
+  margin-top: 8px;
+}
+
+.succession-organization-personnel-history > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.succession-organization-personnel-history article {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  border-left: 3px solid var(--succession-line, #313846);
+  background: var(--succession-surface, #0c1118);
+  border-radius: 0 12px 12px 0;
+  padding: 12px;
+}
+
+.succession-organization-personnel-history h4 {
+  margin: 0;
+}
+
+.succession-organization-sources {
+  display: grid;
+  gap: 10px;
+}
+
+.succession-organization-dossier__footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.succession-organization-dossier__footer button:first-child {
+  justify-content: flex-start;
+}
+
+.succession-organization-dossier__footer button:last-child {
+  justify-content: flex-end;
+}
+
+.succession-organization-dossier__footer button span {
+  display: grid;
+  text-align: left;
+}
+
+.succession-organization-dossier__footer button:last-child span {
+  text-align: right;
+}
+
+.succession-organization-dossier__footer small {
+  font-size: 11px;
+  color: var(--succession-muted, #aab3c2);
+}
+
+@media (max-width: 940px) {
+  .succession-organization-hero,
+  .succession-organization-state-board {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-organization-filters,
+  .succession-organization-dossier__columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .succession-organization-dossier__identity,
+  .succession-organization-grid dl,
+  .succession-organization-state-board dl {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-organization-hero dl {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .succession-organization-chapter {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+
+  .succession-organization-dossier__footer {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-organization-workspace *,
+  .succession-organization-dossier * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
