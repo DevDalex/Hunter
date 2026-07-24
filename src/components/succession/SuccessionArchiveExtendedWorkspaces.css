@@ -1,0 +1,882 @@
+.succession-characters-workspace,
+.succession-hunters-workspace,
+.succession-military-workspace,
+.succession-organizations-workspace,
+.succession-politics-workspace,
+.succession-locations-workspace,
+.succession-research-workspace,
+.succession-glossary-workspace,
+.succession-media-workspace,
+.succession-domain-dossier,
+.succession-chapter-records--extended {
+  display: grid;
+  gap: 26px;
+  min-width: 0;
+}
+
+.succession-extended-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(280px, .55fr);
+  gap: 26px;
+  padding: clamp(24px, 4vw, 44px);
+  border: 1px solid rgba(216, 173, 82, .26);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(216, 173, 82, .14), transparent 35%),
+    linear-gradient(135deg, rgba(117, 22, 38, .22), rgba(15, 19, 26, .97) 52%);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .24);
+}
+
+.succession-extended-hero > div > span,
+.succession-extended-hero h2,
+.succession-extended-hero p,
+.succession-extended-hero dl,
+.succession-extended-hero dt,
+.succession-extended-hero dd {
+  margin: 0;
+}
+
+.succession-extended-hero > div > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e16678;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.succession-extended-hero h2 {
+  max-width: 920px;
+  margin-top: 9px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(32px, 5vw, 58px);
+  line-height: .99;
+}
+
+.succession-extended-hero p {
+  max-width: 840px;
+  margin-top: 15px;
+  color: var(--archive-muted, #adb5c0);
+  line-height: 1.68;
+}
+
+.succession-extended-hero dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-self: end;
+  gap: 10px;
+}
+
+.succession-extended-hero dl > div,
+.succession-domain-dossier__facts > div {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 14px;
+  background: rgba(4, 7, 11, .42);
+}
+
+.succession-extended-hero dt,
+.succession-domain-dossier__facts dt {
+  color: var(--archive-muted, #aeb5c0);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.succession-extended-hero dd,
+.succession-domain-dossier__facts dd {
+  margin-top: 5px;
+  color: #f7f1e6;
+  font-size: clamp(18px, 2.5vw, 28px);
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.succession-extended-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 17px;
+  background: rgba(14, 18, 24, .76);
+}
+
+.succession-extended-tools label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 320px;
+  min-width: 0;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, .11);
+  border-radius: 12px;
+  background: rgba(2, 5, 9, .55);
+}
+
+.succession-extended-tools input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 0;
+  border: 0;
+  outline: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+}
+
+.succession-extended-tools > div {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.succession-extended-tools button,
+.succession-politics-workspace button,
+.succession-locations-workspace button,
+.succession-research-workspace button,
+.succession-domain-dossier button {
+  color: inherit;
+}
+
+.succession-extended-tools > div button {
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .035);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: capitalize;
+}
+
+.succession-extended-tools > div button.is-active {
+  border-color: rgba(224, 91, 109, .65);
+  background: rgba(224, 91, 109, .18);
+  color: #ffe8ec;
+}
+
+.succession-character-ledger {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+.succession-character-ledger > button {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr);
+  grid-template-rows: 1fr auto;
+  gap: 14px;
+  min-height: 250px;
+  padding: 16px;
+  text-align: left;
+  color: inherit;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(25, 30, 39, .96), rgba(10, 13, 18, .96));
+}
+
+.succession-character-ledger > button:hover,
+.succession-character-ledger > button:focus-visible,
+.succession-hunter-missions button:hover,
+.succession-hunter-missions button:focus-visible,
+.succession-organization-tree button:hover,
+.succession-organization-tree button:focus-visible,
+.succession-location-hierarchy button:hover,
+.succession-location-hierarchy button:focus-visible,
+.succession-room-location-board button:hover,
+.succession-room-location-board button:focus-visible {
+  border-color: rgba(216, 173, 82, .52);
+  transform: translateY(-2px);
+}
+
+.succession-character-ledger .succession-entity-visual {
+  width: 82px;
+  height: 108px;
+}
+
+.succession-character-ledger > button > div > span:not(.succession-entity-badge) {
+  display: inline-flex;
+  margin-top: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .06);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.succession-character-ledger h3,
+.succession-character-ledger p,
+.succession-character-ledger footer {
+  margin: 0;
+}
+
+.succession-character-ledger h3 {
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.succession-character-ledger p {
+  margin-top: 8px;
+  color: var(--archive-muted, #aeb5c0);
+  line-height: 1.55;
+}
+
+.succession-character-ledger footer {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+}
+
+.succession-character-ledger footer small,
+.succession-character-ledger footer b {
+  font-size: 11px;
+}
+
+.succession-character-ledger footer b {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: #e7c879;
+}
+
+.succession-hunter-missions,
+.succession-organization-tree,
+.succession-research-grid,
+.succession-domain-dossier__split {
+  display: grid;
+  gap: 18px;
+}
+
+.succession-hunter-missions {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.succession-hunter-missions > section,
+.succession-authority-chain,
+.succession-legal-ledger,
+.succession-military-people,
+.succession-military-operations,
+.succession-expedition-layer,
+.succession-organization-tree > article,
+.succession-political-branches,
+.succession-sponsor-map,
+.succession-political-links,
+.succession-location-hierarchy,
+.succession-room-location-board,
+.succession-route-systems,
+.succession-source-catalogue,
+.succession-evidence-catalogue,
+.succession-mystery-catalogue,
+.succession-domain-dossier__split > section,
+.succession-domain-dossier__relationships,
+.succession-domain-dossier__related,
+.succession-domain-dossier__sources,
+.succession-domain-source,
+.succession-domain-link {
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 18px;
+  background: rgba(13, 17, 23, .84);
+}
+
+.succession-hunter-missions > section > header,
+.succession-authority-chain > header,
+.succession-legal-ledger > header,
+.succession-military-people > header,
+.succession-military-operations > header,
+.succession-expedition-layer > header,
+.succession-political-branches > header,
+.succession-sponsor-map > header,
+.succession-political-links > header,
+.succession-location-hierarchy > header,
+.succession-room-location-board > header,
+.succession-route-systems > header,
+.succession-source-catalogue > header,
+.succession-evidence-catalogue > header,
+.succession-mystery-catalogue > header,
+.succession-domain-dossier section > header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.succession-hunter-missions > section > header {
+  justify-content: space-between;
+  color: #e7c879;
+  font-weight: 900;
+}
+
+.succession-hunter-missions > section > div,
+.succession-military-people > div,
+.succession-organization-tree__leaders,
+.succession-organization-tree__children,
+.succession-domain-dossier section > div,
+.succession-domain-dossier__related > div {
+  display: grid;
+  gap: 10px;
+}
+
+.succession-hunter-missions button,
+.succession-extended-entity,
+.succession-organization-tree__children button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px;
+  text-align: left;
+  color: inherit;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .035);
+}
+
+.succession-hunter-missions h3,
+.succession-hunter-missions p,
+.succession-hunter-missions small,
+.succession-extended-entity b,
+.succession-extended-entity small {
+  margin: 0;
+}
+
+.succession-hunter-missions h3 {
+  font-size: 16px;
+}
+
+.succession-hunter-missions p,
+.succession-extended-entity small {
+  color: var(--archive-muted, #adb5c0);
+}
+
+.succession-hunter-missions p {
+  margin-top: 4px;
+  line-height: 1.45;
+}
+
+.succession-extended-entity span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.succession-authority-chain > div,
+.succession-legal-ledger > div,
+.succession-military-operations > div,
+.succession-expedition-layer > div,
+.succession-political-branches > div,
+.succession-sponsor-map > div,
+.succession-political-links > div,
+.succession-location-hierarchy > div,
+.succession-room-location-board > div,
+.succession-route-systems > div,
+.succession-evidence-catalogue > div,
+.succession-mystery-catalogue > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.succession-authority-chain article,
+.succession-legal-ledger article,
+.succession-military-operations article,
+.succession-expedition-layer article,
+.succession-sponsor-map article,
+.succession-political-links article,
+.succession-route-systems article,
+.succession-evidence-catalogue article,
+.succession-mystery-catalogue article {
+  padding: 15px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.succession-authority-chain h4,
+.succession-authority-chain p,
+.succession-legal-ledger h4,
+.succession-legal-ledger p,
+.succession-military-operations h4,
+.succession-military-operations p,
+.succession-expedition-layer h4,
+.succession-expedition-layer p,
+.succession-sponsor-map h4,
+.succession-sponsor-map p,
+.succession-political-links h4,
+.succession-political-links p,
+.succession-route-systems h4,
+.succession-route-systems p,
+.succession-evidence-catalogue h4,
+.succession-evidence-catalogue p,
+.succession-mystery-catalogue h4,
+.succession-mystery-catalogue p {
+  margin: 0;
+}
+
+.succession-authority-chain h4,
+.succession-legal-ledger h4,
+.succession-military-operations h4,
+.succession-expedition-layer h4,
+.succession-sponsor-map h4,
+.succession-political-links h4,
+.succession-route-systems h4,
+.succession-evidence-catalogue h4,
+.succession-mystery-catalogue h4 {
+  margin-top: 5px;
+  font-size: 17px;
+}
+
+.succession-authority-chain p,
+.succession-legal-ledger p,
+.succession-military-operations p,
+.succession-expedition-layer p,
+.succession-sponsor-map p,
+.succession-political-links p,
+.succession-route-systems p,
+.succession-evidence-catalogue p,
+.succession-mystery-catalogue p {
+  margin-top: 8px;
+  color: var(--archive-muted, #adb5c0);
+  line-height: 1.52;
+}
+
+.succession-organization-tree {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.succession-organization-tree > article > header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.succession-organization-tree h3,
+.succession-organization-tree p {
+  margin: 0;
+}
+
+.succession-organization-tree p {
+  margin-top: 6px;
+  color: var(--archive-muted, #adb5c0);
+  line-height: 1.5;
+}
+
+.succession-organization-tree > article > dl {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.succession-organization-tree > article > dl > div {
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .04);
+}
+
+.succession-organization-tree dt,
+.succession-organization-tree dd {
+  margin: 0;
+}
+
+.succession-organization-tree dt {
+  color: var(--archive-muted, #adb5c0);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.succession-organization-tree dd {
+  margin-top: 4px;
+  font-weight: 900;
+}
+
+.succession-political-branches button,
+.succession-location-hierarchy button,
+.succession-room-location-board button {
+  padding: 15px;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.succession-political-branches h4,
+.succession-political-branches p,
+.succession-location-hierarchy h4,
+.succession-location-hierarchy p,
+.succession-room-location-board h4,
+.succession-room-location-board p {
+  margin: 0;
+}
+
+.succession-political-branches p,
+.succession-location-hierarchy p,
+.succession-room-location-board p {
+  margin-top: 6px;
+  color: var(--archive-muted, #adb5c0);
+  line-height: 1.48;
+}
+
+.succession-room-location-board button {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+}
+
+.succession-room-location-board button > i {
+  grid-column: 1 / -1;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 850;
+}
+
+.succession-research-grid {
+  grid-template-columns: minmax(0, 1.3fr) minmax(300px, .7fr);
+}
+
+.succession-research-grid > aside {
+  display: grid;
+  gap: 18px;
+  align-content: start;
+}
+
+.succession-source-catalogue > div {
+  display: grid;
+  gap: 10px;
+  max-height: 1050px;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.succession-source-catalogue article {
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, .08);
+  border-radius: 13px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.succession-source-catalogue h4,
+.succession-source-catalogue p,
+.succession-source-catalogue footer {
+  margin: 0;
+}
+
+.succession-source-catalogue p {
+  margin-top: 6px;
+  color: var(--archive-muted, #adb5c0);
+  line-height: 1.48;
+}
+
+.succession-source-catalogue footer {
+  display: flex;
+  gap: 9px;
+  margin-top: 10px;
+}
+
+.succession-source-catalogue footer button,
+.succession-source-catalogue footer a,
+.succession-media-grid footer button,
+.succession-media-grid footer a,
+.succession-domain-source a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 9px;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 9px;
+  color: inherit;
+  background: rgba(255, 255, 255, .04);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.succession-glossary-list,
+.succession-media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 13px;
+}
+
+.succession-glossary-list article {
+  min-height: 170px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(24, 29, 38, .92), rgba(10, 13, 18, .92));
+}
+
+.succession-glossary-list h3,
+.succession-glossary-list p {
+  margin: 0;
+}
+
+.succession-glossary-list h3 {
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+.succession-glossary-list p {
+  margin-top: 8px;
+  color: var(--archive-muted, #adb5c0);
+  line-height: 1.6;
+}
+
+.succession-media-grid article {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .09);
+  border-radius: 17px;
+  background: rgba(13, 17, 23, .88);
+}
+
+.succession-media-grid article > img,
+.succession-media-grid article > .safe-image-placeholder {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: rgba(0, 0, 0, .3);
+}
+
+.succession-media-grid article > div {
+  padding: 14px;
+}
+
+.succession-media-grid h3,
+.succession-media-grid footer {
+  margin: 0;
+}
+
+.succession-media-grid h3 {
+  margin-top: 5px;
+}
+
+.succession-media-grid footer {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.succession-domain-dossier__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.succession-domain-dossier__facts dd {
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.succession-domain-dossier__split {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.succession-domain-dossier section h3,
+.succession-domain-dossier section h4,
+.succession-domain-dossier section p,
+.succession-domain-dossier section dl {
+  margin: 0;
+}
+
+.succession-domain-dossier section p,
+.succession-domain-dossier section dd,
+.succession-domain-dossier section li {
+  color: var(--archive-muted, #adb5c0);
+  line-height: 1.55;
+}
+
+.succession-domain-dossier section dl {
+  display: grid;
+  gap: 10px;
+}
+
+.succession-domain-dossier section dl > div,
+.succession-domain-dossier section article {
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .025);
+}
+
+.succession-domain-dossier section dt,
+.succession-domain-dossier section dd {
+  margin: 0;
+}
+
+.succession-domain-dossier section dt {
+  color: #e7c879;
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.succession-domain-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.succession-domain-dossier__related > div {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.succession-domain-dossier__relationships > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
+}
+
+.succession-domain-dossier__sources {
+  display: grid;
+  gap: 10px;
+}
+
+.succession-chapter-records--extended .succession-extended-hero {
+  margin-bottom: 0;
+}
+
+.is-dead { color: #ff8897; }
+.is-unknown { color: #d0b77a; }
+.is-exceptional { color: #bca8ff; }
+.is-active { color: #9ed7b1; }
+
+@media (max-width: 1040px) {
+  .succession-extended-hero,
+  .succession-research-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-extended-hero dl {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .succession-hunter-missions,
+  .succession-domain-dossier__split {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-organization-tree {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-domain-link {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-domain-link > svg {
+    transform: rotate(90deg);
+    justify-self: center;
+  }
+}
+
+@media (max-width: 620px) {
+  .succession-characters-workspace,
+  .succession-hunters-workspace,
+  .succession-military-workspace,
+  .succession-organizations-workspace,
+  .succession-politics-workspace,
+  .succession-locations-workspace,
+  .succession-research-workspace,
+  .succession-glossary-workspace,
+  .succession-media-workspace,
+  .succession-domain-dossier,
+  .succession-chapter-records--extended {
+    gap: 18px;
+  }
+
+  .succession-extended-hero {
+    padding: 21px;
+    border-radius: 18px;
+  }
+
+  .succession-extended-hero h2 {
+    font-size: clamp(29px, 11vw, 44px);
+  }
+
+  .succession-extended-hero dl {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-extended-tools {
+    align-items: stretch;
+  }
+
+  .succession-extended-tools > div {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 3px;
+  }
+
+  .succession-extended-tools > div button {
+    flex: 0 0 auto;
+  }
+
+  .succession-character-ledger,
+  .succession-glossary-list,
+  .succession-media-grid,
+  .succession-authority-chain > div,
+  .succession-legal-ledger > div,
+  .succession-military-operations > div,
+  .succession-expedition-layer > div,
+  .succession-political-branches > div,
+  .succession-sponsor-map > div,
+  .succession-political-links > div,
+  .succession-location-hierarchy > div,
+  .succession-room-location-board > div,
+  .succession-route-systems > div,
+  .succession-evidence-catalogue > div,
+  .succession-mystery-catalogue > div {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-character-ledger > button {
+    grid-template-columns: 68px minmax(0, 1fr);
+    min-height: 0;
+  }
+
+  .succession-character-ledger .succession-entity-visual {
+    width: 68px;
+    height: 88px;
+  }
+
+  .succession-organization-tree > article > header {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .succession-organization-tree > article > header > button {
+    grid-column: 1 / -1;
+  }
+
+  .succession-organization-tree > article > dl {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-domain-dossier__facts {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-character-ledger > button,
+  .succession-hunter-missions button,
+  .succession-organization-tree button,
+  .succession-location-hierarchy button,
+  .succession-room-location-board button {
+    transition: none;
+  }
+}
