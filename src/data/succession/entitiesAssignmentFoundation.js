@@ -3,6 +3,9 @@ import { assignmentFoundationExpansion } from './assignmentFoundationExpansion.j
 
 const ARCHIVE_DATE = '2026-07-24';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
+const eventIdAliases = Object.freeze({
+  'event:camilla-have-not-network-disclosure': 'event:camilla-curse-network-disclosure',
+});
 
 const assignmentEnrichment = Object.freeze({
   'assignment:kurapika-protects-woble': Object.freeze({
@@ -82,12 +85,14 @@ const assignmentEnrichment = Object.freeze({
 
 const normalizeAssignment = (assignment) => {
   const enrichment = assignmentEnrichment[assignment.id] || {};
+  const relatedEventIds = (assignment.relatedEventIds || enrichment.relatedEventIds || [])
+    .map((eventId) => eventIdAliases[eventId] || eventId);
   return Object.freeze({
     ...assignment,
     objective: assignment.objective || enrichment.objective || assignment.summary,
     authorityBasis: assignment.authorityBasis || enrichment.authorityBasis || 'Household, military, Justice, or contracted authority documented in the voyage record.',
     operationalNotes: Object.freeze([...(assignment.operationalNotes || enrichment.operationalNotes || [])]),
-    relatedEventIds: Object.freeze([...(assignment.relatedEventIds || enrichment.relatedEventIds || [])]),
+    relatedEventIds: Object.freeze([...new Set(relatedEventIds)]),
     supersedesAssignmentId: assignment.supersedesAssignmentId || enrichment.supersedesAssignmentId || null,
     replacedByAssignmentId: assignment.replacedByAssignmentId || enrichment.replacedByAssignmentId || null,
     certainty: assignment.certainty || enrichment.certainty || 'confirmed',
