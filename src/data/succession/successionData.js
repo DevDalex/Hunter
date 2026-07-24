@@ -1,34 +1,28 @@
-import { successionArchiveData } from './entitiesOrganizationFoundation.js';
+import { successionArchiveData } from './entitiesNenSystemFoundation.js';
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { createCharacterStateSelectors } from './characterStateSelectors.js';
 import { createOrganizationStateSelectors } from './organizationStateSelectors.js';
 import { createPeopleInstitutionClosure } from './peopleInstitutionClosure.js';
+import { createNenSystemSelectors } from './nenSystemSelectors.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
 export const successionArchiveIndexes = buildSuccessionIndexes(successionArchiveData);
 export const successionArchive = createSuccessionSelectors(successionArchiveData, successionArchiveIndexes);
-export const successionCharacterStates = createCharacterStateSelectors({
-  data: successionArchiveData,
-  archive: successionArchive,
-});
-export const successionOrganizationStates = createOrganizationStateSelectors({
-  data: successionArchiveData,
-  archive: successionArchive,
-});
+export const successionCharacterStates = createCharacterStateSelectors({ data: successionArchiveData, archive: successionArchive });
+export const successionOrganizationStates = createOrganizationStateSelectors({ data: successionArchiveData, archive: successionArchive });
 export const successionPeopleInstitutionClosure = createPeopleInstitutionClosure({
   data: successionArchiveData,
   archive: successionArchive,
   characterStates: successionCharacterStates,
   organizationStates: successionOrganizationStates,
 });
+export const successionNenSystems = createNenSystemSelectors({ data: successionArchiveData, archive: successionArchive });
 export const successionEvidenceGraph = createSuccessionEvidenceGraph(successionArchiveData);
 
-export {
-  successionArchiveData,
-};
+export { successionArchiveData };
 
 export const {
   getEntityById,
@@ -117,6 +111,20 @@ export const {
   getPeopleInstitutionCoverageGaps,
   getPeopleInstitutionClosureReport,
 } = successionPeopleInstitutionClosure;
+
+export const {
+  getAbilityKnowledgeAtChapter,
+  getAbilitiesKnownAtChapter,
+  getAbilityDossier,
+  getNenSystemProfile,
+  getNenSystemsAtChapter,
+  getNenSystemDossier,
+  getGuardianBeastStateTimeline,
+  getGuardianBeastStateAtChapter,
+  getGuardianBeastDossier,
+  getNenSystemClosureReport,
+  searchNenSystems,
+} = successionNenSystems;
 
 export const searchSuccessionArchive = (query, options = {}) => {
   const limit = Number(options.limit) || 20;
