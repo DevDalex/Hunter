@@ -25,6 +25,7 @@ import {
   QueensWorkspace,
 } from './SuccessionArchiveDeepWorkspaces';
 import AssignmentsWorkspace from './SuccessionArchiveAssignmentWorkspace';
+import EvidenceWorkspace from './SuccessionArchiveEvidenceWorkspace';
 import EventsWorkspace from './SuccessionArchiveEventWorkspace';
 import LocationsWorkspace from './SuccessionArchiveLocationWorkspace';
 import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';
@@ -38,7 +39,6 @@ import {
   MilitaryWorkspace,
   OrganizationsWorkspace,
   PoliticsWorkspace,
-  ResearchWorkspace,
 } from './SuccessionArchiveExtendedWorkspaces';
 import {
   ArchiveState,
@@ -233,7 +233,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {!showDomainDetail && route.id === 'deaths' && <BodyStatesWorkspace routeParams={routeParams} onNavigate={navigate} />}
     {!showDomainDetail && route.id === 'relationships' && <RelationshipsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {route.id === 'chapters' && <ChapterRecordsWorkspaceV2 routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {!showDomainDetail && route.id === 'research' && <ResearchWorkspace onNavigate={navigate} />}
+    {!showDomainDetail && route.id === 'research' && <EvidenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {!showDomainDetail && route.id === 'glossary' && <GlossaryWorkspace />}
     {!showDomainDetail && route.id === 'media' && <MediaWorkspace onNavigate={navigate} />}
     {preserved && <PreservedWorkspace routeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
