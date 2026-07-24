@@ -1,14 +1,19 @@
-import { successionArchiveData } from './entitiesCharacterFoundation.js';
+import { successionArchiveData } from './entitiesOrganizationFoundation.js';
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { createCharacterStateSelectors } from './characterStateSelectors.js';
+import { createOrganizationStateSelectors } from './organizationStateSelectors.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
 export const successionArchiveIndexes = buildSuccessionIndexes(successionArchiveData);
 export const successionArchive = createSuccessionSelectors(successionArchiveData, successionArchiveIndexes);
 export const successionCharacterStates = createCharacterStateSelectors({
+  data: successionArchiveData,
+  archive: successionArchive,
+});
+export const successionOrganizationStates = createOrganizationStateSelectors({
   data: successionArchiveData,
   archive: successionArchive,
 });
@@ -85,13 +90,28 @@ export const {
   searchCharactersByState,
 } = successionCharacterStates;
 
+export const {
+  getOrganizationStateTimeline,
+  getOrganizationStateAtChapter,
+  getOrganizationCurrentState,
+  getOrganizationPersonnelTimeline,
+  getOrganizationPersonnelAtChapter,
+  getOrganizationHierarchy,
+  getOrganizationDossier,
+  getOrganizationsWithStateProfiles,
+  getOrganizationStateCoverageReport,
+  searchOrganizationsByState,
+} = successionOrganizationStates;
+
 export const searchSuccessionArchive = (query, options = {}) => {
   const limit = Number(options.limit) || 20;
   const baseResults = successionArchive.search(query, { ...options, limit });
   const allowCharacters = !options.types || options.types.includes('character');
+  const allowOrganizations = !options.types || options.types.includes('organization');
   const stateResults = allowCharacters ? searchCharactersByState(query, { limit }) : [];
+  const organizationResults = allowOrganizations ? searchOrganizationsByState(query, { limit }) : [];
   const merged = new Map();
-  for (const result of [...baseResults, ...stateResults]) {
+  for (const result of [...baseResults, ...stateResults, ...organizationResults]) {
     const current = merged.get(result.entity.id);
     if (!current || result.score > current.score) merged.set(result.entity.id, result);
   }
