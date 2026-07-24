@@ -99,9 +99,13 @@ try {
   assert(typeof archive.getFoundationClosureReport === 'function', 'evidence closure selectors must remain public');
   assert(typeof archive.getCharacterStateAtChapter === 'function', 'character state selectors must remain public');
   assert(typeof archive.getCharacterDossier === 'function', 'character dossier selector must remain public');
-  assert(archive.getCharactersWithStateProfiles().length >= 10, 'Batch 2 must retain explicit state profiles for the high-value cast');
+  assert(typeof archive.getCharacterRoleProfile === 'function', 'role-specific character layers must remain public');
+  assert(typeof archive.getCharacterLifetimeTimeline === 'function', 'lifetime character chronology must remain public');
+  assert(typeof archive.getCharacterStateCoverageReport === 'function', 'character state coverage reporting must remain public');
+  assert(archive.getCharactersWithStateProfiles().length >= 28, 'Batch 2.2 must retain expanded explicit state profiles');
+  assert(archive.getCharacterStateCoverageReport().explicitCharacters >= 28, 'Batch 2.2 coverage report must retain expanded profiles');
 
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits avoid transient foundation imports, route membership is order-independent, aggregate failure collection is active, and the canonical runtime exposes every Batch 1 graph layer plus the Batch 2 character state foundation.`);
+  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits avoid transient foundation imports, route membership is order-independent, aggregate failure collection is active, and the canonical runtime exposes every Batch 1 graph layer plus Batch 2.2 role-aware character dossiers and lifetime chronology.`);
 } finally {
   await vite.close();
 }
