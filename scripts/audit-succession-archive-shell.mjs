@@ -25,18 +25,29 @@ for (const id of [
   'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'research', 'glossary', 'media', 'search',
 ]) assert(successionArchiveRouteIds.has(id), `missing primary route ${id}`);
 
-const [app, entry, shell, workspace, primitives, entities, router, preload, css, contrast, catalogue, main, packageJson] = await Promise.all([
+for (const id of ['glossary', 'media']) {
+  assert(successionArchiveRoutes.find((route) => route.id === id)?.status === 'active', `${id} must be a completed active route`);
+}
+assert(successionArchiveRoutes.find((route) => route.id === 'chapters')?.description.includes('340–414'), 'Chapter Records route must advertise coverage through 414');
+
+const [app, entry, shell, workspace, extendedWorkspace, deepWorkspace, workspaces, primitives, entities, extendedEntities, research, router, preload, css, contrast, catalogue, extendedCss, main, packageJson] = await Promise.all([
   read('src/App.jsx'),
   read('src/components/succession/SuccessionArchiveEntry.jsx'),
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionArchiveApp.jsx'),
+  read('src/components/succession/SuccessionArchiveExtendedWorkspaces.jsx'),
+  read('src/components/succession/SuccessionArchiveDeepWorkspaces.jsx'),
+  read('src/components/succession/SuccessionArchiveWorkspaces.jsx'),
   read('src/components/succession/SuccessionArchivePrimitives.jsx'),
   read('src/data/succession/entities.js'),
+  read('src/data/succession/entitiesExtended.js'),
+  read('src/data/succession/successionResearch.js'),
   read('src/lib/appRouter.js'),
   read('src/lib/routePreload.js'),
   read('src/styles/succession-archive.css'),
   read('src/components/succession/SuccessionArchiveContrast.css'),
   read('src/components/succession/SuccessionArchiveCatalog.css'),
+  read('src/components/succession/SuccessionArchiveExtendedWorkspaces.css'),
   read('src/main.jsx'),
   read('package.json'),
 ]);
@@ -58,10 +69,27 @@ assert(workspace.includes("const preserved = ['black-whale', 'timeline', 'nen']"
 assert(workspace.includes('canonLevel') && workspace.includes('SourceReference'), 'canon separation and source references must be visible in entity workspaces');
 assert(workspace.includes('SuccessionChapterReader') === false, 'the archive application must not embed the manga reader');
 
+for (const component of [
+  'CharactersWorkspace', 'HuntersWorkspace', 'MilitaryWorkspace', 'OrganizationsWorkspace', 'PoliticsWorkspace',
+  'LocationsWorkspace', 'ResearchWorkspace', 'GlossaryWorkspace', 'MediaWorkspace', 'DomainEntityDetail', 'ChapterRecordsWorkspaceV2',
+]) assert(extendedWorkspace.includes(`export function ${component}`), `missing completed workspace ${component}`);
+for (const component of ['QueensWorkspace', 'BodyguardsWorkspace', 'GuardianBeastsWorkspace', 'EventsWorkspace', 'BodyStatesWorkspace', 'RelationshipsWorkspace']) {
+  assert(deepWorkspace.includes(`export function ${component}`), `missing deep workspace ${component}`);
+}
+for (const component of ['SuccessionStoryWorkspace', 'PrincesWorkspace', 'MafiaWorkspace']) {
+  assert(workspaces.includes(`export function ${component}`), `missing specialized workspace ${component}`);
+}
+for (const route of ['characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']) {
+  assert(workspace.includes(`route.id === '${route}'`), `route ${route} is not wired into a dedicated workspace`);
+}
+assert(workspace.includes('DomainEntityDetail') && workspace.includes('selectedEntity'), 'canonical entity links must open domain-specific dossiers');
+
 assert(entities.includes('successionRosterGroups') && entities.includes('princeDossiers') && entities.includes('queenDossiers'), 'canonical catalogue must derive from maintained roster and royal records');
 assert(entities.includes('excludedName') && entities.includes('groupsByCharacter'), 'canonical catalogue must filter placeholders and deduplicate names');
 assert(entities.includes("organizationType: 'mafia-family'") && entities.includes("organizationType: 'military'"), 'mafia and military organization records are required');
 assert(entities.includes('dossierGuardianBeasts.map') && entities.includes('successionChapterResearch.map'), 'Guardian Spirit Beasts and chapter records must be generated from maintained sources');
+assert(extendedEntities.includes('source:chapter-414') && extendedEntities.includes('chapter:414'), 'canonical archive overlay must include Chapter 414 and its source');
+assert(research.includes('LATEST_SUCCESSION_RESEARCH_CHAPTER = 414') && research.includes('detailed research pending verified chapter documentation'), 'Chapter 414 must exist without unsupported scene claims');
 
 assert(router.includes("'/story/succession-contest/chapters'"), 'legacy reader URL must remain authoritative');
 assert(router.includes("nextTarget === 'reader'"), 'new reader navigation must resolve to the existing reader');
@@ -71,6 +99,7 @@ assert(entry.includes("../../styles/succession-archive.css") && entry.includes('
 assert(!main.includes("./styles/succession-archive.css"), 'the scoped archive stylesheet must not alter the locked global CSS import order');
 assert(contrast.includes('font-size: 11px !important'), 'archive readability overrides must preserve the 11px text floor');
 assert(catalogue.includes('.succession-entity-visual') && catalogue.includes('data-has-visual'), 'catalogue design must provide portrait and fallback visual frames');
+assert(extendedCss.includes('.succession-extended-hero') && extendedCss.includes('.succession-domain-dossier') && extendedCss.includes('@media (max-width: 620px)'), 'extended workspaces require owned desktop and mobile design');
 
 for (const selector of ['.succession-archive__layout', '.succession-archive__sidebar', '.succession-page-header', '.succession-entity-link', '.succession-state', '.succession-drawer']) {
   assert(css.includes(selector), `design layer is missing ${selector}`);
@@ -80,4 +109,4 @@ assert(catalogue.includes('@media (max-width: 620px)'), 'catalogue visuals must 
 assert(css.includes(':focus-visible'), 'accessible focus styling is required');
 assert(packageJson.includes('"audit:succession-shell"') && packageJson.includes('"qa:succession-shell"'), 'package scripts must expose archive audit and browser QA');
 
-console.log(`Succession Archive shell audit passed: ${successionArchiveRoutes.length} routes, canonical roster generation, deduplicated people directories, visual fallbacks, preserved reader routing, scoped design ownership, desktop/mobile shells, and accessibility states verified.`);
+console.log(`Succession Archive shell audit passed: ${successionArchiveRoutes.length} active routes, dedicated subject workspaces, type-aware dossiers, Chapter 414 research, glossary and media libraries, canonical roster generation, scoped design ownership, desktop/mobile shells, and accessibility states verified.`);
