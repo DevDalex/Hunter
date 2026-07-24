@@ -16,7 +16,7 @@ const [workspace, styles, app, dataEntry, expansion, selectors] = await Promise.
 
 assert(app.includes("import LocationsWorkspace from './SuccessionArchiveLocationWorkspace';"), 'app must load the dedicated canonical location workspace');
 assert(!app.includes('  LocationsWorkspace,\n  MediaWorkspace,'), 'app must not import the legacy location workspace from extended workspaces');
-assert(app.includes("['princes', 'queens', 'chapters', 'locations']"), 'location entity routes must remain inside the dedicated dossier workspace');
+assert(app.includes("const specializedRecordRoute = ['princes', 'queens', 'chapters', 'locations', 'bodyguards', 'relationships'].includes(route.id);"), 'location entity routes must remain inside the dedicated dossier workspace');
 assert(dataEntry.includes("from './entitiesLocationFoundation.js'"), 'canonical data entry must activate the location foundation');
 assert(expansion.includes('locationFoundationExpansion'), 'location expansion records must be published');
 assert(expansion.includes('locationHistoryExpansion'), 'chapter-bounded occupancy records must be published');
