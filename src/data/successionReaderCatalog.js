@@ -1,5 +1,5 @@
 import { chapterTitles } from './chapterTitles.js';
-import { successionChapterResearch } from './successionDossier.js';
+import { successionChapterResearch } from './succession/successionResearch.js';
 import {
   SUCCESSION_READER_END,
   SUCCESSION_READER_START,
@@ -19,7 +19,7 @@ export const successionReaderPhases = Object.freeze([
   { id: 'heil-ly-war', label: 'Heil-Ly war', range: [391, 400], description: 'The lower-tier conflict expands through Contagion, Room 3101, and the Troupe’s history.' },
   { id: 'alliance-convergence', label: 'Alliances and upper-tier convergence', range: [401, 406], description: 'Moonlight Act, Beyond’s curse network, the funeral operation, and Hisoka move toward Tier 1.' },
   { id: 'martial-law', label: 'Martial law and negotiation', range: [407, 413], description: 'Borksen’s recruitment, the funeral procession, the second Nen class, and martial law advance together.' },
-  { id: 'latest', label: 'Latest chapter', range: [414, 414], description: 'The newest indexed chapter in the local reader manifest.' },
+  { id: 'latest', label: 'Latest chapter', range: [414, 414], description: 'The newest indexed chapter in the local reader manifest and canonical research catalogue.' },
 ]);
 
 const phaseForChapter = (chapter) => successionReaderPhases.find(({ range }) => chapter >= range[0] && chapter <= range[1]) || successionReaderPhases.at(-1);
