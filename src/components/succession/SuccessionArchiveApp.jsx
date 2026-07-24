@@ -17,13 +17,13 @@ import SuccessionArchiveShell from './SuccessionArchiveShell';
 import {
   MafiaWorkspace,
   PrincesWorkspace,
-  SuccessionStoryWorkspace,
 } from './SuccessionArchiveWorkspaces';
 import {
   BodyStatesWorkspace,
   QueensWorkspace,
 } from './SuccessionArchiveDeepWorkspaces';
 import AssignmentsWorkspace from './SuccessionArchiveAssignmentWorkspace';
+import ChapterStoryWorkspace from './SuccessionArchiveChapterStoryWorkspace';
 import CharactersWorkspace from './SuccessionArchiveCharacterWorkspace';
 import EvidenceWorkspace from './SuccessionArchiveEvidenceWorkspace';
 import EventsWorkspace from './SuccessionArchiveEventWorkspace';
@@ -32,8 +32,8 @@ import LocationsWorkspace from './SuccessionArchiveLocationWorkspace';
 import NenWorkspace from './SuccessionArchiveNenWorkspace';
 import OrganizationsWorkspace from './SuccessionArchiveOrganizationWorkspace';
 import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';
+import StoryIntelligenceWorkspace from './SuccessionArchiveStoryIntelligenceWorkspace';
 import {
-  ChapterRecordsWorkspaceV2,
   DomainEntityDetail,
   GlossaryWorkspace,
   HuntersWorkspace,
@@ -218,7 +218,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   };
   const treeView = route.id === 'princes' && routeParams.view === 'tree';
   const preserved = ['black-whale', 'timeline'].includes(route.id);
-  const dedicated = new Set(['princes', 'queens', 'bodyguards', 'mafia', 'nen', 'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']);
+  const dedicated = new Set(['story', 'princes', 'queens', 'bodyguards', 'mafia', 'nen', 'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']);
   const selectedEntity = routeParams.entity ? getEntityById(routeParams.entity) : null;
   const specializedRecordRoute = ['characters', 'princes', 'queens', 'chapters', 'locations', 'bodyguards', 'relationships', 'organizations', 'nen', 'guardian-spirit-beasts'].includes(route.id);
   const showCharacterDossier = Boolean(selectedEntity?.entityType === 'character' && !treeView);
@@ -230,7 +230,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
 
   return <SuccessionArchiveShell activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} onExitArchive={onExitArchive} onOpenSearch={onOpenSearch} onIntent={onIntent}>
     {route.id === 'archive' && <ArchiveHome onNavigate={navigate} />}
-    {route.id === 'story' && <SuccessionStoryWorkspace onNavigate={navigate} />}
+    {route.id === 'story' && <StoryIntelligenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {route.id === 'search' && <SearchWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit} />}
     {treeView && <FamilyTreeWorkspace spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showCharacterDossier && <CharactersWorkspace routeParams={{ ...routeParams, entity: selectedEntity.id }} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
@@ -253,7 +253,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {showRouteWorkspace && route.id === 'events' && <EventsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'deaths' && <BodyStatesWorkspace routeParams={routeParams} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'relationships' && <RelationshipsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'chapters' && <ChapterRecordsWorkspaceV2 routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
+    {showRouteWorkspace && route.id === 'chapters' && <ChapterStoryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'research' && <EvidenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'glossary' && <GlossaryWorkspace />}
     {showRouteWorkspace && route.id === 'media' && <MediaWorkspace onNavigate={navigate} />}
