@@ -3,6 +3,7 @@ import { characterStateProfiles } from './characterStateFoundation.js';
 import { characterStateExpansionProfiles } from './characterStateExpansion.js';
 import { characterStateRoyalExpansionProfiles } from './characterStateRoyalExpansion.js';
 import { characterStateInstitutionExpansionProfiles } from './characterStateInstitutionExpansion.js';
+import { characterStateInstitutionClosureExpansionProfiles } from './characterStateInstitutionClosureExpansion.js';
 import { characterStatusKnowledge } from './characterStatusKnowledge.js';
 
 const characterIds = new Set([
@@ -10,6 +11,7 @@ const characterIds = new Set([
   ...Object.keys(characterStateExpansionProfiles),
   ...Object.keys(characterStateRoyalExpansionProfiles),
   ...Object.keys(characterStateInstitutionExpansionProfiles),
+  ...Object.keys(characterStateInstitutionClosureExpansionProfiles),
 ]);
 
 const mergedCharacterStateProfiles = Object.freeze(Object.fromEntries(
@@ -20,6 +22,7 @@ const mergedCharacterStateProfiles = Object.freeze(Object.fromEntries(
       ...(characterStateExpansionProfiles[characterId] || []),
       ...(characterStateRoyalExpansionProfiles[characterId] || []),
       ...(characterStateInstitutionExpansionProfiles[characterId] || []),
+      ...(characterStateInstitutionClosureExpansionProfiles[characterId] || []),
     ].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id))),
   ]),
 ));
