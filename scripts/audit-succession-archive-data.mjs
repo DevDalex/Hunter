@@ -61,7 +61,7 @@ try {
   const kurapika = getCharacter('kurapika');
   assert(kurapika?.id === 'character:kurapika', 'character slug lookup must resolve Kurapika');
   assert(getCharacter('character:kurapika') === kurapika, 'character ID and slug lookup must resolve the same canonical object');
-  assert(kurapika?.status?.asOfChapter === 414, 'maintained character status boundaries must reach Chapter 414');
+  assert(kurapika?.status?.asOfChapter === latestChapter, `maintained character status boundaries must reach Chapter ${latestChapter}`);
 
   const woble = getCharacter('woble-hui-guo-rou');
   assert(woble?.princeOrder === 14, 'Woble must resolve as the Fourteenth Prince');
