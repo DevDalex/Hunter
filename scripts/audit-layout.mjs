@@ -30,7 +30,7 @@ assert(royalTreeCss.includes('.royal-guard-tree__king-stem') && royalTreeCss.inc
 assert(css.includes('.interactive-ship-map__canvas { position: relative; min-height: 470px; }') && blackWhale.includes('ship-hotspot-layer'), 'the dominant clickable Black Whale canvas is missing');
 assert(css.includes('.entity-record-image img { width: 100%; height: 100%; max-height: 620px; object-fit: contain;') && css.includes('.room-card > figure img { width: 100%; height: 100%; object-fit: contain;'), 'portrait and room media must use uncropped contain framing');
 assert(css.includes('@media (max-width: 900px)') && css.includes('@media (max-width: 640px)') && css.includes('@media (max-width: 420px)'), 'tablet and phone layout boundaries are required');
-assert(royalTreeCss.includes('@media (max-width: 900px)') && royalTreeCss.includes('@media (max-width: 620px)'), 'the royal family visualization needs tablet and phone adaptations');
+assert(royalTreeCss.includes('@media (max-width: 1100px)') && royalTreeCss.includes('@media (max-width: 760px)') && royalTreeCss.includes('@media (max-width: 430px)'), 'the royal family visualization needs desktop-collapse, tablet, and phone adaptations');
 assert(worldAtlas.includes('Map as MapIcon') && worldAtlas.includes('new Map('), 'the World Atlas constructor guard is missing');
 assert(packageJson.includes('"qa:visual"') && packageJson.includes('"qa:architecture"'), 'the repeatable browser and architecture matrix commands are missing');
 
