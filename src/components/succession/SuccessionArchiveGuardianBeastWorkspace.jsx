@@ -12,7 +12,6 @@ import {
   getEntitiesByType,
   getEntityById,
   getGuardianBeastDossier,
-  getGuardianBeastStateAtChapter,
 } from '../../data/succession/successionData';
 import {
   ArchivePageHeader,
@@ -28,7 +27,7 @@ const labelize = (value) => String(value || 'unknown').replaceAll('-', ' ').repl
 const orderValue = (beast) => beast.hostCharacterId === 'character:nasubi-hui-guo-rou' ? 0 : getEntityById(beast.hostCharacterId)?.princeOrder || 99;
 
 function BeastDossier({ dossier, onBack, onNavigate }) {
-  if (!dossier) return <ArchiveState kind="empty" title="Guardian Spirit Beast unavailable" description="No canonical beast dossier is available at this chapter boundary." action={<button type="button" onClick={onBack}>Back to all beasts</button>} />;
+  if (!dossier) return <ArchiveState kind="empty" title="Guardian Spirit Beast unavailable" description="No Guardian Spirit Beast record has been revealed at this chapter boundary." action={<button type="button" onClick={onBack}>Back to all beasts</button>} />;
   const { beast, host, state } = dossier;
   return <article className="succession-gsb-dossier">
     <button type="button" className="succession-gsb-back" onClick={onBack}><ArrowLeft size={15} /> All Guardian Spirit Beasts</button>
@@ -59,8 +58,9 @@ export default function SuccessionArchiveGuardianBeastWorkspace({ routeParams = 
   }, [routeParams.entity, routeParams.focus]);
 
   const records = useMemo(() => getEntitiesByType('guardian-beast')
-    .map((beast) => ({ beast, host: getEntityById(beast.hostCharacterId), state: getGuardianBeastStateAtChapter(beast.id, spoilerLimit) }))
-    .filter((record) => record.state)
+    .map((beast) => getGuardianBeastDossier(beast.id, spoilerLimit))
+    .filter(Boolean)
+    .map((dossier) => ({ beast: dossier.beast, host: dossier.host, state: dossier.state }))
     .sort((left, right) => orderValue(left.beast) - orderValue(right.beast)), [spoilerLimit]);
   const knowledgeGroups = useMemo(() => [...new Set(records.map((record) => record.state.knowledge))].sort(), [records]);
   const visible = useMemo(() => records.filter(({ beast, host, state }) => {
@@ -85,7 +85,7 @@ export default function SuccessionArchiveGuardianBeastWorkspace({ routeParams = 
     />
     <div className="succession-gsb-tools"><label><Search size={16} /><span className="sr-only">Search Guardian Spirit Beasts</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Host, mechanic, state, uncertainty…" /></label><div><button type="button" className={knowledge === 'all' ? 'is-active' : ''} onClick={() => setKnowledge('all')}>All states</button>{knowledgeGroups.map((value) => <button type="button" className={knowledge === value ? 'is-active' : ''} onClick={() => setKnowledge(value)} key={value}>{value}</button>)}</div></div>
     <section className="succession-gsb-grid" aria-label="Guardian Spirit Beast records">{visible.map(({ beast, host, state }) => <button type="button" key={beast.id} className={state.hostState.includes('deceased') || state.knowledge.includes('destroyed') || state.knowledge.includes('inactive') ? 'is-exceptional' : ''} onClick={() => { setSelectedId(beast.id); onNavigate('guardian-spirit-beasts', { entity: beast.id }); }}><div className="succession-gsb-grid__visual"><EntityVisual entity={beast} /><span>{host?.princeOrder ? String(host.princeOrder).padStart(2, '0') : 'K'}</span></div><div><span>{state.knowledge}</span><h2>{host?.name || beast.name}</h2><p>{state.operationalState}</p><dl><div><dt>Known</dt><dd>{state.knownAbilityIds.length}</dd></div><div><dt>Suspected</dt><dd>{state.suspectedAbilityIds.length}</dd></div><div><dt>Unknowns</dt><dd>{state.unresolved.length}</dd></div></dl><footer>Open beast dossier</footer></div></button>)}</section>
-    {!visible.length && <ArchiveState kind="empty" title="No matching Guardian Spirit Beasts" description="Change the search or knowledge-state filter while keeping the chapter boundary." />}
+    {!visible.length && <ArchiveState kind="empty" title="No Guardian Spirit Beast records at this chapter" description="The royal beasts enter the archive with the Seed Urn ritual in Chapter 349. Later mechanics remain hidden until their supporting chapters." />}
     <section className="succession-gsb-boundary"><ShieldAlert size={20} /><div><h3>Host, body, consciousness, and Nen continuation remain separate</h3><p>Kacho’s human-form continuation does not automatically prove her original consciousness survives, while Halkenburg’s original body state does not determine where his consciousness is operating.</p></div></section>
   </div>;
 }
