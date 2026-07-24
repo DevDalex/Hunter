@@ -114,6 +114,9 @@ export const createOrganizationStateSelectors = ({ data, archive }) => {
       ...(relationshipSnapshot?.relationships || []).flatMap((relationship) => relationship.sourceIds || []),
       ...(assignmentSnapshot?.assignments || []).flatMap((assignment) => assignment.sourceIds || []),
     ])];
+    const sources = sourceIds
+      .map((id) => archive.getEntityById(id))
+      .filter((source) => source?.entityType === 'source' && (!source.chapter || source.chapter <= parsedChapter));
     return Object.freeze({
       organization,
       chapter: parsedChapter,
@@ -131,7 +134,7 @@ export const createOrganizationStateSelectors = ({ data, archive }) => {
       activeEvents: Object.freeze(activeEvents),
       eventHistory: Object.freeze(eventHistory),
       relatedEvents: Object.freeze((state?.relatedEventIds || []).map((id) => archive.getEntityById(id)).filter((event) => event?.entityType === 'event')),
-      sources: Object.freeze(sourceIds.map((id) => archive.getEntityById(id)).filter((source) => source?.entityType === 'source')),
+      sources: Object.freeze(sources),
     });
   };
 
