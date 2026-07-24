@@ -90,6 +90,7 @@ for (const beastId of [
   'guardian-beast:momoze', 'guardian-beast:marayam', 'guardian-beast:woble',
 ]) assert(systemFoundation.includes(`'${beastId}'`), `beast state foundation must include ${beastId}`);
 assert(systemSelectors.includes('firstKnownChapter'), 'ability revelation must use source-backed first knowledge');
+assert(systemSelectors.includes('parsedChapter < firstChapter) return null'), 'direct beast dossiers must remain hidden before ritual revelation');
 assert(systemSelectors.includes('stateIntegrityIssues'), 'closure must reject overlapping beast state records');
 assert(nenWorkspace.includes('Abilities, contracts, curses, possession, instruction, and royal ritual'), 'Nen workspace must expose the systems model');
 assert(nenWorkspace.includes('Interpretive boundary'), 'Nen workspace must preserve uncertainty');
@@ -174,6 +175,11 @@ try {
   assert(getAbilityKnowledgeAtChapter('ability:benjamin-guardian-curse-dispersal', 389)?.known, 'Benjamin curse dispersal must appear at Chapter 389');
   const wobleMystery = getAbilityKnowledgeAtChapter('ability:woble-guardian-beast-unrevealed', 413);
   assert(wobleMystery?.known && wobleMystery.knowledgeState === 'existence known; mechanics unrevealed', 'Woble beast mechanics must remain explicitly unrevealed');
+  assert(getGuardianBeastDossier('guardian-beast:woble', 348) === null, 'direct beast dossiers must remain unavailable before the Seed Urn revelation');
+
+  const stealth361 = getAbilityDossier('ability:stealth-dolphin', 361);
+  assert(stealth361?.systems.length === 0, 'an early Stealth Dolphin dossier must not expose systems first documented in Chapter 369');
+  assert(stealth361?.locations.every((location) => location.id === 'location:black-whale:tier-1:room-1014'), 'early ability locations must derive only from events already available');
 
   assert(getGuardianBeastStateAtChapter('guardian-beast:sale-sale', 380)?.knowledge === 'diffusive influence system known', 'Sale-sale beast must remain active at Chapter 380');
   assert(getGuardianBeastStateAtChapter('guardian-beast:sale-sale', 381)?.knowledge === 'destroyed', 'Sale-sale beast must be destroyed at Chapter 381');
@@ -193,9 +199,9 @@ try {
   assert(getNenSystemsAtChapter(378).some((profile) => profile.id === 'nen-system:contagion-progression'), 'Contagion system must appear at Chapter 378');
   assert(getAbilitiesKnownAtChapter(384).every((record) => record.ability.id !== 'ability:parallel-future'), 'ability directory must honor revelation boundaries');
 
-  assert(searchSuccessionArchive('requires the bearer’s death').some(({ entity }) => entity.id === 'ability:have-not-curse' || entity.id === 'ability:beyond-curse-child-network'), 'global search must resolve death-powered curse conditions');
+  assert(searchSuccessionArchive('curse bearer’s death').some(({ entity }) => entity.id === 'ability:have-not-curse'), 'global search must resolve death-powered curse conditions');
   assert(searchSuccessionArchive('ten-second precognitive vision').some(({ entity }) => entity.id === 'ability:parallel-future'), 'global search must resolve ability mechanics');
-  assert(searchNenSystems('body death consciousness continuation').some(({ profile }) => profile.id === 'nen-system:post-mortem-nen' || profile.id === 'nen-system:possession-and-consciousness-transfer'), 'system search must resolve body and consciousness distinctions');
+  assert(searchNenSystems('body death, consciousness continuation').some(({ profile }) => profile.id === 'nen-system:post-mortem-nen'), 'system search must resolve body and consciousness distinctions');
   assert(searchNenSystems('murder points').some(({ profile }) => profile.id === 'nen-system:contagion-progression'), 'system search must resolve Contagion progression');
 
   console.log(`Succession Nen systems audit passed: ${abilities.length} ability dossiers, 15 chapter-bounded Guardian Spirit Beasts, 8 ritual and mechanic systems, canonical routes, revelation timing, uncertainty, source boundaries, search, and closure integrity are wired.`);
