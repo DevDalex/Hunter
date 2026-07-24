@@ -15,6 +15,11 @@ import {
 } from '../../data/succession/archiveRoutes';
 import SuccessionArchiveShell from './SuccessionArchiveShell';
 import {
+  MafiaWorkspace,
+  PrincesWorkspace,
+  SuccessionStoryWorkspace,
+} from './SuccessionArchiveWorkspaces';
+import {
   ArchiveState,
   EntityBadge,
   EntityHeader,
@@ -209,13 +214,16 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const navigate = (target, params = {}) => onNavigate(target, params);
   const treeView = route.id === 'princes' && routeParams.view === 'tree';
   const preserved = ['black-whale', 'timeline', 'nen'].includes(route.id);
+  const dedicated = ['princes', 'mafia'].includes(route.id);
 
   return <SuccessionArchiveShell activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} onExitArchive={onExitArchive} onOpenSearch={onOpenSearch} onIntent={onIntent}>
     {route.id === 'archive' && <ArchiveHome onNavigate={navigate} />}
-    {route.id === 'story' && <StoryWorkspace onNavigate={navigate} />}
+    {route.id === 'story' && <SuccessionStoryWorkspace onNavigate={navigate} />}
     {route.id === 'search' && <SearchWorkspace onNavigate={navigate} />}
     {treeView && <FamilyTreeWorkspace spoilerLimit={spoilerLimit} onNavigate={navigate} />}
+    {route.id === 'princes' && !treeView && <PrincesWorkspace routeParams={routeParams} onNavigate={navigate} />}
+    {route.id === 'mafia' && <MafiaWorkspace routeParams={routeParams} onNavigate={navigate} />}
     {preserved && <PreservedWorkspace routeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {!['archive', 'story', 'search'].includes(route.id) && !treeView && !preserved && <DirectoryWorkspace routeId={route.id} routeParams={routeParams} onNavigate={navigate} />}
+    {!['archive', 'story', 'search'].includes(route.id) && !treeView && !preserved && !dedicated && <DirectoryWorkspace routeId={route.id} routeParams={routeParams} onNavigate={navigate} />}
   </SuccessionArchiveShell>;
 }
