@@ -22,6 +22,7 @@ assert(!app.includes('  RelationshipsWorkspace,'), 'app must not import the lega
 assert(app.includes("['princes', 'queens', 'chapters', 'locations', 'bodyguards', 'relationships']"), 'relationship records must remain inside the specialized route');
 assert(dataEntry.includes("from './entitiesRelationshipFoundation.js'"), 'canonical data entry must activate the relationship foundation');
 assert(foundation.includes('relationshipEnrichment'), 'existing relationships must receive normalized graph metadata');
+assert(foundation.includes('legacyRelationshipAliases'), 'conceptually duplicated legacy edges must be replaced by canonical IDs');
 assert(expansion.includes('relationshipFoundationExpansion'), 'expanded relationship records must be published');
 assert(expansion.includes('benjamin-balsamilco-command'), 'Benjamin and Balsamilco command relationship must be indexed');
 assert(expansion.includes('longhi-kurapika-moonlight-act-treaty'), 'Longhi and Kurapika treaty relationship must be indexed');
@@ -76,6 +77,7 @@ try {
   assert(relationships.every((relationship) => relationship.certainty), 'every relationship must publish certainty');
   assert(relationships.every((relationship) => Array.isArray(relationship.relatedEventIds)), 'every relationship must publish related-event IDs');
   assert(relationships.every((relationship) => Array.isArray(relationship.evidenceNotes)), 'every relationship must publish evidence-note arrays');
+  assert(relationships.every((relationship) => Array.isArray(relationship.legacyIds)), 'every relationship must publish a legacy-ID array');
 
   for (const relationship of relationships) {
     assert(getEntityById(relationship.sourceEntityId), `${relationship.id} references a missing source node`);
@@ -84,6 +86,12 @@ try {
       assert(getEntityById(eventId)?.entityType === 'event', `${relationship.id} references missing event ${eventId}`);
     }
   }
+
+  assert(!getEntityById('relationship:kurapika-bill-partnership'), 'legacy Kurapika–Bill duplicate must not remain a second graph edge');
+  assert(!getEntityById('relationship:benjamin-halkenburg-conflict'), 'legacy Benjamin–Halkenburg duplicate must not remain a second graph edge');
+  assert(!getEntityById('relationship:tserriednich-theta-deception'), 'legacy Theta–Tserriednich duplicate must not remain a second graph edge');
+  const longhiTreaty = getEntityById('relationship:longhi-kurapika-moonlight-act-treaty');
+  assert(longhiTreaty?.legacyIds.includes('relationship:kurapika-longhi-treaty'), 'canonical Longhi treaty must preserve its retired legacy ID');
 
   const commandTypes = new Set(getRelationshipsForType('command').map((relationship) => relationship.id));
   assert(commandTypes.has('relationship:benjamin-balsamilco-command'), 'command index must include Benjamin and Balsamilco');
@@ -122,7 +130,7 @@ try {
   assert(searchSuccessionArchive('Moonlight Act treaty partners').some(({ entity }) => entity.id === 'relationship:longhi-kurapika-moonlight-act-treaty'), 'global search must resolve relationship aliases');
   assert(searchSuccessionArchive('coercive and unstable').some(({ entity }) => entity.id === 'relationship:theta-tserriednich-conflicted-instructor'), 'global search must resolve operational relationship states');
 
-  console.log(`Succession relationship workspace audit passed: ${relationships.length} edges, chapter snapshots, command and deception types, event evidence, directed roles, neighborhoods, search, sources, and responsive presentation are wired.`);
+  console.log(`Succession relationship workspace audit passed: ${relationships.length} deduplicated edges, chapter snapshots, command and deception types, event evidence, directed roles, neighborhoods, search, sources, and responsive presentation are wired.`);
 } finally {
   await vite.close();
 }
