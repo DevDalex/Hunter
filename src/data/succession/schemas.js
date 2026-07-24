@@ -1,4 +1,7 @@
 import {
+  ASSIGNMENT_SECRECY_LEVELS,
+  ASSIGNMENT_STATUSES,
+  ASSIGNMENT_TYPES,
   CANON_LEVEL_VALUES,
   CERTAINTY_LEVELS,
   ENTITY_TYPE_VALUES,
@@ -15,7 +18,7 @@ import {
   SUCCESSION_CHAPTER_RANGE,
 } from './registries.js';
 
-const ID_PATTERN = /^(character|organization|ability|guardian-beast|location|location-history|event|chapter|relationship|source):[a-z0-9][a-z0-9:-]*$/;
+const ID_PATTERN = /^(character|organization|ability|guardian-beast|location|location-history|event|assignment|chapter|relationship|source):[a-z0-9][a-z0-9:-]*$/;
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const isObject = (value) => Boolean(value) && typeof value === 'object' && !Array.isArray(value);
@@ -53,6 +56,10 @@ const validateIdList = (values, label, knownIds, errors) => {
   for (const value of values) {
     if (!knownIds.has(value)) errors.push(`${label} references missing entity ${value}`);
   }
+};
+
+const validateOptionalId = (value, label, knownIds, errors) => {
+  if (value !== null && value !== undefined && !knownIds.has(value)) errors.push(`${label} references missing entity ${value}`);
 };
 
 const validateBaseEntity = (entity, knownIds, errors) => {
@@ -166,6 +173,20 @@ const validateEvent = (entity, knownIds, errors) => {
   validateIdList(entity.consequenceEventIds || [], `${label}.consequenceEventIds`, knownIds, errors);
 };
 
+const validateAssignment = (entity, knownIds, errors) => {
+  const label = entity.id;
+  if (!knownIds.has(entity.personId) || !String(entity.personId).startsWith('character:')) errors.push(`${label}.personId must reference a character`);
+  validateOptionalId(entity.principalEntityId, `${label}.principalEntityId`, knownIds, errors);
+  validateOptionalId(entity.subjectEntityId, `${label}.subjectEntityId`, knownIds, errors);
+  validateOptionalId(entity.locationId, `${label}.locationId`, knownIds, errors);
+  validateOptionalId(entity.allegianceEntityId, `${label}.allegianceEntityId`, knownIds, errors);
+  validateOptionalId(entity.reportingEntityId, `${label}.reportingEntityId`, knownIds, errors);
+  if (!inEnum(entity.assignmentType, ASSIGNMENT_TYPES)) errors.push(`${label}.assignmentType is invalid`);
+  if (!inEnum(entity.status, ASSIGNMENT_STATUSES)) errors.push(`${label}.status is invalid`);
+  if (!inEnum(entity.secrecy, ASSIGNMENT_SECRECY_LEVELS)) errors.push(`${label}.secrecy is invalid`);
+  validateChapterRange(entity.chapterRange, `${label}.chapterRange`, errors);
+};
+
 const validateChapter = (entity, knownIds, errors) => {
   const label = entity.id;
   validateChapterNumber(entity.number, `${label}.number`, errors);
@@ -237,6 +258,7 @@ export const validateSuccessionArchiveData = (data) => {
       case 'location': validateLocation(entity, knownIds, errors); break;
       case 'location-history': validateLocationHistory(entity, knownIds, errors); break;
       case 'event': validateEvent(entity, knownIds, errors); break;
+      case 'assignment': validateAssignment(entity, knownIds, errors); break;
       case 'chapter': validateChapter(entity, knownIds, errors); break;
       case 'relationship': validateRelationship(entity, knownIds, errors); break;
       case 'source': validateSource(entity, errors); break;
@@ -260,7 +282,11 @@ export const validateSuccessionArchiveData = (data) => {
       sources: data.sources?.length || 0,
       characters: data.characters?.length || 0,
       chapters: data.chapters?.length || 0,
+      abilities: data.abilities?.length || 0,
+      locations: data.locations?.length || 0,
       events: data.events?.length || 0,
+      assignments: data.assignments?.length || 0,
+      relationships: data.relationships?.length || 0,
     }),
   });
 };
