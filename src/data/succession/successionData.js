@@ -1,6 +1,7 @@
 import { successionArchiveData } from './entitiesStoryIntelligenceFoundation.js';
 // Active predecessor chain: from './entitiesStoryIntelligenceFoundation.js' to from './entitiesNenSystemFoundation.js' to from './entitiesOrganizationFoundation.js', preserving Batches 2 and 3 beneath Batch 4.
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
+import { createEventKnowledgeSelectors } from './eventKnowledgeSelectors.js';
 import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { createCharacterStateSelectors } from './characterStateSelectors.js';
@@ -22,7 +23,8 @@ export const successionPeopleInstitutionClosure = createPeopleInstitutionClosure
   organizationStates: successionOrganizationStates,
 });
 export const successionNenSystems = createNenSystemSelectors({ data: successionArchiveData, archive: successionArchive });
-export const successionStoryIntelligence = createStoryIntelligenceSelectors({ data: successionArchiveData, archive: successionArchive });
+export const successionEventKnowledge = createEventKnowledgeSelectors({ data: successionArchiveData, archive: successionArchive });
+export const successionStoryIntelligence = createStoryIntelligenceSelectors({ data: successionArchiveData, archive: successionArchive, eventKnowledge: successionEventKnowledge });
 export const successionEvidenceGraph = createSuccessionEvidenceGraph(successionArchiveData);
 
 export { successionArchiveData };
@@ -128,6 +130,11 @@ export const {
   getNenSystemClosureReport,
   searchNenSystems,
 } = successionNenSystems;
+
+export const {
+  getStoryEventKnowledgeAtChapter,
+  getStoryEventsKnownAtChapter,
+} = successionEventKnowledge;
 
 export const {
   getStoryPhaseProfile,
