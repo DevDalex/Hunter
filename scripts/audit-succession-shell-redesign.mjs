@@ -39,6 +39,8 @@ for (const requiredSelector of [
   '.succession-archive__sidebar-inner',
   '.succession-archive__workspace',
   '.succession-archive__workspace-frame',
+  '.succession-archive__content > *',
+  ".succession-archive[data-archive-route='timeline'] .timeline-workspace",
   '.succession-archive__mobile-bar',
   '.succession-drawer',
 ]) assert(shellCss.includes(requiredSelector), `shell CSS is missing ${requiredSelector}`);
@@ -46,6 +48,9 @@ for (const requiredSelector of [
 assert(shellCss.includes('grid-template-columns: var(--succession-sidebar-width) minmax(0, 1fr)'), 'desktop shell must use the shared sidebar-width token');
 assert(shellCss.includes('position: sticky') && shellCss.includes('height: 100dvh'), 'desktop sidebar must remain viewport-sticky');
 assert(shellCss.includes('width: min(100%, var(--succession-content-width))'), 'workspace stage must respect the shared content-width token');
+assert(shellCss.includes('.succession-archive__content > * {\n  min-width: 0;\n  max-width: 100%;'), 'workspace children must not enlarge the shared stage through intrinsic sizing');
+assert(shellCss.includes(".succession-archive[data-archive-route='timeline'] .timeline-workspace") && shellCss.includes('margin-inline: 0'), 'preserved Timeline workspace must be clamped to the shell while keeping its internal rail as scroll owner');
+assert(!shellCss.includes('overflow: clip'), 'the shell must not hide horizontal-layout regressions from browser QA');
 assert(shellCss.includes('@media (max-width: 860px)') && shellCss.includes('@media (max-width: 560px)'), 'tablet/mobile shell breakpoints are required');
 assert(shellCss.includes('min-height: 44px'), 'mobile command controls must retain 44px touch targets');
 assert(shellCss.includes('@media (prefers-reduced-motion: reduce)'), 'shell motion must respect reduced-motion preferences');
@@ -59,6 +64,7 @@ assert(workflow.includes('audit:succession-shell-redesign'), 'visual workflow mu
 assert(workflow.includes("succession-visual-redesign-batch-*"), 'visual workflow must cover stacked Batch branches');
 assert(docs.includes('## Batch 2 — Shell, navigation, and landing experience'), 'design record must include the Batch 2 contract');
 assert(docs.includes('### Hour 15 — Shared shell and layout'), 'design record must document Hour 15');
+assert(docs.includes('Preserved wide-workspace containment'), 'design record must explain the Timeline containment exception');
 
 for (const file of [
   'src/components/succession/SuccessionArchiveShell.jsx',
@@ -66,4 +72,4 @@ for (const file of [
   'scripts/audit-succession-shell-redesign.mjs',
 ]) await access(path.join(root, file));
 
-console.log('Succession shell redesign audit passed: shared desktop shell, sticky dossier sidebar, controlled workspace stage, mobile command bar, modal drawer, skip navigation, semantic tokens, responsive geometry, and reduced-motion behavior verified.');
+console.log('Succession shell redesign audit passed: shared desktop shell, sticky dossier sidebar, controlled workspace stage, preserved wide-workspace containment, mobile command bar, modal drawer, skip navigation, semantic tokens, responsive geometry, and reduced-motion behavior verified.');
