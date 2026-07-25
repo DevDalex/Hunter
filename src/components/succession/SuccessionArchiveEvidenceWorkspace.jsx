@@ -24,6 +24,7 @@ import {
   entityWorkspaceTarget,
 } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveEvidenceWorkspace.css';
+import './SuccessionArchiveReleaseCandidate.css';
 
 const normalize = (value) => String(value || '').trim().toLocaleLowerCase();
 const titleCase = (value) => String(value || '').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
