@@ -16,7 +16,7 @@ const [shell, primitives, spoiler, app, completionCss, searchCss, packageJson, w
   read('src/components/succession/SuccessionArchiveSearch.css'),
   read('package.json'),
   read('.github/workflows/succession-visual-redesign.yml'),
-  read('docs/SUCCESSION-VISUAL-REDESIGN.md'),
+  read('docs/SUCCESSION-VISUAL-REDESIGN-BATCH-2-CLOSURE.md'),
 ]);
 
 for (const token of [
@@ -75,6 +75,6 @@ assert(workflow.includes('audit:succession-batch-2'), 'visual workflow must run 
 for (const hour of ['Hour 18', 'Hour 19', 'Hour 20', 'Hour 21', 'Hour 22', 'Hour 23', 'Hour 24']) {
   assert(docs.includes(hour), `design record must document ${hour}`);
 }
-assert(docs.includes('Batch 2 closure'), 'design record must include the Batch 2 closure gate');
+assert(docs.includes('Batch 2 closure gate'), 'design record must include the Batch 2 closure gate');
 
 console.log('Succession Batch 2 completion audit passed: navigation, tabs, chapter controls, search, landing experience, and responsive closure are registered.');
