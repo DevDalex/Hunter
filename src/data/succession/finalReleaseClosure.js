@@ -43,8 +43,14 @@ export const createFinalReleaseClosure = ({
         nenSystems: Boolean(nen?.closureReady),
         storyIntelligence: Boolean(story?.closureReady),
         searchGlossaryMedia: Boolean(product?.closureReady),
+        routingAndLegacyCleanup: Boolean(product?.closureReady),
+        responsiveAccessibilitySourceContracts: Boolean(product?.closureReady),
+        performanceBuild: 'pending-external-build-result',
+        browserInteractionQa: 'pending-external-run',
+        browserAccessibilityQa: 'pending-external-run',
         cloudflareDeployment: 'pending-external-build-result',
       }),
+      promotionRule: 'A successful production build, browser QA run, and Cloudflare deployment promote release-candidate to closed.',
     });
   };
 
