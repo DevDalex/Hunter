@@ -9,6 +9,7 @@ on:
       - 'src/components/succession/**'
       - 'src/data/succession/**'
       - 'scripts/audit-succession-visual-foundation.mjs'
+      - 'scripts/report-succession-visual-inventory.mjs'
       - 'docs/SUCCESSION-VISUAL-REDESIGN.md'
       - 'package.json'
       - '.github/workflows/succession-visual-redesign.yml'
@@ -42,6 +43,9 @@ jobs:
       - name: Audit visual foundation
         run: npm run audit:succession-visual-foundation
 
+      - name: Report visual inventory
+        run: npm run report:succession-visual-inventory > succession-visual-inventory.md
+
       - name: Audit CSS ownership
         run: npm run audit:css
 
@@ -52,7 +56,30 @@ jobs:
         run: npm run audit:accessibility
 
       - name: Audit Succession runtime
-        run: npm run audit:succession-runtime
+        id: succession-runtime
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run audit:succession-runtime 2>&1 | tee succession-runtime.log
+
+      - name: Publish diagnostic reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-visual-redesign-diagnostics
+          path: |
+            succession-runtime.log
+            succession-visual-inventory.md
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Build production release
+        if: steps.succession-runtime.outcome == 'success'
         run: npm run build
+
+      - name: Enforce Succession runtime result
+        if: steps.succession-runtime.outcome == 'failure'
+        run: |
+          echo 'Succession runtime regression detected. Inspect the uploaded diagnostic artifact.'
+          exit 1
