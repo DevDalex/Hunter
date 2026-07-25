@@ -1,0 +1,33 @@
+@import './SuccessionArchiveGuardianBeastCommandLayout.css';
+@import './SuccessionArchiveGuardianBeastCommandDossier.css';
+
+.succession-gsb-command {
+  --gsb-canvas: var(--succession-surface-inset);
+  --gsb-surface: var(--succession-surface-1);
+  --gsb-raised: var(--succession-surface-2);
+  --gsb-paper: var(--succession-surface-paper-raised);
+  --gsb-paper-muted: var(--succession-surface-paper);
+  --gsb-ink: var(--succession-text-strong);
+  --gsb-muted: var(--succession-text-muted);
+  --gsb-paper-ink: var(--succession-text-on-paper);
+  --gsb-paper-muted-ink: var(--succession-text-on-paper-muted);
+  --gsb-gold: var(--succession-gold-strong);
+  --gsb-crimson: var(--succession-crimson-strong);
+  --gsb-line: var(--succession-border-default);
+  --gsb-line-strong: var(--succession-border-strong);
+  display: grid;
+  gap: clamp(20px, 3vw, 38px);
+  min-width: 0;
+}
+
+.succession-gsb-command h2,
+.succession-gsb-command h3,
+.succession-gsb-command h4,
+.succession-gsb-command p {
+  margin: 0;
+}
+
+.succession-gsb-command p { line-height: 1.65; }
+.succession-gsb-command button,
+.succession-gsb-command input,
+.succession-gsb-command select { min-height: 44px; }
