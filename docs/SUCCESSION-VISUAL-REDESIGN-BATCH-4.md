@@ -4,7 +4,65 @@
 
 Batch 4 redesigns the chapter, Story, event, Nen, Guardian Spirit Beast, location, and Black Whale reference interfaces while preserving canonical data, source provenance, research conclusions, routing, and chapter boundaries.
 
-## Hours 37–40 — Chapter intelligence
+## Task register
+
+### Hour 37 — Chapter directory
+
+Cinematic chapter-intelligence command, metrics, search, phase/research filters, and intelligence-card plus compact-index directory modes.
+
+### Hour 38 — Chapter-page headers
+
+Oversized chapter identity stage, phase progress, Reader and Story actions, research state, and previous/next navigation.
+
+### Hour 39 — Chapter summaries and event sequences
+
+Begins here, Already moving, and State change sequences with chapter, participant, location, and consequence context.
+
+### Hour 40 — Evidence, uncertainty, and spoiler safety
+
+Persistent authorized boundary, evidence board, documentation gaps, unresolved questions, and explicit pending-research treatment.
+
+### Hour 41 — Story overview and narrative phases
+
+Current-snapshot narrative command, phase architecture, metrics, and phase dossiers.
+
+### Hour 42 — Parallel Story lanes
+
+Synchronized chapter-positioned swimlanes with focus controls and accessible mobile alternatives.
+
+### Hour 43 — Story-thread cards
+
+Status-aware evidence records and thread dossiers with categories, chapters, questions, connected records, and sources.
+
+### Hour 44 — Causal links and consequences
+
+Navigable causal river limited to source, relationship, target, and explanation records already published by the Story graph.
+
+### Hour 45 — Event directory
+
+Operational timeline, intelligence-grid, compact-index views, metrics, and existing event facets with active-filter controls.
+
+### Hour 46 — Event pages
+
+Dedicated dossiers with chapter range, cause/action/outcome pipeline, state changes, questions, linked entities, event graph, evidence, and navigation.
+
+### Hour 47 — Nen ability directory and cards
+
+Systems/abilities modes, knowledge and mechanics filters, status-aware records, and six-stage mechanic summaries.
+
+### Hour 48 — Ability dossiers and mechanic explanations
+
+Trigger, range, target, duration, cost, limitation, owners, systems, events, actors, evidence, and interpretive boundaries.
+
+### Hour 49 — Guardian Spirit Beasts, rituals, and systems
+
+Fifteen-position Seed Urn-centered orbit, host/beast browsing, state filters, body/consciousness/Nen separation, knowledge history, ritual links, and evidence.
+
+### Hour 50 — Locations, Black Whale reference, and Batch 4 closure
+
+Canonical spatial command plus premium Black Whale atlas, inspector, bridge precision, sourced gallery, room plan, routes, manifest, directory, and final regression closure.
+
+## Completed chapter intelligence
 
 - Cinematic chapter-intelligence command and chapter metrics.
 - Search across chapters, events, lanes, state changes, and Story pressure.
@@ -15,7 +73,7 @@ Batch 4 redesigns the chapter, Story, event, Nen, Guardian Spirit Beast, locatio
 - Persistent chapter boundary and evidence/uncertainty board.
 - Explicit pending-research treatment for imported but unannotated chapters.
 
-## Hours 41–44 — Story intelligence
+## Completed Story intelligence
 
 - Current-snapshot command hero and phase architecture.
 - Synchronized Story swimlanes across a shared chapter axis.
@@ -24,14 +82,14 @@ Batch 4 redesigns the chapter, Story, event, Nen, Guardian Spirit Beast, locatio
 - Causal river with navigable source event, relationship, target consequence, and explanation.
 - Maintained graph edges only; no inferred relationships are manufactured by presentation code.
 
-## Hours 45–46 — Event intelligence
+## Completed event intelligence
 
 - Event command hero and visible, active, resolved, unresolved, and causal-edge metrics.
 - Existing status, category, faction, location, ability, and chapter filters retained.
 - Operational timeline, intelligence-grid, and compact-index views.
 - Dedicated event dossiers with chapter range, category, state, knowledge, importance, voyage day, evidence, cause/action/outcome pipeline, state changes, questions, linked entities, event graph, sources, and previous/next navigation.
 
-## Hours 47–48 — Nen mechanics laboratory
+## Completed Nen mechanics laboratory
 
 - Systems and abilities retained as distinct archive modes.
 - Knowledge, category, Nen type, owner, and system filtering.
@@ -39,7 +97,7 @@ Batch 4 redesigns the chapter, Story, event, Nen, Guardian Spirit Beast, locatio
 - Six-stage mechanic model: trigger, range, target, duration, cost, and limitation.
 - Dedicated ability and system dossiers with mechanics, owners, connected systems, events, Guardian Spirit Beasts, actors, evidence, and interpretive boundaries.
 
-## Hour 49 — Guardian Spirit Beasts and rituals
+## Completed Guardian Spirit Beast intelligence
 
 - Fifteen-position Seed Urn-centered royal Nen orbit with a complete semantic host index.
 - Host-first and beast-first browsing.
@@ -48,7 +106,7 @@ Batch 4 redesigns the chapter, Story, event, Nen, Guardian Spirit Beast, locatio
 - Dedicated dossiers separating host body, host consciousness, beast activity, and Nen continuation.
 - Ability models, unresolved research records, knowledge timeline, ritual-system links, and evidence.
 
-## Hour 50 — Locations and Black Whale reference
+## Completed spatial reference intelligence
 
 - Canonical spatial command with hierarchy, type, tier, access, and chapter-snapshot filtering.
 - Redesigned location cards and dossiers covering breadcrumbs, contained locations, occupants, assignments, events, abilities, movement history, and sources.
