@@ -64,6 +64,23 @@ Batch 4 redesigns the chapter, Story, event, Nen, Guardian Spirit Beast, locatio
 - Preserve textual relationship labels so meaning does not depend on connectors or color.
 - Limit the presentation to causal edges already exposed by the Story graph.
 
+## Hour 45 — Event directory
+
+- Add a canonical event-command hero and visible event, active, resolved, unresolved, and causal-edge metrics.
+- Keep existing status, category, faction, location, ability, and chapter filters.
+- Add active-filter chips and a one-step reset.
+- Add operational timeline, intelligence-grid, and compact-index views.
+- Show chapter span, state, participants, locations, abilities, consequences, and portrait stacks on event records.
+
+## Hour 46 — Event dossiers
+
+- Add a chapter-range identity stage with category, state, knowledge, importance, voyage day, and evidence context.
+- Add direct Chapter and Story intelligence actions.
+- Add a persistent chapter-boundary notice.
+- Present causes, event action, and available outcomes as a three-part operational pipeline.
+- Preserve state changes, unresolved questions, participants, organizations, locations, Nen abilities, predecessors, consequences, sources, and previous/next event navigation.
+- Keep later outcomes and graph nodes hidden until their supporting chapter is authorized.
+
 ## Presentation constraints
 
 - Use semantic Succession design tokens.
@@ -73,12 +90,14 @@ Batch 4 redesigns the chapter, Story, event, Nen, Guardian Spirit Beast, locatio
 - Provide reduced-motion behavior.
 - Keep the Reader as a separate route.
 - Keep advanced lane and causal visuals paired with ordinary semantic controls.
+- Keep event filters and dossiers projected through the current chapter boundary.
 
 ## Validation
 
 ```bash
 node scripts/audit-succession-batch-4-chapters.mjs
 node scripts/audit-succession-batch-4-story.mjs
+node scripts/audit-succession-batch-4-events.mjs
 npm run audit:succession-visual-foundation
 npm run audit:succession-shell-redesign
 npm run audit:succession-page-header-redesign
@@ -94,12 +113,10 @@ npm run prepare:eta-assets
 npx vite build
 ```
 
-The Batch 4 workflow renders the Chapters and Story workspaces at desktop, tablet, and mobile sizes.
+The Batch 4 workflow renders the Chapters, Story, and Events workspaces at desktop, tablet, and mobile sizes.
 
 ## Remaining work
 
-- Hour 45: Event directory.
-- Hour 46: Event dossiers.
 - Hour 47: Nen ability directory and cards.
 - Hour 48: Ability dossiers and mechanic explanations.
 - Hour 49: Guardian Spirit Beasts and ritual systems.
