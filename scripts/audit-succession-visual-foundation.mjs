@@ -27,8 +27,9 @@ for (const requiredState of ['confirmed', 'inferred', 'uncertain', 'disputed', '
   assert(successionSemanticStates.some((state) => state.id === requiredState), `missing semantic state ${requiredState}`);
 }
 
-const [css, searchCss, preview, previewCss, app, docs, packageJson, inventoryReport] = await Promise.all([
+const [css, bridgeCss, searchCss, preview, previewCss, app, docs, packageJson, inventoryReport] = await Promise.all([
   read('src/components/succession/SuccessionVisualFoundation.css'),
+  read('src/components/succession/SuccessionVisualFoundationBridge.css'),
   read('src/components/succession/SuccessionArchiveSearch.css'),
   read('src/components/succession/SuccessionVisualFoundationPreview.jsx'),
   read('src/components/succession/SuccessionVisualFoundationPreview.css'),
@@ -51,7 +52,11 @@ for (const contract of successionVisualComponentContracts) {
   assert(css.includes(contract.selector), `CSS is missing component selector ${contract.selector}`);
 }
 
-assert(searchCss.trimStart().startsWith("@import './SuccessionVisualFoundation.css';"), 'the visual foundation must load after existing Succession compatibility modules');
+const expectedImports = "@import './SuccessionVisualFoundation.css';\n@import './SuccessionVisualFoundationBridge.css';";
+assert(searchCss.trimStart().startsWith(expectedImports), 'the foundation and compatibility bridge must load after existing Succession compatibility modules');
+assert(bridgeCss.includes('.succession-story-intel') && bridgeCss.includes('.succession-character-workspace'), 'compatibility bridge must cover the Story and Character workspace roots verified by browser QA');
+assert(bridgeCss.includes('--archive-panel: var(--succession-surface-1)') && bridgeCss.includes('--succession-panel: var(--succession-surface-1)'), 'legacy workspace variables must map to semantic foundation tokens');
+assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(bridgeCss), 'the compatibility bridge must not introduce raw hex colors');
 assert(preview.includes('Development-only visual contract preview'), 'preview must remain explicitly development-only');
 assert(preview.includes("import './SuccessionVisualFoundationPreview.css';"), 'preview must load its isolated presentation styles');
 assert(previewCss.includes('.succession-visual-preview') && previewCss.includes('@media (max-width: 620px)'), 'preview CSS must remain scoped and responsive');
@@ -67,10 +72,11 @@ for (const phrase of ['64-hour implementation schedule', 'presentation-only', 'H
 for (const file of [
   'src/data/succession/visualDesignSystem.js',
   'src/components/succession/SuccessionVisualFoundation.css',
+  'src/components/succession/SuccessionVisualFoundationBridge.css',
   'src/components/succession/SuccessionVisualFoundationPreview.jsx',
   'src/components/succession/SuccessionVisualFoundationPreview.css',
   'scripts/report-succession-visual-inventory.mjs',
   'docs/SUCCESSION-VISUAL-REDESIGN.md',
 ]) await access(path.join(root, file));
 
-console.log(`Succession visual foundation audit passed: ${successionVisualPrinciples.length} principles, ${successionVisualTokenGroups.length} token groups, ${successionSemanticStates.length} semantic states, ${successionVisualComponentContracts.length} component contracts, scoped CSS, hidden preview, responsive behavior, reduced motion, inventory reporting, and issue #49 schedule documentation verified.`);
+console.log(`Succession visual foundation audit passed: ${successionVisualPrinciples.length} principles, ${successionVisualTokenGroups.length} token groups, ${successionSemanticStates.length} semantic states, ${successionVisualComponentContracts.length} component contracts, scoped CSS, semantic compatibility bridge, hidden preview, responsive behavior, reduced motion, inventory reporting, and issue #49 schedule documentation verified.`);
