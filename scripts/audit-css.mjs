@@ -36,6 +36,19 @@ const normalize = (value) => value
   .replace(/\s+/g, ' ')
   .trim();
 
+const normalizeSelector = (value) => normalize(value)
+  .replace(/\s*([>+~])\s*/g, '$1')
+  .replace(/\s*([|^$*~]?=)\s*/g, '$1');
+
+assert(
+  normalizeSelector('.example article > span') === normalizeSelector('.example article>span'),
+  'selector normalization must treat combinator whitespace as equivalent',
+);
+assert(
+  normalizeSelector('[data-state = "open"] > span') === normalizeSelector('[data-state="open"]>span'),
+  'selector normalization must treat attribute-operator whitespace as equivalent',
+);
+
 const collectRules = (css, source) => {
   const rules = [];
   const pattern = /([^{}]+)\{([^{}]*)\}/g;
@@ -45,7 +58,7 @@ const collectRules = (css, source) => {
     const body = normalize(match[2]);
     if (!prelude || !body || prelude.startsWith('@')) continue;
     if (/^(from|to|\d+(?:\.\d+)?%)$/.test(prelude)) continue;
-    for (const selector of prelude.split(',').map(normalize).filter(Boolean)) {
+    for (const selector of prelude.split(',').map(normalizeSelector).filter(Boolean)) {
       rules.push({ selector, body, source });
     }
   }
@@ -121,9 +134,9 @@ for (const file of cssFiles.filter((value) => value !== finalPolishPath)) {
     }
   }
 }
-assert(!unresolvedTinyRules.length, `legacy text sizes below 11px lack an exact final-polish override:\n- ${unresolvedTinyRules.join('\n- ')}`);
+assert(!unresolvedTinyRules.length, `legacy text sizes below 11px lack an equivalent final-polish override:\n- ${unresolvedTinyRules.join('\n- ')}`);
 
 const repeatedSelectors = [...selectorCounts.values()].filter((count) => count > 1).length;
 const exactDuplicateRules = [...exactCounts.values()].reduce((total, count) => total + Math.max(0, count - 1), 0);
 
-console.log(`CSS ownership audit passed: ${layerPaths.length} ordered styles.css layers including semantic contrast and Batch 12 archive primitives; ${runtimeExtensionPaths.length} ordered runtime extension layers; ${routePolishPaths.length} route-owned final polish layer(s); ${cssFiles.length} CSS files checked; ${legacyTinyRules.length} legacy sub-11px declarations covered by exact final-polish overrides; ${rules.length} selector rules; ${repeatedSelectors} intentional override selectors; ${exactDuplicateRules} exact duplicate rule occurrence(s) reported for future cleanup.`);
+console.log(`CSS ownership audit passed: ${layerPaths.length} ordered styles.css layers including semantic contrast and Batch 12 archive primitives; ${runtimeExtensionPaths.length} ordered runtime extension layers; ${routePolishPaths.length} route-owned final polish layer(s); ${cssFiles.length} CSS files checked; ${legacyTinyRules.length} legacy sub-11px declarations covered by equivalent final-polish selectors; ${rules.length} selector rules; ${repeatedSelectors} intentional override selectors; ${exactDuplicateRules} exact duplicate rule occurrence(s) reported for future cleanup.`);
