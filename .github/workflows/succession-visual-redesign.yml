@@ -12,8 +12,10 @@ on:
       - 'scripts/audit-succession-shell-redesign.mjs'
       - 'scripts/audit-succession-page-header-redesign.mjs'
       - 'scripts/audit-succession-breadcrumb-redesign.mjs'
+      - 'scripts/audit-succession-batch-2-completion.mjs'
       - 'scripts/report-succession-visual-inventory.mjs'
       - 'docs/SUCCESSION-VISUAL-REDESIGN.md'
+      - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-2-CLOSURE.md'
       - 'package.json'
       - '.github/workflows/succession-visual-redesign.yml'
 
@@ -70,7 +72,7 @@ jobs:
           echo "Main runtime outcome: ${{ steps.baseline_runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
 
   foundation:
-    name: Foundation, shell, header, and breadcrumb visual regression audits
+    name: Batch 2 closure and visual regression audits
     needs: baseline_runtime
     runs-on: ubuntu-latest
     timeout-minutes: 55
@@ -99,6 +101,9 @@ jobs:
 
       - name: Audit breadcrumb redesign
         run: npm run audit:succession-breadcrumb-redesign
+
+      - name: Audit Batch 2 closure
+        run: npm run audit:succession-batch-2
 
       - name: Report visual inventory
         run: npm run report:succession-visual-inventory > succession-visual-inventory.md
