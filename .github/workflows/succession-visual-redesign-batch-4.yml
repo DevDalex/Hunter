@@ -9,8 +9,12 @@ on:
       - 'src/components/succession/SuccessionArchiveChapterStoryWorkspace.jsx'
       - 'src/components/succession/SuccessionArchiveChapterStoryWorkspace.css'
       - 'src/components/succession/SuccessionArchiveChapterCommand.css'
+      - 'src/components/succession/SuccessionArchiveStoryIntelligenceWorkspace.jsx'
+      - 'src/components/succession/SuccessionArchiveStoryIntelligenceWorkspace.css'
+      - 'src/components/succession/SuccessionArchiveStoryCommand.css'
       - 'src/components/succession/SuccessionArchiveContrast.css'
       - 'scripts/audit-succession-batch-4-chapters.mjs'
+      - 'scripts/audit-succession-batch-4-story.mjs'
       - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-4.md'
       - '.github/workflows/succession-visual-redesign-batch-4.yml'
 
@@ -22,10 +26,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  chapter_intelligence:
-    name: Batch 4 chapter intelligence regression gate
+  narrative_intelligence:
+    name: Batch 4 chapter and Story intelligence regression gate
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 55
 
     steps:
       - name: Check out repository
@@ -42,6 +46,9 @@ jobs:
 
       - name: Audit Batch 4 chapter intelligence
         run: node scripts/audit-succession-batch-4-chapters.mjs
+
+      - name: Audit Batch 4 Story intelligence
+        run: node scripts/audit-succession-batch-4-story.mjs
 
       - name: Audit visual foundation
         run: npm run audit:succession-visual-foundation
@@ -97,14 +104,26 @@ jobs:
           set -o pipefail
           npm run qa:visual 2>&1 | tee batch4-chapters-visual.log
 
-      - name: Publish Batch 4 chapter diagnostics
+      - name: Inspect Story workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/story
+          VISUAL_QA_OUTPUT: .visual-qa/succession-story
+          VISUAL_QA_SCREENSHOTS: all
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run qa:visual 2>&1 | tee batch4-story-visual.log
+
+      - name: Publish Batch 4 narrative diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: succession-batch-4-chapter-diagnostics
+          name: succession-batch-4-narrative-diagnostics
           path: |
             batch4-chapters-visual.log
+            batch4-story-visual.log
             .visual-qa/succession-chapters
+            .visual-qa/succession-story
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 14
