@@ -1,5 +1,9 @@
 @import './SuccessionVisualFoundation.css';
 @import './SuccessionVisualFoundationBridge.css';
+@import './SuccessionArchiveShellRedesign.css';
+@import './SuccessionArchivePageHeaderRedesign.css';
+@import './SuccessionArchiveBreadcrumbRedesign.css';
+@import './SuccessionArchiveBatch2Completion.css';
 
 .succession-search-complete {
   display: grid;

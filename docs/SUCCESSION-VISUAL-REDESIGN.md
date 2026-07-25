@@ -155,17 +155,18 @@ The report is diagnostic. High counts identify compatibility debt; they do not j
 
 Rendered screenshot review found that the older Story and Character workspaces inherited dark text variables while using dark card surfaces. Machine overflow and size checks passed, but headings and descriptions remained visually unreadable.
 
-`SuccessionVisualFoundationBridge.css` now maps legacy workspace presentation to the semantic foundation:
+`SuccessionVisualFoundationBridge.css` now maps the legacy workspace variables to the semantic foundation:
 
 - Story uses the new surface, text, border, muted-text, and accent tokens through its existing `--archive-*` aliases.
 - Character pages use the same foundation through their existing `--succession-*` aliases.
-- Research labels previously declared at `.68rem` computed to 10.88px at the current root size. The bridge preserves their compact role while enforcing an exact 11px floor for Research metadata, domain labels, and source-type labels.
 - The bridge contains no raw color literals and does not modify markup, records, routing, search, or layout.
-- These aliases and floor corrections are temporary compatibility infrastructure. They may be removed only when the relevant workspace CSS is fully migrated in its scheduled batch.
+- These aliases are temporary compatibility infrastructure. Their declarations may be removed only when the relevant workspace CSS is fully migrated in its scheduled batch.
+
+The Research workspace also contained three `.68rem` label rules that computed to 10.88px. The bridge enforces an exact 11px floor with selectors specific enough to win naturally in the cascade and without adding `!important`.
 
 ## Rendered visual QA
 
-The dedicated `Succession Visual Redesign` workflow performs a direct Vite presentation build and browser-renders all six public Succession release surfaces:
+The dedicated `Succession Visual Redesign` workflow performs a direct Vite presentation build and browser-renders all public Succession release surfaces:
 
 - Story;
 - Timeline;
@@ -174,15 +175,155 @@ The dedicated `Succession Visual Redesign` workflow performs a direct Vite prese
 - Nen;
 - Research.
 
-Every route is inspected at:
+Each route is rendered at:
 
 - desktop: 1440 × 1000;
 - tablet: 768 × 1024;
 - mobile: 390 × 844.
 
-This produces an 18-render Batch 1 matrix. The browser audit checks runtime errors, request failures, horizontal overflow, uncontained spill, broken or pending images, empty media frames, media/text overlap, text below the 11px floor, and undersized touch controls. Screenshots and JSON reports are retained as workflow artifacts for manual review.
+The browser audit checks runtime errors, request failures, horizontal overflow, uncontained spill, broken or pending images, empty media frames, media/text overlap, text below the 11px floor, and undersized touch controls. The complete matrix contains 18 route/viewport renders. Screenshots and JSON reports are retained as workflow artifacts for manual review.
 
 The repository's existing Succession runtime sweep currently has inherited failures on `main`. The redesign workflow therefore captures the `main` runtime result as a baseline and fails only when the redesign branch introduces a branch-only runtime regression. Existing debt remains visible in diagnostic artifacts and is not silently reclassified as success.
+
+## Batch 2 — Shell, navigation, and landing experience
+
+Batch 2 owns the shared frame through which every Succession workspace is presented. It may reorganize shell markup and presentation, but it must preserve route identity, navigation destinations, spoiler behavior, keyboard behavior, and all workspace children.
+
+### Hour 15 — Shared shell and layout
+
+Owned files:
+
+- `src/components/succession/SuccessionArchiveShell.jsx`
+- `src/components/succession/SuccessionArchiveShellRedesign.css`
+- `src/components/succession/SuccessionArchiveSearch.css`
+- `scripts/audit-succession-shell-redesign.mjs`
+- `.github/workflows/succession-visual-redesign.yml`
+
+Command:
+
+```bash
+npm run audit:succession-shell-redesign
+```
+
+The Hour 15 redesign introduces:
+
+- a two-column desktop archive frame using the shared sidebar-width token;
+- a viewport-sticky dossier sidebar with its own bounded scroll region;
+- a formal archive seal, brand block, desk label, and reading-boundary context;
+- a controlled workspace stage using the shared content-width and responsive gutter tokens;
+- subtle archive registration marks and a vertical document rail;
+- a keyboard-visible skip link targeting the shared workspace content;
+- a sticky mobile command bar with 44px controls;
+- a modal navigation drawer that retains Escape handling and focus trapping;
+- responsive shell collapse at tablet and mobile breakpoints;
+- semantic-token-only styling with no raw hex values or `!important` declarations.
+
+#### Preserved wide-workspace containment
+
+The first browser pass found that the pre-existing global Timeline root participated in CSS Grid intrinsic sizing and enlarged the shared stage on desktop and tablet. Its mobile layout already passed, and its internal horizontal arc rail was the intended scroll owner.
+
+Hour 15 therefore adds containment rather than a Timeline redesign:
+
+- the workspace frame and shared content boundary explicitly use `min-width: 0` and `max-width: 100%`;
+- every direct workspace child is prevented from enlarging the stage through intrinsic sizing;
+- only the preserved Timeline root receives a route-scoped `width: 100%` clamp and zero inline margin;
+- Timeline typography, cards, filters, chronology, rail behavior, and responsive internals remain unchanged for their scheduled later redesign;
+- shell-level overflow clipping is not used, ensuring future horizontal regressions remain visible to browser QA.
+
+Hour 15 does not redesign the route header, breadcrumbs, primary navigation contents, local tabs, chapter controls, search surface, or landing-page content. Those remain assigned to Hours 16–24.
+
+Acceptance requires the dedicated shell audit, foundation audit, CSS/readability/accessibility checks, direct Vite build, and the complete 18-render Succession visual matrix.
+
+### Hour 16 — Page headers and metadata
+
+Owned files:
+
+- `src/components/succession/SuccessionArchivePrimitives.jsx`
+- `src/components/succession/SuccessionArchivePageHeaderRedesign.css`
+- `src/components/succession/SuccessionArchiveSearch.css`
+- `scripts/audit-succession-page-header-redesign.mjs`
+- `.github/workflows/succession-visual-redesign.yml`
+
+Command:
+
+```bash
+npm run audit:succession-page-header-redesign
+```
+
+The Hour 16 redesign introduces:
+
+- a single shared route-header hierarchy for every Succession workspace;
+- an archive-record classification line that visually separates the shell from route content;
+- balanced title and description measure with responsive typography;
+- a dedicated action region that preserves button semantics and 44px mobile targets;
+- a compact keyboard-shortcut treatment that disappears when it no longer helps on small screens;
+- semantic-token-only styling with no raw hex values or `!important` declarations;
+- responsive action stacking and metadata reflow rather than scaled-down desktop geometry.
+
+#### Workspace metadata rail
+
+The existing route metadata remains unchanged: reading boundary, evidence mode, and workspace availability are still supplied by the shared shell. Hour 16 changes only their presentation:
+
+- empty entries are removed before the definition list renders;
+- each record receives a visible two-digit archive index for scanning without replacing its text label;
+- metadata uses a three-column adaptive rail on wide screens, a two-column grid on intermediate widths, and a single-column stack on mobile;
+- labels and values remain real `dt` and `dd` elements inside an explicitly named definition list;
+- long values wrap within their cell instead of enlarging the shared workspace stage.
+
+Hour 16 does not redesign breadcrumbs, navigation contents, local tabs, chapter controls, search, or landing-page content. Those remain assigned to Hours 17–24.
+
+Acceptance requires the dedicated page-header audit, all earlier Batch 1 and Batch 2 audits, CSS/readability/accessibility checks, direct Vite build, and the complete 18-render Succession visual matrix.
+
+### Hour 17 — Breadcrumbs and return paths
+
+Owned files:
+
+- `src/components/succession/SuccessionArchiveShell.jsx`
+- `src/components/succession/SuccessionArchiveBreadcrumbRedesign.css`
+- `src/components/succession/SuccessionArchiveSearch.css`
+- `scripts/audit-succession-breadcrumb-redesign.mjs`
+- `.github/workflows/succession-visual-redesign.yml`
+
+Command:
+
+```bash
+npm run audit:succession-breadcrumb-redesign
+```
+
+The Hour 17 redesign introduces:
+
+- a semantic ordered breadcrumb trail instead of a loose sequence of controls;
+- an explicit current-page record using `aria-current="page"`;
+- horizontally reachable breadcrumbs when labels exceed the available width;
+- a separate, visually stable return action that remains available beside the route trail;
+- 44px breadcrumb and return targets on mobile;
+- stacked mobile orientation without hiding route ancestry;
+- reduced-motion behavior for the return-path interaction;
+- semantic-token-only styling with no raw hex values or `!important` declarations.
+
+#### Return-path contract
+
+Hour 17 preserves the existing destinations and makes the expected exit explicit:
+
+- on the archive landing page, the return control calls the existing `onExitArchive` path back to Story;
+- on every nested Succession workspace, it calls the existing archive navigation path and returns to the Succession Archive index;
+- the breadcrumb ancestry remains Story → Succession Archive → current workspace;
+- breadcrumb buttons continue using the established callbacks rather than introducing new route ownership;
+- the return control has a route-specific accessible label in addition to its visible text.
+
+Hour 17 does not redesign primary navigation contents, local tabs, chapter controls, search, or landing-page content. Those remain assigned to Hours 18–24.
+
+Acceptance requires the dedicated breadcrumb audit, all earlier visual-redesign audits, CSS/readability/accessibility checks, direct Vite build, and the complete 18-render Succession visual matrix.
+
+### Hours 18–24 — Batch 2 closure
+
+The remaining Batch 2 work is documented in `docs/SUCCESSION-VISUAL-REDESIGN-BATCH-2-CLOSURE.md` and validated by:
+
+```bash
+npm run audit:succession-batch-2
+```
+
+That closure covers main navigation, local tabs, chapter-boundary controls, search and filter presentation, the archive landing hero, canonical summary panels, responsive navigation, and the complete Batch 2 regression gate.
 
 ## Compatibility strategy
 
