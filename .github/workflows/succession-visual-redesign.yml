@@ -142,6 +142,7 @@ jobs:
             succession-runtime.log
             succession-visual-inventory.md
             .visual-qa
+          include-hidden-files: true
           if-no-files-found: warn
           retention-days: 14
 
