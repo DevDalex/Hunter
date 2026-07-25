@@ -2,6 +2,7 @@
 @import './SuccessionVisualFoundationBridge.css';
 @import './SuccessionArchiveShellRedesign.css';
 @import './SuccessionArchivePageHeaderRedesign.css';
+@import './SuccessionArchiveBreadcrumbRedesign.css';
 
 .succession-search-complete {
   display: grid;
