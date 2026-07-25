@@ -1,5 +1,6 @@
 @import './SuccessionVisualFoundation.css';
 @import './SuccessionVisualFoundationBridge.css';
+@import './SuccessionArchiveShellRedesign.css';
 
 .succession-search-complete {
   display: grid;
