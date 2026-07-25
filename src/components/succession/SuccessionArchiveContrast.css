@@ -74,6 +74,13 @@
   font-size: 11px !important;
 }
 
+/* Batch 4 chapter intelligence uses dark command surfaces whose headings must not inherit paper ink. */
+.succession-chapter-command__hero h2,
+.succession-chapter-command__card h3,
+.succession-chapter-dossier__identity h2 {
+  color: var(--succession-text-strong) !important;
+}
+
 /* Batch 3 character command uses deliberate dark intelligence stages and paper work surfaces. */
 .succession-character-workspace,
 .succession-character-dossier {
