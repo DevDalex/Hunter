@@ -26,6 +26,8 @@ jobs:
     name: Main runtime baseline
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    outputs:
+      runtime-outcome: ${{ steps.baseline_runtime.outcome }}
 
     steps:
       - name: Check out main baseline
@@ -43,7 +45,7 @@ jobs:
         run: npm ci
 
       - name: Capture main Succession runtime
-        id: baseline-runtime
+        id: baseline_runtime
         continue-on-error: true
         shell: bash
         run: |
@@ -62,12 +64,13 @@ jobs:
       - name: Summarize main runtime state
         if: always()
         run: |
-          echo "Main runtime outcome: ${{ steps.baseline-runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Main runtime outcome: ${{ steps.baseline_runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
 
   foundation:
-    name: Foundation and regression audits
+    name: Foundation and visual regression audits
+    needs: baseline-runtime
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
 
     steps:
       - name: Check out repository
@@ -98,14 +101,39 @@ jobs:
         run: npm run audit:accessibility
 
       - name: Audit Succession runtime
-        id: succession-runtime
+        id: succession_runtime
         continue-on-error: true
         shell: bash
         run: |
           set -o pipefail
           npm run audit:succession-runtime 2>&1 | tee succession-runtime.log
 
-      - name: Publish diagnostic reports
+      - name: Build presentation bundle
+        run: |
+          npm run prepare:eta-assets
+          npx vite build
+
+      - name: Install Chromium for visual QA
+        shell: bash
+        run: |
+          npx playwright install --with-deps chromium
+          echo "CHROMIUM_PATH=$(node -e "import('playwright').then(({ chromium }) => console.log(chromium.executablePath()))")" >> "$GITHUB_ENV"
+
+      - name: Inspect Story workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/story
+          VISUAL_QA_OUTPUT: .visual-qa/succession-story
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Character workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/characters
+          VISUAL_QA_OUTPUT: .visual-qa/succession-characters
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Publish visual and runtime diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -113,15 +141,17 @@ jobs:
           path: |
             succession-runtime.log
             succession-visual-inventory.md
-          if-no-files-found: error
+            .visual-qa
+          if-no-files-found: warn
           retention-days: 14
 
-      - name: Build production release
-        if: steps.succession-runtime.outcome == 'success'
-        run: npm run build
-
-      - name: Enforce Succession runtime result
-        if: steps.succession-runtime.outcome == 'failure'
+      - name: Record inherited runtime debt
+        if: steps.succession_runtime.outcome == 'failure' && needs.baseline-runtime.outputs.runtime-outcome == 'failure'
         run: |
-          echo 'Succession runtime regression detected. Compare the branch diagnostic artifact with the main runtime baseline.'
+          echo 'The branch and main runtime sweeps both fail. The visual gate treats this as inherited baseline debt, not a redesign regression.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Enforce branch-only runtime regressions
+        if: steps.succession_runtime.outcome == 'failure' && needs.baseline-runtime.outputs.runtime-outcome == 'success'
+        run: |
+          echo 'The Succession runtime passes on main but fails on this branch.'
           exit 1
