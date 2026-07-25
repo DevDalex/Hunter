@@ -14,18 +14,19 @@ export const createProductClosureSelectors = (args) => {
     .filter(Boolean))];
 
   const searchArchiveProduct = (query, options = {}) => {
+    const normalizedQuery = normalizeArchiveSearchText(query);
     const allowed = options.types ? new Set(options.types) : null;
     const baseTypes = allowed
       ? [...allowed].filter((type) => type !== 'story')
       : [...entityTypes, 'glossary'];
-    const baseResults = base.searchArchiveProduct(query, { ...options, types: baseTypes });
+    const baseResults = base.searchArchiveProduct(normalizedQuery, { ...options, types: baseTypes });
     const includeStory = !allowed || allowed.has('story');
     if (!includeStory) return baseResults;
 
     const chapter = Number.isFinite(Number(options.chapter))
       ? Number(options.chapter)
       : args.data.chapters.at(-1)?.number;
-    const storyResults = args.storyIntelligence.searchStoryIntelligence(query, {
+    const storyResults = args.storyIntelligence.searchStoryIntelligence(normalizedQuery, {
       chapter,
       limit: Math.max(Number(options.limit) || 40, 100),
     }).map((result) => {
