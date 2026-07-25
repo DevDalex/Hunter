@@ -13,6 +13,7 @@ const assert = (condition, message) => {
 };
 
 const auditPaths = Object.freeze([
+  'scripts/audit-succession-stabilization.mjs',
   'scripts/audit-succession-archive-shell.mjs',
   'scripts/audit-succession-characters-workspace.mjs',
   'scripts/audit-succession-organizations-workspace.mjs',
@@ -36,7 +37,7 @@ const [app, primitives, packageText, ...auditSources] = await Promise.all([
 ]);
 const packageJson = JSON.parse(packageText);
 
-for (const routeId of ['characters', 'organizations', 'locations', 'bodyguards', 'relationships', 'nen', 'guardian-spirit-beasts', 'chapters']) {
+for (const routeId of ['characters', 'organizations', 'locations', 'bodyguards', 'relationships', 'nen', 'guardian-spirit-beasts', 'chapters', 'events']) {
   assert(declarationIncludesLiteral(app, 'specializedRecordRoute', routeId), `${routeId} must remain a specialized record route`);
 }
 for (const routeId of ['black-whale', 'timeline']) {
@@ -67,6 +68,8 @@ assert(app.includes("linkedEntity?.entityType === 'ability'") && app.includes("l
 assert(app.includes('showCharacterDossier') && app.includes('showOrganizationDossier'), 'people and institution legacy URLs must resolve dedicated dossiers');
 assert(app.includes('showAbilityDossier') && app.includes('showGuardianBeastDossier'), 'Nen legacy URLs must resolve dedicated dossiers');
 assert(app.includes('chapter: spoilerLimit') && app.includes('SearchWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit}'), 'global search must remain inside the selected chapter boundary');
+assert(app.includes('princes.find((record) => record.princeOrder === Number(order))'), 'family-tree navigation must use the candidate prince record');
+assert(!app.includes('princes.find((record) => entity.princeOrder'), 'family-tree navigation must not self-reference its result variable');
 assert(primitives.includes("if (entity.entityType === 'character') return 'characters'"), 'shared entity routing must send every character to the character workspace');
 assert(primitives.includes("if (entity.entityType === 'organization') return 'organizations'"), 'shared entity routing must send every organization to the organization workspace');
 assert(primitives.includes("if (entity.entityType === 'ability') return 'nen'"), 'shared entity routing must send every ability to the Nen workspace');
@@ -80,6 +83,10 @@ const forbiddenAuditPatterns = Object.freeze([
   {
     pattern: /app\.includes\(\s*["'](?:const specializedRecordRoute = )?\['princes'/,
     message: 'audits must inspect route membership rather than an exact ordered array literal',
+  },
+  {
+    pattern: /counts\.chapters\s*===\s*75|pendingChapterIds\.length\s*===\s*1.*chapter:414/,
+    message: 'audits must derive chapter and pending-release coverage from canonical imported data',
   },
 ]);
 
@@ -152,20 +159,37 @@ try {
   assert(nenClosure.systems.total === 8, 'all eight canonical Nen and ritual system profiles must remain active');
   assert(nenClosure.stateIntegrityIssues.length === 0 && nenClosure.missingSystemReferences.length === 0, 'Nen state and graph integrity must remain clean');
 
+  const chapters = archive.getEntitiesByType('chapter');
+  const firstChapter = chapters[0]?.number;
+  const latestChapter = chapters.at(-1)?.number;
+  assert(Number.isFinite(firstChapter) && Number.isFinite(latestChapter), 'canonical chapter boundaries must remain numeric');
+  assert(chapters.length === latestChapter - firstChapter + 1, `chapter catalogue must remain contiguous from ${firstChapter} through ${latestChapter}`);
+
   const storyClosure = archive.getStoryIntelligenceClosureReport();
   assert(storyClosure?.closureReady && storyClosure.status === 'closed', 'Batch 4 chapter and story intelligence closure must remain closed');
-  assert(storyClosure.counts.chapters === 75, 'Batch 4 must retain Chapter 340 through 414');
-  assert(storyClosure.counts.phases === 11 && storyClosure.counts.lanes === 7, 'Batch 4 must retain eleven phases and seven story lanes');
-  assert(storyClosure.counts.threads >= 19 && storyClosure.counts.causalLinks >= 17, 'Batch 4 must retain the unresolved-thread and causal graph foundation');
+  assert(storyClosure.counts.chapters === chapters.length, 'Batch 4 chapter count must follow canonical imported data');
+  assert(storyClosure.chapterRange.start === firstChapter && storyClosure.chapterRange.end === latestChapter, 'Batch 4 range must follow canonical imported data');
+  assert(storyClosure.counts.phases >= 11 && storyClosure.counts.lanes === 7, 'Batch 4 must retain documented phases, a generated pending phase when needed, and seven story lanes');
+  assert(storyClosure.counts.threads >= 20 && storyClosure.counts.causalLinks >= 17, 'Batch 4 must retain the unresolved-thread and causal graph foundation');
   assert(storyClosure.phaseCoverageIssues.length === 0 && storyClosure.phaseContinuityIssues.length === 0, 'story phase coverage and continuity must remain clean');
   assert(storyClosure.missingReferences.length === 0 && storyClosure.chapterProjectionIssues.length === 0, 'story graph references and chapter projections must remain clean');
-  assert(storyClosure.pendingChapterIds.length === 1 && storyClosure.pendingChapterIds[0] === 'chapter:414', 'Chapter 414 must remain the only explicitly pending maintained story record');
+
+  const storyPhases = Object.values(archive.successionArchiveData.storyPhaseProfiles || {});
+  const documentedEnd = Math.max(...storyPhases
+    .filter((phase) => phase.status !== 'pending-maintained-research')
+    .map((phase) => phase.chapterRange.end ?? phase.chapterRange.start));
+  const expectedPendingIds = chapters.filter((chapter) => chapter.number > documentedEnd).map((chapter) => chapter.id);
+  assert(JSON.stringify(storyClosure.pendingChapterIds) === JSON.stringify(expectedPendingIds), 'pending story records must follow imported chapters after the last documented phase');
+  for (const chapterId of expectedPendingIds) {
+    const chapterNumber = Number(chapterId.split(':').at(-1));
+    assert(archive.getStoryPhaseAtChapter(chapterNumber)?.status === 'pending-maintained-research', `${chapterId} must resolve a pending research phase`);
+    const dossier = archive.getChapterStoryDossier(chapterNumber);
+    assert(dossier?.events.length === 0 && dossier.lanes.length === 0 && dossier.threads.length === 0, `${chapterId} must not manufacture story claims`);
+  }
 
   assert(archive.getStoryPhaseAtChapter(349)?.id === 'story-phase:succession-preparation', 'Chapter 349 must resolve succession preparation');
   assert(archive.getStoryPhaseAtChapter(383)?.id === 'story-phase:escape-failure-and-hidden-systems', 'Chapter 383 must resolve the escape-failure phase');
   assert(archive.getStoryPhaseAtChapter(401)?.id === 'story-phase:treaties-possession-and-convergence', 'Chapter 401 must resolve the treaty and possession convergence phase');
-  assert(archive.getStoryPhaseAtChapter(414)?.status === 'pending-maintained-research', 'Chapter 414 must remain a pending research phase');
-  assert(archive.getChapterStoryDossier(414)?.events.length === 0, 'pending Chapter 414 must not manufacture event claims');
   assert(archive.getStoryLaneDossier('story-lane:mafia-war', 377) === null, 'mafia story intelligence must remain hidden before Chapter 378');
   assert(archive.getStoryLaneDossier('story-lane:mafia-war', 378)?.profile.id === 'story-lane:mafia-war', 'mafia story intelligence must appear at Chapter 378');
   assert(archive.getStoryThreadDossier('story-thread:borksen-autonomy', 409) === null, 'Borksen autonomy must remain hidden before Chapter 410');
@@ -188,7 +212,7 @@ try {
   assert(!contagion378?.characters.some((character) => character.id === 'character:borksen'), 'early Contagion dossiers must not expose Borksen');
   assert(contagion410?.characters.some((character) => character.id === 'character:borksen'), 'Contagion must include Borksen after the recruitment outcome');
 
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph; Batch 2 people and institutions, Batch 3 Nen systems, and Batch 4 chapter and story intelligence remain closed and chapter-bounded.`);
+  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph through imported Chapter ${latestChapter}; Batch 2 people and institutions, Batch 3 Nen systems, and Batch 4 chapter and story intelligence remain closed and chapter-bounded.`);
 } finally {
   await vite.close();
 }
