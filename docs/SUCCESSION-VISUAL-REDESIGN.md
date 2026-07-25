@@ -218,6 +218,18 @@ The Hour 15 redesign introduces:
 - responsive shell collapse at tablet and mobile breakpoints;
 - semantic-token-only styling with no raw hex values or `!important` declarations.
 
+#### Preserved wide-workspace containment
+
+The first browser pass found that the pre-existing global Timeline root participated in CSS Grid intrinsic sizing and enlarged the shared stage on desktop and tablet. Its mobile layout already passed, and its internal horizontal arc rail was the intended scroll owner.
+
+Hour 15 therefore adds containment rather than a Timeline redesign:
+
+- the workspace frame and shared content boundary explicitly use `min-width: 0` and `max-width: 100%`;
+- every direct workspace child is prevented from enlarging the stage through intrinsic sizing;
+- only the preserved Timeline root receives a route-scoped `width: 100%` clamp and zero inline margin;
+- Timeline typography, cards, filters, chronology, rail behavior, and responsive internals remain unchanged for their scheduled later redesign;
+- shell-level overflow clipping is not used, ensuring future horizontal regressions remain visible to browser QA.
+
 Hour 15 does not redesign the route header, breadcrumbs, primary navigation contents, local tabs, chapter controls, search surface, or landing-page content. Those remain assigned to Hours 16–24.
 
 Acceptance requires the dedicated shell audit, foundation audit, CSS/readability/accessibility checks, direct Vite build, and the complete 18-render Succession visual matrix.
