@@ -70,7 +70,7 @@ jobs:
     name: Foundation and visual regression audits
     needs: baseline_runtime
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 55
 
     steps:
       - name: Check out repository
@@ -126,10 +126,38 @@ jobs:
           VISUAL_QA_SCREENSHOTS: all
         run: npm run qa:visual
 
+      - name: Inspect Timeline workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/timeline
+          VISUAL_QA_OUTPUT: .visual-qa/succession-timeline
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
       - name: Inspect Character workspace at all viewports
         env:
           VISUAL_QA_ROUTE: succession/characters
           VISUAL_QA_OUTPUT: .visual-qa/succession-characters
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Black Whale workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/black-whale
+          VISUAL_QA_OUTPUT: .visual-qa/succession-black-whale
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Nen workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/nen
+          VISUAL_QA_OUTPUT: .visual-qa/succession-nen
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Research workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/research
+          VISUAL_QA_OUTPUT: .visual-qa/succession-research
           VISUAL_QA_SCREENSHOTS: all
         run: npm run qa:visual
 
