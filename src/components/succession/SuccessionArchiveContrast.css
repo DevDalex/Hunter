@@ -70,7 +70,13 @@
 .succession-chapter-sequence-card__topline span,
 .succession-chapter-sequence-card__topline em,
 .succession-chapter-sequence-card dt,
-.succession-chapter-intel__changes li > span {
+.succession-chapter-intel__changes li > span,
+.succession-story-command__metrics dt,
+.succession-story-command__phase-grid dt,
+.succession-story-command-event dt,
+.succession-story-command-dossier__hero dt,
+.succession-story-command__lane-track > button > span,
+.succession-story-command__causal-river > article > div > span {
   font-size: 11px !important;
 }
 
