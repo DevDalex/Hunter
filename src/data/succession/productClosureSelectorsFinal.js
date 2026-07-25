@@ -29,14 +29,22 @@ export const createProductClosureSelectors = (args) => {
     const storyResults = args.storyIntelligence.searchStoryIntelligence(normalizedQuery, {
       chapter,
       limit: Math.max(Number(options.limit) || 40, 100),
-    }).map((result) => {
+    }).flatMap((result) => {
       const record = result.record || null;
-      return Object.freeze({
+      const unavailableAbilities = (record?.abilityIds || [])
+        .map((id) => args.archive.getEntityById(id))
+        .filter(Boolean)
+        .filter((ability) => !args.nenSystems.getAbilityKnowledgeAtChapter(ability.id, chapter)?.known);
+      if (unavailableAbilities.some((ability) => normalizedQuery.includes(normalizeArchiveSearchText(ability.name)))) return [];
+      const safeSummary = unavailableAbilities.length
+        ? `This ${result.kind} is active through Chapter ${chapter}; later ability details remain hidden by the selected boundary.`
+        : result.displaySummary || record?.summary || 'Story Intelligence record.';
+      return [Object.freeze({
         id: record?.id || result.id,
         resultType: 'story',
         domain: `story-${result.kind}`,
         label: result.displayName || record?.name || result.id,
-        summary: result.displaySummary || record?.summary || 'Story Intelligence record.',
+        summary: safeSummary,
         score: Number(result.score) || 75,
         matchReason: `Matched Story ${result.kind}`,
         route: result.kind === 'chapter' ? 'chapters' : 'story',
@@ -44,7 +52,7 @@ export const createProductClosureSelectors = (args) => {
           ? { chapter: record?.number || chapter }
           : { [result.kind]: record?.id, chapter }),
         story: result,
-      });
+      })];
     });
 
     return freeze([...new Map([...baseResults, ...storyResults].map((result) => [result.id, result])).values()]
