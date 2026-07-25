@@ -1,10 +1,10 @@
 import { successionArchiveData as nenFoundationData } from './entitiesNenSystemFoundation.js';
 import {
+  correctedStoryLaneProfiles as storyLaneProfiles,
+  correctedStoryPhaseProfiles as storyPhaseProfiles,
+  correctedStoryThreadProfiles as storyThreadProfiles,
   storyCausalLinks,
-  storyLaneProfiles,
-  storyPhaseProfiles,
-  storyThreadProfiles,
-} from './storyIntelligenceFoundation.js';
+} from './storyIntelligenceCorrections.js';
 import { successionChapterResearchByNumber } from './successionResearch.js';
 
 const ARCHIVE_DATE = '2026-07-25';
