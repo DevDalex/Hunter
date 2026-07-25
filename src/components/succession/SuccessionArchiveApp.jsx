@@ -1,11 +1,11 @@
 import { lazy, Suspense, useMemo, useState } from 'react';
-import { ArrowRight, Database, Images, Search, Users } from 'lucide-react';
+import { ArrowRight, BookOpen, Database, Images, Search, Users } from 'lucide-react';
 import { ArchiveCard, ArchiveSection, EvidenceBadge, StatusPill } from '../ArchiveUI';
 import {
   getEntitiesByType,
   getEntityById,
   getSourcesForEntity,
-  searchSuccessionArchive,
+  searchArchiveProduct,
   successionArchiveValidation,
 } from '../../data/succession/successionData';
 import {
@@ -27,17 +27,17 @@ import ChapterStoryWorkspace from './SuccessionArchiveChapterStoryWorkspace';
 import CharactersWorkspace from './SuccessionArchiveCharacterWorkspace';
 import EvidenceWorkspace from './SuccessionArchiveEvidenceWorkspace';
 import EventsWorkspace from './SuccessionArchiveEventWorkspace';
+import GlossaryWorkspace from './SuccessionArchiveGlossaryWorkspace';
 import GuardianBeastsWorkspace from './SuccessionArchiveGuardianBeastWorkspace';
 import LocationsWorkspace from './SuccessionArchiveLocationWorkspace';
+import MediaWorkspace from './SuccessionArchiveMediaWorkspace';
 import NenWorkspace from './SuccessionArchiveNenWorkspace';
 import OrganizationsWorkspace from './SuccessionArchiveOrganizationWorkspace';
 import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';
 import StoryIntelligenceWorkspace from './SuccessionArchiveStoryIntelligenceWorkspace';
 import {
   DomainEntityDetail,
-  GlossaryWorkspace,
   HuntersWorkspace,
-  MediaWorkspace,
   MilitaryWorkspace,
   PoliticsWorkspace,
 } from './SuccessionArchiveExtendedWorkspaces';
@@ -51,6 +51,7 @@ import {
   SourceReference,
   entityWorkspaceTarget,
 } from './SuccessionArchivePrimitives';
+import './SuccessionArchiveSearch.css';
 
 const FamilyTree = lazy(() => import('../FamilyTree'));
 const BlackWhaleGuide = lazy(() => import('../BlackWhaleGuide'));
@@ -110,44 +111,18 @@ function ArchiveHome({ onNavigate }) {
       <div className="succession-home-grid">
         {featured.map((id) => {
           const route = getSuccessionArchiveRoute(id);
-          return <ArchiveCard key={id} eyebrow={route.group} title={route.label} meta={route.description} onClick={() => onNavigate(id)}>
-            <span className="succession-card-action">Open workspace <ArrowRight size={14} /></span>
-          </ArchiveCard>;
+          return <ArchiveCard key={id} eyebrow={route.group} title={route.label} meta={route.description} onClick={() => onNavigate(id)}><span className="succession-card-action">Open workspace <ArrowRight size={14} /></span></ArchiveCard>;
         })}
       </div>
     </ArchiveSection>
-
-    <section className="succession-data-health" aria-labelledby="succession-data-health-title">
-      <div><Database size={19} aria-hidden="true" /><span>Canonical catalogue</span><h2 id="succession-data-health-title">The current-arc roster is connected and validated.</h2><p>Named records are deduplicated, placeholders are excluded, roles and affiliations drive each directory, and available Hunterpedia visuals are reused consistently.</p></div>
-      <dl>
-        <div><dt>Entities</dt><dd>{stats.entities}</dd></div>
-        <div><dt>Characters</dt><dd>{stats.characters}</dd></div>
-        <div><dt>Portraits</dt><dd>{pictured}</dd></div>
-        <div><dt>Chapters</dt><dd>{stats.chapters}</dd></div>
-      </dl>
-    </section>
-
-    <ArchiveSection id="archive-directory" kicker="Route hierarchy" title="Archive directory" description="Every major subject has a stable destination, a bounded record set, and a presentation suited to that subject.">
-      <div className="succession-route-matrix">
-        {successionArchiveGroups.map((group) => <section key={group}><h3>{group}</h3><div>{successionArchiveRoutes.filter((route) => route.group === group).map((route) => <button type="button" key={route.id} onClick={() => onNavigate(route.id)}><span>{route.label}</span><small>{route.status}</small><ArrowRight size={13} /></button>)}</div></section>)}
-      </div>
-    </ArchiveSection>
+    <section className="succession-data-health" aria-labelledby="succession-data-health-title"><div><Database size={19} aria-hidden="true" /><span>Canonical catalogue</span><h2 id="succession-data-health-title">The current-arc archive is connected and validated.</h2><p>People, institutions, Nen systems, story intelligence, vocabulary, media, and evidence share one chapter-bounded graph.</p></div><dl><div><dt>Entities</dt><dd>{stats.entities}</dd></div><div><dt>Characters</dt><dd>{stats.characters}</dd></div><div><dt>Portraits</dt><dd>{pictured}</dd></div><div><dt>Chapters</dt><dd>{stats.chapters}</dd></div></dl></section>
+    <ArchiveSection id="archive-directory" kicker="Route hierarchy" title="Archive directory" description="Every major subject has a stable destination, a bounded record set, and a presentation suited to that subject."><div className="succession-route-matrix">{successionArchiveGroups.map((group) => <section key={group}><h3>{group}</h3><div>{successionArchiveRoutes.filter((route) => route.group === group).map((route) => <button type="button" key={route.id} onClick={() => onNavigate(route.id)}><span>{route.label}</span><small>{route.status}</small><ArrowRight size={13} /></button>)}</div></section>)}</div></ArchiveSection>
   </>;
 }
 
 function EntityDetail({ entity, onNavigate }) {
   const sources = getSourcesForEntity(entity.id);
-  return <div className="succession-entity-detail">
-    <EntityHeader entity={entity} onNavigate={onNavigate} />
-    <section className="succession-entity-detail__facts">
-      <div><span>Stable ID</span><code>{entity.id}</code></div>
-      <div><span>Publication</span><b>{entity.publicationStatus || 'published'}</b></div>
-      <div><span>Canon layer</span><EvidenceBadge state={entity.canonLevel === 'inference' ? 'inferred' : entity.canonLevel === 'theory' ? 'unclear' : 'confirmed'}>{entity.canonLevel || 'canon'}</EvidenceBadge></div>
-      <div><span>Workspace</span><b>{getSuccessionArchiveRoute(entityWorkspaceTarget(entity)).label}</b></div>
-    </section>
-    {!!sources.length && <section className="succession-source-list" aria-labelledby="entity-source-list-title"><header><span>Evidence</span><h3 id="entity-source-list-title">Source references</h3></header>{sources.map((source) => <SourceReference source={source} onNavigate={onNavigate} key={source.id} />)}</section>}
-    <RelatedEntities entityId={entity.id} onNavigate={onNavigate} />
-  </div>;
+  return <div className="succession-entity-detail"><EntityHeader entity={entity} onNavigate={onNavigate} /><section className="succession-entity-detail__facts"><div><span>Stable ID</span><code>{entity.id}</code></div><div><span>Publication</span><b>{entity.publicationStatus || 'published'}</b></div><div><span>Canon layer</span><EvidenceBadge state={entity.canonLevel === 'inference' ? 'inferred' : entity.canonLevel === 'theory' ? 'unclear' : 'confirmed'}>{entity.canonLevel || 'canon'}</EvidenceBadge></div><div><span>Workspace</span><b>{getSuccessionArchiveRoute(entityWorkspaceTarget(entity)).label}</b></div></section>{!!sources.length && <section className="succession-source-list" aria-labelledby="entity-source-list-title"><header><span>Evidence</span><h3 id="entity-source-list-title">Source references</h3></header>{sources.map((source) => <SourceReference source={source} onNavigate={onNavigate} key={source.id} />)}</section>}<RelatedEntities entityId={entity.id} onNavigate={onNavigate} /></div>;
 }
 
 function DirectoryWorkspace({ routeId, routeParams, onNavigate }) {
@@ -162,43 +137,37 @@ function DirectoryWorkspace({ routeId, routeParams, onNavigate }) {
     return entities.filter((entity) => `${entity.name || ''} ${entity.id} ${(entity.aliases || []).join(' ')} ${(entity.roles || []).join(' ')} ${(entity.tags || []).join(' ')} ${entity.summary || ''}`.toLocaleLowerCase().includes(normalized));
   }, [entities, query]);
   const pictured = visible.filter((entity) => entity.media?.portrait).length;
-
   if (selected) return <EntityDetail entity={selected} onNavigate={onNavigate} />;
   if (!entities.length) return <ArchiveState kind="empty" title="Canonical records are not published here yet." description="The route will not manufacture missing lore or classifications. Source and provenance rules remain the publication gate." action={<button className="succession-button succession-button--quiet" onClick={() => onNavigate('research')}>Open research desk</button>} />;
-
-  return <section className="succession-directory" aria-labelledby="succession-directory-title">
-    <header>
-      <div><span>Canonical directory</span><h2 id="succession-directory-title">{visible.length} of {entities.length} records</h2><p><Users size={13} aria-hidden="true" /> Deduplicated named records <i>·</i> <Images size={13} aria-hidden="true" /> {pictured} available visuals</p></div>
-      <div className="succession-directory__tools"><label><Search size={16} aria-hidden="true" /><span className="sr-only">Filter current workspace</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Filter this workspace…" />{query && <button type="button" onClick={() => setQuery('')}>Clear</button>}</label></div>
-    </header>
-    <div className="succession-entity-grid">{visible.map((entity) => <article key={entity.id}><EntityVisual entity={entity} /><div><EntityBadge entity={entity} compact /><StatusPill tone="neutral">{entity.status?.life || entity.canonLevel || 'canon'}</StatusPill></div><h3>{entity.name || entity.id}</h3><p>{entity.summary || 'Canonical record available.'}</p><footer><code>{entity.id}</code><EntityLink entity={entity} onNavigate={onNavigate}>Open record</EntityLink></footer></article>)}</div>
-    {!visible.length && <ArchiveState kind="empty" title="No matching records" description="Clear the workspace filter or search the complete archive." />}
-  </section>;
+  return <section className="succession-directory" aria-labelledby="succession-directory-title"><header><div><span>Canonical directory</span><h2 id="succession-directory-title">{visible.length} of {entities.length} records</h2><p><Users size={13} aria-hidden="true" /> Deduplicated named records <i>·</i> <Images size={13} aria-hidden="true" /> {pictured} available visuals</p></div><div className="succession-directory__tools"><label><Search size={16} aria-hidden="true" /><span className="sr-only">Filter current workspace</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Filter this workspace…" />{query && <button type="button" onClick={() => setQuery('')}>Clear</button>}</label></div></header><div className="succession-entity-grid">{visible.map((entity) => <article key={entity.id}><EntityVisual entity={entity} /><div><EntityBadge entity={entity} compact /><StatusPill tone="neutral">{entity.status?.life || entity.canonLevel || 'canon'}</StatusPill></div><h3>{entity.name || entity.id}</h3><p>{entity.summary || 'Canonical record available.'}</p><footer><code>{entity.id}</code><EntityLink entity={entity} onNavigate={onNavigate}>Open record</EntityLink></footer></article>)}</div>{!visible.length && <ArchiveState kind="empty" title="No matching records" description="Clear the workspace filter or search the complete archive." />}</section>;
 }
+
+const searchGroupLabel = (domain) => domain.startsWith('story-') ? 'Story Intelligence' : domain === 'glossary' ? 'Glossary' : domain.replaceAll('-', ' ');
 
 function SearchWorkspace({ onNavigate, spoilerLimit }) {
   const [query, setQuery] = useState('');
-  const results = useMemo(() => query.trim() ? searchSuccessionArchive(query, { limit: 30, chapter: spoilerLimit }) : [], [query, spoilerLimit]);
-  return <section className="succession-search-workspace" aria-labelledby="succession-search-title">
-    <label><Search size={20} aria-hidden="true" /><span className="sr-only">Search canonical Succession Archive</span><input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Character, organization, event, location, ability, condition…" /></label>
-    <p role="status" aria-live="polite">{query ? `${results.length} canonical result${results.length === 1 ? '' : 's'} through Chapter ${spoilerLimit}` : `Enter a term to search records available through Chapter ${spoilerLimit}.`}</p>
-    <div>{results.map(({ entity, score }) => <article key={entity.id}><EntityVisual entity={entity} compact /><EntityBadge entity={entity} /><p>{entity.summary}</p><footer><span>Match {score}</span><EntityLink entity={entity} onNavigate={onNavigate}>Open</EntityLink></footer></article>)}</div>
-    {query && !results.length && <ArchiveState kind="empty" title="No canonical match inside this chapter boundary" description="Try an alias, organization, location, ability condition, or Nen cost already documented by the selected chapter." />}
+  const results = useMemo(() => query.trim() ? searchArchiveProduct(query, { limit: 60, chapter: spoilerLimit }) : [], [query, spoilerLimit]);
+  const groups = useMemo(() => {
+    const map = new Map();
+    for (const result of results) {
+      const key = result.domain.startsWith('story-') ? 'story-intelligence' : result.domain;
+      const current = map.get(key) || [];
+      current.push(result);
+      map.set(key, current);
+    }
+    return [...map.entries()];
+  }, [results]);
+  return <section className="succession-search-workspace succession-search-complete" aria-labelledby="succession-search-title">
+    <label><Search size={20} aria-hidden="true" /><span className="sr-only">Search canonical Succession Archive</span><input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Name, alias, mechanic, condition, thread, term…" /></label>
+    <p role="status" aria-live="polite">{query ? `${results.length} result${results.length === 1 ? '' : 's'} through Chapter ${spoilerLimit}` : `Search every canonical domain available through Chapter ${spoilerLimit}.`}</p>
+    <div className="succession-search-complete__groups">{groups.map(([domain, records]) => <section key={domain} aria-labelledby={`search-group-${domain}`}><header><h2 id={`search-group-${domain}`}>{searchGroupLabel(domain)}</h2><span>{records.length}</span></header><div>{records.map((result) => <article key={result.id}>{result.entity ? <EntityVisual entity={result.entity} compact /> : result.resultType === 'glossary' ? <BookOpen size={22} aria-hidden="true" /> : <Search size={22} aria-hidden="true" />}<div><span>{result.domain.replaceAll('-', ' ')}</span><h3>{result.label}</h3><p>{result.summary}</p><small>{result.matchReason}</small></div><button type="button" onClick={() => onNavigate(result.route, result.params)}>Open <ArrowRight size={13} aria-hidden="true" /></button></article>)}</div></section>)}</div>
+    {query && !results.length && <ArchiveState kind="empty" title="No canonical match inside this chapter boundary" description="Try an alias, synonym, organization, location, ability mechanic, unresolved question, or glossary term already documented by the selected chapter." />}
   </section>;
 }
 
 function FamilyTreeWorkspace({ spoilerLimit, onNavigate }) {
   const princes = entitiesForRoute('princes');
-  return <Suspense fallback={<Loading label="royal family tree" />}>
-    <div className="succession-migration-note"><b>Diagram view</b><span>The family tree remains available as a visual companion; prince records now open in the chapter-bounded character dossier.</span><button type="button" onClick={() => onNavigate('princes')}>Back to prince records</button></div>
-    <FamilyTree
-      spoilerLimit={spoilerLimit}
-      onOpenPrince={(order) => {
-        const entity = princes.find((record) => record.princeOrder === Number(order));
-        onNavigate('characters', entity ? { entity: entity.id } : {});
-      }}
-    />
-  </Suspense>;
+  return <Suspense fallback={<Loading label="royal family tree" />}><div className="succession-migration-note"><b>Diagram view</b><span>The family tree remains available as a visual companion; prince records open in the chapter-bounded character dossier.</span><button type="button" onClick={() => onNavigate('princes')}>Back to prince records</button></div><FamilyTree spoilerLimit={spoilerLimit} onOpenPrince={(order) => { const entity = princes.find((record) => record.princeOrder === Number(order)); onNavigate('characters', entity ? { entity: entity.id } : {}); }} /></Suspense>;
 }
 
 function PreservedWorkspace({ routeId, routeParams, spoilerLimit, onNavigate }) {
@@ -211,15 +180,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const route = getSuccessionArchiveRoute(routeTarget);
   const navigate = (target, params = {}) => {
     const linkedEntity = params.entity ? getEntityById(params.entity) : null;
-    const canonicalTarget = linkedEntity?.entityType === 'character'
-      ? 'characters'
-      : linkedEntity?.entityType === 'organization'
-        ? 'organizations'
-        : linkedEntity?.entityType === 'ability'
-          ? 'nen'
-          : linkedEntity?.entityType === 'guardian-beast'
-            ? 'guardian-spirit-beasts'
-            : target;
+    const canonicalTarget = linkedEntity?.entityType === 'character' ? 'characters' : linkedEntity?.entityType === 'organization' ? 'organizations' : linkedEntity?.entityType === 'ability' ? 'nen' : linkedEntity?.entityType === 'guardian-beast' ? 'guardian-spirit-beasts' : target;
     onNavigate(canonicalTarget, params);
   };
   const treeView = route.id === 'princes' && routeParams.view === 'tree';
@@ -248,11 +209,11 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {showRouteWorkspace && route.id === 'princes' && !treeView && <PrincesWorkspace routeParams={routeParams} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'queens' && <QueensWorkspace routeParams={routeParams} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'bodyguards' && <AssignmentsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'hunters' && <HuntersWorkspace onNavigate={navigate} />}
+    {showRouteWorkspace && route.id === 'hunters' && <HuntersWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit} />}
     {showRouteWorkspace && route.id === 'mafia' && <MafiaWorkspace routeParams={routeParams} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'military' && <MilitaryWorkspace onNavigate={navigate} />}
+    {showRouteWorkspace && route.id === 'military' && <MilitaryWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit} />}
     {showRouteWorkspace && route.id === 'organizations' && <OrganizationsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'politics' && <PoliticsWorkspace onNavigate={navigate} />}
+    {showRouteWorkspace && route.id === 'politics' && <PoliticsWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit} />}
     {showRouteWorkspace && route.id === 'locations' && <LocationsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'nen' && <NenWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'guardian-spirit-beasts' && <GuardianBeastsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
@@ -261,8 +222,8 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {showRouteWorkspace && route.id === 'relationships' && <RelationshipsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'chapters' && <ChapterStoryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'research' && <EvidenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'glossary' && <GlossaryWorkspace />}
-    {showRouteWorkspace && route.id === 'media' && <MediaWorkspace onNavigate={navigate} />}
+    {showRouteWorkspace && route.id === 'glossary' && <GlossaryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
+    {showRouteWorkspace && route.id === 'media' && <MediaWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {preserved && <PreservedWorkspace routeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {!['archive', 'story', 'search'].includes(route.id) && !treeView && !preserved && !dedicated.has(route.id) && <DirectoryWorkspace routeId={route.id} routeParams={routeParams} onNavigate={navigate} />}
   </SuccessionArchiveShell>;
