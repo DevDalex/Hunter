@@ -43,3 +43,12 @@ npm run audit:accessibility
 npm run prepare:eta-assets
 npx vite build
 ```
+
+Final closure result:
+
+- every Batch 4 and inherited visual audit passed;
+- CSS ownership, readability, and accessibility passed;
+- the production presentation build passed;
+- Chapters, Story, Events, Nen, Guardian Spirit Beasts, Locations, and Black Whale passed at desktop, tablet, and mobile;
+- **21 of 21 route-and-viewport renders passed**;
+- manual screenshot review confirmed Location and Black Whale desktop/mobile hierarchy, contrast, controls, wrapping, map navigation, inspector actions, and room-directory stacking are visually sound.
