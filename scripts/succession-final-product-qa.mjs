@@ -68,6 +68,7 @@ const record = async (name, page, test) => {
 };
 
 const horizontalOverflow = (page) => page.evaluate(() => Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth);
+const resultGroup = (page, heading) => page.locator('.succession-search-complete__groups > section').filter({ has: page.getByRole('heading', { name: heading, exact: true }) });
 
 await mkdir(output, { recursive: true });
 const executablePath = await firstAvailable([
@@ -86,22 +87,28 @@ try {
     await desktop.waitForSelector('.succession-search-complete input', { timeout: 15_000 });
     const input = desktop.locator('.succession-search-complete input');
     await input.fill('GSB');
-    const glossaryResult = desktop.locator('.succession-search-complete__groups article').filter({ hasText: 'Guardian Spirit Beast' }).first();
+    const glossaryGroup = resultGroup(desktop, 'Glossary');
+    await glossaryGroup.waitFor({ state: 'visible', timeout: 15_000 });
+    const glossaryResult = glossaryGroup.locator('article').filter({ hasText: 'Guardian Spirit Beast' }).first();
     await glossaryResult.waitFor({ state: 'visible', timeout: 15_000 });
     const reason = await glossaryResult.locator('small').innerText();
     if (!reason.trim()) throw new Error('Search result does not explain why it matched');
+
     await input.fill('Kurapika portrait');
-    const mediaResult = desktop.locator('.succession-search-complete__groups article').filter({ hasText: 'Kurapika' }).first();
+    const mediaGroup = resultGroup(desktop, 'media');
+    await mediaGroup.waitFor({ state: 'visible', timeout: 15_000 });
+    const mediaResult = mediaGroup.locator('article').filter({ hasText: 'Kurapika' }).first();
     await mediaResult.waitFor({ state: 'visible', timeout: 15_000 });
-    const domain = await mediaResult.locator('div > span').first().innerText();
-    if (!domain.toLowerCase().includes('media')) throw new Error(`Expected a media result, received ${domain}`);
+    const mediaReason = await mediaResult.locator('small').innerText();
+    if (!mediaReason.toLowerCase().includes('media')) throw new Error(`Media result explanation is incomplete: ${mediaReason}`);
   });
 
   await record('Search opens a graph-connected glossary dossier and browser back restores search', desktop, async () => {
     await desktop.goto(`${base}/story/succession-contest/search`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
     const input = desktop.locator('.succession-search-complete input');
     await input.fill('GSB');
-    const result = desktop.locator('.succession-search-complete__groups article').filter({ hasText: 'Guardian Spirit Beast' }).first();
+    const glossaryGroup = resultGroup(desktop, 'Glossary');
+    const result = glossaryGroup.locator('article').filter({ hasText: 'Guardian Spirit Beast' }).first();
     await result.getByRole('button', { name: 'Open', exact: true }).click();
     await desktop.waitForSelector('.succession-product-dossier #glossary-dossier-title', { timeout: 15_000 });
     if (!desktop.url().includes('/glossary') || !desktop.url().includes('term=glossary%3Aguardian-spirit-beast')) throw new Error(`Glossary deep link was not preserved: ${desktop.url()}`);
