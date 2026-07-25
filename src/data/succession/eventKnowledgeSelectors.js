@@ -45,9 +45,9 @@ export const createEventKnowledgeSelectors = ({ data, archive }) => {
 
     const canonicalEnd = event.chapterRange.end ?? event.chapterRange.start;
     const sourceChapters = sourceChapterNumbers(event);
-    const matureChapter = Math.max(canonicalEnd, ...(sourceChapters.length ? sourceChapters : [event.chapterRange.start]));
+    const matureAt = Math.max(canonicalEnd, ...(sourceChapters.length ? sourceChapters : [event.chapterRange.start]));
     const singleChapter = canonicalEnd === event.chapterRange.start;
-    const mature = singleChapter || parsedChapter >= matureChapter;
+    const mature = singleChapter || parsedChapter >= matureAt;
     const activeAtBoundary = parsedChapter < canonicalEnd;
     const visibleEnd = Math.min(canonicalEnd, parsedChapter);
     const summary = mature
@@ -74,12 +74,12 @@ export const createEventKnowledgeSelectors = ({ data, archive }) => {
 
     return Object.freeze({
       ...event,
-      canonicalEvent: event,
       chapter: parsedChapter,
+      startChapter: event.chapterRange.start,
+      visibleThroughChapter: visibleEnd,
       knowledgeState: mature ? 'documented through selected boundary' : 'operation in progress; later details hidden',
       mature,
-      matureChapter,
-      canonicalChapterRange: event.chapterRange,
+      matureChapter: mature ? matureAt : null,
       chapterRange: Object.freeze({ start: event.chapterRange.start, end: visibleEnd }),
       summary,
       status: activeAtBoundary ? 'active-at-selected-chapter' : event.status,
@@ -97,10 +97,11 @@ export const createEventKnowledgeSelectors = ({ data, archive }) => {
     });
   };
 
-  const getStoryEventsKnownAtChapter = (chapter = null, { category = null, status = null } = {}) => {
+  const getStoryEventsKnownAtChapter = (chapter = null, { category = null, status = null, atChapterOnly = false } = {}) => {
     const parsedChapter = chapter === null ? latestChapter : Number(chapter);
     if (!Number.isFinite(parsedChapter)) return freeze([]);
     return freeze(events
+      .filter((event) => !atChapterOnly || (parsedChapter >= event.chapterRange.start && parsedChapter <= (event.chapterRange.end ?? event.chapterRange.start)))
       .map((event) => getStoryEventKnowledgeAtChapter(event, parsedChapter))
       .filter(Boolean)
       .filter((event) => !category || event.category === category)
