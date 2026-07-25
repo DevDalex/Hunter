@@ -1,0 +1,76 @@
+/*
+ * Batch 1 compatibility bridge.
+ *
+ * These workspace roots predate the Succession visual-token contract and use
+ * older --archive-* / --succession-* variables. Map those variables to the new
+ * semantic foundation without changing component markup or domain behavior.
+ * Later workspace batches may remove these aliases when their CSS is migrated.
+ */
+
+.succession-archive :where(
+  .succession-story-intel,
+  .succession-story-intel__dossier
+) {
+  --archive-panel: var(--succession-surface-1);
+  --archive-muted: var(--succession-text-muted);
+  --archive-line: var(--succession-border-default);
+  --archive-accent: var(--succession-gold);
+  color: var(--succession-text);
+}
+
+.succession-archive :where(
+  .succession-character-workspace,
+  .succession-character-dossier
+) {
+  --succession-panel: var(--succession-surface-1);
+  --succession-surface: var(--succession-surface-inset);
+  --succession-muted: var(--succession-text-muted);
+  --succession-line: var(--succession-border-default);
+  --succession-accent: var(--succession-gold);
+  color: var(--succession-text);
+}
+
+.succession-archive :where(
+  .succession-story-intel,
+  .succession-story-intel__dossier,
+  .succession-character-workspace,
+  .succession-character-dossier
+) :where(h2, h3, h4, h5, h6, strong, b) {
+  color: var(--succession-text-strong);
+}
+
+.succession-archive :where(
+  .succession-story-intel,
+  .succession-story-intel__dossier,
+  .succession-character-workspace,
+  .succession-character-dossier
+) :where(p, li, dd, small) {
+  color: var(--succession-text-muted);
+}
+
+.succession-archive :where(
+  .succession-story-intel__current,
+  .succession-story-intel__phases button,
+  .succession-story-intel__lanes button,
+  .succession-story-intel__thread-list button,
+  .succession-story-intel__causal article,
+  .succession-character-hero,
+  .succession-character-grid article,
+  .succession-character-coverage article,
+  .succession-character-role-board,
+  .succession-character-role-board__grid article,
+  .succession-character-history-summary article,
+  .succession-character-lifetime,
+  .succession-character-lifetime article
+) {
+  color: var(--succession-text);
+}
+
+.succession-archive :where(
+  .succession-story-intel__current,
+  .succession-character-hero,
+  .succession-character-role-board,
+  .succession-character-lifetime
+) {
+  border-color: var(--succession-border-default);
+}
