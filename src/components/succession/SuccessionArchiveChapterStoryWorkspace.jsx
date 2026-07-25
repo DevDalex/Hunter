@@ -47,14 +47,19 @@ export default function SuccessionArchiveChapterStoryWorkspace({ routeParams = {
   const requestedNumber = Number(routeParams.chapter || routeParams.focus || requestedEntity?.number);
   const chapters = useMemo(() => getEntitiesByType('chapter').filter((chapter) => chapter.number <= spoilerLimit).sort((left, right) => left.number - right.number), [spoilerLimit]);
   const fallbackNumber = chapters.at(-1)?.number || 340;
-  const [selectedNumber, setSelectedNumber] = useState(requestedNumber || fallbackNumber);
+  const requestedAllowed = Number.isFinite(requestedNumber) && chapters.some((chapter) => chapter.number === requestedNumber);
+  const [selectedNumber, setSelectedNumber] = useState(requestedAllowed ? requestedNumber : fallbackNumber);
   const [query, setQuery] = useState('');
   const [phaseId, setPhaseId] = useState('all');
 
   useEffect(() => {
     const next = Number(routeParams.chapter || routeParams.focus || requestedEntity?.number);
-    if (next && chapters.some((chapter) => chapter.number === next)) setSelectedNumber(next);
-  }, [chapters, requestedEntity?.number, routeParams.chapter, routeParams.focus]);
+    if (Number.isFinite(next) && chapters.some((chapter) => chapter.number === next)) {
+      setSelectedNumber(next);
+      return;
+    }
+    setSelectedNumber((current) => chapters.some((chapter) => chapter.number === current) ? current : fallbackNumber);
+  }, [chapters, fallbackNumber, requestedEntity?.number, routeParams.chapter, routeParams.focus]);
 
   const phaseOptions = useMemo(() => [...new Set(chapters.flatMap((chapter) => chapter.storyPhaseIds || []))].map(getStoryPhaseProfile).filter(Boolean), [chapters]);
   const visible = useMemo(() => chapters.filter((chapter) => {
@@ -63,11 +68,16 @@ export default function SuccessionArchiveChapterStoryWorkspace({ routeParams = {
     return (phaseId === 'all' || chapter.storyPhaseIds?.includes(phaseId)) && (!query.trim() || text.includes(normalize(query)));
   }), [chapters, phaseId, query]);
 
-  const dossier = useMemo(() => getChapterStoryDossier(selectedNumber), [selectedNumber]);
-  const selectedIndex = chapters.findIndex((chapter) => chapter.number === selectedNumber);
+  const boundedSelectedNumber = chapters.some((chapter) => chapter.number === selectedNumber) ? selectedNumber : fallbackNumber;
+  const dossier = useMemo(() => getChapterStoryDossier(boundedSelectedNumber), [boundedSelectedNumber]);
+  const selectedIndex = chapters.findIndex((chapter) => chapter.number === boundedSelectedNumber);
   const previous = chapters[selectedIndex - 1];
   const next = chapters[selectedIndex + 1];
-  const openChapter = (number) => { setSelectedNumber(number); onNavigate('chapters', { chapter: number }); };
+  const openChapter = (number) => {
+    if (!chapters.some((chapter) => chapter.number === number)) return;
+    setSelectedNumber(number);
+    onNavigate('chapters', { chapter: number });
+  };
 
   if (!dossier) return <ArchiveState kind="empty" title="Chapter dossier unavailable" description="No canonical chapter record exists inside this spoiler boundary." />;
   const pending = dossier.chapter.storyIntelligenceStatus === 'Reader media indexed; detailed research pending verified chapter documentation';
