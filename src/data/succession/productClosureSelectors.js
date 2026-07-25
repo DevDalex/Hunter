@@ -6,6 +6,14 @@ const ordinalAliases = Object.freeze([
   ['eleventh', '11th'], ['twelfth', '12th'], ['thirteenth', '13th'], ['fourteenth', '14th'],
 ]);
 
+const ordinalNumber = (number) => {
+  const value = Number(number);
+  if (!Number.isFinite(value)) return '';
+  const mod100 = value % 100;
+  const suffix = mod100 >= 11 && mod100 <= 13 ? 'th' : value % 10 === 1 ? 'st' : value % 10 === 2 ? 'nd' : value % 10 === 3 ? 'rd' : 'th';
+  return `${value}${suffix}`;
+};
+
 export const normalizeArchiveSearchText = (value) => {
   let normalized = String(value || '')
     .normalize('NFKD')
@@ -55,9 +63,15 @@ const scoreFields = (query, fields) => {
 };
 
 const entityFields = (entity, dossiers = {}) => {
+  const royalOrder = entity.princeOrder
+    ? `${ordinalNumber(entity.princeOrder)} prince prince ${entity.princeOrder}`
+    : entity.queenRank
+      ? `${entity.queenRank} queen`
+      : '';
   const fields = [
     { label: 'name', value: entity.name, weight: 100 },
     { label: 'alias', value: (entity.aliases || []).join(' '), weight: 90 },
+    { label: 'royal order', value: royalOrder, weight: 88 },
     { label: 'stable ID', value: `${entity.id} ${(entity.legacyIds || []).join(' ')}`, weight: 75 },
     { label: 'summary', value: entity.summary, weight: 45 },
     { label: 'classification', value: [entity.entityType, entity.category, entity.subtype, entity.organizationType, entity.locationType, ...(entity.roles || []), ...(entity.tags || [])].filter(Boolean).join(' '), weight: 35 },
@@ -134,12 +148,20 @@ export const createProductClosureSelectors = ({ data, archive, characterStates, 
     return freeze([...mediaById.values()]
       .filter((record) => !mediaType || record.mediaType === mediaType)
       .filter((record) => !availability || record.availability === availability)
-      .map((record) => Object.freeze({
-        ...record,
-        subjects: freeze((record.subjectIds || []).map((id) => archive.getEntityById(id)).filter((entity) => entityAvailableAtChapter(entity, parsedChapter))),
-        sources: freeze((record.sourceIds || []).map((id) => archive.getEntityById(id)).filter((source) => source?.entityType === 'source' && (!source.chapter || source.chapter <= parsedChapter))),
-      }))
-      .filter((record) => record.subjects.length > 0)
+      .map((record) => {
+        const subjects = (record.subjectIds || []).map((id) => archive.getEntityById(id)).filter((entity) => entityAvailableAtChapter(entity, parsedChapter));
+        if (!subjects.length) return null;
+        const names = subjects.map((subject) => subject.name);
+        const typeLabel = record.mediaType.replaceAll('-', ' ');
+        return Object.freeze({
+          ...record,
+          label: names.length === 1 ? `${names[0]} ${typeLabel}` : `${names.join(', ')} shared ${typeLabel}`,
+          alt: names.length === 1 ? `${names[0]} archive ${typeLabel}` : `${names.join(', ')} archive ${typeLabel}`,
+          subjects: freeze(subjects),
+          sources: freeze((record.sourceIds || []).map((id) => archive.getEntityById(id)).filter((source) => source?.entityType === 'source' && (!source.chapter || source.chapter <= parsedChapter))),
+        });
+      })
+      .filter(Boolean)
       .sort((left, right) => left.label.localeCompare(right.label)));
   };
 
