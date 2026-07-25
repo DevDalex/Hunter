@@ -274,6 +274,47 @@ Hour 16 does not redesign breadcrumbs, navigation contents, local tabs, chapter 
 
 Acceptance requires the dedicated page-header audit, all earlier Batch 1 and Batch 2 audits, CSS/readability/accessibility checks, direct Vite build, and the complete 18-render Succession visual matrix.
 
+### Hour 17 — Breadcrumbs and return paths
+
+Owned files:
+
+- `src/components/succession/SuccessionArchiveShell.jsx`
+- `src/components/succession/SuccessionArchiveBreadcrumbRedesign.css`
+- `src/components/succession/SuccessionArchiveSearch.css`
+- `scripts/audit-succession-breadcrumb-redesign.mjs`
+- `.github/workflows/succession-visual-redesign.yml`
+
+Command:
+
+```bash
+npm run audit:succession-breadcrumb-redesign
+```
+
+The Hour 17 redesign introduces:
+
+- a semantic ordered breadcrumb trail instead of a loose sequence of controls;
+- an explicit current-page record using `aria-current="page"`;
+- horizontally reachable breadcrumbs when labels exceed the available width;
+- a separate, visually stable return action that remains available beside the route trail;
+- 44px breadcrumb and return targets on mobile;
+- stacked mobile orientation without hiding route ancestry;
+- reduced-motion behavior for the return-path interaction;
+- semantic-token-only styling with no raw hex values or `!important` declarations.
+
+#### Return-path contract
+
+Hour 17 preserves the existing destinations and makes the expected exit explicit:
+
+- on the archive landing page, the return control calls the existing `onExitArchive` path back to Story;
+- on every nested Succession workspace, it calls the existing archive navigation path and returns to the Succession Archive index;
+- the breadcrumb ancestry remains Story → Succession Archive → current workspace;
+- breadcrumb buttons continue using the established callbacks rather than introducing new route ownership;
+- the return control has a route-specific accessible label in addition to its visible text.
+
+Hour 17 does not redesign primary navigation contents, local tabs, chapter controls, search, or landing-page content. Those remain assigned to Hours 18–24.
+
+Acceptance requires the dedicated breadcrumb audit, all earlier visual-redesign audits, CSS/readability/accessibility checks, direct Vite build, and the complete 18-render Succession visual matrix.
+
 ## Compatibility strategy
 
 The current Succession implementation contains several corrective style layers. Batch 1 does not delete them blindly.
