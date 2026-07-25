@@ -12,10 +12,16 @@ on:
       - 'src/components/succession/SuccessionArchiveStoryIntelligenceWorkspace.jsx'
       - 'src/components/succession/SuccessionArchiveStoryIntelligenceWorkspace.css'
       - 'src/components/succession/SuccessionArchiveStoryCommand.css'
+      - 'src/components/succession/SuccessionArchiveEventWorkspace.jsx'
+      - 'src/components/succession/SuccessionArchiveEventWorkspace.css'
+      - 'src/components/succession/SuccessionArchiveEventCommand.css'
       - 'src/components/succession/SuccessionArchiveContrast.css'
+      - 'src/components/succession/SuccessionArchiveStoryContrast.css'
       - 'scripts/audit-succession-batch-4-chapters.mjs'
       - 'scripts/audit-succession-batch-4-story.mjs'
+      - 'scripts/audit-succession-batch-4-events.mjs'
       - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-4.md'
+      - 'src/data/routeManifest.js'
       - '.github/workflows/succession-visual-redesign-batch-4.yml'
 
 permissions:
@@ -27,9 +33,9 @@ concurrency:
 
 jobs:
   narrative_intelligence:
-    name: Batch 4 chapter and Story intelligence regression gate
+    name: Batch 4 narrative and event intelligence regression gate
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: 65
 
     steps:
       - name: Check out repository
@@ -49,6 +55,9 @@ jobs:
 
       - name: Audit Batch 4 Story intelligence
         run: node scripts/audit-succession-batch-4-story.mjs
+
+      - name: Audit Batch 4 event intelligence
+        run: node scripts/audit-succession-batch-4-events.mjs
 
       - name: Audit visual foundation
         run: npm run audit:succession-visual-foundation
@@ -114,6 +123,16 @@ jobs:
           set -o pipefail
           npm run qa:visual 2>&1 | tee batch4-story-visual.log
 
+      - name: Inspect Events workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/events
+          VISUAL_QA_OUTPUT: .visual-qa/succession-events
+          VISUAL_QA_SCREENSHOTS: all
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run qa:visual 2>&1 | tee batch4-events-visual.log
+
       - name: Publish Batch 4 narrative diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -122,8 +141,10 @@ jobs:
           path: |
             batch4-chapters-visual.log
             batch4-story-visual.log
+            batch4-events-visual.log
             .visual-qa/succession-chapters
             .visual-qa/succession-story
+            .visual-qa/succession-events
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 14
