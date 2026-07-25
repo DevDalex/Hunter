@@ -90,7 +90,7 @@ const events = Object.freeze(uniqueById([
   ...batch1Events,
 ]).map((event) => Object.freeze({
   ...event,
-  chapterRange: Object.freeze(updateRangeEnd(event.chapterRange)),
+  chapterRange: Object.freeze({ ...event.chapterRange }),
   updatedAt: ARCHIVE_DATE,
 })));
 
