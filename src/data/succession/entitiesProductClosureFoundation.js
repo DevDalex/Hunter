@@ -12,17 +12,7 @@ const slugify = (value = '') => String(value)
   .replace(/^-+|-+$/g, '');
 const chapterSourceId = (chapter) => `source:chapter-${chapter}`;
 
-const glossary = ({
-  term,
-  definition,
-  category,
-  firstChapter,
-  synonyms = [],
-  relatedEntityIds = [],
-  sourceChapters = [firstChapter],
-  certainty = 'confirmed',
-  boundaryDefinitions = [],
-}) => Object.freeze({
+const glossary = ({ term, definition, category, firstChapter, synonyms = [], relatedEntityIds = [], sourceChapters = [firstChapter], certainty = 'confirmed', boundaryDefinitions = [] }) => Object.freeze({
   id: `glossary:${slugify(term)}`,
   recordType: 'glossary',
   slug: slugify(term),
@@ -65,29 +55,39 @@ export const successionGlossaryEntries = freeze([
   glossary({ term: 'Inference', definition: 'An archive interpretation supported by evidence but not directly confirmed as a complete canonical fact.', category: 'Evidence', firstChapter: 340, synonyms: ['Inferred'], relatedEntityIds: ['source:hunterpedia-succession-contest'], sourceChapters: [340], certainty: 'inference' }),
 ]);
 
-const mediaRecord = ({ subject, mediaType, src, provenanceUrl = null, sourceIds = [] }) => Object.freeze({
-  id: `media:${subject.id.replaceAll(':', '-')}:${mediaType}`,
-  recordType: 'media',
-  mediaType,
-  subjectIds: freeze([subject.id]),
-  label: `${subject.name} ${mediaType.replaceAll('-', ' ')}`,
-  src,
-  provenanceUrl: provenanceUrl || subject.referenceUrl || null,
-  sourceIds: freeze(unique(sourceIds.length ? sourceIds : subject.sourceIds || [])),
-  availability: src ? 'available' : 'missing',
-  alt: `${subject.name} archive ${mediaType.replaceAll('-', ' ')}`,
-  aspectRatio: mediaType === 'portrait' ? '3:4' : '4:3',
-  lastVerifiedAt: ARCHIVE_DATE,
-});
-
 const visualSubjects = [
   ...storyFoundationData.characters.map((subject) => ({ subject, mediaType: 'portrait', src: subject.media?.portrait || null, provenanceUrl: subject.media?.source || subject.referenceUrl })),
   ...storyFoundationData.guardianBeasts.map((subject) => ({ subject, mediaType: 'guardian-beast-visual', src: subject.media?.portrait || null, provenanceUrl: subject.referenceUrl })),
-];
+].filter((record) => record.src);
 
-export const successionMediaRecords = freeze(visualSubjects
-  .filter((record) => record.src)
-  .map((record) => mediaRecord(record)));
+const consolidatedMedia = new Map();
+for (const record of visualSubjects) {
+  const key = `${record.mediaType}|${record.src}`;
+  const current = consolidatedMedia.get(key) || { ...record, subjects: [], sourceIds: [] };
+  current.subjects.push(record.subject);
+  current.sourceIds.push(...(record.subject.sourceIds || []));
+  if (!current.provenanceUrl && record.provenanceUrl) current.provenanceUrl = record.provenanceUrl;
+  consolidatedMedia.set(key, current);
+}
+
+export const successionMediaRecords = freeze([...consolidatedMedia.values()].map((record) => {
+  const names = record.subjects.map((subject) => subject.name);
+  const first = record.subjects[0];
+  return Object.freeze({
+    id: `media:${first.id.replaceAll(':', '-')}:${record.mediaType}`,
+    recordType: 'media',
+    mediaType: record.mediaType,
+    subjectIds: freeze(unique(record.subjects.map((subject) => subject.id))),
+    label: names.length === 1 ? `${names[0]} ${record.mediaType.replaceAll('-', ' ')}` : `${names.join(', ')} shared ${record.mediaType.replaceAll('-', ' ')}`,
+    src: record.src,
+    provenanceUrl: record.provenanceUrl || first.referenceUrl || null,
+    sourceIds: freeze(unique(record.sourceIds)),
+    availability: 'available',
+    alt: names.length === 1 ? `${names[0]} archive ${record.mediaType.replaceAll('-', ' ')}` : `${names.join(', ')} archive ${record.mediaType.replaceAll('-', ' ')}`,
+    aspectRatio: record.mediaType === 'portrait' ? '3:4' : '4:3',
+    lastVerifiedAt: ARCHIVE_DATE,
+  });
+}));
 
 export const successionArchiveData = Object.freeze({
   ...storyFoundationData,
