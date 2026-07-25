@@ -1,0 +1,5 @@
+/* Batch 3 royal command readability floor for compact SVG status labels. */
+.succession-royal-orbit__node text,
+.succession-royal-orbit__center .is-label {
+  font-size: 11px !important;
+}
