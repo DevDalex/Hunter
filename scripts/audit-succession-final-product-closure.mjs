@@ -12,6 +12,8 @@ const assert = (condition, message) => {
 
 const [
   app,
+  roleWorkspaces,
+  deepWorkspaces,
   extended,
   glossaryWorkspace,
   mediaWorkspace,
@@ -21,10 +23,13 @@ const [
   productFoundation,
   productSelectors,
   finalSearchAdapter,
+  schemaAdapter,
   finalReleaseSource,
   packageText,
 ] = await Promise.all([
   readFile(new URL('../src/components/succession/SuccessionArchiveApp.jsx', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/succession/SuccessionArchiveWorkspaces.jsx', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/succession/SuccessionArchiveDeepWorkspaces.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveExtendedWorkspaces.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveGlossaryWorkspace.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveMediaWorkspace.jsx', import.meta.url), 'utf8'),
@@ -34,6 +39,7 @@ const [
   readFile(new URL('../src/data/succession/entitiesProductClosureFoundation.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/productClosureSelectors.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/productClosureSelectorsFinal.js', import.meta.url), 'utf8'),
+  readFile(new URL('../src/data/succession/schemasFinal.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/finalReleaseClosure.js', import.meta.url), 'utf8'),
   readFile(new URL('../package.json', import.meta.url), 'utf8'),
 ]);
@@ -45,13 +51,24 @@ assert(sourceRendersRouteWith(app, 'glossary', 'GlossaryWorkspace'), 'glossary r
 assert(sourceRendersRouteWith(app, 'media', 'MediaWorkspace'), 'media route must render the canonical workspace');
 assert(declarationIncludesLiteral(app, 'dedicated', 'glossary') && declarationIncludesLiteral(app, 'dedicated', 'media'), 'Glossary and Media must remain dedicated routes');
 assert(app.includes('searchArchiveProduct') && app.includes('matchReason') && app.includes('succession-search-complete__groups'), 'global search must use grouped explained product results');
-assert(app.includes('routeParams={routeParams} spoilerLimit={spoilerLimit}'), 'Library routes must receive deep-link parameters and the chapter boundary');
+assert(app.includes('routeParams={routeParams} spoilerLimit={spoilerLimit}'), 'Library and role routes must receive deep-link parameters and the chapter boundary');
+assert(app.includes("<PrincesWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit}") && app.includes("<MafiaWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit}"), 'Royal Family and Mafia role routes must remain chapter-bounded');
+assert(app.includes('<QueensWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit}') && app.includes('<BodyStatesWorkspace spoilerLimit={spoilerLimit}'), 'Queens and body-state role routes must remain chapter-bounded');
 
 for (const removedExport of ['CharactersWorkspace', 'OrganizationsWorkspace', 'LocationsWorkspace', 'ResearchWorkspace', 'GlossaryWorkspace', 'MediaWorkspace']) {
   assert(!extended.includes(`export function ${removedExport}`), `${removedExport} legacy export must be removed from the shared module`);
 }
-assert(!extended.includes("../../data/successionDossier") && !extended.includes("../../data/successionArchive"), 'active role workspaces must not import legacy dossier or archive ledgers');
-assert(extended.includes('export function HuntersWorkspace') && extended.includes('export function MilitaryWorkspace') && extended.includes('export function PoliticsWorkspace'), 'the three active role views must remain available');
+assert(!extended.includes("../../data/successionDossier") && !extended.includes("../../data/successionArchive"), 'active extended role workspaces must not import legacy dossier or archive ledgers');
+assert(extended.includes('export function HuntersWorkspace') && extended.includes('export function MilitaryWorkspace') && extended.includes('export function PoliticsWorkspace'), 'the three active extended role views must remain available');
+
+assert(!roleWorkspaces.includes("../../data/successionDossier") && !roleWorkspaces.includes('SuccessionStoryWorkspace'), 'Royal Family and Mafia must not depend on the legacy dossier or static Story workspace');
+assert(roleWorkspaces.includes('getCharacterDossier') && roleWorkspaces.includes('getOrganizationDossier'), 'Royal Family and Mafia must use canonical dossiers');
+assert(roleWorkspaces.includes('export function PrincesWorkspace') && roleWorkspaces.includes('export function MafiaWorkspace'), 'the two active role workspaces must remain available');
+for (const removed of ['SuccessionStoryWorkspace', 'GuardianBeastsWorkspace', 'EventsWorkspace', 'BodyguardsWorkspace', 'RelationshipsWorkspace', 'ChapterRecordsWorkspace']) {
+  assert(!deepWorkspaces.includes(`export function ${removed}`) && !roleWorkspaces.includes(`export function ${removed}`), `${removed} inactive implementation must remain removed`);
+}
+assert(!deepWorkspaces.includes("../../data/successionDossier") && !deepWorkspaces.includes("../../data/successionArchive"), 'Queens and body states must not depend on static legacy ledgers');
+assert(deepWorkspaces.includes('getCharacterDossier') && deepWorkspaces.includes('export function QueensWorkspace') && deepWorkspaces.includes('export function BodyStatesWorkspace'), 'Queens and body states must use canonical character dossiers');
 
 assert(glossaryWorkspace.includes('getGlossaryEntriesAtChapter') && glossaryWorkspace.includes('getGlossaryEntryAtChapter'), 'Glossary workspace must use chapter-bounded canonical selectors');
 assert(glossaryWorkspace.includes('SourceReference') && glossaryWorkspace.includes('EntityLink'), 'Glossary dossiers must expose evidence and graph connections');
@@ -62,8 +79,10 @@ assert(searchStyles.includes('@media(max-width:620px)') && searchStyles.includes
 
 assert(dataEntry.includes("from './entitiesProductClosureCorrections.js'"), 'public data must activate the corrected Batch 5 foundation');
 assert(dataEntry.includes("from './indexesFinal.js'"), 'product records must remain outside canonical entity indexes');
+assert(dataEntry.includes("from './schemasFinal.js'"), 'product records must remain outside canonical entity validation');
 assert(dataEntry.includes("from './productClosureSelectorsFinal.js'"), 'public search must use the final Story adapter');
 assert(dataEntry.includes('getFinalReleaseClosureReport'), 'public data must expose the definitive release report');
+assert(schemaAdapter.includes('glossaryEntries: Object.freeze({})') && schemaAdapter.includes('mediaRecords: Object.freeze({})'), 'schema adapter must validate only canonical entity collections');
 assert(productFoundation.includes('successionGlossaryEntries') && productFoundation.includes('successionMediaRecords'), 'Batch 5 foundation must publish glossary and media records');
 assert(productFoundation.includes('consolidatedMedia'), 'duplicate media sources must be consolidated in the foundation');
 assert(productSelectors.includes('normalizeArchiveSearchText') && productSelectors.includes('matchReason'), 'product selectors must normalize and explain search matches');
@@ -118,7 +137,7 @@ try {
 
   for (const report of [archive.getPeopleInstitutionClosureReport(), archive.getNenSystemClosureReport(), archive.getStoryIntelligenceClosureReport(), archive.getFoundationClosureReport()]) assert(report?.closureReady, 'all earlier batch closure reports must remain closed');
 
-  console.log(`Succession final product closure audit passed: ${glossary.length} glossary records, ${media.length} consolidated media records, grouped explained chapter-safe search, inactive workspace removal, responsive and reduced-motion Library presentation, all Batch 1–4 closures, and the definitive release-candidate report are active.`);
+  console.log(`Succession final product closure audit passed: ${glossary.length} glossary records, ${media.length} consolidated media records, grouped explained chapter-safe search, inactive workspace and legacy-ledger removal, product-safe schema and indexes, responsive and reduced-motion Library presentation, all Batch 1–4 closures, and the definitive release-candidate report are active.`);
 } finally {
   await vite.close();
 }
