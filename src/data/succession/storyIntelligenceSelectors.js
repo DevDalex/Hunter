@@ -62,7 +62,7 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
 
   const threadStatusAtChapter = (profile, chapter) => {
     if (!profile || chapter < profile.chapterRange.start) return 'not-yet-open';
-    if (profile.resolutionChapter !== null && chapter >= profile.resolutionChapter) return 'resolved';
+    if (profile.resolutionChapter !== null) return chapter >= profile.resolutionChapter ? 'resolved' : 'open';
     return profile.status || 'open';
   };
 
