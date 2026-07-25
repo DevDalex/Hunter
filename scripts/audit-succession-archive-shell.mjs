@@ -31,16 +31,46 @@ for (const id of [
   'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'research', 'glossary', 'media', 'search',
 ]) assert(successionArchiveRouteIds.has(id), `missing primary route ${id}`);
 
-for (const id of ['glossary', 'media', 'nen', 'guardian-spirit-beasts']) {
+for (const id of ['story', 'chapters', 'glossary', 'media', 'nen', 'guardian-spirit-beasts']) {
   assert(successionArchiveRoutes.find((route) => route.id === id)?.status === 'active', `${id} must be a completed active route`);
 }
-assert(successionArchiveRoutes.find((route) => route.id === 'chapters')?.description.includes('latest imported reader chapter'), 'Chapter Records route must follow imported chapter availability');
+assert(successionArchiveRoutes.find((route) => route.id === 'story')?.description.includes('seven parallel story lanes'), 'Story route must describe the canonical Batch 4 model');
+assert(successionArchiveRoutes.find((route) => route.id === 'chapters')?.description.includes('latest imported reader release'), 'Chapter route must follow imported chapter availability');
 
-const [app, entry, shell, workspace, organizationWorkspace, nenWorkspace, beastWorkspace, extendedWorkspace, deepWorkspace, workspaces, primitives, entities, extendedEntities, research, router, preload, css, contrast, catalogue, extendedCss, main, packageJson] = await Promise.all([
+const [
+  app,
+  entry,
+  shell,
+  workspace,
+  storyWorkspace,
+  chapterWorkspace,
+  organizationWorkspace,
+  nenWorkspace,
+  beastWorkspace,
+  extendedWorkspace,
+  deepWorkspace,
+  workspaces,
+  primitives,
+  entities,
+  extendedEntities,
+  research,
+  router,
+  preload,
+  css,
+  contrast,
+  catalogue,
+  storyCss,
+  chapterCss,
+  extendedCss,
+  main,
+  packageJson,
+] = await Promise.all([
   read('src/App.jsx'),
   read('src/components/succession/SuccessionArchiveEntry.jsx'),
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionArchiveApp.jsx'),
+  read('src/components/succession/SuccessionArchiveStoryIntelligenceWorkspace.jsx'),
+  read('src/components/succession/SuccessionArchiveChapterStoryWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveOrganizationWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveNenWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveGuardianBeastWorkspace.jsx'),
@@ -56,6 +86,8 @@ const [app, entry, shell, workspace, organizationWorkspace, nenWorkspace, beastW
   read('src/styles/succession-archive.css'),
   read('src/components/succession/SuccessionArchiveContrast.css'),
   read('src/components/succession/SuccessionArchiveCatalog.css'),
+  read('src/components/succession/SuccessionArchiveStoryIntelligenceWorkspace.css'),
+  read('src/components/succession/SuccessionArchiveChapterStoryWorkspace.css'),
   read('src/components/succession/SuccessionArchiveExtendedWorkspaces.css'),
   read('src/main.jsx'),
   read('package.json'),
@@ -78,19 +110,28 @@ for (const routeId of ['black-whale', 'timeline']) assert(declarationIncludesLit
 assert(!declarationIncludesLiteral(workspace, 'preserved', 'nen'), 'Nen must remain migrated into its canonical workspace');
 assert(workspace.includes('canonLevel') && workspace.includes('SourceReference'), 'canon separation and source references must be visible in entity workspaces');
 assert(workspace.includes('SuccessionChapterReader') === false, 'the archive application must not embed the manga reader');
+assert(!workspace.includes('SuccessionStoryWorkspace'), 'legacy static Story workspace must not remain active');
+assert(!workspace.includes('ChapterRecordsWorkspaceV2'), 'legacy chapter ledger must not remain active');
 
 for (const component of [
   'HuntersWorkspace', 'MilitaryWorkspace', 'PoliticsWorkspace',
-  'GlossaryWorkspace', 'MediaWorkspace', 'DomainEntityDetail', 'ChapterRecordsWorkspaceV2',
+  'GlossaryWorkspace', 'MediaWorkspace', 'DomainEntityDetail',
 ]) assert(extendedWorkspace.includes(`export function ${component}`), `missing completed workspace ${component}`);
+assert(extendedWorkspace.includes('export function ChapterRecordsWorkspaceV2'), 'legacy ChapterRecordsWorkspaceV2 must remain identifiable as inactive migration code');
 for (const component of ['QueensWorkspace', 'BodyStatesWorkspace']) assert(deepWorkspace.includes(`export function ${component}`), `missing active deep workspace ${component}`);
 assert(deepWorkspace.includes('export function GuardianBeastsWorkspace'), 'legacy Guardian Beast workspace must remain identifiable as inactive migration code');
-for (const component of ['SuccessionStoryWorkspace', 'PrincesWorkspace', 'MafiaWorkspace']) assert(workspaces.includes(`export function ${component}`), `missing specialized workspace ${component}`);
+assert(workspaces.includes('export function SuccessionStoryWorkspace'), 'legacy Story workspace must remain identifiable as inactive migration code');
+for (const component of ['PrincesWorkspace', 'MafiaWorkspace']) assert(workspaces.includes(`export function ${component}`), `missing specialized workspace ${component}`);
+
 assert(organizationWorkspace.includes('Organizations as chapter-bounded systems of authority'), 'dedicated organization workspace must own institutional dossiers');
 assert(nenWorkspace.includes('Abilities, contracts, curses, possession, instruction, and royal ritual'), 'dedicated Nen workspace must own system dossiers');
 assert(beastWorkspace.includes('Fifteen Guardian Spirit Beasts as changing ritual records'), 'dedicated beast workspace must own royal beast dossiers');
+assert(storyWorkspace.includes('The arc as phases, parallel plotlines, causal turns, and unresolved questions'), 'dedicated Story workspace must own narrative intelligence');
+assert(chapterWorkspace.includes('Every chapter placed inside phase, plotline, causality, and unresolved-story context'), 'dedicated Chapter workspace must own chapter dossiers');
 
 for (const [routeId, componentName, modulePath] of [
+  ['story', 'StoryIntelligenceWorkspace', './SuccessionArchiveStoryIntelligenceWorkspace'],
+  ['chapters', 'ChapterStoryWorkspace', './SuccessionArchiveChapterStoryWorkspace'],
   ['characters', 'CharactersWorkspace', './SuccessionArchiveCharacterWorkspace'],
   ['bodyguards', 'AssignmentsWorkspace', './SuccessionArchiveAssignmentWorkspace'],
   ['events', 'EventsWorkspace', './SuccessionArchiveEventWorkspace'],
@@ -105,7 +146,7 @@ for (const [routeId, componentName, modulePath] of [
   assert(sourceRendersRouteWith(workspace, routeId, componentName), `route ${routeId} must render ${componentName}`);
 }
 
-for (const route of ['characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'nen', 'guardian-spirit-beasts', 'research', 'glossary', 'media']) {
+for (const route of ['story', 'chapters', 'characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'nen', 'guardian-spirit-beasts', 'research', 'glossary', 'media']) {
   assert(workspace.includes(`route.id === '${route}'`), `route ${route} is not wired into a dedicated workspace`);
 }
 assert(workspace.includes('DomainEntityDetail') && workspace.includes('selectedEntity'), 'canonical entity links must open domain-specific dossiers');
@@ -126,11 +167,13 @@ assert(!main.includes("./styles/succession-archive.css"), 'the scoped archive st
 assert(contrast.includes('font-size: 11px !important'), 'archive readability overrides must preserve the 11px text floor');
 assert(catalogue.includes('.succession-entity-visual') && catalogue.includes('data-has-visual'), 'catalogue design must provide portrait and fallback visual frames');
 assert(extendedCss.includes('.succession-extended-hero') && extendedCss.includes('.succession-domain-dossier') && extendedCss.includes('@media (max-width: 620px)'), 'extended workspaces require owned desktop and mobile design');
+assert(storyCss.includes('.succession-story-intel') && storyCss.includes('@media(max-width:720px)') && storyCss.includes('@media(prefers-reduced-motion:reduce)'), 'Story intelligence requires owned responsive and reduced-motion design');
+assert(chapterCss.includes('.succession-chapter-intel') && chapterCss.includes('@media(max-width:720px)') && chapterCss.includes('@media(prefers-reduced-motion:reduce)'), 'Chapter intelligence requires owned responsive and reduced-motion design');
 
 for (const selector of ['.succession-archive__layout', '.succession-archive__sidebar', '.succession-page-header', '.succession-entity-link', '.succession-state', '.succession-drawer']) assert(css.includes(selector), `design layer is missing ${selector}`);
 assert(css.includes('@media (max-width: 860px)') && css.includes('@media (prefers-reduced-motion: reduce)'), 'responsive and reduced-motion rules are required');
 assert(catalogue.includes('@media (max-width: 620px)'), 'catalogue visuals must include a mobile layout');
 assert(css.includes(':focus-visible'), 'accessible focus styling is required');
-assert(packageJson.includes('"audit:succession-shell"') && packageJson.includes('"qa:succession-shell"') && packageJson.includes('"audit:succession-nen-systems"'), 'package scripts must expose archive and Nen audits');
+assert(packageJson.includes('"audit:succession-shell"') && packageJson.includes('"qa:succession-shell"') && packageJson.includes('"audit:succession-nen-systems"') && packageJson.includes('"audit:succession-story-intelligence"'), 'package scripts must expose archive, Nen, and story audits');
 
-console.log(`Succession Archive shell audit passed through imported Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}: ${successionArchiveRoutes.length} active routes, dedicated people, institution, Nen, and Guardian Beast dossiers, automatic pending research records, scoped design ownership, desktop/mobile shells, and accessibility states verified.`);
+console.log(`Succession Archive shell audit passed through imported Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}: ${successionArchiveRoutes.length} active routes, canonical Story and Chapter intelligence, dedicated people, institution, Nen, and Guardian Beast dossiers, automatic pending research records, scoped design ownership, desktop/mobile shells, and accessibility states verified.`);
