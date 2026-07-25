@@ -2,102 +2,80 @@
 
 ## Objective
 
-Batch 4 redesigns the chapter, Story, event, Nen, Guardian Spirit Beast, location, and Black Whale reference interfaces while preserving the existing data and chapter boundary rules.
+Batch 4 redesigns the chapter, Story, event, Nen, Guardian Spirit Beast, location, and Black Whale reference interfaces while preserving canonical data, source provenance, research conclusions, routing, and chapter boundaries.
 
-## Hour 37 — Chapter directory
+## Hours 37–40 — Chapter intelligence
 
-- Add a chapter intelligence overview.
-- Add imported, documented, partial, pending, and Story-lane metrics.
-- Add text, Story-phase, and research-state filters.
-- Add intelligence-card and compact-index layouts.
-- Show event, cast, and Story-thread counts on chapter records.
+- Cinematic chapter-intelligence command and chapter metrics.
+- Search across chapters, events, lanes, state changes, and Story pressure.
+- Story-phase and research-state filters.
+- Intelligence-card and compact-index directory modes.
+- Oversized chapter identity stage, phase progress, Reader/Story controls, and previous/next navigation.
+- Structured Begins here / Already moving / State change sequence.
+- Persistent chapter boundary and evidence/uncertainty board.
+- Explicit pending-research treatment for imported but unannotated chapters.
 
-## Hour 38 — Chapter-page headers
+## Hours 41–44 — Story intelligence
 
-- Add an oversized chapter identity stage.
-- Show title, phase, voyage day, research state, event count, open Story pressure, and evidence count.
-- Add Reader, Story-phase, previous-chapter, and next-chapter controls.
-- Show progress through the current Story phase.
+- Current-snapshot command hero and phase architecture.
+- Synchronized Story swimlanes across a shared chapter axis.
+- Accessible stacked lane alternatives for mobile.
+- Status-aware Story-thread evidence records and dossiers.
+- Causal river with navigable source event, relationship, target consequence, and explanation.
+- Maintained graph edges only; no inferred relationships are manufactured by presentation code.
 
-## Hour 39 — Chapter summaries and event sequences
+## Hours 45–46 — Event intelligence
 
-- Separate events that begin here from operations already in progress.
-- Present maintained state changes as an ordered sequence.
-- Show event chapter span, category, participant count, location count, and consequence count.
-- Preserve links to Story lanes, event records, cast, locations, institutions, and Nen records.
+- Event command hero and visible, active, resolved, unresolved, and causal-edge metrics.
+- Existing status, category, faction, location, ability, and chapter filters retained.
+- Operational timeline, intelligence-grid, and compact-index views.
+- Dedicated event dossiers with chapter range, category, state, knowledge, importance, voyage day, evidence, cause/action/outcome pipeline, state changes, questions, linked entities, event graph, sources, and previous/next navigation.
 
-## Hour 40 — Evidence and chapter safety
+## Hours 47–48 — Nen mechanics laboratory
 
-- Show the authorized chapter boundary throughout the dossier.
-- Add a dedicated evidence and uncertainty board.
-- Show source count, research state, unresolved Story-thread count, and selected boundary.
-- Keep documented facts, maintained interpretation, unresolved questions, and missing documentation visually distinct.
-- Keep imported but unannotated chapters explicitly marked as pending.
+- Systems and abilities retained as distinct archive modes.
+- Knowledge, category, Nen type, owner, and system filtering.
+- Status-aware ability and system records.
+- Six-stage mechanic model: trigger, range, target, duration, cost, and limitation.
+- Dedicated ability and system dossiers with mechanics, owners, connected systems, events, Guardian Spirit Beasts, actors, evidence, and interpretive boundaries.
 
-## Hour 41 — Story overview and narrative phases
+## Hour 49 — Guardian Spirit Beasts and rituals
 
-- Add a narrative-intelligence command hero for the current authorized Story snapshot.
-- Add phase, lane, event, thread, and causal-link metrics.
-- Redesign the phase directory as a numbered chronological architecture.
-- Show visible chapter range, lane count, event count, thread count, and current-phase state.
-- Redesign phase dossiers with range identity, lane structure, event chronology, Story pressure, and evidence.
+- Fifteen-position Seed Urn-centered royal Nen orbit with a complete semantic host index.
+- Host-first and beast-first browsing.
+- Search, knowledge-state, host-state, and active-filter controls.
+- Status-aware beast records with known, suspected, unresolved, visibility, and host-state context.
+- Dedicated dossiers separating host body, host consciousness, beast activity, and Nen continuation.
+- Ability models, unresolved research records, knowledge timeline, ritual-system links, and evidence.
 
-## Hour 42 — Parallel Story lanes
+## Hour 50 — Locations and Black Whale reference
 
-- Add synchronized Story swimlanes across a shared Chapter 340-to-current axis.
-- Place event markers according to their canonical starting chapters.
-- Add focus controls for one lane or all active lanes.
-- Preserve ordinary lane buttons and mobile event lists as accessible alternatives.
-- Redesign lane dossiers with phase history, event chronology, actors, and pressure records.
-
-## Hour 43 — Story-thread presentation
-
-- Promote open questions into status-aware evidence cards.
-- Show category, opening chapter, exact question, and current status.
-- Redesign thread dossiers with plotline, evidence-event, subject, and source counts.
-- Keep resolved and unresolved thread states structurally and textually distinct.
-
-## Hour 44 — Causal links and consequences
-
-- Add a causal river that shows maintained source-event, relationship, target-event, and summary records.
-- Keep every source and consequence node directly navigable to its event dossier.
-- Preserve textual relationship labels so meaning does not depend on connectors or color.
-- Limit the presentation to causal edges already exposed by the Story graph.
-
-## Hour 45 — Event directory
-
-- Add a canonical event-command hero and visible event, active, resolved, unresolved, and causal-edge metrics.
-- Keep existing status, category, faction, location, ability, and chapter filters.
-- Add active-filter chips and a one-step reset.
-- Add operational timeline, intelligence-grid, and compact-index views.
-- Show chapter span, state, participants, locations, abilities, consequences, and portrait stacks on event records.
-
-## Hour 46 — Event dossiers
-
-- Add a chapter-range identity stage with category, state, knowledge, importance, voyage day, and evidence context.
-- Add direct Chapter and Story intelligence actions.
-- Add a persistent chapter-boundary notice.
-- Present causes, event action, and available outcomes as a three-part operational pipeline.
-- Preserve state changes, unresolved questions, participants, organizations, locations, Nen abilities, predecessors, consequences, sources, and previous/next event navigation.
-- Keep later outcomes and graph nodes hidden until their supporting chapter is authorized.
+- Canonical spatial command with hierarchy, type, tier, access, and chapter-snapshot filtering.
+- Redesigned location cards and dossiers covering breadcrumbs, contained locations, occupants, assignments, events, abilities, movement history, and sources.
+- Premium Black Whale atlas framing with zoom controls, hotspots, complete location index, canonical bridge precision, selected-location inspector, sourced visual tour, royal-room plan, movement routes, passenger manifest, and room directory.
+- Canonical location dossiers remain the source of truth; the atlas remains a navigational and sourced reference layer.
 
 ## Presentation constraints
 
-- Use semantic Succession design tokens.
-- Do not introduce raw hexadecimal colors or `!important` in the new route-owned visual files.
-- Retain 44px control targets.
-- Do not depend on hover for touch layouts.
-- Provide reduced-motion behavior.
-- Keep the Reader as a separate route.
-- Keep advanced lane and causal visuals paired with ordinary semantic controls.
-- Keep event filters and dossiers projected through the current chapter boundary.
+- Semantic Succession design tokens.
+- No new canonical claims, source changes, or spoiler-boundary changes.
+- No raw hexadecimal colors or route-owned `!important` overrides in the new Batch 4 command styles.
+- 44px control targets.
+- Keyboard and touch access without hover dependency.
+- Reduced-motion behavior.
+- Advanced graphics paired with ordinary semantic controls and lists.
 
-## Validation
+## Final validation
+
+The Batch 4 closure workflow runs:
 
 ```bash
 node scripts/audit-succession-batch-4-chapters.mjs
 node scripts/audit-succession-batch-4-story.mjs
 node scripts/audit-succession-batch-4-events.mjs
+node scripts/audit-succession-batch-4-nen-release.mjs
+node scripts/audit-succession-batch-4-guardian-beasts.mjs
+node scripts/audit-succession-batch-4-spatial.mjs
 npm run audit:succession-visual-foundation
 npm run audit:succession-shell-redesign
 npm run audit:succession-page-header-redesign
@@ -113,11 +91,8 @@ npm run prepare:eta-assets
 npx vite build
 ```
 
-The Batch 4 workflow renders the Chapters, Story, and Events workspaces at desktop, tablet, and mobile sizes.
+It then renders Chapters, Story, Events, Nen, Guardian Spirit Beasts, Locations, and Black Whale at desktop, tablet, and mobile sizes.
 
-## Remaining work
+Final result: all audits and the production build pass, and **21 of 21 route-and-viewport renders pass**. Manual review confirmed the materially redesigned Guardian Spirit Beast, Location, and Black Whale screens are visually sound on desktop and mobile.
 
-- Hour 47: Nen ability directory and cards.
-- Hour 48: Ability dossiers and mechanic explanations.
-- Hour 49: Guardian Spirit Beasts and ritual systems.
-- Hour 50: Locations, Black Whale reference, and Batch 4 closure.
+Batch 4 is complete. Batch 5 begins with the global Succession timeline and advanced visualization closure work.
