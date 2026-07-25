@@ -1,0 +1,23 @@
+/* Paper-surface corrections for the Batch 4 Story command. */
+.succession-story-command__phases > .succession-story-intel__section-title span,
+.succession-story-command__lanes > header .succession-story-intel__section-title span,
+.succession-story-command__threads > .succession-story-intel__section-title span,
+.succession-story-command__causal > .succession-story-intel__section-title span {
+  color: var(--succession-text-on-paper-muted);
+}
+
+.succession-story-command__phases > .succession-story-intel__section-title h3,
+.succession-story-command__lanes > header .succession-story-intel__section-title h3,
+.succession-story-command__threads > .succession-story-intel__section-title h3,
+.succession-story-command__causal > .succession-story-intel__section-title h3 {
+  color: var(--succession-text-on-paper);
+}
+
+.succession-story-command__boundary,
+.succession-story-command__boundary h3 {
+  color: var(--succession-text-on-paper);
+}
+
+.succession-story-command__boundary p {
+  color: var(--succession-text-on-paper-muted);
+}
