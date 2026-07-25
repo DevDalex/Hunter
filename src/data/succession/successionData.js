@@ -1,5 +1,5 @@
 import { successionArchiveData } from './entitiesStoryIntelligenceFoundation.js';
-// Active predecessor chain: entitiesStoryIntelligenceFoundation preserves the Batch 3 Nen foundation, which preserves every Batch 2 character and institution record.
+// Active predecessor chain: from './entitiesStoryIntelligenceFoundation.js' to from './entitiesNenSystemFoundation.js' to from './entitiesOrganizationFoundation.js', preserving Batches 2 and 3 beneath Batch 4.
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { buildSuccessionIndexes } from './indexes.js';
 import { createSuccessionSelectors } from './selectors.js';
