@@ -1,0 +1,35 @@
+.succession-nen-command {
+  --nen-canvas: var(--succession-surface-inset);
+  --nen-surface: var(--succession-surface-1);
+  --nen-raised: var(--succession-surface-2);
+  --nen-paper: var(--succession-surface-paper-raised);
+  --nen-paper-muted: var(--succession-surface-paper);
+  --nen-ink: var(--succession-text-strong);
+  --nen-muted: var(--succession-text-muted);
+  --nen-paper-ink: var(--succession-text-on-paper);
+  --nen-paper-muted-ink: var(--succession-text-on-paper-muted);
+  --nen-gold: var(--succession-gold-strong);
+  --nen-crimson: var(--succession-crimson-strong);
+  --nen-line: var(--succession-border-default);
+  --nen-line-strong: var(--succession-border-strong);
+  display: grid;
+  gap: clamp(20px, 3vw, 38px);
+  min-width: 0;
+}
+
+.succession-nen-command h2,
+.succession-nen-command h3,
+.succession-nen-command h4,
+.succession-nen-command p {
+  margin: 0;
+}
+
+.succession-nen-command p {
+  line-height: 1.65;
+}
+
+.succession-nen-command button,
+.succession-nen-command input,
+.succession-nen-command select {
+  min-height: 44px;
+}
