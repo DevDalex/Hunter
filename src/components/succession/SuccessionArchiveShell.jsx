@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Archive,
+  ArrowLeft,
   BookOpen,
   Boxes,
   Building2,
@@ -184,12 +185,28 @@ export default function SuccessionArchiveShell({
 
       <div className="succession-archive__workspace">
         <div className="succession-archive__workspace-frame">
-          <nav className="succession-breadcrumbs" aria-label="Breadcrumb">
-            <button type="button" onClick={onExitArchive}>Story</button>
-            <ChevronRight size={13} aria-hidden="true" />
-            <button type="button" onClick={() => onNavigate('archive')}>Succession Archive</button>
-            {route.id !== 'archive' && <><ChevronRight size={13} aria-hidden="true" /><span aria-current="page">{route.label}</span></>}
-          </nav>
+          <div className="succession-route-context">
+            <nav className="succession-breadcrumbs" aria-label="Breadcrumb">
+              <ol>
+                <li><button type="button" onClick={onExitArchive}>Story</button></li>
+                <li className="succession-breadcrumbs__separator" aria-hidden="true"><ChevronRight size={13} /></li>
+                <li><button type="button" onClick={() => onNavigate('archive')}>Succession Archive</button></li>
+                {route.id !== 'archive' && <>
+                  <li className="succession-breadcrumbs__separator" aria-hidden="true"><ChevronRight size={13} /></li>
+                  <li><span aria-current="page">{route.label}</span></li>
+                </>}
+              </ol>
+            </nav>
+            <button
+              type="button"
+              className="succession-return-path"
+              onClick={route.id === 'archive' ? onExitArchive : () => onNavigate('archive')}
+              aria-label={route.id === 'archive' ? 'Return to Story' : 'Back to Succession Archive index'}
+            >
+              <ArrowLeft size={15} aria-hidden="true" />
+              <span>{route.id === 'archive' ? 'Return to Story' : 'Back to archive index'}</span>
+            </button>
+          </div>
           <ArchivePageHeader
             kicker={`${route.group} workspace`}
             title={route.title}
