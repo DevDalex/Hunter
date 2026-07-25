@@ -1,4 +1,4 @@
-/* Route-owned 11px readability floor, including Batch 4 Story and Chapter intelligence labels. */
+/* Route-owned 11px readability floor, including Batch 3 character command and Batch 4 Story and Chapter intelligence labels. */
 .succession-archive-nav h2,
 .succession-archive-nav a small,
 .succession-page-header__meta dt,
@@ -20,6 +20,14 @@
 .succession-search-workspace article footer > span,
 .succession-state > span,
 .succession-drawer header span,
+.succession-character-command-metrics dt,
+.succession-character-command-filters label > span:not(.sr-only),
+.succession-character-card__state,
+.succession-character-command-profile__record,
+.succession-character-command-identity__badges span,
+.succession-character-command-chapter__copy span,
+.succession-character-lifetime article::before,
+.succession-character-lifetime article.is-current::after,
 .succession-canonical-assignments__hero dt,
 .succession-assignment-dossier dt,
 .succession-assignment-character-snapshot dt,
