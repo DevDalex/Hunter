@@ -191,7 +191,7 @@ function FamilyTreeWorkspace({ spoilerLimit, onNavigate }) {
   const princes = entitiesForRoute('princes');
   return <Suspense fallback={<Loading label="royal family tree" />}>
     <div className="succession-migration-note"><b>Diagram view</b><span>The family tree remains available as a visual companion; prince records now open in the chapter-bounded character dossier.</span><button type="button" onClick={() => onNavigate('princes')}>Back to prince records</button></div>
-    <FamilyTree spoilerLimit={spoilerLimit} onOpenPrince={(order) => { const entity = princes.find((record) => record.princeOrder === Number(order)); onNavigate('characters', entity ? { entity: entity.id } : {}); }} />
+    <FamilyTree spoilerLimit={spoilerLimit} onOpenPrince={(order) => { const entity = princes.find((record) => entity.princeOrder === Number(order)); onNavigate('characters', entity ? { entity: entity.id } : {}); }} />
   </Suspense>;
 }
 
@@ -220,7 +220,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const preserved = ['black-whale', 'timeline'].includes(route.id);
   const dedicated = new Set(['story', 'princes', 'queens', 'bodyguards', 'mafia', 'nen', 'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']);
   const selectedEntity = routeParams.entity ? getEntityById(routeParams.entity) : null;
-  const specializedRecordRoute = ['characters', 'princes', 'queens', 'chapters', 'locations', 'bodyguards', 'relationships', 'organizations', 'nen', 'guardian-spirit-beasts'].includes(route.id);
+  const specializedRecordRoute = ['characters', 'princes', 'queens', 'chapters', 'events', 'locations', 'bodyguards', 'relationships', 'organizations', 'nen', 'guardian-spirit-beasts'].includes(route.id);
   const showCharacterDossier = Boolean(selectedEntity?.entityType === 'character' && !treeView);
   const showOrganizationDossier = Boolean(selectedEntity?.entityType === 'organization' && !treeView);
   const showAbilityDossier = Boolean(selectedEntity?.entityType === 'ability' && !treeView);
