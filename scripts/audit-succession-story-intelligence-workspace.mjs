@@ -19,6 +19,7 @@ const [
   dataEntry,
   entityLayer,
   foundation,
+  corrections,
   selectors,
   routes,
 ] = await Promise.all([
@@ -30,6 +31,7 @@ const [
   readFile(new URL('../src/data/succession/successionData.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/entitiesStoryIntelligenceFoundation.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/storyIntelligenceFoundation.js', import.meta.url), 'utf8'),
+  readFile(new URL('../src/data/succession/storyIntelligenceCorrections.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/storyIntelligenceSelectors.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/archiveRoutes.js', import.meta.url), 'utf8'),
 ]);
@@ -54,11 +56,14 @@ for (const selector of [
 ]) assert(dataEntry.includes(selector), `public data entry must expose ${selector}`);
 assert(entityLayer.includes('storyPhaseIds') && entityLayer.includes('storyLaneIds') && entityLayer.includes('storyThreadIds'), 'every chapter must receive story projections');
 assert(entityLayer.includes('incomingCausalLinkIds') && entityLayer.includes('outgoingCausalLinkIds'), 'chapters must receive causal projections');
+assert(entityLayer.includes('storyIntelligenceCorrections.js'), 'active story layer must apply maintained corrections');
 assert(foundation.includes('story-lane:expedition-frame') && foundation.includes('story-lane:justice-military'), 'all narrative edges must be represented as lanes');
 assert(foundation.includes('story-phase:pending-current-release'), 'pending imported releases must have an explicit non-claim phase');
 assert(foundation.includes('story-thread:succession-completion-condition') && foundation.includes('story-thread:sarahell-curse-operation'), 'major unresolved threads must be explicit');
 assert(foundation.includes('story-cause:seed-urn-to-departure') && foundation.includes('story-cause:balsamilco-to-funeral'), 'major causal transitions must be explicit');
+assert(corrections.includes('story-thread:hisoka-chrollo-deathmatch-outcome'), 'Heavens Arena chapters must retain a bounded outcome thread');
 assert(selectors.includes('phaseCoverageIssues') && selectors.includes('phaseContinuityIssues'), 'closure must reject phase gaps and overlaps');
+assert(selectors.includes("chapter >= profile.resolutionChapter ? 'resolved' : 'open'"), 'resolved threads must remain open before their resolution chapter');
 assert(selectors.includes('pending-maintained-research') || entityLayer.includes('pending-maintained-research'), 'pending research must remain explicit');
 
 assert(storyWorkspace.includes('The arc as phases, parallel plotlines, causal turns, and unresolved questions'), 'Story workspace must expose the Batch 4 model');
@@ -94,7 +99,7 @@ try {
   assert(chapters.length === 75, `Chapter 340–414 coverage must contain 75 records, found ${chapters.length}`);
   assert(Object.keys(successionArchiveData.storyPhaseProfiles || {}).length === 11, 'Batch 4 must retain eleven contiguous phases');
   assert(Object.keys(successionArchiveData.storyLaneProfiles || {}).length === 7, 'Batch 4 must retain seven parallel story lanes');
-  assert(Object.keys(successionArchiveData.storyThreadProfiles || {}).length >= 19, 'Batch 4 must retain at least nineteen explicit story threads');
+  assert(Object.keys(successionArchiveData.storyThreadProfiles || {}).length >= 20, 'Batch 4 must retain at least twenty explicit story threads');
   assert(Object.keys(successionArchiveData.storyCausalLinksById || {}).length >= 17, 'Batch 4 must retain at least seventeen causal links');
 
   const closure = getStoryIntelligenceClosureReport();
@@ -127,6 +132,11 @@ try {
   ]);
   for (const [chapter, phaseId] of phaseExpectations) assert(getStoryPhaseAtChapter(chapter)?.id === phaseId, `Chapter ${chapter} must resolve ${phaseId}`);
 
+  const chapter351 = getChapterStoryDossier(351);
+  assert(chapter351?.threads.some(({ profile, status }) => profile.id === 'story-thread:hisoka-chrollo-deathmatch-outcome' && status === 'open'), 'Chapter 351 must open the Hisoka–Chrollo outcome thread');
+  const chapter357 = getChapterStoryDossier(357);
+  assert(chapter357?.threads.some(({ profile, status }) => profile.id === 'story-thread:hisoka-chrollo-deathmatch-outcome' && status === 'resolved'), 'Chapter 357 must resolve the Hisoka–Chrollo outcome thread');
+
   const chapter383 = getChapterStoryDossier(383);
   assert(chapter383?.phase.id === 'story-phase:escape-failure-and-hidden-systems', 'Chapter 383 must resolve the escape-failure phase');
   assert(chapter383.startingEvents.some((event) => event.id === 'event:twin-prince-escape'), 'Chapter 383 must begin the twin escape event');
@@ -149,7 +159,7 @@ try {
   assert(getStoryLaneDossier('story-lane:mafia-war', 378)?.profile.id === 'story-lane:mafia-war', 'mafia-war lane must appear at Chapter 378');
   assert(getStoryThreadDossier('story-thread:borksen-autonomy', 409) === null, 'Borksen autonomy must remain hidden before Chapter 410');
   assert(getStoryThreadDossier('story-thread:borksen-autonomy', 410)?.status === 'open', 'Borksen autonomy must open at Chapter 410');
-  assert(getStoryThreadDossier('story-thread:sale-sale-beast-threat', 380)?.status === 'resolved' ? false : true, 'Sale-sale threat must remain unresolved at Chapter 380');
+  assert(getStoryThreadDossier('story-thread:sale-sale-beast-threat', 380)?.status === 'open', 'Sale-sale threat must remain unresolved at Chapter 380');
   assert(getStoryThreadDossier('story-thread:sale-sale-beast-threat', 381)?.status === 'resolved', 'Sale-sale threat must resolve at Chapter 381');
 
   const snapshot384 = getStorySnapshotAtChapter(384);
@@ -160,7 +170,7 @@ try {
 
   const causal383 = getStoryCausalGraphAtChapter(383);
   assert(causal383.edges.some((link) => link.id === 'story-cause:seed-urn-to-departure'), 'causal graph must retain Seed Urn to departure');
-  assert(causal383.edges.some((link) => link.id === 'story-cause:twin-escape-to-kacho-letters') === false, 'future Kacho letter consequence must remain hidden at Chapter 383');
+  assert(!causal383.edges.some((link) => link.id === 'story-cause:twin-escape-to-kacho-letters'), 'future Kacho letter consequence must remain hidden at Chapter 383');
   const causal413 = getStoryCausalGraphAtChapter(413);
   assert(causal413.edges.some((link) => link.id === 'story-cause:halkenburg-first-to-balsamilco'), 'causal graph must connect the two possession operations');
   assert(causal413.edges.some((link) => link.id === 'story-cause:balsamilco-to-funeral'), 'causal graph must connect possession to the funeral route');
@@ -177,7 +187,7 @@ try {
   }
   for (const thread of getStoryThreadsAtChapter(413)) assert(thread.sources.length > 0, `${thread.profile.id} must retain chapter-bounded evidence`);
 
-  console.log(`Succession Batch 4 story intelligence audit passed: ${closure.counts.chapters} chapter dossiers, ${closure.counts.phases} contiguous phases, ${closure.counts.lanes} parallel lanes, ${closure.counts.threads} story threads, ${closure.counts.causalLinks} causal links, one explicit pending release, and chapter-bounded search and narrative state.`);
+  console.log(`Succession Batch 4 story intelligence audit passed: ${closure.counts.chapters} chapter dossiers, ${closure.counts.phases} contiguous phases, ${closure.counts.lanes} parallel lanes, ${closure.counts.threads} story threads, ${closure.counts.causalLinks} causal links, one explicit pending release, and chapter-bounded opening, resolution, search, and narrative state.`);
 } finally {
   await vite.close();
 }
