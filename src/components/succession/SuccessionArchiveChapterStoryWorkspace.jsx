@@ -18,7 +18,7 @@ import {
   getChapterStoryDossier,
   getEntitiesByType,
   getEntityById,
-  getStoryPhaseProfile,
+  getStoryPhaseDossier,
 } from '../../data/succession/successionData';
 import {
   ArchivePageHeader,
@@ -61,10 +61,12 @@ export default function SuccessionArchiveChapterStoryWorkspace({ routeParams = {
     setSelectedNumber((current) => chapters.some((chapter) => chapter.number === current) ? current : fallbackNumber);
   }, [chapters, fallbackNumber, requestedEntity?.number, routeParams.chapter, routeParams.focus]);
 
-  const phaseOptions = useMemo(() => [...new Set(chapters.flatMap((chapter) => chapter.storyPhaseIds || []))].map(getStoryPhaseProfile).filter(Boolean), [chapters]);
+  const phaseOptions = useMemo(() => [...new Set(chapters.flatMap((chapter) => chapter.storyPhaseIds || []))]
+    .map((id) => getStoryPhaseDossier(id, spoilerLimit))
+    .filter(Boolean), [chapters, spoilerLimit]);
   const visible = useMemo(() => chapters.filter((chapter) => {
-    const phase = (chapter.storyPhaseIds || []).map(getStoryPhaseProfile).filter(Boolean)[0];
-    const text = normalize([chapter.number, chapter.name, chapter.summary, chapter.voyageDay, phase?.name, ...(chapter.lanes || []), ...(chapter.storyLaneIds || []), ...(chapter.storyThreadIds || [])].join(' '));
+    const phaseDossier = chapter.storyPhaseIds?.[0] ? getStoryPhaseDossier(chapter.storyPhaseIds[0], chapter.number) : null;
+    const text = normalize([chapter.number, chapter.name, chapter.summary, chapter.voyageDay, phaseDossier?.presentation.name, phaseDossier?.presentation.summary, ...(chapter.lanes || []), ...(chapter.storyLaneIds || []), ...(chapter.storyThreadIds || [])].join(' '));
     return (phaseId === 'all' || chapter.storyPhaseIds?.includes(phaseId)) && (!query.trim() || text.includes(normalize(query)));
   }), [chapters, phaseId, query]);
 
@@ -99,16 +101,16 @@ export default function SuccessionArchiveChapterStoryWorkspace({ routeParams = {
     <div className="succession-chapter-intel__layout">
       <aside className="succession-chapter-intel__index">
         <label><Search size={16} /><span className="sr-only">Search chapter dossiers</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Chapter, event, lane, question…" /></label>
-        <select value={phaseId} onChange={(event) => setPhaseId(event.target.value)} aria-label="Filter chapter phase"><option value="all">All story phases</option>{phaseOptions.map((phase) => <option value={phase.id} key={phase.id}>{phase.name}</option>)}</select>
-        <div>{visible.map((chapter) => { const phase = getStoryPhaseProfile(chapter.storyPhaseIds?.[0]); return <button type="button" className={chapter.number === dossier.chapter.number ? 'is-active' : ''} onClick={() => openChapter(chapter.number)} key={chapter.id}><b>{chapter.number}</b><span><strong>{chapter.name.replace(/^Chapter \d+ ·?\s*/, '')}</strong><small>{phase?.name || 'Pending phase'} · {chapter.voyageDay}</small></span><ArrowRight size={13} /></button>; })}</div>
+        <select value={phaseId} onChange={(event) => setPhaseId(event.target.value)} aria-label="Filter chapter phase"><option value="all">All story phases</option>{phaseOptions.map((phaseDossier) => <option value={phaseDossier.profile.id} key={phaseDossier.profile.id}>{phaseDossier.presentation.name}</option>)}</select>
+        <div>{visible.map((chapter) => { const phaseDossier = chapter.storyPhaseIds?.[0] ? getStoryPhaseDossier(chapter.storyPhaseIds[0], chapter.number) : null; return <button type="button" className={chapter.number === dossier.chapter.number ? 'is-active' : ''} onClick={() => openChapter(chapter.number)} key={chapter.id}><b>{chapter.number}</b><span><strong>{chapter.name.replace(/^Chapter \d+ ·?\s*/, '')}</strong><small>{phaseDossier?.presentation.name || 'Pending phase'} · {chapter.voyageDay}</small></span><ArrowRight size={13} /></button>; })}</div>
       </aside>
 
       <article className="succession-chapter-intel__dossier">
-        <header><div><span>{dossier.phase?.name || 'Pending annotation'} · {dossier.chapter.voyageDay}</span><h2>{dossier.chapter.name}</h2><p>{dossier.research?.focus || dossier.chapter.summary}</p></div><button type="button" onClick={() => onNavigate('reader', { chapter: dossier.chapter.number })}>Read chapter <BookOpen size={14} /></button></header>
+        <header><div><span>{dossier.phasePresentation?.name || 'Pending annotation'} · {dossier.chapter.voyageDay}</span><h2>{dossier.chapter.name}</h2><p>{dossier.research?.focus || dossier.chapter.summary}</p></div><button type="button" onClick={() => onNavigate('reader', { chapter: dossier.chapter.number })}>Read chapter <BookOpen size={14} /></button></header>
 
         {pending && <section className="succession-chapter-intel__pending"><ShieldAlert size={20} /><div><h3>Reader media imported; maintained scene research pending</h3><p>This chapter remains accessible in the reader, but Batch 4 does not infer events, locations, or story outcomes before verified annotation is added.</p></div></section>}
 
-        {!!dossier.lanes.length && <section><div className="succession-chapter-intel__section-title"><Layers3 size={18} /><div><span>Parallel narrative</span><h3>Story lanes active in this phase</h3></div></div><div className="succession-chapter-intel__lanes">{dossier.lanes.map((lane) => <button type="button" key={lane.id} onClick={() => onNavigate('story', { lane: shortId(lane.id) })}><b>{lane.name}</b><span>{lane.objective}</span></button>)}</div></section>}
+        {!!dossier.laneDossiers.length && <section><div className="succession-chapter-intel__section-title"><Layers3 size={18} /><div><span>Parallel narrative</span><h3>Story lanes active in this phase</h3></div></div><div className="succession-chapter-intel__lanes">{dossier.laneDossiers.map((laneDossier) => <button type="button" key={laneDossier.profile.id} onClick={() => onNavigate('story', { lane: shortId(laneDossier.profile.id) })}><b>{laneDossier.presentation.name}</b><span>{laneDossier.presentation.objective}</span></button>)}</div></section>}
 
         <div className="succession-chapter-intel__event-columns">
           <section><div className="succession-chapter-intel__section-title"><Activity size={18} /><div><span>Begins here</span><h3>New events and operations</h3></div></div><div className="succession-chapter-intel__events">{dossier.startingEvents.map((event) => <EventCard key={event.id} event={event} mode="Starts" onNavigate={onNavigate} />)}{!dossier.startingEvents.length && <p>No maintained event begins in this chapter.</p>}</div></section>
