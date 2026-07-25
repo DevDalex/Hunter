@@ -18,6 +18,7 @@ const audits = Object.freeze([
   ['relationships', 'scripts/audit-succession-relationships-workspace.mjs'],
   ['foundation', 'scripts/audit-succession-foundation-closure.mjs'],
   ['reader', 'scripts/audit-succession-reader.mjs'],
+  ['final-product', 'scripts/audit-succession-final-product-closure.mjs'],
 ]);
 
 const failures = [];
@@ -41,9 +42,7 @@ for (const [name, relativePath] of audits) {
 
 if (failures.length) {
   console.error(`\nSuccession runtime audit sweep failed in ${failures.length}/${audits.length} audit(s):`);
-  for (const failure of failures) {
-    console.error(`- ${failure.name}: exit code ${failure.status}${failure.error ? ` · ${failure.error}` : ''}`);
-  }
+  for (const failure of failures) console.error(`- ${failure.name}: exit code ${failure.status}${failure.error ? ` · ${failure.error}` : ''}`);
   process.exitCode = 1;
 } else {
   console.log(`\nSuccession runtime audit sweep passed: ${audits.length}/${audits.length} audits.`);
