@@ -9,7 +9,7 @@ import { createOrganizationStateSelectors } from './organizationStateSelectors.j
 import { createPeopleInstitutionClosure } from './peopleInstitutionClosure.js';
 import { createNenSystemSelectors } from './nenSystemSelectors.js';
 import { createStoryIntelligenceSelectors } from './storyIntelligenceSelectors.js';
-import { createProductClosureSelectors } from './productClosureSelectors.js';
+import { createProductClosureSelectors } from './productClosureSelectorsFinal.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
@@ -188,10 +188,7 @@ export const isSuccessionEntityAvailableAtChapter = (entityOrId, chapter) => {
   if (entity.entityType === 'chapter') return entity.number <= parsedChapter;
   if (entity.entityType === 'source' && Number.isFinite(entity.chapter)) return entity.chapter <= parsedChapter;
   if (entity.chapterRange?.start) return entity.chapterRange.start <= parsedChapter;
-
-  const sourceChapters = (entity.sourceIds || [])
-    .map((sourceId) => getEntityById(sourceId)?.chapter)
-    .filter(Number.isFinite);
+  const sourceChapters = (entity.sourceIds || []).map((sourceId) => getEntityById(sourceId)?.chapter).filter(Number.isFinite);
   const contextualChapters = [];
   if (entity.entityType === 'character') {
     contextualChapters.push(...getAppearancesForCharacter(entity.id).map((record) => record.chapter));
@@ -209,11 +206,7 @@ export const isSuccessionEntityAvailableAtChapter = (entityOrId, chapter) => {
 export const searchSuccessionArchive = (query, options = {}) => {
   const limit = Number(options.limit) || 20;
   const chapter = Number.isFinite(Number(options.chapter)) ? Number(options.chapter) : successionArchiveData.chapters.at(-1)?.number;
-  return searchArchiveProduct(query, {
-    chapter,
-    limit: Math.max(limit, 100),
-    types: options.types || null,
-  })
+  return searchArchiveProduct(query, { chapter, limit: Math.max(limit, 100), types: options.types || null })
     .filter((result) => result.resultType === 'entity')
     .slice(0, limit)
     .map((result) => Object.freeze({ entity: result.entity, score: result.score, matchReason: result.matchReason }));
