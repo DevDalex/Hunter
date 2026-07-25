@@ -10,6 +10,7 @@ on:
       - 'src/data/succession/**'
       - 'scripts/audit-succession-visual-foundation.mjs'
       - 'scripts/audit-succession-shell-redesign.mjs'
+      - 'scripts/audit-succession-page-header-redesign.mjs'
       - 'scripts/report-succession-visual-inventory.mjs'
       - 'docs/SUCCESSION-VISUAL-REDESIGN.md'
       - 'package.json'
@@ -68,7 +69,7 @@ jobs:
           echo "Main runtime outcome: ${{ steps.baseline_runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
 
   foundation:
-    name: Foundation and shell visual regression audits
+    name: Foundation, shell, and page-header visual regression audits
     needs: baseline_runtime
     runs-on: ubuntu-latest
     timeout-minutes: 55
@@ -91,6 +92,9 @@ jobs:
 
       - name: Audit shared shell redesign
         run: npm run audit:succession-shell-redesign
+
+      - name: Audit page-header redesign
+        run: npm run audit:succession-page-header-redesign
 
       - name: Report visual inventory
         run: npm run report:succession-visual-inventory > succession-visual-inventory.md
