@@ -1,3 +1,6 @@
+@import './SuccessionArchiveNenCommandLayout.css';
+@import './SuccessionArchiveNenCommandDossier.css';
+
 .succession-nen-command {
   --nen-canvas: var(--succession-surface-inset);
   --nen-surface: var(--succession-surface-1);
