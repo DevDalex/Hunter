@@ -80,33 +80,45 @@
   line-height: 1.68;
 }
 
+.ship-source-banner,
+.ship-visual-tour,
+.royal-room-plan--editorial,
+.ship-movement-map,
+.ship-manifest,
+.room-index {
+  border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 18%, transparent);
+  border-radius: 22px;
+  background: var(--ship-paper-muted);
+  color: var(--ship-paper-ink);
+  box-shadow: var(--succession-shadow-sm);
+}
+
 .ship-source-banner {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
   padding: 18px 20px;
-  border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 18%, transparent);
-  border-radius: 18px;
   background: var(--ship-paper);
-  color: var(--ship-paper-ink);
-  box-shadow: var(--succession-shadow-sm);
 }
 
-.ship-source-banner > svg {
-  color: var(--ship-crimson);
-}
+.ship-source-banner > svg { color: var(--ship-crimson); }
+.ship-source-banner p,
+.ship-visual-tour > header p,
+.royal-room-plan--editorial > header p,
+.room-index__heading p,
+.ship-route p,
+.room-card p { color: var(--ship-paper-muted-ink); }
 
-.ship-source-banner p {
-  color: var(--ship-paper-muted-ink);
-}
-
-.ship-source-banner__actions {
+.ship-source-banner__actions,
+.ship-location-inspector__actions,
+.room-index__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  justify-content: flex-end;
 }
+
+.ship-source-banner__actions { justify-content: flex-end; }
 
 .ship-source-banner__actions button,
 .ship-source-banner__actions a,
@@ -158,21 +170,9 @@
 }
 
 .interactive-ship-map__toolbar span,
-.interactive-ship-map__toolbar small {
-  display: block;
-}
-
-.interactive-ship-map__toolbar small {
-  margin-top: 3px;
-  color: var(--ship-muted);
-  font-size: 11px;
-}
-
-.interactive-ship-map__toolbar > div:last-child {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
+.interactive-ship-map__toolbar small { display: block; }
+.interactive-ship-map__toolbar small { margin-top: 3px; color: var(--ship-muted); font-size: 11px; }
+.interactive-ship-map__toolbar > div:last-child { display: flex; align-items: center; gap: 6px; }
 
 .interactive-ship-map__toolbar button,
 .ship-location-inspector__pager button {
@@ -195,16 +195,8 @@
   background-size: 32px 32px;
 }
 
-.interactive-ship-map__canvas {
-  position: relative;
-  margin: 0 auto;
-}
-
-.ship-hotspot {
-  min-width: 44px;
-  min-height: 44px;
-}
-
+.interactive-ship-map__canvas { position: relative; margin: 0 auto; }
+.ship-hotspot { min-width: 44px; min-height: 44px; }
 .ship-hotspot > i {
   display: block;
   width: 18px;
@@ -214,7 +206,6 @@
   background: var(--ship-gold);
   box-shadow: 0 0 0 6px color-mix(in srgb, var(--ship-gold) 14%, transparent);
 }
-
 .ship-hotspot.is-selected > i,
 .ship-hotspot:focus-visible > i {
   background: var(--ship-crimson);
@@ -230,14 +221,8 @@
   color: var(--ship-ink);
   box-shadow: var(--succession-shadow-md);
 }
-
 .ship-hotspot__tooltip small,
-.ship-hotspot__tooltip em {
-  display: block;
-  color: var(--ship-muted);
-  font-size: 11px;
-  font-style: normal;
-}
+.ship-hotspot__tooltip em { display: block; color: var(--ship-muted); font-size: 11px; font-style: normal; }
 
 .interactive-ship-map figcaption {
   display: flex;
@@ -248,35 +233,16 @@
   color: var(--ship-muted);
   font-size: 11px;
 }
-
-.interactive-ship-map figcaption a {
-  color: var(--ship-gold);
-}
+.interactive-ship-map figcaption a { color: var(--ship-gold); }
 
 .ship-location-inspector {
   position: sticky;
   top: 18px;
   padding: clamp(18px, 3vw, 26px);
 }
-
-.ship-location-inspector__pager {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.ship-location-inspector__pager > span {
-  color: var(--ship-muted);
-  font-family: var(--succession-font-mono);
-  font-size: 11px;
-  font-weight: 850;
-}
-
-.ship-location-inspector > header {
-  margin-top: 16px;
-}
-
+.ship-location-inspector__pager { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ship-location-inspector__pager > span { color: var(--ship-muted); font-family: var(--succession-font-mono); font-size: 11px; font-weight: 850; }
+.ship-location-inspector > header { margin-top: 16px; }
 .ship-location-inspector > header h3 {
   margin-top: 6px;
   color: var(--ship-ink);
@@ -284,20 +250,9 @@
   font-size: clamp(28px, 3.2vw, 44px);
   line-height: .98;
 }
-
 .ship-location-inspector > header p,
-.ship-location-inspector > p {
-  margin-top: 8px;
-  color: var(--ship-muted);
-  line-height: 1.6;
-}
-
-.ship-location-inspector > figure {
-  margin-top: 16px;
-  overflow: hidden;
-  border: 1px solid var(--ship-line);
-  border-radius: 16px;
-}
+.ship-location-inspector > p { margin-top: 8px; color: var(--ship-muted); line-height: 1.6; }
+.ship-location-inspector > figure { margin-top: 16px; overflow: hidden; border: 1px solid var(--ship-line); border-radius: 16px; }
 
 .ship-location-inspector__evidence {
   display: grid;
@@ -305,7 +260,6 @@
   gap: 7px;
   margin-top: 10px;
 }
-
 .ship-location-inspector__evidence button {
   min-height: 82px;
   padding: 0;
@@ -316,12 +270,11 @@
   color: var(--ship-ink);
   cursor: pointer;
 }
-
 .ship-location-inspector__evidence span {
   display: block;
   padding: 6px;
   overflow: hidden;
-  font-size: 10px;
+  font-size: 11px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -332,33 +285,10 @@
   gap: 8px;
   margin-top: 16px;
 }
-
-.ship-location-inspector dl > div {
-  padding: 11px;
-  border: 1px solid var(--ship-line);
-  border-radius: 11px;
-  background: var(--ship-raised);
-}
-
-.ship-location-inspector dt {
-  color: var(--ship-muted);
-  font-family: var(--succession-font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.ship-location-inspector dd {
-  margin: 4px 0 0;
-  color: var(--ship-ink);
-  font-weight: 800;
-}
-
-.ship-location-inspector__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 16px;
-}
+.ship-location-inspector dl > div { padding: 11px; border: 1px solid var(--ship-line); border-radius: 11px; background: var(--ship-raised); }
+.ship-location-inspector dt { color: var(--ship-muted); font-family: var(--succession-font-mono); font-size: 11px; text-transform: uppercase; }
+.ship-location-inspector dd { margin: 4px 0 0; color: var(--ship-ink); font-weight: 800; }
+.ship-location-inspector__actions { margin-top: 16px; }
 
 .ship-hotspot-index,
 .ship-tier-key,
@@ -373,7 +303,6 @@
   background: var(--ship-paper-muted);
   scrollbar-width: thin;
 }
-
 .ship-hotspot-index button,
 .ship-tier-key button,
 .tier-tabs button,
@@ -387,7 +316,6 @@
   color: var(--ship-paper-ink);
   cursor: pointer;
 }
-
 .ship-hotspot-index button.is-active,
 .ship-tier-key button.is-active,
 .tier-tabs button.is-active,
@@ -404,26 +332,10 @@
 .royal-room-plan--editorial,
 .ship-movement-map,
 .ship-manifest,
-.room-index {
-  display: grid;
-  gap: 16px;
-  padding: clamp(20px, 3vw, 30px);
-  border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 18%, transparent);
-  border-radius: 22px;
-  background: var(--ship-paper-muted);
-  color: var(--ship-paper-ink);
-  box-shadow: var(--succession-shadow-sm);
-}
-
+.room-index { display: grid; gap: 16px; padding: clamp(20px, 3vw, 30px); }
 .ship-visual-tour > header,
 .royal-room-plan--editorial > header,
-.room-index__heading {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 20px;
-}
-
+.room-index__heading { display: flex; align-items: end; justify-content: space-between; gap: 20px; }
 .ship-visual-tour h3,
 .royal-room-plan--editorial h3,
 .ship-movement-map h3,
@@ -435,20 +347,7 @@
   line-height: 1;
 }
 
-.ship-visual-tour > header p,
-.royal-room-plan--editorial > header p,
-.room-index__heading p,
-.ship-route p,
-.room-card p {
-  color: var(--ship-paper-muted-ink);
-}
-
-.ship-visual-tour > div {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-}
-
+.ship-visual-tour > div { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .ship-visual-tour > div > button {
   min-width: 0;
   padding: 0;
@@ -460,14 +359,7 @@
   color: var(--ship-paper-ink);
   cursor: pointer;
 }
-
-.ship-visual-tour figure {
-  position: relative;
-  margin: 0;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-}
-
+.ship-visual-tour figure { position: relative; margin: 0; aspect-ratio: 16 / 10; overflow: hidden; }
 .ship-visual-tour figure i {
   position: absolute;
   right: 8px;
@@ -484,17 +376,8 @@
   font-style: normal;
   font-weight: 900;
 }
-
-.ship-visual-tour > div > button > span {
-  display: grid;
-  gap: 4px;
-  padding: 12px;
-}
-
-.ship-visual-tour small {
-  color: var(--ship-paper-muted-ink);
-  font-size: 11px;
-}
+.ship-visual-tour > div > button > span { display: grid; gap: 4px; padding: 12px; }
+.ship-visual-tour small { color: var(--ship-paper-muted-ink); font-size: 11px; }
 
 .ship-fact-ribbon {
   display: grid;
@@ -505,139 +388,33 @@
   background: var(--ship-paper);
   color: var(--ship-paper-ink);
 }
-
-.ship-fact-ribbon > div {
-  display: grid;
-  gap: 5px;
-  padding: 18px;
-  border-right: 1px solid color-mix(in srgb, var(--ship-paper-ink) 13%, transparent);
-}
-
-.ship-fact-ribbon > div:last-child {
-  border-right: 0;
-}
-
-.ship-fact-ribbon span {
-  color: var(--ship-paper-muted-ink);
-  font-family: var(--succession-font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.ship-fact-ribbon strong {
-  color: var(--ship-paper-ink);
-  font-family: var(--succession-font-display);
-  font-size: clamp(22px, 2.4vw, 34px);
-}
+.ship-fact-ribbon > div { display: grid; gap: 5px; padding: 18px; border-right: 1px solid color-mix(in srgb, var(--ship-paper-ink) 13%, transparent); }
+.ship-fact-ribbon > div:last-child { border-right: 0; }
+.ship-fact-ribbon span { color: var(--ship-paper-muted-ink); font-family: var(--succession-font-mono); font-size: 11px; text-transform: uppercase; }
+.ship-fact-ribbon strong { color: var(--ship-paper-ink); font-family: var(--succession-font-display); font-size: clamp(22px, 2.4vw, 34px); }
 
 .royal-room-plan__banquet,
 .royal-room-plan__side button,
 .ship-route,
-.room-card {
-  border-color: color-mix(in srgb, var(--ship-paper-ink) 15%, transparent);
-  background: var(--ship-paper);
-  color: var(--ship-paper-ink);
-}
+.room-card { border-color: color-mix(in srgb, var(--ship-paper-ink) 15%, transparent); background: var(--ship-paper); color: var(--ship-paper-ink); }
+.royal-room-plan__side button { min-height: 86px; }
+.royal-room-plan__side button i { color: var(--ship-crimson); font-family: var(--succession-font-mono); font-size: 11px; }
+.royal-room-plan__corridor { border-color: color-mix(in srgb, var(--ship-gold) 35%, transparent); background: color-mix(in srgb, var(--ship-gold) 7%, var(--ship-paper)); }
 
-.royal-room-plan__side button {
-  min-height: 86px;
-}
+.ship-movement-map__routes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.ship-route { padding: 16px; border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 15%, transparent); border-radius: 14px; border-left: 4px solid var(--ship-gold); }
+.ship-route--restricted { border-left-color: var(--succession-state-warning); }
+.ship-route--hidden { border-left-color: var(--ship-crimson); }
+.ship-route header span { color: var(--ship-paper-muted-ink); font-family: var(--succession-font-mono); font-size: 11px; text-transform: uppercase; }
+.ship-route h4 { color: var(--ship-paper-ink); }
+.ship-route > div { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+.ship-route > div > span { display: inline-flex; align-items: center; gap: 7px; padding: 7px 9px; border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 13%, transparent); border-radius: 999px; background: var(--ship-paper-muted); }
 
-.royal-room-plan__side button i {
-  color: var(--ship-crimson);
-  font-family: var(--succession-font-mono);
-  font-size: 11px;
-}
-
-.royal-room-plan__corridor {
-  border-color: color-mix(in srgb, var(--ship-gold) 35%, transparent);
-  background: color-mix(in srgb, var(--ship-gold) 7%, var(--ship-paper));
-}
-
-.ship-movement-map__routes {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.ship-route {
-  padding: 16px;
-  border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 15%, transparent);
-  border-radius: 14px;
-  border-left: 4px solid var(--ship-gold);
-}
-
-.ship-route--restricted {
-  border-left-color: var(--succession-state-warning);
-}
-
-.ship-route--hidden {
-  border-left-color: var(--ship-crimson);
-}
-
-.ship-route header span {
-  color: var(--ship-paper-muted-ink);
-  font-family: var(--succession-font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.ship-route h4 {
-  color: var(--ship-paper-ink);
-}
-
-.ship-route > div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-top: 10px;
-}
-
-.ship-route > div > span {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 7px 9px;
-  border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 13%, transparent);
-  border-radius: 999px;
-  background: var(--ship-paper-muted);
-}
-
-.ship-manifest__table-wrap {
-  overflow: auto;
-  border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 16%, transparent);
-  border-radius: 14px;
-  background: var(--ship-paper);
-}
-
-.ship-manifest table {
-  width: 100%;
-  min-width: 760px;
-  border-collapse: collapse;
-  color: var(--ship-paper-ink);
-}
-
+.ship-manifest__table-wrap { overflow: auto; border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 16%, transparent); border-radius: 14px; background: var(--ship-paper); }
+.ship-manifest table { width: 100%; min-width: 760px; border-collapse: collapse; color: var(--ship-paper-ink); }
 .ship-manifest th,
-.ship-manifest td {
-  padding: 13px 14px;
-  border-bottom: 1px solid color-mix(in srgb, var(--ship-paper-ink) 12%, transparent);
-  text-align: left;
-}
-
-.ship-manifest thead th {
-  position: sticky;
-  top: 0;
-  background: var(--ship-paper-muted);
-  color: var(--ship-paper-muted-ink);
-  font-family: var(--succession-font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.room-index__actions {
-  display: flex;
-  gap: 8px;
-}
+.ship-manifest td { padding: 13px 14px; border-bottom: 1px solid color-mix(in srgb, var(--ship-paper-ink) 12%, transparent); text-align: left; }
+.ship-manifest thead th { position: sticky; top: 0; background: var(--ship-paper-muted); color: var(--ship-paper-muted-ink); font-family: var(--succession-font-mono); font-size: 11px; text-transform: uppercase; }
 
 .room-index__actions label {
   display: flex;
@@ -649,63 +426,15 @@
   border-radius: 999px;
   background: var(--ship-paper);
 }
-
-.room-index__actions input {
-  min-width: 0;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: var(--ship-paper-ink);
-}
-
-.room-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.room-card {
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 15%, transparent);
-  border-radius: 16px;
-  box-shadow: var(--succession-shadow-sm);
-}
-
-.room-card > div {
-  padding: 16px;
-}
-
-.room-card h4 {
-  margin-top: 5px;
-  color: var(--ship-paper-ink);
-  font-size: 21px;
-}
-
-.room-card dl {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 7px;
-  margin-top: 14px;
-}
-
-.room-card dl > div {
-  padding: 9px;
-  border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 12%, transparent);
-  border-radius: 9px;
-  background: var(--ship-paper-muted);
-}
-
-.room-card dt {
-  color: var(--ship-paper-muted-ink);
-  font-family: var(--succession-font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.room-card dd {
-  margin: 4px 0 0;
-  color: var(--ship-paper-ink);
-}
+.room-index__actions input { min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ship-paper-ink); }
+.room-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.room-card { overflow: hidden; border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 15%, transparent); border-radius: 16px; box-shadow: var(--succession-shadow-sm); }
+.room-card > div { padding: 16px; }
+.room-card h4 { margin-top: 5px; color: var(--ship-paper-ink); font-size: 21px; }
+.room-card dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; margin-top: 14px; }
+.room-card dl > div { padding: 9px; border: 1px solid color-mix(in srgb, var(--ship-paper-ink) 12%, transparent); border-radius: 9px; background: var(--ship-paper-muted); }
+.room-card dt { color: var(--ship-paper-muted-ink); font-family: var(--succession-font-mono); font-size: 11px; text-transform: uppercase; }
+.room-card dd { margin: 4px 0 0; color: var(--ship-paper-ink); }
 
 .room-index__more,
 .ship-access-note {
@@ -721,49 +450,27 @@
 }
 
 @media (max-width: 1120px) {
-  .interactive-ship-atlas {
-    grid-template-columns: minmax(0, 1fr) minmax(300px, .55fr);
-  }
-
-  .ship-visual-tour > div {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
+  .interactive-ship-atlas { grid-template-columns: minmax(0, 1fr) minmax(300px, .55fr); }
+  .ship-visual-tour > div { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 @media (max-width: 860px) {
   .black-whale-section--atlas > .section-heading,
-  .interactive-ship-atlas {
-    grid-template-columns: 1fr;
-  }
-
-  .ship-location-inspector {
-    position: static;
-  }
-
+  .interactive-ship-atlas { grid-template-columns: 1fr; }
+  .ship-location-inspector { position: static; }
   .ship-visual-tour > header,
   .royal-room-plan--editorial > header,
-  .room-index__heading {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
+  .room-index__heading { align-items: stretch; flex-direction: column; }
   .ship-visual-tour > div,
   .room-grid,
-  .ship-movement-map__routes {
-    grid-template-columns: 1fr 1fr;
-  }
+  .ship-movement-map__routes { grid-template-columns: 1fr 1fr; }
+  .ship-fact-ribbon { grid-template-columns: 1fr 1fr; }
+  .ship-fact-ribbon > div:nth-child(2) { border-right: 0; }
+  .ship-fact-ribbon > div:nth-child(-n+2) { border-bottom: 1px solid color-mix(in srgb, var(--ship-paper-ink) 13%, transparent); }
+}
 
-  .ship-fact-ribbon {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .ship-fact-ribbon > div:nth-child(2) {
-    border-right: 0;
-  }
-
-  .ship-fact-ribbon > div:nth-child(-n+2) {
-    border-bottom: 1px solid color-mix(in srgb, var(--ship-paper-ink) 13%, transparent);
-  }
+@media (max-width: 780px) {
+  .interactive-ship-map__toolbar { align-items: stretch; flex-direction: column; }
 }
 
 @media (max-width: 560px) {
@@ -773,74 +480,36 @@
   .royal-room-plan--editorial,
   .ship-movement-map,
   .ship-manifest,
-  .room-index {
-    padding: 18px;
-    border-radius: 18px;
-  }
-
-  .ship-source-banner {
-    grid-template-columns: 1fr;
-  }
-
+  .room-index { padding: 18px; border-radius: 18px; }
+  .ship-source-banner { grid-template-columns: 1fr; }
   .ship-source-banner__actions,
   .room-index__actions,
-  .ship-location-inspector__actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
+  .ship-location-inspector__actions { align-items: stretch; flex-direction: column; }
   .ship-source-banner__actions button,
   .ship-source-banner__actions a,
   .room-index__actions button,
   .room-index__actions label,
   .ship-location-inspector__actions button,
-  .ship-location-inspector__actions a {
-    width: 100%;
-  }
-
-  .interactive-ship-map__toolbar {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
+  .ship-location-inspector__actions a { width: 100%; }
   .ship-location-inspector dl,
   .ship-visual-tour > div,
   .room-grid,
   .ship-movement-map__routes,
   .ship-fact-ribbon,
-  .room-card dl {
-    grid-template-columns: 1fr;
-  }
-
+  .room-card dl { grid-template-columns: 1fr; }
   .ship-fact-ribbon > div,
-  .ship-fact-ribbon > div:nth-child(2) {
-    border-right: 0;
-    border-bottom: 1px solid color-mix(in srgb, var(--ship-paper-ink) 13%, transparent);
-  }
-
-  .ship-fact-ribbon > div:last-child {
-    border-bottom: 0;
-  }
-
+  .ship-fact-ribbon > div:nth-child(2) { border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--ship-paper-ink) 13%, transparent); }
+  .ship-fact-ribbon > div:last-child { border-bottom: 0; }
   .room-index__more,
-  .ship-access-note {
-    align-items: stretch;
-    flex-direction: column;
-  }
+  .ship-access-note { align-items: stretch; flex-direction: column; }
 }
 
 @media (hover: none) {
-  .ship-hotspot__tooltip {
-    display: none;
-  }
+  .ship-hotspot__tooltip { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .black-whale-section--atlas *,
   .black-whale-section--atlas *::before,
-  .black-whale-section--atlas *::after {
-    scroll-behavior: auto;
-    animation: none;
-    transition: none;
-  }
+  .black-whale-section--atlas *::after { scroll-behavior: auto; animation: none; transition: none; }
 }
