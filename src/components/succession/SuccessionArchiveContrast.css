@@ -43,6 +43,10 @@
 .succession-location-linked-entity small,
 .succession-location-activity-grid button small,
 .succession-location-children button small,
-.succession-location-history article b {
+.succession-location-history article b,
+.succession-chapter-intel__events article > span,
+.succession-chapter-intel__causal article > span,
+.succession-chapter-intel__threads button > span,
+.succession-story-intel__search > div span {
   font-size: 11px !important;
 }
