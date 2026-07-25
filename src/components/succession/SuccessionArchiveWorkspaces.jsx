@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   AlertTriangle,
   ArrowLeft,
@@ -15,6 +15,7 @@ import {
   getEntityById,
   getEventsForOrganization,
   getOrganizationDossier,
+  getStoryEventKnowledgeAtChapter,
 } from '../../data/succession/successionData';
 import { EntityVisual } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveWorkspaces.css';
@@ -74,11 +75,15 @@ export function MafiaWorkspace({ routeParams = {}, spoilerLimit = latestChapter(
   const organizations = useMemo(() => getEntitiesByType('organization')
     .filter((organization) => organization.organizationType === 'mafia-family')
     .sort((left, right) => left.name.localeCompare(right.name)), []);
-  const initialFocus = routeParams.focus || '';
-  const [focus, setFocus] = useState(initialFocus);
+  const [focus, setFocus] = useState(routeParams.focus || '');
+  useEffect(() => setFocus(routeParams.focus || ''), [routeParams.focus]);
   const selected = organizations.find((organization) => mafiaSlug(organization) === focus) || null;
   const dossiers = organizations.map((organization) => getOrganizationDossier(organization.id, spoilerLimit)).filter(Boolean);
-  const events = [...new Map(organizations.flatMap((organization) => getEventsForOrganization(organization.id)).filter((event) => event.chapterRange.start <= spoilerLimit).map((event) => [event.id, event])).values()];
+  const events = [...new Map(organizations
+    .flatMap((organization) => getEventsForOrganization(organization.id))
+    .map((event) => getStoryEventKnowledgeAtChapter(event.id, spoilerLimit))
+    .filter(Boolean)
+    .map((event) => [event.id, event])).values()];
 
   const openFamily = (organization) => {
     const slug = mafiaSlug(organization);
@@ -94,6 +99,6 @@ export function MafiaWorkspace({ routeParams = {}, spoilerLimit = latestChapter(
       return <article className={`${mafiaSlug(dossier.organization)}${active ? ' is-selected' : ''}`} key={dossier.organization.id}><header><EntityVisual entity={dossier.organization} compact /><div><span>{dossier.state?.status || dossier.organization.status}</span><h4>{dossier.organization.name}</h4><p><MapPin size={13} aria-hidden="true" /> {dossier.territories.map((location) => location.name).join(' · ') || 'Territory unresolved'}</p></div></header><dl><div><dt>Leadership</dt><dd>{dossier.leaders.length}</dd></div><div><dt>Active personnel</dt><dd>{dossier.activePersonnel.length}</dd></div></dl><section><span>Objectives</span><ul>{dossier.objectives.map((objective) => <li key={objective}>{objective}</li>)}</ul></section><section><span>Pressure</span><ul>{dossier.pressure.map((risk) => <li key={risk}>{risk}</li>)}</ul></section><button type="button" onClick={() => openFamily(dossier.organization)}>{active ? 'Dossier open' : 'Open family summary'} <ArrowRight size={14} aria-hidden="true" /></button></article>;
     })}</div></section>
     {selected && <section className="succession-mafia-workspace__dossier" aria-labelledby="succession-mafia-dossier-title"><header><div><span>Selected family</span><h3 id="succession-mafia-dossier-title">{selected.name} command and membership</h3></div><button type="button" onClick={() => { setFocus(''); onNavigate('mafia'); }}>Close summary</button></header><div className="succession-mafia-workspace__leadership">{getOrganizationDossier(selected.id, spoilerLimit)?.leaders.map((person) => <button type="button" onClick={() => onNavigate('characters', { entity: person.id })} key={person.id}><EntityVisual entity={person} compact /><span>{person.name}</span></button>)}</div><div className="succession-mafia-workspace__members"><span>Active chapter-bounded personnel</span><div>{getOrganizationDossier(selected.id, spoilerLimit)?.activePersonnel.map((record) => <small key={record.id}>{record.character?.name || record.characterId} · {record.role}</small>)}</div></div><footer><button type="button" onClick={() => onNavigate('organizations', { entity: selected.id })}>Open authoritative institution dossier <ArrowRight size={13} aria-hidden="true" /></button></footer></section>}
-    <section className="succession-mafia-workspace__operations" aria-labelledby="succession-mafia-operations-title"><header><span>Conflict ledger</span><h3 id="succession-mafia-operations-title">Events driving the lower-tier war</h3></header><div>{events.map((event) => <article key={event.id}><span>Ch. {event.chapterRange.start}{event.chapterRange.end && event.chapterRange.end !== event.chapterRange.start ? `–${Math.min(event.chapterRange.end, spoilerLimit)}` : ''}</span><h4>{event.name}</h4><p>{event.summary}</p><b>{event.status}</b></article>)}</div><button type="button" onClick={() => onNavigate('events')}>Open the complete event archive <ArrowRight size={14} aria-hidden="true" /></button></section>
+    <section className="succession-mafia-workspace__operations" aria-labelledby="succession-mafia-operations-title"><header><span>Conflict ledger</span><h3 id="succession-mafia-operations-title">Events driving the lower-tier war</h3></header><div>{events.map((event) => <article key={event.id}><span>Ch. {event.chapterRange.start}{event.chapterRange.end && event.chapterRange.end !== event.chapterRange.start ? `–${event.chapterRange.end}` : ''}</span><h4>{event.name}</h4><p>{event.summary}</p><b>{event.status}</b></article>)}</div><button type="button" onClick={() => onNavigate('events')}>Open the complete event archive <ArrowRight size={14} aria-hidden="true" /></button></section>
   </div>;
 }
