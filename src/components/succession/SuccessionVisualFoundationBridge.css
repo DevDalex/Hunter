@@ -78,11 +78,11 @@
 /*
  * Legacy .68rem labels compute to 10.88px at the current root size. Preserve
  * their compact role while enforcing the archive's exact 11px readability floor.
+ * These selectors intentionally exceed the legacy workspace-rule specificity;
+ * no !important escalation is required.
  */
-.succession-archive :where(
-  .succession-evidence-workspace dt,
-  .succession-foundation-closure__domains span,
-  .succession-evidence-source-catalogue article > span
-) {
+.succession-archive .succession-evidence-workspace dt,
+.succession-archive .succession-foundation-closure__domains span,
+.succession-archive .succession-evidence-source-catalogue article > span {
   font-size: 11px;
 }
