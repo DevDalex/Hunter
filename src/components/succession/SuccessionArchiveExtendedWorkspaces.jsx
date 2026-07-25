@@ -17,6 +17,7 @@ import {
   getRelatedEntities,
   getRelationshipsForType,
   getSourcesForEntity,
+  getStoryEventKnowledgeAtChapter,
 } from '../../data/succession/successionData';
 import {
   EntityBadge,
@@ -63,12 +64,17 @@ export function MilitaryWorkspace({ onNavigate, spoilerLimit = latestChapter() }
   const organizations = useMemo(() => getEntitiesByType('organization').filter((organization) => ['organization:kakin-military', 'organization:kakin-justice-bureau', 'organization:benjamin-private-army'].includes(organization.id)), []);
   const personnel = useMemo(() => getEntitiesByType('character').filter((character) => (character.roles || []).some((role) => ['military', 'justice-official', 'benjamin-soldier'].includes(role))), []);
   const dossiers = organizations.map((organization) => getOrganizationDossier(organization.id, spoilerLimit)).filter(Boolean);
+  const events = [...new Map(organizations
+    .flatMap((organization) => getEventsForOrganization(organization.id))
+    .map((event) => getStoryEventKnowledgeAtChapter(event.id, spoilerLimit))
+    .filter(Boolean)
+    .map((event) => [event.id, event])).values()];
 
   return <div className="succession-military-workspace">
     <WorkspaceHero kicker="Authority map" title="Military command, Justice procedure, and private-army operations" description="Institutional authority, personnel, assignments, and events are drawn from canonical organization dossiers rather than separate static ledgers." icon={Scale} stats={[{ label: 'Institutions', value: dossiers.length }, { label: 'Personnel', value: personnel.length }, { label: 'Boundary', value: `Ch. ${spoilerLimit}` }]} />
     <section className="succession-authority-chain"><header><Landmark size={18} aria-hidden="true" /><div><span>Command and jurisdiction</span><h3>Chapter-bounded authority</h3></div></header><div>{dossiers.map((dossier) => <article key={dossier.organization.id}><span>{roleLabel(dossier.organization.organizationType)}</span><h4>{dossier.organization.name}</h4><b>{dossier.state?.authority || 'Authority recorded in the institutional dossier.'}</b><p>{dossier.state?.operationalState}</p><button type="button" onClick={() => onNavigate('organizations', { entity: dossier.organization.id })}>Open institution</button></article>)}</div></section>
     <section className="succession-military-people"><header><Users size={18} aria-hidden="true" /><div><span>Personnel</span><h3>Soldiers and Justice officials</h3></div></header><div>{personnel.map((person) => <EntityMiniButton key={person.id} entity={person} onNavigate={onNavigate} />)}</div></section>
-    <section className="succession-military-operations"><header><Activity size={18} aria-hidden="true" /><div><span>Connected events</span><h3>Operations linked to state authority</h3></div></header><div>{[...new Map(organizations.flatMap((organization) => getEventsForOrganization(organization.id)).filter((event) => event.chapterRange.start <= spoilerLimit).map((event) => [event.id, event])).values()].map((event) => <article key={event.id}><span>Ch. {event.chapterRange.start}{event.chapterRange.end && event.chapterRange.end !== event.chapterRange.start ? `–${Math.min(event.chapterRange.end, spoilerLimit)}` : ''}</span><h4>{event.name}</h4><p>{event.summary}</p><EntityLink entity={event} onNavigate={onNavigate}>Open event</EntityLink></article>)}</div></section>
+    <section className="succession-military-operations"><header><Activity size={18} aria-hidden="true" /><div><span>Connected events</span><h3>Operations linked to state authority</h3></div></header><div>{events.map((event) => <article key={event.id}><span>Ch. {event.chapterRange.start}{event.chapterRange.end && event.chapterRange.end !== event.chapterRange.start ? `–${event.chapterRange.end}` : ''}</span><h4>{event.name}</h4><p>{event.summary}</p><EntityLink entity={event} onNavigate={onNavigate}>Open event</EntityLink></article>)}</div></section>
   </div>;
 }
 
