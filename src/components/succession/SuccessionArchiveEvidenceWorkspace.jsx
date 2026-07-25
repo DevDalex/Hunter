@@ -15,6 +15,7 @@ import {
   getEntitiesByType,
   getEntityById,
   getEvidenceEntities,
+  getFinalReleaseClosureReport,
   getFoundationClosureReport,
 } from '../../data/succession/successionData';
 import {
@@ -50,6 +51,7 @@ export default function SuccessionArchiveEvidenceWorkspace({ routeParams = {}, s
   const sources = useMemo(() => getEntitiesByType('source'), []);
   const chapters = useMemo(() => getEntitiesByType('chapter').filter((chapter) => chapter.number <= spoilerLimit).sort((left, right) => left.number - right.number), [spoilerLimit]);
   const closure = useMemo(() => getFoundationClosureReport(), []);
+  const finalRelease = useMemo(() => getFinalReleaseClosureReport(), []);
   const requestedChapter = Number(routeParams.chapter);
   const [selectedChapter, setSelectedChapter] = useState(requestedChapter || chapters.at(-1)?.number || 414);
   const [query, setQuery] = useState(routeParams.search || '');
@@ -88,6 +90,8 @@ export default function SuccessionArchiveEvidenceWorkspace({ routeParams = {}, s
       ? [...closure.missingSourceEntityIds, ...closure.brokenSourceEntityIds]
       : [];
   const readinessLabel = closure.readyForBatch2 ? 'Foundation closed' : 'Closure blocked';
+  const batchStatus = Object.entries(finalRelease.batches || {});
+  const externalGateKeys = ['performanceBuild', 'browserInteractionQa', 'browserAccessibilityQa', 'cloudflareDeployment'];
 
   const openChapter = (chapter) => {
     setSelectedChapter(chapter);
@@ -98,6 +102,19 @@ export default function SuccessionArchiveEvidenceWorkspace({ routeParams = {}, s
     <section className={`succession-evidence-hero is-${closure.readyForBatch2 ? 'ready' : 'blocked'}`}>
       <div><span><ShieldCheck size={16} aria-hidden="true" /> Batch 1.6 · Evidence Graph and Foundation Closure</span><h2>Chapter provenance, graph coverage, unresolved claims, and release gates</h2><p>Every chapter profile is derived from the canonical event, assignment, relationship, ability, location, organization, character, and source records. Missing evidence remains visible instead of being converted into invented certainty.</p></div>
       <dl><div><dt>Status</dt><dd>{readinessLabel}</dd></div><div><dt>Critical gaps</dt><dd>{closure.criticalGapCount}</dd></div><div><dt>Average provenance</dt><dd>{closure.averageChapterScore}% · {closure.averageChapterGrade}</dd></div><div><dt>Boundary</dt><dd>Ch. {closure.asOfChapter}</dd></div></dl>
+    </section>
+
+    <section className={`succession-release-candidate is-${finalRelease.closureReady ? 'ready' : 'blocked'}`} aria-labelledby="succession-release-candidate-title">
+      <header>{finalRelease.closureReady ? <CheckCircle2 size={20} aria-hidden="true" /> : <AlertTriangle size={20} aria-hidden="true" />}<div><span>Batch 5 · Final Product Closure</span><h3 id="succession-release-candidate-title">{finalRelease.closureReady ? 'Static architecture is a release candidate' : 'Final product closure remains open'}</h3></div><b>{titleCase(finalRelease.status)}</b></header>
+      <p>{finalRelease.promotionRule}</p>
+      <div className="succession-release-candidate__inventory">
+        <article><span>Authoritative workspaces</span><b>{finalRelease.productInventory?.counts.authoritativeWorkspaces || 0}</b></article>
+        <article><span>Preserved tools</span><b>{finalRelease.productInventory?.counts.preservedVisualTools || 0}</b></article>
+        <article><span>Legacy aliases</span><b>{finalRelease.productInventory?.counts.legacyAliases || 0}</b></article>
+        <article><span>Removed implementation classes</span><b>{finalRelease.productInventory?.counts.removedImplementationClasses || 0}</b></article>
+      </div>
+      <div className="succession-release-candidate__batches">{batchStatus.map(([id, record]) => <article className={`is-${record.status}`} key={id}><span>{titleCase(id)}</span><b>{titleCase(record.status)}</b></article>)}</div>
+      <div className="succession-release-candidate__external"><span>External gates required for closed status</span><div>{externalGateKeys.map((key) => <article key={key}><b>{titleCase(key)}</b><small>{titleCase(finalRelease.releaseGates[key])}</small></article>)}</div></div>
     </section>
 
     <section className="succession-foundation-closure" aria-labelledby="succession-foundation-closure-title">
