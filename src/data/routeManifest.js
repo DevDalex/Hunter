@@ -144,8 +144,9 @@ export const referenceAliases = {
 
 // The release matrix is a deliberately curated set of public entry screens.
 // Batch 3 promotes the redesigned Royal Family, queen-household, and institution workspaces into the rendered release gate.
+// Batch 4 promotes the redesigned Chapter intelligence command into the rendered release gate.
 // The complete Succession hierarchy remains validated separately by the archive shell audit.
-export const successionReleaseRouteIds = Object.freeze(['story', 'timeline', 'characters', 'princes', 'queens', 'organizations', 'black-whale', 'nen', 'research']);
+export const successionReleaseRouteIds = Object.freeze(['story', 'chapters', 'timeline', 'characters', 'princes', 'queens', 'organizations', 'black-whale', 'nen', 'research']);
 export const successionReleaseRoutes = successionReleaseRouteIds.map((id) => successionArchiveRoutes.find((route) => route.id === id));
 
 export const routeManifest = [
