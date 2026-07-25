@@ -138,7 +138,7 @@ function OrganizationDirectory({ organizations, chapter, initialView = 'director
 
   return <div className="succession-organization-workspace succession-institution-command">
     <section className="succession-institution-command__hero">
-      <div><span><Building2 size={16} aria-hidden="true" /> Institutional intelligence command</span><h2>Power is a system of authority, personnel, territory, and pressure</h2><p>Browse every canonical institution, reconstruct parent and subordinate units, compare operational reach, and open chapter-bounded dossiers without flattening organizations into static member lists.</p></div>
+      <div><span><Building2 size={16} aria-hidden="true" /> Institutional intelligence command</span><h2>Power is a system of authority, personnel, territory, and pressure</h2><p>Organizations as chapter-bounded systems of authority: browse every canonical institution, reconstruct parent and subordinate units, compare operational reach, and open chapter-bounded dossiers without flattening organizations into static member lists.</p></div>
       <div className="succession-institution-command__network" aria-hidden="true"><Building2 size={38} /><span>{organizations.length}</span><small>connected institutions</small><i /><i /><i /></div>
     </section>
 
