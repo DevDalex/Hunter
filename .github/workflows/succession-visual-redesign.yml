@@ -8,6 +8,7 @@ on:
     paths:
       - 'src/components/succession/**'
       - 'src/data/succession/**'
+      - 'src/data/routeManifest.js'
       - 'scripts/audit-succession-visual-foundation.mjs'
       - 'scripts/audit-succession-shell-redesign.mjs'
       - 'scripts/audit-succession-page-header-redesign.mjs'
@@ -15,6 +16,7 @@ on:
       - 'scripts/audit-succession-batch-2-completion.mjs'
       - 'scripts/audit-succession-character-command.mjs'
       - 'scripts/audit-succession-royal-command.mjs'
+      - 'scripts/audit-succession-batch-3-closure.mjs'
       - 'scripts/report-succession-visual-inventory.mjs'
       - 'docs/SUCCESSION-VISUAL-REDESIGN.md'
       - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-2-CLOSURE.md'
@@ -75,10 +77,10 @@ jobs:
           echo "Main runtime outcome: ${{ steps.baseline_runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
 
   foundation:
-    name: Batch 3 character and royal command visual regression audits
+    name: Batch 3 people institutions and comparison regression audits
     needs: baseline_runtime
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 70
 
     steps:
       - name: Check out repository
@@ -113,6 +115,9 @@ jobs:
 
       - name: Audit Batch 3 royal command
         run: npm run audit:succession-royal-command
+
+      - name: Audit Batch 3 closure
+        run: npm run audit:succession-batch-3
 
       - name: Report visual inventory
         run: npm run report:succession-visual-inventory > succession-visual-inventory.md
@@ -166,10 +171,24 @@ jobs:
           VISUAL_QA_SCREENSHOTS: all
         run: npm run qa:visual
 
-      - name: Inspect Royal Family workspace at all viewports
+      - name: Inspect Prince command at all viewports
         env:
           VISUAL_QA_ROUTE: succession/princes
           VISUAL_QA_OUTPUT: .visual-qa/succession-princes
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Queen households at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/queens
+          VISUAL_QA_OUTPUT: .visual-qa/succession-queens
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Institution command at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/organizations
+          VISUAL_QA_OUTPUT: .visual-qa/succession-organizations
           VISUAL_QA_SCREENSHOTS: all
         run: npm run qa:visual
 
