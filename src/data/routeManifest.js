@@ -142,9 +142,10 @@ export const referenceAliases = {
   sources: { target: 'encyclopedia' },
 };
 
-// The release matrix remains a deliberately curated set of public entry screens.
-// The complete 25-route Succession hierarchy is validated separately by the archive shell audit.
-export const successionReleaseRouteIds = Object.freeze(['story', 'timeline', 'characters', 'black-whale', 'nen', 'research']);
+// The release matrix is a deliberately curated set of public entry screens.
+// Batch 3 promotes the redesigned Royal Family workspace into the rendered release gate.
+// The complete Succession hierarchy remains validated separately by the archive shell audit.
+export const successionReleaseRouteIds = Object.freeze(['story', 'timeline', 'characters', 'princes', 'black-whale', 'nen', 'research']);
 export const successionReleaseRoutes = successionReleaseRouteIds.map((id) => successionArchiveRoutes.find((route) => route.id === id));
 
 export const routeManifest = [
