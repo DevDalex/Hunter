@@ -1,3 +1,5 @@
+import { getSuccessionProductInventoryReport } from './productInventory.js';
+
 export const createFinalReleaseClosure = ({
   data,
   validation,
@@ -13,8 +15,12 @@ export const createFinalReleaseClosure = ({
     const nen = nenSystems.getNenSystemClosureReport();
     const story = storyIntelligence.getStoryIntelligenceClosureReport();
     const product = productClosure.getProductClosureReport();
+    const inventory = getSuccessionProductInventoryReport();
     const chapterCount = data.chapters.length;
     const latestChapter = data.chapters.at(-1)?.number || null;
+    const inventoryReady = inventory.counts.authoritativeWorkspaces === 22
+      && inventory.counts.preservedVisualTools === 3
+      && inventory.counts.releaseGates === 10;
     const closureReady = Boolean(
       validation.valid
       && foundation?.closureReady
@@ -22,6 +28,7 @@ export const createFinalReleaseClosure = ({
       && nen?.closureReady
       && story?.closureReady
       && product?.closureReady
+      && inventoryReady
     );
 
     return Object.freeze({
@@ -29,12 +36,13 @@ export const createFinalReleaseClosure = ({
       closureReady,
       deploymentRequiredForClosedStatus: true,
       catalogue: Object.freeze({ chapterCount, latestChapter, entities: validation.stats.entities }),
+      productInventory: inventory,
       batches: Object.freeze({
         foundation: Object.freeze({ status: foundation?.closureReady ? 'closed' : 'open', report: foundation }),
         peopleAndInstitutions: Object.freeze({ status: people?.closureReady ? 'closed' : 'open', report: people }),
         nenAndRitualSystems: Object.freeze({ status: nen?.closureReady ? 'closed' : 'open', report: nen }),
         chapterAndStoryIntelligence: Object.freeze({ status: story?.closureReady ? 'closed' : 'open', report: story }),
-        finalProductClosure: Object.freeze({ status: product?.closureReady ? 'release-candidate' : 'open', report: product }),
+        finalProductClosure: Object.freeze({ status: product?.closureReady && inventoryReady ? 'release-candidate' : 'open', report: product }),
       }),
       releaseGates: Object.freeze({
         canonicalData: validation.valid,
@@ -43,7 +51,7 @@ export const createFinalReleaseClosure = ({
         nenSystems: Boolean(nen?.closureReady),
         storyIntelligence: Boolean(story?.closureReady),
         searchGlossaryMedia: Boolean(product?.closureReady),
-        routingAndLegacyCleanup: Boolean(product?.closureReady),
+        routingAndLegacyCleanup: Boolean(product?.closureReady && inventoryReady),
         responsiveAccessibilitySourceContracts: Boolean(product?.closureReady),
         performanceBuild: 'pending-external-build-result',
         browserInteractionQa: 'pending-external-run',
