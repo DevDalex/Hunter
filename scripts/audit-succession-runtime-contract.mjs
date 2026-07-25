@@ -27,6 +27,8 @@ const auditPaths = Object.freeze([
   'scripts/audit-succession-relationships-workspace.mjs',
   'scripts/audit-succession-foundation-closure.mjs',
   'scripts/audit-succession-reader.mjs',
+  'scripts/audit-succession-production-surface.mjs',
+  'scripts/audit-succession-product-inventory.mjs',
   'scripts/audit-succession-final-product-closure.mjs',
 ]);
 
@@ -92,6 +94,7 @@ assert(packageJson.scripts?.['audit:succession-organizations'] === 'node scripts
 assert(packageJson.scripts?.['audit:succession-people-institutions'] === 'node scripts/audit-succession-people-institutions-closure.mjs', 'package scripts must expose the Batch 2 closure audit');
 assert(packageJson.scripts?.['audit:succession-nen-systems'] === 'node scripts/audit-succession-nen-systems-workspace.mjs', 'package scripts must expose the Batch 3 systems audit');
 assert(packageJson.scripts?.['audit:succession-story-intelligence'] === 'node scripts/audit-succession-story-intelligence-workspace.mjs', 'package scripts must expose the Batch 4 story intelligence audit');
+assert(packageJson.scripts?.['audit:succession-product-inventory'] === 'node scripts/audit-succession-product-inventory.mjs', 'package scripts must expose the Batch 5 product inventory audit');
 assert(packageJson.scripts?.['audit:succession-final-product'] === 'node scripts/audit-succession-final-product-closure.mjs', 'package scripts must expose the Batch 5 final-product audit');
 assert(packageJson.scripts?.['build:runtime']?.startsWith('npm run audit:succession-runtime &&'), 'build:runtime must collect all Succession failures before continuing');
 
@@ -207,9 +210,12 @@ try {
 
   const finalReport = archive.getFinalReleaseClosureReport();
   assert(finalReport?.closureReady && finalReport.status === 'release-candidate', 'the complete Succession Archive must reach release-candidate status before deployment');
+  assert(finalReport.productInventory?.counts.authoritativeWorkspaces === 22, 'final report must retain the authoritative workspace inventory');
+  assert(finalReport.productInventory?.counts.preservedVisualTools === 3, 'final report must retain the preserved-tool inventory');
+  assert(finalReport.productInventory?.counts.releaseGates === 10, 'final report must retain all final release gates');
   assert(finalReport.deploymentRequiredForClosedStatus && finalReport.releaseGates.cloudflareDeployment === 'pending-external-build-result', 'only an external successful deployment may promote the project from release-candidate to closed');
 
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph through imported Chapter ${latestChapter}; Batches 1–4 remain closed and Batch 5 search, glossary, media, legacy cleanup, and final release reporting form a deployment-ready release candidate.`);
+  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph through imported Chapter ${latestChapter}; Batches 1–4 remain closed and Batch 5 search, glossary, media, product inventory, legacy cleanup, and final release reporting form a deployment-ready release candidate.`);
 } finally {
   await vite.close();
 }
