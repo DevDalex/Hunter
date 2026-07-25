@@ -61,7 +61,8 @@ jobs:
 
       - name: Summarize main runtime state
         if: always()
-        run: echo "Main runtime outcome: ${{ steps.baseline-runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "Main runtime outcome: ${{ steps.baseline-runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
 
   foundation:
     name: Foundation and regression audits
