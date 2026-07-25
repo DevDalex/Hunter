@@ -56,7 +56,21 @@
 .succession-chapter-intel__events article > span,
 .succession-chapter-intel__causal article > span,
 .succession-chapter-intel__threads button > span,
-.succession-story-intel__search > div span {
+.succession-story-intel__search > div span,
+.succession-chapter-command__radar span,
+.succession-chapter-command__status dt,
+.succession-chapter-command__filters label > span:not(.sr-only),
+.succession-chapter-command__card > div > span,
+.succession-chapter-command__card > em,
+.succession-chapter-command__card dt,
+.succession-chapter-command__index-head,
+.succession-chapter-command__rail dt,
+.succession-chapter-intel__dossier > header.succession-chapter-dossier__hero dt,
+.succession-chapter-dossier__sequence-grid > section > header > span,
+.succession-chapter-sequence-card__topline span,
+.succession-chapter-sequence-card__topline em,
+.succession-chapter-sequence-card dt,
+.succession-chapter-intel__changes li > span {
   font-size: 11px !important;
 }
 
