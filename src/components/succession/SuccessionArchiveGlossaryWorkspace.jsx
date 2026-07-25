@@ -11,6 +11,7 @@ import {
   SourceReference,
 } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveProductLibrary.css';
+import './SuccessionArchiveProductLibraryLinks.css';
 
 const normalize = (value) => String(value || '')
   .normalize('NFKD')
