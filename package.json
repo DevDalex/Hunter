@@ -15,6 +15,7 @@
     "audit:design-system": "node scripts/audit-design-system.mjs",
     "audit:succession-visual-foundation": "node scripts/audit-succession-visual-foundation.mjs",
     "audit:succession-shell-redesign": "node scripts/audit-succession-shell-redesign.mjs",
+    "audit:succession-page-header-redesign": "node scripts/audit-succession-page-header-redesign.mjs",
     "report:succession-visual-inventory": "node scripts/report-succession-visual-inventory.mjs",
     "audit:succession-stabilization": "node scripts/audit-succession-stabilization.mjs",
     "audit:succession-contract": "node scripts/audit-succession-runtime-contract.mjs",
