@@ -191,7 +191,13 @@ function FamilyTreeWorkspace({ spoilerLimit, onNavigate }) {
   const princes = entitiesForRoute('princes');
   return <Suspense fallback={<Loading label="royal family tree" />}>
     <div className="succession-migration-note"><b>Diagram view</b><span>The family tree remains available as a visual companion; prince records now open in the chapter-bounded character dossier.</span><button type="button" onClick={() => onNavigate('princes')}>Back to prince records</button></div>
-    <FamilyTree spoilerLimit={spoilerLimit} onOpenPrince={(order) => { const entity = princes.find((record) => entity.princeOrder === Number(order)); onNavigate('characters', entity ? { entity: entity.id } : {}); }} />
+    <FamilyTree
+      spoilerLimit={spoilerLimit}
+      onOpenPrince={(order) => {
+        const entity = princes.find((record) => record.princeOrder === Number(order));
+        onNavigate('characters', entity ? { entity: entity.id } : {});
+      }}
+    />
   </Suspense>;
 }
 
