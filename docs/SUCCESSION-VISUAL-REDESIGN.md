@@ -41,7 +41,7 @@ npm run audit:succession-visual-foundation
 npm run report:succession-visual-inventory
 ```
 
-The foundation audit is also part of `npm run audit:succession-runtime`, ensuring the contract participates in the existing runtime gate.
+The visual foundation audit runs as a dedicated required step in the Succession visual-redesign workflow. The established Succession runtime-audit inventory remains unchanged so existing product-closure contracts are preserved.
 
 ### Foundation requirements
 
