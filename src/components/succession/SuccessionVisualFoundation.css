@@ -1,0 +1,551 @@
+/*
+ * Succession Visual Redesign — Batch 1 foundation
+ *
+ * Scope: shared presentation only. This file must not encode lore, route logic,
+ * chapter availability, or data ownership. It is imported after the existing
+ * Succession compatibility layers so later batches can migrate deliberately.
+ */
+
+.succession-archive {
+  --succession-vf-version: 1;
+
+  /* Canvas and surfaces */
+  --succession-canvas: #090b0f;
+  --succession-canvas-raised: #0f1319;
+  --succession-surface-1: #141922;
+  --succession-surface-2: #1a202a;
+  --succession-surface-3: #222936;
+  --succession-surface-inset: #0c1016;
+  --succession-surface-paper: #eee6d8;
+  --succession-surface-paper-raised: #f6f0e6;
+  --succession-surface-selected: #2a2230;
+
+  /* Ink */
+  --succession-text: #f4eee5;
+  --succession-text-strong: #fffaf1;
+  --succession-text-muted: #c5bdb1;
+  --succession-text-subtle: #9d968c;
+  --succession-text-on-paper: #1c1a1d;
+  --succession-text-on-paper-muted: #696159;
+
+  /* Royal / intelligence accents */
+  --succession-gold: #d7b56d;
+  --succession-gold-strong: #f1cf81;
+  --succession-crimson: #9f3442;
+  --succession-crimson-strong: #c34b5b;
+  --succession-steel: #7693a8;
+  --succession-violet: #8d769d;
+  --succession-emerald: #668f7c;
+  --succession-amber: #c28b45;
+
+  /* Semantic borders */
+  --succession-border-subtle: rgba(244, 238, 229, 0.1);
+  --succession-border-default: rgba(244, 238, 229, 0.17);
+  --succession-border-strong: rgba(215, 181, 109, 0.4);
+  --succession-border-focus: rgba(241, 207, 129, 0.92);
+
+  /* Status and evidence */
+  --succession-state-confirmed: #6f9c8b;
+  --succession-state-inferred: #c7a25e;
+  --succession-state-uncertain: #b77882;
+  --succession-state-pending: #8c7b9d;
+  --succession-state-active: #779bad;
+  --succession-state-deceased: #9c5963;
+  --succession-state-missing: #ba8b52;
+  --succession-state-hostile: #b64a57;
+  --succession-state-allied: #66917f;
+
+  /* Typography */
+  --succession-font-display: var(--serif, Georgia, 'Times New Roman', serif);
+  --succession-font-body: var(--sans, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+  --succession-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+  --succession-text-xs: 11px;
+  --succession-text-sm: 0.78rem;
+  --succession-text-md: 0.94rem;
+  --succession-text-lg: 1.08rem;
+  --succession-title-sm: clamp(1.3rem, 2.4vw, 1.8rem);
+  --succession-title-md: clamp(1.9rem, 4vw, 3.2rem);
+  --succession-title-lg: clamp(2.45rem, 6vw, 5rem);
+
+  /* Spacing and layout */
+  --succession-space-1: 4px;
+  --succession-space-2: 8px;
+  --succession-space-3: 12px;
+  --succession-space-4: 16px;
+  --succession-space-5: 20px;
+  --succession-space-6: 24px;
+  --succession-space-8: 32px;
+  --succession-space-10: 40px;
+  --succession-space-12: 48px;
+  --succession-content-width: 1480px;
+  --succession-reading-width: 74ch;
+  --succession-sidebar-width: 276px;
+
+  /* Shape and elevation */
+  --succession-radius-sm: 8px;
+  --succession-radius-md: 14px;
+  --succession-radius-lg: 20px;
+  --succession-radius-xl: 28px;
+  --succession-shadow-sm: 0 10px 28px rgba(0, 0, 0, 0.18);
+  --succession-shadow-md: 0 24px 64px rgba(0, 0, 0, 0.28);
+  --succession-shadow-focus: 0 0 0 3px rgba(215, 181, 109, 0.22);
+
+  /* Motion */
+  --succession-motion-fast: 120ms;
+  --succession-motion-standard: 180ms;
+  --succession-motion-slow: 260ms;
+  --succession-ease: cubic-bezier(0.2, 0.75, 0.25, 1);
+
+  min-height: 100%;
+  color: var(--succession-text);
+  background:
+    radial-gradient(circle at 82% 5%, rgba(159, 52, 66, 0.12), transparent 28rem),
+    radial-gradient(circle at 6% 42%, rgba(215, 181, 109, 0.075), transparent 34rem),
+    var(--succession-canvas);
+  font-family: var(--succession-font-body);
+  color-scheme: dark;
+}
+
+.succession-archive,
+.succession-archive *,
+.succession-archive *::before,
+.succession-archive *::after {
+  box-sizing: border-box;
+}
+
+.succession-archive ::selection {
+  color: #171216;
+  background: var(--succession-gold-strong);
+}
+
+.succession-archive :where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 2px solid var(--succession-border-focus);
+  outline-offset: 3px;
+  box-shadow: var(--succession-shadow-focus);
+}
+
+.succession-archive__layout {
+  min-height: 100vh;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22rem);
+}
+
+.succession-archive__sidebar {
+  border-right: 1px solid var(--succession-border-subtle);
+  background:
+    linear-gradient(180deg, rgba(215, 181, 109, 0.055), transparent 13rem),
+    rgba(9, 11, 15, 0.94);
+  box-shadow: 18px 0 54px rgba(0, 0, 0, 0.16);
+}
+
+.succession-archive__brand {
+  border-bottom: 1px solid var(--succession-border-subtle);
+}
+
+.succession-archive__brand > span,
+.succession-page-header__copy > span,
+.succession-directory > header span,
+.succession-source-list > header span,
+.succession-related header span,
+.succession-state > span {
+  color: var(--succession-gold);
+  font-size: var(--succession-text-xs);
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.succession-archive__brand strong,
+.succession-page-header h1,
+.succession-entity-header h2,
+.succession-state h2 {
+  color: var(--succession-text-strong);
+  font-family: var(--succession-font-display);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.succession-archive__brand p,
+.succession-page-header p,
+.succession-state p {
+  color: var(--succession-text-muted);
+}
+
+.succession-archive-nav h2 {
+  color: var(--succession-text-subtle);
+  font-size: var(--succession-text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.succession-archive-nav a {
+  min-height: 42px;
+  border: 1px solid transparent;
+  border-radius: var(--succession-radius-sm);
+  color: var(--succession-text-muted);
+  transition:
+    color var(--succession-motion-fast) var(--succession-ease),
+    border-color var(--succession-motion-fast) var(--succession-ease),
+    background var(--succession-motion-fast) var(--succession-ease),
+    transform var(--succession-motion-fast) var(--succession-ease);
+}
+
+.succession-archive-nav a:hover {
+  color: var(--succession-text-strong);
+  border-color: var(--succession-border-subtle);
+  background: rgba(255, 255, 255, 0.035);
+  transform: translateX(2px);
+}
+
+.succession-archive-nav a.is-active {
+  color: var(--succession-text-strong);
+  border-color: var(--succession-border-strong);
+  background:
+    linear-gradient(90deg, rgba(215, 181, 109, 0.14), rgba(159, 52, 66, 0.07)),
+    var(--succession-surface-1);
+  box-shadow: inset 3px 0 0 var(--succession-gold);
+}
+
+.succession-archive__boundary {
+  border: 1px solid var(--succession-border-subtle);
+  border-radius: var(--succession-radius-md);
+  background: var(--succession-surface-inset);
+}
+
+.succession-archive__workspace {
+  min-width: 0;
+}
+
+.succession-breadcrumbs {
+  color: var(--succession-text-subtle);
+}
+
+.succession-breadcrumbs button {
+  color: var(--succession-text-muted);
+}
+
+.succession-breadcrumbs button:hover {
+  color: var(--succession-gold-strong);
+}
+
+.succession-page-header {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--succession-border-default);
+  border-radius: var(--succession-radius-xl);
+  background:
+    radial-gradient(circle at 88% 12%, rgba(215, 181, 109, 0.14), transparent 20rem),
+    linear-gradient(135deg, rgba(42, 25, 31, 0.96), rgba(20, 25, 34, 0.98) 52%, rgba(12, 16, 22, 0.98));
+  box-shadow: var(--succession-shadow-md);
+}
+
+.succession-page-header::after {
+  position: absolute;
+  inset: auto 0 0;
+  height: 2px;
+  content: '';
+  background: linear-gradient(90deg, transparent, var(--succession-gold), var(--succession-crimson), transparent);
+  opacity: 0.72;
+}
+
+.succession-page-header h1 {
+  max-width: 19ch;
+  font-size: var(--succession-title-md);
+  line-height: 0.98;
+}
+
+.succession-page-header__copy p {
+  max-width: var(--succession-reading-width);
+  font-size: var(--succession-text-md);
+  line-height: 1.65;
+}
+
+.succession-page-header__meta {
+  border-top: 1px solid var(--succession-border-subtle);
+}
+
+.succession-page-header__meta dt {
+  color: var(--succession-text-subtle);
+  font-size: var(--succession-text-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.succession-page-header__meta dd {
+  color: var(--succession-text-strong);
+}
+
+.succession-button,
+.succession-entity-link,
+.succession-tabs > button {
+  min-height: 40px;
+  border: 1px solid var(--succession-border-default);
+  border-radius: var(--succession-radius-sm);
+  background: var(--succession-surface-2);
+  color: var(--succession-text);
+  font: inherit;
+  font-weight: 750;
+  transition:
+    color var(--succession-motion-fast) var(--succession-ease),
+    border-color var(--succession-motion-fast) var(--succession-ease),
+    background var(--succession-motion-fast) var(--succession-ease),
+    transform var(--succession-motion-fast) var(--succession-ease),
+    box-shadow var(--succession-motion-fast) var(--succession-ease);
+}
+
+.succession-button:hover,
+.succession-entity-link:hover,
+.succession-tabs > button:hover {
+  color: var(--succession-text-strong);
+  border-color: var(--succession-border-strong);
+  background: var(--succession-surface-3);
+  transform: translateY(-1px);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-button--primary {
+  border-color: rgba(215, 181, 109, 0.58);
+  background: linear-gradient(135deg, #8e2938, #6f2632);
+  color: #fff8ed;
+}
+
+.succession-button--quiet {
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.succession-tabs {
+  gap: var(--succession-space-2);
+  padding: var(--succession-space-1);
+  border: 1px solid var(--succession-border-subtle);
+  border-radius: var(--succession-radius-md);
+  background: var(--succession-surface-inset);
+}
+
+.succession-tabs > button.is-active,
+.succession-tabs > button[aria-selected='true'] {
+  border-color: var(--succession-border-strong);
+  background: linear-gradient(135deg, rgba(215, 181, 109, 0.17), rgba(159, 52, 66, 0.11));
+  color: var(--succession-gold-strong);
+  box-shadow: inset 0 -2px 0 var(--succession-gold);
+}
+
+.succession-archive :where(input, select, textarea) {
+  min-height: 42px;
+  border: 1px solid var(--succession-border-default);
+  border-radius: var(--succession-radius-sm);
+  background: var(--succession-surface-inset);
+  color: var(--succession-text-strong);
+  font: inherit;
+}
+
+.succession-archive :where(input, textarea)::placeholder {
+  color: var(--succession-text-subtle);
+  opacity: 1;
+}
+
+.succession-archive :where(input, select, textarea):hover {
+  border-color: rgba(215, 181, 109, 0.32);
+}
+
+.succession-archive :where(input, select, textarea):focus {
+  border-color: var(--succession-border-focus);
+}
+
+.succession-home-grid .archive-card,
+.succession-entity-grid > article,
+.succession-source-reference,
+.succession-related,
+.succession-state,
+.succession-entity-header {
+  border: 1px solid var(--succession-border-default);
+  border-radius: var(--succession-radius-lg);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.025), transparent 48%),
+    var(--succession-surface-1);
+  color: var(--succession-text);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-home-grid .archive-card:hover,
+.succession-entity-grid > article:hover {
+  border-color: var(--succession-border-strong);
+  background:
+    linear-gradient(145deg, rgba(215, 181, 109, 0.075), transparent 46%),
+    var(--succession-surface-2);
+}
+
+.succession-home-grid .archive-card h3,
+.succession-entity-grid > article h3,
+.succession-source-reference strong,
+.succession-related h3 {
+  color: var(--succession-text-strong);
+}
+
+.succession-home-grid .archive-card p,
+.succession-entity-grid > article p,
+.succession-source-reference p {
+  color: var(--succession-text-muted);
+}
+
+.succession-entity-visual {
+  overflow: hidden;
+  border: 1px solid var(--succession-border-default);
+  border-radius: var(--succession-radius-md);
+  background:
+    radial-gradient(circle at 50% 22%, rgba(215, 181, 109, 0.14), transparent 52%),
+    var(--succession-surface-inset);
+}
+
+.succession-entity-badge > span,
+.archive-card__eyebrow {
+  color: var(--succession-gold);
+}
+
+.succession-archive :where(.evidence-badge, .status-pill) {
+  min-height: 26px;
+  border-color: var(--succession-border-default);
+  background: rgba(255, 255, 255, 0.055);
+  color: var(--succession-text);
+  font-size: var(--succession-text-xs);
+}
+
+.succession-archive .evidence-badge.is-confirmed,
+.succession-archive .status-pill--good {
+  border-color: color-mix(in srgb, var(--succession-state-confirmed) 58%, transparent);
+  background: color-mix(in srgb, var(--succession-state-confirmed) 18%, transparent);
+}
+
+.succession-archive .evidence-badge.is-inferred,
+.succession-archive .status-pill--analysis {
+  border-color: color-mix(in srgb, var(--succession-state-inferred) 58%, transparent);
+  background: color-mix(in srgb, var(--succession-state-inferred) 17%, transparent);
+}
+
+.succession-archive .evidence-badge.is-unclear,
+.succession-archive .status-pill--warn {
+  border-color: color-mix(in srgb, var(--succession-state-uncertain) 58%, transparent);
+  background: color-mix(in srgb, var(--succession-state-uncertain) 17%, transparent);
+}
+
+.succession-archive .evidence-badge.is-deferred,
+.succession-archive .evidence-badge.is-source-index-only,
+.succession-archive .status-pill--debt {
+  border-color: color-mix(in srgb, var(--succession-state-pending) 58%, transparent);
+  background: color-mix(in srgb, var(--succession-state-pending) 17%, transparent);
+}
+
+.succession-state {
+  position: relative;
+  padding: clamp(24px, 4vw, 44px);
+  text-align: left;
+}
+
+.succession-state.is-error {
+  border-color: color-mix(in srgb, var(--succession-crimson-strong) 62%, transparent);
+  background:
+    linear-gradient(135deg, rgba(159, 52, 66, 0.18), transparent 58%),
+    var(--succession-surface-1);
+}
+
+.succession-state.is-loading {
+  border-style: dashed;
+}
+
+.succession-state.is-loading::after {
+  display: block;
+  width: min(240px, 62%);
+  height: 3px;
+  margin-top: var(--succession-space-5);
+  border-radius: 999px;
+  content: '';
+  background: linear-gradient(90deg, transparent, var(--succession-gold), transparent);
+  animation: succession-foundation-loading 1.35s ease-in-out infinite;
+}
+
+.succession-drawer > aside,
+.succession-archive__mobile-bar {
+  border-color: var(--succession-border-default);
+  background: rgba(9, 11, 15, 0.97);
+  color: var(--succession-text);
+  backdrop-filter: blur(18px);
+}
+
+@keyframes succession-foundation-loading {
+  0%, 100% { opacity: 0.3; transform: scaleX(0.72); transform-origin: left; }
+  50% { opacity: 1; transform: scaleX(1); transform-origin: left; }
+}
+
+@media (max-width: 1100px) {
+  .succession-archive {
+    --succession-sidebar-width: 244px;
+  }
+
+  .succession-page-header h1 {
+    max-width: 24ch;
+  }
+}
+
+@media (max-width: 860px) {
+  .succession-archive__layout {
+    display: block;
+  }
+
+  .succession-page-header {
+    border-radius: var(--succession-radius-lg);
+  }
+
+  .succession-page-header__actions,
+  .succession-page-header__meta {
+    width: 100%;
+  }
+
+  .succession-button,
+  .succession-entity-link,
+  .succession-tabs > button,
+  .succession-archive :where(input, select, textarea) {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 560px) {
+  .succession-archive {
+    --succession-space-8: 24px;
+    --succession-space-10: 32px;
+    --succession-space-12: 40px;
+  }
+
+  .succession-page-header {
+    padding: var(--succession-space-5);
+  }
+
+  .succession-page-header h1 {
+    font-size: clamp(1.75rem, 10vw, 2.7rem);
+  }
+
+  .succession-tabs {
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+  }
+
+  .succession-tabs > button {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-archive *,
+  .succession-archive *::before,
+  .succession-archive *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .succession-archive-nav a:hover,
+  .succession-button:hover,
+  .succession-entity-link:hover,
+  .succession-tabs > button:hover {
+    transform: none;
+  }
+}
