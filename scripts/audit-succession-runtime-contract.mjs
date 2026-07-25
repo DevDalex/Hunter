@@ -27,6 +27,7 @@ const auditPaths = Object.freeze([
   'scripts/audit-succession-relationships-workspace.mjs',
   'scripts/audit-succession-foundation-closure.mjs',
   'scripts/audit-succession-reader.mjs',
+  'scripts/audit-succession-final-product-closure.mjs',
 ]);
 
 const [app, primitives, packageText, ...auditSources] = await Promise.all([
@@ -40,11 +41,9 @@ const packageJson = JSON.parse(packageText);
 for (const routeId of ['characters', 'organizations', 'locations', 'bodyguards', 'relationships', 'nen', 'guardian-spirit-beasts', 'chapters', 'events']) {
   assert(declarationIncludesLiteral(app, 'specializedRecordRoute', routeId), `${routeId} must remain a specialized record route`);
 }
-for (const routeId of ['black-whale', 'timeline']) {
-  assert(declarationIncludesLiteral(app, 'preserved', routeId), `${routeId} must remain a preserved visual workspace`);
-}
+for (const routeId of ['black-whale', 'timeline']) assert(declarationIncludesLiteral(app, 'preserved', routeId), `${routeId} must remain a preserved visual workspace`);
 assert(!declarationIncludesLiteral(app, 'preserved', 'nen'), 'Nen must remain migrated out of the preserved legacy layer');
-for (const routeId of ['story', 'chapters', 'characters', 'organizations', 'nen', 'guardian-spirit-beasts', 'events', 'locations', 'bodyguards', 'relationships', 'research']) {
+for (const routeId of ['story', 'chapters', 'characters', 'organizations', 'nen', 'guardian-spirit-beasts', 'events', 'locations', 'bodyguards', 'relationships', 'research', 'glossary', 'media']) {
   assert(declarationIncludesLiteral(app, 'dedicated', routeId), `${routeId} must remain a dedicated workspace route`);
 }
 for (const [routeId, componentName] of [
@@ -59,6 +58,8 @@ for (const [routeId, componentName] of [
   ['bodyguards', 'AssignmentsWorkspace'],
   ['relationships', 'RelationshipsWorkspace'],
   ['research', 'EvidenceWorkspace'],
+  ['glossary', 'GlossaryWorkspace'],
+  ['media', 'MediaWorkspace'],
 ]) assert(sourceRendersRouteWith(app, routeId, componentName), `${routeId} must render ${componentName}`);
 
 assert(!app.includes('SuccessionStoryWorkspace'), 'legacy static Story workspace must remain inactive');
@@ -67,7 +68,7 @@ assert(app.includes("linkedEntity?.entityType === 'character'") && app.includes(
 assert(app.includes("linkedEntity?.entityType === 'ability'") && app.includes("linkedEntity?.entityType === 'guardian-beast'"), 'system-route navigation must normalize ability and beast links');
 assert(app.includes('showCharacterDossier') && app.includes('showOrganizationDossier'), 'people and institution legacy URLs must resolve dedicated dossiers');
 assert(app.includes('showAbilityDossier') && app.includes('showGuardianBeastDossier'), 'Nen legacy URLs must resolve dedicated dossiers');
-assert(app.includes('chapter: spoilerLimit') && app.includes('SearchWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit}'), 'global search must remain inside the selected chapter boundary');
+assert(app.includes('searchArchiveProduct') && app.includes('matchReason') && app.includes('spoilerLimit'), 'final global search must be grouped, explained, and chapter-bounded');
 assert(app.includes('princes.find((record) => record.princeOrder === Number(order))'), 'family-tree navigation must use the candidate prince record');
 assert(!app.includes('princes.find((record) => entity.princeOrder'), 'family-tree navigation must not self-reference its result variable');
 assert(primitives.includes("if (entity.entityType === 'character') return 'characters'"), 'shared entity routing must send every character to the character workspace');
@@ -76,23 +77,12 @@ assert(primitives.includes("if (entity.entityType === 'ability') return 'nen'"),
 assert(primitives.includes("if (entity.entityType === 'guardian-beast') return 'guardian-spirit-beasts'"), 'shared entity routing must send every beast to the Guardian Beast workspace');
 
 const forbiddenAuditPatterns = Object.freeze([
-  {
-    pattern: /dataEntry\.includes\(\s*["']from '\.\/entities(?:Location|Assignment|Relationship)Foundation\.js'/,
-    message: 'audits must validate active runtime data rather than a transient foundation import path',
-  },
-  {
-    pattern: /app\.includes\(\s*["'](?:const specializedRecordRoute = )?\['princes'/,
-    message: 'audits must inspect route membership rather than an exact ordered array literal',
-  },
-  {
-    pattern: /counts\.chapters\s*===\s*75|pendingChapterIds\.length\s*===\s*1.*chapter:414/,
-    message: 'audits must derive chapter and pending-release coverage from canonical imported data',
-  },
+  { pattern: /dataEntry\.includes\(\s*["']from '\.\/entities(?:Location|Assignment|Relationship)Foundation\.js'/, message: 'audits must validate active runtime data rather than a transient foundation import path' },
+  { pattern: /app\.includes\(\s*["'](?:const specializedRecordRoute = )?\['princes'/, message: 'audits must inspect route membership rather than an exact ordered array literal' },
+  { pattern: /counts\.chapters\s*===\s*75|pendingChapterIds\.length\s*===\s*1.*chapter:414/, message: 'audits must derive chapter and pending-release coverage from canonical imported data' },
 ]);
-
 for (let index = 0; index < auditPaths.length; index += 1) {
-  const source = auditSources[index];
-  for (const forbidden of forbiddenAuditPatterns) assert(!forbidden.pattern.test(source), `${auditPaths[index]}: ${forbidden.message}`);
+  for (const forbidden of forbiddenAuditPatterns) assert(!forbidden.pattern.test(auditSources[index]), `${auditPaths[index]}: ${forbidden.message}`);
 }
 
 assert(packageJson.scripts?.['audit:succession-runtime'] === 'node scripts/run-succession-runtime-audits.mjs', 'package scripts must expose the aggregate Succession runtime sweep');
@@ -102,6 +92,7 @@ assert(packageJson.scripts?.['audit:succession-organizations'] === 'node scripts
 assert(packageJson.scripts?.['audit:succession-people-institutions'] === 'node scripts/audit-succession-people-institutions-closure.mjs', 'package scripts must expose the Batch 2 closure audit');
 assert(packageJson.scripts?.['audit:succession-nen-systems'] === 'node scripts/audit-succession-nen-systems-workspace.mjs', 'package scripts must expose the Batch 3 systems audit');
 assert(packageJson.scripts?.['audit:succession-story-intelligence'] === 'node scripts/audit-succession-story-intelligence-workspace.mjs', 'package scripts must expose the Batch 4 story intelligence audit');
+assert(packageJson.scripts?.['audit:succession-final-product'] === 'node scripts/audit-succession-final-product-closure.mjs', 'package scripts must expose the Batch 5 final-product audit');
 assert(packageJson.scripts?.['build:runtime']?.startsWith('npm run audit:succession-runtime &&'), 'build:runtime must collect all Succession failures before continuing');
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
@@ -109,14 +100,7 @@ try {
   const archive = await vite.ssrLoadModule('/src/data/succession/successionData.js');
   assert(archive.successionArchiveValidation?.valid, 'canonical Succession data must validate');
   for (const [entityType, minimum] of [
-    ['organization', 11],
-    ['ability', 30],
-    ['guardian-beast', 15],
-    ['event', 29],
-    ['location', 42],
-    ['assignment', 37],
-    ['relationship', 54],
-    ['chapter', 75],
+    ['organization', 11], ['ability', 30], ['guardian-beast', 15], ['event', 29], ['location', 42], ['assignment', 37], ['relationship', 54], ['chapter', 75],
   ]) {
     const records = archive.getEntitiesByType(entityType);
     assert(records.length >= minimum, `${entityType} runtime layer must retain at least ${minimum} records, found ${records.length}`);
@@ -131,8 +115,9 @@ try {
     'getAbilityDossier', 'getNenSystemDossier', 'getGuardianBeastStateAtChapter', 'getGuardianBeastDossier',
     'getNenSystemClosureReport', 'getStoryPhaseAtChapter', 'getStoryPhaseDossier', 'getStoryLanesAtChapter',
     'getStoryLaneDossier', 'getStoryThreadDossier', 'getStoryThreadsAtChapter', 'getStoryCausalGraphAtChapter',
-    'getChapterStoryDossier', 'getStorySnapshotAtChapter', 'searchStoryIntelligence',
-    'getStoryIntelligenceClosureReport', 'isSuccessionEntityAvailableAtChapter', 'searchSuccessionArchive',
+    'getChapterStoryDossier', 'getStorySnapshotAtChapter', 'searchStoryIntelligence', 'getStoryIntelligenceClosureReport',
+    'getGlossaryEntryAtChapter', 'getGlossaryEntriesAtChapter', 'getMediaRecordsAtChapter', 'searchArchiveProduct',
+    'getProductClosureReport', 'getFinalReleaseClosureReport', 'isSuccessionEntityAvailableAtChapter', 'searchSuccessionArchive',
   ]) assert(typeof archive[selector] === 'function', `${selector} must remain public`);
 
   assert(archive.getCharactersWithStateProfiles().length >= 42, 'Batch 2 closure must retain complete royal and institution-leader state coverage');
@@ -175,9 +160,7 @@ try {
   assert(storyClosure.missingReferences.length === 0 && storyClosure.chapterProjectionIssues.length === 0, 'story graph references and chapter projections must remain clean');
 
   const storyPhases = Object.values(archive.successionArchiveData.storyPhaseProfiles || {});
-  const documentedEnd = Math.max(...storyPhases
-    .filter((phase) => phase.status !== 'pending-maintained-research')
-    .map((phase) => phase.chapterRange.end ?? phase.chapterRange.start));
+  const documentedEnd = Math.max(...storyPhases.filter((phase) => phase.status !== 'pending-maintained-research').map((phase) => phase.chapterRange.end ?? phase.chapterRange.start));
   const expectedPendingIds = chapters.filter((chapter) => chapter.number > documentedEnd).map((chapter) => chapter.id);
   assert(JSON.stringify(storyClosure.pendingChapterIds) === JSON.stringify(expectedPendingIds), 'pending story records must follow imported chapters after the last documented phase');
   for (const chapterId of expectedPendingIds) {
@@ -212,7 +195,21 @@ try {
   assert(!contagion378?.characters.some((character) => character.id === 'character:borksen'), 'early Contagion dossiers must not expose Borksen');
   assert(contagion410?.characters.some((character) => character.id === 'character:borksen'), 'Contagion must include Borksen after the recruitment outcome');
 
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph through imported Chapter ${latestChapter}; Batch 2 people and institutions, Batch 3 Nen systems, and Batch 4 chapter and story intelligence remain closed and chapter-bounded.`);
+  const productClosure = archive.getProductClosureReport();
+  assert(productClosure?.closureReady && productClosure.status === 'release-candidate', 'Batch 5 search, glossary, and media closure must reach release-candidate status');
+  assert(productClosure.glossary.total >= 24 && productClosure.glossary.referenceIssues.length === 0, 'canonical glossary references must remain complete');
+  assert(productClosure.media.total > 0 && productClosure.media.issues.length === 0, 'canonical media provenance must remain complete and deduplicated');
+  assert(archive.getGlossaryEntryAtChapter('glossary:parallel-future', 384) === null && archive.getGlossaryEntryAtChapter('glossary:parallel-future', 385), 'glossary records must obey ability revelation timing');
+  assert(!archive.searchArchiveProduct('Parallel Future', { chapter: 384, limit: 100 }).some((result) => ['ability:parallel-future', 'glossary:parallel-future', 'story-thread:tserriednich-future-growth'].includes(result.id)), 'unified search must hide future ability language');
+  assert(archive.searchArchiveProduct('Borksen autonomy', { chapter: 410, limit: 100 }).some((result) => result.id === 'story-thread:borksen-autonomy'), 'unified search must resolve normalized Story threads');
+  assert(archive.searchArchiveProduct('GSB', { chapter: 349, limit: 100 }).some((result) => result.id === 'glossary:guardian-spirit-beast'), 'unified search must resolve glossary synonyms');
+  assert(archive.searchArchiveProduct('Room 1014', { chapter: latestChapter, limit: 100 }).every((result) => result.matchReason), 'unified search must explain every match');
+
+  const finalReport = archive.getFinalReleaseClosureReport();
+  assert(finalReport?.closureReady && finalReport.status === 'release-candidate', 'the complete Succession Archive must reach release-candidate status before deployment');
+  assert(finalReport.deploymentRequiredForClosedStatus && finalReport.releaseGates.cloudflareDeployment === 'pending-external-build-result', 'only an external successful deployment may promote the project from release-candidate to closed');
+
+  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph through imported Chapter ${latestChapter}; Batches 1–4 remain closed and Batch 5 search, glossary, media, legacy cleanup, and final release reporting form a deployment-ready release candidate.`);
 } finally {
   await vite.close();
 }
