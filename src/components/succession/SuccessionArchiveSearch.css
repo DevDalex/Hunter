@@ -1,4 +1,5 @@
 @import './SuccessionVisualFoundation.css';
+@import './SuccessionVisualFoundationBridge.css';
 
 .succession-search-complete {
   display: grid;
