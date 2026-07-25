@@ -1,0 +1,152 @@
+/*
+ * Succession Visual Redesign — Batch 2, Hour 17
+ *
+ * Shared breadcrumb and return-path presentation only. This layer owns route
+ * orientation and safe exits while preserving the existing navigation targets.
+ */
+
+.succession-archive .succession-route-context {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--succession-space-3);
+  margin-bottom: var(--succession-space-4);
+}
+
+.succession-archive .succession-breadcrumbs {
+  min-width: 0;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  border: 1px solid var(--succession-border-subtle);
+  border-radius: var(--succession-radius-md);
+  background: color-mix(in srgb, var(--succession-surface-inset) 88%, transparent);
+  scrollbar-width: none;
+}
+
+.succession-archive .succession-breadcrumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.succession-archive .succession-breadcrumbs ol {
+  display: flex;
+  width: max-content;
+  min-width: 100%;
+  align-items: center;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+}
+
+.succession-archive .succession-breadcrumbs li {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+}
+
+.succession-archive .succession-breadcrumbs button,
+.succession-archive .succession-breadcrumbs [aria-current='page'] {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  padding: 8px 11px;
+  border: 0;
+  border-radius: var(--succession-radius-sm);
+  background: transparent;
+  font: inherit;
+  font-size: var(--succession-text-sm);
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.succession-archive .succession-breadcrumbs button {
+  color: var(--succession-text-muted);
+  cursor: pointer;
+  transition:
+    color var(--succession-motion-fast) var(--succession-ease),
+    background var(--succession-motion-fast) var(--succession-ease);
+}
+
+.succession-archive .succession-breadcrumbs button:hover {
+  background: var(--succession-surface-2);
+  color: var(--succession-gold-strong);
+}
+
+.succession-archive .succession-breadcrumbs [aria-current='page'] {
+  color: var(--succession-text-strong);
+  background: color-mix(in srgb, var(--succession-gold) 10%, transparent);
+}
+
+.succession-archive .succession-breadcrumbs__separator {
+  flex: 0 0 auto;
+  color: var(--succession-border-strong);
+}
+
+.succession-archive .succession-return-path {
+  display: inline-flex;
+  min-height: 40px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: var(--succession-space-2);
+  padding: 8px 13px;
+  border: 1px solid var(--succession-border-default);
+  border-radius: var(--succession-radius-md);
+  background: var(--succession-surface-1);
+  color: var(--succession-text-muted);
+  font: inherit;
+  font-size: var(--succession-text-sm);
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    color var(--succession-motion-fast) var(--succession-ease),
+    border-color var(--succession-motion-fast) var(--succession-ease),
+    background var(--succession-motion-fast) var(--succession-ease),
+    transform var(--succession-motion-fast) var(--succession-ease);
+}
+
+.succession-archive .succession-return-path:hover {
+  border-color: var(--succession-border-strong);
+  background: var(--succession-surface-2);
+  color: var(--succession-text-strong);
+  transform: translateX(-2px);
+}
+
+@media (max-width: 720px) {
+  .succession-archive .succession-route-context {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .succession-archive .succession-breadcrumbs,
+  .succession-archive .succession-return-path {
+    width: 100%;
+  }
+
+  .succession-archive .succession-return-path {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 560px) {
+  .succession-archive .succession-route-context {
+    margin-bottom: var(--succession-space-3);
+  }
+
+  .succession-archive .succession-breadcrumbs button,
+  .succession-archive .succession-breadcrumbs [aria-current='page'] {
+    min-height: 44px;
+    padding-inline: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-archive .succession-breadcrumbs button,
+  .succession-archive .succession-return-path {
+    transition: none;
+  }
+
+  .succession-archive .succession-return-path:hover {
+    transform: none;
+  }
+}
