@@ -1,5 +1,5 @@
-import { successionArchiveData } from './entitiesStoryIntelligenceFoundation.js';
-// Active predecessor chain: from './entitiesStoryIntelligenceFoundation.js' to from './entitiesNenSystemFoundation.js' to from './entitiesOrganizationFoundation.js', preserving Batches 2 and 3 beneath Batch 4.
+import { successionArchiveData } from './entitiesProductClosureFoundation.js';
+// Active predecessor chain: from './entitiesProductClosureFoundation.js' to from './entitiesStoryIntelligenceFoundation.js' to from './entitiesNenSystemFoundation.js' to from './entitiesOrganizationFoundation.js', preserving Batches 2–4 beneath Batch 5.
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { createEventKnowledgeSelectors } from './eventKnowledgeSelectors.js';
 import { buildSuccessionIndexes } from './indexes.js';
@@ -9,6 +9,7 @@ import { createOrganizationStateSelectors } from './organizationStateSelectors.j
 import { createPeopleInstitutionClosure } from './peopleInstitutionClosure.js';
 import { createNenSystemSelectors } from './nenSystemSelectors.js';
 import { createStoryIntelligenceSelectors } from './storyIntelligenceSelectors.js';
+import { createProductClosureSelectors } from './productClosureSelectors.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
@@ -25,6 +26,14 @@ export const successionPeopleInstitutionClosure = createPeopleInstitutionClosure
 export const successionNenSystems = createNenSystemSelectors({ data: successionArchiveData, archive: successionArchive });
 export const successionEventKnowledge = createEventKnowledgeSelectors({ data: successionArchiveData, archive: successionArchive });
 export const successionStoryIntelligence = createStoryIntelligenceSelectors({ data: successionArchiveData, archive: successionArchive, eventKnowledge: successionEventKnowledge });
+export const successionProductClosure = createProductClosureSelectors({
+  data: successionArchiveData,
+  archive: successionArchive,
+  characterStates: successionCharacterStates,
+  organizationStates: successionOrganizationStates,
+  nenSystems: successionNenSystems,
+  storyIntelligence: successionStoryIntelligence,
+});
 export const successionEvidenceGraph = createSuccessionEvidenceGraph(successionArchiveData);
 
 export { successionArchiveData };
@@ -155,6 +164,16 @@ export const {
   getStoryIntelligenceClosureReport,
 } = successionStoryIntelligence;
 
+export const {
+  getGlossaryEntry,
+  getGlossaryEntryAtChapter,
+  getGlossaryEntriesAtChapter,
+  getMediaRecord,
+  getMediaRecordsAtChapter,
+  searchArchiveProduct,
+  getProductClosureReport,
+} = successionProductClosure;
+
 const earliestChapter = (values) => {
   const chapters = values.filter(Number.isFinite);
   return chapters.length ? Math.min(...chapters) : null;
@@ -187,80 +206,17 @@ export const isSuccessionEntityAvailableAtChapter = (entityOrId, chapter) => {
   return firstChapter === null || firstChapter <= parsedChapter;
 };
 
-const searchCharacterStatesAtChapter = (query, chapter, limit) => {
-  const normalized = String(query || '').trim().toLocaleLowerCase();
-  if (!normalized) return [];
-  const matches = [];
-  for (const character of getEntitiesByType('character')) {
-    const dossier = getCharacterDossier(character.id, chapter);
-    if (!dossier) continue;
-    const text = [
-      dossier.state?.bodyState,
-      dossier.state?.consciousnessState,
-      dossier.state?.operationalState,
-      dossier.state?.protectionState,
-      dossier.state?.threatLevel,
-      dossier.state?.nenKnowledge,
-      dossier.state?.allegianceState,
-      ...(dossier.state?.openQuestions || []),
-      dossier.roleProfile?.label,
-      dossier.roleProfile?.mandate,
-      dossier.roleProfile?.authority,
-      ...dossier.timeline.flatMap((record) => [record.operationalState, record.allegianceState, ...(record.openQuestions || [])]),
-    ].filter(Boolean).join(' ').toLocaleLowerCase();
-    if (text.includes(normalized)) matches.push(Object.freeze({ entity: character, score: 25 }));
-  }
-  return matches.slice(0, limit);
-};
-
-const searchOrganizationStatesAtChapter = (query, chapter, limit) => {
-  const normalized = String(query || '').trim().toLocaleLowerCase();
-  if (!normalized) return [];
-  const matches = [];
-  for (const organization of getEntitiesByType('organization')) {
-    const dossier = getOrganizationDossier(organization.id, chapter);
-    if (!dossier) continue;
-    const text = [
-      dossier.state?.status,
-      dossier.state?.operationalState,
-      dossier.state?.authority,
-      ...(dossier.state?.objectiveStates || []),
-      ...(dossier.state?.pressure || []),
-      ...(dossier.objectives || []),
-      ...(dossier.pressure || []),
-      ...dossier.personnelHistory.flatMap((record) => [record.role, record.status, record.transitionType, record.note]),
-    ].filter(Boolean).join(' ').toLocaleLowerCase();
-    if (text.includes(normalized)) matches.push(Object.freeze({ entity: organization, score: 25 }));
-  }
-  return matches.slice(0, limit);
-};
-
 export const searchSuccessionArchive = (query, options = {}) => {
   const limit = Number(options.limit) || 20;
-  const chapter = Number(options.chapter);
-  const searchLimit = Math.max(limit, 100);
-  const baseResults = successionArchive.search(query, { ...options, limit: searchLimit });
-  const allowCharacters = !options.types || options.types.includes('character');
-  const allowOrganizations = !options.types || options.types.includes('organization');
-  const stateResults = allowCharacters
-    ? Number.isFinite(chapter)
-      ? searchCharacterStatesAtChapter(query, chapter, searchLimit)
-      : searchCharactersByState(query, { limit: searchLimit })
-    : [];
-  const organizationResults = allowOrganizations
-    ? Number.isFinite(chapter)
-      ? searchOrganizationStatesAtChapter(query, chapter, searchLimit)
-      : searchOrganizationsByState(query, { limit: searchLimit })
-    : [];
-  const merged = new Map();
-  for (const result of [...baseResults, ...stateResults, ...organizationResults]) {
-    if (Number.isFinite(chapter) && !isSuccessionEntityAvailableAtChapter(result.entity, chapter)) continue;
-    const current = merged.get(result.entity.id);
-    if (!current || result.score > current.score) merged.set(result.entity.id, result);
-  }
-  return [...merged.values()]
-    .sort((left, right) => right.score - left.score || left.entity.name.localeCompare(right.entity.name))
-    .slice(0, limit);
+  const chapter = Number.isFinite(Number(options.chapter)) ? Number(options.chapter) : successionArchiveData.chapters.at(-1)?.number;
+  return searchArchiveProduct(query, {
+    chapter,
+    limit: Math.max(limit, 100),
+    types: options.types || null,
+  })
+    .filter((result) => result.resultType === 'entity')
+    .slice(0, limit)
+    .map((result) => Object.freeze({ entity: result.entity, score: result.score, matchReason: result.matchReason }));
 };
 
 export const {
