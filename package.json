@@ -13,6 +13,7 @@
     "audit:final": "node scripts/audit-final-polish.mjs",
     "audit:governance": "node scripts/audit-archive-governance.mjs",
     "audit:design-system": "node scripts/audit-design-system.mjs",
+    "audit:succession-stabilization": "node scripts/audit-succession-stabilization.mjs",
     "audit:succession-contract": "node scripts/audit-succession-runtime-contract.mjs",
     "audit:succession-runtime": "node scripts/run-succession-runtime-audits.mjs",
     "audit:succession-shell": "node scripts/audit-succession-archive-shell.mjs",
