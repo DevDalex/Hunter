@@ -13,9 +13,11 @@ on:
       - 'scripts/audit-succession-page-header-redesign.mjs'
       - 'scripts/audit-succession-breadcrumb-redesign.mjs'
       - 'scripts/audit-succession-batch-2-completion.mjs'
+      - 'scripts/audit-succession-character-command.mjs'
       - 'scripts/report-succession-visual-inventory.mjs'
       - 'docs/SUCCESSION-VISUAL-REDESIGN.md'
       - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-2-CLOSURE.md'
+      - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-3.md'
       - 'package.json'
       - '.github/workflows/succession-visual-redesign.yml'
 
@@ -72,7 +74,7 @@ jobs:
           echo "Main runtime outcome: ${{ steps.baseline_runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
 
   foundation:
-    name: Batch 2 closure and visual regression audits
+    name: Batch 3 character command and visual regression audits
     needs: baseline_runtime
     runs-on: ubuntu-latest
     timeout-minutes: 55
@@ -104,6 +106,9 @@ jobs:
 
       - name: Audit Batch 2 closure
         run: npm run audit:succession-batch-2
+
+      - name: Audit Batch 3 character command
+        run: npm run audit:succession-character-command
 
       - name: Report visual inventory
         run: npm run report:succession-visual-inventory > succession-visual-inventory.md
