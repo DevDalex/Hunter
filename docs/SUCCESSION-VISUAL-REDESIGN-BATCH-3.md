@@ -72,27 +72,57 @@ The lifetime chronology becomes a multi-kind intelligence lane for:
 
 Records active at the selected chapter receive an explicit textual and structural marker. The separate state-history ledger retains certainty, body state, consciousness state, and unresolved questions.
 
+## Hours 30–31 — Royal contest command
+
+### Hour 30 — Fourteen-prince directory and status board
+
+The prince directory becomes a Succession Contest command surface with:
+
+- an SVG fourteen-position royal status orbit;
+- accessible text summarizing active, deceased, and exceptional states;
+- maternal-branch and unresolved-pressure metrics;
+- sticky state filtering;
+- ranked royal cards with portrait, status, maternal branch, location, assignments, abilities, pressure, and chapter boundary;
+- dedicated prince-route navigation rather than redirecting every prince card directly into the general character directory.
+
+The SVG is supplemental. Every candidate remains present in a fully operable semantic card directory, so status and navigation do not depend on interpreting the visualization.
+
+### Hour 31 — Prince pages
+
+Each prince receives a dedicated royal intelligence dossier containing:
+
+- rank-dominant cinematic identity stage;
+- maternal branch, current location, chapter boundary, and canonical status;
+- assignments, relationships, Nen, protection, and pressure metrics;
+- body, consciousness, allegiance, authority, and Nen knowledge panels;
+- operational-network, protection-circle, ability, vulnerability, and open-question sections;
+- source evidence;
+- previous and next prince navigation;
+- an explicit bridge to the complete general character chronology.
+
+The prince dossier remains derived from the authoritative chapter-bounded character dossier API. It does not create a second source of canonical truth.
+
 ## Advanced presentation boundaries
 
 - New CSS uses semantic archive tokens and introduces no raw hexadecimal colors.
-- No new visual layer depends on `!important`.
+- Primary presentation layers do not depend on `!important`; route-owned readability polish is limited to exact sub-11px legacy or compact-SVG selectors.
 - Motion is restrained and disabled through `prefers-reduced-motion`.
 - Touch layouts do not depend on hover.
 - Mobile controls retain 44px targets.
 - Existing canonical selectors and chapter-bounded dossier APIs remain authoritative.
+- Advanced SVG visualizations include accessible textual equivalents.
 
-## Validation command
+## Validation commands
 
 ```bash
 npm run audit:succession-character-command
+npm run audit:succession-royal-command
 ```
 
 The dedicated Succession visual-redesign workflow also runs the existing foundation, shell, header, breadcrumb, Batch 2, CSS, readability, accessibility, runtime, build, and browser-render gates.
 
 ## Remaining Batch 3 scope
 
-- Hour 30: fourteen-prince directory and status board.
-- Hour 31: prince pages.
 - Hour 32: queen directory and profiles.
 - Hour 33: royal-family hierarchy presentation.
 - Hour 34: faction and organization directories.
