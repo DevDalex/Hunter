@@ -36,7 +36,9 @@ function GlossaryDossier({ entry, entries, onNavigate }) {
 
     {!!entry.synonyms.length && <section><h3>Alternate wording</h3><div className="succession-product-chips">{entry.synonyms.map((synonym) => <span key={synonym}>{synonym}</span>)}</div></section>}
 
-    <section aria-labelledby="glossary-connections-title"><h3 id="glossary-connections-title">Connected canonical records</h3>{entry.related.length ? <div className="succession-product-links">{entry.related.map((entity) => <EntityLink entity={entity} onNavigate={onNavigate} key={entity.id} />)}</div> : <p>No direct entity record is published for this archive vocabulary term.</p>}</section>
+    <section aria-labelledby="glossary-connections-title"><h3 id="glossary-connections-title">Connected canonical records</h3>{entry.relatedRecords?.length ? <div className="succession-product-links">{entry.relatedRecords.map((record) => record.entity
+      ? <EntityLink entity={record.entity} onNavigate={onNavigate} key={record.id} />
+      : <button type="button" key={record.id} onClick={() => onNavigate(record.route, record.params)}><span><small>{record.kind.replaceAll('-', ' ')}</small><b>{record.label}</b></span><ArrowRight size={13} aria-hidden="true" /></button>)}</div> : <p>No direct graph record is published for this archive vocabulary term.</p>}</section>
 
     {!!entry.sources.length && <section className="succession-source-list" aria-labelledby="glossary-sources-title"><header><span>Evidence</span><h3 id="glossary-sources-title">Chapter sources available at this boundary</h3></header>{entry.sources.map((source) => <SourceReference source={source} onNavigate={onNavigate} key={source.id} />)}</section>}
 
