@@ -1,0 +1,488 @@
+.succession-canonical-locations {
+  --location-canvas: var(--succession-surface-inset);
+  --location-surface: var(--succession-surface-1);
+  --location-raised: var(--succession-surface-2);
+  --location-paper: var(--succession-surface-paper-raised);
+  --location-paper-muted: var(--succession-surface-paper);
+  --location-ink: var(--succession-text-strong);
+  --location-muted: var(--succession-text-muted);
+  --location-paper-ink: var(--succession-text-on-paper);
+  --location-paper-muted-ink: var(--succession-text-on-paper-muted);
+  --location-gold: var(--succession-gold-strong);
+  --location-crimson: var(--succession-crimson-strong);
+  --location-line: var(--succession-border-default);
+  --location-line-strong: var(--succession-border-strong);
+  gap: clamp(20px, 3vw, 36px);
+}
+
+.succession-canonical-locations__hero {
+  position: relative;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, .65fr);
+  gap: clamp(24px, 4vw, 58px);
+  overflow: hidden;
+  padding: clamp(30px, 5vw, 66px);
+  border-color: var(--location-line-strong);
+  border-radius: clamp(24px, 3vw, 40px);
+  background:
+    radial-gradient(circle at 87% 14%, color-mix(in srgb, var(--location-crimson) 26%, transparent), transparent 38%),
+    radial-gradient(circle at 9% 88%, color-mix(in srgb, var(--location-gold) 12%, transparent), transparent 45%),
+    linear-gradient(145deg, var(--location-surface), var(--location-canvas));
+  color: var(--location-ink);
+  box-shadow: var(--succession-shadow-md);
+  isolation: isolate;
+}
+
+.succession-canonical-locations__hero::before {
+  content: "SPATIAL / ACCESS / OCCUPANCY / EVIDENCE";
+  position: absolute;
+  left: 28px;
+  bottom: -13px;
+  z-index: -1;
+  color: color-mix(in srgb, var(--location-ink) 4%, transparent);
+  font-family: var(--succession-font-mono);
+  font-size: clamp(32px, 5.8vw, 82px);
+  font-weight: 900;
+  letter-spacing: -.055em;
+  white-space: nowrap;
+}
+
+.succession-canonical-locations__hero > div > span,
+.succession-location-filter-panel > header span,
+.succession-location-dossier > header span,
+.succession-location-snapshot header span,
+.succession-location-children header span,
+.succession-location-occupants header span,
+.succession-location-activity-grid header span,
+.succession-location-history header span,
+.succession-location-sources header span {
+  color: var(--location-gold);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .1em;
+}
+
+.succession-canonical-locations__hero h2 {
+  max-width: 960px;
+  margin-top: 12px;
+  color: var(--location-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(38px, 5.3vw, 72px);
+  line-height: .94;
+  letter-spacing: -.052em;
+}
+
+.succession-canonical-locations__hero p {
+  max-width: 880px;
+  margin-top: 18px;
+  color: var(--location-muted);
+  font-size: clamp(15px, 1.45vw, 18px);
+}
+
+.succession-canonical-locations__hero dl {
+  align-self: center;
+  gap: 9px;
+}
+
+.succession-canonical-locations__hero dl > div {
+  min-height: 102px;
+  padding: 16px;
+  border-color: var(--location-line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--location-raised) 88%, transparent);
+}
+
+.succession-canonical-locations__hero dt {
+  color: var(--location-muted);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.succession-canonical-locations__hero dd {
+  color: var(--location-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(26px, 3vw, 40px);
+}
+
+.succession-location-filter-panel,
+.succession-location-snapshot,
+.succession-location-children,
+.succession-location-occupants,
+.succession-location-history,
+.succession-location-sources,
+.succession-location-activity-grid > section {
+  padding: clamp(20px, 3vw, 30px);
+  border-color: color-mix(in srgb, var(--location-paper-ink) 18%, transparent);
+  border-radius: 22px;
+  background: var(--location-paper-muted);
+  color: var(--location-paper-ink);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-location-filter-panel > header > svg,
+.succession-location-snapshot > header > svg,
+.succession-location-children > header > svg,
+.succession-location-occupants > header > svg,
+.succession-location-history > header > svg,
+.succession-location-sources > header > svg,
+.succession-location-activity-grid > section > header > svg {
+  color: var(--location-crimson);
+}
+
+.succession-location-filter-panel h3,
+.succession-location-snapshot h3,
+.succession-location-children h3,
+.succession-location-occupants h3,
+.succession-location-history h3,
+.succession-location-sources h3,
+.succession-location-activity-grid h3 {
+  color: var(--location-paper-ink);
+}
+
+.succession-location-filter-panel > header > b {
+  border: 1px solid color-mix(in srgb, var(--location-crimson) 35%, transparent);
+  background: color-mix(in srgb, var(--location-crimson) 8%, var(--location-paper));
+  color: var(--location-crimson);
+}
+
+.succession-location-filter-panel__search,
+.succession-location-filter-panel__fields label {
+  min-height: 50px;
+  border-color: color-mix(in srgb, var(--location-paper-ink) 16%, transparent);
+  background: var(--location-paper);
+  color: var(--location-paper-ink);
+}
+
+.succession-location-filter-panel__search input,
+.succession-location-filter-panel__fields input,
+.succession-location-filter-panel__fields select {
+  color: var(--location-paper-ink);
+}
+
+.succession-location-filter-panel__fields label > span,
+.succession-location-filter-panel > footer,
+.succession-location-card dt,
+.succession-location-card em {
+  color: var(--location-paper-muted-ink);
+}
+
+.succession-location-filter-panel__fields option {
+  background: var(--location-paper);
+  color: var(--location-paper-ink);
+}
+
+.succession-location-filter-panel > footer button,
+.succession-location-directory__empty button {
+  min-height: 44px;
+  border-color: color-mix(in srgb, var(--location-crimson) 35%, transparent);
+  background: color-mix(in srgb, var(--location-crimson) 7%, var(--location-paper));
+  color: var(--location-paper-ink);
+}
+
+.succession-location-directory {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.succession-location-card {
+  position: relative;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 15px;
+  min-height: 330px;
+  padding: 20px;
+  overflow: hidden;
+  border-color: var(--location-line);
+  border-radius: 19px;
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--location-crimson) 10%, transparent), transparent 42%),
+    linear-gradient(145deg, var(--location-raised), var(--location-surface));
+  color: var(--location-ink);
+  box-shadow: var(--succession-shadow-sm);
+  transition: transform var(--succession-motion-base), border-color var(--succession-motion-base), box-shadow var(--succession-motion-base);
+}
+
+.succession-location-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--location-gold);
+}
+
+.succession-location-card:hover,
+.succession-location-card:focus-visible,
+.succession-location-card.is-selected {
+  transform: translateY(-4px);
+  border-color: var(--location-gold);
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--location-crimson) 15%, transparent), transparent 44%),
+    linear-gradient(145deg, var(--location-raised), var(--location-surface));
+  box-shadow: var(--succession-shadow-md);
+}
+
+.succession-location-card__icon {
+  width: 48px;
+  height: 48px;
+  border-color: color-mix(in srgb, var(--location-gold) 38%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--location-gold) 9%, var(--location-canvas));
+  color: var(--location-gold);
+}
+
+.succession-location-card small {
+  color: var(--location-gold);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+
+.succession-location-card h3 {
+  color: var(--location-ink);
+  font-size: clamp(20px, 2vw, 28px);
+  line-height: 1.05;
+}
+
+.succession-location-card p {
+  color: var(--location-muted);
+}
+
+.succession-location-card dl {
+  grid-column: 1 / -1;
+  align-self: end;
+  margin-top: auto;
+}
+
+.succession-location-card dl > div {
+  border: 1px solid var(--location-line);
+  background: var(--location-canvas);
+}
+
+.succession-location-card dd {
+  color: var(--location-ink);
+}
+
+.succession-location-directory__empty {
+  border-color: var(--location-line);
+  background: var(--location-paper-muted);
+  color: var(--location-paper-ink);
+}
+
+.succession-location-dossier {
+  gap: clamp(18px, 3vw, 30px);
+  padding: clamp(22px, 4vw, 42px);
+  border-color: var(--location-line-strong);
+  border-radius: clamp(24px, 3vw, 38px);
+  background:
+    radial-gradient(circle at 88% 8%, color-mix(in srgb, var(--location-crimson) 13%, transparent), transparent 28%),
+    linear-gradient(145deg, var(--location-surface), var(--location-canvas));
+  color: var(--location-ink);
+  box-shadow: var(--succession-shadow-md);
+}
+
+.succession-location-dossier > header {
+  grid-template-columns: auto minmax(0, 1fr) minmax(270px, .55fr);
+  gap: clamp(18px, 3vw, 32px);
+}
+
+.succession-location-dossier__close {
+  min-height: 44px;
+  border-color: var(--location-line);
+  border-radius: 999px;
+  background: var(--location-raised);
+  color: var(--location-ink);
+}
+
+.succession-location-dossier > header h2 {
+  color: var(--location-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(36px, 5vw, 68px);
+  line-height: .94;
+  letter-spacing: -.045em;
+}
+
+.succession-location-dossier > header p {
+  color: var(--location-muted);
+}
+
+.succession-location-dossier > header dl > div {
+  border: 1px solid var(--location-line);
+  background: var(--location-raised);
+}
+
+.succession-location-dossier > header dt {
+  color: var(--location-muted);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.succession-location-dossier > header dd {
+  color: var(--location-ink);
+}
+
+.succession-location-breadcrumbs {
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid color-mix(in srgb, var(--location-paper-ink) 16%, transparent);
+  border-radius: 14px;
+  background: var(--location-paper);
+  color: var(--location-paper-ink);
+}
+
+.succession-location-breadcrumbs button {
+  min-height: 36px;
+  color: var(--location-crimson);
+}
+
+.succession-location-snapshot__stats > div {
+  border: 1px solid color-mix(in srgb, var(--location-paper-ink) 14%, transparent);
+  background: var(--location-paper);
+  color: var(--location-paper-ink);
+}
+
+.succession-location-snapshot__stats > div > svg {
+  color: var(--location-crimson);
+}
+
+.succession-location-children button,
+.succession-location-linked-entity,
+.succession-location-activity-grid button,
+.succession-location-history article {
+  border-color: color-mix(in srgb, var(--location-paper-ink) 15%, transparent);
+  background: var(--location-paper);
+  color: var(--location-paper-ink);
+}
+
+.succession-location-children button:hover,
+.succession-location-children button:focus-visible,
+.succession-location-linked-entity:hover,
+.succession-location-linked-entity:focus-visible,
+.succession-location-activity-grid button:hover,
+.succession-location-activity-grid button:focus-visible {
+  border-color: var(--location-crimson);
+  background: color-mix(in srgb, var(--location-crimson) 7%, var(--location-paper));
+}
+
+.succession-location-linked-entity small,
+.succession-location-activity-grid button small,
+.succession-location-history article > span,
+.succession-location-history article p,
+.succession-location-occupants > p,
+.succession-location-activity-grid > section > p,
+.succession-location-history > p {
+  color: var(--location-paper-muted-ink);
+}
+
+.succession-location-history article {
+  grid-template-columns: minmax(88px, auto) auto minmax(0, 1fr) auto;
+  border-left: 4px solid var(--location-gold);
+}
+
+.succession-location-history article button {
+  min-height: 44px;
+  border-color: color-mix(in srgb, var(--location-crimson) 34%, transparent);
+  background: color-mix(in srgb, var(--location-crimson) 7%, var(--location-paper));
+  color: var(--location-paper-ink);
+}
+
+@media (max-width: 1120px) {
+  .succession-canonical-locations__hero {
+    grid-template-columns: minmax(0, 1fr) minmax(230px, .55fr);
+  }
+
+  .succession-location-dossier > header {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .succession-location-dossier > header dl {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 780px) {
+  .succession-canonical-locations__hero,
+  .succession-location-dossier > header {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-canonical-locations__hero dl,
+  .succession-location-dossier > header dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .succession-location-directory,
+  .succession-location-filter-panel__fields {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-location-history article {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .succession-location-history article > span,
+  .succession-location-history article button {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .succession-canonical-locations__hero,
+  .succession-location-filter-panel,
+  .succession-location-dossier,
+  .succession-location-snapshot,
+  .succession-location-children,
+  .succession-location-occupants,
+  .succession-location-history,
+  .succession-location-sources,
+  .succession-location-activity-grid > section {
+    padding: 18px;
+    border-radius: 18px;
+  }
+
+  .succession-canonical-locations__hero dl,
+  .succession-location-dossier > header dl {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-location-card {
+    grid-template-columns: 42px minmax(0, 1fr);
+    min-height: 0;
+    padding: 16px;
+  }
+
+  .succession-location-card dl {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-location-filter-panel > footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .succession-location-filter-panel > footer button,
+  .succession-location-history article button {
+    width: 100%;
+  }
+}
+
+@media (hover: none) {
+  .succession-location-card:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-canonical-locations *,
+  .succession-canonical-locations *::before,
+  .succession-canonical-locations *::after {
+    scroll-behavior: auto;
+    animation: none;
+    transition: none;
+  }
+}
