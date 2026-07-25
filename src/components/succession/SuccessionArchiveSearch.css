@@ -4,6 +4,7 @@
 @import './SuccessionArchivePageHeaderRedesign.css';
 @import './SuccessionArchiveBreadcrumbRedesign.css';
 @import './SuccessionArchiveBatch2Completion.css';
+@import './SuccessionArchiveRoyalContrast.css';
 
 .succession-search-complete {
   display: grid;
