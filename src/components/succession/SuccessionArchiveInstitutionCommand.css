@@ -1,0 +1,1146 @@
+.succession-institution-command,
+.succession-institution-dossier {
+  --institution-canvas: var(--succession-surface-inset);
+  --institution-surface: var(--succession-surface-1);
+  --institution-raised: var(--succession-surface-2);
+  --institution-paper: var(--succession-surface-paper-raised);
+  --institution-paper-muted: var(--succession-surface-paper);
+  --institution-ink: var(--succession-text-strong);
+  --institution-muted: var(--succession-text-muted);
+  --institution-paper-ink: var(--succession-text-on-paper);
+  --institution-paper-muted-ink: var(--succession-text-on-paper-muted);
+  --institution-gold: var(--succession-gold-strong);
+  --institution-crimson: var(--succession-crimson-strong);
+  --institution-line: var(--succession-border-default);
+  --institution-line-strong: var(--succession-border-strong);
+  display: grid;
+  gap: clamp(18px, 2.7vw, 34px);
+  min-width: 0;
+}
+
+.succession-institution-command h2,
+.succession-institution-command h3,
+.succession-institution-dossier h2,
+.succession-institution-dossier h3,
+.succession-institution-dossier h4 {
+  margin: 0;
+}
+
+.succession-institution-command p,
+.succession-institution-dossier p {
+  margin: 0;
+  line-height: 1.68;
+}
+
+.succession-institution-command__hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(250px, .65fr);
+  gap: clamp(24px, 4vw, 58px);
+  overflow: hidden;
+  padding: clamp(28px, 5vw, 68px);
+  border: 1px solid var(--institution-line-strong);
+  border-radius: clamp(24px, 3vw, 38px);
+  background:
+    radial-gradient(circle at 86% 14%, color-mix(in srgb, var(--institution-crimson) 25%, transparent), transparent 38%),
+    radial-gradient(circle at 8% 90%, color-mix(in srgb, var(--institution-gold) 10%, transparent), transparent 42%),
+    linear-gradient(145deg, var(--institution-surface), var(--institution-canvas));
+  color: var(--institution-ink);
+  box-shadow: var(--succession-shadow-md);
+  isolation: isolate;
+}
+
+.succession-institution-command__hero::before {
+  content: "INSTITUTION / COMMAND";
+  position: absolute;
+  left: 28px;
+  bottom: -12px;
+  z-index: -1;
+  color: color-mix(in srgb, var(--institution-ink) 4%, transparent);
+  font-family: var(--succession-font-mono);
+  font-size: clamp(34px, 6vw, 84px);
+  font-weight: 900;
+  letter-spacing: -.05em;
+  white-space: nowrap;
+}
+
+.succession-institution-command__hero > div:first-child {
+  align-self: center;
+}
+
+.succession-institution-command__hero > div:first-child > span,
+.succession-institution-control-deck > header > div:first-child span,
+.succession-institution-comparison > header span,
+.succession-institution-dossier__topline > span,
+.succession-institution-dossier__identity > div:last-child > span,
+.succession-institution-dossier__chapter > div > span,
+.succession-institution-state-board > div > span,
+.succession-institution-dossier section > header span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--institution-gold);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+}
+
+.succession-institution-command__hero h2 {
+  max-width: 850px;
+  margin-top: 15px;
+  color: var(--institution-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(42px, 6vw, 80px);
+  font-weight: 600;
+  line-height: .92;
+  letter-spacing: -.052em;
+  text-wrap: balance;
+}
+
+.succession-institution-command__hero p {
+  max-width: 780px;
+  margin-top: 20px;
+  color: var(--institution-muted);
+  font-size: clamp(15px, 1.6vw, 19px);
+}
+
+.succession-institution-command__network {
+  position: relative;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  min-height: 290px;
+  border: 1px solid var(--institution-line);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle, color-mix(in srgb, var(--institution-gold) 11%, transparent), transparent 58%),
+    color-mix(in srgb, var(--institution-raised) 82%, transparent);
+}
+
+.succession-institution-command__network svg {
+  color: var(--institution-gold);
+}
+
+.succession-institution-command__network span {
+  margin-top: 8px;
+  font-family: var(--succession-font-display);
+  font-size: clamp(58px, 8vw, 94px);
+  line-height: .8;
+}
+
+.succession-institution-command__network small {
+  margin-top: 13px;
+  color: var(--institution-muted);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.succession-institution-command__network i {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border: 2px solid var(--institution-gold);
+  border-radius: 50%;
+  background: var(--institution-raised);
+}
+
+.succession-institution-command__network i:nth-of-type(1) { left: 14%; top: 26%; }
+.succession-institution-command__network i:nth-of-type(2) { right: 15%; top: 37%; }
+.succession-institution-command__network i:nth-of-type(3) { left: 26%; bottom: 16%; }
+
+.succession-institution-status-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.succession-institution-status-strip div {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 17%, transparent);
+  border-radius: 17px;
+  background: var(--institution-paper);
+  color: var(--institution-paper-ink);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-institution-status-strip dt {
+  color: var(--institution-paper-muted-ink);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.succession-institution-status-strip dd {
+  margin: 7px 0 0;
+  font-family: var(--succession-font-display);
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1;
+}
+
+.succession-institution-control-deck {
+  position: sticky;
+  top: 12px;
+  z-index: 16;
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 20%, transparent);
+  border-radius: 18px;
+  background: color-mix(in srgb, var(--institution-paper) 93%, transparent);
+  color: var(--institution-paper-ink);
+  box-shadow: var(--succession-shadow-sm);
+  backdrop-filter: blur(18px);
+}
+
+.succession-institution-control-deck > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.succession-institution-control-deck > header > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.succession-institution-control-deck > header strong {
+  font-family: var(--succession-font-display);
+  font-size: 20px;
+}
+
+.succession-institution-control-deck > header > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.succession-institution-control-deck > header button,
+.succession-institution-active-filters button,
+.succession-institution-grid footer button,
+.succession-institution-comparison__picker button,
+.succession-institution-comparison table button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 18%, transparent);
+  border-radius: 999px;
+  background: var(--institution-paper-muted);
+  color: var(--institution-paper-muted-ink);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.succession-institution-control-deck > header button.is-active,
+.succession-institution-grid footer button.is-selected,
+.succession-institution-comparison__picker button.is-selected {
+  border-color: var(--institution-crimson);
+  background: var(--institution-crimson);
+  color: var(--institution-ink);
+}
+
+.succession-institution-filters.succession-organization-filters {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(170px, 240px) minmax(170px, 240px);
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.succession-institution-filters label {
+  min-height: 44px;
+  display: grid;
+  gap: 5px;
+}
+
+.succession-institution-filters label:first-child {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 18%, transparent);
+  border-radius: 11px;
+  background: var(--institution-paper-muted);
+}
+
+.succession-institution-filters input,
+.succession-institution-filters select {
+  min-height: 44px;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 18%, transparent);
+  border-radius: 11px;
+  background: var(--institution-paper-muted);
+  color: var(--institution-paper-ink);
+}
+
+.succession-institution-filters label:first-child input {
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+}
+
+.succession-institution-filters label > span:not(.sr-only) {
+  color: var(--institution-paper-muted-ink);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.succession-institution-active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+}
+
+.succession-institution-active-filters > span {
+  color: var(--institution-paper-muted-ink);
+  font-size: 11px;
+}
+
+.succession-institution-active-filters button.is-reset {
+  margin-left: auto;
+  border-style: dashed;
+}
+
+.succession-institution-coverage.succession-organization-coverage {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+}
+
+.succession-institution-coverage article {
+  position: relative;
+  display: grid;
+  gap: 5px;
+  overflow: hidden;
+  padding: 15px;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 16%, transparent);
+  border-radius: 15px;
+  background: var(--institution-paper);
+  color: var(--institution-paper-ink);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-institution-coverage span,
+.succession-institution-coverage small {
+  color: var(--institution-paper-muted-ink);
+  font-size: 11px;
+}
+
+.succession-institution-coverage b {
+  font-family: var(--succession-font-display);
+  font-size: 24px;
+}
+
+.succession-institution-coverage i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: var(--coverage);
+  height: 4px;
+  background: var(--institution-crimson);
+}
+
+.succession-institution-grid.succession-organization-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.succession-institution-grid > article.succession-institution-grid > article,
+.succession-institution-grid > article {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  min-width: 0;
+  overflow: hidden;
+  padding: 22px;
+  border: 1px solid var(--institution-line);
+  border-radius: 22px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--institution-crimson) 9%, transparent), transparent 54%),
+    var(--institution-surface);
+  color: var(--institution-ink);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-institution-grid > article::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--succession-state-active);
+}
+
+.succession-institution-grid > article.is-contested::before {
+  background: var(--succession-state-uncertain);
+}
+
+.succession-institution-grid > article.is-inactive::before {
+  background: var(--succession-state-deceased);
+}
+
+.succession-institution-grid > article > header {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 17px;
+  align-items: center;
+}
+
+.succession-institution-grid > article > header .succession-entity-visual {
+  width: 96px;
+  height: 112px;
+  border-radius: 16px;
+}
+
+.succession-institution-grid > article > header > div {
+  display: grid;
+  gap: 5px;
+}
+
+.succession-institution-grid > article > header span {
+  color: var(--institution-gold);
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.succession-institution-grid h3 {
+  color: var(--institution-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1;
+}
+
+.succession-institution-grid > article > p {
+  color: var(--institution-muted);
+}
+
+.succession-institution-grid dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--institution-line);
+  border-radius: 14px;
+  background: var(--institution-line);
+}
+
+.succession-institution-grid dl div {
+  padding: 12px;
+  background: var(--institution-raised);
+}
+
+.succession-institution-grid dt,
+.succession-institution-grid dd {
+  margin: 0;
+}
+
+.succession-institution-grid dt {
+  color: var(--institution-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.succession-institution-grid dd {
+  margin-top: 4px;
+  color: var(--institution-ink);
+  font-weight: 900;
+}
+
+.succession-institution-grid footer {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  margin-top: auto;
+}
+
+.succession-institution-grid footer button {
+  border-radius: 11px;
+  background: var(--institution-raised);
+  color: var(--institution-ink);
+}
+
+.succession-institution-grid footer button:last-child {
+  justify-content: space-between;
+  border-color: var(--institution-line-strong);
+}
+
+.succession-institution-grid footer button:disabled,
+.succession-institution-comparison__picker button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.succession-institution-hierarchy.succession-organization-hierarchy,
+.succession-institution-comparison {
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 18%, transparent);
+  border-radius: 22px;
+  background: var(--institution-paper);
+  color: var(--institution-paper-ink);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-institution-hierarchy > header,
+.succession-institution-comparison > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.succession-institution-hierarchy > header {
+  justify-content: flex-start;
+}
+
+.succession-institution-hierarchy > header svg {
+  flex: 0 0 auto;
+  color: var(--institution-crimson);
+}
+
+.succession-institution-hierarchy h3,
+.succession-institution-comparison h3 {
+  margin-top: 5px;
+  color: var(--institution-paper-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(27px, 3vw, 40px);
+}
+
+.succession-institution-hierarchy p,
+.succession-institution-comparison p {
+  margin-top: 8px;
+  color: var(--institution-paper-muted-ink);
+}
+
+.succession-institution-hierarchy > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.succession-institution-hierarchy article {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 14%, transparent);
+  border-radius: 15px;
+  background: var(--institution-paper-muted);
+}
+
+.succession-institution-hierarchy article > button {
+  min-height: 64px;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 8px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--institution-paper-ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.succession-institution-hierarchy article > button span,
+.succession-institution-hierarchy article > div button {
+  display: grid;
+  gap: 3px;
+}
+
+.succession-institution-hierarchy article small {
+  color: var(--institution-paper-muted-ink);
+  font-size: 11px;
+}
+
+.succession-institution-hierarchy article > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 7px;
+}
+
+.succession-institution-hierarchy article > div button {
+  min-height: 44px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 14%, transparent);
+  border-radius: 10px;
+  background: var(--institution-paper);
+  color: var(--institution-paper-ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.succession-institution-comparison > header > b {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 16%, transparent);
+  border-radius: 999px;
+  background: var(--institution-paper-muted);
+}
+
+.succession-institution-comparison__picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.succession-institution-comparison__table-wrap {
+  overflow-x: auto;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 16%, transparent);
+  border-radius: 16px;
+}
+
+.succession-institution-comparison table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: collapse;
+  background: var(--institution-paper-muted);
+}
+
+.succession-institution-comparison th,
+.succession-institution-comparison td {
+  padding: 13px 14px;
+  border-bottom: 1px solid color-mix(in srgb, var(--institution-paper-ink) 12%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--institution-paper-ink) 12%, transparent);
+  color: var(--institution-paper-ink);
+  text-align: left;
+  vertical-align: top;
+}
+
+.succession-institution-comparison th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  min-width: 150px;
+  background: var(--institution-paper);
+}
+
+.succession-institution-comparison thead th {
+  background: var(--institution-paper);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.succession-institution-comparison table button {
+  justify-content: space-between;
+  width: 100%;
+  min-width: 170px;
+  border-radius: 10px;
+  color: var(--institution-paper-ink);
+}
+
+.succession-institution-dossier__hero {
+  position: relative;
+  display: grid;
+  gap: 20px;
+  overflow: hidden;
+  padding: clamp(24px, 4vw, 54px);
+  border: 1px solid var(--institution-line-strong);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 88% 10%, color-mix(in srgb, var(--institution-crimson) 26%, transparent), transparent 40%),
+    linear-gradient(145deg, var(--institution-surface), var(--institution-canvas));
+  color: var(--institution-ink);
+  box-shadow: var(--succession-shadow-md);
+}
+
+.succession-institution-dossier__topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.succession-institution-dossier__topline .succession-organization-back {
+  min-height: 44px;
+  border-color: var(--institution-line);
+  background: var(--institution-raised);
+  color: var(--institution-ink);
+}
+
+.succession-institution-dossier__identity {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: clamp(22px, 4vw, 44px);
+  align-items: center;
+}
+
+.succession-institution-dossier__visual .succession-entity-visual {
+  width: 190px;
+  height: 220px;
+  border-radius: 22px;
+}
+
+.succession-institution-dossier__identity > div:last-child {
+  display: grid;
+  gap: 8px;
+}
+
+.succession-institution-dossier__identity h2 {
+  color: var(--institution-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(42px, 6vw, 76px);
+  line-height: .92;
+  letter-spacing: -.045em;
+}
+
+.succession-institution-dossier__identity p {
+  max-width: 880px;
+  color: var(--institution-muted);
+  font-size: clamp(15px, 1.6vw, 18px);
+}
+
+.succession-institution-dossier__chapter {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 120px auto;
+  gap: 10px;
+  align-items: center;
+  padding: 13px;
+  border: 1px solid var(--institution-line);
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--institution-raised) 86%, transparent);
+}
+
+.succession-institution-dossier__chapter > div {
+  display: grid;
+  gap: 4px;
+}
+
+.succession-institution-dossier__chapter input,
+.succession-institution-dossier__chapter button {
+  min-height: 44px;
+  width: 100%;
+  border: 1px solid var(--institution-line);
+  border-radius: 10px;
+  background: var(--institution-canvas);
+  color: var(--institution-ink);
+}
+
+.succession-institution-dossier__chapter button {
+  padding: 9px 13px;
+  cursor: pointer;
+  font-weight: 850;
+}
+
+.succession-institution-dossier__chapter button:disabled {
+  opacity: .48;
+  cursor: not-allowed;
+}
+
+.succession-institution-dossier-nav {
+  position: sticky;
+  top: 12px;
+  z-index: 15;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 18%, transparent);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--institution-paper) 93%, transparent);
+  box-shadow: var(--succession-shadow-sm);
+  backdrop-filter: blur(18px);
+}
+
+.succession-institution-dossier-nav a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 13px;
+  border-radius: 10px;
+  color: var(--institution-paper-muted-ink);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.succession-institution-dossier-nav a:hover,
+.succession-institution-dossier-nav a:focus-visible {
+  background: var(--institution-paper-muted);
+  color: var(--institution-paper-ink);
+}
+
+.succession-institution-state-board.succession-organization-state-board,
+.succession-institution-hierarchy-board.succession-organization-hierarchy-board,
+.succession-institution-operation-grid > section,
+.succession-institution-history.succession-organization-personnel-history,
+.succession-institution-event-history.succession-organization-event-history,
+.succession-institution-sources.succession-organization-sources {
+  padding: clamp(20px, 3vw, 32px);
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 18%, transparent);
+  border-radius: 20px;
+  background: var(--institution-paper);
+  color: var(--institution-paper-ink);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-institution-state-board.succession-organization-state-board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, .8fr);
+  gap: 24px;
+}
+
+.succession-institution-state-board h3,
+.succession-institution-dossier section > header h3 {
+  margin-top: 6px;
+  color: var(--institution-paper-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(26px, 3vw, 39px);
+}
+
+.succession-institution-state-board p,
+.succession-institution-dossier section p {
+  margin-top: 11px;
+  color: var(--institution-paper-muted-ink);
+}
+
+.succession-institution-state-board dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+
+.succession-institution-state-board dl div {
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--institution-paper-ink) 14%, transparent);
+  border-radius: 11px;
+  background: var(--institution-paper-muted);
+}
+
+.succession-institution-state-board dt,
+.succession-institution-state-board dd {
+  margin: 0;
+}
+
+.succession-institution-state-board dt {
+  color: var(--institution-paper-muted-ink);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.succession-institution-state-board dd {
+  margin-top: 4px;
+  font-weight: 850;
+}
+
+.succession-institution-dossier section > header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.succession-institution-dossier section > header svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: var(--institution-crimson);
+}
+
+.succession-institution-chain {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 9px;
+}
+
+.succession-institution-chain__focus {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-height: 64px;
+  padding: 9px;
+  border: 2px solid var(--institution-crimson);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--institution-crimson) 7%, var(--institution-paper-muted));
+}
+
+.succession-institution-chain__focus span {
+  display: grid;
+  gap: 3px;
+}
+
+.succession-institution-chain__focus small {
+  color: var(--institution-paper-muted-ink);
+  font-size: 11px;
+}
+
+.succession-institution-dossier .succession-organization-entity {
+  min-height: 64px;
+  border-color: color-mix(in srgb, var(--institution-paper-ink) 15%, transparent);
+  background: var(--institution-paper-muted);
+  color: var(--institution-paper-ink);
+}
+
+.succession-institution-dossier .succession-organization-entity small {
+  color: var(--institution-paper-muted-ink);
+}
+
+.succession-institution-operation-grid.succession-organization-dossier__columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.succession-institution-operation-grid > section {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.succession-institution-operation-grid > section > div,
+.succession-institution-event-history > div {
+  display: grid;
+  gap: 8px;
+}
+
+.succession-institution-operation-grid ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.succession-institution-operation-grid li + li {
+  margin-top: 8px;
+}
+
+.succession-institution-history > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 12px;
+}
+
+.succession-institution-history article {
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  padding: 14px;
+  border-left: 4px solid var(--institution-crimson);
+  border-radius: 0 13px 13px 0;
+  background: var(--institution-paper-muted);
+}
+
+.succession-institution-history article > span {
+  color: var(--institution-paper-muted-ink);
+  font-size: 11px;
+}
+
+.succession-institution-sources {
+  display: grid;
+  gap: 10px;
+}
+
+.succession-institution-dossier__footer.succession-organization-dossier__footer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.succession-institution-dossier__footer button {
+  min-height: 54px;
+  border-color: var(--institution-line);
+  background: var(--institution-raised);
+  color: var(--institution-ink);
+}
+
+@media (hover: hover) {
+  .succession-institution-grid > article:hover,
+  .succession-institution-grid > article:focus-within {
+    transform: translateY(-3px);
+    border-color: var(--institution-gold);
+    box-shadow: var(--succession-shadow-md);
+  }
+}
+
+@media (max-width: 1100px) {
+  .succession-institution-command__hero {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-institution-command__network {
+    min-height: 220px;
+  }
+
+  .succession-institution-filters.succession-organization-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .succession-institution-filters label:first-child {
+    grid-column: 1 / -1;
+  }
+
+  .succession-institution-state-board.succession-organization-state-board {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .succession-institution-status-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .succession-institution-control-deck {
+    position: static;
+  }
+
+  .succession-institution-control-deck > header,
+  .succession-institution-comparison > header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .succession-institution-control-deck > header > div:last-child {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .succession-institution-grid.succession-organization-grid,
+  .succession-institution-hierarchy > div,
+  .succession-institution-operation-grid.succession-organization-dossier__columns {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-institution-dossier__identity {
+    grid-template-columns: 150px minmax(0, 1fr);
+  }
+
+  .succession-institution-dossier__visual .succession-entity-visual {
+    width: 150px;
+    height: 180px;
+  }
+
+  .succession-institution-dossier__chapter {
+    grid-template-columns: minmax(0, 1fr) 110px;
+  }
+
+  .succession-institution-dossier__chapter button {
+    grid-column: 1 / -1;
+  }
+
+  .succession-institution-dossier__footer.succession-organization-dossier__footer {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .succession-institution-command__hero,
+  .succession-institution-dossier__hero {
+    padding: 24px 20px;
+    border-radius: 22px;
+  }
+
+  .succession-institution-command__hero h2,
+  .succession-institution-dossier__identity h2 {
+    font-size: clamp(38px, 13vw, 58px);
+  }
+
+  .succession-institution-status-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .succession-institution-control-deck > header > div:last-child {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-institution-control-deck > header button,
+  .succession-institution-active-filters button {
+    width: 100%;
+  }
+
+  .succession-institution-filters.succession-organization-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-institution-filters label:first-child {
+    grid-column: auto;
+  }
+
+  .succession-institution-grid > article > header,
+  .succession-institution-dossier__identity {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-institution-grid > article > header .succession-entity-visual,
+  .succession-institution-dossier__visual .succession-entity-visual {
+    width: 100%;
+    height: 220px;
+  }
+
+  .succession-institution-grid dl,
+  .succession-institution-state-board dl {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .succession-institution-grid footer {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-institution-grid footer button {
+    width: 100%;
+  }
+
+  .succession-institution-comparison__picker {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .succession-institution-comparison__picker button {
+    width: 100%;
+  }
+
+  .succession-institution-dossier__topline {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .succession-institution-dossier__chapter {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-institution-dossier__chapter button {
+    grid-column: auto;
+  }
+
+  .succession-institution-dossier-nav {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .succession-institution-dossier-nav a {
+    justify-content: center;
+  }
+}
+
+@media (hover: none) {
+  .succession-institution-grid > article {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-institution-command *,
+  .succession-institution-dossier * {
+    scroll-behavior: auto;
+    transition-duration: .01ms;
+    animation-duration: .01ms;
+  }
+}
