@@ -9,8 +9,8 @@ const route = (id, path, label, group, title, description, status = 'foundation'
 });
 
 export const successionArchiveRoutes = Object.freeze([
-  route('archive', '', 'Archive Home', 'Overview', 'Succession Contest Archive', 'A dedicated research application for the voyage, with canonical chapter-bounded people, institutions, Nen systems, chronology, evidence, assignments, relationships, and location state.', 'active'),
-  route('story', 'story', 'Story', 'Overview', 'Story workspace', 'The arc mapped through its chronological phases, parallel conflicts, active operations, ritual rules, and power blocs.', 'active'),
+  route('archive', '', 'Archive Home', 'Overview', 'Succession Contest Archive', 'A dedicated research application for the voyage, with canonical chapter-bounded people, institutions, Nen systems, story intelligence, chronology, evidence, assignments, relationships, and location state.', 'active'),
+  route('story', 'story', 'Story', 'Overview', 'Chapter and story intelligence', 'The authoritative narrative route: contiguous phases, seven parallel story lanes, causal event links, unresolved threads, current pressure, and pending research gaps at the selected chapter.', 'active'),
   route('timeline', 'timeline', 'Timeline', 'Overview', 'Voyage timeline', 'Chapter-bounded events and movements presented in chronological order.', 'active'),
   route('reader', 'reader', 'Reader', 'Overview', 'Manga reader', 'The chapter image reader, kept separate from research and reference material.', 'active'),
   route('search', 'search', 'Global Search', 'Overview', 'Search the archive', 'Search canonical Succession Contest entities by names, roles, mechanics, conditions, costs, evidence, and operational state.', 'active'),
@@ -35,7 +35,7 @@ export const successionArchiveRoutes = Object.freeze([
   route('events', 'events', 'Events', 'Records', 'Event archive', 'Operations organized by chapter range, participants, location, causes, consequences, and current state.', 'active'),
   route('deaths', 'deaths', 'Deaths', 'Records', 'Deaths and body states', 'Confirmed deaths and exceptional body, consciousness, possession, custody, and Nen-continuation states.', 'active'),
   route('relationships', 'relationships', 'Relationships', 'Records', 'Relationship archive', 'Typed family, professional, protective, political, allied, deceptive, command, and hostile links.', 'active'),
-  route('chapters', 'chapter-records', 'Chapters', 'Records', 'Chapter records', 'Research records from Chapter 340 through the latest imported reader chapter, separate from the image reader.', 'active'),
+  route('chapters', 'chapter-records', 'Chapters', 'Records', 'Canonical chapter dossiers', 'Every Chapter 340 through the latest imported reader release placed inside its story phase, active lanes, events, causal links, state changes, unresolved threads, evidence, and reader bridge.', 'active'),
 
   route('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, provenance, evidence types, confidence, coverage, unresolved claims, and explicit research gaps.', 'active'),
   route('glossary', 'glossary', 'Glossary', 'Library', 'Succession glossary', 'Controlled ritual, Nen, legal, political, ship, status, and archive vocabulary.', 'active'),
