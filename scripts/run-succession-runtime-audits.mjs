@@ -3,6 +3,7 @@ import path from 'node:path';
 
 const root = process.cwd();
 const audits = Object.freeze([
+  ['stabilization', 'scripts/audit-succession-stabilization.mjs'],
   ['contract', 'scripts/audit-succession-runtime-contract.mjs'],
   ['shell', 'scripts/audit-succession-archive-shell.mjs'],
   ['characters', 'scripts/audit-succession-characters-workspace.mjs'],
