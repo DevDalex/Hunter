@@ -2,13 +2,14 @@ import { successionArchiveData as nenFoundationData } from './entitiesNenSystemF
 import {
   correctedStoryLaneProfiles as storyLaneProfiles,
   correctedStoryPhaseProfiles as baseStoryPhaseProfiles,
-  correctedStoryThreadProfiles as storyThreadProfiles,
+  correctedStoryThreadProfiles as baseStoryThreadProfiles,
   storyCausalLinks,
 } from './storyIntelligenceCorrections.js';
 import { successionChapterResearchByNumber } from './successionResearch.js';
 
 const ARCHIVE_DATE = '2026-07-25';
 const PENDING_PHASE_ID = 'story-phase:pending-current-release';
+const BORKSEN_AUTONOMY_THREAD_ID = 'story-thread:borksen-autonomy';
 const includesChapter = (range, chapter) => chapter >= range.start && chapter <= (range.end ?? Number.POSITIVE_INFINITY);
 const unique = (values) => [...new Set(values.filter(Boolean))];
 
@@ -33,6 +34,14 @@ const generatedPendingPhase = pendingChapters.length
 const storyPhaseProfiles = Object.freeze({
   ...Object.fromEntries(Object.entries(baseStoryPhaseProfiles).filter(([id]) => id !== PENDING_PHASE_ID)),
   ...(generatedPendingPhase ? { [PENDING_PHASE_ID]: generatedPendingPhase } : {}),
+});
+
+const storyThreadProfiles = Object.freeze({
+  ...baseStoryThreadProfiles,
+  [BORKSEN_AUTONOMY_THREAD_ID]: Object.freeze({
+    ...baseStoryThreadProfiles[BORKSEN_AUTONOMY_THREAD_ID],
+    name: 'Borksen autonomy inside Heil-Ly',
+  }),
 });
 
 const phaseValues = Object.values(storyPhaseProfiles);
