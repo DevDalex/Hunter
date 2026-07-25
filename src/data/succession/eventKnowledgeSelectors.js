@@ -50,6 +50,7 @@ export const createEventKnowledgeSelectors = ({ data, archive }) => {
     const mature = singleChapter || parsedChapter >= matureAt;
     const activeAtBoundary = parsedChapter < canonicalEnd;
     const visibleEnd = Math.min(canonicalEnd, parsedChapter);
+    const boundedStatus = activeAtBoundary ? 'active-at-selected-chapter' : event.status;
     const summary = mature
       ? event.summary
       : parsedChapter === event.chapterRange.start
@@ -80,9 +81,11 @@ export const createEventKnowledgeSelectors = ({ data, archive }) => {
       knowledgeState: mature ? 'documented through selected boundary' : 'operation in progress; later details hidden',
       mature,
       matureChapter: mature ? matureAt : null,
+      canonicalEvent: Object.freeze({ status: boundedStatus }),
+      canonicalChapterRange: Object.freeze({ start: event.chapterRange.start, end: visibleEnd }),
       chapterRange: Object.freeze({ start: event.chapterRange.start, end: visibleEnd }),
       summary,
-      status: activeAtBoundary ? 'active-at-selected-chapter' : event.status,
+      status: boundedStatus,
       causes: freeze([...(event.causes || [])]),
       outcomes: mature ? freeze([...(event.outcomes || [])]) : freeze([]),
       stateChanges: mature ? freeze([...(event.stateChanges || [])]) : freeze([]),
