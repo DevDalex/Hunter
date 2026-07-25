@@ -18,6 +18,7 @@ const auditPaths = Object.freeze([
   'scripts/audit-succession-organizations-workspace.mjs',
   'scripts/audit-succession-people-institutions-closure.mjs',
   'scripts/audit-succession-nen-systems-workspace.mjs',
+  'scripts/audit-succession-story-intelligence-workspace.mjs',
   'scripts/audit-succession-events-workspace.mjs',
   'scripts/audit-succession-locations-workspace.mjs',
   'scripts/audit-succession-black-whale-bridge.mjs',
@@ -35,17 +36,19 @@ const [app, primitives, packageText, ...auditSources] = await Promise.all([
 ]);
 const packageJson = JSON.parse(packageText);
 
-for (const routeId of ['characters', 'organizations', 'locations', 'bodyguards', 'relationships', 'nen', 'guardian-spirit-beasts']) {
+for (const routeId of ['characters', 'organizations', 'locations', 'bodyguards', 'relationships', 'nen', 'guardian-spirit-beasts', 'chapters']) {
   assert(declarationIncludesLiteral(app, 'specializedRecordRoute', routeId), `${routeId} must remain a specialized record route`);
 }
 for (const routeId of ['black-whale', 'timeline']) {
   assert(declarationIncludesLiteral(app, 'preserved', routeId), `${routeId} must remain a preserved visual workspace`);
 }
 assert(!declarationIncludesLiteral(app, 'preserved', 'nen'), 'Nen must remain migrated out of the preserved legacy layer');
-for (const routeId of ['characters', 'organizations', 'nen', 'guardian-spirit-beasts', 'events', 'locations', 'bodyguards', 'relationships', 'research']) {
+for (const routeId of ['story', 'chapters', 'characters', 'organizations', 'nen', 'guardian-spirit-beasts', 'events', 'locations', 'bodyguards', 'relationships', 'research']) {
   assert(declarationIncludesLiteral(app, 'dedicated', routeId), `${routeId} must remain a dedicated workspace route`);
 }
 for (const [routeId, componentName] of [
+  ['story', 'StoryIntelligenceWorkspace'],
+  ['chapters', 'ChapterStoryWorkspace'],
   ['characters', 'CharactersWorkspace'],
   ['organizations', 'OrganizationsWorkspace'],
   ['nen', 'NenWorkspace'],
@@ -57,6 +60,8 @@ for (const [routeId, componentName] of [
   ['research', 'EvidenceWorkspace'],
 ]) assert(sourceRendersRouteWith(app, routeId, componentName), `${routeId} must render ${componentName}`);
 
+assert(!app.includes('SuccessionStoryWorkspace'), 'legacy static Story workspace must remain inactive');
+assert(!app.includes('ChapterRecordsWorkspaceV2'), 'legacy chapter ledger must remain inactive');
 assert(app.includes("linkedEntity?.entityType === 'character'") && app.includes("linkedEntity?.entityType === 'organization'"), 'role-route navigation must normalize character and organization links');
 assert(app.includes("linkedEntity?.entityType === 'ability'") && app.includes("linkedEntity?.entityType === 'guardian-beast'"), 'system-route navigation must normalize ability and beast links');
 assert(app.includes('showCharacterDossier') && app.includes('showOrganizationDossier'), 'people and institution legacy URLs must resolve dedicated dossiers');
@@ -89,6 +94,7 @@ assert(packageJson.scripts?.['audit:succession-characters'] === 'node scripts/au
 assert(packageJson.scripts?.['audit:succession-organizations'] === 'node scripts/audit-succession-organizations-workspace.mjs', 'package scripts must expose the Batch 2 organization audit');
 assert(packageJson.scripts?.['audit:succession-people-institutions'] === 'node scripts/audit-succession-people-institutions-closure.mjs', 'package scripts must expose the Batch 2 closure audit');
 assert(packageJson.scripts?.['audit:succession-nen-systems'] === 'node scripts/audit-succession-nen-systems-workspace.mjs', 'package scripts must expose the Batch 3 systems audit');
+assert(packageJson.scripts?.['audit:succession-story-intelligence'] === 'node scripts/audit-succession-story-intelligence-workspace.mjs', 'package scripts must expose the Batch 4 story intelligence audit');
 assert(packageJson.scripts?.['build:runtime']?.startsWith('npm run audit:succession-runtime &&'), 'build:runtime must collect all Succession failures before continuing');
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
@@ -116,7 +122,10 @@ try {
     'getOrganizationPersonnelAtChapter', 'getOrganizationHierarchy', 'getOrganizationDossier',
     'getOrganizationStateCoverageReport', 'getAbilityKnowledgeAtChapter', 'getAbilitiesKnownAtChapter',
     'getAbilityDossier', 'getNenSystemDossier', 'getGuardianBeastStateAtChapter', 'getGuardianBeastDossier',
-    'getNenSystemClosureReport', 'isSuccessionEntityAvailableAtChapter', 'searchSuccessionArchive',
+    'getNenSystemClosureReport', 'getStoryPhaseAtChapter', 'getStoryPhaseDossier', 'getStoryLanesAtChapter',
+    'getStoryLaneDossier', 'getStoryThreadDossier', 'getStoryThreadsAtChapter', 'getStoryCausalGraphAtChapter',
+    'getChapterStoryDossier', 'getStorySnapshotAtChapter', 'searchStoryIntelligence',
+    'getStoryIntelligenceClosureReport', 'isSuccessionEntityAvailableAtChapter', 'searchSuccessionArchive',
   ]) assert(typeof archive[selector] === 'function', `${selector} must remain public`);
 
   assert(archive.getCharactersWithStateProfiles().length >= 42, 'Batch 2 closure must retain complete royal and institution-leader state coverage');
@@ -143,6 +152,29 @@ try {
   assert(nenClosure.systems.total === 8, 'all eight canonical Nen and ritual system profiles must remain active');
   assert(nenClosure.stateIntegrityIssues.length === 0 && nenClosure.missingSystemReferences.length === 0, 'Nen state and graph integrity must remain clean');
 
+  const storyClosure = archive.getStoryIntelligenceClosureReport();
+  assert(storyClosure?.closureReady && storyClosure.status === 'closed', 'Batch 4 chapter and story intelligence closure must remain closed');
+  assert(storyClosure.counts.chapters === 75, 'Batch 4 must retain Chapter 340 through 414');
+  assert(storyClosure.counts.phases === 11 && storyClosure.counts.lanes === 7, 'Batch 4 must retain eleven phases and seven story lanes');
+  assert(storyClosure.counts.threads >= 19 && storyClosure.counts.causalLinks >= 17, 'Batch 4 must retain the unresolved-thread and causal graph foundation');
+  assert(storyClosure.phaseCoverageIssues.length === 0 && storyClosure.phaseContinuityIssues.length === 0, 'story phase coverage and continuity must remain clean');
+  assert(storyClosure.missingReferences.length === 0 && storyClosure.chapterProjectionIssues.length === 0, 'story graph references and chapter projections must remain clean');
+  assert(storyClosure.pendingChapterIds.length === 1 && storyClosure.pendingChapterIds[0] === 'chapter:414', 'Chapter 414 must remain the only explicitly pending maintained story record');
+
+  assert(archive.getStoryPhaseAtChapter(349)?.id === 'story-phase:succession-preparation', 'Chapter 349 must resolve succession preparation');
+  assert(archive.getStoryPhaseAtChapter(383)?.id === 'story-phase:escape-failure-and-hidden-systems', 'Chapter 383 must resolve the escape-failure phase');
+  assert(archive.getStoryPhaseAtChapter(401)?.id === 'story-phase:treaties-possession-and-convergence', 'Chapter 401 must resolve the treaty and possession convergence phase');
+  assert(archive.getStoryPhaseAtChapter(414)?.status === 'pending-maintained-research', 'Chapter 414 must remain a pending research phase');
+  assert(archive.getChapterStoryDossier(414)?.events.length === 0, 'pending Chapter 414 must not manufacture event claims');
+  assert(archive.getStoryLaneDossier('story-lane:mafia-war', 377) === null, 'mafia story intelligence must remain hidden before Chapter 378');
+  assert(archive.getStoryLaneDossier('story-lane:mafia-war', 378)?.profile.id === 'story-lane:mafia-war', 'mafia story intelligence must appear at Chapter 378');
+  assert(archive.getStoryThreadDossier('story-thread:borksen-autonomy', 409) === null, 'Borksen autonomy must remain hidden before Chapter 410');
+  assert(archive.getStoryThreadDossier('story-thread:borksen-autonomy', 410)?.status === 'open', 'Borksen autonomy must open at Chapter 410');
+  assert(!archive.searchStoryIntelligence('Borksen autonomy', { chapter: 409 }).some((result) => result.id === 'story-thread:borksen-autonomy'), 'story search must hide future threads');
+  assert(archive.searchStoryIntelligence('Borksen autonomy', { chapter: 410 }).some((result) => result.id === 'story-thread:borksen-autonomy'), 'story search must reveal threads at their opening chapter');
+  assert(!archive.getStoryCausalGraphAtChapter(383).edges.some((link) => link.id === 'story-cause:twin-escape-to-kacho-letters'), 'causal graph must hide future consequences');
+  assert(archive.getStoryCausalGraphAtChapter(413).edges.some((link) => link.id === 'story-cause:balsamilco-to-funeral'), 'causal graph must retain the possession-to-funeral chain');
+
   assert(!archive.isSuccessionEntityAvailableAtChapter('ability:parallel-future', 384), 'Parallel Future must remain unavailable through Chapter 384');
   assert(archive.isSuccessionEntityAvailableAtChapter('ability:parallel-future', 385), 'Parallel Future must become available at Chapter 385');
   assert(archive.getGuardianBeastDossier('guardian-beast:woble', 348) === null, 'Guardian Spirit Beast dossiers must remain hidden before Chapter 349');
@@ -156,7 +188,7 @@ try {
   assert(!contagion378?.characters.some((character) => character.id === 'character:borksen'), 'early Contagion dossiers must not expose Borksen');
   assert(contagion410?.characters.some((character) => character.id === 'character:borksen'), 'Contagion must include Borksen after the recruitment outcome');
 
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph, Batch 2 people and institutions remain closed, and Batch 3 Nen, ritual, ability, Guardian Spirit Beast, linked-actor, and global-search knowledge remain chapter-bounded and closed.`);
+  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph; Batch 2 people and institutions, Batch 3 Nen systems, and Batch 4 chapter and story intelligence remain closed and chapter-bounded.`);
 } finally {
   await vite.close();
 }
