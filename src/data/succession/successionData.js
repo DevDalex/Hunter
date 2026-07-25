@@ -1,8 +1,8 @@
-import { successionArchiveData } from './entitiesProductClosureFoundation.js';
-// Active predecessor chain: from './entitiesProductClosureFoundation.js' to from './entitiesStoryIntelligenceFoundation.js' to from './entitiesNenSystemFoundation.js' to from './entitiesOrganizationFoundation.js', preserving Batches 2–4 beneath Batch 5.
+import { successionArchiveData } from './entitiesProductClosureCorrections.js';
+// Active predecessor chain: from './entitiesProductClosureCorrections.js' to from './entitiesProductClosureFoundation.js' to from './entitiesStoryIntelligenceFoundation.js' to from './entitiesNenSystemFoundation.js' to from './entitiesOrganizationFoundation.js', preserving Batches 2–4 beneath Batch 5.
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { createEventKnowledgeSelectors } from './eventKnowledgeSelectors.js';
-import { buildSuccessionIndexes } from './indexes.js';
+import { buildSuccessionIndexes } from './indexesFinal.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { createCharacterStateSelectors } from './characterStateSelectors.js';
 import { createOrganizationStateSelectors } from './organizationStateSelectors.js';
@@ -10,6 +10,7 @@ import { createPeopleInstitutionClosure } from './peopleInstitutionClosure.js';
 import { createNenSystemSelectors } from './nenSystemSelectors.js';
 import { createStoryIntelligenceSelectors } from './storyIntelligenceSelectors.js';
 import { createProductClosureSelectors } from './productClosureSelectorsFinal.js';
+import { createFinalReleaseClosure } from './finalReleaseClosure.js';
 import { assertValidSuccessionArchiveData } from './schemas.js';
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
@@ -17,24 +18,13 @@ export const successionArchiveIndexes = buildSuccessionIndexes(successionArchive
 export const successionArchive = createSuccessionSelectors(successionArchiveData, successionArchiveIndexes);
 export const successionCharacterStates = createCharacterStateSelectors({ data: successionArchiveData, archive: successionArchive });
 export const successionOrganizationStates = createOrganizationStateSelectors({ data: successionArchiveData, archive: successionArchive });
-export const successionPeopleInstitutionClosure = createPeopleInstitutionClosure({
-  data: successionArchiveData,
-  archive: successionArchive,
-  characterStates: successionCharacterStates,
-  organizationStates: successionOrganizationStates,
-});
+export const successionPeopleInstitutionClosure = createPeopleInstitutionClosure({ data: successionArchiveData, archive: successionArchive, characterStates: successionCharacterStates, organizationStates: successionOrganizationStates });
 export const successionNenSystems = createNenSystemSelectors({ data: successionArchiveData, archive: successionArchive });
 export const successionEventKnowledge = createEventKnowledgeSelectors({ data: successionArchiveData, archive: successionArchive });
 export const successionStoryIntelligence = createStoryIntelligenceSelectors({ data: successionArchiveData, archive: successionArchive, eventKnowledge: successionEventKnowledge });
-export const successionProductClosure = createProductClosureSelectors({
-  data: successionArchiveData,
-  archive: successionArchive,
-  characterStates: successionCharacterStates,
-  organizationStates: successionOrganizationStates,
-  nenSystems: successionNenSystems,
-  storyIntelligence: successionStoryIntelligence,
-});
+export const successionProductClosure = createProductClosureSelectors({ data: successionArchiveData, archive: successionArchive, characterStates: successionCharacterStates, organizationStates: successionOrganizationStates, nenSystems: successionNenSystems, storyIntelligence: successionStoryIntelligence });
 export const successionEvidenceGraph = createSuccessionEvidenceGraph(successionArchiveData);
+export const successionFinalReleaseClosure = createFinalReleaseClosure({ data: successionArchiveData, validation: successionArchiveValidation, evidenceGraph: successionEvidenceGraph, peopleClosure: successionPeopleInstitutionClosure, nenSystems: successionNenSystems, storyIntelligence: successionStoryIntelligence, productClosure: successionProductClosure });
 
 export { successionArchiveData };
 
@@ -173,6 +163,8 @@ export const {
   searchArchiveProduct,
   getProductClosureReport,
 } = successionProductClosure;
+
+export const { getFinalReleaseClosureReport } = successionFinalReleaseClosure;
 
 const earliestChapter = (values) => {
   const chapters = values.filter(Number.isFinite);
