@@ -7,6 +7,7 @@ import {
   successionVisualTokenGroups,
 } from '../../data/succession/visualDesignSystem';
 import { ArchiveState } from './SuccessionArchivePrimitives';
+import './SuccessionVisualFoundationPreview.css';
 
 const sampleStates = ['confirmed', 'inferred', 'uncertain', 'pending'];
 
