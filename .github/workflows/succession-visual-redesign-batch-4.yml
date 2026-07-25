@@ -1,0 +1,104 @@
+name: Succession Visual Redesign Batch 4
+
+on:
+  push:
+    branches:
+      - 'succession-visual-redesign-batch-4'
+  pull_request:
+    paths:
+      - 'src/components/succession/SuccessionArchiveChapterStoryWorkspace.jsx'
+      - 'src/components/succession/SuccessionArchiveChapterStoryWorkspace.css'
+      - 'src/components/succession/SuccessionArchiveChapterCommand.css'
+      - 'scripts/audit-succession-batch-4-chapters.mjs'
+      - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-4.md'
+      - '.github/workflows/succession-visual-redesign-batch-4.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: succession-visual-redesign-batch-4-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  chapter_intelligence:
+    name: Batch 4 chapter intelligence regression gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit Batch 4 chapter intelligence
+        run: node scripts/audit-succession-batch-4-chapters.mjs
+
+      - name: Audit visual foundation
+        run: npm run audit:succession-visual-foundation
+
+      - name: Audit shared shell redesign
+        run: npm run audit:succession-shell-redesign
+
+      - name: Audit page-header redesign
+        run: npm run audit:succession-page-header-redesign
+
+      - name: Audit breadcrumb redesign
+        run: npm run audit:succession-breadcrumb-redesign
+
+      - name: Audit Batch 2 closure
+        run: npm run audit:succession-batch-2
+
+      - name: Audit Batch 3 character command
+        run: npm run audit:succession-character-command
+
+      - name: Audit Batch 3 royal command
+        run: npm run audit:succession-royal-command
+
+      - name: Audit Batch 3 closure
+        run: npm run audit:succession-batch-3
+
+      - name: Audit CSS ownership
+        run: npm run audit:css
+
+      - name: Audit readability
+        run: npm run audit:readability
+
+      - name: Audit accessibility contracts
+        run: npm run audit:accessibility
+
+      - name: Build presentation bundle
+        run: |
+          npm run prepare:eta-assets
+          npx vite build
+
+      - name: Install Chromium for visual QA
+        shell: bash
+        run: |
+          npx playwright install --with-deps chromium
+          echo "CHROMIUM_PATH=$(node -e "import('playwright').then(({ chromium }) => console.log(chromium.executablePath()))")" >> "$GITHUB_ENV"
+
+      - name: Inspect Chapters workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/chapters
+          VISUAL_QA_OUTPUT: .visual-qa/succession-chapters
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Publish Batch 4 chapter diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-batch-4-chapter-diagnostics
+          path: .visual-qa/succession-chapters
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14
