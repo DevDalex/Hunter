@@ -1,4 +1,4 @@
-const route = (id, path, label, group, title, description, status = 'foundation') => Object.freeze({
+const route = (id, path, label, group, title, description, status = 'active') => Object.freeze({
   id,
   path,
   label,
