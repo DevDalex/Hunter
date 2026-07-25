@@ -28,10 +28,12 @@ Batch 1 establishes shared presentation rules. It does not complete page-specifi
 
 - `src/data/succession/visualDesignSystem.js`
 - `src/components/succession/SuccessionVisualFoundation.css`
+- `src/components/succession/SuccessionVisualFoundationBridge.css`
 - `src/components/succession/SuccessionVisualFoundationPreview.jsx`
 - `src/components/succession/SuccessionVisualFoundationPreview.css`
 - `scripts/audit-succession-visual-foundation.mjs`
 - `scripts/report-succession-visual-inventory.mjs`
+- `.github/workflows/succession-visual-redesign.yml`
 - `docs/SUCCESSION-VISUAL-REDESIGN.md`
 
 ### Commands
@@ -145,7 +147,32 @@ A later Batch 1 checkpoint may mount it in a local-only or screenshot-test harne
 - CSS import ownership;
 - migration guidance.
 
+The first report identified 29 Succession CSS files, 22 JSX files, 9,725 CSS lines, 244 `!important` declarations, 235 raw hexadecimal color values, 106 gradients, 45 shadows, 16 legacy tiny-text declarations, and two inline-style uses. These figures are a migration baseline rather than a deletion target.
+
 The report is diagnostic. High counts identify compatibility debt; they do not justify deleting a stylesheet or adding stronger overrides without workspace-level verification.
+
+## Compatibility bridge
+
+Rendered screenshot review found that the older Story and Character workspaces inherited dark text variables while using dark card surfaces. Machine overflow and size checks passed, but headings and descriptions remained visually unreadable.
+
+`SuccessionVisualFoundationBridge.css` now maps the legacy workspace variables to the semantic foundation:
+
+- Story uses the new surface, text, border, muted-text, and accent tokens through its existing `--archive-*` aliases.
+- Character pages use the same foundation through their existing `--succession-*` aliases.
+- The bridge contains no raw color literals and does not modify markup, records, routing, search, or layout.
+- These aliases are temporary compatibility infrastructure. Their declarations may be removed only when the relevant workspace CSS is fully migrated in its scheduled batch.
+
+## Rendered visual QA
+
+The dedicated `Succession Visual Redesign` workflow performs a direct Vite presentation build and browser-renders representative Story and Character workspaces at:
+
+- desktop: 1440 × 1000;
+- tablet: 768 × 1024;
+- mobile: 390 × 844.
+
+The browser audit checks runtime errors, request failures, horizontal overflow, uncontained spill, broken or pending images, empty media frames, media/text overlap, text below the 11px floor, and undersized touch controls. Screenshots and JSON reports are retained as workflow artifacts for manual review.
+
+The repository's existing Succession runtime sweep currently has inherited failures on `main`. The redesign workflow therefore captures the `main` runtime result as a baseline and fails only when the redesign branch introduces a branch-only runtime regression. Existing debt remains visible in diagnostic artifacts and is not silently reclassified as success.
 
 ## Compatibility strategy
 
