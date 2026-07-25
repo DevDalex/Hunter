@@ -11,7 +11,7 @@ import { createNenSystemSelectors } from './nenSystemSelectors.js';
 import { createStoryIntelligenceSelectors } from './storyIntelligenceSelectors.js';
 import { createProductClosureSelectors } from './productClosureSelectorsFinal.js';
 import { createFinalReleaseClosure } from './finalReleaseClosure.js';
-import { assertValidSuccessionArchiveData } from './schemas.js';
+import { assertValidSuccessionArchiveData } from './schemasFinal.js';
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
 export const successionArchiveIndexes = buildSuccessionIndexes(successionArchiveData);
