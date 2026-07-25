@@ -10,10 +10,29 @@ const ARCHIVE_DATE = '2026-07-25';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 
+const enrichAbility = (ability) => {
+  if (ability.id !== 'ability:parallel-future') return ability;
+  return Object.freeze({
+    ...ability,
+    summary: 'Tserriednich enters Zetsu to receive a ten-second precognitive vision, then remains aware as the predicted sequence unfolds while his own actions can diverge from it.',
+    activation: 'Tserriednich closes his eyes and enters Zetsu to receive the ten-second precognitive vision.',
+    conditions: Object.freeze(unique([
+      ...(ability.conditions || []),
+      'The precognitive vision is linked to entering Zetsu.',
+      'Other people continue through the perceived sequence without sharing Tserriednich’s awareness of the divergence.',
+    ])),
+    knownUses: Object.freeze(unique([
+      ...(ability.knownUses || []),
+      'Used during Theta’s attempted assassination while Tserriednich’s Zetsu training develops.',
+    ])),
+    updatedAt: ARCHIVE_DATE,
+  });
+};
+
 const abilities = Object.freeze(uniqueById([
   ...organizationFoundationData.abilities,
   ...nenSystemAbilityExpansion,
-]));
+]).map(enrichAbility));
 
 const expansionAbilityIdsByChapter = new Map();
 for (const ability of nenSystemAbilityExpansion) {
