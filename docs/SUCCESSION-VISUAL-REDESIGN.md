@@ -4,6 +4,8 @@
 
 Redesign the presentation of the Succession section without changing its canonical data, research conclusions, chapter records, routing, search logic, source ownership, import workflows, or archive structure.
 
+**Scope classification: presentation-only.**
+
 The visual direction is a restrained royal intelligence archive: formal, political, secretive, dangerous, readable, and deliberately organized. It should not become a decorative fantasy dashboard, a neon game interface, or a collection of unrelated cards.
 
 ## Schedule and tracking
