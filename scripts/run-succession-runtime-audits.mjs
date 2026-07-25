@@ -19,6 +19,7 @@ const audits = Object.freeze([
   ['foundation', 'scripts/audit-succession-foundation-closure.mjs'],
   ['reader', 'scripts/audit-succession-reader.mjs'],
   ['production-surface', 'scripts/audit-succession-production-surface.mjs'],
+  ['product-inventory', 'scripts/audit-succession-product-inventory.mjs'],
   ['final-product', 'scripts/audit-succession-final-product-closure.mjs'],
 ]);
 
