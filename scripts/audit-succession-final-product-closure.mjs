@@ -26,6 +26,7 @@ const [
   productSelectors,
   finalSearchAdapter,
   schemaAdapter,
+  productInventorySource,
   finalReleaseSource,
   packageText,
 ] = await Promise.all([
@@ -44,6 +45,7 @@ const [
   readFile(new URL('../src/data/succession/productClosureSelectors.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/productClosureSelectorsFinal.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/schemasFinal.js', import.meta.url), 'utf8'),
+  readFile(new URL('../src/data/succession/productInventory.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/finalReleaseClosure.js', import.meta.url), 'utf8'),
   readFile(new URL('../package.json', import.meta.url), 'utf8'),
 ]);
@@ -68,7 +70,7 @@ assert(extended.includes('getStoryEventKnowledgeAtChapter') && extended.includes
 
 assert(!roleWorkspaces.includes("../../data/successionDossier") && !roleWorkspaces.includes('SuccessionStoryWorkspace'), 'Royal Family and Mafia must not depend on the legacy dossier or static Story workspace');
 assert(roleWorkspaces.includes('getCharacterDossier') && roleWorkspaces.includes('getOrganizationDossier'), 'Royal Family and Mafia must use canonical dossiers');
-assert(roleWorkspaces.includes('getStoryEventKnowledgeAtChapter') && roleWorkspaces.includes('useEffect(() => setFocus(routeParams.focus || \'\')'), 'Mafia must use chapter-bounded events and synchronize URL focus state');
+assert(roleWorkspaces.includes('getStoryEventKnowledgeAtChapter') && roleWorkspaces.includes("useEffect(() => setFocus(routeParams.focus || '')"), 'Mafia must use chapter-bounded events and synchronize URL focus state');
 assert(roleWorkspaces.includes('export function PrincesWorkspace') && roleWorkspaces.includes('export function MafiaWorkspace'), 'the two active role workspaces must remain available');
 for (const removed of ['SuccessionStoryWorkspace', 'GuardianBeastsWorkspace', 'EventsWorkspace', 'BodyguardsWorkspace', 'RelationshipsWorkspace', 'ChapterRecordsWorkspace']) {
   assert(!deepWorkspaces.includes(`export function ${removed}`) && !roleWorkspaces.includes(`export function ${removed}`), `${removed} inactive implementation must remain removed`);
@@ -97,8 +99,12 @@ assert(productSelectors.includes('normalizeArchiveSearchText') && productSelecto
 assert(productSelectors.includes('label: names.length === 1') && productSelectors.includes('alt: names.length === 1'), 'media labels and alt text must be rebuilt from chapter-visible subjects');
 assert(finalSearchAdapter.includes('unavailableAbilities') && finalSearchAdapter.includes('later ability details remain hidden'), 'Story search must suppress future ability language');
 assert(finalSearchAdapter.includes('relatedRecords') && finalSearchAdapter.includes("domain: 'media'"), 'final adapter must connect glossary systems and index media results');
+assert(productInventorySource.includes('authoritativeWorkspaces') && productInventorySource.includes('preservedVisualTools') && productInventorySource.includes('removedImplementationClasses'), 'Batch 5 must publish the maintained product inventory');
+assert(productInventorySource.includes("status: 'release-candidate'") && productInventorySource.includes('releaseGates'), 'product inventory must state the release-candidate gate model');
 assert(finalReleaseSource.includes("status: closureReady ? 'release-candidate' : 'open'"), 'final report must distinguish release candidate from deployed closure');
+assert(finalReleaseSource.includes('productInventory: inventory') && finalReleaseSource.includes('inventoryReady'), 'final report must embed and require the product inventory');
 assert(finalReleaseSource.includes('performanceBuild') && finalReleaseSource.includes('browserInteractionQa') && finalReleaseSource.includes('cloudflareDeployment'), 'final report must preserve external build, browser, and deployment gates');
+assert(packageJson.scripts?.['audit:succession-product-inventory'] === 'node scripts/audit-succession-product-inventory.mjs', 'package scripts must expose the Batch 5 inventory audit');
 assert(packageJson.scripts?.['audit:succession-final-product'] === 'node scripts/audit-succession-final-product-closure.mjs', 'package scripts must expose the Batch 5 audit');
 assert(packageJson.scripts?.['qa:succession-final-product'] === 'node scripts/succession-final-product-qa.mjs', 'package scripts must expose the Batch 5 browser QA');
 assert(packageJson.scripts?.['qa:browser:verify']?.includes('qa:succession-final-product'), 'complete browser verification must run the Batch 5 flow');
@@ -118,6 +124,9 @@ try {
 
   const finalReport = archive.getFinalReleaseClosureReport();
   assert(finalReport?.closureReady && finalReport.status === 'release-candidate', 'all Batch 1–5 static and runtime gates must form a release candidate');
+  assert(finalReport.productInventory?.counts.authoritativeWorkspaces === 22, 'final report must expose all authoritative workspaces');
+  assert(finalReport.productInventory?.counts.preservedVisualTools === 3, 'final report must expose all preserved tools');
+  assert(finalReport.productInventory?.counts.releaseGates === 10, 'final report must expose all release gates');
   assert(finalReport.deploymentRequiredForClosedStatus, 'only the external deployment may promote release-candidate to closed');
   for (const key of ['canonicalData', 'foundationEvidence', 'peopleInstitutions', 'nenSystems', 'storyIntelligence', 'searchGlossaryMedia', 'routingAndLegacyCleanup', 'responsiveAccessibilitySourceContracts']) assert(finalReport.releaseGates[key], `${key} final release gate must pass`);
   for (const key of ['performanceBuild', 'browserInteractionQa', 'browserAccessibilityQa', 'cloudflareDeployment']) assert(typeof finalReport.releaseGates[key] === 'string' && finalReport.releaseGates[key].startsWith('pending-'), `${key} must remain an explicit external gate before deployment`);
@@ -154,7 +163,7 @@ try {
 
   for (const report of [archive.getPeopleInstitutionClosureReport(), archive.getNenSystemClosureReport(), archive.getStoryIntelligenceClosureReport(), archive.getFoundationClosureReport()]) assert(report?.closureReady, 'all earlier batch closure reports must remain closed');
 
-  console.log(`Succession final product closure audit passed: ${glossary.length} glossary records, ${media.length} consolidated media records, grouped explained chapter-safe entity/Story/glossary/media search, graph-connected vocabulary, chapter-safe role events, inactive workspace and legacy-ledger removal, product-safe schema and indexes, browser QA registration, responsive and reduced-motion Library presentation, all Batch 1–4 closures, and the definitive release-candidate report are active.`);
+  console.log(`Succession final product closure audit passed: ${glossary.length} glossary records, ${media.length} consolidated media records, 22 authoritative workspaces, three preserved tools, grouped explained chapter-safe entity/Story/glossary/media search, graph-connected vocabulary, chapter-safe role events, inactive workspace and legacy-ledger removal, product-safe schema and indexes, browser QA registration, responsive and reduced-motion Library presentation, all Batch 1–4 closures, and the definitive inventory-backed release-candidate report are active.`);
 } finally {
   await vite.close();
 }
