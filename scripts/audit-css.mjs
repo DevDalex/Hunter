@@ -8,6 +8,7 @@ const routePolishPaths = [
   'src/components/HunterExamPageContrast.css',
   'src/components/SuccessionChapterReaderPolish.css',
   'src/components/succession/SuccessionArchiveContrast.css',
+  'src/components/succession/SuccessionArchiveRoyalContrast.css',
 ];
 const layerPaths = [
   'src/styles/base.css',
@@ -134,6 +135,7 @@ for (const file of cssFiles.filter((value) => value !== finalPolishPath)) {
     }
   }
 }
+
 assert(!unresolvedTinyRules.length, `legacy text sizes below 11px lack an equivalent final-polish override:\n- ${unresolvedTinyRules.join('\n- ')}`);
 
 const repeatedSelectors = [...selectorCounts.values()].filter((count) => count > 1).length;

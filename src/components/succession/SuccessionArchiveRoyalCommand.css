@@ -1,0 +1,1020 @@
+.succession-prince-board,
+.succession-prince-dossier {
+  --royal-canvas: var(--succession-surface-inset);
+  --royal-surface: var(--succession-surface-1);
+  --royal-surface-raised: var(--succession-surface-2);
+  --royal-paper: var(--succession-surface-paper-raised);
+  --royal-paper-muted: var(--succession-surface-paper);
+  --royal-ink: var(--succession-text-strong);
+  --royal-ink-muted: var(--succession-text-muted);
+  --royal-paper-ink: var(--succession-text-on-paper);
+  --royal-paper-muted-ink: var(--succession-text-on-paper-muted);
+  --royal-gold: var(--succession-gold-strong);
+  --royal-crimson: var(--succession-crimson-strong);
+  --royal-line: var(--succession-border-default);
+  --royal-line-strong: var(--succession-border-strong);
+  --royal-focus: var(--succession-border-focus);
+}
+
+.succession-prince-board {
+  gap: clamp(18px, 2.6vw, 34px);
+}
+
+.succession-royal-command {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(340px, .9fr);
+  gap: clamp(24px, 4vw, 62px);
+  overflow: hidden;
+  padding: clamp(28px, 5vw, 68px);
+  border: 1px solid var(--royal-line-strong);
+  border-radius: clamp(24px, 3vw, 38px);
+  background:
+    radial-gradient(circle at 82% 15%, color-mix(in srgb, var(--royal-crimson) 28%, transparent), transparent 38%),
+    radial-gradient(circle at 8% 88%, color-mix(in srgb, var(--royal-gold) 10%, transparent), transparent 42%),
+    linear-gradient(145deg, var(--royal-surface), var(--royal-canvas));
+  color: var(--royal-ink);
+  box-shadow: var(--succession-shadow-md);
+  isolation: isolate;
+}
+
+.succession-royal-command::before {
+  content: "SUCCESSION / ROYAL STATUS";
+  position: absolute;
+  left: 32px;
+  bottom: -10px;
+  z-index: -1;
+  color: color-mix(in srgb, var(--royal-ink) 4%, transparent);
+  font-family: var(--succession-font-mono);
+  font-size: clamp(34px, 6vw, 88px);
+  font-weight: 900;
+  letter-spacing: -.05em;
+  white-space: nowrap;
+}
+
+.succession-royal-command__copy {
+  position: relative;
+  z-index: 1;
+  align-self: center;
+}
+
+.succession-royal-command__eyebrow,
+.succession-royal-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--royal-gold);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.succession-royal-command h2 {
+  max-width: 760px;
+  margin: 16px 0 18px;
+  color: var(--royal-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(42px, 6vw, 82px);
+  font-weight: 600;
+  line-height: .91;
+  letter-spacing: -.052em;
+  text-wrap: balance;
+}
+
+.succession-royal-command__copy > p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--royal-ink-muted);
+  font-size: clamp(15px, 1.6vw, 19px);
+  line-height: 1.72;
+}
+
+.succession-royal-command__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 24px;
+}
+
+.succession-royal-command__actions button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--royal-line);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--royal-surface-raised) 82%, transparent);
+  color: var(--royal-ink);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.succession-royal-command__actions button:first-child {
+  border-color: var(--royal-crimson);
+  background: var(--royal-crimson);
+}
+
+.succession-royal-orbit {
+  position: relative;
+  align-self: center;
+  min-width: 0;
+  margin: 0;
+  padding: 18px;
+  border: 1px solid var(--royal-line);
+  border-radius: 28px;
+  background: color-mix(in srgb, var(--royal-surface-raised) 74%, transparent);
+  backdrop-filter: blur(20px);
+}
+
+.succession-royal-orbit svg {
+  display: block;
+  width: 100%;
+  max-height: 430px;
+  overflow: visible;
+}
+
+.succession-royal-orbit__outer,
+.succession-royal-orbit__inner {
+  fill: none;
+  stroke: var(--royal-line);
+}
+
+.succession-royal-orbit__outer {
+  stroke-dasharray: 2 7;
+}
+
+.succession-royal-orbit__axis {
+  stroke: color-mix(in srgb, var(--royal-line) 58%, transparent);
+}
+
+.succession-royal-orbit__node line {
+  stroke: color-mix(in srgb, var(--royal-line) 65%, transparent);
+}
+
+.succession-royal-orbit__node circle {
+  fill: var(--royal-surface-raised);
+  stroke: var(--royal-line-strong);
+  stroke-width: 2;
+}
+
+.succession-royal-orbit__node.is-active circle {
+  fill: color-mix(in srgb, var(--succession-state-active) 28%, var(--royal-surface-raised));
+  stroke: var(--succession-state-active);
+}
+
+.succession-royal-orbit__node.is-deceased circle {
+  fill: color-mix(in srgb, var(--succession-state-deceased) 30%, var(--royal-surface-raised));
+  stroke: var(--succession-state-deceased);
+}
+
+.succession-royal-orbit__node.is-exceptional circle {
+  fill: color-mix(in srgb, var(--succession-state-uncertain) 32%, var(--royal-surface-raised));
+  stroke: var(--succession-state-uncertain);
+  stroke-dasharray: 3 2;
+}
+
+.succession-royal-orbit__node text,
+.succession-royal-orbit__center text {
+  fill: var(--royal-ink);
+  font-family: var(--succession-font-mono);
+  font-weight: 900;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.succession-royal-orbit__node text {
+  font-size: 9px;
+}
+
+.succession-royal-orbit__center circle {
+  fill: var(--royal-canvas);
+  stroke: var(--royal-gold);
+  stroke-width: 2;
+  filter: drop-shadow(0 0 18px color-mix(in srgb, var(--royal-gold) 25%, transparent));
+}
+
+.succession-royal-orbit__center .is-number {
+  font-family: var(--succession-font-display);
+  font-size: 38px;
+}
+
+.succession-royal-orbit__center .is-label {
+  fill: var(--royal-gold);
+  font-size: 7px;
+  letter-spacing: .15em;
+}
+
+.succession-royal-orbit figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 16px;
+  margin-top: 4px;
+  color: var(--royal-ink-muted);
+  font-size: 11px;
+}
+
+.succession-royal-orbit figcaption span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.succession-royal-orbit figcaption i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--succession-state-active);
+}
+
+.succession-royal-orbit figcaption .is-deceased i {
+  background: var(--succession-state-deceased);
+}
+
+.succession-royal-orbit figcaption .is-exceptional i {
+  border: 1px dashed var(--succession-state-uncertain);
+  background: transparent;
+}
+
+.succession-royal-status-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.succession-royal-status-strip div {
+  min-width: 0;
+  padding: 17px;
+  border: 1px solid color-mix(in srgb, var(--royal-paper-ink) 17%, transparent);
+  border-radius: 17px;
+  background: var(--royal-paper);
+  color: var(--royal-paper-ink);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-royal-status-strip dt {
+  color: var(--royal-paper-muted-ink);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.succession-royal-status-strip dd {
+  margin: 7px 0 0;
+  font-family: var(--succession-font-display);
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1;
+}
+
+.succession-royal-filter-bar {
+  position: sticky;
+  top: 12px;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--royal-paper-ink) 20%, transparent);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--royal-paper) 91%, transparent);
+  color: var(--royal-paper-ink);
+  box-shadow: var(--succession-shadow-sm);
+  backdrop-filter: blur(18px);
+}
+
+.succession-royal-filter-bar > div:first-child {
+  display: grid;
+  gap: 3px;
+}
+
+.succession-royal-filter-bar > div:first-child span {
+  color: var(--royal-paper-muted-ink);
+  font-size: 11px;
+}
+
+.succession-royal-filter-bar > div:first-child strong {
+  font-family: var(--succession-font-display);
+  font-size: 20px;
+}
+
+.succession-prince-board__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.succession-prince-board__filters button {
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid color-mix(in srgb, var(--royal-paper-ink) 18%, transparent);
+  border-radius: 999px;
+  background: var(--royal-paper-muted);
+  color: var(--royal-paper-muted-ink);
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.succession-prince-board__filters button.is-active {
+  border-color: var(--royal-crimson);
+  background: var(--royal-crimson);
+  color: var(--royal-ink);
+}
+
+.succession-prince-board__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.succession-prince-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 0;
+  min-width: 0;
+  min-height: 390px;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid var(--royal-line);
+  border-radius: 22px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--royal-crimson) 10%, transparent), transparent 52%),
+    var(--royal-surface);
+  color: var(--royal-ink);
+  cursor: pointer;
+  text-align: left;
+  box-shadow: var(--succession-shadow-sm);
+  transition: transform var(--succession-motion-standard) var(--succession-ease), border-color var(--succession-motion-standard) var(--succession-ease), box-shadow var(--succession-motion-standard) var(--succession-ease);
+}
+
+.succession-prince-card::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--royal-gold), var(--royal-crimson), transparent);
+}
+
+.succession-prince-card:hover,
+.succession-prince-card:focus-visible {
+  transform: translateY(-5px);
+  border-color: var(--royal-gold);
+  box-shadow: var(--succession-shadow-md);
+}
+
+.succession-prince-card__visual {
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+  border-right: 1px solid var(--royal-line);
+  background:
+    radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--royal-gold) 12%, transparent), transparent 46%),
+    var(--royal-canvas);
+}
+
+.succession-prince-card__visual .succession-entity-visual {
+  width: 100%;
+  height: 100%;
+  min-height: 390px;
+  border: 0;
+  border-radius: 0;
+}
+
+.succession-prince-card__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  filter: saturate(.82) contrast(1.04);
+  transition: transform var(--succession-motion-slow) var(--succession-ease), filter var(--succession-motion-slow) var(--succession-ease);
+}
+
+.succession-prince-card:hover .succession-prince-card__visual img,
+.succession-prince-card:focus-visible .succession-prince-card__visual img {
+  transform: scale(1.035);
+  filter: saturate(1) contrast(1.06);
+}
+
+.succession-prince-card__rank {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  z-index: 2;
+  min-width: 46px;
+  min-height: 46px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--royal-line-strong);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--royal-canvas) 82%, transparent);
+  color: var(--royal-gold);
+  font-family: var(--succession-font-display);
+  font-size: 22px;
+  font-weight: 900;
+  backdrop-filter: blur(12px);
+}
+
+.succession-prince-card__status {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 5px 8px;
+  border: 1px solid var(--royal-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--royal-canvas) 80%, transparent);
+  color: var(--royal-ink);
+  font-size: 11px;
+  font-weight: 850;
+  text-align: center;
+  backdrop-filter: blur(12px);
+}
+
+.succession-prince-card__body {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto auto;
+  gap: 13px;
+  padding: 22px;
+}
+
+.succession-prince-card__body > span {
+  color: var(--royal-gold);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.succession-prince-card h3 {
+  margin: 0;
+  color: var(--royal-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(27px, 3vw, 38px);
+  line-height: .98;
+}
+
+.succession-prince-card p {
+  margin: 0;
+  color: var(--royal-ink-muted);
+  line-height: 1.6;
+}
+
+.succession-prince-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  margin: 0;
+  border: 1px solid var(--royal-line);
+  border-radius: 13px;
+  background: var(--royal-line);
+}
+
+.succession-prince-card dl div {
+  min-width: 0;
+  padding: 10px;
+  background: var(--royal-surface-raised);
+}
+
+.succession-prince-card dt {
+  color: var(--royal-ink-muted);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.succession-prince-card dd {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.succession-prince-card footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--royal-line);
+}
+
+.succession-prince-card footer span {
+  color: var(--royal-ink-muted);
+  font-size: 11px;
+}
+
+.succession-prince-card footer b {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--royal-gold);
+  font-size: 11px;
+}
+
+.succession-prince-dossier {
+  gap: clamp(18px, 2.5vw, 32px);
+}
+
+.succession-prince-dossier__toolbar {
+  position: sticky;
+  top: 12px;
+  z-index: 15;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--royal-paper-ink) 19%, transparent);
+  border-radius: 15px;
+  background: color-mix(in srgb, var(--royal-paper) 91%, transparent);
+  box-shadow: var(--succession-shadow-sm);
+  backdrop-filter: blur(18px);
+}
+
+.succession-prince-dossier__toolbar button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 9px 13px;
+  border: 1px solid color-mix(in srgb, var(--royal-paper-ink) 18%, transparent);
+  border-radius: 10px;
+  background: var(--royal-paper-muted);
+  color: var(--royal-paper-ink);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.succession-prince-dossier__hero.succession-prince-intelligence-hero {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(210px, 300px) minmax(0, 1fr);
+  gap: clamp(26px, 5vw, 64px);
+  overflow: hidden;
+  padding: clamp(24px, 5vw, 60px);
+  border: 1px solid var(--royal-line-strong);
+  border-radius: clamp(24px, 3vw, 38px);
+  background:
+    radial-gradient(circle at 82% 18%, color-mix(in srgb, var(--royal-crimson) 28%, transparent), transparent 40%),
+    linear-gradient(145deg, var(--royal-surface), var(--royal-canvas));
+  color: var(--royal-ink);
+  box-shadow: var(--succession-shadow-md);
+}
+
+.succession-prince-dossier__hero.succession-prince-intelligence-hero::after {
+  content: attr(data-rank);
+  position: absolute;
+  right: -18px;
+  bottom: -42px;
+  color: color-mix(in srgb, var(--royal-ink) 5%, transparent);
+  font-family: var(--succession-font-display);
+  font-size: clamp(180px, 28vw, 430px);
+  font-weight: 900;
+  line-height: .72;
+  pointer-events: none;
+}
+
+.succession-prince-intelligence-hero__portrait {
+  position: relative;
+  z-index: 1;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--royal-line-strong);
+  border-radius: 24px 24px 5px 24px;
+  background: var(--royal-canvas);
+  box-shadow: 18px 20px 0 color-mix(in srgb, var(--royal-gold) 10%, transparent);
+}
+
+.succession-prince-intelligence-hero__portrait .succession-entity-visual {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: inherit;
+}
+
+.succession-prince-intelligence-hero__portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.succession-prince-intelligence-hero__copy {
+  position: relative;
+  z-index: 1;
+  align-self: end;
+  display: grid;
+  gap: 12px;
+}
+
+.succession-prince-intelligence-hero__copy > span {
+  color: var(--royal-gold);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.succession-prince-intelligence-hero__copy h2 {
+  margin: 0;
+  color: var(--royal-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(52px, 8vw, 112px);
+  font-weight: 600;
+  line-height: .84;
+  letter-spacing: -.06em;
+}
+
+.succession-prince-intelligence-hero__copy > p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--royal-ink-muted);
+  font-size: clamp(15px, 1.6vw, 19px);
+  line-height: 1.65;
+}
+
+.succession-prince-intelligence-hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.succession-prince-intelligence-hero__facts span,
+.succession-prince-intelligence-hero__facts a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 9px;
+  border: 1px solid var(--royal-line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--royal-surface-raised) 82%, transparent);
+  color: var(--royal-ink-muted);
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.succession-prince-intelligence-hero__facts a {
+  color: var(--royal-gold);
+}
+
+.succession-prince-risk-board {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.succession-prince-risk-board article {
+  min-width: 0;
+  min-height: 126px;
+  padding: 17px;
+  border: 1px solid color-mix(in srgb, var(--royal-paper-ink) 18%, transparent);
+  border-radius: 17px;
+  background: var(--royal-paper);
+  color: var(--royal-paper-ink);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-prince-risk-board span {
+  color: var(--royal-paper-muted-ink);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.succession-prince-risk-board strong {
+  display: block;
+  margin-top: 12px;
+  font-family: var(--succession-font-display);
+  font-size: 32px;
+  line-height: 1;
+}
+
+.succession-prince-risk-board small {
+  display: block;
+  margin-top: 7px;
+  color: var(--royal-paper-muted-ink);
+  line-height: 1.4;
+}
+
+.succession-prince-dossier__status,
+.succession-prince-dossier__core > section,
+.succession-prince-dossier__network > section,
+.succession-prince-evidence {
+  border: 1px solid color-mix(in srgb, var(--royal-paper-ink) 18%, transparent);
+  background: var(--royal-paper);
+  color: var(--royal-paper-ink);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-prince-dossier__status {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 13px;
+  padding: 18px;
+  border-left: 4px solid var(--succession-state-uncertain);
+  border-radius: 15px;
+}
+
+.succession-prince-dossier__status span,
+.succession-prince-dossier__core span,
+.succession-prince-dossier__network header span,
+.succession-prince-evidence header span {
+  color: var(--royal-paper-muted-ink);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.succession-prince-dossier__status p,
+.succession-prince-dossier__core p,
+.succession-prince-dossier__network p {
+  color: var(--royal-paper-muted-ink);
+}
+
+.succession-prince-dossier__core {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.succession-prince-dossier__core > section {
+  min-height: 210px;
+  padding: 22px;
+  border-radius: 18px;
+}
+
+.succession-prince-dossier__core h3,
+.succession-prince-dossier__network h3,
+.succession-prince-evidence h3 {
+  margin: 7px 0 0;
+  color: var(--royal-paper-ink);
+  font-family: var(--succession-font-display);
+  font-size: clamp(24px, 3vw, 35px);
+  line-height: 1.08;
+}
+
+.succession-prince-dossier__network {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.succession-prince-dossier__network > section,
+.succession-prince-evidence {
+  min-width: 0;
+  padding: 22px;
+  border-radius: 18px;
+}
+
+.succession-prince-dossier__network header,
+.succession-prince-evidence header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.succession-prince-dossier__network section > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.succession-prince-dossier__network section > div button {
+  min-height: 48px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--royal-paper-ink) 16%, transparent);
+  border-radius: 11px;
+  background: var(--royal-paper-muted);
+  color: var(--royal-paper-ink);
+  cursor: pointer;
+  text-align: left;
+}
+
+.succession-prince-dossier__network ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.succession-prince-dossier__network li {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--royal-paper-ink) 14%, transparent);
+  border-radius: 11px;
+  background: var(--royal-paper-muted);
+}
+
+.succession-prince-dossier__network li b {
+  color: var(--royal-crimson);
+  font-family: var(--succession-font-mono);
+}
+
+.succession-prince-evidence > div {
+  display: grid;
+  gap: 9px;
+}
+
+.succession-prince-dossier__pager {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.succession-prince-dossier__pager button {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 14px;
+  border: 1px solid color-mix(in srgb, var(--royal-paper-ink) 18%, transparent);
+  border-radius: 13px;
+  background: var(--royal-paper);
+  color: var(--royal-paper-ink);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.succession-prince-dossier__pager button:disabled {
+  cursor: not-allowed;
+  opacity: .48;
+}
+
+.succession-prince-dossier__pager .is-character-record {
+  border-color: var(--royal-crimson);
+  background: var(--royal-crimson);
+  color: var(--royal-ink);
+}
+
+@media (max-width: 1100px) {
+  .succession-royal-command {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-royal-orbit {
+    max-width: 620px;
+  }
+
+  .succession-royal-status-strip,
+  .succession-prince-risk-board {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .succession-prince-board__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .succession-royal-command {
+    padding: 26px;
+  }
+
+  .succession-royal-command h2 {
+    font-size: 46px;
+  }
+
+  .succession-royal-status-strip,
+  .succession-prince-risk-board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .succession-royal-filter-bar {
+    position: relative;
+    top: auto;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .succession-prince-card {
+    grid-template-columns: 130px minmax(0, 1fr);
+  }
+
+  .succession-prince-dossier__hero.succession-prince-intelligence-hero {
+    grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);
+  }
+
+  .succession-prince-dossier__core,
+  .succession-prince-dossier__network {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-prince-dossier__pager {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .succession-prince-dossier__pager .is-character-record {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 560px) {
+  .succession-royal-command {
+    padding: 22px;
+  }
+
+  .succession-royal-command h2 {
+    font-size: 40px;
+  }
+
+  .succession-royal-orbit {
+    padding: 8px;
+  }
+
+  .succession-royal-status-strip,
+  .succession-prince-risk-board {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .succession-prince-card {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-prince-card__visual {
+    min-height: 280px;
+    border-right: 0;
+    border-bottom: 1px solid var(--royal-line);
+  }
+
+  .succession-prince-card__visual .succession-entity-visual {
+    min-height: 280px;
+  }
+
+  .succession-prince-card__body {
+    padding: 18px;
+  }
+
+  .succession-prince-dossier__toolbar {
+    position: relative;
+    top: auto;
+    display: grid;
+  }
+
+  .succession-prince-dossier__hero.succession-prince-intelligence-hero {
+    grid-template-columns: 1fr;
+    padding: 22px;
+  }
+
+  .succession-prince-intelligence-hero__portrait {
+    max-width: 300px;
+  }
+
+  .succession-prince-intelligence-hero__copy h2 {
+    font-size: 56px;
+  }
+
+  .succession-prince-dossier__network section > div {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-prince-dossier__pager {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-prince-dossier__pager .is-character-record {
+    grid-column: auto;
+    grid-row: auto;
+  }
+}
+
+@media (hover: none) {
+  .succession-prince-card:hover {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-prince-card,
+  .succession-prince-card__visual img {
+    transition: none;
+  }
+
+  .succession-prince-card:hover,
+  .succession-prince-card:focus-visible,
+  .succession-prince-card:hover .succession-prince-card__visual img,
+  .succession-prince-card:focus-visible .succession-prince-card__visual img {
+    transform: none;
+  }
+}
