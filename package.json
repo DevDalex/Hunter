@@ -22,6 +22,7 @@
     "audit:succession-people-institutions": "node scripts/audit-succession-people-institutions-closure.mjs",
     "audit:succession-nen-systems": "node scripts/audit-succession-nen-systems-workspace.mjs",
     "audit:succession-story-intelligence": "node scripts/audit-succession-story-intelligence-workspace.mjs",
+    "audit:succession-product-inventory": "node scripts/audit-succession-product-inventory.mjs",
     "audit:succession-final-product": "node scripts/audit-succession-final-product-closure.mjs",
     "audit:succession-events": "node scripts/audit-succession-events-workspace.mjs",
     "audit:succession-locations": "node scripts/audit-succession-locations-workspace.mjs",
