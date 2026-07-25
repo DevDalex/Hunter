@@ -32,15 +32,31 @@ export const entityWorkspaceTarget = (entity) => {
 };
 
 export function ArchivePageHeader({ kicker, title, description, meta = [], actions }) {
+  const visibleMeta = meta.filter((item) => item && item.label && item.value != null);
   return <header className="succession-page-header">
-    <div className="succession-page-header__copy">
-      {kicker && <span>{kicker}</span>}
-      <h1>{title}</h1>
-      {description && <p>{description}</p>}
+    <div className="succession-page-header__main">
+      <div className="succession-page-header__classification" aria-hidden="true">
+        <span>Archive brief</span>
+        <span className="succession-page-header__classification-rule" />
+        <span>Workspace record</span>
+      </div>
+      <div className="succession-page-header__body">
+        <div className="succession-page-header__copy">
+          {kicker && <span className="succession-page-header__kicker">{kicker}</span>}
+          <h1>{title}</h1>
+          {description && <p className="succession-page-header__description">{description}</p>}
+        </div>
+        {actions && <div className="succession-page-header__actions" aria-label="Page actions">{actions}</div>}
+      </div>
     </div>
-    {actions && <div className="succession-page-header__actions">{actions}</div>}
-    {!!meta.length && <dl className="succession-page-header__meta">
-      {meta.map((item) => <div key={item.label}><dt>{item.label}</dt><dd>{item.value}</dd></div>)}
+    {!!visibleMeta.length && <dl className="succession-page-header__meta" aria-label="Workspace metadata">
+      {visibleMeta.map((item, index) => <div className="succession-page-header__meta-item" key={`${item.label}-${index}`}>
+        <dt>
+          <span className="succession-page-header__meta-index" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+          <b>{item.label}</b>
+        </dt>
+        <dd>{item.value}</dd>
+      </div>)}
     </dl>}
   </header>;
 }
