@@ -9,6 +9,7 @@ on:
       - 'src/components/succession/SuccessionArchiveChapterStoryWorkspace.jsx'
       - 'src/components/succession/SuccessionArchiveChapterStoryWorkspace.css'
       - 'src/components/succession/SuccessionArchiveChapterCommand.css'
+      - 'src/components/succession/SuccessionArchiveContrast.css'
       - 'scripts/audit-succession-batch-4-chapters.mjs'
       - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-4.md'
       - '.github/workflows/succession-visual-redesign-batch-4.yml'
@@ -91,14 +92,19 @@ jobs:
           VISUAL_QA_ROUTE: succession/chapters
           VISUAL_QA_OUTPUT: .visual-qa/succession-chapters
           VISUAL_QA_SCREENSHOTS: all
-        run: npm run qa:visual
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run qa:visual 2>&1 | tee batch4-chapters-visual.log
 
       - name: Publish Batch 4 chapter diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: succession-batch-4-chapter-diagnostics
-          path: .visual-qa/succession-chapters
+          path: |
+            batch4-chapters-visual.log
+            .visual-qa/succession-chapters
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 14
