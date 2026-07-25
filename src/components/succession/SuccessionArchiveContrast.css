@@ -76,7 +76,8 @@
 .succession-story-command-event dt,
 .succession-story-command-dossier__hero dt,
 .succession-story-command__lane-track > button > span,
-.succession-story-command__causal-river > article > div > span {
+.succession-story-command__causal-river > article > div > span,
+.succession-event-command-card dt {
   font-size: 11px !important;
 }
 
