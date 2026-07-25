@@ -18,7 +18,9 @@ const [
   glossaryWorkspace,
   mediaWorkspace,
   productStyles,
+  productLinkStyles,
   searchStyles,
+  browserQa,
   dataEntry,
   productFoundation,
   productSelectors,
@@ -34,7 +36,9 @@ const [
   readFile(new URL('../src/components/succession/SuccessionArchiveGlossaryWorkspace.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveMediaWorkspace.jsx', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveProductLibrary.css', import.meta.url), 'utf8'),
+  readFile(new URL('../src/components/succession/SuccessionArchiveProductLibraryLinks.css', import.meta.url), 'utf8'),
   readFile(new URL('../src/components/succession/SuccessionArchiveSearch.css', import.meta.url), 'utf8'),
+  readFile(new URL('./succession-final-product-qa.mjs', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/successionData.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/entitiesProductClosureFoundation.js', import.meta.url), 'utf8'),
   readFile(new URL('../src/data/succession/productClosureSelectors.js', import.meta.url), 'utf8'),
@@ -60,9 +64,11 @@ for (const removedExport of ['CharactersWorkspace', 'OrganizationsWorkspace', 'L
 }
 assert(!extended.includes("../../data/successionDossier") && !extended.includes("../../data/successionArchive"), 'active extended role workspaces must not import legacy dossier or archive ledgers');
 assert(extended.includes('export function HuntersWorkspace') && extended.includes('export function MilitaryWorkspace') && extended.includes('export function PoliticsWorkspace'), 'the three active extended role views must remain available');
+assert(extended.includes('getStoryEventKnowledgeAtChapter') && extended.includes('.map((event) => getStoryEventKnowledgeAtChapter(event.id, spoilerLimit))'), 'Military role events must use chapter-bounded event knowledge');
 
 assert(!roleWorkspaces.includes("../../data/successionDossier") && !roleWorkspaces.includes('SuccessionStoryWorkspace'), 'Royal Family and Mafia must not depend on the legacy dossier or static Story workspace');
 assert(roleWorkspaces.includes('getCharacterDossier') && roleWorkspaces.includes('getOrganizationDossier'), 'Royal Family and Mafia must use canonical dossiers');
+assert(roleWorkspaces.includes('getStoryEventKnowledgeAtChapter') && roleWorkspaces.includes('useEffect(() => setFocus(routeParams.focus || \'\')'), 'Mafia must use chapter-bounded events and synchronize URL focus state');
 assert(roleWorkspaces.includes('export function PrincesWorkspace') && roleWorkspaces.includes('export function MafiaWorkspace'), 'the two active role workspaces must remain available');
 for (const removed of ['SuccessionStoryWorkspace', 'GuardianBeastsWorkspace', 'EventsWorkspace', 'BodyguardsWorkspace', 'RelationshipsWorkspace', 'ChapterRecordsWorkspace']) {
   assert(!deepWorkspaces.includes(`export function ${removed}`) && !roleWorkspaces.includes(`export function ${removed}`), `${removed} inactive implementation must remain removed`);
@@ -71,11 +77,13 @@ assert(!deepWorkspaces.includes("../../data/successionDossier") && !deepWorkspac
 assert(deepWorkspaces.includes('getCharacterDossier') && deepWorkspaces.includes('export function QueensWorkspace') && deepWorkspaces.includes('export function BodyStatesWorkspace'), 'Queens and body states must use canonical character dossiers');
 
 assert(glossaryWorkspace.includes('getGlossaryEntriesAtChapter') && glossaryWorkspace.includes('getGlossaryEntryAtChapter'), 'Glossary workspace must use chapter-bounded canonical selectors');
-assert(glossaryWorkspace.includes('SourceReference') && glossaryWorkspace.includes('EntityLink'), 'Glossary dossiers must expose evidence and graph connections');
+assert(glossaryWorkspace.includes('SourceReference') && glossaryWorkspace.includes('EntityLink') && glossaryWorkspace.includes('relatedRecords'), 'Glossary dossiers must expose evidence and entity/system/story graph connections');
 assert(mediaWorkspace.includes('getMediaRecordsAtChapter') && mediaWorkspace.includes('getMediaRecord'), 'Media workspace must use canonical media selectors');
 assert(mediaWorkspace.includes('record.alt') && mediaWorkspace.includes('provenanceUrl'), 'Media workspace must expose alt text and provenance');
 assert(productStyles.includes('@media(max-width:520px)') && productStyles.includes('@media(prefers-reduced-motion:reduce)'), 'Library workspaces must include mobile and reduced-motion handling');
+assert(productLinkStyles.includes('.succession-product-links > button') && productLinkStyles.includes('font-size: 11px'), 'extended glossary graph links must have owned mobile-safe styles');
 assert(searchStyles.includes('@media(max-width:620px)') && searchStyles.includes('font-size: 11px'), 'Grouped search must include mobile handling and the readability floor');
+assert(browserQa.includes('Grouped search explains glossary and media matches') && browserQa.includes('Final Search Glossary and Media remain usable on mobile'), 'Batch 5 browser QA must cover grouped search, graph-connected glossary, media provenance, and mobile layout');
 
 assert(dataEntry.includes("from './entitiesProductClosureCorrections.js'"), 'public data must activate the corrected Batch 5 foundation');
 assert(dataEntry.includes("from './indexesFinal.js'"), 'product records must remain outside canonical entity indexes');
@@ -85,10 +93,15 @@ assert(dataEntry.includes('getFinalReleaseClosureReport'), 'public data must exp
 assert(schemaAdapter.includes('glossaryEntries: Object.freeze({})') && schemaAdapter.includes('mediaRecords: Object.freeze({})'), 'schema adapter must validate only canonical entity collections');
 assert(productFoundation.includes('successionGlossaryEntries') && productFoundation.includes('successionMediaRecords'), 'Batch 5 foundation must publish glossary and media records');
 assert(productFoundation.includes('consolidatedMedia'), 'duplicate media sources must be consolidated in the foundation');
-assert(productSelectors.includes('normalizeArchiveSearchText') && productSelectors.includes('matchReason'), 'product selectors must normalize and explain search matches');
+assert(productSelectors.includes('normalizeArchiveSearchText') && productSelectors.includes('matchReason') && productSelectors.includes('royal order'), 'product selectors must normalize, explain, and index royal-order searches');
+assert(productSelectors.includes('label: names.length === 1') && productSelectors.includes('alt: names.length === 1'), 'media labels and alt text must be rebuilt from chapter-visible subjects');
 assert(finalSearchAdapter.includes('unavailableAbilities') && finalSearchAdapter.includes('later ability details remain hidden'), 'Story search must suppress future ability language');
+assert(finalSearchAdapter.includes('relatedRecords') && finalSearchAdapter.includes("domain: 'media'"), 'final adapter must connect glossary systems and index media results');
 assert(finalReleaseSource.includes("status: closureReady ? 'release-candidate' : 'open'"), 'final report must distinguish release candidate from deployed closure');
+assert(finalReleaseSource.includes('performanceBuild') && finalReleaseSource.includes('browserInteractionQa') && finalReleaseSource.includes('cloudflareDeployment'), 'final report must preserve external build, browser, and deployment gates');
 assert(packageJson.scripts?.['audit:succession-final-product'] === 'node scripts/audit-succession-final-product-closure.mjs', 'package scripts must expose the Batch 5 audit');
+assert(packageJson.scripts?.['qa:succession-final-product'] === 'node scripts/succession-final-product-qa.mjs', 'package scripts must expose the Batch 5 browser QA');
+assert(packageJson.scripts?.['qa:browser:verify']?.includes('qa:succession-final-product'), 'complete browser verification must run the Batch 5 flow');
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {
@@ -106,13 +119,16 @@ try {
   const finalReport = archive.getFinalReleaseClosureReport();
   assert(finalReport?.closureReady && finalReport.status === 'release-candidate', 'all Batch 1–5 static and runtime gates must form a release candidate');
   assert(finalReport.deploymentRequiredForClosedStatus, 'only the external deployment may promote release-candidate to closed');
-  for (const key of ['canonicalData', 'foundationEvidence', 'peopleInstitutions', 'nenSystems', 'storyIntelligence', 'searchGlossaryMedia']) assert(finalReport.releaseGates[key], `${key} final release gate must pass`);
+  for (const key of ['canonicalData', 'foundationEvidence', 'peopleInstitutions', 'nenSystems', 'storyIntelligence', 'searchGlossaryMedia', 'routingAndLegacyCleanup', 'responsiveAccessibilitySourceContracts']) assert(finalReport.releaseGates[key], `${key} final release gate must pass`);
+  for (const key of ['performanceBuild', 'browserInteractionQa', 'browserAccessibilityQa', 'cloudflareDeployment']) assert(typeof finalReport.releaseGates[key] === 'string' && finalReport.releaseGates[key].startsWith('pending-'), `${key} must remain an explicit external gate before deployment`);
 
   const glossary = archive.getGlossaryEntriesAtChapter(latestChapter);
   assert(glossary.length >= 24, 'latest glossary must expose the complete maintained vocabulary');
   assert(archive.getGlossaryEntryAtChapter('glossary:parallel-future', 384) === null, 'Parallel Future glossary definition must remain hidden before Chapter 385');
   assert(archive.getGlossaryEntryAtChapter('glossary:parallel-future', 385)?.term === 'Parallel Future', 'Parallel Future glossary definition must appear at Chapter 385');
-  assert(archive.getGlossaryEntryAtChapter('glossary:guardian-spirit-beast', 349)?.related.length >= 15, 'Guardian Spirit Beast glossary entry must connect to the ritual and beast graph');
+  const beastGlossary = archive.getGlossaryEntryAtChapter('glossary:guardian-spirit-beast', 349);
+  assert(beastGlossary?.related.length >= 15, 'Guardian Spirit Beast glossary entry must connect to the ritual and beast graph');
+  assert(beastGlossary?.relatedRecords.some((record) => record.id === 'nen-system:guardian-spirit-beast-contract' && record.route === 'nen'), 'Guardian Spirit Beast glossary entry must link directly to its canonical Nen system');
   assert(archive.getEntityById('glossary:parallel-future') === null, 'glossary records must not pollute canonical entity indexes');
 
   const media = archive.getMediaRecordsAtChapter(latestChapter);
@@ -132,12 +148,13 @@ try {
   assert(!search('Parallel Future', 384).some((result) => result.entity?.id === 'ability:parallel-future' || result.id === 'glossary:parallel-future' || result.id === 'story-thread:tserriednich-future-growth'), 'future ability names must remain hidden before their evidence chapter');
   assert(search('ten second precognitive vision', 385).some((result) => result.entity?.id === 'ability:parallel-future' || result.id === 'glossary:parallel-future'), 'ability mechanics must resolve when available');
   assert(search('Room 1014').some((result) => result.domain === 'location') && search('Room 1014').some((result) => result.domain === 'glossary'), 'global search must group canonical entity and glossary matches');
+  assert(search('Kurapika portrait').some((result) => result.domain === 'media' && result.media?.subjects.some((subject) => subject.id === 'character:kurapika')), 'global search must return direct media matches');
   assert(search('Guardian Spirit Beast').every((result) => typeof result.matchReason === 'string' && result.matchReason.length > 0), 'every result must explain why it matched');
   assert(archive.searchSuccessionArchive('Kurapika', { chapter: latestChapter }).some((result) => result.entity.id === 'character:kurapika'), 'legacy entity-search API must remain compatible');
 
   for (const report of [archive.getPeopleInstitutionClosureReport(), archive.getNenSystemClosureReport(), archive.getStoryIntelligenceClosureReport(), archive.getFoundationClosureReport()]) assert(report?.closureReady, 'all earlier batch closure reports must remain closed');
 
-  console.log(`Succession final product closure audit passed: ${glossary.length} glossary records, ${media.length} consolidated media records, grouped explained chapter-safe search, inactive workspace and legacy-ledger removal, product-safe schema and indexes, responsive and reduced-motion Library presentation, all Batch 1–4 closures, and the definitive release-candidate report are active.`);
+  console.log(`Succession final product closure audit passed: ${glossary.length} glossary records, ${media.length} consolidated media records, grouped explained chapter-safe entity/Story/glossary/media search, graph-connected vocabulary, chapter-safe role events, inactive workspace and legacy-ledger removal, product-safe schema and indexes, browser QA registration, responsive and reduced-motion Library presentation, all Batch 1–4 closures, and the definitive release-candidate report are active.`);
 } finally {
   await vite.close();
 }
