@@ -1,3 +1,5 @@
+@import './SuccessionVisualFoundation.css';
+
 .succession-search-complete {
   display: grid;
   gap: 16px;
