@@ -6,6 +6,7 @@
 @import './SuccessionArchiveBatch2Completion.css';
 @import './SuccessionArchiveRoyalContrast.css';
 @import './SuccessionArchiveRoyalFamilyRedesign.css';
+@import './SuccessionArchiveStoryContrast.css';
 
 .succession-search-complete {
   display: grid;
