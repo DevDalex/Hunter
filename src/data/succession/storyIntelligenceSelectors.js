@@ -6,14 +6,21 @@ const uniqueById = (values) => [...new Map(values.filter(Boolean).map((value) =>
 const uniqueStrings = (values) => [...new Set(values.filter(Boolean))];
 const freeze = (values) => Object.freeze(values);
 
-export const createStoryIntelligenceSelectors = ({ data, archive }) => {
+export const createStoryIntelligenceSelectors = ({ data, archive, eventKnowledge }) => {
   const latestChapter = data.chapters.at(-1)?.number || 414;
   const phaseProfiles = data.storyPhaseProfiles || Object.freeze({});
   const laneProfiles = data.storyLaneProfiles || Object.freeze({});
   const threadProfiles = data.storyThreadProfiles || Object.freeze({});
   const causalLinksById = data.storyCausalLinksById || Object.freeze({});
+  const getEventKnowledge = eventKnowledge?.getStoryEventKnowledgeAtChapter || null;
 
   const resolve = (ids) => (ids || []).map((id) => archive.getEntityById(id)).filter(Boolean);
+  const eventAtChapter = (eventOrId, chapter) => getEventKnowledge
+    ? getEventKnowledge(eventOrId, chapter)
+    : (() => {
+      const event = typeof eventOrId === 'string' ? archive.getEntityById(eventOrId) : eventOrId;
+      return event?.entityType === 'event' && event.chapterRange.start <= chapter ? event : null;
+    })();
   const sourceAtChapter = (id, chapter) => {
     const source = archive.getEntityById(id);
     return source?.entityType === 'source' && (!source.chapter || source.chapter <= chapter) ? source : null;
@@ -118,7 +125,7 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
         : 'The resolution remains unavailable at the selected chapter boundary.',
       lanes: freeze((profile.laneIds || []).map(getStoryLaneProfile).filter(Boolean)),
       entities: freeze(resolve(profile.entityIds).filter((entity) => entityAvailableAtChapter(entity, parsedChapter))),
-      events: freeze(resolve(profile.eventIds).filter((event) => event.chapterRange.start <= parsedChapter)),
+      events: freeze(resolve(profile.eventIds).map((event) => eventAtChapter(event, parsedChapter)).filter(Boolean)),
       abilities: freeze(resolve(profile.abilityIds).filter((ability) => {
         const sourceChapters = (ability.sourceIds || []).map((id) => archive.getEntityById(id)?.chapter).filter(Number.isFinite);
         return !sourceChapters.length || Math.min(...sourceChapters) <= parsedChapter;
@@ -144,11 +151,7 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
     const parsedChapter = chapter === null ? latestChapter : Number(chapter);
     if (!Number.isFinite(parsedChapter)) return freeze([]);
     return freeze(Object.values(causalLinksById)
-      .filter((link) => {
-        const source = archive.getEntityById(link.sourceEventId);
-        const target = archive.getEntityById(link.targetEventId);
-        return source?.entityType === 'event' && target?.entityType === 'event' && target.chapterRange.start <= parsedChapter;
-      })
+      .filter((link) => eventAtChapter(link.sourceEventId, parsedChapter) && eventAtChapter(link.targetEventId, parsedChapter))
       .sort((left, right) => {
         const leftTarget = archive.getEntityById(left.targetEventId);
         const rightTarget = archive.getEntityById(right.targetEventId);
@@ -160,7 +163,7 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
     const parsedChapter = chapter === null ? latestChapter : Number(chapter);
     if (!Number.isFinite(parsedChapter)) return null;
     const links = getStoryCausalLinksAtChapter(parsedChapter);
-    const nodes = uniqueById(links.flatMap((link) => [archive.getEntityById(link.sourceEventId), archive.getEntityById(link.targetEventId)]));
+    const nodes = uniqueById(links.flatMap((link) => [eventAtChapter(link.sourceEventId, parsedChapter), eventAtChapter(link.targetEventId, parsedChapter)]));
     return Object.freeze({ chapter: parsedChapter, nodes: freeze(nodes), edges: links });
   };
 
@@ -171,7 +174,10 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
     const boundedEnd = Math.min(profile.chapterRange.end ?? parsedChapter, parsedChapter);
     const boundedRange = { start: profile.chapterRange.start, end: boundedEnd };
     const chapters = data.chapters.filter((record) => record.number >= boundedRange.start && record.number <= boundedRange.end);
-    const events = data.events.filter((event) => rangesIntersect(event.chapterRange, boundedRange) && event.chapterRange.start <= parsedChapter);
+    const events = data.events
+      .filter((event) => rangesIntersect(event.chapterRange, boundedRange) && event.chapterRange.start <= parsedChapter)
+      .map((event) => eventAtChapter(event, parsedChapter))
+      .filter(Boolean);
     const lanes = (profile.laneIds || []).map(getStoryLaneProfile).filter(Boolean);
     return Object.freeze({
       profile,
@@ -197,8 +203,8 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
       .filter((phase) => phase.laneIds.includes(profile.id) && phase.chapterRange.start <= parsedChapter)
       .sort((left, right) => left.chapterRange.start - right.chapterRange.start);
     const events = (profile.eventIds || [])
-      .map((id) => archive.getEntityById(id))
-      .filter((event) => event?.entityType === 'event' && event.chapterRange.start <= parsedChapter)
+      .map((id) => eventAtChapter(id, parsedChapter))
+      .filter(Boolean)
       .sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.name.localeCompare(right.name));
     const sourceIds = new Set([...(profile.sourceIds || []), ...events.flatMap((event) => event.sourceIds || [])]);
     return Object.freeze({
@@ -228,9 +234,11 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
       .map((id) => getStoryThreadDossier(id, parsedChapter))
       .filter(Boolean);
     const events = archive.getEventsForChapter(parsedChapter)
+      .map((event) => eventAtChapter(event, parsedChapter))
+      .filter(Boolean)
       .sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.name.localeCompare(right.name));
-    const startingEvents = events.filter((event) => event.chapterRange.start === parsedChapter);
-    const continuingEvents = events.filter((event) => event.chapterRange.start < parsedChapter);
+    const startingEvents = events.filter((event) => event.canonicalChapterRange.start === parsedChapter);
+    const continuingEvents = events.filter((event) => event.canonicalChapterRange.start < parsedChapter);
     const appearances = resolve((chapterRecord.appearanceRecords || []).map((record) => record.characterId));
     const incomingCausalLinks = (chapterRecord.incomingCausalLinkIds || []).map(getStoryCausalLink).filter(Boolean);
     const outgoingCausalLinks = (chapterRecord.outgoingCausalLinkIds || []).map(getStoryCausalLink).filter(Boolean);
@@ -272,8 +280,7 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
   const getStorySnapshotAtChapter = (chapter = null) => {
     const dossier = getChapterStoryDossier(chapter);
     if (!dossier) return null;
-    const ongoingEvents = data.events
-      .filter((event) => event.status === 'ongoing' && includesChapter(event.chapterRange, dossier.chapter.number));
+    const ongoingEvents = dossier.events.filter((event) => event.status === 'active-at-selected-chapter' || event.canonicalEvent?.status === 'ongoing');
     return Object.freeze({
       chapter: dossier.chapter.number,
       phase: dossier.phase,
@@ -373,24 +380,33 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
         || !chapter.storyCoverage?.phase
         || (!pending && (!chapter.storyLaneIds?.length || !chapter.storyThreadIds?.length));
     });
+    const eventProjectionIssues = data.events.filter((event) => {
+      const opening = eventAtChapter(event, event.chapterRange.start);
+      const matureChapter = Math.max(event.chapterRange.end ?? event.chapterRange.start, ...(event.sourceIds || []).map((id) => archive.getEntityById(id)?.chapter).filter(Number.isFinite));
+      const mature = eventAtChapter(event, matureChapter);
+      return !opening || !mature || opening.id !== event.id || mature.id !== event.id;
+    });
     const pendingChapters = data.chapters.filter((chapter) => chapter.storyIntelligenceStatus === 'Reader media indexed; detailed research pending verified chapter documentation');
-    const closureReady = phases.length >= 10
+    const closureReady = Boolean(getEventKnowledge)
+      && phases.length >= 10
       && lanes.length === 7
       && threads.length >= 15
       && causalLinks.length >= 15
       && phaseCoverageIssues.length === 0
       && phaseContinuityIssues.length === 0
       && missingReferences.length === 0
-      && chapterProjectionIssues.length === 0;
+      && chapterProjectionIssues.length === 0
+      && eventProjectionIssues.length === 0;
     return Object.freeze({
       status: closureReady ? 'closed' : 'open',
       closureReady,
       chapterRange: Object.freeze({ start: data.chapters[0]?.number || 340, end: latestChapter }),
-      counts: Object.freeze({ phases: phases.length, lanes: lanes.length, threads: threads.length, causalLinks: causalLinks.length, chapters: data.chapters.length, pendingChapters: pendingChapters.length }),
+      counts: Object.freeze({ phases: phases.length, lanes: lanes.length, threads: threads.length, causalLinks: causalLinks.length, chapters: data.chapters.length, pendingChapters: pendingChapters.length, events: data.events.length }),
       phaseCoverageIssues: freeze(phaseCoverageIssues),
       phaseContinuityIssues: freeze(phaseContinuityIssues),
       missingReferences: freeze(missingReferences),
       chapterProjectionIssues: freeze(chapterProjectionIssues),
+      eventProjectionIssues: freeze(eventProjectionIssues),
       pendingChapterIds: freeze(pendingChapters.map((chapter) => chapter.id)),
     });
   };
