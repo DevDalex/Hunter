@@ -27,13 +27,16 @@ for (const requiredState of ['confirmed', 'inferred', 'uncertain', 'disputed', '
   assert(successionSemanticStates.some((state) => state.id === requiredState), `missing semantic state ${requiredState}`);
 }
 
-const [css, searchCss, preview, app, docs, packageJson] = await Promise.all([
+const [css, searchCss, preview, previewCss, app, docs, packageJson, runtimeAudits, inventoryReport] = await Promise.all([
   read('src/components/succession/SuccessionVisualFoundation.css'),
   read('src/components/succession/SuccessionArchiveSearch.css'),
   read('src/components/succession/SuccessionVisualFoundationPreview.jsx'),
+  read('src/components/succession/SuccessionVisualFoundationPreview.css'),
   read('src/components/succession/SuccessionArchiveApp.jsx'),
   read('docs/SUCCESSION-VISUAL-REDESIGN.md'),
   read('package.json'),
+  read('scripts/run-succession-runtime-audits.mjs'),
+  read('scripts/report-succession-visual-inventory.mjs'),
 ]);
 
 assert(css.includes('.succession-archive {'), 'foundation styles must be scoped to .succession-archive');
@@ -51,8 +54,13 @@ for (const contract of successionVisualComponentContracts) {
 
 assert(searchCss.trimStart().startsWith("@import './SuccessionVisualFoundation.css';"), 'the visual foundation must load after existing Succession compatibility modules');
 assert(preview.includes('Development-only visual contract preview'), 'preview must remain explicitly development-only');
+assert(preview.includes("import './SuccessionVisualFoundationPreview.css';"), 'preview must load its isolated presentation styles');
+assert(previewCss.includes('.succession-visual-preview') && previewCss.includes('@media (max-width: 620px)'), 'preview CSS must remain scoped and responsive');
 assert(!app.includes('SuccessionVisualFoundationPreview'), 'the preview must not become a public archive route during Batch 1');
 assert(packageJson.includes('"audit:succession-visual-foundation"'), 'package.json must expose the visual foundation audit');
+assert(packageJson.includes('"report:succession-visual-inventory"'), 'package.json must expose the visual inventory report');
+assert(runtimeAudits.includes("['visual-foundation', 'scripts/audit-succession-visual-foundation.mjs']"), 'Succession runtime audits must include the visual foundation contract');
+assert(inventoryReport.includes('# Succession visual inventory') && inventoryReport.includes('Migration guidance'), 'visual inventory report must document debt and migration guidance');
 
 for (const phrase of ['64-hour implementation schedule', 'presentation-only', 'Hourly safety check', 'Compatibility strategy', 'GitHub issue **#49**']) {
   assert(docs.includes(phrase), `documentation is missing ${phrase}`);
@@ -62,7 +70,9 @@ for (const file of [
   'src/data/succession/visualDesignSystem.js',
   'src/components/succession/SuccessionVisualFoundation.css',
   'src/components/succession/SuccessionVisualFoundationPreview.jsx',
+  'src/components/succession/SuccessionVisualFoundationPreview.css',
+  'scripts/report-succession-visual-inventory.mjs',
   'docs/SUCCESSION-VISUAL-REDESIGN.md',
 ]) await access(path.join(root, file));
 
-console.log(`Succession visual foundation audit passed: ${successionVisualPrinciples.length} principles, ${successionVisualTokenGroups.length} token groups, ${successionSemanticStates.length} semantic states, ${successionVisualComponentContracts.length} component contracts, scoped CSS, hidden preview, responsive behavior, reduced motion, and issue #49 schedule documentation verified.`);
+console.log(`Succession visual foundation audit passed: ${successionVisualPrinciples.length} principles, ${successionVisualTokenGroups.length} token groups, ${successionSemanticStates.length} semantic states, ${successionVisualComponentContracts.length} component contracts, scoped CSS, hidden preview, responsive behavior, reduced motion, inventory reporting, runtime wiring, and issue #49 schedule documentation verified.`);
