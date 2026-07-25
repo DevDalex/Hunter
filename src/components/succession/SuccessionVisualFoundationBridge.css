@@ -74,3 +74,15 @@
 ) {
   border-color: var(--succession-border-default);
 }
+
+/*
+ * Legacy .68rem labels compute to 10.88px at the current root size. Preserve
+ * their compact role while enforcing the archive's exact 11px readability floor.
+ */
+.succession-archive :where(
+  .succession-evidence-workspace dt,
+  .succession-foundation-closure__domains span,
+  .succession-evidence-source-catalogue article > span
+) {
+  font-size: 11px;
+}
