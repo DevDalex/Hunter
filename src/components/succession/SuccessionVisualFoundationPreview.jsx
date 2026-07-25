@@ -17,15 +17,15 @@ const sampleStates = ['confirmed', 'inferred', 'uncertain', 'pending'];
  * Later Batch 1 work may mount it in a local-only harness or screenshot suite.
  */
 export default function SuccessionVisualFoundationPreview() {
-  return <main className="succession-visual-preview" aria-labelledby="succession-visual-preview-title">
+  return <main className="succession-visual-preview" aria-labelledby="succession-visual-foundation-preview-title">
     <ArchiveSection
-      id="succession-visual-preview"
+      id="succession-visual-foundation-preview"
       kicker="Development contract"
       title="Succession visual foundation"
       description={SUCCESSION_VISUAL_FOUNDATION_VERSION}
     >
-      <section className="succession-visual-preview__principles" aria-labelledby="succession-visual-preview-title">
-        <h2 id="succession-visual-preview-title">Presentation principles</h2>
+      <section className="succession-visual-preview__principles" aria-labelledby="succession-visual-preview-principles">
+        <h2 id="succession-visual-preview-principles">Presentation principles</h2>
         <div>{successionVisualPrinciples.map((principle) => <ArchiveCard key={principle.id} eyebrow={principle.id} title={principle.rule} />)}</div>
       </section>
 
