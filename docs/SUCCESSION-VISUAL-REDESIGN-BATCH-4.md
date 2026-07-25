@@ -34,19 +34,51 @@ Batch 4 redesigns the chapter, Story, event, Nen, Guardian Spirit Beast, locatio
 - Keep documented facts, maintained interpretation, unresolved questions, and missing documentation visually distinct.
 - Keep imported but unannotated chapters explicitly marked as pending.
 
+## Hour 41 — Story overview and narrative phases
+
+- Add a narrative-intelligence command hero for the current authorized Story snapshot.
+- Add phase, lane, event, thread, and causal-link metrics.
+- Redesign the phase directory as a numbered chronological architecture.
+- Show visible chapter range, lane count, event count, thread count, and current-phase state.
+- Redesign phase dossiers with range identity, lane structure, event chronology, Story pressure, and evidence.
+
+## Hour 42 — Parallel Story lanes
+
+- Add synchronized Story swimlanes across a shared Chapter 340-to-current axis.
+- Place event markers according to their canonical starting chapters.
+- Add focus controls for one lane or all active lanes.
+- Preserve ordinary lane buttons and mobile event lists as accessible alternatives.
+- Redesign lane dossiers with phase history, event chronology, actors, and pressure records.
+
+## Hour 43 — Story-thread presentation
+
+- Promote open questions into status-aware evidence cards.
+- Show category, opening chapter, exact question, and current status.
+- Redesign thread dossiers with plotline, evidence-event, subject, and source counts.
+- Keep resolved and unresolved thread states structurally and textually distinct.
+
+## Hour 44 — Causal links and consequences
+
+- Add a causal river that shows maintained source-event, relationship, target-event, and summary records.
+- Keep every source and consequence node directly navigable to its event dossier.
+- Preserve textual relationship labels so meaning does not depend on connectors or color.
+- Limit the presentation to causal edges already exposed by the Story graph.
+
 ## Presentation constraints
 
 - Use semantic Succession design tokens.
-- Do not introduce raw hexadecimal colors or `!important`.
+- Do not introduce raw hexadecimal colors or `!important` in the new route-owned visual files.
 - Retain 44px control targets.
 - Do not depend on hover for touch layouts.
 - Provide reduced-motion behavior.
 - Keep the Reader as a separate route.
+- Keep advanced lane and causal visuals paired with ordinary semantic controls.
 
 ## Validation
 
 ```bash
 node scripts/audit-succession-batch-4-chapters.mjs
+node scripts/audit-succession-batch-4-story.mjs
 npm run audit:succession-visual-foundation
 npm run audit:succession-shell-redesign
 npm run audit:succession-page-header-redesign
@@ -62,14 +94,10 @@ npm run prepare:eta-assets
 npx vite build
 ```
 
-The Batch 4 workflow renders the Chapters workspace at desktop, tablet, and mobile sizes.
+The Batch 4 workflow renders the Chapters and Story workspaces at desktop, tablet, and mobile sizes.
 
 ## Remaining work
 
-- Hour 41: Story overview and phases.
-- Hour 42: Parallel Story lanes.
-- Hour 43: Story-thread presentation.
-- Hour 44: Causal links and consequences.
 - Hour 45: Event directory.
 - Hour 46: Event dossiers.
 - Hour 47: Nen ability directory and cards.
