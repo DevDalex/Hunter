@@ -12,7 +12,7 @@ const [workspace, commandCss, packageJson, workflow, docs] = await Promise.all([
   read('src/components/succession/SuccessionArchiveCharacterCommand.css'),
   read('package.json'),
   read('.github/workflows/succession-visual-redesign.yml'),
-  read('docs/SUCCESSION-VISUAL-REDESIGN.md'),
+  read('docs/SUCCESSION-VISUAL-REDESIGN-BATCH-3.md'),
 ]);
 
 for (const token of [
