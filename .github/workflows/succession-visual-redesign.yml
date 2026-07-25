@@ -22,12 +22,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  baseline-runtime:
+  baseline_runtime:
     name: Main runtime baseline
     runs-on: ubuntu-latest
     timeout-minutes: 20
     outputs:
-      runtime-outcome: ${{ steps.baseline_runtime.outcome }}
+      runtime_outcome: ${{ steps.baseline_runtime.outcome }}
 
     steps:
       - name: Check out main baseline
@@ -68,7 +68,7 @@ jobs:
 
   foundation:
     name: Foundation and visual regression audits
-    needs: baseline-runtime
+    needs: baseline_runtime
     runs-on: ubuntu-latest
     timeout-minutes: 40
 
@@ -146,12 +146,12 @@ jobs:
           retention-days: 14
 
       - name: Record inherited runtime debt
-        if: steps.succession_runtime.outcome == 'failure' && needs.baseline-runtime.outputs.runtime-outcome == 'failure'
+        if: steps.succession_runtime.outcome == 'failure' && needs.baseline_runtime.outputs.runtime_outcome == 'failure'
         run: |
           echo 'The branch and main runtime sweeps both fail. The visual gate treats this as inherited baseline debt, not a redesign regression.' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Enforce branch-only runtime regressions
-        if: steps.succession_runtime.outcome == 'failure' && needs.baseline-runtime.outputs.runtime-outcome == 'success'
+        if: steps.succession_runtime.outcome == 'failure' && needs.baseline_runtime.outputs.runtime_outcome == 'success'
         run: |
           echo 'The Succession runtime passes on main but fails on this branch.'
           exit 1
