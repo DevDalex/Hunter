@@ -22,6 +22,47 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  baseline-runtime:
+    name: Main runtime baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out main baseline
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Capture main Succession runtime
+        id: baseline-runtime
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run audit:succession-runtime 2>&1 | tee succession-runtime-main.log
+
+      - name: Publish main runtime baseline
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-runtime-main-baseline
+          path: succession-runtime-main.log
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Summarize main runtime state
+        if: always()
+        run: echo "Main runtime outcome: ${{ steps.baseline-runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+
   foundation:
     name: Foundation and regression audits
     runs-on: ubuntu-latest
@@ -81,5 +122,5 @@ jobs:
       - name: Enforce Succession runtime result
         if: steps.succession-runtime.outcome == 'failure'
         run: |
-          echo 'Succession runtime regression detected. Inspect the uploaded diagnostic artifact.'
+          echo 'Succession runtime regression detected. Compare the branch diagnostic artifact with the main runtime baseline.'
           exit 1
