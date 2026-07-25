@@ -29,8 +29,19 @@ Batch 1 establishes shared presentation rules. It does not complete page-specifi
 - `src/data/succession/visualDesignSystem.js`
 - `src/components/succession/SuccessionVisualFoundation.css`
 - `src/components/succession/SuccessionVisualFoundationPreview.jsx`
+- `src/components/succession/SuccessionVisualFoundationPreview.css`
 - `scripts/audit-succession-visual-foundation.mjs`
+- `scripts/report-succession-visual-inventory.mjs`
 - `docs/SUCCESSION-VISUAL-REDESIGN.md`
+
+### Commands
+
+```bash
+npm run audit:succession-visual-foundation
+npm run report:succession-visual-inventory
+```
+
+The foundation audit is also part of `npm run audit:succession-runtime`, ensuring the contract participates in the existing runtime gate.
 
 ### Foundation requirements
 
@@ -114,6 +125,27 @@ The first foundation pass standardizes:
 - error states.
 
 Specialized workspaces remain structurally unchanged until their assigned batch.
+
+## Hidden preview
+
+`SuccessionVisualFoundationPreview.jsx` demonstrates the token groups, principles, state vocabulary, component contracts, and loading/empty/error states. It is intentionally not registered in the public route map during Batch 1.
+
+A later Batch 1 checkpoint may mount it in a local-only or screenshot-test harness. Public navigation must not expose the preview.
+
+## Visual debt inventory
+
+`npm run report:succession-visual-inventory` scans the Succession component directory and reports:
+
+- CSS and JSX ownership;
+- `!important` usage;
+- raw color ownership;
+- gradients and shadows;
+- legacy tiny-text declarations;
+- inline style use;
+- CSS import ownership;
+- migration guidance.
+
+The report is diagnostic. High counts identify compatibility debt; they do not justify deleting a stylesheet or adding stronger overrides without workspace-level verification.
 
 ## Compatibility strategy
 
