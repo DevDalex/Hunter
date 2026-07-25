@@ -315,6 +315,16 @@ Hour 17 does not redesign primary navigation contents, local tabs, chapter contr
 
 Acceptance requires the dedicated breadcrumb audit, all earlier visual-redesign audits, CSS/readability/accessibility checks, direct Vite build, and the complete 18-render Succession visual matrix.
 
+### Hours 18–24 — Batch 2 closure
+
+The remaining Batch 2 work is documented in `docs/SUCCESSION-VISUAL-REDESIGN-BATCH-2-CLOSURE.md` and validated by:
+
+```bash
+npm run audit:succession-batch-2
+```
+
+That closure covers main navigation, local tabs, chapter-boundary controls, search and filter presentation, the archive landing hero, canonical summary panels, responsive navigation, and the complete Batch 2 regression gate.
+
 ## Compatibility strategy
 
 The current Succession implementation contains several corrective style layers. Batch 1 does not delete them blindly.
