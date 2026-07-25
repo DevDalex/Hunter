@@ -234,6 +234,46 @@ Hour 15 does not redesign the route header, breadcrumbs, primary navigation cont
 
 Acceptance requires the dedicated shell audit, foundation audit, CSS/readability/accessibility checks, direct Vite build, and the complete 18-render Succession visual matrix.
 
+### Hour 16 — Page headers and metadata
+
+Owned files:
+
+- `src/components/succession/SuccessionArchivePrimitives.jsx`
+- `src/components/succession/SuccessionArchivePageHeaderRedesign.css`
+- `src/components/succession/SuccessionArchiveSearch.css`
+- `scripts/audit-succession-page-header-redesign.mjs`
+- `.github/workflows/succession-visual-redesign.yml`
+
+Command:
+
+```bash
+npm run audit:succession-page-header-redesign
+```
+
+The Hour 16 redesign introduces:
+
+- a single shared route-header hierarchy for every Succession workspace;
+- an archive-record classification line that visually separates the shell from route content;
+- balanced title and description measure with responsive typography;
+- a dedicated action region that preserves button semantics and 44px mobile targets;
+- a compact keyboard-shortcut treatment that disappears when it no longer helps on small screens;
+- semantic-token-only styling with no raw hex values or `!important` declarations;
+- responsive action stacking and metadata reflow rather than scaled-down desktop geometry.
+
+#### Workspace metadata rail
+
+The existing route metadata remains unchanged: reading boundary, evidence mode, and workspace availability are still supplied by the shared shell. Hour 16 changes only their presentation:
+
+- empty entries are removed before the definition list renders;
+- each record receives a visible two-digit archive index for scanning without replacing its text label;
+- metadata uses a three-column adaptive rail on wide screens, a two-column grid on intermediate widths, and a single-column stack on mobile;
+- labels and values remain real `dt` and `dd` elements inside an explicitly named definition list;
+- long values wrap within their cell instead of enlarging the shared workspace stage.
+
+Hour 16 does not redesign breadcrumbs, navigation contents, local tabs, chapter controls, search, or landing-page content. Those remain assigned to Hours 17–24.
+
+Acceptance requires the dedicated page-header audit, all earlier Batch 1 and Batch 2 audits, CSS/readability/accessibility checks, direct Vite build, and the complete 18-render Succession visual matrix.
+
 ## Compatibility strategy
 
 The current Succession implementation contains several corrective style layers. Batch 1 does not delete them blindly.
