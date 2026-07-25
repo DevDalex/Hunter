@@ -3,6 +3,7 @@ import { successionChapterResearchByNumber } from './successionResearch.js';
 const includesChapter = (range, chapter) => chapter >= range.start && chapter <= (range.end ?? Number.POSITIVE_INFINITY);
 const rangesIntersect = (left, right) => left.start <= (right.end ?? Number.POSITIVE_INFINITY) && right.start <= (left.end ?? Number.POSITIVE_INFINITY);
 const uniqueById = (values) => [...new Map(values.filter(Boolean).map((value) => [value.id, value])).values()];
+const uniqueStrings = (values) => [...new Set(values.filter(Boolean))];
 const freeze = (values) => Object.freeze(values);
 
 export const createStoryIntelligenceSelectors = ({ data, archive }) => {
@@ -17,6 +18,9 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
     const source = archive.getEntityById(id);
     return source?.entityType === 'source' && (!source.chapter || source.chapter <= chapter) ? source : null;
   };
+  const profileSourceChapters = (profile) => (profile?.sourceIds || [])
+    .map((id) => archive.getEntityById(id)?.chapter)
+    .filter(Number.isFinite);
 
   const entityFirstKnownChapter = (entity) => {
     if (!entity) return null;
@@ -66,14 +70,52 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
     return profile.status || 'open';
   };
 
+  const phasePresentationAtChapter = (profile, chapter) => {
+    if (!profile) return null;
+    const end = profile.chapterRange.end ?? chapter;
+    const complete = chapter >= end;
+    const research = successionChapterResearchByNumber.get(chapter);
+    return Object.freeze({
+      name: complete ? profile.name : research?.phase || `Story phase beginning Chapter ${profile.chapterRange.start}`,
+      summary: complete ? profile.summary : research?.focus || `This phase is active at Chapter ${chapter}; later developments remain hidden by the selected boundary.`,
+      complete,
+      visibleChapterRange: Object.freeze({ start: profile.chapterRange.start, end: Math.min(end, chapter) }),
+    });
+  };
+
+  const lanePresentationAtChapter = (profile, chapter, events) => {
+    if (!profile) return null;
+    const sourceChapters = profileSourceChapters(profile);
+    const matureChapter = sourceChapters.length ? Math.max(...sourceChapters) : profile.chapterRange.start;
+    const mature = chapter >= matureChapter;
+    const recentEvents = events.slice(-3).map((event) => event.name);
+    return Object.freeze({
+      name: profile.name,
+      summary: mature
+        ? profile.summary
+        : recentEvents.length
+          ? `Through Chapter ${chapter}, this plotline includes ${recentEvents.join(', ')}. Later developments remain hidden.`
+          : `This plotline is active at Chapter ${chapter}, but no later operational development is exposed before its supporting chapter.`,
+      objective: mature
+        ? profile.objective
+        : 'Follow the events and unresolved questions currently supported by the selected chapter boundary.',
+      mature,
+      matureChapter,
+    });
+  };
+
   const getStoryThreadDossier = (threadId, chapter = null) => {
     const profile = getStoryThreadProfile(threadId);
     const parsedChapter = chapter === null ? latestChapter : Number(chapter);
     if (!profile || !Number.isFinite(parsedChapter) || parsedChapter < profile.chapterRange.start) return null;
+    const status = threadStatusAtChapter(profile, parsedChapter);
     return Object.freeze({
       profile,
       chapter: parsedChapter,
-      status: threadStatusAtChapter(profile, parsedChapter),
+      status,
+      evidenceState: status === 'resolved'
+        ? profile.evidenceState
+        : 'The resolution remains unavailable at the selected chapter boundary.',
       lanes: freeze((profile.laneIds || []).map(getStoryLaneProfile).filter(Boolean)),
       entities: freeze(resolve(profile.entityIds).filter((entity) => entityAvailableAtChapter(entity, parsedChapter))),
       events: freeze(resolve(profile.eventIds).filter((event) => event.chapterRange.start <= parsedChapter)),
@@ -130,11 +172,14 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
     const boundedRange = { start: profile.chapterRange.start, end: boundedEnd };
     const chapters = data.chapters.filter((record) => record.number >= boundedRange.start && record.number <= boundedRange.end);
     const events = data.events.filter((event) => rangesIntersect(event.chapterRange, boundedRange) && event.chapterRange.start <= parsedChapter);
+    const lanes = (profile.laneIds || []).map(getStoryLaneProfile).filter(Boolean);
     return Object.freeze({
       profile,
+      presentation: phasePresentationAtChapter(profile, parsedChapter),
       chapter: parsedChapter,
       chapters: freeze(chapters),
-      lanes: freeze((profile.laneIds || []).map(getStoryLaneProfile).filter(Boolean)),
+      lanes: freeze(lanes),
+      laneDossiers: freeze(lanes.map((lane) => getStoryLaneDossier(lane.id, parsedChapter)).filter(Boolean)),
       events: freeze(events.sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.name.localeCompare(right.name))),
       entities: freeze(resolve(profile.entityIds).filter((entity) => entityAvailableAtChapter(entity, parsedChapter))),
       organizations: freeze(resolve(profile.organizationIds).filter((entity) => entityAvailableAtChapter(entity, parsedChapter))),
@@ -158,6 +203,7 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
     const sourceIds = new Set([...(profile.sourceIds || []), ...events.flatMap((event) => event.sourceIds || [])]);
     return Object.freeze({
       profile,
+      presentation: lanePresentationAtChapter(profile, parsedChapter, events),
       chapter: parsedChapter,
       phases: freeze(phases),
       events: freeze(events),
@@ -176,6 +222,7 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
     if (!chapterRecord) return null;
     const research = successionChapterResearchByNumber.get(parsedChapter) || null;
     const phase = getStoryPhaseAtChapter(parsedChapter);
+    const phaseDossier = phase ? getStoryPhaseDossier(phase.id, parsedChapter) : null;
     const lanes = getStoryLanesAtChapter(parsedChapter);
     const threadDossiers = (chapterRecord.storyThreadIds || [])
       .map((id) => getStoryThreadDossier(id, parsedChapter))
@@ -197,7 +244,9 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
       chapter: chapterRecord,
       research,
       phase,
+      phasePresentation: phaseDossier?.presentation || null,
       lanes,
+      laneDossiers: phaseDossier?.laneDossiers || freeze([]),
       threads: freeze(threadDossiers),
       openThreads: freeze(threadDossiers.filter((dossier) => dossier.status === 'open')),
       resolvedThreads: freeze(threadDossiers.filter((dossier) => dossier.status === 'resolved')),
@@ -213,10 +262,10 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
       previous: archive.getChapter(parsedChapter - 1),
       next: archive.getChapter(parsedChapter + 1),
       sources: freeze([...sourceIds].map((id) => sourceAtChapter(id, parsedChapter)).filter(Boolean)),
-      changes: freeze(uniqueById(startingEvents).flatMap((event) => [
+      changes: freeze(uniqueStrings(startingEvents.flatMap((event) => [
         ...(event.stateChanges || []),
         ...(event.outcomes || []),
-      ])),
+      ]))),
     });
   };
 
@@ -228,7 +277,9 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
     return Object.freeze({
       chapter: dossier.chapter.number,
       phase: dossier.phase,
+      phasePresentation: dossier.phasePresentation,
       lanes: dossier.lanes,
+      laneDossiers: dossier.laneDossiers,
       startingEvents: dossier.startingEvents,
       ongoingEvents: freeze(ongoingEvents),
       openThreads: dossier.openThreads,
@@ -250,25 +301,30 @@ export const createStoryIntelligenceSelectors = ({ data, archive }) => {
     const records = [];
     for (const profile of Object.values(phaseProfiles)) {
       if (profile.chapterRange.start > parsedChapter || (kind && kind !== 'phase')) continue;
-      const text = [profile.name, profile.summary, profile.status].join(' ').toLocaleLowerCase();
-      if (text.includes(normalized)) records.push({ kind: 'phase', id: profile.id, record: profile, score: profile.name.toLocaleLowerCase() === normalized ? 70 : 35 });
+      const dossier = getStoryPhaseDossier(profile.id, parsedChapter);
+      const presentation = dossier?.presentation;
+      const text = [presentation?.name, presentation?.summary, profile.status].join(' ').toLocaleLowerCase();
+      if (text.includes(normalized)) records.push({ kind: 'phase', id: profile.id, record: profile, displayName: presentation.name, displaySummary: presentation.summary, score: presentation.name.toLocaleLowerCase() === normalized ? 70 : 35 });
     }
     for (const profile of Object.values(laneProfiles)) {
       if (profile.chapterRange.start > parsedChapter || (kind && kind !== 'lane')) continue;
-      const text = [profile.name, profile.summary, profile.objective].join(' ').toLocaleLowerCase();
-      if (text.includes(normalized)) records.push({ kind: 'lane', id: profile.id, record: profile, score: profile.name.toLocaleLowerCase() === normalized ? 70 : 35 });
+      const dossier = getStoryLaneDossier(profile.id, parsedChapter);
+      const presentation = dossier?.presentation;
+      const text = [presentation?.name, presentation?.summary, presentation?.objective].join(' ').toLocaleLowerCase();
+      if (text.includes(normalized)) records.push({ kind: 'lane', id: profile.id, record: profile, displayName: presentation.name, displaySummary: presentation.summary, score: presentation.name.toLocaleLowerCase() === normalized ? 70 : 35 });
     }
     for (const profile of Object.values(threadProfiles)) {
       if (profile.chapterRange.start > parsedChapter || (kind && kind !== 'thread')) continue;
-      const text = [profile.name, profile.question, profile.category, profile.evidenceState].join(' ').toLocaleLowerCase();
-      if (text.includes(normalized)) records.push({ kind: 'thread', id: profile.id, record: profile, score: profile.name.toLocaleLowerCase() === normalized ? 70 : 40 });
+      const dossier = getStoryThreadDossier(profile.id, parsedChapter);
+      const text = [profile.name, profile.question, profile.category, dossier.evidenceState].join(' ').toLocaleLowerCase();
+      if (text.includes(normalized)) records.push({ kind: 'thread', id: profile.id, record: profile, displayName: profile.name, displaySummary: profile.question, score: profile.name.toLocaleLowerCase() === normalized ? 70 : 40 });
     }
     if (!kind || kind === 'chapter') {
       for (const chapterRecord of data.chapters) {
         if (chapterRecord.number > parsedChapter) continue;
         const research = successionChapterResearchByNumber.get(chapterRecord.number);
         const text = [chapterRecord.name, chapterRecord.summary, research?.phase, research?.voyageDay, ...(research?.lanes || []), ...(research?.threadLabels || [])].join(' ').toLocaleLowerCase();
-        if (text.includes(normalized)) records.push({ kind: 'chapter', id: chapterRecord.id, record: chapterRecord, score: String(chapterRecord.number) === normalized ? 80 : 30 });
+        if (text.includes(normalized)) records.push({ kind: 'chapter', id: chapterRecord.id, record: chapterRecord, displayName: chapterRecord.name, displaySummary: research?.focus || chapterRecord.summary, score: String(chapterRecord.number) === normalized ? 80 : 30 });
       }
     }
     return records.sort((left, right) => right.score - left.score || left.id.localeCompare(right.id)).slice(0, limit);
