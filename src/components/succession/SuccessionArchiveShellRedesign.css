@@ -11,7 +11,6 @@
   --succession-shell-top-gap: clamp(18px, 2.5vw, 34px);
   --succession-shell-rail-width: 14px;
   isolation: isolate;
-  overflow: clip;
 }
 
 .succession-archive__skip-link {
@@ -184,6 +183,8 @@
 .succession-archive__workspace-frame {
   position: relative;
   width: min(100%, var(--succession-content-width));
+  min-width: 0;
+  max-width: 100%;
   margin-inline: auto;
 }
 
@@ -210,8 +211,27 @@
 .succession-archive__content {
   display: grid;
   gap: var(--succession-space-6);
+  width: 100%;
   min-width: 0;
+  max-width: 100%;
   padding-top: var(--succession-space-6);
+}
+
+.succession-archive__content > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/*
+ * The preserved global Timeline predates the archive shell and declares a
+ * percentage width that participates in grid intrinsic sizing. Clamp its root
+ * to the shared stage; its own arc rail remains the intentional scroll owner.
+ */
+.succession-archive[data-archive-route='timeline'] .timeline-workspace {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin-inline: 0;
 }
 
 .succession-archive__mobile-bar {
@@ -254,10 +274,6 @@
 }
 
 @media (max-width: 860px) {
-  .succession-archive {
-    overflow: visible;
-  }
-
   .succession-archive__layout {
     display: block;
     min-height: calc(100dvh - 58px);
