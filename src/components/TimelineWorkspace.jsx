@@ -33,12 +33,14 @@ export default function TimelineWorkspace({
   requestedScope = 'overview',
   requestedSearch = '',
   spoilerLimit = Number.MAX_SAFE_INTEGER,
+  embedded = false,
   onNavigate,
   onOpenLocation,
 }) {
   const arc = normalizeArc(requestedArc);
   const scope = normalizeScope(requestedScope, arc);
   const [query, setQuery] = useState(requestedSearch);
+  const HeroHeading = embedded ? 'h2' : 'h1';
 
   useEffect(() => setQuery(requestedSearch), [requestedSearch]);
 
@@ -70,7 +72,7 @@ export default function TimelineWorkspace({
     <header className="timeline-workspace__hero timeline-command__hero">
       <div className="timeline-command__hero-copy">
         <span><Compass size={15} aria-hidden="true" /> Global chronology command</span>
-        <h2>Every arc, phase, voyage day, and consequence on one navigable axis.</h2>
+        <HeroHeading>Every arc, phase, voyage day, and consequence on one navigable axis.</HeroHeading>
         <p>Move from broad series structure to the chapter-bounded Succession voyage ledger without losing chronology, source precision, concurrent story pressure, or the selected reading boundary.</p>
         <div className="timeline-command__hero-actions" aria-label="Timeline destinations">
           <button type="button" onClick={() => chooseArc('all')}><Database size={15} aria-hidden="true" /> Complete series</button>
