@@ -40,7 +40,16 @@ export const successionArchiveGroups = Object.freeze(['Overview', 'People', 'Pow
 export const successionArchiveRouteIds = new Set(successionArchiveRoutes.map((item) => item.id));
 export const successionArchivePrimary = successionArchiveRoutes.map((item) => item.id);
 export const successionArchiveRouteById = new Map(successionArchiveRoutes.map((item) => [item.id, item]));
-export const successionArchivePathToTarget = new Map(successionArchiveRoutes.map((item) => [item.path, item.id]));
+export const successionArchivePathToTarget = new Map([
+  ...successionArchiveRoutes.map((item) => [item.path, item.id]),
+  ['hunters', 'characters'],
+  ['deaths', 'characters'],
+  ['mafia', 'organizations'],
+  ['military', 'organizations'],
+  ['politics', 'organizations'],
+  ['media', 'research'],
+  ['power-blocs', 'organizations'],
+]);
 export const successionArchiveTargetToPath = new Map(successionArchiveRoutes.map((item) => [item.id, item.path]));
 
 export const successionArchiveLegacyTargets = Object.freeze({
