@@ -21,11 +21,25 @@ const [app, routesSource, extended, roleWorkspaces, deepWorkspaces, finalRelease
 const authoritative = successionProductInventory.authoritativeWorkspaces;
 const preserved = successionProductInventory.preservedVisualTools;
 const allInventoryRoutes = [...authoritative, ...preserved].map((record) => record.routeId);
-assert(authoritative.length === 22, `expected 22 authoritative workspaces, found ${authoritative.length}`);
+const retiredRedirects = Object.freeze({
+  hunters: 'characters',
+  deaths: 'characters',
+  mafia: 'organizations',
+  military: 'organizations',
+  politics: 'organizations',
+  justice: 'organizations',
+  'power-blocs': 'organizations',
+  media: 'research',
+});
+
+assert(authoritative.length > 0, 'the authoritative workspace inventory must not be empty');
 assert(preserved.length === 3, `expected three preserved tools, found ${preserved.length}`);
 assert(new Set(allInventoryRoutes).size === allInventoryRoutes.length, 'inventory route IDs must be unique');
 assert(successionProductInventory.releaseGates.length === 10, 'inventory must name all ten final release gates');
 assert(successionProductInventory.removedImplementationClasses.length >= 10, 'inventory must retain the legacy-removal map');
+for (const [retired, destination] of Object.entries(retiredRedirects)) {
+  assert(successionProductInventory.legacyAliases[retired] === destination, `${retired} must redirect to ${destination}`);
+}
 
 for (const routeId of authoritative.map((record) => record.routeId).filter((id) => !['archive', 'search'].includes(id))) {
   assert(declarationIncludesLiteral(app, 'dedicated', routeId), `${routeId} must remain in the dedicated route registry`);
@@ -56,20 +70,23 @@ assert(!app.includes('SuccessionStoryWorkspace') && !app.includes('ChapterRecord
 assert(!routesSource.includes("status = 'foundation'"), 'route registry defaults must not imply unfinished foundation status');
 assert(finalReleaseSource.includes('productInventory: inventory'), 'final release report must embed the maintained inventory');
 assert(finalReleaseSource.includes('inventoryReady'), 'final release status must be gated by inventory completeness');
+assert(finalReleaseSource.includes('successionArchiveRoutes.every'), 'final release inventory validation must derive from the canonical registry');
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {
   const routes = await vite.ssrLoadModule('/src/data/succession/archiveRoutes.js');
   const archive = await vite.ssrLoadModule('/src/data/succession/successionData.js');
   const canonicalRouteIds = routes.successionArchiveRoutes.map((record) => record.id);
+  const canonicalRouteSet = new Set(canonicalRouteIds);
   assert(canonicalRouteIds.length === allInventoryRoutes.length, `inventory covers ${allInventoryRoutes.length} routes but registry exposes ${canonicalRouteIds.length}`);
   assert(canonicalRouteIds.every((routeId) => allInventoryRoutes.includes(routeId)), 'every registered route must appear in the maintained inventory');
-  assert(allInventoryRoutes.every((routeId) => canonicalRouteIds.includes(routeId)), 'inventory must not contain retired route IDs');
+  assert(allInventoryRoutes.every((routeId) => canonicalRouteSet.has(routeId)), 'inventory must not contain retired route IDs');
+  for (const retired of Object.keys(retiredRedirects)) assert(!canonicalRouteSet.has(retired), `${retired} must not remain a primary route`);
 
   const report = archive.getFinalReleaseClosureReport();
-  assert(report?.productInventory?.version === 1, 'public final report must expose product inventory version 1');
-  assert(report.productInventory.counts.authoritativeWorkspaces === 22, 'public final report must expose all authoritative workspaces');
-  assert(report.productInventory.counts.preservedVisualTools === 3, 'public final report must expose all preserved tools');
+  assert(report?.productInventory?.version === successionProductInventory.version, 'public final report must expose the current product inventory version');
+  assert(report.productInventory.counts.authoritativeWorkspaces === authoritative.length, 'public final report must expose the registry-aligned authoritative workspace count');
+  assert(report.productInventory.counts.preservedVisualTools === preserved.length, 'public final report must expose all preserved tools');
   const batchStatuses = Object.fromEntries(Object.entries(report.batches || {}).map(([key, value]) => [key, value.status]));
   assert(
     report.closureReady && report.status === 'release-candidate',
