@@ -11,17 +11,12 @@ import {
 import {
   getSuccessionArchiveRoute,
   successionArchiveGroups,
+  successionArchiveRetiredTargets,
   successionArchiveRoutes,
 } from '../../data/succession/archiveRoutes';
 import SuccessionArchiveShell from './SuccessionArchiveShell';
-import {
-  MafiaWorkspace,
-  PrincesWorkspace,
-} from './SuccessionArchiveWorkspaces';
-import {
-  BodyStatesWorkspace,
-  QueensWorkspace,
-} from './SuccessionArchiveDeepWorkspaces';
+import { PrincesWorkspace } from './SuccessionArchiveWorkspaces';
+import { QueensWorkspace } from './SuccessionArchiveDeepWorkspaces';
 import AssignmentsWorkspace from './SuccessionArchiveAssignmentWorkspace';
 import ChapterStoryWorkspace from './SuccessionArchiveChapterStoryWorkspace';
 import CharactersWorkspace from './SuccessionArchiveCharacterWorkspace';
@@ -30,17 +25,11 @@ import EventsWorkspace from './SuccessionArchiveEventWorkspace';
 import GlossaryWorkspace from './SuccessionArchiveGlossaryWorkspace';
 import GuardianBeastsWorkspace from './SuccessionArchiveGuardianBeastWorkspace';
 import LocationsWorkspace from './SuccessionArchiveLocationWorkspace';
-import MediaWorkspace from './SuccessionArchiveMediaWorkspace';
 import NenWorkspace from './SuccessionArchiveNenWorkspace';
 import OrganizationsWorkspace from './SuccessionArchiveOrganizationWorkspace';
 import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';
 import StoryIntelligenceWorkspace from './SuccessionArchiveStoryIntelligenceWorkspace';
-import {
-  DomainEntityDetail,
-  HuntersWorkspace,
-  MilitaryWorkspace,
-  PoliticsWorkspace,
-} from './SuccessionArchiveExtendedWorkspaces';
+import { DomainEntityDetail } from './SuccessionArchiveExtendedWorkspaces';
 import {
   ArchiveState,
   EntityBadge,
@@ -67,16 +56,11 @@ const entitiesForRoute = (routeId) => {
   if (routeId === 'princes') return characters().filter((entity) => (entity.roles || []).includes('prince'));
   if (routeId === 'queens') return characters().filter((entity) => (entity.roles || []).includes('queen'));
   if (routeId === 'bodyguards') return [...getEntitiesByType('assignment'), ...characters().filter((entity) => (entity.roles || []).includes('bodyguard'))];
-  if (routeId === 'hunters') return characters().filter((entity) => (entity.roles || []).some((role) => role === 'hunter' || role === 'zodiac'));
-  if (routeId === 'mafia') return [...organizations().filter((entity) => entity.organizationType === 'mafia-family'), ...characters().filter((entity) => (entity.roles || []).some((role) => role === 'mafia-member' || role === 'mafia-boss' || role === 'mafia-underboss'))];
-  if (routeId === 'military') return [...organizations().filter((entity) => entity.organizationType === 'military' || entity.id === 'organization:kakin-justice-bureau'), ...characters().filter((entity) => (entity.roles || []).some((role) => role === 'military' || role === 'justice-official'))];
   if (routeId === 'organizations') return organizations();
-  if (routeId === 'politics') return [...organizations().filter((entity) => entity.organizationType === 'royal-house' || entity.organizationType === 'government-agency'), ...relationships().filter((entity) => entity.relationshipType === 'political' || entity.relationshipType === 'family')];
   if (routeId === 'locations') return getEntitiesByType('location');
   if (routeId === 'nen') return getEntitiesByType('ability');
   if (routeId === 'guardian-spirit-beasts') return getEntitiesByType('guardian-beast');
   if (routeId === 'events') return getEntitiesByType('event');
-  if (routeId === 'deaths') return characters().filter((entity) => entity.status?.life === 'dead');
   if (routeId === 'relationships') return relationships();
   if (routeId === 'chapters') return getEntitiesByType('chapter');
   if (routeId === 'research') return getEntitiesByType('source');
@@ -95,8 +79,8 @@ function ArchiveHome({ onNavigate }) {
   const pictured = characters().filter((entity) => entity.media?.portrait).length;
   const featured = ['story', 'princes', 'reader', 'black-whale', 'research', 'glossary'];
   return <>
-    <ArchiveSection id="succession-entry-points" kicker="Independent workspaces" title="One purpose per page." description="Story, reading, people, systems, records, research, vocabulary, and media now live in dedicated routes while sharing one canonical graph."><div className="succession-home-grid">{featured.map((id) => { const route = getSuccessionArchiveRoute(id); return <ArchiveCard key={id} eyebrow={route.group} title={route.label} meta={route.description} onClick={() => onNavigate(id)}><span className="succession-card-action">Open workspace <ArrowRight size={14} /></span></ArchiveCard>; })}</div></ArchiveSection>
-    <section className="succession-data-health" aria-labelledby="succession-data-health-title"><div><Database size={19} aria-hidden="true" /><span>Canonical catalogue</span><h2 id="succession-data-health-title">The current-arc archive is connected and validated.</h2><p>People, institutions, Nen systems, story intelligence, vocabulary, media, and evidence share one chapter-bounded graph.</p></div><dl><div><dt>Entities</dt><dd>{stats.entities}</dd></div><div><dt>Characters</dt><dd>{stats.characters}</dd></div><div><dt>Portraits</dt><dd>{pictured}</dd></div><div><dt>Chapters</dt><dd>{stats.chapters}</dd></div></dl></section>
+    <ArchiveSection id="succession-entry-points" kicker="Independent workspaces" title="One purpose per page." description="Story, reading, people, institutions, systems, records, research, and vocabulary live in focused routes while media provenance remains available through Search and Research."><div className="succession-home-grid">{featured.map((id) => { const route = getSuccessionArchiveRoute(id); return <ArchiveCard key={id} eyebrow={route.group} title={route.label} meta={route.description} onClick={() => onNavigate(id)}><span className="succession-card-action">Open workspace <ArrowRight size={14} /></span></ArchiveCard>; })}</div></ArchiveSection>
+    <section className="succession-data-health" aria-labelledby="succession-data-health-title"><div><Database size={19} aria-hidden="true" /><span>Canonical catalogue</span><h2 id="succession-data-health-title">The current-arc archive is connected and validated.</h2><p>People, institutions, Nen systems, story intelligence, vocabulary, media provenance, and evidence share one chapter-bounded graph.</p></div><dl><div><dt>Entities</dt><dd>{stats.entities}</dd></div><div><dt>Characters</dt><dd>{stats.characters}</dd></div><div><dt>Portraits</dt><dd>{pictured}</dd></div><div><dt>Chapters</dt><dd>{stats.chapters}</dd></div></dl></section>
     <ArchiveSection id="archive-directory" kicker="Route hierarchy" title="Archive directory" description="Every major subject has a stable destination, a bounded record set, and a presentation suited to that subject."><div className="succession-route-matrix">{successionArchiveGroups.map((group) => <section key={group}><h3>{group}</h3><div>{successionArchiveRoutes.filter((route) => route.group === group).map((route) => <button type="button" key={route.id} onClick={() => onNavigate(route.id)}><span>{route.label}</span><small>{route.status}</small><ArrowRight size={13} /></button>)}</div></section>)}</div></ArchiveSection>
   </>;
 }
@@ -151,11 +135,12 @@ function PreservedWorkspace({ routeId, routeParams, spoilerLimit, onNavigate }) 
 export default function SuccessionArchiveApp({ routeTarget, routeParams, spoilerLimit, onSpoilerChange, onNavigate, onExitArchive, onOpenSearch, onIntent }) {
   const route = getSuccessionArchiveRoute(routeTarget);
   const navigate = (target, params = {}) => {
+    const requestedTarget = successionArchiveRetiredTargets[target] || target;
     const linkedEntity = params.entity ? getEntityById(params.entity) : null;
-    const preserveRoyalTarget = target === 'princes' && (linkedEntity?.roles || []).includes('prince')
-      || target === 'queens' && (linkedEntity?.roles || []).includes('queen');
+    const preserveRoyalTarget = requestedTarget === 'princes' && (linkedEntity?.roles || []).includes('prince')
+      || requestedTarget === 'queens' && (linkedEntity?.roles || []).includes('queen');
     const canonicalTarget = preserveRoyalTarget
-      ? target
+      ? requestedTarget
       : linkedEntity?.entityType === 'character'
         ? 'characters'
         : linkedEntity?.entityType === 'organization'
@@ -164,12 +149,12 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
             ? 'nen'
             : linkedEntity?.entityType === 'guardian-beast'
               ? 'guardian-spirit-beasts'
-              : target;
+              : requestedTarget;
     onNavigate(canonicalTarget, params);
   };
   const treeView = route.id === 'princes' && routeParams.view === 'tree';
   const preserved = ['black-whale', 'timeline'].includes(route.id);
-  const dedicated = new Set(['story', 'princes', 'queens', 'bodyguards', 'mafia', 'nen', 'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']);
+  const dedicated = new Set(['story', 'princes', 'queens', 'bodyguards', 'nen', 'guardian-spirit-beasts', 'events', 'relationships', 'chapters', 'characters', 'organizations', 'locations', 'research', 'glossary']);
   const selectedEntity = routeParams.entity ? getEntityById(routeParams.entity) : null;
   const specializedRecordRoute = ['characters', 'princes', 'queens', 'chapters', 'events', 'locations', 'bodyguards', 'relationships', 'organizations', 'nen', 'guardian-spirit-beasts'].includes(route.id);
   const royalCharacterRoute = ['princes', 'queens'].includes(route.id);
@@ -194,21 +179,15 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {showRouteWorkspace && route.id === 'princes' && !treeView && <PrincesWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'queens' && <QueensWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'bodyguards' && <AssignmentsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'hunters' && <HuntersWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit} />}
-    {showRouteWorkspace && route.id === 'mafia' && <MafiaWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'military' && <MilitaryWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit} />}
     {showRouteWorkspace && route.id === 'organizations' && <OrganizationsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'politics' && <PoliticsWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit} />}
     {showRouteWorkspace && route.id === 'locations' && <LocationsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'nen' && <NenWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'guardian-spirit-beasts' && <GuardianBeastsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'events' && <EventsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'deaths' && <BodyStatesWorkspace spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'relationships' && <RelationshipsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'chapters' && <ChapterStoryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'research' && <EvidenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'glossary' && <GlossaryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'media' && <MediaWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {preserved && <PreservedWorkspace routeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {!['archive', 'story', 'search'].includes(route.id) && !treeView && !preserved && !dedicated.has(route.id) && <DirectoryWorkspace routeId={route.id} routeParams={routeParams} onNavigate={navigate} />}
   </SuccessionArchiveShell>;
