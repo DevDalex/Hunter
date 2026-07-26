@@ -1,0 +1,45 @@
+name: Apply Batch 5 Final Route Contrast
+
+on:
+  pull_request:
+    branches:
+      - succession-visual-redesign-batch-4
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.head_ref == 'succession-visual-redesign-batch-5'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: succession-visual-redesign-batch-5
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apply final route contrast fixes
+        run: node scripts/apply-batch5-final-route-contrast.mjs
+
+      - name: Commit final route contrast fixes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No final route contrast changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/TimelineCommand.css \
+            src/components/BlackWhaleIntelligenceCommand.css \
+            src/components/succession/SuccessionArchiveRoyalFamilyRedesign.css \
+            src/components/succession/SuccessionArchiveGuardianBeastCommand.css
+          git commit -m "fix(batch5): resolve final route contrast failures"
+          git push origin HEAD:succession-visual-redesign-batch-5
