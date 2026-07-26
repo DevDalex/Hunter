@@ -7,8 +7,9 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 3 closure audit failed: ${message}`);
 };
 
-const [app, queens, organizations, royalCss, institutionCss, searchCss, routeManifest, packageJson, workflow, docs] = await Promise.all([
+const [app, shell, queens, organizations, royalCss, institutionCss, searchCss, routeManifest, packageJson, workflow, docs] = await Promise.all([
   read('src/components/succession/SuccessionArchiveApp.jsx'),
+  read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionArchiveDeepWorkspaces.jsx'),
   read('src/components/succession/SuccessionArchiveOrganizationWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveRoyalFamilyRedesign.css'),
@@ -24,9 +25,17 @@ for (const token of [
   'preserveRoyalTarget',
   "!royalCharacterRoute",
   'succession-royal-hierarchy-workspace',
-  'succession-royal-hierarchy-intro',
+  '<h1 className="sr-only">Kakin Royal Family</h1>',
+  '<FamilyTree spoilerLimit={spoilerLimit}',
   "onNavigate('princes', entity ? { entity: entity.id } : {})",
-]) assert(app.includes(token), `dedicated royal routing or hierarchy contract is missing ${token}`);
+]) assert(app.includes(token), `dedicated royal routing or direct hierarchy contract is missing ${token}`);
+
+assert(!app.includes('succession-royal-hierarchy-intro'), 'retired Royal Family intro chrome must remain absent');
+
+for (const token of [
+  "const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';",
+  '{!hidePageHeader && <ArchivePageHeader',
+]) assert(shell.includes(token), `Royal Family tree header suppression contract is missing ${token}`);
 
 for (const token of [
   'succession-queen-command',
@@ -57,7 +66,7 @@ for (const token of [
 ]) assert(organizations.includes(token), `institution command contract is missing ${token}`);
 
 for (const [css, name, selectors] of [
-  [royalCss, 'royal family', ['.succession-queen-command__hero', '.succession-queen-card', '.succession-queen-intelligence-hero', '.succession-queen-dossier-nav', '.succession-royal-hierarchy-intro']],
+  [royalCss, 'royal family', ['.succession-queen-command__hero', '.succession-queen-card', '.succession-queen-intelligence-hero', '.succession-queen-dossier-nav', '.succession-royal-hierarchy-workspace']],
   [institutionCss, 'institution', ['.succession-institution-command__hero', '.succession-institution-control-deck', '.succession-institution-grid', '.succession-institution-comparison', '.succession-institution-dossier__hero']],
 ]) {
   for (const selector of selectors) assert(css.includes(selector), `${name} CSS is missing ${selector}`);
@@ -76,4 +85,4 @@ assert(workflow.includes('audit:succession-batch-3'), 'visual workflow must run 
 for (const route of ['succession/queens', 'succession/organizations']) assert(workflow.includes(route), `visual workflow must render ${route}`);
 for (const hour of ['Hour 32', 'Hour 33', 'Hour 34', 'Hour 35', 'Hour 36']) assert(docs.includes(hour), `design record must document ${hour}`);
 
-console.log('Succession Batch 3 closure audit passed: queen households, dedicated royal routes, interactive hierarchy, institution directory, comparison matrix, dossiers, responsive behavior, touch targets, and reduced motion are registered.');
+console.log('Succession Batch 3 closure audit passed: queen households, dedicated royal routes, direct Royal Family hierarchy, suppressed tree-view intro chrome, institution directory, comparison matrix, dossiers, responsive behavior, touch targets, and reduced motion are registered.');
