@@ -1,6 +1,12 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { referencePages, routeManifest, routeManifestStats, successionPages } from '../src/data/routeManifest.js';
+import {
+  referencePages,
+  routeManifest,
+  routeManifestStats,
+  successionPages,
+  successionReleaseRoutes,
+} from '../src/data/routeManifest.js';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
@@ -17,8 +23,13 @@ const [app, css, worldAtlas, familyTree, royalTree, royalTreeCss, blackWhale, pa
   read('package.json'),
 ]);
 
-assert(routeManifest.length === 26 && routeManifestStats.screens === 26, 'the redesigned reader-facing route matrix must contain 26 purposeful screens');
-assert(successionPages.length === 7 && referencePages.length === 5 && routeManifestStats.timeline === 1, 'the grouped workspaces must retain seven Succession screens, five encyclopedia screens, and one global Timeline');
+const routeKeys = routeManifest.map((route) => `${route.view}/${route.target}`);
+assert(routeManifest.length === routeManifestStats.screens, 'route manifest statistics must match the rendered route matrix');
+assert(new Set(routeKeys).size === routeKeys.length, 'the redesigned reader-facing route matrix must not contain duplicate destinations');
+assert(routeManifest.length >= 35, 'the expanded curated route matrix must retain all redesigned release screens');
+assert(routeManifestStats.successionReleaseScreens === successionReleaseRoutes.length + 1, 'Succession release-screen statistics must include archive home plus every curated route');
+assert(successionReleaseRoutes.length >= 15 && successionReleaseRoutes.every(Boolean), 'the curated Succession release matrix is incomplete');
+assert(successionPages.length === 7 && referencePages.length === 5 && routeManifestStats.timeline === 1, 'the grouped legacy workspaces must retain seven Succession screens, five encyclopedia screens, and one global Timeline');
 assert(!referencePages.some((page) => page.id === 'notebook'), 'the Notebook navigation button returned');
 assert(!routeManifest.some((route) => /source/i.test(`${route.target} ${route.label}`)), 'a dedicated Sources screen returned to the public route matrix');
 assert(!app.includes('StudyNotebook') && !app.includes("import SourceRegistry"), 'a removed Notebook or Sources section is still mounted by the application');
@@ -34,4 +45,4 @@ assert(royalTreeCss.includes('@media (max-width: 1100px)') && royalTreeCss.inclu
 assert(worldAtlas.includes('Map as MapIcon') && worldAtlas.includes('new Map('), 'the World Atlas constructor guard is missing');
 assert(packageJson.includes('"qa:visual"') && packageJson.includes('"qa:architecture"'), 'the repeatable browser and architecture matrix commands are missing');
 
-console.log(`Layout audit passed: ${routeManifest.length} purposeful routes; one global Timeline; ${successionPages.length} Succession screens; ${referencePages.length} Reference screens; Notebook absent; unified royal family and guard network; contained media and tables; dominant ship atlas; responsive editorial shell.`);
+console.log(`Layout audit passed: ${routeManifest.length} unique purposeful routes; ${successionReleaseRoutes.length} curated Succession release workspaces; one global Timeline; ${successionPages.length} legacy Succession screens; ${referencePages.length} Reference screens; Notebook absent; unified royal family and guard network; contained media and tables; dominant ship atlas; responsive editorial shell.`);

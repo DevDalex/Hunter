@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
+  Activity,
   AlertTriangle,
   ArrowLeft,
   ArrowRight,
+  BookOpen,
+  Crown,
   ExternalLink,
   MapPin,
   Network,
+  Shield,
+  Sparkles,
   Swords,
   Users,
 } from 'lucide-react';
@@ -17,12 +22,53 @@ import {
   getOrganizationDossier,
   getStoryEventKnowledgeAtChapter,
 } from '../../data/succession/successionData';
-import { EntityVisual } from './SuccessionArchivePrimitives';
+import { EntityVisual, SourceReference } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveWorkspaces.css';
+import './SuccessionArchiveRoyalCommand.css';
 
 const latestChapter = () => getEntitiesByType('chapter').at(-1)?.number || 414;
-const statusLabel = (character) => character.status?.life === 'dead' ? 'Deceased' : character.status?.certainty === 'probable' ? 'Exceptional body state' : 'Active contender';
+const statusLabel = (character, dossier) => dossier?.state?.life === 'dead' || character.status?.life === 'dead'
+  ? 'Deceased'
+  : character.status?.certainty === 'probable' || /possess|occupied|displaced|continuation|exceptional|unknown/i.test(`${dossier?.state?.bodyState || ''} ${dossier?.state?.consciousnessState || ''}`)
+    ? 'Exceptional body state'
+    : 'Active contender';
+const statusKey = (character, dossier) => statusLabel(character, dossier) === 'Deceased'
+  ? 'deceased'
+  : statusLabel(character, dossier) === 'Exceptional body state'
+    ? 'exceptional'
+    : 'active';
 const mafiaSlug = (organization) => organization.id.replace('organization:', '');
+
+function RoyalStatusOrbit({ records, counts }) {
+  const center = 160;
+  const radius = 118;
+  return <figure className="succession-royal-orbit" aria-label={`Royal status orbit: ${counts.active} active, ${counts.deceased} deceased, and ${counts.exceptional} exceptional-state princes`}>
+    <svg viewBox="0 0 320 320" role="img" aria-hidden="true">
+      <circle className="succession-royal-orbit__outer" cx={center} cy={center} r="136" />
+      <circle className="succession-royal-orbit__inner" cx={center} cy={center} r="83" />
+      <line className="succession-royal-orbit__axis" x1="160" y1="14" x2="160" y2="306" />
+      <line className="succession-royal-orbit__axis" x1="14" y1="160" x2="306" y2="160" />
+      {records.map(({ prince, dossier }, index) => {
+        const angle = ((index / records.length) * Math.PI * 2) - (Math.PI / 2);
+        const x = center + Math.cos(angle) * radius;
+        const y = center + Math.sin(angle) * radius;
+        const innerX = center + Math.cos(angle) * 86;
+        const innerY = center + Math.sin(angle) * 86;
+        return <g className={`succession-royal-orbit__node is-${statusKey(prince, dossier)}`} key={prince.id}>
+          <line x1={innerX} y1={innerY} x2={x} y2={y} />
+          <circle cx={x} cy={y} r="15" />
+          <text x={x} y={y}>{String(prince.princeOrder).padStart(2, '0')}</text>
+        </g>;
+      })}
+      <g className="succession-royal-orbit__center">
+        <circle cx={center} cy={center} r="53" />
+        <text className="is-number" x={center} y="151">14</text>
+        <text className="is-label" x={center} y="181">ROYAL CANDIDATES</text>
+      </g>
+    </svg>
+    <figcaption><span><i /> Active</span><span className="is-deceased"><i /> Deceased</span><span className="is-exceptional"><i /> Exceptional state</span></figcaption>
+  </figure>;
+}
 
 export function PrincesWorkspace({ routeParams = {}, spoilerLimit = latestChapter(), onNavigate }) {
   const princes = useMemo(() => getEntitiesByType('character')
@@ -32,42 +78,110 @@ export function PrincesWorkspace({ routeParams = {}, spoilerLimit = latestChapte
   const requestedOrder = Number(routeParams.prince) || requestedEntity?.princeOrder || null;
   const [filter, setFilter] = useState('all');
   const selected = requestedOrder ? princes.find((prince) => prince.princeOrder === requestedOrder) : null;
-  const visiblePrinces = useMemo(() => princes.filter((prince) => {
-    if (filter === 'all') return true;
-    if (filter === 'deceased') return prince.status?.life === 'dead';
-    if (filter === 'exceptional') return prince.status?.certainty === 'probable';
-    return prince.status?.life !== 'dead' && prince.status?.certainty !== 'probable';
-  }), [princes, filter]);
-  const counts = useMemo(() => ({
-    active: princes.filter((prince) => prince.status?.life !== 'dead' && prince.status?.certainty !== 'probable').length,
-    deceased: princes.filter((prince) => prince.status?.life === 'dead').length,
-    exceptional: princes.filter((prince) => prince.status?.certainty === 'probable').length,
-  }), [princes]);
+  const records = useMemo(() => princes.map((prince) => ({ prince, dossier: getCharacterDossier(prince.id, spoilerLimit) })), [princes, spoilerLimit]);
+  const visibleRecords = useMemo(() => records.filter(({ prince, dossier }) => filter === 'all' || statusKey(prince, dossier) === filter), [filter, records]);
+  const counts = useMemo(() => records.reduce((result, { prince, dossier }) => {
+    result[statusKey(prince, dossier)] += 1;
+    return result;
+  }, { active: 0, deceased: 0, exceptional: 0 }), [records]);
+  const branchCount = useMemo(() => new Set(princes.map((prince) => prince.royalMother).filter(Boolean)).size, [princes]);
+  const unresolvedCount = useMemo(() => records.filter(({ dossier }) => (dossier?.state?.openQuestions || []).length > 0).length, [records]);
 
-  const openPrince = (prince) => onNavigate('characters', { entity: prince.id });
+  const openPrince = (prince) => onNavigate('princes', { prince: prince.princeOrder });
 
   if (selected) {
     const dossier = getCharacterDossier(selected.id, spoilerLimit);
     const previous = princes[selected.princeOrder - 2];
     const next = princes[selected.princeOrder];
+    const assignments = dossier?.assignments?.assignments || [];
+    const relationships = dossier?.relationships?.relationships || [];
+    const pressure = [...(dossier?.roleProfile?.vulnerabilities || []), ...(dossier?.state?.openQuestions || [])];
+    const operationalRecords = [...assignments, ...relationships].slice(0, 12);
     return <article className="succession-prince-dossier">
-      <header className="succession-prince-dossier__toolbar"><button type="button" onClick={() => onNavigate('princes')}><ArrowLeft size={16} aria-hidden="true" /> All princes</button><button type="button" onClick={() => onNavigate('princes', { view: 'tree' })}><Network size={16} aria-hidden="true" /> Family tree</button></header>
-      <section className="succession-prince-dossier__hero"><div className="succession-prince-dossier__portrait"><EntityVisual entity={selected} /></div><div><span>{selected.princeOrder} · {statusLabel(selected)}</span><h2>{selected.name}</h2><p>{dossier?.state?.operationalState || selected.summary}</p><div><small>{selected.royalMother || 'Maternal branch recorded in royal dossier'}</small><small>{dossier?.location?.name || 'Current room unresolved'}</small><small>Chapter {spoilerLimit} boundary</small></div></div>{selected.referenceUrl && <a href={selected.referenceUrl} target="_blank" rel="noreferrer noopener">Reference <ExternalLink size={13} aria-hidden="true" /></a>}</section>
+      <header className="succession-prince-dossier__toolbar">
+        <button type="button" onClick={() => onNavigate('princes')}><ArrowLeft size={16} aria-hidden="true" /> Royal status board</button>
+        <button type="button" onClick={() => onNavigate('princes', { view: 'tree' })}><Network size={16} aria-hidden="true" /> Family hierarchy</button>
+      </header>
+
+      <section className="succession-prince-dossier__hero succession-prince-intelligence-hero" data-rank={String(selected.princeOrder).padStart(2, '0')}>
+        <div className="succession-prince-intelligence-hero__portrait"><EntityVisual entity={selected} /></div>
+        <div className="succession-prince-intelligence-hero__copy">
+          <span>Prince {String(selected.princeOrder).padStart(2, '0')} · {statusLabel(selected, dossier)}</span>
+          <h2>{selected.name}</h2>
+          <p>{dossier?.state?.operationalState || selected.summary}</p>
+          <div className="succession-prince-intelligence-hero__facts">
+            <span><Crown size={13} aria-hidden="true" /> {selected.royalMother || 'Maternal branch unresolved'}</span>
+            <span><MapPin size={13} aria-hidden="true" /> {dossier?.location?.name || 'Current room unresolved'}</span>
+            <span><BookOpen size={13} aria-hidden="true" /> Chapter {spoilerLimit} boundary</span>
+            {selected.referenceUrl && <a href={selected.referenceUrl} target="_blank" rel="noreferrer noopener">Reference <ExternalLink size={13} aria-hidden="true" /></a>}
+          </div>
+        </div>
+      </section>
+
+      <section className="succession-prince-risk-board" aria-label="Prince operational risk summary">
+        <article><span>Assignments</span><strong>{assignments.length}</strong><small>active protection, reporting, surveillance, and threat records</small></article>
+        <article><span>Relationships</span><strong>{relationships.length}</strong><small>active directed or reciprocal graph edges</small></article>
+        <article><span>Nen intelligence</span><strong>{dossier?.abilities.length || 0}</strong><small>linked abilities at the selected boundary</small></article>
+        <article><span>Protection</span><strong>{dossier?.protectionAssignments.length || 0}</strong><small>assignments currently protecting this prince</small></article>
+        <article><span>Threat pressure</span><strong>{(dossier?.threatAssignments.length || 0) + pressure.length}</strong><small>hostile assignments, vulnerabilities, and unresolved questions</small></article>
+      </section>
+
       {dossier?.state?.openQuestions?.length > 0 && <aside className="succession-prince-dossier__status"><AlertTriangle size={18} aria-hidden="true" /><div><span>Body, contest, and evidence state</span><p>{dossier.state.openQuestions.join(' ')}</p></div></aside>}
-      <div className="succession-prince-dossier__core"><section><span>Body and consciousness</span><h3>{dossier?.state?.bodyState || 'State not established'}</h3><p>{dossier?.state?.consciousnessState || 'No separate consciousness record is maintained.'}</p></section><section><span>Nen knowledge</span><h3>Chapter-bounded ability state</h3><p>{dossier?.state?.nenKnowledge || 'Nen knowledge remains unresolved.'}</p></section></div>
-      <div className="succession-prince-dossier__network"><section><header><Users size={17} aria-hidden="true" /><div><span>Operational network</span><h3>Assignments and relationships</h3></div></header><div>{[...(dossier?.assignments?.assignments || []), ...(dossier?.relationships?.relationships || [])].slice(0, 12).map((record) => <button type="button" key={record.id} onClick={() => onNavigate(record.entityType === 'assignment' ? 'bodyguards' : 'relationships', { entity: record.id })}><span>{record.name}</span></button>)}</div></section><section><header><AlertTriangle size={17} aria-hidden="true" /><div><span>Unresolved pressure</span><h3>Threats and open questions</h3></div></header><ol>{[...(dossier?.roleProfile?.vulnerabilities || []), ...(dossier?.state?.openQuestions || [])].slice(0, 8).map((pressure, index) => <li key={`${pressure}-${index}`}><b>{String(index + 1).padStart(2, '0')}</b><span>{pressure}</span></li>)}</ol></section></div>
-      <footer className="succession-prince-dossier__pager"><button type="button" onClick={() => previous && openPrince(previous)} disabled={!previous}><ArrowLeft size={15} aria-hidden="true" /> {previous ? `${previous.princeOrder}. ${previous.name}` : 'First prince'}</button><button type="button" onClick={() => next && openPrince(next)} disabled={!next}>{next ? `${next.princeOrder}. ${next.name}` : 'Last prince'} <ArrowRight size={15} aria-hidden="true" /></button></footer>
+
+      <div className="succession-prince-dossier__core">
+        <section><span>Body and consciousness</span><h3>{dossier?.state?.bodyState || 'State not established'}</h3><p>{dossier?.state?.consciousnessState || 'No separate consciousness record is maintained.'}</p></section>
+        <section><span>Nen and ritual knowledge</span><h3>{dossier?.state?.nenKnowledge || 'Knowledge unresolved'}</h3><p>{dossier?.abilities.length ? `${dossier.abilities.length} canonical ability record${dossier.abilities.length === 1 ? '' : 's'} currently linked.` : 'No canonical ability is linked at this boundary.'}</p></section>
+        <section><span>Allegiance and authority</span><h3>{dossier?.state?.allegianceState || 'Alignment unresolved'}</h3><p>{dossier?.roleProfile?.authority || 'Royal authority remains described by the maintained character record.'}</p></section>
+      </div>
+
+      <div className="succession-prince-dossier__network">
+        <section><header><Users size={17} aria-hidden="true" /><div><span>Operational network</span><h3>Assignments and relationships</h3></div></header><div>{operationalRecords.length ? operationalRecords.map((record) => <button type="button" key={record.id} onClick={() => onNavigate(record.entityType === 'assignment' ? 'bodyguards' : 'relationships', { entity: record.id })}>{record.name}</button>) : <p>No active network record intersects this chapter.</p>}</div></section>
+        <section><header><AlertTriangle size={17} aria-hidden="true" /><div><span>Unresolved pressure</span><h3>Threats, vulnerabilities, and open questions</h3></div></header>{pressure.length ? <ol>{pressure.slice(0, 10).map((item, index) => <li key={`${item}-${index}`}><b>{String(index + 1).padStart(2, '0')}</b><span>{item}</span></li>)}</ol> : <p>No structured vulnerability or open question is published.</p>}</section>
+        <section><header><Shield size={17} aria-hidden="true" /><div><span>Protection circle</span><h3>Actors and assignments maintaining security</h3></div></header><div>{dossier?.protectionAssignments.length ? dossier.protectionAssignments.slice(0, 10).map((record) => <button type="button" key={record.id} onClick={() => onNavigate('bodyguards', { entity: record.id })}>{record.name}</button>) : <p>No active protection assignment is published.</p>}</div></section>
+        <section><header><Sparkles size={17} aria-hidden="true" /><div><span>Nen intelligence</span><h3>Known abilities and ritual-linked mechanics</h3></div></header><div>{dossier?.abilities.length ? dossier.abilities.map((ability) => <button type="button" key={ability.id} onClick={() => onNavigate('nen', { entity: ability.id })}>{ability.name}</button>) : <p>No canonical ability is linked to this prince.</p>}</div></section>
+      </div>
+
+      {!!dossier?.sources.length && <section className="succession-prince-evidence"><header><Activity size={17} aria-hidden="true" /><div><span>Evidence record</span><h3>Sources supporting the royal intelligence file</h3></div></header><div>{dossier.sources.map((source) => <SourceReference source={source} onNavigate={onNavigate} key={source.id} />)}</div></section>}
+
+      <footer className="succession-prince-dossier__pager">
+        <button type="button" onClick={() => previous && openPrince(previous)} disabled={!previous}><ArrowLeft size={15} aria-hidden="true" /> {previous ? `${previous.princeOrder}. ${previous.name}` : 'First prince'}</button>
+        <button type="button" className="is-character-record" onClick={() => onNavigate('characters', { entity: selected.id })}>Open complete character chronology <BookOpen size={15} aria-hidden="true" /></button>
+        <button type="button" onClick={() => next && openPrince(next)} disabled={!next}>{next ? `${next.princeOrder}. ${next.name}` : 'Last prince'} <ArrowRight size={15} aria-hidden="true" /></button>
+      </footer>
     </article>;
   }
 
   return <section className="succession-prince-board" aria-labelledby="succession-prince-board-title">
-    <header className="succession-prince-board__header"><div><span>Royal contest board</span><h2 id="succession-prince-board-title">Fourteen chapter-bounded royal candidates</h2><p>This visual index is generated from canonical character records. Every prince opens the authoritative character dossier rather than a separate static profile.</p></div><button type="button" className="succession-button succession-button--quiet" onClick={() => onNavigate('princes', { view: 'tree' })}><Network size={16} aria-hidden="true" /> Open family tree</button></header>
-    <dl className="succession-prince-board__stats"><div><dt>Active</dt><dd>{counts.active}</dd></div><div><dt>Confirmed deceased</dt><dd>{counts.deceased}</dd></div><div><dt>Exceptional state</dt><dd>{counts.exceptional}</dd></div><div><dt>Total contestants</dt><dd>{princes.length}</dd></div></dl>
-    <div className="succession-prince-board__filters" aria-label="Filter princes by current state">{[['all', 'All'], ['active', 'Active'], ['deceased', 'Deceased'], ['exceptional', 'Exceptional']].map(([id, label]) => <button type="button" className={filter === id ? 'is-active' : ''} aria-pressed={filter === id} onClick={() => setFilter(id)} key={id}>{label}</button>)}</div>
-    <div className="succession-prince-board__grid">{visiblePrinces.map((prince) => {
-      const dossier = getCharacterDossier(prince.id, spoilerLimit);
-      return <button type="button" className={`succession-prince-card is-${prince.status?.life || 'unknown'}`} onClick={() => openPrince(prince)} key={prince.id}><span className="succession-prince-card__rank">{String(prince.princeOrder).padStart(2, '0')}</span><EntityVisual entity={prince} /><div className="succession-prince-card__copy"><span>{statusLabel(prince)}</span><h3>{prince.name}</h3><p>{dossier?.state?.operationalState || prince.summary}</p></div><dl><div><dt>Branch</dt><dd>{prince.royalMother || 'Unknown'}</dd></div><div><dt>Location</dt><dd>{dossier?.location?.name || 'Unresolved'}</dd></div><div><dt>Assignments</dt><dd>{dossier?.assignments?.assignments.length || 0}</dd></div><div><dt>Pressure</dt><dd>{dossier?.roleProfile?.vulnerabilities.length || 0}</dd></div></dl><footer><span>{dossier?.abilities.length ? `${dossier.abilities.length} abilities linked` : 'Ability state unresolved'}</span><b>Open dossier <ArrowRight size={14} aria-hidden="true" /></b></footer></button>;
-    })}</div>
+    <header className="succession-royal-command">
+      <div className="succession-royal-command__copy">
+        <span className="succession-royal-command__eyebrow"><Crown size={17} aria-hidden="true" /> Succession Contest command</span>
+        <h2 id="succession-prince-board-title">Fourteen royal candidates. One chapter-bounded field of pressure.</h2>
+        <p>The status board combines rank, maternal branch, body state, current location, protection, threats, abilities, and unresolved pressure while every detail remains grounded in the canonical character dossier.</p>
+        <div className="succession-royal-command__actions">
+          <button type="button" onClick={() => openPrince(princes[0])}>Open first royal dossier <ArrowRight size={14} aria-hidden="true" /></button>
+          <button type="button" onClick={() => onNavigate('princes', { view: 'tree' })}><Network size={16} aria-hidden="true" /> Open family hierarchy</button>
+        </div>
+      </div>
+      <RoyalStatusOrbit records={records} counts={counts} />
+    </header>
+
+    <dl className="succession-royal-status-strip">
+      <div><dt>Active</dt><dd>{counts.active}</dd></div>
+      <div><dt>Confirmed deceased</dt><dd>{counts.deceased}</dd></div>
+      <div><dt>Exceptional state</dt><dd>{counts.exceptional}</dd></div>
+      <div><dt>Maternal branches</dt><dd>{branchCount}</dd></div>
+      <div><dt>Open questions</dt><dd>{unresolvedCount}</dd></div>
+    </dl>
+
+    <div className="succession-royal-filter-bar">
+      <div><span>Royal status query</span><strong>{visibleRecords.length} of {records.length} candidates visible</strong></div>
+      <div className="succession-prince-board__filters" aria-label="Filter princes by current state">{[['all', 'All candidates'], ['active', 'Active'], ['deceased', 'Deceased'], ['exceptional', 'Exceptional']].map(([id, label]) => <button type="button" className={filter === id ? 'is-active' : ''} aria-pressed={filter === id} onClick={() => setFilter(id)} key={id}>{label}</button>)}</div>
+    </div>
+
+    <div className="succession-prince-board__grid">{visibleRecords.map(({ prince, dossier }) => <button type="button" className={`succession-prince-card is-${statusKey(prince, dossier)}`} onClick={() => openPrince(prince)} key={prince.id}>
+      <div className="succession-prince-card__visual"><span className="succession-prince-card__rank">{String(prince.princeOrder).padStart(2, '0')}</span><EntityVisual entity={prince} /><span className="succession-prince-card__status"><Activity size={12} aria-hidden="true" /> {statusLabel(prince, dossier)}</span></div>
+      <div className="succession-prince-card__body"><span>{prince.royalMother || 'Maternal branch unresolved'}</span><h3>{prince.name}</h3><p>{dossier?.state?.operationalState || prince.summary}</p><dl><div><dt>Location</dt><dd>{dossier?.location?.name || 'Unresolved'}</dd></div><div><dt>Assignments</dt><dd>{dossier?.assignments?.assignments.length || 0}</dd></div><div><dt>Abilities</dt><dd>{dossier?.abilities.length || 0}</dd></div><div><dt>Pressure</dt><dd>{(dossier?.roleProfile?.vulnerabilities.length || 0) + (dossier?.state?.openQuestions.length || 0)}</dd></div></dl><footer><span>Chapter {spoilerLimit} intelligence</span><b>Open royal dossier <ArrowRight size={14} aria-hidden="true" /></b></footer></div>
+    </button>)}</div>
   </section>;
 }
 

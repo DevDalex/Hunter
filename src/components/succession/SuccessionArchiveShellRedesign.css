@@ -1,0 +1,355 @@
+/*
+ * Succession Visual Redesign — Batch 2, Hour 15
+ *
+ * Shared archive-shell geometry only. This layer owns the application frame,
+ * sidebar, workspace stage, mobile command bar, drawer, and responsive gutters.
+ * It must not encode route content, canonical records, or workspace-specific UI.
+ */
+
+.succession-archive {
+  --succession-shell-gutter: clamp(18px, 3vw, 46px);
+  --succession-shell-top-gap: clamp(18px, 2.5vw, 34px);
+  --succession-shell-rail-width: 14px;
+  isolation: isolate;
+}
+
+.succession-archive__skip-link {
+  position: fixed;
+  z-index: 100;
+  top: var(--succession-space-3);
+  left: var(--succession-space-3);
+  transform: translateY(-160%);
+  padding: 10px 14px;
+  border: 1px solid var(--succession-border-focus);
+  border-radius: var(--succession-radius-sm);
+  background: var(--succession-surface-paper-raised);
+  color: var(--succession-text-on-paper);
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform var(--succession-motion-fast) var(--succession-ease);
+}
+
+.succession-archive__skip-link:focus {
+  transform: translateY(0);
+}
+
+.succession-archive__layout {
+  display: grid;
+  grid-template-columns: var(--succession-sidebar-width) minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+.succession-archive__sidebar {
+  position: sticky;
+  z-index: 12;
+  top: 0;
+  align-self: start;
+  height: 100dvh;
+  min-height: 0;
+  padding: var(--succession-space-4) var(--succession-space-3);
+}
+
+.succession-archive__sidebar-inner {
+  display: flex;
+  min-height: 0;
+  height: 100%;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--succession-border-subtle);
+  border-radius: var(--succession-radius-lg);
+  background: var(--succession-surface-inset);
+  box-shadow: var(--succession-shadow-sm);
+}
+
+.succession-archive__brand {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: var(--succession-space-3);
+  align-items: center;
+  padding: var(--succession-space-4);
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--succession-gold) 12%, transparent), transparent 58%),
+    var(--succession-surface-1);
+}
+
+.succession-archive__brand-seal {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 1px solid var(--succession-border-strong);
+  border-radius: 50%;
+  background: var(--succession-surface-selected);
+  color: var(--succession-gold-strong);
+  box-shadow: inset 0 0 0 4px var(--succession-surface-inset);
+}
+
+.succession-archive__brand-copy {
+  min-width: 0;
+}
+
+.succession-archive__brand-copy > span,
+.succession-archive__brand-copy strong,
+.succession-archive__brand-copy p {
+  display: block;
+}
+
+.succession-archive__brand-copy strong {
+  margin-top: 3px;
+  font-size: 1rem;
+  line-height: 1.1;
+}
+
+.succession-archive__brand-copy p {
+  margin: 5px 0 0;
+  font-size: var(--succession-text-xs);
+}
+
+.succession-archive__sidebar-context {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  border-top: 1px solid var(--succession-border-subtle);
+  border-bottom: 1px solid var(--succession-border-subtle);
+  background: var(--succession-border-subtle);
+}
+
+.succession-archive__sidebar-context > div {
+  min-width: 0;
+  padding: 10px var(--succession-space-3);
+  background: var(--succession-surface-inset);
+}
+
+.succession-archive__sidebar-context dt {
+  color: var(--succession-text-subtle);
+  font-size: var(--succession-text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.succession-archive__sidebar-context dd {
+  overflow: hidden;
+  margin: 4px 0 0;
+  color: var(--succession-text-strong);
+  font-size: var(--succession-text-sm);
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.succession-archive__sidebar-scroll {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: var(--succession-space-3) 9px var(--succession-space-4);
+  scrollbar-color: var(--succession-border-strong) transparent;
+  scrollbar-width: thin;
+}
+
+.succession-archive__sidebar-scroll .succession-archive-nav {
+  padding: 0;
+}
+
+.succession-archive__boundary {
+  flex: 0 0 auto;
+  margin: 0 var(--succession-space-3) var(--succession-space-3);
+}
+
+.succession-archive__workspace {
+  position: relative;
+  min-width: 0;
+  padding: var(--succession-shell-top-gap) var(--succession-shell-gutter) var(--succession-space-12);
+}
+
+.succession-archive__workspace::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0 auto 0 0;
+  width: var(--succession-shell-rail-width);
+  border-left: 1px solid var(--succession-border-subtle);
+  border-right: 1px solid var(--succession-border-subtle);
+  content: '';
+  background:
+    repeating-linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--succession-gold) 25%, transparent) 0 1px,
+      transparent 1px 18px
+    );
+  opacity: 0.42;
+}
+
+.succession-archive__workspace-frame {
+  position: relative;
+  width: min(100%, var(--succession-content-width));
+  min-width: 0;
+  max-width: 100%;
+  margin-inline: auto;
+}
+
+.succession-archive__workspace-frame::before,
+.succession-archive__workspace-frame::after {
+  position: absolute;
+  top: -10px;
+  width: 34px;
+  height: 10px;
+  border-top: 1px solid var(--succession-border-strong);
+  content: '';
+}
+
+.succession-archive__workspace-frame::before {
+  left: 0;
+  border-left: 1px solid var(--succession-border-strong);
+}
+
+.succession-archive__workspace-frame::after {
+  right: 0;
+  border-right: 1px solid var(--succession-border-strong);
+}
+
+.succession-archive__content {
+  display: grid;
+  gap: var(--succession-space-6);
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  padding-top: var(--succession-space-6);
+}
+
+.succession-archive__content > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/*
+ * The preserved global Timeline predates the archive shell and declares a
+ * percentage width that participates in grid intrinsic sizing. Clamp its root
+ * to the shared stage; its own arc rail remains the intentional scroll owner.
+ */
+.succession-archive[data-archive-route='timeline'] .timeline-workspace {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  margin-inline: 0;
+}
+
+.succession-archive__mobile-bar {
+  display: none;
+}
+
+.succession-drawer {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 360px) 1fr;
+  background: color-mix(in srgb, var(--succession-canvas) 74%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.succession-drawer > aside {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  border-right: 1px solid var(--succession-border-default);
+  box-shadow: var(--succession-shadow-md);
+}
+
+.succession-drawer > aside > header {
+  flex: 0 0 auto;
+}
+
+.succession-drawer .succession-archive-nav {
+  min-height: 0;
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+@media (max-width: 1100px) {
+  .succession-archive {
+    --succession-shell-gutter: clamp(18px, 2.5vw, 32px);
+  }
+}
+
+@media (max-width: 860px) {
+  .succession-archive__layout {
+    display: block;
+    min-height: calc(100dvh - 58px);
+  }
+
+  .succession-archive__sidebar {
+    display: none;
+  }
+
+  .succession-archive__mobile-bar {
+    position: sticky;
+    z-index: 50;
+    top: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    min-height: 58px;
+    align-items: center;
+    gap: var(--succession-space-3);
+    padding: max(8px, env(safe-area-inset-top)) var(--succession-space-3) 8px;
+    border-bottom: 1px solid var(--succession-border-default);
+    box-shadow: var(--succession-shadow-sm);
+  }
+
+  .succession-archive__mobile-bar > span {
+    overflow: hidden;
+    color: var(--succession-text-strong);
+    font-weight: 800;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .succession-archive__mobile-bar button {
+    display: inline-flex;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 1px solid var(--succession-border-subtle);
+    border-radius: var(--succession-radius-sm);
+    background: var(--succession-surface-1);
+    color: var(--succession-text);
+  }
+
+  .succession-archive__workspace {
+    padding-top: var(--succession-space-5);
+  }
+
+  .succession-archive__workspace::before {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
+  .succession-archive {
+    --succession-shell-gutter: 14px;
+    --succession-shell-top-gap: 14px;
+  }
+
+  .succession-archive__workspace-frame::before,
+  .succession-archive__workspace-frame::after {
+    display: none;
+  }
+
+  .succession-drawer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .succession-drawer > aside {
+    width: min(92vw, 360px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-archive__skip-link {
+    transition: none;
+  }
+}

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useMemo, useState } from 'react';
-import { ArrowRight, BookOpen, Database, Images, Search, Users } from 'lucide-react';
+import { ArrowRight, BookOpen, Crown, Database, GitBranch, Images, Search, Users } from 'lucide-react';
 import { ArchiveCard, ArchiveSection, EvidenceBadge, StatusPill } from '../ArchiveUI';
 import {
   getEntitiesByType,
@@ -130,24 +130,50 @@ function SearchWorkspace({ onNavigate, spoilerLimit }) {
 
 function FamilyTreeWorkspace({ spoilerLimit, onNavigate }) {
   const princes = entitiesForRoute('princes');
-  return <Suspense fallback={<Loading label="royal family tree" />}><div className="succession-migration-note"><b>Diagram view</b><span>The family tree remains available as a visual companion; prince records open in the chapter-bounded character dossier.</span><button type="button" onClick={() => onNavigate('princes')}>Back to prince records</button></div><FamilyTree spoilerLimit={spoilerLimit} onOpenPrince={(order) => { const entity = princes.find((record) => record.princeOrder === Number(order)); onNavigate('characters', entity ? { entity: entity.id } : {}); }} /></Suspense>;
+  const queens = entitiesForRoute('queens');
+  const activePrinces = princes.filter((record) => record.status?.life !== 'dead').length;
+  return <Suspense fallback={<Loading label="royal family hierarchy" />}><div className="succession-royal-hierarchy-workspace">
+    <section className="succession-royal-hierarchy-intro" aria-labelledby="succession-royal-hierarchy-title">
+      <div><span><GitBranch size={15} aria-hidden="true" /> Royal genealogy command</span><h2 id="succession-royal-hierarchy-title">One throne, eight maternal branches, fourteen contenders</h2><p>The hierarchy combines the canonical king, queen branches, princes, protection teams, placements, observers, spies, and infiltrators at the selected chapter boundary.</p><nav aria-label="Royal hierarchy destinations"><button type="button" onClick={() => onNavigate('princes')}><Crown size={15} aria-hidden="true" /> Prince command</button><button type="button" onClick={() => onNavigate('queens')}><Users size={15} aria-hidden="true" /> Queen households</button></nav></div>
+      <dl><div><dt>Queen branches</dt><dd>{queens.length}</dd></div><div><dt>Contenders</dt><dd>{princes.length}</dd></div><div><dt>Active records</dt><dd>{activePrinces}</dd></div><div><dt>Boundary</dt><dd>Ch. {spoilerLimit}</dd></div></dl>
+    </section>
+    <div className="succession-royal-hierarchy-note"><b>Interactive hierarchy</b><span>Select a queen, then a prince, to reconstruct the chapter-bounded protection and intelligence circle. Horizontal scrolling is retained where the eight-branch structure cannot compress safely.</span></div>
+    <FamilyTree spoilerLimit={spoilerLimit} onOpenPrince={(order) => { const entity = princes.find((record) => record.princeOrder === Number(order)); onNavigate('princes', entity ? { entity: entity.id } : {}); }} />
+  </div></Suspense>;
 }
 
 function PreservedWorkspace({ routeId, routeParams, spoilerLimit, onNavigate }) {
   if (routeId === 'black-whale') return <Suspense fallback={<Loading label="Black Whale atlas" />}><BlackWhaleGuide initialQuery={routeParams.room || ''} initialLocationId={routeParams.entity || ''} spoilerLimit={spoilerLimit} onOpenWorldMap={(params = {}) => onNavigate('locations', params)} onOpenCanonicalLocation={(params) => onNavigate('locations', params)} /></Suspense>;
-  if (routeId === 'timeline') return <Suspense fallback={<Loading label="voyage timeline" />}><TimelineWorkspace requestedArc="succession-contest" requestedScope={routeParams.scope || 'events'} requestedSearch={routeParams.search || ''} spoilerLimit={spoilerLimit} onNavigate={(params) => onNavigate('timeline', params)} onOpenLocation={(room) => onNavigate('black-whale', { room })} /></Suspense>;
+  if (routeId === 'timeline') return <Suspense fallback={<Loading label="voyage timeline" />}><TimelineWorkspace embedded requestedArc="succession-contest" requestedScope={routeParams.scope || 'events'} requestedSearch={routeParams.search || ''} spoilerLimit={spoilerLimit} onNavigate={(params) => onNavigate('timeline', params)} onOpenLocation={(room) => onNavigate('black-whale', { room })} /></Suspense>;
   return null;
 }
 
 export default function SuccessionArchiveApp({ routeTarget, routeParams, spoilerLimit, onSpoilerChange, onNavigate, onExitArchive, onOpenSearch, onIntent }) {
   const route = getSuccessionArchiveRoute(routeTarget);
-  const navigate = (target, params = {}) => { const linkedEntity = params.entity ? getEntityById(params.entity) : null; const canonicalTarget = linkedEntity?.entityType === 'character' ? 'characters' : linkedEntity?.entityType === 'organization' ? 'organizations' : linkedEntity?.entityType === 'ability' ? 'nen' : linkedEntity?.entityType === 'guardian-beast' ? 'guardian-spirit-beasts' : target; onNavigate(canonicalTarget, params); };
+  const navigate = (target, params = {}) => {
+    const linkedEntity = params.entity ? getEntityById(params.entity) : null;
+    const preserveRoyalTarget = target === 'princes' && (linkedEntity?.roles || []).includes('prince')
+      || target === 'queens' && (linkedEntity?.roles || []).includes('queen');
+    const canonicalTarget = preserveRoyalTarget
+      ? target
+      : linkedEntity?.entityType === 'character'
+        ? 'characters'
+        : linkedEntity?.entityType === 'organization'
+          ? 'organizations'
+          : linkedEntity?.entityType === 'ability'
+            ? 'nen'
+            : linkedEntity?.entityType === 'guardian-beast'
+              ? 'guardian-spirit-beasts'
+              : target;
+    onNavigate(canonicalTarget, params);
+  };
   const treeView = route.id === 'princes' && routeParams.view === 'tree';
   const preserved = ['black-whale', 'timeline'].includes(route.id);
   const dedicated = new Set(['story', 'princes', 'queens', 'bodyguards', 'mafia', 'nen', 'guardian-spirit-beasts', 'events', 'deaths', 'relationships', 'chapters', 'characters', 'hunters', 'military', 'organizations', 'politics', 'locations', 'research', 'glossary', 'media']);
   const selectedEntity = routeParams.entity ? getEntityById(routeParams.entity) : null;
   const specializedRecordRoute = ['characters', 'princes', 'queens', 'chapters', 'events', 'locations', 'bodyguards', 'relationships', 'organizations', 'nen', 'guardian-spirit-beasts'].includes(route.id);
-  const showCharacterDossier = Boolean(selectedEntity?.entityType === 'character' && !treeView);
+  const royalCharacterRoute = ['princes', 'queens'].includes(route.id);
+  const showCharacterDossier = Boolean(selectedEntity?.entityType === 'character' && !treeView && !royalCharacterRoute);
   const showOrganizationDossier = Boolean(selectedEntity?.entityType === 'organization' && !treeView);
   const showAbilityDossier = Boolean(selectedEntity?.entityType === 'ability' && !treeView);
   const showGuardianBeastDossier = Boolean(selectedEntity?.entityType === 'guardian-beast' && !treeView);

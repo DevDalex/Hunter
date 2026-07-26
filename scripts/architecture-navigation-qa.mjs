@@ -89,10 +89,10 @@ try {
     if (await page.locator('.timeline-workspace').count() !== 1) throw new Error('Timeline shell is duplicated');
 
     await page.locator('.timeline-workspace__arc-rail button').filter({ hasText: 'Succession Contest' }).click();
-    await page.getByRole('button', { name: 'Detailed events' }).click();
+    await page.getByRole('button', { name: 'Voyage intelligence' }).last().click();
     await page.waitForSelector('.timeline-section', { timeout: 15_000 });
     if (!page.url().includes('arc=succession-contest') || !page.url().includes('scope=events')) throw new Error(`Succession detail route was not preserved: ${page.url()}`);
-    if (await page.locator('.timeline-workspace').count() !== 1) throw new Error('Detailed events replaced the global Timeline shell');
+    if (await page.locator('.timeline-workspace').count() !== 1) throw new Error('Voyage intelligence replaced the global Timeline shell');
   });
 
   await record('Succession voyage route belongs to the dedicated archive shell', page, async () => {

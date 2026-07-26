@@ -164,12 +164,15 @@ try {
       if (await trigger.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close the menu');
       if (!await trigger.evaluate((node) => node === document.activeElement)) throw new Error('menu trigger did not regain focus');
     });
-    await recordInteraction('family-tree tabs support arrow keys', { width: 1440, height: 1000 }, 'succession/princes?view=tree', async (page) => {
-      await page.waitForSelector('#tree-tab-legal', { timeout: 10_000 });
-      await page.locator('#tree-tab-legal').focus();
-      await page.keyboard.press('ArrowRight');
-      if (await page.locator('#tree-tab-biological').getAttribute('aria-selected') !== 'true') throw new Error('biological tree did not activate');
-      if (!await page.locator('#tree-tab-biological').evaluate((node) => node === document.activeElement)) throw new Error('focus did not move with the family-tree tab');
+    await recordInteraction('family-tree branch controls activate with keyboard', { width: 1440, height: 1000 }, 'succession/princes?view=tree', async (page) => {
+      const queens = page.locator('.royal-guard-tree__queen');
+      await queens.first().waitFor({ state: 'visible', timeout: 10_000 });
+      if (await queens.count() < 2) throw new Error('family tree did not render multiple queen branches');
+      const nextQueen = queens.nth(1);
+      await nextQueen.focus();
+      if (!await nextQueen.evaluate((node) => node === document.activeElement)) throw new Error('queen branch control did not receive focus');
+      await page.keyboard.press('Enter');
+      if (await nextQueen.getAttribute('aria-pressed') !== 'true') throw new Error('keyboard activation did not select the queen branch');
     });
     await recordInteraction('Succession Archive navigation activates with keyboard', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
       const timelineLink = page.locator('#succession-desktop-navigation a').filter({ hasText: 'Timeline' });

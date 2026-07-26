@@ -1,0 +1,164 @@
+name: Succession Visual Redesign Batch 5
+
+on:
+  push:
+    branches:
+      - 'succession-visual-redesign-batch-5'
+  pull_request:
+    paths:
+      - 'src/components/TimelineWorkspace.jsx'
+      - 'src/components/TimelineWorkspace.css'
+      - 'src/components/TimelineCommand.css'
+      - 'src/components/SuccessionTimeline.jsx'
+      - 'src/components/BlackWhaleGuide.jsx'
+      - 'src/components/BlackWhaleIntelligenceCommand.css'
+      - 'src/components/SafeImage.jsx'
+      - 'src/components/succession/SuccessionArchiveShell.jsx'
+      - 'src/components/succession/SuccessionArchivePrimitives.jsx'
+      - 'src/components/succession/SuccessionArchiveFinalPolish.css'
+      - 'src/components/succession/SuccessionArchiveRelationshipWorkspace.jsx'
+      - 'src/components/succession/SuccessionArchiveRelationshipWorkspace.css'
+      - 'src/components/succession/SuccessionArchiveRelationshipCommand.css'
+      - 'src/components/succession/SuccessionArchiveAssignmentWorkspace.jsx'
+      - 'src/components/succession/SuccessionArchiveAssignmentWorkspace.css'
+      - 'src/components/succession/SuccessionArchiveAssignmentCommand.css'
+      - 'src/components/succession/SuccessionArchiveSearch.css'
+      - 'src/data/routeManifest.js'
+      - 'scripts/audit-succession-batch-5-*.mjs'
+      - 'scripts/succession-final-release-qa.mjs'
+      - 'scripts/succession-cross-browser-qa.mjs'
+      - 'docs/SUCCESSION-VISUAL-REDESIGN-*.md'
+      - 'package.json'
+      - '.github/workflows/succession-visual-redesign-batch-5.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: succession-visual-redesign-batch-5-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  final_closure:
+    name: Batch 5 final responsive, accessibility, performance, and cross-browser gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit Batch 5 timeline intelligence
+        run: node scripts/audit-succession-batch-5-timeline.mjs
+
+      - name: Audit Batch 5 relationship intelligence
+        run: node scripts/audit-succession-batch-5-relationships.mjs
+
+      - name: Audit Batch 5 Black Whale intelligence
+        run: node scripts/audit-succession-batch-5-black-whale.mjs
+
+      - name: Audit Batch 5 assignment intelligence
+        run: node scripts/audit-succession-batch-5-assignments.mjs
+
+      - name: Audit Batch 5 final closure contract
+        run: node scripts/audit-succession-batch-5-final.mjs
+
+      - name: Audit visual foundation
+        run: npm run audit:succession-visual-foundation
+
+      - name: Audit shared shell redesign
+        run: npm run audit:succession-shell-redesign
+
+      - name: Audit page-header redesign
+        run: npm run audit:succession-page-header-redesign
+
+      - name: Audit breadcrumb redesign
+        run: npm run audit:succession-breadcrumb-redesign
+
+      - name: Audit Batch 2 closure
+        run: npm run audit:succession-batch-2
+
+      - name: Audit Batch 3 character command
+        run: npm run audit:succession-character-command
+
+      - name: Audit Batch 3 royal command
+        run: npm run audit:succession-royal-command
+
+      - name: Audit Batch 3 closure
+        run: npm run audit:succession-batch-3
+
+      - name: Audit Batch 4 chapter intelligence
+        run: node scripts/audit-succession-batch-4-chapters.mjs
+
+      - name: Audit Batch 4 Story intelligence
+        run: node scripts/audit-succession-batch-4-story.mjs
+
+      - name: Audit Batch 4 event intelligence
+        run: node scripts/audit-succession-batch-4-events.mjs
+
+      - name: Audit Batch 4 Nen mechanics
+        run: node scripts/audit-succession-batch-4-nen-release.mjs
+
+      - name: Audit Batch 4 Guardian Spirit Beasts
+        run: node scripts/audit-succession-batch-4-guardian-beasts.mjs
+
+      - name: Audit Batch 4 spatial closure
+        run: node scripts/audit-succession-batch-4-spatial.mjs
+
+      - name: Audit CSS ownership
+        run: npm run audit:css
+
+      - name: Audit readability
+        run: npm run audit:readability
+
+      - name: Audit layout contracts
+        run: npm run audit:layout
+
+      - name: Audit accessibility contracts
+        run: npm run audit:accessibility
+
+      - name: Build production presentation bundle
+        run: |
+          npm run prepare:eta-assets
+          npx vite build
+
+      - name: Audit production performance budgets
+        run: npm run audit:performance
+
+      - name: Install Chromium, Firefox, and WebKit
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Run complete Chromium release matrix
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run qa:succession-final-release 2>&1 | tee batch5-final-release.log
+
+      - name: Run Firefox and WebKit regression matrix
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run qa:succession-cross-browser 2>&1 | tee batch5-cross-browser.log
+
+      - name: Publish Batch 5 final diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-batch-5-final-diagnostics
+          path: |
+            batch5-final-release.log
+            batch5-cross-browser.log
+            .succession-final-qa
+            .succession-cross-browser-qa
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14

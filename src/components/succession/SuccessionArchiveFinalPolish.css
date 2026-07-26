@@ -1,0 +1,484 @@
+/*
+ * Succession Visual Redesign — Batch 5 final interaction and stability layer.
+ * Presentation only: no route, lore, chapter, or data ownership rules belong here.
+ */
+
+.succession-archive {
+  --succession-motion-instant: 80ms;
+  --succession-motion-base: var(--succession-motion-standard);
+  --succession-focus-ring: 0 0 0 3px color-mix(in srgb, var(--succession-gold-strong) 24%, transparent);
+  accent-color: var(--succession-gold-strong);
+}
+
+.succession-archive :where(a, button, summary, [role='button'], [role='tab']) {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.succession-archive :where(button, [role='button'], [role='tab']):not(:disabled) {
+  cursor: pointer;
+}
+
+.succession-archive :where(a, button, input, select, textarea, summary, [role='button'], [role='tab']):focus-visible {
+  outline: 3px solid var(--succession-border-focus);
+  outline-offset: 3px;
+  box-shadow: var(--succession-focus-ring);
+  scroll-margin: 18vh 0;
+}
+
+.succession-archive__content:focus-visible {
+  outline: 0;
+  box-shadow: none;
+}
+
+.succession-archive :where(button, [role='button'], [role='tab']):active:not(:disabled) {
+  transform: translateY(1px) scale(.99);
+  transition-duration: var(--succession-motion-instant);
+}
+
+.succession-archive :where(button, input, select, textarea)[disabled],
+.succession-archive :where(button, input, select, textarea)[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: .56;
+}
+
+.succession-archive :where(section, article, div)[id] {
+  scroll-margin-top: clamp(72px, 12vh, 140px);
+}
+
+.succession-archive :where(
+  .succession-assignment-card,
+  .succession-chapter-command__card,
+  .succession-event-command-card,
+  .succession-relationship-command-card,
+  .succession-character-command-card,
+  .succession-royal-command-card,
+  .succession-organization-command-card,
+  .succession-nen-command-ability,
+  .succession-nen-command-system,
+  .succession-guardian-beast-card,
+  .succession-location-command-card,
+  .timeline-day,
+  .room-card
+) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 360px;
+}
+
+.succession-archive :where(
+  .succession-assignment-table-wrap,
+  .succession-assignment-ledger,
+  .succession-relationship-command__semantic,
+  .timeline-swimlanes,
+  .ship-manifest__table-wrap,
+  .black-whale-intelligence__map-scroll
+) {
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
+
+.succession-archive :where(
+  .succession-assignment-table-wrap,
+  .succession-relationship-command__semantic,
+  .ship-manifest__table-wrap,
+  .timeline-swimlanes
+):focus-visible {
+  border-color: var(--succession-border-focus);
+}
+
+.succession-archive :where(img, svg, canvas) {
+  max-width: 100%;
+}
+
+.succession-archive img {
+  height: auto;
+}
+
+.succession-archive .safe-image,
+.succession-archive .safe-image-placeholder {
+  transition:
+    opacity var(--succession-motion-slow) var(--succession-ease),
+    filter var(--succession-motion-slow) var(--succession-ease);
+}
+
+.succession-archive .safe-image[data-image-loaded='false'] {
+  opacity: .72;
+  filter: saturate(.78);
+}
+
+.succession-archive .safe-image[data-image-loaded='true'] {
+  opacity: 1;
+  filter: none;
+}
+
+.succession-archive :where(dialog, [role='dialog']) {
+  isolation: isolate;
+}
+
+.succession-archive :where(.succession-drawer, .archive-search-dialog) {
+  overscroll-behavior: contain;
+}
+
+.succession-archive :where(.succession-tabs, [role='tablist']) {
+  scrollbar-gutter: stable;
+}
+
+.succession-archive :where(.succession-tabs > button, [role='tab']) {
+  position: relative;
+}
+
+.succession-archive :where(.succession-tabs > button, [role='tab'])[aria-selected='true']::after {
+  content: '';
+  position: absolute;
+  left: 18%;
+  right: 18%;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.succession-archive :where(.succession-state, .succession-assignment-empty, .timeline-empty-state) {
+  min-height: 220px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .succession-archive :where(a, button, summary, [role='button'], [role='tab']):not(:disabled) {
+    transition:
+      color var(--succession-motion-fast) var(--succession-ease),
+      border-color var(--succession-motion-fast) var(--succession-ease),
+      background-color var(--succession-motion-fast) var(--succession-ease),
+      box-shadow var(--succession-motion-fast) var(--succession-ease),
+      transform var(--succession-motion-fast) var(--succession-ease),
+      opacity var(--succession-motion-fast) var(--succession-ease);
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .succession-archive :where(a, button, summary, [role='button'], [role='tab']):hover {
+    transform: none;
+  }
+
+  .succession-archive :where(button, input, select, textarea, summary, [role='button'], [role='tab']) {
+    min-height: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-archive,
+  .succession-archive *,
+  .succession-archive *::before,
+  .succession-archive *::after {
+    scroll-behavior: auto;
+    animation-duration: .01ms;
+    animation-iteration-count: 1;
+    transition-duration: .01ms;
+    transition-delay: 0ms;
+  }
+
+  .succession-archive :where(a, button, summary, [role='button'], [role='tab']):active:not(:disabled) {
+    transform: none;
+  }
+
+  .succession-archive .safe-image[data-image-loaded='false'] {
+    opacity: 1;
+    filter: none;
+  }
+}
+
+@media (prefers-contrast: more) {
+  .succession-archive {
+    --succession-border-subtle: color-mix(in srgb, var(--succession-text-strong) 32%, transparent);
+    --succession-border-default: color-mix(in srgb, var(--succession-text-strong) 46%, transparent);
+    --succession-border-strong: color-mix(in srgb, var(--succession-gold-strong) 74%, transparent);
+  }
+
+  .succession-archive :where(a, button, input, select, textarea, summary, [role='button'], [role='tab']) {
+    border-width: 2px;
+  }
+}
+
+@media (forced-colors: active) {
+  .succession-archive,
+  .succession-archive * {
+    forced-color-adjust: auto;
+  }
+
+  .succession-archive :where(a, button, input, select, textarea, summary, [role='button'], [role='tab']) {
+    border: 1px solid ButtonText;
+  }
+
+  .succession-archive :where(a, button, summary, [role='button'], [role='tab']):focus-visible {
+    outline: 3px solid Highlight;
+    box-shadow: none;
+  }
+
+  .succession-archive :where([aria-current='page'], [aria-selected='true'], .is-active) {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
+  }
+
+  .succession-archive :where(svg, .succession-page-header::after, [class*='__signal'] i, [class*='__radar'] i) {
+    forced-color-adjust: auto;
+  }
+}
+
+@media print {
+  .succession-archive__sidebar,
+  .succession-archive__mobile-bar,
+  .succession-page-header__actions,
+  .succession-return-path,
+  .succession-drawer {
+    display: none;
+  }
+
+  .succession-archive,
+  .succession-archive__layout,
+  .succession-archive__workspace,
+  .succession-archive__content {
+    color: CanvasText;
+    background: Canvas;
+  }
+
+  .succession-archive :where(section, article, div) {
+    content-visibility: visible;
+  }
+}
+
+/* Batch 5 final WCAG contrast repairs discovered by the complete Chromium matrix. */
+.succession-nen-command__mode-navigation,
+.succession-nen-command__mode-navigation [role='tablist'] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.succession-assignment-command__metric-label,
+.succession-chapter-dossier__evidence-label {
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 560px) {
+  .succession-archive :where(
+    .succession-story-command__metrics dd,
+    .succession-story-command__search > div > span,
+    .succession-story-command__search > div > b,
+    .succession-story-command__causal-index,
+    .succession-queen-status-strip dt,
+    .succession-queen-status-strip dd,
+    .succession-assignment-type-board > header > div > span,
+    .succession-assignment-filter-panel > header > div > span,
+    .succession-assignment-snapshot-board > header > div > span,
+    .succession-assignment-personnel > header > div > span,
+    .succession-organization-command header > div > span,
+    .succession-relationship-filter-panel > header > div > span,
+    .succession-relationship-view-switcher > header > div > span,
+    .succession-relationship-connectivity > header > div > span,
+    .succession-relationship-accessible > header > div > span,
+    .succession-location-command header > div > span,
+    .black-whale-intelligence header > b,
+    .ship-location-inspector__pager > span,
+    .ship-location-inspector > header > span,
+    .black-whale-intelligence .section-kicker,
+    .royal-room-plan > header > div > span,
+    .ship-movement-map > .subsection-title > span,
+    .ship-manifest > .subsection-title > span,
+    .room-index__heading .section-kicker,
+    .black-whale-intelligence th,
+    .royal-room-plan__side > span,
+    .ship-location-inspector footer span
+  ) {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .succession-story-command__search > div,
+  .succession-archive .succession-story-command__metrics,
+  .succession-archive .succession-queen-status-strip {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .succession-chapter-intel__dossier,
+  .succession-archive .succession-chapter-dossier__phase,
+  .succession-archive .succession-chapter-dossier__boundary,
+  .succession-archive #chapter-dossier-pressure,
+  .succession-archive .succession-chapter-intel__entity-columns > section,
+  .succession-archive .succession-chapter-dossier__evidence {
+    background: var(--succession-surface-paper-raised);
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive :where(
+    .succession-chapter-dossier__phase span,
+    .succession-chapter-dossier__boundary span,
+    .succession-chapter-dossier__boundary p,
+    .succession-chapter-intel__section-title span,
+    .succession-chapter-intel__threads > p,
+    .succession-chapter-intel__entity-columns p
+  ) {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .succession-chapter-dossier__sequence-grid > section,
+  .succession-archive .succession-chapter-dossier__evidence-note {
+    color: var(--succession-text-strong);
+  }
+
+  .succession-archive .succession-chapter-dossier__sequence-grid > section p,
+  .succession-archive .succession-chapter-dossier__evidence-note p {
+    color: var(--succession-text-strong);
+  }
+
+  .succession-archive :where(
+    .timeline-command__navigation > header > div > span,
+    .timeline-source-note__links a,
+    .timeline-prelude > summary > span,
+    .timeline-command-voyage__controls header > b,
+    .timeline-command-voyage__selected > div:first-child > span,
+    .timeline-inspector > span
+  ) {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .timeline-day__number > span {
+    color: var(--succession-gold-strong);
+  }
+
+  .succession-archive .timeline-day > header > em {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .timeline-day-rail button em {
+    background: color-mix(in srgb, var(--succession-crimson-strong) 78%, var(--succession-surface-inset));
+    color: white;
+  }
+
+  .succession-archive .succession-assignment-load-more {
+    background: color-mix(in srgb, var(--succession-crimson-strong) 78%, var(--succession-surface-inset));
+    color: white;
+  }
+
+  .succession-archive .ship-location-inspector__snapshot :where(dt, dd) {
+    color: var(--succession-text-strong);
+  }
+
+  .succession-archive .succession-gsb-command-card__visual > span {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .succession-evidence-workspace,
+  .succession-archive .succession-evidence-workspace :where(
+    section,
+    article,
+    div,
+    p,
+    span,
+    small,
+    dt,
+    dd,
+    b,
+    strong,
+    button,
+    label,
+    input,
+    select
+  ) {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .succession-evidence-workspace :where(button, input, select) {
+    background: var(--succession-surface-paper-raised);
+  }
+}
+
+/* Batch 5 exact mobile contrast closure — route-scoped to outrank legacy workspace rules. */
+@media (max-width: 560px) {
+  .succession-archive[data-archive-route='story'] .succession-story-command .succession-story-command__search > div > span {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive[data-archive-route='chapters'] .succession-chapter-command__controls > header > div:first-child > span,
+  .succession-archive[data-archive-route='chapters'] .succession-chapter-dossier__phase > div:first-child > span,
+  .succession-archive[data-archive-route='chapters'] .succession-chapter-dossier__boundary > div > span,
+  .succession-archive[data-archive-route='chapters'] .succession-chapter-dossier__boundary > div > p,
+  .succession-archive[data-archive-route='chapters'] .succession-chapter-intel__section-title > div > span,
+  .succession-archive[data-archive-route='chapters'] .succession-chapter-intel__threads > p {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive[data-archive-route='chapters'] .succession-chapter-dossier__evidence-board > div > strong,
+  .succession-archive[data-archive-route='chapters'] .succession-chapter-intel__dossier > footer > button {
+    color: var(--succession-text-strong);
+  }
+
+  .succession-archive[data-archive-route='timeline'] .timeline-source-note__links > a,
+  .succession-archive[data-archive-route='timeline'] .timeline-prelude > summary > span,
+  .succession-archive[data-archive-route='timeline'] .timeline-command-voyage__controls header > b,
+  .succession-archive[data-archive-route='timeline'] .timeline-command-voyage__selected > div:first-child > span,
+  .succession-archive[data-archive-route='timeline'] .timeline-inspector > span {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive[data-archive-route='timeline'] .timeline-day-rail button > em {
+    color: white;
+  }
+
+  .succession-archive[data-archive-route='timeline'] .timeline-day__number > span {
+    color: var(--succession-text-strong);
+  }
+
+  .succession-archive[data-archive-route='queens'] .succession-queen-status-strip dt,
+  .succession-archive[data-archive-route='queens'] .succession-queen-status-strip dd {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive[data-archive-route='bodyguards'] .succession-assignment-type-board > header > div > span,
+  .succession-archive[data-archive-route='bodyguards'] .succession-assignment-filter-panel > header > div > span,
+  .succession-archive[data-archive-route='bodyguards'] .succession-assignment-snapshot-board > header > div > span,
+  .succession-archive[data-archive-route='bodyguards'] .succession-assignment-personnel > header > div > span {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive[data-archive-route='organizations'] .succession-institution-control-deck > header > div:first-child > span {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive[data-archive-route='relationships'] .succession-relationship-filter-panel > header > div > span,
+  .succession-archive[data-archive-route='relationships'] .succession-relationship-filter-panel > header > b,
+  .succession-archive[data-archive-route='relationships'] .succession-relationship-view-switcher > header > div > span,
+  .succession-archive[data-archive-route='relationships'] .succession-relationship-connectivity > header > div > span,
+  .succession-archive[data-archive-route='relationships'] .succession-relationship-accessible > header > div > span {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive[data-archive-route='locations'] .succession-location-command header > div > span,
+  .succession-archive[data-archive-route='locations'] .succession-location-command header > b {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive[data-archive-route='black-whale'] .ship-temporal-command > header > b,
+  .succession-archive[data-archive-route='black-whale'] .ship-temporal-command > footer > div > span,
+  .succession-archive[data-archive-route='black-whale'] .ship-location-inspector__pager > span,
+  .succession-archive[data-archive-route='black-whale'] .ship-location-inspector > header > span,
+  .succession-archive[data-archive-route='black-whale'] .ship-visual-tour .section-kicker,
+  .succession-archive[data-archive-route='black-whale'] .royal-room-plan > header > div > span,
+  .succession-archive[data-archive-route='black-whale'] .royal-room-plan__side > span,
+  .succession-archive[data-archive-route='black-whale'] .ship-movement-map > .subsection-title > span,
+  .succession-archive[data-archive-route='black-whale'] .ship-manifest > .subsection-title > span,
+  .succession-archive[data-archive-route='black-whale'] .ship-manifest th,
+  .succession-archive[data-archive-route='black-whale'] .room-index__heading .section-kicker {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive[data-archive-route='black-whale'] .ship-location-inspector__snapshot dt,
+  .succession-archive[data-archive-route='black-whale'] .ship-location-inspector__snapshot dd {
+    color: var(--succession-text-strong);
+  }
+
+  .succession-archive[data-archive-route='guardian-spirit-beasts'] .succession-gsb-command-card__visual > span {
+    color: var(--succession-text-on-paper);
+  }
+}

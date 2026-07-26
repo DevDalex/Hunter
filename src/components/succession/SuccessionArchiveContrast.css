@@ -1,4 +1,4 @@
-/* Route-owned 11px readability floor, including Batch 4 Story and Chapter intelligence labels. */
+/* Route-owned 11px readability floor, including Batch 3 character command and Batch 4 Story and Chapter intelligence labels. */
 .succession-archive-nav h2,
 .succession-archive-nav a small,
 .succession-page-header__meta dt,
@@ -20,6 +20,14 @@
 .succession-search-workspace article footer > span,
 .succession-state > span,
 .succession-drawer header span,
+.succession-character-command-metrics dt,
+.succession-character-command-filters label > span:not(.sr-only),
+.succession-character-card__state,
+.succession-character-command-profile__record,
+.succession-character-command-identity__badges span,
+.succession-character-command-chapter__copy span,
+.succession-character-lifetime article::before,
+.succession-character-lifetime article.is-current::after,
 .succession-canonical-assignments__hero dt,
 .succession-assignment-dossier dt,
 .succession-assignment-character-snapshot dt,
@@ -48,6 +56,221 @@
 .succession-chapter-intel__events article > span,
 .succession-chapter-intel__causal article > span,
 .succession-chapter-intel__threads button > span,
-.succession-story-intel__search > div span {
+.succession-story-intel__search > div span,
+.succession-chapter-command__radar span,
+.succession-chapter-command__status dt,
+.succession-chapter-command__filters label > span:not(.sr-only),
+.succession-chapter-command__card > div > span,
+.succession-chapter-command__card > em,
+.succession-chapter-command__card dt,
+.succession-chapter-command__index-head,
+.succession-chapter-command__rail dt,
+.succession-chapter-intel__dossier > header.succession-chapter-dossier__hero dt,
+.succession-chapter-dossier__sequence-grid > section > header > span,
+.succession-chapter-sequence-card__topline span,
+.succession-chapter-sequence-card__topline em,
+.succession-chapter-sequence-card dt,
+.succession-chapter-intel__changes li > span,
+.succession-story-command__metrics dt,
+.succession-story-command__phase-grid dt,
+.succession-story-command-event dt,
+.succession-story-command-dossier__hero dt,
+.succession-story-command__lane-track > button > span,
+.succession-story-command__causal-river > article > div > span,
+.succession-event-command-card dt {
   font-size: 11px !important;
+}
+
+/* Batch 4 chapter intelligence uses dark command surfaces whose headings must not inherit paper ink. */
+.succession-chapter-command__hero h2,
+.succession-chapter-command__card h3,
+.succession-chapter-dossier__identity h2 {
+  color: var(--succession-text-strong) !important;
+}
+
+/* Batch 3 character command uses deliberate dark intelligence stages and paper work surfaces. */
+.succession-character-workspace,
+.succession-character-dossier {
+  color: var(--succession-text-on-paper) !important;
+}
+
+.succession-character-command-hero,
+.succession-character-dossier__header.succession-character-command-profile {
+  color: var(--succession-text-strong) !important;
+  background:
+    radial-gradient(circle at 84% 12%, color-mix(in srgb, var(--succession-crimson) 30%, transparent), transparent 38%),
+    radial-gradient(circle at 8% 92%, color-mix(in srgb, var(--succession-gold) 12%, transparent), transparent 42%),
+    linear-gradient(145deg, var(--succession-surface-1), var(--succession-surface-inset)) !important;
+  border-color: var(--succession-border-strong) !important;
+}
+
+.succession-character-command-hero h2,
+.succession-character-command-identity__copy h2,
+.succession-character-command-hero__eyebrow,
+.succession-character-command-label,
+.succession-character-command-profile__record {
+  color: var(--succession-text-strong) !important;
+}
+
+.succession-character-command-hero__eyebrow,
+.succession-character-command-label {
+  color: var(--succession-gold-strong) !important;
+}
+
+.succession-character-command-hero p,
+.succession-character-command-profile p,
+.succession-character-command-profile__record {
+  color: var(--succession-text-muted) !important;
+}
+
+.succession-character-coverage-ring,
+.succession-character-command-metrics div,
+.succession-character-command-chapter.succession-character-command-chapter {
+  color: var(--succession-text-strong) !important;
+  background: color-mix(in srgb, var(--succession-surface-2) 88%, transparent) !important;
+  border-color: var(--succession-border-default) !important;
+}
+
+.succession-character-coverage-ring__copy span,
+.succession-character-coverage-ring__copy small,
+.succession-character-command-metrics dt,
+.succession-character-command-chapter__copy span {
+  color: var(--succession-text-muted) !important;
+}
+
+.succession-character-coverage-ring__copy strong,
+.succession-character-command-metrics dd,
+.succession-character-command-chapter__copy strong {
+  color: var(--succession-text-strong) !important;
+}
+
+.succession-character-command-bar,
+.succession-character-coverage article {
+  color: var(--succession-text-on-paper) !important;
+  background: var(--succession-surface-paper-raised) !important;
+  border-color: color-mix(in srgb, var(--succession-text-on-paper) 18%, transparent) !important;
+}
+
+.succession-character-command-bar__heading strong,
+.succession-character-coverage b {
+  color: var(--succession-text-on-paper) !important;
+}
+
+.succession-character-command-bar__heading span,
+.succession-character-coverage span,
+.succession-character-coverage small,
+.succession-character-active-filters > span {
+  color: var(--succession-text-on-paper-muted) !important;
+}
+
+.succession-character-command-filters label:first-child,
+.succession-character-command-filters select,
+.succession-character-active-filters button {
+  color: var(--succession-text-on-paper) !important;
+  background: var(--succession-surface-paper) !important;
+  border-color: color-mix(in srgb, var(--succession-text-on-paper) 18%, transparent) !important;
+}
+
+.succession-character-command-filters input,
+.succession-character-command-filters label > span:not(.sr-only) {
+  color: var(--succession-text-on-paper) !important;
+}
+
+.succession-character-command-filters input::placeholder {
+  color: var(--succession-text-on-paper-muted) !important;
+}
+
+.succession-character-card {
+  color: var(--succession-text-strong) !important;
+  background:
+    linear-gradient(155deg, color-mix(in srgb, var(--succession-crimson) 14%, transparent), transparent 44%),
+    var(--succession-surface-1) !important;
+  border-color: var(--succession-border-default) !important;
+}
+
+.succession-character-card h3,
+.succession-character-card__facts dd,
+.succession-character-card__action {
+  color: var(--succession-text-strong) !important;
+}
+
+.succession-character-card__summary,
+.succession-character-card__facts dt,
+.succession-character-card .succession-character-layer-label {
+  color: var(--succession-text-muted) !important;
+}
+
+.succession-character-card__facts,
+.succession-character-card__facts div,
+.succession-character-card__action {
+  background: var(--succession-surface-2) !important;
+  border-color: var(--succession-border-default) !important;
+}
+
+.succession-character-command-identity__badges span {
+  color: var(--succession-text-muted) !important;
+  background: color-mix(in srgb, var(--succession-surface-2) 88%, transparent) !important;
+  border-color: var(--succession-border-default) !important;
+}
+
+.succession-character-command-chapter__controls button,
+.succession-character-command-chapter__controls input {
+  color: var(--succession-text-strong) !important;
+  background: var(--succession-surface-inset) !important;
+  border-color: var(--succession-border-default) !important;
+}
+
+.succession-character-dossier-nav,
+.succession-character-role-board,
+.succession-character-state-board,
+.succession-character-history-summary,
+.succession-character-dossier__columns > section,
+.succession-character-lifetime,
+.succession-character-timeline,
+.succession-character-sources,
+.succession-character-dossier__footer button {
+  color: var(--succession-text-on-paper) !important;
+  background: var(--succession-surface-paper-raised) !important;
+  border-color: color-mix(in srgb, var(--succession-text-on-paper) 18%, transparent) !important;
+}
+
+.succession-character-dossier-nav a,
+.succession-character-role-board p,
+.succession-character-state-board p,
+.succession-character-dossier__columns p,
+.succession-character-lifetime p,
+.succession-character-timeline p,
+.succession-character-sources p,
+.succession-character-dossier__footer small {
+  color: var(--succession-text-on-paper-muted) !important;
+}
+
+.succession-character-role-board h3,
+.succession-character-state-board h3,
+.succession-character-dossier__columns h3,
+.succession-character-lifetime h3,
+.succession-character-lifetime h4,
+.succession-character-timeline h3,
+.succession-character-timeline h4,
+.succession-character-sources h3,
+.succession-character-dossier__footer button {
+  color: var(--succession-text-on-paper) !important;
+}
+
+.succession-character-role-board__grid article,
+.succession-character-history-summary article,
+.succession-character-entity,
+.succession-character-lifetime nav button,
+.succession-character-lifetime article,
+.succession-character-timeline article {
+  color: var(--succession-text-on-paper) !important;
+  background: var(--succession-surface-paper) !important;
+  border-color: color-mix(in srgb, var(--succession-text-on-paper) 18%, transparent) !important;
+}
+
+.succession-character-entity small,
+.succession-character-lifetime article > span,
+.succession-character-lifetime article > small,
+.succession-character-timeline article > span {
+  color: var(--succession-text-on-paper-muted) !important;
 }

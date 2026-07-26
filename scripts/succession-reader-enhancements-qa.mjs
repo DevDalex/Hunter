@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { access, mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
+import { SUCCESSION_READER_END } from '../src/data/successionChapterReader.js';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
@@ -97,10 +98,10 @@ try {
     if (!saved.chapters?.['400']) throw new Error('Bookmark-only reset removed chapter progress');
   });
 
-  await record('Direct command syntax opens exact chapter and page', page, async () => {
-    await openReader(page, base);
-    await page.keyboard.press('Control+k');
+  await record('Direct command syntax opens exact chapter page and latest boundary', page, async () => {
+    await openReader(page, base, 'chapter=400&page=1&mode=page&fit=width&direction=rtl&panel=commands');
     const input = page.locator('.succession-reader-panel--commands input[data-reader-autofocus]');
+    await input.waitFor({ state: 'visible' });
     await input.fill('400:7');
     await input.press('Enter');
     await page.waitForFunction(() => {
@@ -109,8 +110,17 @@ try {
     });
     if (!page.url().includes('page=7')) throw new Error('chapter:page command did not preserve page 7');
 
-    await page.keyboard.press('Control+k');
+    await openReader(page, base, 'chapter=400&page=7&mode=page&fit=width&direction=rtl&panel=commands');
+    const latestInput = page.locator('.succession-reader-panel--commands input[data-reader-autofocus]');
+    await latestInput.waitFor({ state: 'visible' });
+    await latestInput.fill('latest');
+    await latestInput.press('Enter');
+    await page.waitForFunction((latest) => new URL(location.href).searchParams.get('chapter') === String(latest), SUCCESSION_READER_END);
+    if (!page.url().includes(`chapter=${SUCCESSION_READER_END}`)) throw new Error('latest command did not use the canonical reader boundary');
+
+    await openReader(page, base, 'chapter=400&page=7&mode=page&fit=width&direction=rtl&panel=commands');
     const secondInput = page.locator('.succession-reader-panel--commands input[data-reader-autofocus]');
+    await secondInput.waitFor({ state: 'visible' });
     await secondInput.fill('bookmarks');
     await secondInput.press('Enter');
     await page.waitForSelector('.succession-reader__bookmark-current');

@@ -170,13 +170,15 @@ try {
   });
 
   await run('Dedicated relationship workspace filters and links remain readable', { width: 1440, height: 1000 }, 'succession/relationships', async (page) => {
-    await page.waitForSelector('.succession-relationships-workspace .succession-relationship-ledger');
-    const rootNode = page.locator('.succession-relationships-workspace');
-    const records = rootNode.locator('.succession-relationship-ledger > article');
+    await page.waitForSelector('.succession-canonical-relationships .succession-relationship-network');
+    const rootNode = page.locator('.succession-canonical-relationships');
+    await rootNode.getByRole('button', { name: /Accessible edge list/i }).click();
+    await page.waitForSelector('.succession-relationship-accessible > ol > li');
+    const records = rootNode.locator('.succession-relationship-accessible > ol > li');
     const initialCount = await records.count();
-    if (initialCount < 20) throw new Error(`relationship ledger is incomplete: ${initialCount} records`);
+    if (initialCount < 20) throw new Error(`relationship edge list is incomplete: ${initialCount} records`);
 
-    const filter = rootNode.getByPlaceholder('Person, organization, relationship, chapter…');
+    const filter = rootNode.locator('.succession-relationship-filter-panel__search input');
     for (const item of [
       { query: 'Kurapika', minimum: 4, label: 'Kurapika relationships' },
       { query: 'Morena', minimum: 3, label: 'Morena relationships' },
@@ -186,28 +188,32 @@ try {
       await page.waitForTimeout(80);
       const count = await records.count();
       if (count < item.minimum) throw new Error(`${item.label} returned ${count}; expected at least ${item.minimum}`);
-      const health = await pageHealth(page, '.succession-relationships-workspace');
+      const health = await pageHealth(page, '.succession-canonical-relationships');
       if (health.bodyOverflow > 2) throw new Error(`${item.label} overflowed by ${health.bodyOverflow}px`);
     }
 
     await filter.fill('');
-    const kurapikaFocus = rootNode.locator('.succession-relationship-focus button').filter({ hasText: /^Kurapika/ }).first();
-    await kurapikaFocus.click();
     await page.waitForTimeout(80);
-    const focusedCount = await records.count();
-    if (focusedCount < 4 || focusedCount >= initialCount) throw new Error(`actor focus did not narrow the ledger: ${focusedCount} of ${initialCount}`);
+    const kurapikaFocus = rootNode.locator('.succession-relationship-connectivity button').filter({ hasText: /^Kurapika/ }).first();
+    await kurapikaFocus.click();
+    await page.waitForSelector('.succession-relationship-node-snapshot');
+    const focusedCount = Number((await rootNode.locator('.succession-relationship-node-snapshot header dl dd').first().innerText()).trim());
+    if (!Number.isFinite(focusedCount) || focusedCount < 4 || focusedCount >= initialCount) throw new Error(`actor focus did not narrow the relationship graph: ${focusedCount} of ${initialCount}`);
 
-    const entityLink = rootNode.locator('.succession-deep-entity-button:not([disabled])').first();
+    const entityLink = rootNode.locator('.succession-relationship-linked-entity__record').first();
     await entityLink.click();
-    await page.waitForSelector('.succession-domain-dossier .succession-entity-header');
+    await page.waitForSelector('.succession-character-dossier, .succession-organization-dossier', { timeout: 10_000 });
     if (!page.url().includes('entity=character%3A') && !page.url().includes('entity=organization%3A')) throw new Error('relationship node did not preserve a canonical entity ID');
-    const health = await pageHealth(page, '.succession-domain-dossier');
-    if (health.bodyOverflow > 1) throw new Error(`relationship-linked domain dossier overflowed by ${health.bodyOverflow}px`);
+    const health = await pageHealth(page, 'main');
+    if (health.bodyOverflow > 1) throw new Error(`relationship-linked canonical dossier overflowed by ${health.bodyOverflow}px`);
   });
 
   await run('Dedicated relationship workspace remains contained on mobile', { width: 390, height: 844 }, 'succession/relationships', async (page) => {
-    await page.waitForSelector('.succession-relationships-workspace .succession-relationship-ledger');
-    const health = await pageHealth(page, '.succession-relationships-workspace');
+    await page.waitForSelector('.succession-canonical-relationships .succession-relationship-network');
+    const rootNode = page.locator('.succession-canonical-relationships');
+    await rootNode.getByRole('button', { name: /Accessible edge list/i }).click();
+    await page.waitForSelector('.succession-relationship-accessible > ol > li');
+    const health = await pageHealth(page, '.succession-canonical-relationships');
     if (health.bodyOverflow > 1) throw new Error(`relationship workspace overflowed horizontally by ${health.bodyOverflow}px`);
   });
 } finally {

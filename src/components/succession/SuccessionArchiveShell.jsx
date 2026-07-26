@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Archive,
+  ArrowLeft,
   BookOpen,
   Boxes,
   Building2,
@@ -107,20 +108,30 @@ export default function SuccessionArchiveShell({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerRef = useRef(null);
   const menuButtonRef = useRef(null);
+  const contentRef = useRef(null);
+  const previousRouteRef = useRef(activeId);
   const route = getSuccessionArchiveRoute(activeId);
 
   useEffect(() => setDrawerOpen(false), [activeId, routeParams]);
+
+  useEffect(() => {
+    if (previousRouteRef.current === activeId) return;
+    previousRouteRef.current = activeId;
+    const frame = window.requestAnimationFrame(() => contentRef.current?.focus({ preventScroll: true }));
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeId]);
 
   useEffect(() => {
     if (!drawerOpen) return undefined;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const timer = window.setTimeout(() => drawerRef.current?.querySelector(focusableSelector)?.focus(), 20);
+    const restoreMenuFocus = () => window.setTimeout(() => menuButtonRef.current?.focus(), 0);
     const handleKey = (event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
         setDrawerOpen(false);
-        menuButtonRef.current?.focus();
+        restoreMenuFocus();
         return;
       }
       if (event.key !== 'Tab' || !drawerRef.current) return;
@@ -146,51 +157,94 @@ export default function SuccessionArchiveShell({
   </>;
 
   return <article className="succession-archive" data-archive-route={route.id}>
+    <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
+    <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{route.label} workspace loaded. Reading boundary Chapter {spoilerLimit}.</span>
+
     <div className="succession-archive__mobile-bar">
       <button ref={menuButtonRef} type="button" onClick={() => setDrawerOpen(true)} aria-expanded={drawerOpen} aria-controls="succession-mobile-navigation"><Menu size={19} aria-hidden="true" /> Archive</button>
       <span>{route.label}</span>
-      <button type="button" onClick={onOpenSearch} aria-label="Search Succession Contest Archive"><Search size={18} /></button>
+      <button type="button" onClick={onOpenSearch} aria-label="Search Succession Contest Archive"><Search size={18} aria-hidden="true" /></button>
     </div>
 
-    <div className="succession-archive__layout">
+    <div className="succession-archive__layout" aria-hidden={drawerOpen ? 'true' : undefined}>
       <aside className="succession-archive__sidebar">
-        <div className="succession-archive__brand">
-          <span>Hunter × Hunter</span>
-          <strong>Succession Contest Archive</strong>
-          <p>Canonical research interface</p>
+        <div className="succession-archive__sidebar-inner">
+          <div className="succession-archive__brand">
+            <div className="succession-archive__brand-seal" aria-hidden="true"><Archive size={21} /></div>
+            <div className="succession-archive__brand-copy">
+              <span>Hunter × Hunter</span>
+              <strong>Succession Contest Archive</strong>
+              <p>Canonical research interface</p>
+            </div>
+          </div>
+
+          <dl className="succession-archive__sidebar-context">
+            <div><dt>Desk</dt><dd>{route.group}</dd></div>
+            <div><dt>Boundary</dt><dd>Chapter {spoilerLimit}</dd></div>
+          </dl>
+
+          <div className="succession-archive__sidebar-scroll">
+            <ArchiveNavigation id="succession-desktop-navigation" activeId={route.id} onNavigate={navigate} onIntent={onIntent} />
+          </div>
+
+          <details className="succession-archive__boundary">
+            <summary>Reading boundary <b>Ch. {spoilerLimit}</b></summary>
+            <SpoilerControl value={spoilerLimit} latestChapter={ARCHIVE_BOUNDARY} onChange={onSpoilerChange} />
+          </details>
         </div>
-        <ArchiveNavigation id="succession-desktop-navigation" activeId={route.id} onNavigate={navigate} onIntent={onIntent} />
-        <details className="succession-archive__boundary">
-          <summary>Reading boundary <b>Ch. {spoilerLimit}</b></summary>
-          <SpoilerControl value={spoilerLimit} latestChapter={ARCHIVE_BOUNDARY} onChange={onSpoilerChange} />
-        </details>
       </aside>
 
       <div className="succession-archive__workspace">
-        <nav className="succession-breadcrumbs" aria-label="Breadcrumb">
-          <button type="button" onClick={onExitArchive}>Story</button>
-          <ChevronRight size={13} aria-hidden="true" />
-          <button type="button" onClick={() => onNavigate('archive')}>Succession Archive</button>
-          {route.id !== 'archive' && <><ChevronRight size={13} aria-hidden="true" /><span aria-current="page">{route.label}</span></>}
-        </nav>
-        <ArchivePageHeader
-          kicker={`${route.group} workspace`}
-          title={route.title}
-          description={route.description}
-          actions={headerActions}
-          meta={[
-            { label: 'Reading boundary', value: `Chapter ${spoilerLimit}` },
-            { label: 'Evidence mode', value: 'Canon separated' },
-            { label: 'Workspace', value: route.status === 'foundation' ? 'Foundation' : 'Available' },
-          ]}
-        />
-        <div id="succession-workspace-content" className="succession-archive__content">{children}</div>
+        <div className="succession-archive__workspace-frame">
+          <div className="succession-route-context">
+            <nav className="succession-breadcrumbs" aria-label="Breadcrumb">
+              <ol>
+                <li><button type="button" onClick={onExitArchive}>Story</button></li>
+                <li className="succession-breadcrumbs__separator" aria-hidden="true"><ChevronRight size={13} /></li>
+                <li><button type="button" onClick={() => onNavigate('archive')}>Succession Archive</button></li>
+                {route.id !== 'archive' && <>
+                  <li className="succession-breadcrumbs__separator" aria-hidden="true"><ChevronRight size={13} /></li>
+                  <li><span aria-current="page">{route.label}</span></li>
+                </>}
+              </ol>
+            </nav>
+            <button
+              type="button"
+              className="succession-return-path"
+              onClick={route.id === 'archive' ? onExitArchive : () => onNavigate('archive')}
+              aria-label={route.id === 'archive' ? 'Return to Story' : 'Back to Succession Archive index'}
+            >
+              <ArrowLeft size={15} aria-hidden="true" />
+              <span>{route.id === 'archive' ? 'Return to Story' : 'Back to archive index'}</span>
+            </button>
+          </div>
+          <ArchivePageHeader
+            headingLevel="h1"
+            kicker={`${route.group} workspace`}
+            title={route.title}
+            description={route.description}
+            actions={headerActions}
+            meta={[
+              { label: 'Reading boundary', value: `Chapter ${spoilerLimit}` },
+              { label: 'Evidence mode', value: 'Canon separated' },
+              { label: 'Workspace', value: route.status === 'foundation' ? 'Foundation' : 'Available' },
+            ]}
+          />
+          <div
+            ref={contentRef}
+            id="succession-workspace-content"
+            className="succession-archive__content"
+            role="region"
+            aria-label={`${route.label} workspace content`}
+            tabIndex="-1"
+          >{children}</div>
+        </div>
       </div>
     </div>
 
     {drawerOpen && <div className="succession-drawer" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDrawerOpen(false); }}>
       <aside ref={drawerRef} role="dialog" aria-modal="true" aria-label="Succession Archive navigation">
-        <header><div><span>Hunter × Hunter</span><strong>Succession Archive</strong></div><button type="button" onClick={() => setDrawerOpen(false)} aria-label="Close archive navigation"><X size={20} /></button></header>
+        <header><div><span>Hunter × Hunter</span><strong>Succession Archive</strong></div><button type="button" onClick={() => { setDrawerOpen(false); window.setTimeout(() => menuButtonRef.current?.focus(), 0); }} aria-label="Close archive navigation"><X size={20} aria-hidden="true" /></button></header>
         <ArchiveNavigation id="succession-mobile-navigation" activeId={route.id} onNavigate={navigate} onIntent={onIntent} />
       </aside>
     </div>}
