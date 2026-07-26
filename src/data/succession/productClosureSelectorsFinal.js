@@ -79,8 +79,6 @@ export const createProductClosureSelectors = (args) => {
     const requestedChapter = requestedChapterMatch ? Number(requestedChapterMatch[1]) : null;
     const pendingChapterResults = (!allowed || allowed.has('chapter'))
       ? successionChapterResearch.flatMap((record) => {
-        const id = `chapter:${record.number}`;
-        if (args.archive.getEntityById(id)) return [];
         if (record.number > chapter && record.number !== requestedChapter) return [];
         const searchable = [
           `Chapter ${record.number}`,
@@ -93,7 +91,7 @@ export const createProductClosureSelectors = (args) => {
         const exactNumber = requestedChapter === record.number;
         const entity = pendingChapterEntity(record);
         return [Object.freeze({
-          id,
+          id: entity.id,
           resultType: 'entity',
           domain: 'chapter',
           label: entity.name,
@@ -101,7 +99,7 @@ export const createProductClosureSelectors = (args) => {
           score: exactNumber ? 190 : 84,
           matchReason: exactNumber ? 'Exact imported chapter number' : 'Matched imported chapter record',
           route: 'chapters',
-          params: Object.freeze({ entity: id, chapter: record.number }),
+          params: Object.freeze({ entity: entity.id, chapter: record.number }),
           entity,
         })];
       })
@@ -246,7 +244,7 @@ export const createProductClosureSelectors = (args) => {
       })
       : [];
 
-    return freeze([...new Map([...baseResults, ...pendingChapterResults, ...systemResults, ...storyResults, ...mediaResults, ...assignmentResults].map((result) => [result.id, result])).values()]
+    return freeze([...new Map([...pendingChapterResults, ...baseResults, ...systemResults, ...storyResults, ...mediaResults, ...assignmentResults].map((result) => [result.id, result])).values()]
       .sort((left, right) => (Number(right.score) || 0) - (Number(left.score) || 0)
         || String(left.label || left.id).localeCompare(String(right.label || right.id)))
       .slice(0, Number(options.limit) || 40));
