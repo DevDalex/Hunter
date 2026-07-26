@@ -1,1 +1,15 @@
 @import './TimelineCommand.css';
+
+/* Route-local collision repair for the legacy prelude grid inherited by the archive shell. */
+.timeline-command-voyage .timeline-prelude__steps {
+  grid-template-columns: minmax(0, 1fr);
+  min-width: 0;
+}
+
+.timeline-command-voyage .timeline-prelude__steps > details,
+.timeline-command-voyage .timeline-prelude__steps > details > summary,
+.timeline-command-voyage .timeline-prelude__steps > details > div {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
