@@ -3,6 +3,7 @@ import {
   referencePrimary,
   successionAliases,
   successionArchivePathToTarget,
+  successionArchiveRetiredTargets,
   successionArchiveRouteIds,
   successionArchiveTargetToPath,
   views,
@@ -23,7 +24,7 @@ const greedIslandSubviews = Object.freeze({
 });
 const legacySuccessionPathToTarget = new Map([
   ['royal-family', 'princes'], ['cast', 'characters'], ['nen-and-beasts', 'guardian-spirit-beasts'],
-  ['power-blocs', 'mafia'], ['records', 'chapters'],
+  ['power-blocs', 'organizations'], ['records', 'chapters'],
 ]);
 const referenceTargetToPath = new Map([
   ['encyclopedia', 'characters'], ['atlas', 'world'], ['nen', 'nen'], ['systems', 'organizations'], ['conflicts', 'fights'],
@@ -67,16 +68,52 @@ const legacySuccessionTarget = (target, params = {}) => {
     return { target: 'guardian-spirit-beasts', params };
   }
   if (target === 'mafia') {
-    if (params.panel === 'justice') return { target: 'military', params };
     if (params.panel === 'relationships') return { target: 'relationships', params };
-    return { target: 'mafia', params };
+    return { target: 'organizations', params };
   }
   if (target === 'chapters') {
     if (params.panel === 'reader') return { target: 'reader', params };
-    if (params.panel === 'deaths') return { target: 'deaths', params };
+    if (params.panel === 'deaths') return { target: 'characters', params };
     return { target: 'chapters', params };
   }
   return { target, params };
+};
+
+const resolveSuccessionTarget = (target = '', params = {}) => {
+  let nextTarget = target || 'archive';
+  let nextParams = { ...(params || {}) };
+  const visited = new Set();
+
+  for (let step = 0; step < 12; step += 1) {
+    if (visited.has(nextTarget)) break;
+    visited.add(nextTarget);
+
+    const legacy = legacySuccessionTarget(nextTarget, nextParams);
+    if (legacy.target !== nextTarget) {
+      nextTarget = legacy.target;
+      nextParams = legacy.params;
+      continue;
+    }
+
+    if (successionArchiveRouteIds.has(nextTarget)) break;
+
+    const alias = successionAliases[nextTarget];
+    if (alias) {
+      nextTarget = alias.target;
+      nextParams = { ...nextParams, ...(alias.panel ? { panel: alias.panel } : {}) };
+      continue;
+    }
+
+    const retiredTarget = successionArchiveRetiredTargets[nextTarget];
+    if (retiredTarget) {
+      nextTarget = retiredTarget;
+      continue;
+    }
+
+    break;
+  }
+
+  return { target: nextTarget, params: nextParams };
 };
 
 export const routeIsLegacyHash = (hash = '') => String(hash || '').startsWith('#/');
@@ -97,14 +134,9 @@ export function normalizeDestination(view, target = '', params = {}) {
     return { view: 'succession', target: 'archive', params };
   }
   if (view === 'succession') {
-    let nextTarget = target || 'archive';
-    let nextParams = { ...(params || {}) };
-    if (!successionArchiveRouteIds.has(nextTarget) && successionAliases[nextTarget]) {
-      const alias = successionAliases[nextTarget];
-      nextTarget = alias.target;
-      nextParams = { ...nextParams, ...(alias.panel ? { panel: alias.panel } : {}) };
-    }
-    ({ target: nextTarget, params: nextParams } = legacySuccessionTarget(nextTarget, nextParams));
+    const resolved = resolveSuccessionTarget(target, params);
+    const nextTarget = resolved.target;
+    const nextParams = resolved.params;
     if (nextTarget === 'reader') {
       const { panel: _panel, ...readerParams } = nextParams;
       return { view: 'series', target: 'succession-contest', params: { section: 'chapters', ...readerParams } };
