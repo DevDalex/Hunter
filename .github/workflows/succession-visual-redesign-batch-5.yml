@@ -12,6 +12,10 @@ on:
       - 'src/components/SuccessionTimeline.jsx'
       - 'src/components/BlackWhaleGuide.jsx'
       - 'src/components/BlackWhaleIntelligenceCommand.css'
+      - 'src/components/SafeImage.jsx'
+      - 'src/components/succession/SuccessionArchiveShell.jsx'
+      - 'src/components/succession/SuccessionArchivePrimitives.jsx'
+      - 'src/components/succession/SuccessionArchiveFinalPolish.css'
       - 'src/components/succession/SuccessionArchiveRelationshipWorkspace.jsx'
       - 'src/components/succession/SuccessionArchiveRelationshipWorkspace.css'
       - 'src/components/succession/SuccessionArchiveRelationshipCommand.css'
@@ -21,7 +25,10 @@ on:
       - 'src/components/succession/SuccessionArchiveSearch.css'
       - 'src/data/routeManifest.js'
       - 'scripts/audit-succession-batch-5-*.mjs'
-      - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-5*.md'
+      - 'scripts/succession-final-release-qa.mjs'
+      - 'scripts/succession-cross-browser-qa.mjs'
+      - 'docs/SUCCESSION-VISUAL-REDESIGN-*.md'
+      - 'package.json'
       - '.github/workflows/succession-visual-redesign-batch-5.yml'
 
 permissions:
@@ -32,10 +39,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  advanced_intelligence:
-    name: Batch 5 advanced intelligence and assignment regression gate
+  final_closure:
+    name: Batch 5 final responsive, accessibility, performance, and cross-browser gate
     runs-on: ubuntu-latest
-    timeout-minutes: 100
+    timeout-minutes: 120
 
     steps:
       - name: Check out repository
@@ -61,6 +68,9 @@ jobs:
 
       - name: Audit Batch 5 assignment intelligence
         run: node scripts/audit-succession-batch-5-assignments.mjs
+
+      - name: Audit Batch 5 final closure contract
+        run: node scripts/audit-succession-batch-5-final.mjs
 
       - name: Audit visual foundation
         run: npm run audit:succession-visual-foundation
@@ -110,67 +120,45 @@ jobs:
       - name: Audit readability
         run: npm run audit:readability
 
+      - name: Audit layout contracts
+        run: npm run audit:layout
+
       - name: Audit accessibility contracts
         run: npm run audit:accessibility
 
-      - name: Build presentation bundle
+      - name: Build production presentation bundle
         run: |
           npm run prepare:eta-assets
           npx vite build
 
-      - name: Install Chromium for visual QA
-        shell: bash
-        run: |
-          npx playwright install --with-deps chromium
-          echo "CHROMIUM_PATH=$(node -e "import('playwright').then(({ chromium }) => console.log(chromium.executablePath()))")" >> "$GITHUB_ENV"
+      - name: Audit production performance budgets
+        run: npm run audit:performance
 
-      - name: Inspect global Timeline at all viewports
-        env: { VISUAL_QA_ROUTE: timeline/, VISUAL_QA_OUTPUT: .visual-qa/global-timeline, VISUAL_QA_SCREENSHOTS: all }
-        shell: bash
-        run: |
-          set -o pipefail
-          npm run qa:visual 2>&1 | tee batch5-global-timeline-visual.log
+      - name: Install Chromium, Firefox, and WebKit
+        run: npx playwright install --with-deps chromium firefox webkit
 
-      - name: Inspect Succession Timeline at all viewports
-        env: { VISUAL_QA_ROUTE: succession/timeline, VISUAL_QA_OUTPUT: .visual-qa/succession-timeline, VISUAL_QA_SCREENSHOTS: all }
+      - name: Run complete Chromium release matrix
         shell: bash
         run: |
           set -o pipefail
-          npm run qa:visual 2>&1 | tee batch5-succession-timeline-visual.log
+          npm run qa:succession-final-release 2>&1 | tee batch5-final-release.log
 
-      - name: Inspect Relationships at all viewports
-        env: { VISUAL_QA_ROUTE: succession/relationships, VISUAL_QA_OUTPUT: .visual-qa/succession-relationships, VISUAL_QA_SCREENSHOTS: all }
+      - name: Run Firefox and WebKit regression matrix
         shell: bash
         run: |
           set -o pipefail
-          npm run qa:visual 2>&1 | tee batch5-relationships-visual.log
+          npm run qa:succession-cross-browser 2>&1 | tee batch5-cross-browser.log
 
-      - name: Inspect Black Whale at all viewports
-        env: { VISUAL_QA_ROUTE: succession/black-whale, VISUAL_QA_OUTPUT: .visual-qa/succession-black-whale, VISUAL_QA_SCREENSHOTS: all }
-        shell: bash
-        run: |
-          set -o pipefail
-          npm run qa:visual 2>&1 | tee batch5-black-whale-visual.log
-
-      - name: Inspect Assignments at all viewports
-        env: { VISUAL_QA_ROUTE: succession/bodyguards, VISUAL_QA_OUTPUT: .visual-qa/succession-assignments, VISUAL_QA_SCREENSHOTS: all }
-        shell: bash
-        run: |
-          set -o pipefail
-          npm run qa:visual 2>&1 | tee batch5-assignments-visual.log
-
-      - name: Publish Batch 5 diagnostics
+      - name: Publish Batch 5 final diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: succession-batch-5-diagnostics
+          name: succession-batch-5-final-diagnostics
           path: |
-            batch5-*-visual.log
-            .visual-qa/global-timeline
-            .visual-qa/succession-timeline
-            .visual-qa/succession-relationships
-            .visual-qa/succession-black-whale
-            .visual-qa/succession-assignments
+            batch5-final-release.log
+            batch5-cross-browser.log
+            .succession-final-qa
+            .succession-cross-browser-qa
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 14
