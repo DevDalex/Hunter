@@ -1,0 +1,46 @@
+name: Apply Batch 5 Accessibility Repairs
+
+on:
+  push:
+    branches:
+      - succession-visual-redesign-batch-5
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: succession-visual-redesign-batch-5
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apply accessibility repairs
+        run: node scripts/apply-batch5-accessibility-repairs.mjs
+
+      - name: Commit repaired files
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No repair changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/TimelineWorkspace.css \
+            src/components/succession/SuccessionArchiveNenWorkspace.jsx \
+            src/components/succession/SuccessionArchiveEvidenceWorkspace.jsx \
+            src/components/succession/SuccessionArchiveChapterStoryWorkspace.jsx \
+            src/components/succession/SuccessionArchiveAssignmentWorkspace.jsx \
+            src/components/succession/SuccessionArchiveFinalPolish.css
+          git commit -m "fix(batch5): resolve final accessibility matrix defects"
+          git push origin HEAD:succession-visual-redesign-batch-5
