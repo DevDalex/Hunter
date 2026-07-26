@@ -138,7 +138,67 @@ export const createProductClosureSelectors = (args) => {
       })
       : [];
 
-    return freeze([...new Map([...baseResults, ...systemResults, ...storyResults, ...mediaResults].map((result) => [result.id, result])).values()]
+    const assignmentResults = (!allowed || allowed.has('assignment'))
+      ? args.archive.getEntitiesByType('assignment').flatMap((entity) => {
+        if (Number.isFinite(entity.chapterRange?.start) && entity.chapterRange.start > chapter) return [];
+        const linkedIds = [
+          entity.personId,
+          entity.assigneeId,
+          entity.subjectId,
+          entity.targetId,
+          entity.principalId,
+          entity.organizationId,
+          entity.locationId,
+          ...(entity.personIds || []),
+          ...(entity.assigneeIds || []),
+          ...(entity.subjectIds || []),
+          ...(entity.targetIds || []),
+          ...(entity.principalIds || []),
+          ...(entity.organizationIds || []),
+          ...(entity.locationIds || []),
+          ...(entity.characterIds || []),
+          ...(entity.actorIds || []),
+        ].filter(Boolean);
+        const linkedNames = [
+          ...linkedIds.map((id) => args.archive.getEntityById(id)?.name).filter(Boolean),
+          ...args.archive.getRelatedEntities(entity.id).map((record) => record?.name).filter(Boolean),
+        ];
+        const searchable = [
+          entity.name,
+          entity.summary,
+          entity.entityType,
+          entity.assignmentType,
+          entity.type,
+          entity.category,
+          entity.subtype,
+          entity.status,
+          entity.role,
+          entity.objective,
+          entity.operationalState,
+          ...(entity.roles || []),
+          ...(entity.tags || []),
+          ...(entity.duties || []),
+          ...(entity.responsibilities || []),
+          ...new Set(linkedNames),
+        ].filter(Boolean).join(' ');
+        if (!includesAllTokens(searchable, normalizedQuery)) return [];
+        const exactName = normalizeArchiveSearchText(entity.name) === normalizedQuery;
+        return [Object.freeze({
+          id: entity.id,
+          resultType: 'entity',
+          domain: 'assignment',
+          label: entity.name,
+          summary: entity.summary || 'Canonical assignment record.',
+          score: exactName ? 160 : 84,
+          matchReason: exactName ? 'Exact assignment name' : 'Matched assignment type, duty, or linked subject',
+          route: 'bodyguards',
+          params: Object.freeze({ entity: entity.id, chapter }),
+          entity,
+        })];
+      })
+      : [];
+
+    return freeze([...new Map([...baseResults, ...systemResults, ...storyResults, ...mediaResults, ...assignmentResults].map((result) => [result.id, result])).values()]
       .sort((left, right) => (Number(right.score) || 0) - (Number(left.score) || 0)
         || String(left.label || left.id).localeCompare(String(right.label || right.id)))
       .slice(0, Number(options.limit) || 40));
