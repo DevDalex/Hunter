@@ -244,7 +244,7 @@ export const createProductClosureSelectors = (args) => {
       })
       : [];
 
-    return freeze([...new Map([...pendingChapterResults, ...baseResults, ...systemResults, ...storyResults, ...mediaResults, ...assignmentResults].map((result) => [result.id, result])).values()]
+    return freeze([...new Map([...systemResults, ...storyResults, ...mediaResults, ...assignmentResults, ...pendingChapterResults, ...baseResults].map((result) => [result.id, result])).values()]
       .sort((left, right) => (Number(right.score) || 0) - (Number(left.score) || 0)
         || String(left.label || left.id).localeCompare(String(right.label || right.id)))
       .slice(0, Number(options.limit) || 40));
