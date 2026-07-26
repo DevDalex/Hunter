@@ -33,8 +33,9 @@ export const entityWorkspaceTarget = (entity) => {
   return 'archive';
 };
 
-export function ArchivePageHeader({ kicker, title, description, meta = [], actions }) {
+export function ArchivePageHeader({ kicker, title, description, meta = [], actions, headingLevel = 'h2' }) {
   const visibleMeta = meta.filter((item) => item && item.label && item.value != null);
+  const Heading = headingLevel === 'h1' ? 'h1' : 'h2';
   return <header className="succession-page-header">
     <div className="succession-page-header__main">
       <div className="succession-page-header__classification" aria-hidden="true">
@@ -45,7 +46,7 @@ export function ArchivePageHeader({ kicker, title, description, meta = [], actio
       <div className="succession-page-header__body">
         <div className="succession-page-header__copy">
           {kicker && <span className="succession-page-header__kicker">{kicker}</span>}
-          <h1>{title}</h1>
+          <Heading>{title}</Heading>
           {description && <p className="succession-page-header__description">{description}</p>}
         </div>
         {actions && <div className="succession-page-header__actions" aria-label="Page actions">{actions}</div>}
