@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Check, Trash2 } from 'lucide-react';
 import {
+  SUCCESSION_READER_END,
+  SUCCESSION_READER_START,
+} from '../../data/successionChapterReader.js';
+import {
   chapterProgressFor,
   clearReaderBookmarks,
   readSuccessionReaderState,
@@ -8,7 +12,7 @@ import {
   writeSuccessionReaderState,
 } from './readerState.js';
 
-const readerRange = { start: 338, end: 414 };
+const readerRange = { start: SUCCESSION_READER_START, end: SUCCESSION_READER_END };
 const clamp = (value, minimum, maximum) => Math.min(maximum, Math.max(minimum, value));
 const currentChapterFromLocation = () => clamp(Number(new URL(window.location.href).searchParams.get('chapter')) || readerRange.start, readerRange.start, readerRange.end);
 
