@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - succession-visual-redesign-batch-5
+  pull_request:
+    branches:
+      - succession-visual-redesign-batch-4
   workflow_dispatch:
 
 jobs:
