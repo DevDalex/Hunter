@@ -1,0 +1,42 @@
+name: Apply Batch 5 Legacy Contrast Exceptions
+
+on:
+  pull_request:
+    branches:
+      - succession-visual-redesign-batch-4
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.head_ref == 'succession-visual-redesign-batch-5'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: succession-visual-redesign-batch-5
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apply legacy contrast exceptions
+        run: node scripts/apply-batch5-legacy-contrast-exceptions.mjs
+
+      - name: Commit legacy contrast exceptions
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No legacy contrast changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/succession/SuccessionArchiveNenFixes.css
+          git commit -m "fix(batch5): neutralize legacy contrast overrides"
+          git push origin HEAD:succession-visual-redesign-batch-5
