@@ -41,11 +41,30 @@ Batch 5 connects the completed Succession workspaces through advanced visualizat
 - Preserve relationship evidence, operational state, interpretive limits, linked events, sources, and entity records.
 - Add responsive graph reduction, mobile semantic reading order, touch-safe controls, and reduced-motion behavior.
 
+## Hour 55 — Advanced Black Whale map
+
+- Upgrade the sourced ship cross-section into a temporal spatial-intelligence command.
+- Add Atlas, Occupancy, and Movement modes over the same canonical hotspot bridges.
+- Preserve exact, aggregate, approximate, and legacy precision labels for every mapped record.
+- Add chapter controls, active-location metrics, mapped occupant totals, event totals, and movement-path totals.
+- Add occupancy and arrival badges directly to map markers without replacing the numbered hotspot index.
+- Retain zoom, tier focus, hotspot paging, selected-location inspector, sourced imagery, canonical actions, royal-room plan, route reference, manifest, and room directory.
+
+## Hour 56 — Chapter-sensitive occupancy and movement
+
+- Resolve every mapped hotspot through `getLocationSnapshot(locationId, chapter)`.
+- Recalculate occupants, assignments, events, abilities, room summaries, and selected-location intelligence whenever the chapter changes.
+- Derive character movement paths from maintained location-history records instead of invented route assumptions.
+- Show the latest mapped transition for each visible character, including previous location, arrival location, and chapter.
+- Add a complete semantic location or movement ledger below the map so spatial meaning never depends on image position, line drawing, or color.
+- Preserve chapter boundaries, touch-safe controls, responsive stacking, horizontal map navigation, and reduced-motion behavior.
+
 ## Acceptance gate
 
 ```bash
 node scripts/audit-succession-batch-5-timeline.mjs
 node scripts/audit-succession-batch-5-relationships.mjs
+node scripts/audit-succession-batch-5-black-whale.mjs
 npm run audit:succession-visual-foundation
 npm run audit:succession-shell-redesign
 npm run audit:succession-page-header-redesign
@@ -67,10 +86,9 @@ npm run prepare:eta-assets
 npx vite build
 ```
 
-The dedicated workflow renders the global Timeline, Succession Timeline, and Relationships workspace at desktop, tablet, and mobile sizes.
+The dedicated workflow renders the global Timeline, Succession Timeline, Relationships, and Black Whale workspaces at desktop, tablet, and mobile sizes.
 
 ## Remaining Batch 5 scope
 
-- Hours 55–56: Black Whale map and chapter-sensitive occupancy/movement.
 - Hours 57–58: assignment workspace and advanced table/result presentation.
 - Hours 59–64: interaction and motion polish, complete responsive/accessibility/performance review, legacy cleanup, cross-browser regression, final audit, debt record, and project closure.
