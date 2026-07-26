@@ -7,10 +7,11 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 5 relationship audit failed: ${message}`);
 };
 
-const [workspace, styles, workflow, docs, routeManifest] = await Promise.all([
+const [workspace, styles, workflow, finalQa, docs, routeManifest] = await Promise.all([
   read('src/components/succession/SuccessionArchiveRelationshipWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveRelationshipCommand.css'),
   read('.github/workflows/succession-visual-redesign-batch-5.yml'),
+  read('scripts/succession-final-release-qa.mjs'),
   read('docs/SUCCESSION-VISUAL-REDESIGN-BATCH-5.md'),
   read('src/data/routeManifest.js'),
 ]);
@@ -53,7 +54,8 @@ assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(styles), 'relationship CSS must not intro
 assert(!styles.includes('!important'), 'relationship CSS must not depend on !important');
 assert(routeManifest.includes("'relationships'"), 'release visual manifest must include the relationship route');
 assert(workflow.includes('node scripts/audit-succession-batch-5-relationships.mjs'), 'Batch 5 workflow must run the relationship audit');
-assert(workflow.includes('VISUAL_QA_ROUTE: succession/relationships'), 'Batch 5 workflow must render the relationship workspace');
+assert(workflow.includes('npm run qa:succession-final-release'), 'Batch 5 workflow must run the complete release matrix');
+assert(finalQa.includes('...successionReleaseRoutes.map'), 'complete release matrix must render the curated Succession routes, including Relationships');
 for (const hour of ['Hour 53', 'Hour 54']) assert(docs.includes(hour), `Batch 5 design record must document ${hour}`);
 
-console.log('Succession Batch 5 relationship audit passed: chapter-sensitive network, directed edge rendering, focused neighborhoods, semantic edge alternatives, dossier views, responsive behavior, touch targets, and reduced motion are registered.');
+console.log('Succession Batch 5 relationship audit passed: chapter-sensitive network, directed edge rendering, focused neighborhoods, semantic edge alternatives, dossier views, consolidated release QA, responsive behavior, touch targets, and reduced motion are registered.');
