@@ -1,8 +1,9 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
 const replaceRequired = (content, before, after, label) => {
-  if (!content.includes(before)) throw new Error(`Missing repair target: ${label}`);
-  return content.replace(before, after);
+  if (content.includes(before)) return content.replace(before, after);
+  if (content.includes(after)) return content;
+  throw new Error(`Missing repair target: ${label}`);
 };
 
 const update = async (path, transform) => {
@@ -49,7 +50,10 @@ await update('src/components/succession/SuccessionArchiveAssignmentWorkspace.jsx
   'Assignment metric semantics',
 ));
 
-await update('src/components/TimelineWorkspace.css', (content) => `${content.trimEnd()}\n\n.timeline-command__hero h2 {\n  max-width: 1000px;\n  margin-top: 16px;\n  color: var(--timeline-ink);\n  font-family: var(--succession-font-display, var(--serif));\n  font-size: clamp(46px, 7vw, 104px);\n  line-height: .87;\n  letter-spacing: -.062em;\n}\n\n.timeline-command__navigation > header > div > span {\n  color: var(--timeline-paper-ink);\n}\n`);
+await update('src/components/TimelineWorkspace.css', (content) => {
+  if (content.includes('.timeline-command__hero h2 {')) return content;
+  return `${content.trimEnd()}\n\n.timeline-command__hero h2 {\n  max-width: 1000px;\n  margin-top: 16px;\n  color: var(--timeline-ink);\n  font-family: var(--succession-font-display, var(--serif));\n  font-size: clamp(46px, 7vw, 104px);\n  line-height: .87;\n  letter-spacing: -.062em;\n}\n\n.timeline-command__navigation > header > div > span {\n  color: var(--timeline-paper-ink);\n}\n`;
+});
 
 const contrastLayer = `
 
