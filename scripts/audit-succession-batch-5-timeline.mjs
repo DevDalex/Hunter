@@ -7,10 +7,11 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 5 timeline audit failed: ${message}`);
 };
 
-const [workspace, voyage, styles, workflow, docs, routeManifest] = await Promise.all([
+const [workspace, voyage, styles, routeStyles, workflow, docs, routeManifest] = await Promise.all([
   read('src/components/TimelineWorkspace.jsx'),
   read('src/components/SuccessionTimeline.jsx'),
   read('src/components/TimelineCommand.css'),
+  read('src/components/TimelineWorkspace.css'),
   read('.github/workflows/succession-visual-redesign-batch-5.yml'),
   read('docs/SUCCESSION-VISUAL-REDESIGN-BATCH-5.md'),
   read('src/data/routeManifest.js'),
@@ -70,11 +71,13 @@ assert(styles.includes('@media (prefers-reduced-motion: reduce)'), 'timeline red
 assert(styles.includes('min-height: 44px'), 'timeline controls must retain 44px targets');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(styles), 'timeline CSS must not introduce raw hex colors');
 assert(!styles.includes('!important'), 'timeline CSS must not depend on !important');
+assert(routeStyles.includes('grid-template-columns: minmax(0, 1fr)'), 'timeline route CSS must contain the prelude collision repair');
 assert(routeManifest.includes("{ view: 'timeline'"), 'global Timeline must remain in the release manifest');
 assert(routeManifest.includes("'timeline'"), 'Succession Timeline must remain in the release manifest');
 assert(workflow.includes('node scripts/audit-succession-batch-5-timeline.mjs'), 'Batch 5 workflow must run the timeline audit');
-assert(workflow.includes('VISUAL_QA_ROUTE: timeline'), 'Batch 5 workflow must render the global Timeline');
+assert(workflow.includes('VISUAL_QA_ROUTE: timeline/'), 'Batch 5 workflow must render the global Timeline');
 assert(workflow.includes('VISUAL_QA_ROUTE: succession/timeline'), 'Batch 5 workflow must render the Succession Timeline');
+assert((workflow.match(/set -o pipefail/g) || []).length >= 2, 'both visual-QA commands must propagate failures through tee');
 for (const hour of ['Hour 51', 'Hour 52']) assert(docs.includes(hour), `Batch 5 design record must document ${hour}`);
 
-console.log('Succession Batch 5 timeline audit passed: global chronology command, voyage filters, evidence confidence, five synchronized views, semantic mobile lanes, touch targets, responsive behavior, and reduced motion are registered.');
+console.log('Succession Batch 5 timeline audit passed: global chronology command, voyage filters, evidence confidence, five synchronized views, semantic mobile lanes, truthful visual gates, tablet containment, touch targets, responsive behavior, and reduced motion are registered.');
