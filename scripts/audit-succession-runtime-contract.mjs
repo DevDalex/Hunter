@@ -32,9 +32,10 @@ const auditPaths = Object.freeze([
   'scripts/audit-succession-final-product-closure.mjs',
 ]);
 
-const [app, primitives, packageText, ...auditSources] = await Promise.all([
+const [app, primitives, router, packageText, ...auditSources] = await Promise.all([
   read('src/components/succession/SuccessionArchiveApp.jsx'),
   read('src/components/succession/SuccessionArchivePrimitives.jsx'),
+  read('src/lib/appRouter.js'),
   read('package.json'),
   ...auditPaths.map(read),
 ]);
@@ -65,10 +66,14 @@ for (const [routeId, componentName] of [
   ['glossary', 'GlossaryWorkspace'],
 ]) assert(sourceRendersRouteWith(app, routeId, componentName), `${routeId} must render ${componentName}`);
 
+for (const removedComponent of ['HuntersWorkspace', 'MafiaWorkspace', 'MilitaryWorkspace', 'PoliticsWorkspace', 'BodyStatesWorkspace', 'MediaWorkspace']) {
+  assert(!app.includes(removedComponent), `${removedComponent} must not return to the active application`);
+}
 assert(!app.includes('SuccessionStoryWorkspace'), 'legacy static Story workspace must remain inactive');
 assert(!app.includes('ChapterRecordsWorkspaceV2'), 'legacy chapter ledger must remain inactive');
 assert(app.includes("linkedEntity?.entityType === 'character'") && app.includes("linkedEntity?.entityType === 'organization'"), 'entity navigation must normalize character and organization links');
 assert(app.includes("linkedEntity?.entityType === 'ability'") && app.includes("linkedEntity?.entityType === 'guardian-beast'"), 'system navigation must normalize ability and beast links');
+assert(app.includes('successionArchiveRetiredTargets') && router.includes('resolveSuccessionTarget'), 'active navigation and browser routing must normalize retired routes');
 assert(app.includes('showCharacterDossier') && app.includes('showOrganizationDossier'), 'people and institution URLs must resolve dedicated dossiers');
 assert(app.includes('showAbilityDossier') && app.includes('showGuardianBeastDossier'), 'Nen URLs must resolve dedicated dossiers');
 assert(app.includes('searchArchiveProduct') && app.includes('matchReason') && app.includes('spoilerLimit'), 'global search must be grouped, explained, and chapter-bounded');
@@ -81,6 +86,7 @@ const forbiddenAuditPatterns = Object.freeze([
   { pattern: /counts\.chapters\s*===\s*75|pendingChapterIds\.length\s*===\s*1.*chapter:414/, message: 'audits must derive chapter coverage from imported data' },
   { pattern: /authoritativeWorkspaces\s*===\s*\d+/, message: 'audits must derive workspace totals from the maintained inventory' },
   { pattern: /successionArchiveRoutes\.length\s*(?:===|>=)\s*2[0-9]/, message: 'audits must not restore the retired route-count contract' },
+  { pattern: /const\s+retiredRedirects\s*=\s*Object\.freeze\(\{/, message: 'audits must derive retired redirects from the canonical registry' },
 ]);
 for (let index = 0; index < auditPaths.length; index += 1) {
   for (const forbidden of forbiddenAuditPatterns) assert(!forbidden.pattern.test(auditSources[index]), `${auditPaths[index]}: ${forbidden.message}`);
@@ -99,17 +105,11 @@ try {
   assert(archive.successionArchiveValidation?.valid, 'canonical Succession data must validate');
 
   const routeIds = new Set(routes.successionArchiveRoutes.map((route) => route.id));
-  const retiredRedirects = {
-    hunters: 'characters',
-    deaths: 'characters',
-    mafia: 'organizations',
-    military: 'organizations',
-    politics: 'organizations',
-    media: 'research',
-  };
-  for (const [retired, destination] of Object.entries(retiredRedirects)) {
+  for (const [retired, destination] of Object.entries(routes.successionArchiveRetiredTargets)) {
     assert(!routeIds.has(retired), `${retired} must not remain a primary route`);
     assert(routes.successionArchiveLegacyTargets[retired] === destination, `${retired} must redirect to ${destination}`);
+    assert(routes.successionArchivePathToTarget.get(retired) === destination, `${retired} clean path must redirect to ${destination}`);
+    assert(routeIds.has(destination), `${retired} must resolve to a maintained route`);
   }
 
   for (const [entityType, minimum] of [
@@ -153,6 +153,7 @@ try {
   assert(archive.isSuccessionEntityAvailableAtChapter('ability:parallel-future', 385), 'Parallel Future must become available at Chapter 385');
   assert(archive.searchArchiveProduct('GSB', { chapter: 349, limit: 100 }).some((result) => result.id === 'glossary:guardian-spirit-beast'), 'unified search must resolve glossary synonyms');
   assert(archive.searchArchiveProduct('Room 1014', { chapter: latestChapter, limit: 100 }).every((result) => result.matchReason), 'unified search must explain every match');
+  assert(archive.searchArchiveProduct('Kurapika portrait', { chapter: latestChapter, limit: 100 }).some((result) => result.domain === 'media' && result.route === 'research'), 'media search must route through Research');
 
   const productClosure = archive.getProductClosureReport();
   assert(productClosure?.closureReady && productClosure.status === 'release-candidate', 'search, glossary, and maintained media closure must reach release-candidate status');
@@ -168,7 +169,7 @@ try {
   assert(finalReport.productInventory.counts.releaseGates === finalReport.productInventory.releaseGates.length, 'release-gate totals must be derived');
   assert(finalReport.deploymentRequiredForClosedStatus && finalReport.releaseGates.cloudflareDeployment === 'pending-external-build-result', 'only an external successful deployment may promote the project from release-candidate to closed');
 
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph through imported Chapter ${latestChapter}; ${routes.successionArchiveRoutes.length} consolidated routes, registry-derived inventory, legacy redirects, and final release reporting form a deployment-ready release candidate.`);
+  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph through imported Chapter ${latestChapter}; ${routes.successionArchiveRoutes.length} consolidated routes, ${Object.keys(routes.successionArchiveRetiredTargets).length} registry-derived redirects, and final release reporting form a deployment-ready release candidate.`);
 } finally {
   await vite.close();
 }
