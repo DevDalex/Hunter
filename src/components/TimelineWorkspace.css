@@ -22,3 +22,17 @@
 .succession-archive .timeline-command .timeline-command-voyage__hero p {
   color: var(--succession-text-muted);
 }
+
+.timeline-command__hero h2 {
+  max-width: 1000px;
+  margin-top: 16px;
+  color: var(--timeline-ink);
+  font-family: var(--succession-font-display, var(--serif));
+  font-size: clamp(46px, 7vw, 104px);
+  line-height: .87;
+  letter-spacing: -.062em;
+}
+
+.timeline-command__navigation > header > div > span {
+  color: var(--timeline-paper-ink);
+}

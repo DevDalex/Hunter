@@ -244,3 +244,152 @@
     content-visibility: visible;
   }
 }
+
+/* Batch 5 final WCAG contrast repairs discovered by the complete Chromium matrix. */
+.succession-nen-command__mode-navigation,
+.succession-nen-command__mode-navigation [role='tablist'] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.succession-assignment-command__metric-label,
+.succession-chapter-dossier__evidence-label {
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 560px) {
+  .succession-archive :where(
+    .succession-story-command__metrics dd,
+    .succession-story-command__search > div > span,
+    .succession-story-command__search > div > b,
+    .succession-story-command__causal-index,
+    .succession-queen-status-strip dt,
+    .succession-queen-status-strip dd,
+    .succession-assignment-type-board > header > div > span,
+    .succession-assignment-filter-panel > header > div > span,
+    .succession-assignment-snapshot-board > header > div > span,
+    .succession-assignment-personnel > header > div > span,
+    .succession-organization-command header > div > span,
+    .succession-relationship-filter-panel > header > div > span,
+    .succession-relationship-view-switcher > header > div > span,
+    .succession-relationship-connectivity > header > div > span,
+    .succession-relationship-accessible > header > div > span,
+    .succession-location-command header > div > span,
+    .black-whale-intelligence header > b,
+    .ship-location-inspector__pager > span,
+    .ship-location-inspector > header > span,
+    .black-whale-intelligence .section-kicker,
+    .royal-room-plan > header > div > span,
+    .ship-movement-map > .subsection-title > span,
+    .ship-manifest > .subsection-title > span,
+    .room-index__heading .section-kicker,
+    .black-whale-intelligence th,
+    .royal-room-plan__side > span,
+    .ship-location-inspector footer span
+  ) {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .succession-story-command__search > div,
+  .succession-archive .succession-story-command__metrics,
+  .succession-archive .succession-queen-status-strip {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .succession-chapter-intel__dossier,
+  .succession-archive .succession-chapter-dossier__phase,
+  .succession-archive .succession-chapter-dossier__boundary,
+  .succession-archive #chapter-dossier-pressure,
+  .succession-archive .succession-chapter-intel__entity-columns > section,
+  .succession-archive .succession-chapter-dossier__evidence {
+    background: var(--succession-surface-paper-raised);
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive :where(
+    .succession-chapter-dossier__phase span,
+    .succession-chapter-dossier__boundary span,
+    .succession-chapter-dossier__boundary p,
+    .succession-chapter-intel__section-title span,
+    .succession-chapter-intel__threads > p,
+    .succession-chapter-intel__entity-columns p
+  ) {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .succession-chapter-dossier__sequence-grid > section,
+  .succession-archive .succession-chapter-dossier__evidence-note {
+    color: var(--succession-text-strong);
+  }
+
+  .succession-archive .succession-chapter-dossier__sequence-grid > section p,
+  .succession-archive .succession-chapter-dossier__evidence-note p {
+    color: var(--succession-text-strong);
+  }
+
+  .succession-archive :where(
+    .timeline-command__navigation > header > div > span,
+    .timeline-source-note__links a,
+    .timeline-prelude > summary > span,
+    .timeline-command-voyage__controls header > b,
+    .timeline-command-voyage__selected > div:first-child > span,
+    .timeline-inspector > span
+  ) {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .timeline-day__number > span {
+    color: var(--succession-gold-strong);
+  }
+
+  .succession-archive .timeline-day > header > em {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .timeline-day-rail button em {
+    background: color-mix(in srgb, var(--succession-crimson-strong) 78%, var(--succession-surface-inset));
+    color: white;
+  }
+
+  .succession-archive .succession-assignment-load-more {
+    background: color-mix(in srgb, var(--succession-crimson-strong) 78%, var(--succession-surface-inset));
+    color: white;
+  }
+
+  .succession-archive .ship-location-inspector__snapshot :where(dt, dd) {
+    color: var(--succession-text-strong);
+  }
+
+  .succession-archive .succession-gsb-command-card__visual > span {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .succession-evidence-workspace,
+  .succession-archive .succession-evidence-workspace :where(
+    section,
+    article,
+    div,
+    p,
+    span,
+    small,
+    dt,
+    dd,
+    b,
+    strong,
+    button,
+    label,
+    input,
+    select
+  ) {
+    color: var(--succession-text-on-paper);
+  }
+
+  .succession-archive .succession-evidence-workspace :where(button, input, select) {
+    background: var(--succession-surface-paper-raised);
+  }
+}
