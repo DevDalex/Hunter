@@ -94,12 +94,12 @@ try {
   });
 
   await record('Character workspace is visual and dossier-linked', desktop, async () => {
-    const cards = await openWorkspace(desktop, base, 'characters', '.succession-character-ledger > button');
+    const cards = await openWorkspace(desktop, base, 'characters', '.succession-character-grid > article');
     const cardCount = await cards.count();
     if (cardCount < 150) throw new Error(`Expanded character catalogue is incomplete: ${cardCount} cards`);
     if (await cards.locator('.succession-entity-visual').count() !== cardCount) throw new Error('Every character card needs a visual frame');
     const billCard = cards.filter({ hasText: 'Bill' }).first();
-    await billCard.click();
+    await billCard.getByRole('button', { name: /Open intelligence dossier/i }).click();
     await desktop.waitForSelector('.succession-character-dossier', { timeout: 15_000 });
     if (!desktop.url().includes('entity=character%3Abill')) throw new Error('Character dossier did not preserve Bill’s stable ID');
   });
@@ -109,16 +109,19 @@ try {
     if (await princeCards.count() !== 14) throw new Error(`Prince board count is ${await princeCards.count()}, expected 14`);
     const princeNames = await princeCards.locator('h3').allInnerTexts();
     if (!princeNames[0]?.includes('Benjamin') || !princeNames[13]?.includes('Woble')) throw new Error('Princes are not ordered First through Fourteenth');
-    await desktop.getByRole('button', { name: 'Open family tree', exact: true }).click();
-    await desktop.waitForSelector('.succession-migration-note', { timeout: 15_000 });
+    await desktop.getByRole('button', { name: /Open family hierarchy/i }).click();
+    await desktop.waitForSelector('.royal-guard-tree', { timeout: 15_000 });
     if (!desktop.url().includes('view=tree')) throw new Error('Family tree did not open as an explicit optional view');
-    const queenCards = await openWorkspace(desktop, base, 'queens', '.succession-queen-board .succession-queen-card');
+    const queenCards = await openWorkspace(desktop, base, 'queens', '.succession-queen-command__grid > .succession-queen-card');
     if (await queenCards.count() !== 8) throw new Error(`Queen board count is ${await queenCards.count()}, expected 8`);
   });
 
   await record('Assignment Hunter mafia and military workspaces expose canonical structures', desktop, async () => {
-    const assignments = await openWorkspace(desktop, base, 'bodyguards', '.succession-assignment-card');
-    if (await assignments.count() < 30) throw new Error(`Assignment workspace is incomplete: ${await assignments.count()}`);
+    const assignmentRoot = await openWorkspace(desktop, base, 'bodyguards', '.succession-assignment-command');
+    const assignmentTotal = Number((await assignmentRoot.locator('.succession-assignment-command__metrics strong').first().innerText()).trim());
+    if (!Number.isFinite(assignmentTotal) || assignmentTotal < 30) throw new Error(`Assignment archive total is incomplete: ${assignmentTotal}`);
+    const assignments = assignmentRoot.locator('.succession-assignment-card');
+    if (await assignments.count() < 15) throw new Error(`Assignment command rendered too few initial records: ${await assignments.count()}`);
     const hunters = await openWorkspace(desktop, base, 'hunters', '.succession-hunter-missions button');
     if (await hunters.count() < 20) throw new Error(`Hunter mission workspace is incomplete: ${await hunters.count()}`);
     const mafiaFamilies = await openWorkspace(desktop, base, 'mafia', '.succession-mafia-workspace__families > div > article');
@@ -128,7 +131,7 @@ try {
   });
 
   await record(`Beast and chapter workspaces are complete through Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}`, desktop, async () => {
-    const beasts = await openWorkspace(desktop, base, 'guardian-spirit-beasts', '.succession-gsb-grid > button');
+    const beasts = await openWorkspace(desktop, base, 'guardian-spirit-beasts', '.succession-gsb-command__grid > .succession-gsb-command-card');
     if (await beasts.count() !== 15) throw new Error(`Guardian Spirit Beast count is ${await beasts.count()}, expected 15`);
     const chapters = await openWorkspace(desktop, base, 'chapter-records', '.succession-chapter-intel__index > div > button');
     if (await chapters.count() !== expectedChapterCount) throw new Error(`Chapter record count is ${await chapters.count()}, expected ${expectedChapterCount}`);
