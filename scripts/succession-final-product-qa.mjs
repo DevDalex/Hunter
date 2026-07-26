@@ -101,6 +101,11 @@ try {
     await mediaResult.waitFor({ state: 'visible', timeout: 15_000 });
     const mediaReason = await mediaResult.locator('small').innerText();
     if (!mediaReason.toLowerCase().includes('media')) throw new Error(`Media result explanation is incomplete: ${mediaReason}`);
+    await mediaResult.getByRole('button', { name: 'Open', exact: true }).click();
+    await desktop.waitForSelector('.succession-evidence-workspace', { timeout: 15_000 });
+    if (!desktop.url().includes('/research') || !desktop.url().includes('media=')) throw new Error(`Media search result did not resolve through Research: ${desktop.url()}`);
+    await desktop.goBack({ waitUntil: 'domcontentloaded' });
+    await desktop.waitForSelector('.succession-search-complete input', { timeout: 15_000 });
   });
 
   await record('Search opens a graph-connected glossary dossier and browser back restores search', desktop, async () => {
@@ -120,41 +125,42 @@ try {
     await desktop.waitForSelector('.succession-search-complete input', { timeout: 15_000 });
   });
 
-  await record('Media library exposes alt text provenance and canonical subjects', desktop, async () => {
-    await desktop.goto(`${base}/story/succession-contest/media`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    const cards = desktop.locator('.succession-media-canonical__grid > article');
-    await cards.first().waitFor({ state: 'visible', timeout: 15_000 });
-    if (await cards.count() < 20) throw new Error(`Media library is unexpectedly sparse: ${await cards.count()} records`);
-    const images = cards.locator('img');
-    const imageCount = await images.count();
-    if (!imageCount) throw new Error('Media library rendered no images');
-    for (let index = 0; index < imageCount; index += 1) {
-      const alt = await images.nth(index).getAttribute('alt');
-      if (!alt?.trim()) throw new Error(`Media image ${index + 1} has no alt text`);
+  await record('Retired Succession routes resolve to maintained workspaces', desktop, async () => {
+    const redirects = [
+      ['hunters', '.succession-character-workspace'],
+      ['deaths', '.succession-character-workspace'],
+      ['mafia', '.succession-organization-workspace'],
+      ['military', '.succession-organization-workspace'],
+      ['politics', '.succession-organization-workspace'],
+      ['justice', '.succession-organization-workspace'],
+      ['power-blocs', '.succession-organization-workspace'],
+      ['media', '.succession-evidence-workspace'],
+    ];
+    for (const [route, selector] of redirects) {
+      await desktop.goto(`${base}/story/succession-contest/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+      await desktop.waitForSelector(selector, { timeout: 15_000 });
     }
-    await cards.first().getByRole('button', { name: /Open provenance/i }).click();
-    await desktop.waitForSelector('.succession-media-dossier', { timeout: 15_000 });
-    if (!await desktop.locator('.succession-media-dossier__visual code').count()) throw new Error('Media dossier does not expose its stable media ID');
-    const provenance = desktop.getByRole('link', { name: /Open provenance/i });
-    if (!await provenance.count()) throw new Error('Media dossier has no provenance link');
-    if ((await provenance.getAttribute('rel')) !== 'noreferrer noopener') throw new Error('External provenance link is missing safe rel attributes');
-    if (!await desktop.locator('.succession-product-links .succession-entity-link').count()) throw new Error('Media dossier does not link to canonical subjects');
+
+    await desktop.goto(`${base}/story/succession-contest`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+    await desktop.waitForSelector('.succession-archive__sidebar', { timeout: 15_000 });
+    for (const label of ['Hunters', 'Deaths', 'Mafia', 'Military', 'Politics', 'Media']) {
+      const retiredControls = desktop.locator('.succession-archive__sidebar').getByRole('button', { name: label, exact: true });
+      if (await retiredControls.count()) throw new Error(`${label} returned to the primary archive navigation`);
+    }
   });
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
-  await record('Final Search Glossary and Media remain usable on mobile', mobile, async () => {
+  await record('Final Search Glossary and Research remain usable on mobile', mobile, async () => {
     for (const [route, selector] of [
       ['search', '.succession-search-complete'],
       ['glossary', '.succession-glossary-canonical'],
-      ['media', '.succession-media-canonical'],
+      ['research', '.succession-evidence-workspace'],
     ]) {
       await mobile.goto(`${base}/story/succession-contest/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
       await mobile.waitForSelector(selector, { timeout: 15_000 });
       const overflow = await horizontalOverflow(mobile);
       if (overflow > 1) throw new Error(`${route} overflows the mobile viewport by ${overflow}px`);
     }
-    const mediaFilterButtons = mobile.locator('.succession-product-tools [role="group"] button');
-    if (!await mediaFilterButtons.count()) throw new Error('Mobile media filters are not reachable');
   });
 
   await desktop.close();
