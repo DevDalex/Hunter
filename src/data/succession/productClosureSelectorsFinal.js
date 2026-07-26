@@ -2,6 +2,7 @@ import {
   createProductClosureSelectors as createBaseProductClosureSelectors,
   normalizeArchiveSearchText,
 } from './productClosureSelectors.js';
+import { successionChapterResearch } from './successionResearch.js';
 
 const freeze = (values) => Object.freeze(values);
 const includesAllTokens = (text, query) => {
@@ -22,6 +23,21 @@ const searchableEntityTypes = Object.freeze([
   'chapter',
   'source',
 ]);
+
+const pendingChapterEntity = (record) => Object.freeze({
+  id: `chapter:${record.number}`,
+  entityType: 'chapter',
+  slug: `chapter-${record.number}`,
+  name: `Chapter ${record.number}`,
+  number: record.number,
+  title: record.title,
+  summary: record.focus,
+  researchStatus: record.status,
+  publicationStatus: 'published',
+  source: record.source,
+  sourceUrl: record.source,
+  pendingResearch: true,
+});
 
 export const createProductClosureSelectors = (args) => {
   const base = createBaseProductClosureSelectors(args);
@@ -58,6 +74,38 @@ export const createProductClosureSelectors = (args) => {
     const chapter = Number.isFinite(Number(options.chapter))
       ? Number(options.chapter)
       : args.data.chapters.at(-1)?.number;
+
+    const requestedChapterMatch = normalizedQuery.match(/^(?:chapter )?(\d+)$/);
+    const requestedChapter = requestedChapterMatch ? Number(requestedChapterMatch[1]) : null;
+    const pendingChapterResults = (!allowed || allowed.has('chapter'))
+      ? successionChapterResearch.flatMap((record) => {
+        const id = `chapter:${record.number}`;
+        if (args.archive.getEntityById(id)) return [];
+        if (record.number > chapter && record.number !== requestedChapter) return [];
+        const searchable = [
+          `Chapter ${record.number}`,
+          record.title,
+          record.phase,
+          record.status,
+          record.focus,
+        ].join(' ');
+        if (!includesAllTokens(searchable, normalizedQuery)) return [];
+        const exactNumber = requestedChapter === record.number;
+        const entity = pendingChapterEntity(record);
+        return [Object.freeze({
+          id,
+          resultType: 'entity',
+          domain: 'chapter',
+          label: entity.name,
+          summary: entity.summary,
+          score: exactNumber ? 190 : 84,
+          matchReason: exactNumber ? 'Exact imported chapter number' : 'Matched imported chapter record',
+          route: 'chapters',
+          params: Object.freeze({ entity: id, chapter: record.number }),
+          entity,
+        })];
+      })
+      : [];
 
     const systemResults = (!allowed || allowed.has('nen-system'))
       ? args.nenSystems.getNenSystemsAtChapter(chapter).flatMap((profile) => {
@@ -198,7 +246,7 @@ export const createProductClosureSelectors = (args) => {
       })
       : [];
 
-    return freeze([...new Map([...baseResults, ...systemResults, ...storyResults, ...mediaResults, ...assignmentResults].map((result) => [result.id, result])).values()]
+    return freeze([...new Map([...baseResults, ...pendingChapterResults, ...systemResults, ...storyResults, ...mediaResults, ...assignmentResults].map((result) => [result.id, result])).values()]
       .sort((left, right) => (Number(right.score) || 0) - (Number(left.score) || 0)
         || String(left.label || left.id).localeCompare(String(right.label || right.id)))
       .slice(0, Number(options.limit) || 40));
