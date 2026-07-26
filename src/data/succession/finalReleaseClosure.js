@@ -1,3 +1,4 @@
+import { successionArchiveRoutes } from './archiveRoutes.js';
 import { getSuccessionProductInventoryReport } from './productInventory.js';
 
 export const createFinalReleaseClosure = ({
@@ -19,9 +20,15 @@ export const createFinalReleaseClosure = ({
     const chapterCount = data.chapters.length;
     const latestChapter = data.chapters.at(-1)?.number || null;
     const foundationReady = Boolean(foundation?.closureReady ?? foundation?.readyForBatch2);
-    const inventoryReady = inventory.counts.authoritativeWorkspaces === 22
-      && inventory.counts.preservedVisualTools === 3
-      && inventory.counts.releaseGates === 10;
+    const inventoryRouteIds = new Set([
+      ...inventory.authoritativeWorkspaces,
+      ...inventory.preservedVisualTools,
+    ].map((record) => record.routeId));
+    const inventoryReady = inventoryRouteIds.size === successionArchiveRoutes.length
+      && successionArchiveRoutes.every((route) => inventoryRouteIds.has(route.id))
+      && inventory.counts.authoritativeWorkspaces === inventory.authoritativeWorkspaces.length
+      && inventory.counts.preservedVisualTools === inventory.preservedVisualTools.length
+      && inventory.counts.releaseGates === inventory.releaseGates.length;
     const closureReady = Boolean(
       validation.valid
       && foundationReady
