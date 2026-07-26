@@ -108,20 +108,30 @@ export default function SuccessionArchiveShell({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const drawerRef = useRef(null);
   const menuButtonRef = useRef(null);
+  const contentRef = useRef(null);
+  const previousRouteRef = useRef(activeId);
   const route = getSuccessionArchiveRoute(activeId);
 
   useEffect(() => setDrawerOpen(false), [activeId, routeParams]);
+
+  useEffect(() => {
+    if (previousRouteRef.current === activeId) return;
+    previousRouteRef.current = activeId;
+    const frame = window.requestAnimationFrame(() => contentRef.current?.focus({ preventScroll: true }));
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeId]);
 
   useEffect(() => {
     if (!drawerOpen) return undefined;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     const timer = window.setTimeout(() => drawerRef.current?.querySelector(focusableSelector)?.focus(), 20);
+    const restoreMenuFocus = () => window.setTimeout(() => menuButtonRef.current?.focus(), 0);
     const handleKey = (event) => {
       if (event.key === 'Escape') {
         event.preventDefault();
         setDrawerOpen(false);
-        menuButtonRef.current?.focus();
+        restoreMenuFocus();
         return;
       }
       if (event.key !== 'Tab' || !drawerRef.current) return;
@@ -148,6 +158,7 @@ export default function SuccessionArchiveShell({
 
   return <article className="succession-archive" data-archive-route={route.id}>
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
+    <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{route.label} workspace loaded. Reading boundary Chapter {spoilerLimit}.</span>
 
     <div className="succession-archive__mobile-bar">
       <button ref={menuButtonRef} type="button" onClick={() => setDrawerOpen(true)} aria-expanded={drawerOpen} aria-controls="succession-mobile-navigation"><Menu size={19} aria-hidden="true" /> Archive</button>
@@ -155,7 +166,7 @@ export default function SuccessionArchiveShell({
       <button type="button" onClick={onOpenSearch} aria-label="Search Succession Contest Archive"><Search size={18} aria-hidden="true" /></button>
     </div>
 
-    <div className="succession-archive__layout">
+    <div className="succession-archive__layout" aria-hidden={drawerOpen ? 'true' : undefined}>
       <aside className="succession-archive__sidebar">
         <div className="succession-archive__sidebar-inner">
           <div className="succession-archive__brand">
@@ -208,6 +219,7 @@ export default function SuccessionArchiveShell({
             </button>
           </div>
           <ArchivePageHeader
+            headingLevel="h1"
             kicker={`${route.group} workspace`}
             title={route.title}
             description={route.description}
@@ -218,14 +230,21 @@ export default function SuccessionArchiveShell({
               { label: 'Workspace', value: route.status === 'foundation' ? 'Foundation' : 'Available' },
             ]}
           />
-          <div id="succession-workspace-content" className="succession-archive__content" tabIndex="-1">{children}</div>
+          <div
+            ref={contentRef}
+            id="succession-workspace-content"
+            className="succession-archive__content"
+            role="region"
+            aria-label={`${route.label} workspace content`}
+            tabIndex="-1"
+          >{children}</div>
         </div>
       </div>
     </div>
 
     {drawerOpen && <div className="succession-drawer" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDrawerOpen(false); }}>
       <aside ref={drawerRef} role="dialog" aria-modal="true" aria-label="Succession Archive navigation">
-        <header><div><span>Hunter × Hunter</span><strong>Succession Archive</strong></div><button type="button" onClick={() => setDrawerOpen(false)} aria-label="Close archive navigation"><X size={20} aria-hidden="true" /></button></header>
+        <header><div><span>Hunter × Hunter</span><strong>Succession Archive</strong></div><button type="button" onClick={() => { setDrawerOpen(false); window.setTimeout(() => menuButtonRef.current?.focus(), 0); }} aria-label="Close archive navigation"><X size={20} aria-hidden="true" /></button></header>
         <ArchiveNavigation id="succession-mobile-navigation" activeId={route.id} onNavigate={navigate} onIntent={onIntent} />
       </aside>
     </div>}

@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { ArrowRight, BookOpen, ExternalLink, Link2 } from 'lucide-react';
 import { EvidenceBadge, StatusPill } from '../ArchiveUI';
 import SafeImage from '../SafeImage';
@@ -9,6 +10,7 @@ import {
 
 const cx = (...parts) => parts.filter(Boolean).join(' ');
 const initials = (name = '') => name.split(/\s+/).filter(Boolean).map((part) => part[0]).slice(0, 2).join('').toUpperCase() || '?';
+const safeId = (value = '') => String(value).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 const evidenceState = (level) => {
   if (level === 'inference') return 'inferred';
@@ -31,8 +33,9 @@ export const entityWorkspaceTarget = (entity) => {
   return 'archive';
 };
 
-export function ArchivePageHeader({ kicker, title, description, meta = [], actions }) {
+export function ArchivePageHeader({ kicker, title, description, meta = [], actions, headingLevel = 'h2' }) {
   const visibleMeta = meta.filter((item) => item && item.label && item.value != null);
+  const Heading = headingLevel === 'h1' ? 'h1' : 'h2';
   return <header className="succession-page-header">
     <div className="succession-page-header__main">
       <div className="succession-page-header__classification" aria-hidden="true">
@@ -43,7 +46,7 @@ export function ArchivePageHeader({ kicker, title, description, meta = [], actio
       <div className="succession-page-header__body">
         <div className="succession-page-header__copy">
           {kicker && <span className="succession-page-header__kicker">{kicker}</span>}
-          <h1>{title}</h1>
+          <Heading>{title}</Heading>
           {description && <p className="succession-page-header__description">{description}</p>}
         </div>
         {actions && <div className="succession-page-header__actions" aria-label="Page actions">{actions}</div>}
@@ -152,16 +155,46 @@ export function RelatedEntities({ entityId, onNavigate, limit = 8 }) {
   </section>;
 }
 
-export function ArchiveTabs({ items, activeId, onSelect, label }) {
-  return <div className="succession-tabs" role="tablist" aria-label={label}>
-    {items.map((item) => <button
-      type="button"
-      role="tab"
-      aria-selected={item.id === activeId}
-      className={item.id === activeId ? 'is-active' : ''}
-      onClick={() => onSelect(item.id)}
-      key={item.id}
-    >{item.label}</button>)}
+export function ArchiveTabs({ items, activeId, onSelect, label, id = 'succession-tabs', panelId }) {
+  const tabRefs = useRef(new Map());
+  const focusAndSelect = (item) => {
+    if (!item) return;
+    onSelect(item.id);
+    requestAnimationFrame(() => tabRefs.current.get(item.id)?.focus());
+  };
+  const handleKeyDown = (event, currentIndex) => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+    event.preventDefault();
+    const nextIndex = event.key === 'Home'
+      ? 0
+      : event.key === 'End'
+        ? items.length - 1
+        : event.key === 'ArrowRight'
+          ? (currentIndex + 1) % items.length
+          : (currentIndex - 1 + items.length) % items.length;
+    focusAndSelect(items[nextIndex]);
+  };
+  return <div className="succession-tabs" role="tablist" aria-label={label} id={id}>
+    {items.map((item, index) => {
+      const selected = item.id === activeId;
+      const tabId = `${id}-${safeId(item.id)}`;
+      return <button
+        type="button"
+        id={tabId}
+        role="tab"
+        aria-selected={selected}
+        aria-controls={item.panelId || panelId || undefined}
+        tabIndex={selected ? 0 : -1}
+        className={selected ? 'is-active' : ''}
+        onClick={() => onSelect(item.id)}
+        onKeyDown={(event) => handleKeyDown(event, index)}
+        ref={(node) => {
+          if (node) tabRefs.current.set(item.id, node);
+          else tabRefs.current.delete(item.id);
+        }}
+        key={item.id}
+      >{item.label}</button>;
+    })}
   </div>;
 }
 

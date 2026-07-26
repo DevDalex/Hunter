@@ -1017,3 +1017,18 @@
     animation-duration: .01ms;
   }
 }
+
+/* Batch 5 route-owned queen contrast closure. */
+@media (max-width: 560px) {
+  .succession-archive .succession-queen-status-strip > div > dt,
+  .succession-archive .succession-queen-status-strip > div > dd {
+    color: var(--succession-text-on-paper);
+  }
+}
+
+/* Batch 5 final queen contrast specificity. */
+@media (max-width: 560px) {
+  .succession-queen-status-strip.succession-queen-status-strip > div > dt {
+    color: var(--succession-text-on-paper);
+  }
+}

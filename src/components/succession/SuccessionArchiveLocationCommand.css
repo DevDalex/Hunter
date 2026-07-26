@@ -486,3 +486,11 @@
     transition: none;
   }
 }
+
+/* Batch 5 route-owned location contrast closure. */
+@media (max-width: 560px) {
+  .succession-archive .succession-location-filter-panel > header > div > span,
+  .succession-archive .succession-location-filter-panel > header > b {
+    color: var(--succession-text-on-paper);
+  }
+}

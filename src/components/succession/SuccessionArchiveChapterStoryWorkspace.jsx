@@ -380,12 +380,12 @@ export default function SuccessionArchiveChapterStoryWorkspace({ routeParams = {
 
         <section id="chapter-dossier-evidence" className="succession-chapter-dossier__evidence">
           <div className="succession-chapter-intel__section-title"><FileSearch size={18} aria-hidden="true" /><div><span>Evidence and uncertainty</span><h3>Chapter-bounded sources and research state</h3></div></div>
-          <dl className="succession-chapter-dossier__evidence-board">
-            <div><dt>Direct sources</dt><dd>{dossier.sources.length}</dd><span>Available at or before the selected boundary</span></div>
-            <div><dt>Research state</dt><dd>{labelize(selectedRecord?.researchState || 'pending')}</dd><span>{dossier.chapter.storyIntelligenceStatus}</span></div>
-            <div><dt>Unresolved threads</dt><dd>{unresolvedThreadCount}</dd><span>Questions remain explicit rather than converted into conclusions</span></div>
-            <div><dt>Boundary</dt><dd>Chapter {spoilerLimit}</dd><span>Later evidence and outcomes remain hidden</span></div>
-          </dl>
+          <div className="succession-chapter-dossier__evidence-board" role="group" aria-label="Chapter evidence metrics">
+            <div><span className="succession-chapter-dossier__evidence-label">Direct sources</span><strong>{dossier.sources.length}</strong><span>Available at or before the selected boundary</span></div>
+            <div><span className="succession-chapter-dossier__evidence-label">Research state</span><strong>{labelize(selectedRecord?.researchState || 'pending')}</strong><span>{dossier.chapter.storyIntelligenceStatus}</span></div>
+            <div><span className="succession-chapter-dossier__evidence-label">Unresolved threads</span><strong>{unresolvedThreadCount}</strong><span>Questions remain explicit rather than converted into conclusions</span></div>
+            <div><span className="succession-chapter-dossier__evidence-label">Boundary</span><strong>Chapter {spoilerLimit}</strong><span>Later evidence and outcomes remain hidden</span></div>
+          </div>
           <div className="succession-chapter-dossier__evidence-note"><ShieldAlert size={18} aria-hidden="true" /><p>Canonical fact, maintained interpretation, unresolved question, and documentation gap remain visually distinct. Missing research is never replaced with an inferred scene summary.</p></div>
           <div className="succession-chapter-intel__sources">{dossier.sources.map((source) => <SourceReference key={source.id} source={source} onNavigate={onNavigate} />)}</div>
         </section>

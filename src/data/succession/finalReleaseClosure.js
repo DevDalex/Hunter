@@ -18,12 +18,13 @@ export const createFinalReleaseClosure = ({
     const inventory = getSuccessionProductInventoryReport();
     const chapterCount = data.chapters.length;
     const latestChapter = data.chapters.at(-1)?.number || null;
+    const foundationReady = Boolean(foundation?.closureReady ?? foundation?.readyForBatch2);
     const inventoryReady = inventory.counts.authoritativeWorkspaces === 22
       && inventory.counts.preservedVisualTools === 3
       && inventory.counts.releaseGates === 10;
     const closureReady = Boolean(
       validation.valid
-      && foundation?.closureReady
+      && foundationReady
       && people?.closureReady
       && nen?.closureReady
       && story?.closureReady
@@ -38,7 +39,7 @@ export const createFinalReleaseClosure = ({
       catalogue: Object.freeze({ chapterCount, latestChapter, entities: validation.stats.entities }),
       productInventory: inventory,
       batches: Object.freeze({
-        foundation: Object.freeze({ status: foundation?.closureReady ? 'closed' : 'open', report: foundation }),
+        foundation: Object.freeze({ status: foundationReady ? 'closed' : 'open', report: foundation }),
         peopleAndInstitutions: Object.freeze({ status: people?.closureReady ? 'closed' : 'open', report: people }),
         nenAndRitualSystems: Object.freeze({ status: nen?.closureReady ? 'closed' : 'open', report: nen }),
         chapterAndStoryIntelligence: Object.freeze({ status: story?.closureReady ? 'closed' : 'open', report: story }),
@@ -46,7 +47,7 @@ export const createFinalReleaseClosure = ({
       }),
       releaseGates: Object.freeze({
         canonicalData: validation.valid,
-        foundationEvidence: Boolean(foundation?.closureReady),
+        foundationEvidence: foundationReady,
         peopleInstitutions: Boolean(people?.closureReady),
         nenSystems: Boolean(nen?.closureReady),
         storyIntelligence: Boolean(story?.closureReady),

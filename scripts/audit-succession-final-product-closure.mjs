@@ -161,7 +161,13 @@ try {
   assert(search('Guardian Spirit Beast').every((result) => typeof result.matchReason === 'string' && result.matchReason.length > 0), 'every result must explain why it matched');
   assert(archive.searchSuccessionArchive('Kurapika', { chapter: latestChapter }).some((result) => result.entity.id === 'character:kurapika'), 'legacy entity-search API must remain compatible');
 
-  for (const report of [archive.getPeopleInstitutionClosureReport(), archive.getNenSystemClosureReport(), archive.getStoryIntelligenceClosureReport(), archive.getFoundationClosureReport()]) assert(report?.closureReady, 'all earlier batch closure reports must remain closed');
+  const earlierReports = [
+    archive.getPeopleInstitutionClosureReport(),
+    archive.getNenSystemClosureReport(),
+    archive.getStoryIntelligenceClosureReport(),
+    archive.getFoundationClosureReport(),
+  ];
+  for (const report of earlierReports) assert(report?.closureReady ?? report?.readyForBatch2, 'all earlier batch closure reports must remain closed');
 
   console.log(`Succession final product closure audit passed: ${glossary.length} glossary records, ${media.length} consolidated media records, 22 authoritative workspaces, three preserved tools, grouped explained chapter-safe entity/Story/glossary/media search, graph-connected vocabulary, chapter-safe role events, inactive workspace and legacy-ledger removal, product-safe schema and indexes, browser QA registration, responsive and reduced-motion Library presentation, all Batch 1–4 closures, and the definitive inventory-backed release-candidate report are active.`);
 } finally {

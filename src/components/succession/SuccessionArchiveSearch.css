@@ -9,6 +9,7 @@
 @import './SuccessionArchiveStoryContrast.css';
 @import './SuccessionArchiveLocationCommand.css';
 @import './SuccessionArchiveBlackWhaleCommand.css';
+@import './SuccessionArchiveFinalPolish.css';
 
 .succession-search-complete {
   display: grid;
