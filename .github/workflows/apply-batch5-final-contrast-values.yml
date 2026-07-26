@@ -1,0 +1,34 @@
+name: Apply Batch 5 Final Contrast Values
+
+on:
+  pull_request:
+    branches:
+      - succession-visual-redesign-batch-4
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.head_ref == 'succession-visual-redesign-batch-5'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: succession-visual-redesign-batch-5
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply final contrast values
+        run: node scripts/apply-batch5-final-contrast-values.mjs
+      - name: Commit final contrast values
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add src/components/SuccessionTimeline.jsx src/components/succession/SuccessionArchiveDeepWorkspaces.jsx src/components/BlackWhaleGuide.jsx src/components/succession/SuccessionArchiveGuardianBeastWorkspace.jsx
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "fix(batch5): use deterministic accessible contrast values"
+          git push origin HEAD:succession-visual-redesign-batch-5
