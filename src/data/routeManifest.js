@@ -1,5 +1,8 @@
 import { ARCHIVE_BOUNDARY } from './archiveMeta.js';
-import { successionArchiveRoutes } from './succession/archiveRoutes.js';
+import {
+  successionArchiveRetiredTargets,
+  successionArchiveRoutes,
+} from './succession/archiveRoutes.js';
 
 export {
   getSuccessionArchiveRoute,
@@ -7,6 +10,7 @@ export {
   successionArchiveLegacyTargets,
   successionArchivePathToTarget,
   successionArchivePrimary,
+  successionArchiveRetiredTargets,
   successionArchiveRouteById,
   successionArchiveRouteIds,
   successionArchiveRoutes,
@@ -47,8 +51,8 @@ export const successionPages = [
     description: `Royalty, guards, servants, Hunters, soldiers, mafia, Justice, the Troupe, and expedition personnel indexed through Chapter ${ARCHIVE_BOUNDARY}.`,
   },
   {
-    id: 'chapters', label: 'Records', kicker: 'Chapters and changing states', title: 'Chapters, deaths and mysteries',
-    description: `Current-arc chapter records, deaths, possession and body states, consequential objects, and unresolved questions through Chapter ${ARCHIVE_BOUNDARY}.`,
+    id: 'chapters', label: 'Records', kicker: 'Chapters and changing states', title: 'Chapters, character states and mysteries',
+    description: `Current-arc chapter records, character life and body states, possession, consequential objects, and unresolved questions through Chapter ${ARCHIVE_BOUNDARY}.`,
   },
   {
     id: 'black-whale', label: 'Black Whale', kicker: 'Interactive ship atlas', title: 'Inside Black Whale 1',
@@ -59,26 +63,24 @@ export const successionPages = [
     description: 'Guardian Spirit Beasts, Succession-specific abilities, Kurapika’s classes, ritual rules, conditions, costs, and unknown mechanics.',
   },
   {
-    id: 'mafia', label: 'Power blocs', kicker: 'Organizations and operations', title: 'Mafia, Justice and operations',
-    description: 'Xi-Yu, Cha-R, Heil-Ly, the Phantom Troupe, military authority, investigations, assassinations, escapes, and political relationships.',
+    id: 'organizations', label: 'Organizations', kicker: 'Power structures and operations', title: 'Organizations and institutions',
+    description: 'Mafia families, Justice, military authority, royal houses, political institutions, expedition groups, investigations, operations, and institutional relationships.',
   },
 ];
 
 export const successionPrimary = successionPages.map((page) => page.id);
 export const legacyDossierPage = successionPages[0];
 
+const retiredSuccessionAliases = Object.fromEntries(
+  Object.entries(successionArchiveRetiredTargets).map(([target, destination]) => [target, { target: destination }]),
+);
+
 export const successionAliases = {
   'deep-dossier': { target: 'family-tree', panel: 'princes' },
   princes: { target: 'family-tree', panel: 'princes' },
   'connection-board': { target: 'succession-roster', panel: 'relationships' },
   'nen-classes': { target: 'beasts', panel: 'classes' },
-  justice: { target: 'organizations' },
-  hunters: { target: 'characters' },
-  deaths: { target: 'characters' },
-  mafia: { target: 'organizations' },
-  military: { target: 'organizations' },
-  politics: { target: 'organizations' },
-  media: { target: 'research' },
+  ...retiredSuccessionAliases,
   mysteries: { target: 'chapters', panel: 'mysteries' },
   'succession-sources': { target: 'overview' },
 };
@@ -91,14 +93,15 @@ export const successionPageIds = new Set([
 export const successionDossierTabs = {
   'family-tree': 'royal',
   beasts: 'beasts',
-  mafia: 'mafia',
+  organizations: 'organizations',
+  mafia: 'organizations',
   chapters: 'chapters',
 };
 
 export const dossierTabRoutes = {
   overview: 'overview', royal: 'family-tree', assignments: 'succession-roster', threads: 'succession-roster',
-  beasts: 'beasts', abilities: 'beasts', rules: 'beasts', mafia: 'mafia', justice: 'mafia',
-  relationships: 'mafia', operations: 'mafia', status: 'chapters', objects: 'chapters',
+  beasts: 'beasts', abilities: 'beasts', rules: 'beasts', mafia: 'organizations', justice: 'organizations',
+  relationships: 'relationships', operations: 'organizations', status: 'chapters', objects: 'chapters',
   chapters: 'chapters', mysteries: 'chapters', links: 'chapters', sources: 'overview',
 };
 
