@@ -23,10 +23,29 @@ Batch 5 connects the completed Succession workspaces through advanced visualizat
 - Pair the wide concurrent-lane matrix with an ordinary lane-by-lane mobile list so the graphic is never the only readable representation.
 - Add mobile-safe stacking, horizontal rails, 44px controls, touch behavior, and reduced-motion handling.
 
+## Hour 53 — Relationship graph
+
+- Replace the flat relationship directory with a chapter-sensitive intelligence network.
+- Render only canonical relationship records already active at the selected chapter.
+- Distinguish allied, hostile, mixed, and uncertain sentiment without using color as the only signal.
+- Preserve directed and bidirectional edges, source and target nodes, type, subtype, strength, status, chapter range, and evidence state.
+- Add a highest-connectivity graph and focused radial neighborhoods around a selected character or organization.
+- Keep direct navigation from every visible node and edge into its canonical dossier.
+
+## Hour 54 — Focused and accessible relationship views
+
+- Add graph, accessible edge-list, and dossier-card modes over the same filtered records.
+- Pair every visual graph with a complete textual edge ledger.
+- State source node, target node, direction, relationship type, sentiment, status, and chapter span in ordinary markup.
+- Add focused node snapshots with incoming, outgoing, neighboring, and total edge counts.
+- Preserve relationship evidence, operational state, interpretive limits, linked events, sources, and entity records.
+- Add responsive graph reduction, mobile semantic reading order, touch-safe controls, and reduced-motion behavior.
+
 ## Acceptance gate
 
 ```bash
 node scripts/audit-succession-batch-5-timeline.mjs
+node scripts/audit-succession-batch-5-relationships.mjs
 npm run audit:succession-visual-foundation
 npm run audit:succession-shell-redesign
 npm run audit:succession-page-header-redesign
@@ -48,11 +67,10 @@ npm run prepare:eta-assets
 npx vite build
 ```
 
-The dedicated workflow then renders the global Timeline and the Succession Timeline at desktop, tablet, and mobile sizes.
+The dedicated workflow renders the global Timeline, Succession Timeline, and Relationships workspace at desktop, tablet, and mobile sizes.
 
 ## Remaining Batch 5 scope
 
-- Hours 53–54: relationship graph, focused relationship analysis, and accessible list views.
 - Hours 55–56: Black Whale map and chapter-sensitive occupancy/movement.
 - Hours 57–58: assignment workspace and advanced table/result presentation.
 - Hours 59–64: interaction and motion polish, complete responsive/accessibility/performance review, legacy cleanup, cross-browser regression, final audit, debt record, and project closure.
