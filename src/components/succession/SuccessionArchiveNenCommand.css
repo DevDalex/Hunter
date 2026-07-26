@@ -17,7 +17,18 @@
   --nen-line-strong: var(--succession-border-strong);
   display: grid;
   gap: clamp(20px, 3vw, 38px);
+  width: 100%;
+  max-width: 100%;
   min-width: 0;
+  overflow-x: clip;
+  box-sizing: border-box;
+}
+
+.succession-nen-command > * {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .succession-nen-command h2,
