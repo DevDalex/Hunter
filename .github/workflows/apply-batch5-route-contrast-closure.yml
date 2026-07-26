@@ -1,0 +1,46 @@
+name: Apply Batch 5 Route Contrast Closure
+
+on:
+  pull_request:
+    branches:
+      - succession-visual-redesign-batch-4
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.head_ref == 'succession-visual-redesign-batch-5'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: succession-visual-redesign-batch-5
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apply route-owned contrast closure
+        run: node scripts/apply-batch5-route-contrast-closure.mjs
+
+      - name: Commit route-owned contrast closure
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No route contrast changes required."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/components/TimelineCommand.css \
+            src/components/BlackWhaleIntelligenceCommand.css \
+            src/components/succession/SuccessionArchiveRoyalFamilyRedesign.css \
+            src/components/succession/SuccessionArchiveLocationCommand.css \
+            src/components/succession/SuccessionArchiveGuardianBeastCommand.css
+          git commit -m "fix(batch5): close route-owned mobile contrast defects"
+          git push origin HEAD:succession-visual-redesign-batch-5
