@@ -30,7 +30,8 @@ for (const token of [
   'className="succession-tabs"',
   'role="tablist"',
   'role="tab"',
-  'aria-selected={item.id === activeId}',
+  'aria-selected={selected}',
+  'tabIndex={selected ? 0 : -1}',
 ]) assert(primitives.includes(token), `local navigation contract is missing ${token}`);
 
 for (const token of [
@@ -77,4 +78,4 @@ for (const hour of ['Hour 18', 'Hour 19', 'Hour 20', 'Hour 21', 'Hour 22', 'Hour
 }
 assert(docs.includes('Batch 2 closure gate'), 'design record must include the Batch 2 closure gate');
 
-console.log('Succession Batch 2 completion audit passed: navigation, tabs, chapter controls, search, landing experience, and responsive closure are registered.');
+console.log('Succession Batch 2 completion audit passed: navigation, keyboard-complete tabs, chapter controls, search, landing experience, and responsive closure are registered.');
