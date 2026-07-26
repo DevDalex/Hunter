@@ -184,13 +184,13 @@ export default function SuccessionTimeline({ spoilerLimit = Number.MAX_SAFE_INTE
         <nav className="timeline-day-rail" aria-label="Jump to a voyage day">
           {boundaryDays.map((day) => {
             const count = day.events.filter((event) => event.chapter <= spoilerLimit && filteredIds.has(event.id)).length;
-            return <button type="button" disabled={!count} onClick={() => jumpToDay(day.day)} key={day.day}><small>Day</small><strong>{day.day}</strong><span>{day.date.replace(', 2001', '')}</span><em style={{ color: 'var(--timeline-paper)' }}>{count}</em></button>;
+            return <button type="button" disabled={!count} onClick={() => jumpToDay(day.day)} key={day.day}><small>Day</small><strong>{day.day}</strong><span>{day.date.replace(', 2001', '')}</span><em style={{ color: 'white' }}>{count}</em></button>;
           })}
         </nav>
         <div className="timeline-workbench">
           <div className="timeline-days timeline-days--ledger">
             {visibleDays.map((day) => <article className="timeline-day" id={`voyage-day-${day.day}`} key={day.day}>
-              <header><div className="timeline-day__number"><span style={{ color: 'var(--timeline-ink)' }}>Day</span><b>{String(day.day).padStart(2, '0')}</b></div><div><span>{day.date} · Chapters {day.chapterRange}</span><h3>{day.headline}</h3><p>{day.summary}</p></div><em>{day.visibleEvents.length} events</em></header>
+              <header><div className="timeline-day__number"><span style={{ color: 'white' }}>Day</span><b>{String(day.day).padStart(2, '0')}</b></div><div><span>{day.date} · Chapters {day.chapterRange}</span><h3>{day.headline}</h3><p>{day.summary}</p></div><em>{day.visibleEvents.length} events</em></header>
               <div className="timeline-event-ledger">{day.visibleEvents.map((event) => eventButton(event, density === 'overview'))}</div>
             </article>)}
             {!visibleDays.length && <div className="timeline-command-voyage__empty"><Filter size={22} aria-hidden="true" /><h3>No voyage events match.</h3><p>Clear one or more filters to restore the maintained chronology.</p><button type="button" onClick={resetFilters}>Reset timeline</button></div>}
