@@ -10,6 +10,8 @@ on:
       - 'src/components/TimelineWorkspace.css'
       - 'src/components/TimelineCommand.css'
       - 'src/components/SuccessionTimeline.jsx'
+      - 'src/components/BlackWhaleGuide.jsx'
+      - 'src/components/BlackWhaleIntelligenceCommand.css'
       - 'src/components/succession/SuccessionArchiveRelationshipWorkspace.jsx'
       - 'src/components/succession/SuccessionArchiveRelationshipWorkspace.css'
       - 'src/components/succession/SuccessionArchiveRelationshipCommand.css'
@@ -27,9 +29,9 @@ concurrency:
 
 jobs:
   advanced_intelligence:
-    name: Batch 5 timeline and relationship regression gate
+    name: Batch 5 timeline, relationship, and spatial regression gate
     runs-on: ubuntu-latest
-    timeout-minutes: 80
+    timeout-minutes: 90
 
     steps:
       - name: Check out repository
@@ -49,6 +51,9 @@ jobs:
 
       - name: Audit Batch 5 relationship intelligence
         run: node scripts/audit-succession-batch-5-relationships.mjs
+
+      - name: Audit Batch 5 Black Whale intelligence
+        run: node scripts/audit-succession-batch-5-black-whale.mjs
 
       - name: Audit visual foundation
         run: npm run audit:succession-visual-foundation
@@ -133,6 +138,13 @@ jobs:
           set -o pipefail
           npm run qa:visual 2>&1 | tee batch5-relationships-visual.log
 
+      - name: Inspect Black Whale at all viewports
+        env: { VISUAL_QA_ROUTE: succession/black-whale, VISUAL_QA_OUTPUT: .visual-qa/succession-black-whale, VISUAL_QA_SCREENSHOTS: all }
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run qa:visual 2>&1 | tee batch5-black-whale-visual.log
+
       - name: Publish Batch 5 diagnostics
         if: always()
         uses: actions/upload-artifact@v4
@@ -143,6 +155,7 @@ jobs:
             .visual-qa/global-timeline
             .visual-qa/succession-timeline
             .visual-qa/succession-relationships
+            .visual-qa/succession-black-whale
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 14
