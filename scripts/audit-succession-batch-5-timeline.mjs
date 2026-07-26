@@ -72,6 +72,7 @@ assert(styles.includes('min-height: 44px'), 'timeline controls must retain 44px 
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(styles), 'timeline CSS must not introduce raw hex colors');
 assert(!styles.includes('!important'), 'timeline CSS must not depend on !important');
 assert(routeStyles.includes('grid-template-columns: minmax(0, 1fr)'), 'timeline route CSS must contain the prelude collision repair');
+assert(routeStyles.includes('.succession-archive .timeline-command .timeline-command-voyage__hero h2'), 'timeline route CSS must preserve dark-surface hero contrast');
 assert(routeManifest.includes("{ view: 'timeline'"), 'global Timeline must remain in the release manifest');
 assert(routeManifest.includes("'timeline'"), 'Succession Timeline must remain in the release manifest');
 assert(workflow.includes('node scripts/audit-succession-batch-5-timeline.mjs'), 'Batch 5 workflow must run the timeline audit');
@@ -80,4 +81,4 @@ assert(workflow.includes('VISUAL_QA_ROUTE: succession/timeline'), 'Batch 5 workf
 assert((workflow.match(/set -o pipefail/g) || []).length >= 2, 'both visual-QA commands must propagate failures through tee');
 for (const hour of ['Hour 51', 'Hour 52']) assert(docs.includes(hour), `Batch 5 design record must document ${hour}`);
 
-console.log('Succession Batch 5 timeline audit passed: global chronology command, voyage filters, evidence confidence, five synchronized views, semantic mobile lanes, truthful visual gates, tablet containment, touch targets, responsive behavior, and reduced motion are registered.');
+console.log('Succession Batch 5 timeline audit passed: global chronology command, voyage filters, evidence confidence, five synchronized views, semantic mobile lanes, truthful visual gates, tablet containment, dark-surface contrast, touch targets, responsive behavior, and reduced motion are registered.');
