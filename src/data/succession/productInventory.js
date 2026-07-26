@@ -1,3 +1,5 @@
+import { successionArchiveLegacyTargets } from './archiveRoutes.js';
+
 const freeze = (values) => Object.freeze(values);
 
 const workspace = (routeId, module, authority, options = {}) => Object.freeze({
@@ -10,7 +12,7 @@ const workspace = (routeId, module, authority, options = {}) => Object.freeze({
 });
 
 export const successionProductInventory = Object.freeze({
-  version: 2,
+  version: 3,
   batch: 5,
   status: 'release-candidate',
   authoritativeWorkspaces: freeze([
@@ -36,22 +38,7 @@ export const successionProductInventory = Object.freeze({
     workspace('timeline', '../TimelineWorkspace.jsx', 'voyage visual timeline', { kind: 'preserved-visual-tool' }),
     workspace('reader', 'SuccessionReader route', 'chapter image reader', { kind: 'external-route-tool' }),
   ]),
-  legacyAliases: Object.freeze({
-    overview: 'archive',
-    'family-tree': 'princes',
-    'royal-family': 'princes',
-    'succession-roster': 'characters',
-    'succession-timeline': 'timeline',
-    beasts: 'guardian-spirit-beasts',
-    hunters: 'characters',
-    deaths: 'characters',
-    mafia: 'organizations',
-    military: 'organizations',
-    politics: 'organizations',
-    justice: 'organizations',
-    'power-blocs': 'organizations',
-    media: 'research',
-  }),
+  legacyAliases: successionArchiveLegacyTargets,
   removedImplementationClasses: freeze([
     'static Story workspace',
     'legacy Chapter Records workspace',
