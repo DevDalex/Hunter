@@ -70,7 +70,11 @@ try {
   assert(report?.productInventory?.version === 1, 'public final report must expose product inventory version 1');
   assert(report.productInventory.counts.authoritativeWorkspaces === 22, 'public final report must expose all authoritative workspaces');
   assert(report.productInventory.counts.preservedVisualTools === 3, 'public final report must expose all preserved tools');
-  assert(report.closureReady && report.status === 'release-candidate', 'inventory-complete static closure must remain a release candidate');
+  const batchStatuses = Object.fromEntries(Object.entries(report.batches || {}).map(([key, value]) => [key, value.status]));
+  assert(
+    report.closureReady && report.status === 'release-candidate',
+    `inventory-complete static closure must remain a release candidate; status=${report.status}; batches=${JSON.stringify(batchStatuses)}; gates=${JSON.stringify(report.releaseGates)}`,
+  );
 
   console.log(`Succession product inventory audit passed: ${authoritative.length} authoritative workspaces, ${preserved.length} preserved tools, ${Object.keys(successionProductInventory.legacyAliases).length} legacy aliases, ${successionProductInventory.removedImplementationClasses.length} removed implementation classes, and ${successionProductInventory.releaseGates.length} final release gates are maintained.`);
 } finally {
