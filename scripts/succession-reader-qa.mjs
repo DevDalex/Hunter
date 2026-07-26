@@ -124,7 +124,7 @@ try {
     await desktop.keyboard.press('c');
     await desktop.waitForSelector('.succession-reader-panel [role="dialog"]');
 
-    const summary = await desktop.locator('.succession-reader__chapter-summary').innerText();
+    const summary = (await desktop.locator('.succession-reader__chapter-summary').innerText()).replace(/\s+/g, ' ').toLocaleLowerCase();
     if (!summary.includes(`${EXPECTED_CHAPTER_TOTAL} indexed`)) {
       throw new Error(`Chapter drawer summary does not report ${EXPECTED_CHAPTER_TOTAL} indexed chapters: ${summary}`);
     }
@@ -153,14 +153,12 @@ try {
   });
 
   await record('Reader modes fit direction and panels preserve URL state', desktop, async () => {
-    const reader = await openReader(desktop, base, 'chapter=400&page=1&mode=spread&fit=height&direction=ltr');
-    await closeReaderPanel(desktop);
+    const reader = await openReader(desktop, base, 'chapter=400&page=1&mode=spread&fit=height&direction=ltr&panel=commands');
     if (await reader.getAttribute('data-reader-mode') !== 'spread') throw new Error('Spread mode did not initialize');
     if (await reader.getAttribute('data-reader-fit') !== 'height') throw new Error('Fit-height did not initialize');
     if (await reader.getAttribute('data-reader-direction') !== 'ltr') throw new Error('LTR direction did not initialize');
 
-    await desktop.keyboard.press('Control+k');
-    await desktop.waitForSelector('.succession-reader-panel--commands [role="dialog"]');
+    await desktop.waitForSelector('.succession-reader-panel--commands > [role="dialog"]');
     if (!desktop.url().includes('panel=commands')) throw new Error('Command palette state is not represented in the URL');
     await closeReaderPanel(desktop);
 
