@@ -1,9 +1,9 @@
 name: Apply Batch 5 Accessibility Repairs
 
 on:
-  push:
+  pull_request:
     branches:
-      - succession-visual-redesign-batch-5
+      - succession-visual-redesign-batch-4
   workflow_dispatch:
 
 permissions:
@@ -11,6 +11,7 @@ permissions:
 
 jobs:
   repair:
+    if: github.head_ref == 'succession-visual-redesign-batch-5'
     runs-on: ubuntu-latest
     steps:
       - name: Check out branch
