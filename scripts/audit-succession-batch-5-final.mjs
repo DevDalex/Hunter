@@ -57,7 +57,7 @@ for (const token of [
 for (const token of [
   "loading = 'lazy'",
   'IntersectionObserver',
-  "decoding=\"async\"",
+  'decoding="async"',
   "priority || (eager ? 'high' : 'auto')",
   'width={media?.width || undefined}',
   'height={media?.height || undefined}',
@@ -95,8 +95,8 @@ for (const token of [
   'node scripts/audit-succession-batch-5-final.mjs',
   'npm run audit:layout',
   'npm run audit:performance',
-  'node scripts/succession-final-release-qa.mjs',
-  'node scripts/succession-cross-browser-qa.mjs',
+  'npm run qa:succession-final-release',
+  'npm run qa:succession-cross-browser',
   'playwright install --with-deps chromium firefox webkit',
 ]) assert(workflow.includes(token), `final workflow is missing ${token}`);
 
