@@ -1,12 +1,13 @@
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
-import { access, readFile, stat } from 'node:fs/promises';
+import { access, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
 
 const require = createRequire(import.meta.url);
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
+const reportPath = path.join(root, 'succession-a11y-diagnostic.json');
 const axePath = require.resolve('axe-core/axe.min.js');
 const routes = [
   'timeline/',
@@ -78,6 +79,7 @@ const server = await serve();
 const base = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({ headless: true });
 const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+const report = [];
 let failed = 0;
 
 try {
@@ -85,7 +87,7 @@ try {
     await page.goto(`${base}/#/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
     await settle(page);
     await page.addScriptTag({ path: axePath });
-    const result = await page.evaluate(async () => {
+    const violations = await page.evaluate(async () => {
       const axeResult = await globalThis.axe.run(document, {
         runOnly: { type: 'rule', values: ['color-contrast', 'definition-list', 'aria-required-children', 'select-name'] },
       });
@@ -102,15 +104,16 @@ try {
         })),
       }));
     });
-    if (!result.length) {
+    report.push({ route, violations });
+    if (!violations.length) {
       console.log(`PASS ${route}`);
       continue;
     }
-    failed += result.reduce((sum, violation) => sum + violation.nodes.length, 0);
-    console.log(`\nFAIL ${route}`);
-    console.log(JSON.stringify(result, null, 2));
+    failed += violations.reduce((sum, violation) => sum + violation.nodes.length, 0);
+    console.log(`FAIL ${route} · ${violations.reduce((sum, violation) => sum + violation.nodes.length, 0)} node(s)`);
   }
 } finally {
+  await writeFile(reportPath, `${JSON.stringify({ generatedAt: new Date().toISOString(), failedNodes: failed, routes: report }, null, 2)}\n`);
   await page.close();
   await browser.close();
   await new Promise((resolve) => server.close(resolve));
