@@ -23,6 +23,7 @@ import {
   getMediaRecordsAtChapter,
 } from '../../data/succession/successionData';
 import {
+  ArchiveState,
   EntityLink,
   EntityVisual,
   SourceReference,
