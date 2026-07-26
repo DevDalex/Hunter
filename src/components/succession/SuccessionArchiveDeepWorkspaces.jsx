@@ -166,7 +166,7 @@ export function QueensWorkspace({ routeParams = {}, spoilerLimit = latestChapter
       <div className="succession-queen-branch-sigil" aria-hidden="true"><Crown size={40} /><span>8</span><small>maternal branches</small></div>
     </section>
 
-    <dl className="succession-queen-status-strip"><div><dt>Queens</dt><dd>{records.length}</dd></div><div><dt>Active</dt><dd>{counts.active}</dd></div><div><dt>Exceptional</dt><dd>{counts.exceptional}</dd></div><div><dt>Deceased</dt><dd>{counts.deceased}</dd></div><div><dt>Linked princes</dt><dd>{counts.children}</dd></div></dl>
+    <dl className="succession-queen-status-strip"><div><dt style={{ color: 'var(--succession-text-on-paper)' }}>Queens</dt><dd>{records.length}</dd></div><div><dt style={{ color: 'var(--succession-text-on-paper)' }}>Active</dt><dd>{counts.active}</dd></div><div><dt style={{ color: 'var(--succession-text-on-paper)' }}>Exceptional</dt><dd>{counts.exceptional}</dd></div><div><dt style={{ color: 'var(--succession-text-on-paper)' }}>Deceased</dt><dd>{counts.deceased}</dd></div><div><dt style={{ color: 'var(--succession-text-on-paper)' }}>Linked princes</dt><dd>{counts.children}</dd></div></dl>
 
     <section className="succession-queen-command__filters" aria-label="Queen household filters">
       <label><Search size={16} aria-hidden="true" /><span className="sr-only">Search queen households</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Queen, prince, authority, pressure…" /></label>

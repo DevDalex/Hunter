@@ -68,7 +68,7 @@ function BeastCard({ record, mode, onOpen }) {
   const classification = knowledgeClass(state);
   const hostClass = hostStateClass(state);
   return <button type="button" className={`succession-gsb-command-card is-${classification} is-host-${hostClass}`} onClick={() => onOpen(beast.id)}>
-    <div className="succession-gsb-command-card__visual"><EntityVisual entity={mode === 'host' ? host : beast} /><span>{host?.princeOrder ? String(host.princeOrder).padStart(2, '0') : 'K'}</span></div>
+    <div className="succession-gsb-command-card__visual"><EntityVisual entity={mode === 'host' ? host : beast} /><span style={{ color: 'var(--succession-text-on-paper)' }}>{host?.princeOrder ? String(host.princeOrder).padStart(2, '0') : 'K'}</span></div>
     <div><span>{state.knowledge} · {labelize(classification)}</span><h3>{mode === 'host' ? host?.name || beast.name : beast.name}</h3><p>{state.operationalState}</p><small>{mode === 'host' ? beast.name : `Host: ${host?.name || 'Unresolved'}`}</small></div>
     <dl><div><dt>Known</dt><dd>{state.knownAbilityIds.length}</dd></div><div><dt>Suspected</dt><dd>{state.suspectedAbilityIds.length}</dd></div><div><dt>Unknowns</dt><dd>{state.unresolved.length}</dd></div><div><dt>Host state</dt><dd>{labelize(hostClass)}</dd></div></dl>
     <footer><span>{labelize(state.visibility)}</span><b>Open ritual dossier <ArrowRight size={13} aria-hidden="true" /></b></footer>
