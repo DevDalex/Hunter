@@ -59,12 +59,30 @@ Batch 5 connects the completed Succession workspaces through advanced visualizat
 - Add a complete semantic location or movement ledger below the map so spatial meaning never depends on image position, line drawing, or color.
 - Preserve chapter boundaries, touch-safe controls, responsive stacking, horizontal map navigation, and reduced-motion behavior.
 
+## Hour 57 — Assignment operations command
+
+- Replace the legacy dark assignment directory with a chapter-sensitive operational command.
+- Keep operative, principal, protected or targeted subject, allegiance, reporting line, physical location, secrecy, status, chapter range, predecessor, successor, related events, and evidence as separate maintained fields.
+- Add a cinematic command hero, active-snapshot signal, archive metrics, and assignment-family architecture.
+- Add complete-archive and active-at-chapter scopes without hiding historical operations.
+- Add personnel role snapshots and redesigned assignment dossiers with command chain, objective, authority basis, notes, succession, events, and sources.
+
+## Hour 58 — Advanced tables and result presentation
+
+- Provide command-card, sortable table, and compact ledger modes over the same filtered assignment records.
+- Add sorting by chapter, assignment name, assignment type, and operative name.
+- Add compound search, type, status, secrecy, scope, and chapter controls with removable active-filter chips.
+- Add paginated result expansion for large sets instead of rendering an unbounded directory.
+- Keep the table semantically structured, horizontally navigable where necessary, and paired with card and ledger alternatives.
+- Preserve active-snapshot labels, explicit secrecy and status text, 44px controls, touch behavior, mobile stacking, and reduced motion.
+
 ## Acceptance gate
 
 ```bash
 node scripts/audit-succession-batch-5-timeline.mjs
 node scripts/audit-succession-batch-5-relationships.mjs
 node scripts/audit-succession-batch-5-black-whale.mjs
+node scripts/audit-succession-batch-5-assignments.mjs
 npm run audit:succession-visual-foundation
 npm run audit:succession-shell-redesign
 npm run audit:succession-page-header-redesign
@@ -86,9 +104,8 @@ npm run prepare:eta-assets
 npx vite build
 ```
 
-The dedicated workflow renders the global Timeline, Succession Timeline, Relationships, and Black Whale workspaces at desktop, tablet, and mobile sizes.
+The dedicated workflow renders the global Timeline, Succession Timeline, Relationships, Black Whale, and Assignments workspaces at desktop, tablet, and mobile sizes.
 
 ## Remaining Batch 5 scope
 
-- Hours 57–58: assignment workspace and advanced table/result presentation.
 - Hours 59–64: interaction and motion polish, complete responsive/accessibility/performance review, legacy cleanup, cross-browser regression, final audit, debt record, and project closure.
