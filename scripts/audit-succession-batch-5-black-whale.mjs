@@ -7,10 +7,11 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 5 Black Whale audit failed: ${message}`);
 };
 
-const [guide, styles, workflow, docs, routeManifest] = await Promise.all([
+const [guide, styles, workflow, finalQa, docs, routeManifest] = await Promise.all([
   read('src/components/BlackWhaleGuide.jsx'),
   read('src/components/BlackWhaleIntelligenceCommand.css'),
   read('.github/workflows/succession-visual-redesign-batch-5.yml'),
+  read('scripts/succession-final-release-qa.mjs'),
   read('docs/SUCCESSION-VISUAL-REDESIGN-BATCH-5.md'),
   read('src/data/routeManifest.js'),
 ]);
@@ -52,7 +53,8 @@ assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(styles), 'Black Whale CSS must not introd
 assert(!styles.includes('!important'), 'Black Whale CSS must not depend on !important');
 assert(routeManifest.includes("'black-whale'"), 'release visual manifest must include the Black Whale route');
 assert(workflow.includes('node scripts/audit-succession-batch-5-black-whale.mjs'), 'Batch 5 workflow must run the Black Whale audit');
-assert(workflow.includes('VISUAL_QA_ROUTE: succession/black-whale'), 'Batch 5 workflow must render the Black Whale workspace');
+assert(workflow.includes('npm run qa:succession-final-release'), 'Batch 5 workflow must run the complete release matrix');
+assert(finalQa.includes('...successionReleaseRoutes.map'), 'complete release matrix must render the curated Succession routes, including Black Whale');
 for (const hour of ['Hour 55', 'Hour 56']) assert(docs.includes(hour), `Batch 5 design record must document ${hour}`);
 
-console.log('Succession Batch 5 Black Whale audit passed: temporal atlas modes, chapter snapshots, occupancy signals, mapped movement paths, semantic ledgers, responsive behavior, touch targets, and reduced motion are registered.');
+console.log('Succession Batch 5 Black Whale audit passed: temporal atlas modes, chapter snapshots, occupancy signals, mapped movement paths, semantic ledgers, consolidated release QA, responsive behavior, touch targets, and reduced motion are registered.');
