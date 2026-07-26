@@ -7,9 +7,10 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 5 assignment audit failed: ${message}`);
 };
 
-const [workspace, styles, searchStyles, routeManifest, workflow, docs] = await Promise.all([
+const [workspace, styles, compatibilityStyles, searchStyles, routeManifest, workflow, docs] = await Promise.all([
   read('src/components/succession/SuccessionArchiveAssignmentWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveAssignmentCommand.css'),
+  read('src/components/succession/SuccessionArchiveAssignmentWorkspace.css'),
   read('src/components/succession/SuccessionArchiveSearch.css'),
   read('src/data/routeManifest.js'),
   read('.github/workflows/succession-visual-redesign-batch-5.yml'),
@@ -58,10 +59,13 @@ assert(styles.includes('@media (prefers-reduced-motion: reduce)'), 'assignment C
 assert(styles.includes('min-height: 44px'), 'assignment controls must retain 44px touch targets');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(styles), 'assignment command CSS must not introduce raw hex colors');
 assert(!styles.includes('!important'), 'assignment command CSS must not depend on !important');
-assert(searchStyles.includes("@import './SuccessionArchiveAssignmentCommand.css';"), 'assignment command must load through the Succession style chain');
+assert(compatibilityStyles.trim().endsWith("@import './SuccessionArchiveAssignmentCommand.css';"), 'legacy Assignment CSS must remain an import-only compatibility shim');
+assert(!compatibilityStyles.includes('.succession-canonical-assignments {'), 'legacy Assignment declarations must be removed');
+assert(!searchStyles.includes("@import './SuccessionArchiveAssignmentCommand.css';"), 'Assignment command must not be loaded twice through the shared search stylesheet');
+assert(searchStyles.includes("@import './SuccessionArchiveFinalPolish.css';"), 'the final shared interaction layer must load last');
 assert(routeManifest.includes("'bodyguards'"), 'release visual manifest must include the Assignments route');
 assert(workflow.includes('node scripts/audit-succession-batch-5-assignments.mjs'), 'Batch 5 workflow must run the assignment audit');
 assert(workflow.includes('succession/bodyguards'), 'Batch 5 workflow must render the Assignment route');
 for (const hour of ['Hour 57', 'Hour 58']) assert(docs.includes(hour), `Batch 5 design record must document ${hour}`);
 
-console.log('Succession Batch 5 assignment audit passed: operational command, snapshot scope, compound filters, sorting, cards, advanced table, compact ledger, pagination, personnel snapshots, dossiers, responsive behavior, touch targets, and reduced motion are registered.');
+console.log('Succession Batch 5 assignment audit passed: operational command, snapshot scope, compound filters, sorting, cards, advanced table, compact ledger, pagination, personnel snapshots, dossiers, legacy cleanup, responsive behavior, touch targets, and reduced motion are registered.');
