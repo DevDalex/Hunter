@@ -516,3 +516,14 @@
     color: var(--succession-text-on-paper);
   }
 }
+
+/* Batch 5 final Black Whale contrast specificity. */
+@media (max-width: 560px) {
+  #black-whale.black-whale-intelligence .ship-location-inspector__snapshot > div > dt {
+    color: var(--succession-text-strong);
+  }
+
+  #black-whale.black-whale-intelligence .ship-manifest table thead th {
+    color: var(--succession-text-on-paper);
+  }
+}

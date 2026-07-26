@@ -736,3 +736,14 @@
     color: var(--succession-text-strong);
   }
 }
+
+/* Batch 5 final timeline contrast specificity. */
+@media (max-width: 560px) {
+  #succession-timeline.timeline-command-voyage .timeline-day-rail button em {
+    color: var(--timeline-paper);
+  }
+
+  #succession-timeline.timeline-command-voyage .timeline-day .timeline-day__number span {
+    color: var(--timeline-ink);
+  }
+}

@@ -1025,3 +1025,10 @@
     color: var(--succession-text-on-paper);
   }
 }
+
+/* Batch 5 final queen contrast specificity. */
+@media (max-width: 560px) {
+  .succession-queen-status-strip.succession-queen-status-strip > div > dt {
+    color: var(--succession-text-on-paper);
+  }
+}
