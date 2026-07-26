@@ -106,12 +106,18 @@ jobs:
           echo "CHROMIUM_PATH=$(node -e "import('playwright').then(({ chromium }) => console.log(chromium.executablePath()))")" >> "$GITHUB_ENV"
 
       - name: Inspect global Timeline at all viewports
-        env: { VISUAL_QA_ROUTE: timeline, VISUAL_QA_OUTPUT: .visual-qa/global-timeline, VISUAL_QA_SCREENSHOTS: all }
-        run: npm run qa:visual 2>&1 | tee batch5-global-timeline-visual.log
+        env: { VISUAL_QA_ROUTE: timeline/, VISUAL_QA_OUTPUT: .visual-qa/global-timeline, VISUAL_QA_SCREENSHOTS: all }
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run qa:visual 2>&1 | tee batch5-global-timeline-visual.log
 
       - name: Inspect Succession Timeline at all viewports
         env: { VISUAL_QA_ROUTE: succession/timeline, VISUAL_QA_OUTPUT: .visual-qa/succession-timeline, VISUAL_QA_SCREENSHOTS: all }
-        run: npm run qa:visual 2>&1 | tee batch5-succession-timeline-visual.log
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run qa:visual 2>&1 | tee batch5-succession-timeline-visual.log
 
       - name: Publish Batch 5 timeline diagnostics
         if: always()
