@@ -133,14 +133,14 @@ try {
   await record(`Beast and chapter workspaces are complete through Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}`, desktop, async () => {
     const beasts = await openWorkspace(desktop, base, 'guardian-spirit-beasts', '.succession-gsb-command__grid > .succession-gsb-command-card');
     if (await beasts.count() !== 15) throw new Error(`Guardian Spirit Beast count is ${await beasts.count()}, expected 15`);
-    const chapters = await openWorkspace(desktop, base, 'chapter-records', '.succession-chapter-intel__index > div > button');
+    const chapters = await openWorkspace(desktop, base, 'chapter-records', '.succession-chapter-command__grid > .succession-chapter-command__card');
     if (await chapters.count() !== expectedChapterCount) throw new Error(`Chapter record count is ${await chapters.count()}, expected ${expectedChapterCount}`);
     const latest = chapters.filter({ hasText: String(LATEST_AUTHORIZED_SUCCESSION_CHAPTER) }).first();
     if (!await latest.count()) throw new Error(`Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER} research record is missing`);
   });
 
   await record('Research glossary and media routes use final canonical workspaces', desktop, async () => {
-    const sources = await openWorkspace(desktop, base, 'research', '.succession-source-catalogue article');
+    const sources = await openWorkspace(desktop, base, 'research', '.succession-evidence-source-catalogue article');
     if (await sources.count() < 75) throw new Error(`Research source catalogue is incomplete: ${await sources.count()}`);
     const glossary = await openWorkspace(desktop, base, 'glossary', '.succession-glossary-canonical__grid > article');
     if (await glossary.count() < 20) throw new Error(`Glossary is incomplete: ${await glossary.count()} terms`);
