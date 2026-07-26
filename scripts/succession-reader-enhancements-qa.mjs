@@ -98,9 +98,9 @@ try {
   });
 
   await record('Direct command syntax opens exact chapter and page', page, async () => {
-    await openReader(page, base);
-    await page.keyboard.press('Control+k');
+    await openReader(page, base, 'chapter=400&page=1&mode=page&fit=width&direction=rtl&panel=commands');
     const input = page.locator('.succession-reader-panel--commands input[data-reader-autofocus]');
+    await input.waitFor({ state: 'visible' });
     await input.fill('400:7');
     await input.press('Enter');
     await page.waitForFunction(() => {
@@ -109,8 +109,9 @@ try {
     });
     if (!page.url().includes('page=7')) throw new Error('chapter:page command did not preserve page 7');
 
-    await page.keyboard.press('Control+k');
+    await openReader(page, base, 'chapter=400&page=7&mode=page&fit=width&direction=rtl&panel=commands');
     const secondInput = page.locator('.succession-reader-panel--commands input[data-reader-autofocus]');
+    await secondInput.waitFor({ state: 'visible' });
     await secondInput.fill('bookmarks');
     await secondInput.press('Enter');
     await page.waitForSelector('.succession-reader__bookmark-current');
