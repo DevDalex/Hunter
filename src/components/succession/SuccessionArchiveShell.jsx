@@ -219,6 +219,7 @@ export default function SuccessionArchiveShell({
             </button>
           </div>
           <ArchivePageHeader
+            headingLevel="h1"
             kicker={`${route.group} workspace`}
             title={route.title}
             description={route.description}
