@@ -10,13 +10,21 @@ const includesAllTokens = (text, query) => {
   return tokens.length > 0 && tokens.every((token) => haystack.includes(token));
 };
 
+const searchableEntityTypes = Object.freeze([
+  'character',
+  'organization',
+  'ability',
+  'guardian-beast',
+  'event',
+  'location',
+  'assignment',
+  'relationship',
+  'chapter',
+  'source',
+]);
+
 export const createProductClosureSelectors = (args) => {
   const base = createBaseProductClosureSelectors(args);
-  const entityTypes = [...new Set(Object.values(args.data)
-    .filter(Array.isArray)
-    .flat()
-    .map((record) => record?.entityType)
-    .filter(Boolean))];
 
   const relatedRecord = (id) => {
     const entity = args.archive.getEntityById(id);
@@ -44,8 +52,8 @@ export const createProductClosureSelectors = (args) => {
     const normalizedQuery = normalizeArchiveSearchText(query);
     const allowed = options.types ? new Set(options.types) : null;
     const baseTypes = allowed
-      ? [...allowed].filter((type) => !['story', 'media', 'nen-system'].includes(type))
-      : [...entityTypes, 'glossary'];
+      ? [...allowed].filter((type) => searchableEntityTypes.includes(type) || type === 'glossary')
+      : [...searchableEntityTypes, 'glossary'];
     const baseResults = base.searchArchiveProduct(normalizedQuery, { ...options, types: baseTypes });
     const chapter = Number.isFinite(Number(options.chapter))
       ? Number(options.chapter)
@@ -131,7 +139,8 @@ export const createProductClosureSelectors = (args) => {
       : [];
 
     return freeze([...new Map([...baseResults, ...systemResults, ...storyResults, ...mediaResults].map((result) => [result.id, result])).values()]
-      .sort((left, right) => right.score - left.score || left.label.localeCompare(right.label))
+      .sort((left, right) => (Number(right.score) || 0) - (Number(left.score) || 0)
+        || String(left.label || left.id).localeCompare(String(right.label || right.id)))
       .slice(0, Number(options.limit) || 40));
   };
 
