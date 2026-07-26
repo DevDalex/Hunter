@@ -4,27 +4,33 @@ import {
   ArrowRight,
   BookOpen,
   CheckCircle2,
+  ExternalLink,
   FileSearch,
   GitBranch,
   Library,
   Search,
   ShieldCheck,
+  X,
 } from 'lucide-react';
+import SafeImage from '../SafeImage';
+import { StatusPill } from '../ArchiveUI';
 import {
   getChapterEvidenceProfile,
   getEntitiesByType,
-  getEntityById,
   getEvidenceEntities,
   getFinalReleaseClosureReport,
   getFoundationClosureReport,
+  getMediaRecordsAtChapter,
 } from '../../data/succession/successionData';
 import {
+  EntityLink,
   EntityVisual,
   SourceReference,
   entityWorkspaceTarget,
 } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveEvidenceWorkspace.css';
 import './SuccessionArchiveReleaseCandidate.css';
+import './SuccessionArchiveProductLibrary.css';
 
 const normalize = (value) => String(value || '').trim().toLocaleLowerCase();
 const titleCase = (value) => String(value || '').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -48,9 +54,25 @@ function GapList({ title, ids, icon: Icon = AlertTriangle, onNavigate }) {
   </section>;
 }
 
+function ResearchMediaRecord({ record, chapter, onNavigate }) {
+  return <article className="succession-product-dossier succession-media-dossier succession-evidence-media-record" aria-labelledby="research-media-record-title">
+    <header>
+      <button type="button" className="succession-button succession-button--quiet" onClick={() => onNavigate('research', { chapter })}><X size={14} aria-hidden="true" /> Clear media focus</button>
+      <div><span>{record.mediaType.replaceAll('-', ' ')}</span><h2 id="research-media-record-title">{record.label}</h2><p>This media record remains part of Research and Search after removal of the standalone Media section.</p></div>
+      <div className="succession-product-dossier__badges"><StatusPill tone="neutral">{record.availability}</StatusPill><StatusPill tone="neutral">Verified {record.lastVerifiedAt}</StatusPill></div>
+    </header>
+    <section className="succession-media-dossier__visual"><SafeImage src={record.src} alt={record.alt} fallbackLabel="Media unavailable" /><dl><div><dt>Alt text</dt><dd>{record.alt}</dd></div><div><dt>Aspect ratio</dt><dd>{record.aspectRatio}</dd></div><div><dt>Media ID</dt><dd><code>{record.id}</code></dd></div></dl></section>
+    <section><h3>Canonical subjects</h3><div className="succession-product-links">{record.subjects.map((subject) => <EntityLink entity={subject} onNavigate={onNavigate} key={subject.id} />)}</div></section>
+    <section><h3>Provenance</h3>{record.provenanceUrl ? <a className="succession-button succession-button--quiet" href={record.provenanceUrl} target="_blank" rel="noreferrer noopener">Open provenance <ExternalLink size={13} aria-hidden="true" /></a> : <p>No external provenance URL is maintained for this record.</p>}</section>
+    {!!record.sources.length && <section className="succession-source-list" aria-labelledby="research-media-sources-title"><header><span>Evidence</span><h3 id="research-media-sources-title">Connected source records</h3></header>{record.sources.map((source) => <SourceReference source={source} onNavigate={onNavigate} key={source.id} />)}</section>}
+  </article>;
+}
+
 export default function SuccessionArchiveEvidenceWorkspace({ routeParams = {}, spoilerLimit = 414, onNavigate }) {
   const sources = useMemo(() => getEntitiesByType('source'), []);
   const chapters = useMemo(() => getEntitiesByType('chapter').filter((chapter) => chapter.number <= spoilerLimit).sort((left, right) => left.number - right.number), [spoilerLimit]);
+  const mediaRecords = useMemo(() => getMediaRecordsAtChapter(spoilerLimit), [spoilerLimit]);
+  const selectedMedia = routeParams.media ? mediaRecords.find((record) => record.id === routeParams.media) || null : null;
   const closure = useMemo(() => getFoundationClosureReport(), []);
   const finalRelease = useMemo(() => getFinalReleaseClosureReport(), []);
   const requestedChapter = Number(routeParams.chapter);
@@ -100,6 +122,9 @@ export default function SuccessionArchiveEvidenceWorkspace({ routeParams = {}, s
   };
 
   return <div className="succession-evidence-workspace">
+    {routeParams.media && !selectedMedia && <ArchiveState kind="empty" title="This media record is unavailable at the selected chapter" description={`Its subject may not be available through Chapter ${spoilerLimit}, or the retired Media deep link is invalid.`} action={<button type="button" className="succession-button succession-button--quiet" onClick={() => onNavigate('research', { chapter: selectedChapter })}>Return to Research</button>} />}
+    {selectedMedia && <ResearchMediaRecord record={selectedMedia} chapter={selectedChapter} onNavigate={onNavigate} />}
+
     <section className={`succession-evidence-hero is-${closure.readyForBatch2 ? 'ready' : 'blocked'}`}>
       <div><span><ShieldCheck size={16} aria-hidden="true" /> Batch 1.6 · Evidence Graph and Foundation Closure</span><h2>Chapter provenance, graph coverage, unresolved claims, and release gates</h2><p>Every chapter profile is derived from the canonical event, assignment, relationship, ability, location, organization, character, and source records. Missing evidence remains visible instead of being converted into invented certainty.</p></div>
       <dl><div><dt>Status</dt><dd>{readinessLabel}</dd></div><div><dt>Critical gaps</dt><dd>{closure.criticalGapCount}</dd></div><div><dt>Average provenance</dt><dd>{closure.averageChapterScore}% · {closure.averageChapterGrade}</dd></div><div><dt>Boundary</dt><dd>Ch. {closure.asOfChapter}</dd></div></dl>
