@@ -1,0 +1,109 @@
+name: Succession Visual Redesign Batch 5 Timeline
+
+on:
+  push:
+    branches:
+      - 'succession-visual-redesign-batch-5-timeline'
+  pull_request:
+    paths:
+      - 'src/components/TimelineWorkspace.jsx'
+      - 'src/components/TimelineWorkspace.css'
+      - 'src/components/SuccessionTimeline.jsx'
+      - 'src/components/SuccessionTimelineCommand.css'
+      - 'src/components/succession/SuccessionArchiveApp.jsx'
+      - 'scripts/audit-succession-batch-5-timeline.mjs'
+      - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-5.md'
+      - 'src/data/routeManifest.js'
+      - '.github/workflows/succession-visual-redesign-batch-5-timeline.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: succession-visual-redesign-batch-5-timeline-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  batch_5_timeline:
+    name: Batch 5 global timeline regression gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit Batch 5 global timeline
+        run: node scripts/audit-succession-batch-5-timeline.mjs
+
+      - name: Audit visual foundation
+        run: npm run audit:succession-visual-foundation
+
+      - name: Audit shared shell redesign
+        run: npm run audit:succession-shell-redesign
+
+      - name: Audit page-header redesign
+        run: npm run audit:succession-page-header-redesign
+
+      - name: Audit breadcrumb redesign
+        run: npm run audit:succession-breadcrumb-redesign
+
+      - name: Audit Batch 2 closure
+        run: npm run audit:succession-batch-2
+
+      - name: Audit Batch 3 character command
+        run: npm run audit:succession-character-command
+
+      - name: Audit Batch 3 royal command
+        run: npm run audit:succession-royal-command
+
+      - name: Audit Batch 3 closure
+        run: npm run audit:succession-batch-3
+
+      - name: Audit CSS ownership
+        run: npm run audit:css
+
+      - name: Audit readability
+        run: npm run audit:readability
+
+      - name: Audit accessibility contracts
+        run: npm run audit:accessibility
+
+      - name: Build presentation bundle
+        run: |
+          npm run prepare:eta-assets
+          npx vite build
+
+      - name: Install Chromium for visual QA
+        shell: bash
+        run: |
+          npx playwright install --with-deps chromium
+          echo "CHROMIUM_PATH=$(node -e "import('playwright').then(({ chromium }) => console.log(chromium.executablePath()))")" >> "$GITHUB_ENV"
+
+      - name: Inspect Timeline at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/timeline
+          VISUAL_QA_OUTPUT: .visual-qa/succession-timeline
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual 2>&1 | tee batch5-timeline-visual.log
+
+      - name: Publish Batch 5 timeline diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-batch-5-timeline-diagnostics
+          path: |
+            batch5-timeline-visual.log
+            .visual-qa/succession-timeline
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14
