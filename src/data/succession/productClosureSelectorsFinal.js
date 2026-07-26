@@ -177,7 +177,7 @@ export const createProductClosureSelectors = (args) => {
           summary: `${record.mediaType.replaceAll('-', ' ')} · ${record.subjects.map((subject) => subject.name).join(' · ')}`,
           score: exactLabel ? 150 : 68,
           matchReason: exactLabel ? 'Exact media label' : 'Matched media subject or alt text',
-          route: 'media',
+          route: 'research',
           params: Object.freeze({ media: record.id, chapter }),
           media: record,
         })];
@@ -257,5 +257,3 @@ export const createProductClosureSelectors = (args) => {
     searchArchiveProduct,
   });
 };
-
-export { normalizeArchiveSearchText };
