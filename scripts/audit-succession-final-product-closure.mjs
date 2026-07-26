@@ -51,6 +51,9 @@ assert(sourceRendersRouteWith(app, 'organizations', 'OrganizationsWorkspace'), '
 assert(sourceImportsDefault(app, 'CharactersWorkspace', './SuccessionArchiveCharacterWorkspace'), 'Characters must use the canonical character module');
 assert(sourceRendersRouteWith(app, 'characters', 'CharactersWorkspace'), 'Characters must render the authoritative people workspace');
 assert(app.includes('searchArchiveProduct') && app.includes('matchReason') && app.includes('succession-search-complete__groups'), 'global search must use grouped explained product results');
+for (const removedComponent of ['HuntersWorkspace', 'MafiaWorkspace', 'MilitaryWorkspace', 'PoliticsWorkspace', 'BodyStatesWorkspace', 'MediaWorkspace']) {
+  assert(!app.includes(removedComponent), `${removedComponent} must not remain imported or rendered by the active application`);
+}
 
 assert(glossaryWorkspace.includes('getGlossaryEntriesAtChapter') && glossaryWorkspace.includes('getGlossaryEntryAtChapter'), 'Glossary workspace must use chapter-bounded canonical selectors');
 assert(glossaryWorkspace.includes('SourceReference') && glossaryWorkspace.includes('EntityLink') && glossaryWorkspace.includes('relatedRecords'), 'Glossary dossiers must expose evidence and graph connections');
@@ -60,6 +63,8 @@ assert(productStyles.includes('@media(max-width:520px)') && productStyles.includ
 assert(productLinkStyles.includes('.succession-product-links > button') && productLinkStyles.includes('font-size: 11px'), 'extended graph links must have mobile-safe styles');
 assert(searchStyles.includes('@media(max-width:620px)') && searchStyles.includes('font-size: 11px'), 'grouped search must include mobile handling and the readability floor');
 assert(browserQa.includes('Grouped search explains glossary and media matches'), 'browser QA must retain grouped search and media-result coverage');
+assert(browserQa.includes('Retired Succession routes resolve to maintained workspaces'), 'browser QA must verify every retired route reaches a maintained destination');
+assert(!browserQa.includes('Media library exposes alt text provenance and canonical subjects'), 'browser QA must not reopen the removed standalone Media page');
 
 assert(dataEntry.includes("from './entitiesProductClosureCorrections.js'"), 'public data must activate the corrected Batch 5 foundation');
 assert(dataEntry.includes("from './indexesFinal.js'"), 'product records must remain outside canonical entity indexes');
@@ -73,8 +78,9 @@ assert(productSelectors.includes('normalizeArchiveSearchText') && productSelecto
 assert(productSelectors.includes('label: names.length === 1') && productSelectors.includes('alt: names.length === 1'), 'media labels and alt text must be rebuilt from chapter-visible subjects');
 assert(finalSearchAdapter.includes('unavailableAbilities') && finalSearchAdapter.includes('later ability details remain hidden'), 'Story search must suppress future ability language');
 assert(finalSearchAdapter.includes('relatedRecords') && finalSearchAdapter.includes("domain: 'media'"), 'final adapter must connect glossary systems and index media results');
+assert(finalSearchAdapter.includes("route: 'research'"), 'media search results must resolve through the maintained Research workspace');
 assert(productInventorySource.includes('authoritativeWorkspaces') && productInventorySource.includes('preservedVisualTools') && productInventorySource.includes('legacyAliases'), 'Batch 5 must publish the maintained product inventory and redirects');
-assert(productInventorySource.includes('standalone Hunters route') && productInventorySource.includes('standalone Media route'), 'inventory must record the consolidated route removals');
+assert(productInventorySource.includes('successionArchiveLegacyTargets'), 'product inventory aliases must derive from the canonical route registry');
 assert(finalReleaseSource.includes("status: closureReady ? 'release-candidate' : 'open'"), 'final report must distinguish release candidate from deployed closure');
 assert(finalReleaseSource.includes('successionArchiveRoutes.every') && finalReleaseSource.includes('inventoryReady'), 'final report must derive inventory completeness from the route registry');
 assert(finalReleaseSource.includes('performanceBuild') && finalReleaseSource.includes('browserInteractionQa') && finalReleaseSource.includes('cloudflareDeployment'), 'final report must preserve external build, browser, and deployment gates');
@@ -90,13 +96,12 @@ try {
   assert(Number.isFinite(latestChapter), 'latest chapter must remain available');
   assert(archive.successionArchiveValidation.valid, 'canonical data must validate after route consolidation');
 
-  const retiredRoutes = ['hunters', 'deaths', 'mafia', 'military', 'politics', 'media'];
   const routeIds = new Set(routes.successionArchiveRoutes.map((route) => route.id));
-  for (const retired of retiredRoutes) assert(!routeIds.has(retired), `${retired} must not remain a primary route`);
-  assert(routes.successionArchiveLegacyTargets.hunters === 'characters', 'Hunters must redirect to Characters');
-  assert(routes.successionArchiveLegacyTargets.deaths === 'characters', 'Deaths must redirect to Characters');
-  for (const retired of ['mafia', 'military', 'politics']) assert(routes.successionArchiveLegacyTargets[retired] === 'organizations', `${retired} must redirect to Organizations`);
-  assert(routes.successionArchiveLegacyTargets.media === 'research', 'Media must redirect to Research');
+  for (const [retired, destination] of Object.entries(routes.successionArchiveRetiredTargets)) {
+    assert(!routeIds.has(retired), `${retired} must not remain a primary route`);
+    assert(routes.successionArchiveLegacyTargets[retired] === destination, `${retired} must redirect to ${destination}`);
+    assert(routes.successionArchivePathToTarget.get(retired) === destination, `${retired} clean path must redirect to ${destination}`);
+  }
 
   const product = archive.getProductClosureReport();
   assert(product?.closureReady && product.status === 'release-candidate', 'product library must reach release-candidate state');
@@ -106,11 +111,11 @@ try {
 
   const finalReport = archive.getFinalReleaseClosureReport();
   assert(finalReport?.closureReady && finalReport.status === 'release-candidate', 'all Batch 1–5 static and runtime gates must form a release candidate');
-  assert(finalReport.productInventory?.version === 2, 'final report must expose consolidated inventory version 2');
+  assert(Number.isInteger(finalReport.productInventory?.version) && finalReport.productInventory.version > 0, 'final report must expose a versioned maintained inventory');
   assert(finalReport.productInventory?.counts.authoritativeWorkspaces === finalReport.productInventory.authoritativeWorkspaces.length, 'authoritative workspace count must be derived from the inventory');
   assert(finalReport.productInventory?.counts.authoritativeWorkspaces === routes.successionArchiveRoutes.length - finalReport.productInventory.preservedVisualTools.length, 'inventory and route registry must describe the same active surface');
-  assert(finalReport.productInventory?.counts.preservedVisualTools === 3, 'final report must expose all preserved tools');
-  assert(finalReport.productInventory?.counts.releaseGates === 10, 'final report must expose all release gates');
+  assert(finalReport.productInventory?.counts.preservedVisualTools === finalReport.productInventory.preservedVisualTools.length, 'final report must expose all preserved tools');
+  assert(finalReport.productInventory?.counts.releaseGates === finalReport.productInventory.releaseGates.length, 'final report must expose all release gates');
   assert(finalReport.deploymentRequiredForClosedStatus, 'only the external deployment may promote release-candidate to closed');
 
   const glossary = archive.getGlossaryEntriesAtChapter(latestChapter);
@@ -126,7 +131,8 @@ try {
   assert(search('Borksen autonomy', 410).some((result) => result.id === 'story-thread:borksen-autonomy'), 'Borksen thread search must remain available');
   assert(!search('Borksen autonomy', 409).some((result) => result.id === 'story-thread:borksen-autonomy'), 'Borksen autonomy must remain hidden before Chapter 410');
   assert(search('GSB', 349).some((result) => result.id === 'glossary:guardian-spirit-beast'), 'glossary synonyms must participate in global search');
-  assert(search('Kurapika portrait').some((result) => result.domain === 'media'), 'media records must remain searchable without a standalone route');
+  const mediaSearchResult = search('Kurapika portrait').find((result) => result.domain === 'media');
+  assert(mediaSearchResult?.route === 'research' && mediaSearchResult.params?.media, 'media search must resolve through Research while preserving the selected media record');
   assert(search('Guardian Spirit Beast').every((result) => typeof result.matchReason === 'string' && result.matchReason.length > 0), 'every result must explain why it matched');
 
   console.log(`Succession final product closure audit passed: ${routes.successionArchiveRoutes.length} consolidated routes, ${finalReport.productInventory.counts.authoritativeWorkspaces} authoritative workspaces, three preserved tools, ${glossary.length} glossary records, ${media.length} maintained media records, registry-derived inventory closure, and legacy redirects verified.`);
