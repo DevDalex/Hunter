@@ -10,6 +10,10 @@ on:
       - 'src/components/TimelineWorkspace.css'
       - 'src/components/TimelineCommand.css'
       - 'src/components/SuccessionTimeline.jsx'
+      - 'src/components/succession/SuccessionArchiveRelationshipWorkspace.jsx'
+      - 'src/components/succession/SuccessionArchiveRelationshipWorkspace.css'
+      - 'src/components/succession/SuccessionArchiveRelationshipCommand.css'
+      - 'src/data/routeManifest.js'
       - 'scripts/audit-succession-batch-5-*.mjs'
       - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-5*.md'
       - '.github/workflows/succession-visual-redesign-batch-5.yml'
@@ -22,10 +26,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  timeline_intelligence:
-    name: Batch 5 global and voyage timeline regression gate
+  advanced_intelligence:
+    name: Batch 5 timeline and relationship regression gate
     runs-on: ubuntu-latest
-    timeout-minutes: 70
+    timeout-minutes: 80
 
     steps:
       - name: Check out repository
@@ -42,6 +46,9 @@ jobs:
 
       - name: Audit Batch 5 timeline intelligence
         run: node scripts/audit-succession-batch-5-timeline.mjs
+
+      - name: Audit Batch 5 relationship intelligence
+        run: node scripts/audit-succession-batch-5-relationships.mjs
 
       - name: Audit visual foundation
         run: npm run audit:succession-visual-foundation
@@ -119,15 +126,23 @@ jobs:
           set -o pipefail
           npm run qa:visual 2>&1 | tee batch5-succession-timeline-visual.log
 
-      - name: Publish Batch 5 timeline diagnostics
+      - name: Inspect Relationships at all viewports
+        env: { VISUAL_QA_ROUTE: succession/relationships, VISUAL_QA_OUTPUT: .visual-qa/succession-relationships, VISUAL_QA_SCREENSHOTS: all }
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run qa:visual 2>&1 | tee batch5-relationships-visual.log
+
+      - name: Publish Batch 5 diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: succession-batch-5-timeline-diagnostics
+          name: succession-batch-5-diagnostics
           path: |
-            batch5-*-timeline-visual.log
+            batch5-*-visual.log
             .visual-qa/global-timeline
             .visual-qa/succession-timeline
+            .visual-qa/succession-relationships
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 14
