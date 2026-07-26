@@ -37,3 +37,12 @@ jobs:
 
       - name: Print exact accessibility targets
         run: node scripts/succession-a11y-diagnostic.mjs
+
+      - name: Publish exact accessibility targets
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-a11y-diagnostic
+          path: succession-a11y-diagnostic.json
+          if-no-files-found: error
+          retention-days: 7
