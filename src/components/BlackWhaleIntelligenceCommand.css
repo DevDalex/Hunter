@@ -504,3 +504,15 @@
   .black-whale-intelligence *::before,
   .black-whale-intelligence *::after { scroll-behavior: auto; animation: none; transition: none; }
 }
+
+/* Batch 5 route-owned Black Whale contrast closure. */
+@media (max-width: 560px) {
+  .succession-archive .black-whale-intelligence .ship-location-inspector__snapshot > div > dt,
+  .succession-archive .black-whale-intelligence .ship-location-inspector__snapshot > div > dd {
+    color: var(--succession-text-strong);
+  }
+
+  .succession-archive .black-whale-intelligence .ship-manifest table thead th {
+    color: var(--succession-text-on-paper);
+  }
+}

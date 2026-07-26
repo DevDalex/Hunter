@@ -725,3 +725,14 @@
   .timeline-command *::before,
   .timeline-command *::after { scroll-behavior: auto; animation: none; transition: none; }
 }
+
+/* Batch 5 route-owned timeline contrast closure. */
+@media (max-width: 560px) {
+  .succession-archive .timeline-command-voyage .timeline-day-rail button > em {
+    color: white;
+  }
+
+  .succession-archive .timeline-command-voyage .timeline-day > header .timeline-day__number > span {
+    color: var(--succession-text-strong);
+  }
+}
