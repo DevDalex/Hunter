@@ -111,6 +111,7 @@ export default function SuccessionArchiveShell({
   const contentRef = useRef(null);
   const previousRouteRef = useRef(activeId);
   const route = getSuccessionArchiveRoute(activeId);
+  const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
 
   useEffect(() => setDrawerOpen(false), [activeId, routeParams]);
 
@@ -218,7 +219,7 @@ export default function SuccessionArchiveShell({
               <span>{route.id === 'archive' ? 'Return to Story' : 'Back to archive index'}</span>
             </button>
           </div>
-          <ArchivePageHeader
+          {!hidePageHeader && <ArchivePageHeader
             headingLevel="h1"
             kicker={`${route.group} workspace`}
             title={route.title}
@@ -229,7 +230,7 @@ export default function SuccessionArchiveShell({
               { label: 'Evidence mode', value: 'Canon separated' },
               { label: 'Workspace', value: route.status === 'foundation' ? 'Foundation' : 'Available' },
             ]}
-          />
+          />}
           <div
             ref={contentRef}
             id="succession-workspace-content"

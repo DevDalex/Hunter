@@ -1,5 +1,5 @@
 import { lazy, Suspense, useMemo, useState } from 'react';
-import { ArrowRight, BookOpen, Crown, Database, GitBranch, Images, Search, Users } from 'lucide-react';
+import { ArrowRight, BookOpen, Database, Images, Search, Users } from 'lucide-react';
 import { ArchiveCard, ArchiveSection, EvidenceBadge, StatusPill } from '../ArchiveUI';
 import {
   getEntitiesByType,
@@ -114,14 +114,8 @@ function SearchWorkspace({ onNavigate, spoilerLimit }) {
 
 function FamilyTreeWorkspace({ spoilerLimit, onNavigate }) {
   const princes = entitiesForRoute('princes');
-  const queens = entitiesForRoute('queens');
-  const activePrinces = princes.filter((record) => record.status?.life !== 'dead').length;
   return <Suspense fallback={<Loading label="royal family hierarchy" />}><div className="succession-royal-hierarchy-workspace">
-    <section className="succession-royal-hierarchy-intro" aria-labelledby="succession-royal-hierarchy-title">
-      <div><span><GitBranch size={15} aria-hidden="true" /> Royal genealogy command</span><h2 id="succession-royal-hierarchy-title">One throne, eight maternal branches, fourteen contenders</h2><p>The hierarchy combines the canonical king, queen branches, princes, protection teams, placements, observers, spies, and infiltrators at the selected chapter boundary.</p><nav aria-label="Royal hierarchy destinations"><button type="button" onClick={() => onNavigate('princes')}><Crown size={15} aria-hidden="true" /> Prince command</button><button type="button" onClick={() => onNavigate('queens')}><Users size={15} aria-hidden="true" /> Queen households</button></nav></div>
-      <dl><div><dt>Queen branches</dt><dd>{queens.length}</dd></div><div><dt>Contenders</dt><dd>{princes.length}</dd></div><div><dt>Active records</dt><dd>{activePrinces}</dd></div><div><dt>Boundary</dt><dd>Ch. {spoilerLimit}</dd></div></dl>
-    </section>
-    <div className="succession-royal-hierarchy-note"><b>Interactive hierarchy</b><span>Select a queen, then a prince, to reconstruct the chapter-bounded protection and intelligence circle. Horizontal scrolling is retained where the eight-branch structure cannot compress safely.</span></div>
+    <h1 className="sr-only">Kakin Royal Family</h1>
     <FamilyTree spoilerLimit={spoilerLimit} onOpenPrince={(order) => { const entity = princes.find((record) => record.princeOrder === Number(order)); onNavigate('princes', entity ? { entity: entity.id } : {}); }} />
   </div></Suspense>;
 }
