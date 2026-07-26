@@ -1,6 +1,7 @@
 import { access, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { createServer } from 'vite';
+import { successionArchiveRetiredTargets } from '../src/data/succession/archiveRoutes.js';
 import { successionProductInventory } from '../src/data/succession/productInventory.js';
 import { declarationIncludesLiteral } from './lib/succession-audit-contracts.mjs';
 
@@ -21,23 +22,13 @@ const [app, routesSource, extended, roleWorkspaces, deepWorkspaces, finalRelease
 const authoritative = successionProductInventory.authoritativeWorkspaces;
 const preserved = successionProductInventory.preservedVisualTools;
 const allInventoryRoutes = [...authoritative, ...preserved].map((record) => record.routeId);
-const retiredRedirects = Object.freeze({
-  hunters: 'characters',
-  deaths: 'characters',
-  mafia: 'organizations',
-  military: 'organizations',
-  politics: 'organizations',
-  justice: 'organizations',
-  'power-blocs': 'organizations',
-  media: 'research',
-});
 
 assert(authoritative.length > 0, 'the authoritative workspace inventory must not be empty');
 assert(preserved.length === 3, `expected three preserved tools, found ${preserved.length}`);
 assert(new Set(allInventoryRoutes).size === allInventoryRoutes.length, 'inventory route IDs must be unique');
 assert(successionProductInventory.releaseGates.length === 10, 'inventory must name all ten final release gates');
 assert(successionProductInventory.removedImplementationClasses.length >= 10, 'inventory must retain the legacy-removal map');
-for (const [retired, destination] of Object.entries(retiredRedirects)) {
+for (const [retired, destination] of Object.entries(successionArchiveRetiredTargets)) {
   assert(successionProductInventory.legacyAliases[retired] === destination, `${retired} must redirect to ${destination}`);
 }
 
@@ -49,6 +40,9 @@ for (const routeId of ['black-whale', 'timeline']) {
 }
 for (const routeId of ['characters', 'princes', 'queens', 'bodyguards', 'organizations', 'locations', 'nen', 'guardian-spirit-beasts', 'events', 'relationships', 'chapters']) {
   assert(declarationIncludesLiteral(app, 'specializedRecordRoute', routeId), `${routeId} must retain specialized record ownership`);
+}
+for (const removedComponent of ['HuntersWorkspace', 'MafiaWorkspace', 'MilitaryWorkspace', 'PoliticsWorkspace', 'BodyStatesWorkspace', 'MediaWorkspace']) {
+  assert(!app.includes(removedComponent), `${removedComponent} must not remain in the active application`);
 }
 
 const componentDirectory = path.join(root, 'src/components/succession');
@@ -68,6 +62,7 @@ for (const removedExport of ['SuccessionStoryWorkspace', 'GuardianBeastsWorkspac
 }
 assert(!app.includes('SuccessionStoryWorkspace') && !app.includes('ChapterRecordsWorkspaceV2'), 'active app must not import superseded Story or Chapter implementations');
 assert(!routesSource.includes("status = 'foundation'"), 'route registry defaults must not imply unfinished foundation status');
+assert(routesSource.includes('successionArchiveRetiredTargets') && routesSource.includes('Object.entries(successionArchiveRetiredTargets)'), 'path and legacy redirects must derive from the retired-route registry');
 assert(finalReleaseSource.includes('productInventory: inventory'), 'final release report must embed the maintained inventory');
 assert(finalReleaseSource.includes('inventoryReady'), 'final release status must be gated by inventory completeness');
 assert(finalReleaseSource.includes('successionArchiveRoutes.every'), 'final release inventory validation must derive from the canonical registry');
@@ -81,7 +76,7 @@ try {
   assert(canonicalRouteIds.length === allInventoryRoutes.length, `inventory covers ${allInventoryRoutes.length} routes but registry exposes ${canonicalRouteIds.length}`);
   assert(canonicalRouteIds.every((routeId) => allInventoryRoutes.includes(routeId)), 'every registered route must appear in the maintained inventory');
   assert(allInventoryRoutes.every((routeId) => canonicalRouteSet.has(routeId)), 'inventory must not contain retired route IDs');
-  for (const retired of Object.keys(retiredRedirects)) assert(!canonicalRouteSet.has(retired), `${retired} must not remain a primary route`);
+  for (const retired of Object.keys(routes.successionArchiveRetiredTargets)) assert(!canonicalRouteSet.has(retired), `${retired} must not remain a primary route`);
 
   const report = archive.getFinalReleaseClosureReport();
   assert(report?.productInventory?.version === successionProductInventory.version, 'public final report must expose the current product inventory version');
@@ -93,7 +88,7 @@ try {
     `inventory-complete static closure must remain a release candidate; status=${report.status}; batches=${JSON.stringify(batchStatuses)}; gates=${JSON.stringify(report.releaseGates)}`,
   );
 
-  console.log(`Succession product inventory audit passed: ${authoritative.length} authoritative workspaces, ${preserved.length} preserved tools, ${Object.keys(successionProductInventory.legacyAliases).length} legacy aliases, ${successionProductInventory.removedImplementationClasses.length} removed implementation classes, and ${successionProductInventory.releaseGates.length} final release gates are maintained.`);
+  console.log(`Succession product inventory audit passed: ${authoritative.length} authoritative workspaces, ${preserved.length} preserved tools, ${Object.keys(successionProductInventory.legacyAliases).length} canonical aliases, ${successionProductInventory.removedImplementationClasses.length} removed implementation classes, and ${successionProductInventory.releaseGates.length} final release gates are maintained.`);
 } finally {
   await vite.close();
 }
