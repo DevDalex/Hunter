@@ -32,9 +32,20 @@ export const successionArchiveRoutes = Object.freeze([
   route('relationships', 'relationships', 'Relationships', 'Records', 'Relationship archive', 'Typed family, professional, protective, political, allied, deceptive, command, and hostile links.', 'active'),
   route('chapters', 'chapter-records', 'Chapters', 'Records', 'Canonical chapter dossiers', 'Every Chapter 340 through the latest imported reader release placed inside its story phase, active lanes, events, causal links, state changes, unresolved threads, evidence, and reader bridge.', 'active'),
 
-  route('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, provenance, evidence types, confidence, coverage, unresolved claims, and explicit research gaps.', 'active'),
+  route('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, provenance, evidence types, confidence, coverage, unresolved claims, media provenance, and explicit research gaps.', 'active'),
   route('glossary', 'glossary', 'Glossary', 'Library', 'Canonical Succession glossary', 'Chapter-bounded definitions, synonyms, certainty, canonical graph connections, and evidence for ritual, Nen, legal, political, location, status, and archive vocabulary.', 'active'),
 ]);
+
+export const successionArchiveRetiredTargets = Object.freeze({
+  hunters: 'characters',
+  deaths: 'characters',
+  mafia: 'organizations',
+  military: 'organizations',
+  politics: 'organizations',
+  justice: 'organizations',
+  'power-blocs': 'organizations',
+  media: 'research',
+});
 
 export const successionArchiveGroups = Object.freeze(['Overview', 'People', 'Power', 'World', 'Systems', 'Records', 'Library']);
 export const successionArchiveRouteIds = new Set(successionArchiveRoutes.map((item) => item.id));
@@ -42,13 +53,7 @@ export const successionArchivePrimary = successionArchiveRoutes.map((item) => it
 export const successionArchiveRouteById = new Map(successionArchiveRoutes.map((item) => [item.id, item]));
 export const successionArchivePathToTarget = new Map([
   ...successionArchiveRoutes.map((item) => [item.path, item.id]),
-  ['hunters', 'characters'],
-  ['deaths', 'characters'],
-  ['mafia', 'organizations'],
-  ['military', 'organizations'],
-  ['politics', 'organizations'],
-  ['media', 'research'],
-  ['power-blocs', 'organizations'],
+  ...Object.entries(successionArchiveRetiredTargets),
 ]);
 export const successionArchiveTargetToPath = new Map(successionArchiveRoutes.map((item) => [item.id, item.path]));
 
@@ -59,13 +64,8 @@ export const successionArchiveLegacyTargets = Object.freeze({
   'succession-roster': 'characters',
   'succession-timeline': 'timeline',
   beasts: 'guardian-spirit-beasts',
-  hunters: 'characters',
-  deaths: 'characters',
-  mafia: 'organizations',
-  military: 'organizations',
-  politics: 'organizations',
-  media: 'research',
   'black-whale': 'black-whale',
+  ...successionArchiveRetiredTargets,
 });
 
 export const getSuccessionArchiveRoute = (id = 'archive') => successionArchiveRouteById.get(id) || successionArchiveRouteById.get('archive');
