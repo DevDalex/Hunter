@@ -1,9 +1,33 @@
+/**
+ * @typedef {{
+ *   outputPath: string;
+ *   width: number;
+ *   height: number;
+ *   format: 'avif' | 'webp' | 'jpeg' | 'png';
+ *   quality: number;
+ * }} BrowserMediaVariant
+ */
+
+/**
+ * @typedef {{
+ *   id: string;
+ *   alt: string;
+ *   sourcePath?: string;
+ *   sourceUrl?: string;
+ *   subjects: string[];
+ *   focalPoint: { x: number; y: number };
+ *   safeTextRegion: 'none' | 'top' | 'right' | 'bottom' | 'left';
+ *   variants: Record<string, BrowserMediaVariant>;
+ * }} BrowserMediaRecord
+ */
+
 /** @param {string} value */
 const toPublicUrl = (value) => (value.startsWith('public/') ? `/${value.slice('public/'.length)}` : value);
 
 /**
  * Canonical media inventory. This module is browser-safe data; build scripts
  * validate it with Zod before generating or packaging any variants.
+ * @type {{ schemaVersion: 1; records: BrowserMediaRecord[] }}
  */
 export const mediaManifest = {
   schemaVersion: 1,
