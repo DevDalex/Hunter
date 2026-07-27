@@ -2,8 +2,10 @@ import { access } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 import { mediaManifest } from '../src/media/mediaManifest.js';
+import { mediaManifestSchema } from '../src/schemas/archiveSchemas.js';
 
 const root = process.cwd();
+const validatedManifest = mediaManifestSchema.parse(mediaManifest);
 const failures = [];
 const expectedSharpFormat = new Map([
   ['avif', 'heif'],
@@ -12,7 +14,7 @@ const expectedSharpFormat = new Map([
   ['webp', 'webp'],
 ]);
 
-for (const record of mediaManifest.records) {
+for (const record of validatedManifest.records) {
   if (!record.sourcePath) continue;
 
   const sourcePath = path.resolve(root, record.sourcePath);
@@ -58,7 +60,7 @@ if (failures.length) {
   throw new Error(`Media manifest verification failed with ${failures.length} issue(s).`);
 }
 
-const variantCount = mediaManifest.records.reduce((total, record) => total + Object.keys(record.variants).length, 0);
+const variantCount = validatedManifest.records.reduce((total, record) => total + Object.keys(record.variants).length, 0);
 console.log(
-  `Media manifest verified: ${mediaManifest.records.length} record(s), ${variantCount} generated variant(s), no invalid sources or outputs.`,
+  `Media manifest verified: ${validatedManifest.records.length} record(s), ${variantCount} generated variant(s), no invalid sources or outputs.`,
 );
