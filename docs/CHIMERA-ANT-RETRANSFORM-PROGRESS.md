@@ -10,8 +10,8 @@ Branch: `chimera-ant-retransform`
 | 2 | Complete | Added the dedicated `ChimeraAntPage`, wide desktop canvas, sticky reading rail, route wiring, and section/phase progress behavior. |
 | 3 | Complete | Rebuilt the cinematic hero, Arc at a Glance orientation spread, and proportional seven-phase episode rail. |
 | 4 | Complete | Added reusable image-led phase spreads, state ledgers, episode-group records, source hooks, and seven composition contracts. |
-| 5 | Next | Build the finished Phase I expedition route and Phase II three-front development system. |
-| 6 | Pending | Phases III and IV. |
+| 5 | Complete | Finished Phase I’s NGL route/threat system and Phase II’s three-front development matrix with phase-specific visual records. |
+| 6 | Next | Build Phase III colony dispersal/East Gorteau and Phase IV Gungi/palace preparation systems. |
 | 7 | Pending | Phase V palace-invasion system. |
 | 8 | Pending | Phases VI and VII. |
 | 9 | Pending | Characters, factions, locations, Nen, conflicts, and objects. |
@@ -134,6 +134,40 @@ Branch: `chimera-ant-retransform`
 - Phase III through VII content is intentionally scaffold-level until their assigned batches.
 - Supporting archive sections continue to use the generic arc records until Batch 9 and Batch 10.
 
+## Batch 5 record
+
+### Completed
+
+- Added `src/data/chimeraAntEarlyPhaseSystems.js` with the finished information architecture for Phase I and Phase II.
+- Built a six-stop NGL expedition route covering Episodes 76–85: Kakin coast, NGL approach, border, interior, nest perimeter, and extraction line.
+- Connected every route stop to a Hunterpedia episode record and paired the route with a five-step threat-escalation ladder.
+- Added a four-portrait Phase I visual field for Kite, Gon, Killua, and Neferpitou using repository-local portrait assets with safe artwork fallbacks.
+- Built the Phase II three-front matrix across Episodes 86–90, 91–92, and 93–95.
+- Aligned Gon and Killua, the Chimera Ant colony, and the Hunter Association across the same three periods, with one sourced event record in every matrix cell.
+- Added a convergence block showing the personal, enemy, and operational conditions that combine into the East Gorteau mission.
+- Replaced Phase I and Phase II’s generic artwork hooks with repository-local Kite and Meruem visual records and Hunterpedia credit links.
+- Added `data-phase-finish="complete"` state, finished-presentation footer copy, and Batch 5 desktop polish for the two completed spreads.
+- Added dedicated wide-screen styling for the expedition route, threat ladder, portrait strip, three-front matrix, and convergence field without introducing mobile layouts.
+
+### Verification
+
+- Phase I route ranges are contiguous and complete: 76–77, 78, 79, 80–82, 83–84, and 85.
+- Phase II periods are contiguous and complete: 86–90, 91–92, and 93–95.
+- Each of the three Phase II fronts contains exactly one event for each of the three periods.
+- Repository portrait registration confirms local assets for Gon, Killua, Biscuit, Kite, Meruem, Neferpitou, and Isaac Netero.
+- `ChimeraAntPhaseArchive.jsx` renders the specialized Phase I/II systems inside their existing stable phase ids and keeps later phases on the shared scaffold.
+- The finished phase records retain opening, turning, closing, image-caption, source, and episode-group hooks from Batch 4.
+- The Batch 5 styles contain no mobile breakpoint; their only media query respects reduced-motion preferences.
+- Comparing the Batch 4 ledger commit with the Batch 5 implementation shows six changed files and seven forward commits with no branch divergence.
+- GitHub exposes no CI status for the final implementation commit, so Vite compilation and screenshot-level browser verification remain outstanding.
+
+### Risks carried into Batch 6
+
+- Phase I’s six-column route is intentionally dense and must receive browser-level spacing verification during Batch 11.
+- The new visual records use verified repository-local portraits rather than episode stills; the source hooks permit later replacement without restructuring the components.
+- Phase III and Phase IV still use scaffold-level composition hooks.
+- Supporting archive sections continue to use generic arc records until Batch 9 and Batch 10.
+
 ### Next action
 
-Finish Phase I and Phase II: build the NGL expedition route and threat-escalation visual, then build the training / colony / Hunter Association three-front development system with phase-specific images, episode evidence, and stronger wide-screen presentation.
+Build Phase III and Phase IV: create the colony-dispersal and East Gorteau occupation map, then pair Komugi’s Gungi progression with the Hunter infiltration plan and a plan-versus-reality palace blueprint.
