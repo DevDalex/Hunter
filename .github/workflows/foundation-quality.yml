@@ -15,6 +15,9 @@ on:
       - wrangler.jsonc
       - src/schemas/**
       - src/media/**
+      - src/components/SafeImage.jsx
+      - src/data/chimeraAntExperience.js
+      - src/data/chimeraAntPhaseScaffold.js
       - scripts/build-media-variants.mjs
       - scripts/verify-media-manifest.mjs
       - tests/**
@@ -31,6 +34,9 @@ on:
       - wrangler.jsonc
       - src/schemas/**
       - src/media/**
+      - src/components/SafeImage.jsx
+      - src/data/chimeraAntExperience.js
+      - src/data/chimeraAntPhaseScaffold.js
       - scripts/build-media-variants.mjs
       - scripts/verify-media-manifest.mjs
       - tests/**
@@ -79,12 +85,19 @@ jobs:
           echo "${PIPESTATUS[0]}" > foundation-tests.status
           exit 0
 
-      - name: Verify media manifest
+      - name: Build and verify manifest media
         shell: bash
         run: |
           set +e
-          npm run media:verify 2>&1 | tee foundation-media.log
+          npm run media:check 2>&1 | tee foundation-media.log
           echo "${PIPESTATUS[0]}" > foundation-media.status
+          exit 0
+
+      - name: Record Knip inventory
+        shell: bash
+        run: |
+          set +e
+          npm run report:deadcode 2>&1 | tee foundation-knip.log
           exit 0
 
       - name: Upload complete foundation logs
@@ -109,3 +122,40 @@ jobs:
             fi
           done
           exit "$failed"
+
+  browser:
+    needs: foundation
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Build runtime with generated media
+        run: npm run build:runtime
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright Test projects
+        run: npm run test:e2e:ci
+
+      - name: Upload Playwright evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: foundation-playwright-${{ github.sha }}
+          path: |
+            playwright-report
+            test-results
+          if-no-files-found: ignore
+          retention-days: 14
