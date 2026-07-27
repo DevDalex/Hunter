@@ -1,0 +1,225 @@
+const deepFreeze = (value) => {
+  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
+  Object.values(value).forEach(deepFreeze);
+  return Object.freeze(value);
+};
+
+export const chimeraAntMiddlePhaseSystems = deepFreeze({
+  'rogue-ants-east-gorteau': {
+    title: 'One colony becomes four different kinds of threat.',
+    deck: 'Episodes 96–102 widen the map. The Queen’s death does not end the crisis; it releases independent colonies, a royal occupation, defectors, and the one civilian capable of changing Meruem without Nen.',
+    origin: {
+      label: 'Former colony center',
+      title: 'The Queen’s nest no longer controls the species.',
+      note: 'After Meruem’s birth and the Queen’s death, rank no longer guarantees loyalty. Every branch carries a different relationship to human society.',
+    },
+    branches: [
+      {
+        id: 'meteor-city',
+        x: 16,
+        y: 23,
+        episodes: '96–97',
+        signal: 'Independent kingdom',
+        title: 'Zazan carries the colony model into Meteor City.',
+        summary: 'A Squadron Leader attempts to reproduce the Queen’s system through forced transformation. The Phantom Troupe destroys the offshoot, proving the crisis has already escaped NGL.',
+        outcome: 'Regional threat eliminated',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_96_(2011)',
+      },
+      {
+        id: 'east-gorteau',
+        x: 83,
+        y: 22,
+        episodes: '98–100',
+        signal: 'Royal occupation',
+        title: 'Meruem converts East Gorteau into Selection machinery.',
+        summary: 'The Royal Guards preserve the appearance of government while concentrating the population for mass sorting and conversion.',
+        outcome: 'State power captured',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_100_(2011)',
+      },
+      {
+        id: 'defectors',
+        x: 18,
+        y: 77,
+        episodes: '101–102',
+        signal: 'Alliance fracture',
+        title: 'Meleoron and Ikalgo make species loyalty optional.',
+        summary: 'Human memory, personal debt, and opposition to the King allow Chimera Ants to become operational partners rather than automatic enemies.',
+        outcome: 'Human–Ant coalition becomes possible',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_101_(2011)',
+      },
+      {
+        id: 'komugi',
+        x: 82,
+        y: 78,
+        episodes: '102',
+        signal: 'Nonviolent challenge',
+        title: 'Komugi enters the palace without strategic importance.',
+        summary: 'The blind Gungi champion appears to be one more summoned specialist. She instead becomes the first opponent Meruem cannot defeat or classify through physical dominance.',
+        outcome: 'The King’s private conflict begins',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_102_(2011)',
+      },
+    ],
+    occupationChain: [
+      {
+        index: '01',
+        label: 'Government shell',
+        title: 'Keep the state visible.',
+        detail: 'The palace and public authority continue to look intact, reducing resistance and concealing the takeover.',
+      },
+      {
+        index: '02',
+        label: 'Puppet control',
+        title: 'Replace political will.',
+        detail: 'Pitou’s manipulation allows the Ants to issue orders through the existing regime rather than govern openly.',
+      },
+      {
+        index: '03',
+        label: 'Population movement',
+        title: 'Bring citizens to the capital.',
+        detail: 'The national celebration becomes the logistical mechanism for gathering millions into one controlled field.',
+      },
+      {
+        index: '04',
+        label: 'Selection',
+        title: 'Sort bodies into soldiers and casualties.',
+        detail: 'Nen awakening is industrialized into a state-scale process whose acceptable losses are counted in human lives.',
+      },
+    ],
+    visualRecords: [
+      {
+        name: 'Meruem',
+        role: 'Royal occupation',
+        image: '/media/portraits/meruem.webp',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Meruem',
+      },
+      {
+        name: 'Komugi',
+        role: 'Private disruption',
+        image: '/media/portraits/komugi.webp',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Komugi',
+      },
+      {
+        name: 'Chrollo Lucilfer',
+        role: 'Meteor City context',
+        image: '/media/portraits/chrollo-lucilfer.webp',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Chrollo_Lucilfer',
+      },
+    ],
+    conclusion: 'The phase does not move in one direction. It spreads outward geographically while narrowing inward around Meruem, the palace, and Komugi.',
+  },
+  'komugi-invasion-preparation': {
+    title: 'The palace is being prepared for two different contests.',
+    deck: 'Episodes 103–110 pair a military operation with a Gungi relationship. The Hunters refine routes, targets, portals, and timing while Komugi changes the person at the center of every target assignment.',
+    gungiTrack: [
+      {
+        index: '01',
+        episodes: '103',
+        label: 'Challenge',
+        title: 'Meruem meets mastery he cannot overpower.',
+        summary: 'Komugi defeats the King within a system where physical force cannot repair a strategic error.',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_103_(2011)',
+      },
+      {
+        index: '02',
+        episodes: '104–105',
+        label: 'Recognition',
+        title: 'Repeated defeat produces attention rather than execution.',
+        summary: 'Meruem keeps playing, learns the seriousness of Komugi’s commitment, and begins treating her ability as something with value independent of rank.',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_105_(2011)',
+      },
+      {
+        index: '03',
+        episodes: '106–108',
+        label: 'Protection',
+        title: 'Concern enters the King’s decision-making.',
+        summary: 'Komugi’s vulnerability makes her survival matter to Meruem, creating a priority the extermination team cannot see from outside the palace.',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_108_(2011)',
+      },
+      {
+        index: '04',
+        episodes: '109–110',
+        label: 'Operational blind spot',
+        title: 'The target has changed before the assault begins.',
+        summary: 'The invasion plan still treats Meruem chiefly as a King to isolate, while his private attachment has already altered what he will protect and why.',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_110_(2011)',
+      },
+    ],
+    preparationTrack: [
+      {
+        index: '01',
+        episodes: '103–105',
+        label: 'Reduction',
+        title: 'Thin the outer defense.',
+        summary: 'Morel’s team continues isolating enemy pieces and testing which Ants can be removed before the palace assault.',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_104_(2011)',
+      },
+      {
+        index: '02',
+        episodes: '106–107',
+        label: 'Access',
+        title: 'Knov installs the portal network.',
+        summary: 'The operation gains controlled entry and withdrawal points, but direct exposure to the Royal Guards’ aura removes Knov from the planned front line.',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_106_(2011)',
+      },
+      {
+        index: '03',
+        episodes: '108–109',
+        label: 'Compromise',
+        title: 'Palm’s infiltration stops returning information.',
+        summary: 'The team loses another source inside the palace and must finalize assignments with incomplete knowledge of both the Guards and the King.',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_109_(2011)',
+      },
+      {
+        index: '04',
+        episodes: '110',
+        label: 'Launch state',
+        title: 'Targets and contingencies become fixed.',
+        summary: 'Netero and Zeno approach from above while the ground team commits to portal timing, Guard separation, and simultaneous engagements.',
+        sourceHref: 'https://hunterxhunter.fandom.com/wiki/Episode_110_(2011)',
+      },
+    ],
+    blueprint: [
+      {
+        id: 'king',
+        target: 'Meruem',
+        assignment: 'Netero with Zeno support',
+        plan: 'Separate the King from the Royal Guards and move the decisive fight away from the capital.',
+        reality: 'The plan cannot account for Komugi becoming Meruem’s immediate protected priority.',
+      },
+      {
+        id: 'pitou',
+        target: 'Neferpitou',
+        assignment: 'Gon and Killua',
+        plan: 'Occupy Pitou while Gon pursues the promise that Kite can be restored.',
+        reality: 'Gon’s personal demand is stronger than the team’s shared extermination logic.',
+      },
+      {
+        id: 'pouf',
+        target: 'Shaiapouf',
+        assignment: 'Morel',
+        plan: 'Contain Pouf and prevent him from reinforcing the King or another Guard.',
+        reality: 'Pouf’s deepest priority is preserving the King’s original identity, not merely winning a tactical exchange.',
+      },
+      {
+        id: 'youpi',
+        target: 'Menthuthuyoupi',
+        assignment: 'Knuckle, Shoot, and Meleoron',
+        plan: 'Use concealment, attrition, and Hakoware to neutralize Youpi without matching his raw power.',
+        reality: 'The plan depends on timing, emotional discipline, and a stable battlefield the palace cannot guarantee.',
+      },
+    ],
+    readiness: [
+      { label: 'Portal network', state: 'Available', detail: 'Entry and extraction routes exist, but their creator cannot lead the assault.' },
+      { label: 'Inside intelligence', state: 'Compromised', detail: 'Palm’s status is unknown as the team moves toward launch.' },
+      { label: 'Guard positions', state: 'Estimated', detail: 'Assignments are based on expected separation, not certainty.' },
+      { label: 'Selection deadline', state: 'Immediate', detail: 'Delay risks allowing the palace regime to process the gathered population.' },
+    ],
+    portraits: [
+      { name: 'Meruem', role: 'Military target', image: '/media/portraits/meruem.webp', sourceHref: 'https://hunterxhunter.fandom.com/wiki/Meruem' },
+      { name: 'Komugi', role: 'Unknown variable', image: '/media/portraits/komugi.webp', sourceHref: 'https://hunterxhunter.fandom.com/wiki/Komugi' },
+    ],
+    conclusion: 'By Episode 110, the operation is precise on paper and already incomplete in reality. The Hunters know the palace structure better than they know the people inside it.',
+  },
+});
+
+export const chimeraAntMiddlePhaseSystemById = new Map(Object.entries(chimeraAntMiddlePhaseSystems));
