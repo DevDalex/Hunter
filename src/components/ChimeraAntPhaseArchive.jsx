@@ -6,6 +6,7 @@ import ChimeraAntMiddlePhaseSystems from './ChimeraAntMiddlePhaseSystems';
 import ChimeraAntPalaceInvasionSystem from './ChimeraAntPalaceInvasionSystem';
 import ChimeraAntEndgameSystems from './ChimeraAntEndgameSystems';
 import ChimeraAntSupportingArchivePortals from './ChimeraAntSupportingArchivePortals';
+import ChimeraAntReferenceArchivePortals from './ChimeraAntReferenceArchivePortals';
 import './ChimeraAntPhaseArchive.css';
 import './ChimeraAntBatch5.css';
 
@@ -81,6 +82,7 @@ export default function ChimeraAntPhaseArchive({
   phases,
   activePhase,
   onSelectPhase,
+  onNavigate,
   artwork,
   fallbackArtwork,
 }) {
@@ -146,5 +148,6 @@ export default function ChimeraAntPhaseArchive({
       </article>;
     })}
     <ChimeraAntSupportingArchivePortals />
+    <ChimeraAntReferenceArchivePortals onNavigate={onNavigate} />
   </div>;
 }
