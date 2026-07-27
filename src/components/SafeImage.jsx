@@ -134,7 +134,7 @@ export default function SafeImage(imageProps) {
     );
     observer.observe(image);
     return () => observer.disconnect();
-  }, [activeSrc, eager, nearViewport]);
+  }, [eager, nearViewport]);
 
   useEffect(() => {
     if (!activeSrc || loaded || unavailable || !nearViewport || !isApprovedExternalMedia(activeSrc)) return undefined;
