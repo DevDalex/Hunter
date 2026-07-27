@@ -8,10 +8,16 @@ const assert = (condition, message) => {
 
 const packageJson = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
 const dependencies = packageJson.dependencies || {};
-const allowedProductionDependencies = new Set(['lucide-react', 'react', 'react-dom']);
+const devDependencies = packageJson.devDependencies || {};
+const allowedProductionDependencies = new Set(['lucide-react', 'react', 'react-dom', 'zod']);
 const unexpectedDependencies = Object.keys(dependencies).filter((name) => !allowedProductionDependencies.has(name));
 assert(unexpectedDependencies.length === 0, `unexpected production dependencies: ${unexpectedDependencies.join(', ')}`);
-assert(Object.keys(dependencies).length === allowedProductionDependencies.size, 'production dependency surface must remain limited to React, React DOM, and Lucide');
+assert(
+  Object.keys(dependencies).length === allowedProductionDependencies.size,
+  'production dependency surface must remain limited to React, React DOM, Lucide, and the canonical Zod schema runtime',
+);
+assert(!dependencies.sharp, 'Sharp must remain build-only and must not enter the production runtime surface');
+assert(devDependencies.sharp, 'Sharp must remain available as the pinned media-build dependency');
 for (const [name, version] of Object.entries(dependencies)) {
   assert(/^\d+\.\d+\.\d+$/.test(version), `${name} must use an exact pinned production version`);
 }
@@ -45,4 +51,4 @@ assert(violations.length === 0, violations.join(' | '));
 const routeSource = await readFile(path.join(root, 'src/components/succession/SuccessionArchiveApp.jsx'), 'utf8');
 assert(!/process\.env|import\.meta\.env/.test(routeSource), 'client archive router must not read secrets or deployment credentials');
 
-console.log(`Succession production surface audit passed: ${Object.keys(dependencies).length} pinned production dependencies, ${sourceFiles.length} Succession source modules, safe external links, no dynamic HTML injection, no eval-style execution, and no client credential reads.`);
+console.log(`Succession production surface audit passed: ${Object.keys(dependencies).length} pinned production dependencies including the Zod schema runtime; Sharp remains build-only; ${sourceFiles.length} Succession source modules; safe external links; no dynamic HTML injection; no eval-style execution; and no client credential reads.`);
