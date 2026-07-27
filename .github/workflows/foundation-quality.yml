@@ -18,6 +18,7 @@ on:
       - src/components/SafeImage.jsx
       - src/data/chimeraAntExperience.js
       - src/data/chimeraAntPhaseScaffold.js
+      - scripts/audit-succession-batch-5-final.mjs
       - scripts/build-media-variants.mjs
       - scripts/verify-media-manifest.mjs
       - scripts/verify-archive-records.mjs
@@ -38,6 +39,7 @@ on:
       - src/components/SafeImage.jsx
       - src/data/chimeraAntExperience.js
       - src/data/chimeraAntPhaseScaffold.js
+      - scripts/audit-succession-batch-5-final.mjs
       - scripts/build-media-variants.mjs
       - scripts/verify-media-manifest.mjs
       - scripts/verify-archive-records.mjs
