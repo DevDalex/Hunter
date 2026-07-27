@@ -30,26 +30,28 @@ import './RoyalFamilyGuardTree.css';
 import './RoyalFamilyGuardTreeFixes.css';
 import './RoyalFamilyBoardInteractionFixes.css';
 
-const MAP_WIDTH = 1520;
-const MAP_HEIGHT = 900;
-const PRINCE_WIDTH = 318;
-const PRINCE_HEIGHT = 122;
+const MAP_WIDTH = 1660;
+const MAP_HEIGHT = 1050;
+const PRINCE_WIDTH = 350;
+const PRINCE_HEIGHT = 154;
+const QUEEN_WIDTH = 58;
+const QUEEN_HEIGHT = 62;
 
 const PRINCE_LAYOUT = Object.freeze({
-  1: { x: 330, y: 155 }, 2: { x: 330, y: 300 }, 5: { x: 330, y: 445 }, 9: { x: 330, y: 590 }, 12: { x: 330, y: 735 },
-  3: { x: 685, y: 155 }, 4: { x: 685, y: 300 }, 7: { x: 685, y: 445 }, 10: { x: 685, y: 590 }, 13: { x: 685, y: 735 },
-  6: { x: 1040, y: 155 }, 8: { x: 1040, y: 300 }, 11: { x: 1040, y: 445 }, 14: { x: 1040, y: 590 },
+  1: { x: 300, y: 155 }, 2: { x: 300, y: 335 }, 5: { x: 300, y: 515 }, 9: { x: 300, y: 695 }, 12: { x: 300, y: 875 },
+  3: { x: 725, y: 155 }, 4: { x: 725, y: 335 }, 7: { x: 725, y: 515 }, 10: { x: 725, y: 695 }, 13: { x: 725, y: 875 },
+  6: { x: 1150, y: 155 }, 8: { x: 1150, y: 335 }, 11: { x: 1150, y: 515 }, 14: { x: 1150, y: 695 },
 });
 
 const QUEEN_LAYOUT = Object.freeze({
-  Unma: { x: 250, y: 170 },
-  Duazul: { x: 250, y: 390 },
-  'Tang Zhao Li': { x: 605, y: 170 },
-  Katrono: { x: 960, y: 170 },
-  'Swinko-swinko': { x: 1385, y: 315 },
-  Seiko: { x: 960, y: 540 },
-  Sevanti: { x: 960, y: 750 },
-  Oito: { x: 1385, y: 620 },
+  Unma: { x: 240, y: 225 },
+  Duazul: { x: 240, y: 520 },
+  'Tang Zhao Li': { x: 658, y: 180 },
+  Katrono: { x: 1083, y: 180 },
+  'Swinko-swinko': { x: 1575, y: 360 },
+  Seiko: { x: 1083, y: 620 },
+  Sevanti: { x: 658, y: 900 },
+  Oito: { x: 1575, y: 730 },
 });
 
 const FORCE_LAYOUT = Object.freeze({
@@ -112,7 +114,7 @@ function orthogonalPath(source, target, bendX = null) {
 }
 
 function RoyalMapConnectors({ branches, forceGroups, activePrinceOrders, activeForceKey }) {
-  const kingSource = { x: 865, y: 126 };
+  const kingSource = { x: MAP_WIDTH / 2, y: 126 };
   return <svg className="royal-map__connectors" viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`} fill="none" aria-hidden="true">
     <g className="royal-map__royal-lines">
       {princeDossiers.map((prince) => {
@@ -129,12 +131,12 @@ function RoyalMapConnectors({ branches, forceGroups, activePrinceOrders, activeF
       {branches.flatMap((branch) => {
         const queenPosition = QUEEN_LAYOUT[branch.short];
         if (!queenPosition) return [];
-        const source = { x: queenPosition.x + 35, y: queenPosition.y + 36 };
+        const source = { x: queenPosition.x + QUEEN_WIDTH / 2, y: queenPosition.y + QUEEN_HEIGHT / 2 };
         return branch.princes.map((prince) => {
           const layout = PRINCE_LAYOUT[prince.order];
           const target = queenPosition.x < layout.x
-            ? { x: layout.x, y: layout.y + 34 }
-            : { x: layout.x + PRINCE_WIDTH, y: layout.y + 34 };
+            ? { x: layout.x, y: layout.y + 38 }
+            : { x: layout.x + PRINCE_WIDTH, y: layout.y + 38 };
           return <path
             key={`maternal-${branch.short}-${prince.order}`}
             className={activePrinceOrders.has(prince.order) ? 'is-active' : ''}
@@ -150,11 +152,11 @@ function RoyalMapConnectors({ branches, forceGroups, activePrinceOrders, activeF
         if (!position) return [];
         const source = { x: 236, y: position.y + 54 };
         return group.linkedOrders.map((order) => {
-          const target = { x: PRINCE_LAYOUT[order].x, y: PRINCE_LAYOUT[order].y + 86 };
+          const target = { x: PRINCE_LAYOUT[order].x, y: PRINCE_LAYOUT[order].y + 112 };
           return <path
             key={`force-${group.key}-${order}`}
             className={`is-${group.key}${activeForceKey === group.key || activePrinceOrders.has(order) ? ' is-active' : ''}`}
-            d={orthogonalPath(source, target, 282 + (order % 3) * 14)}
+            d={orthogonalPath(source, target, 270 + (order % 3) * 12)}
           />;
         });
       })}
@@ -259,10 +261,9 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
     })];
   })), [forceGroups, princeRecords]);
 
-  const selectedRecord = princeRecords.get(selectedOrder) || princeRecords.get(14);
-  const activeRecord = hoveredRecord || pinnedRecord || selectedRecord;
+  const activeRecord = hoveredRecord || pinnedRecord;
   const activeKey = recordKey(activeRecord);
-  const activePrinceOrders = new Set(activeRecord?.linkedOrders?.length ? activeRecord.linkedOrders : [activeRecord?.princeOrder || selectedOrder]);
+  const activePrinceOrders = new Set(activeRecord?.linkedOrders?.length ? activeRecord.linkedOrders : [selectedOrder]);
   const activeForceKey = activeRecord?.kind === 'mafia' || activeRecord?.kind === 'alliance'
     ? activeRecord.key.replace('force:', '')
     : null;
@@ -326,7 +327,7 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
       <div>
         <span><Crown size={14} aria-hidden="true" /> Royal relationship map</span>
         <h2 id="royal-map-title">Kakin Royal Family</h2>
-        <p>King · queens · fourteen princes · Guardian Spirit Beasts · protection circles · mafia ties · Chapter {spoilerLimit}</p>
+        <p>King · queens · fourteen princes · Guardian Spirit Beasts · complete protection circles · mafia ties · Chapter {spoilerLimit}</p>
       </div>
       <div className="royal-map__legend" aria-label="Relationship legend">
         <span><i className="is-royal" /> Royal line</span>
@@ -405,7 +406,7 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
 
     <footer className="royal-map__footer">
       <Shield size={14} aria-hidden="true" />
-      <span>Hover or focus a portrait to inspect essentials. Click or tap to pin. Press Escape to clear a pinned record.</span>
+      <span>Every documented guard is shown. Hover or focus a portrait to inspect essentials. Click or tap to pin. Press Escape to clear.</span>
       <Users size={14} aria-hidden="true" />
       <Link2 size={14} aria-hidden="true" />
     </footer>

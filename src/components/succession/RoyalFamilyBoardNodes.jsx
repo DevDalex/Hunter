@@ -72,6 +72,7 @@ export function QueenMapNode({ branch, position, active, pinned, onPreview, onCl
     {...props}
     className={`royal-map__queen-node ${props.className}`}
     style={{ left: position.x, top: position.y }}
+    data-queen={branch.short}
   >
     <small>Queen</small>
     <strong>{branch.short}</strong>
@@ -95,13 +96,12 @@ function GuardMini({ guard, prince, record, active, pinned, onPreview, onClear, 
 export function PrinceMapNode({ prince, record, guards, position, selected, active, activeKey, pinnedKey, onPreview, onClear, onPin, guardRecordFor }) {
   const beast = beastForHost(prince.short);
   const princeProps = triggerProps({ record, active, pinned: pinnedKey === record.key, onPreview, onClear, onPin });
-  const displayGuards = guards.slice(0, 6);
-  const remaining = Math.max(0, guards.length - displayGuards.length);
 
   return <article
     className={`royal-map__prince-node is-${prince.status}${active ? ' is-active' : ''}${selected ? ' is-selected' : ''}`}
     style={{ left: position.x, top: position.y }}
     data-prince-order={prince.order}
+    data-guard-count={guards.length}
   >
     <BeastBackdrop beast={beast} />
     <button
@@ -120,8 +120,8 @@ export function PrinceMapNode({ prince, record, guards, position, selected, acti
       {prince.status === 'deceased' && <span className="royal-map__death-mark" aria-hidden="true" />}
     </button>
 
-    <div className="royal-map__guard-strip" aria-label={`${prince.short} protection and intelligence circle`}>
-      {displayGuards.map((guard) => {
+    <div className="royal-map__guard-strip" aria-label={`${prince.short} protection and intelligence circle. All ${guards.length} documented records shown.`}>
+      {guards.map((guard) => {
         const guardRecord = guardRecordFor(guard, prince);
         return <GuardMini
           key={guard.id}
@@ -135,12 +135,11 @@ export function PrinceMapNode({ prince, record, guards, position, selected, acti
           onPin={onPin}
         />;
       })}
-      {remaining > 0 && <span className="royal-map__guard-more">+{remaining}</span>}
     </div>
 
     <footer>
       <span>Room {prince.room.split(' / ')[0]}</span>
-      <span>{guards.length} records</span>
+      <span>All {guards.length} shown</span>
     </footer>
   </article>;
 }
