@@ -72,7 +72,13 @@ jobs:
             echo '```'
             echo '</details>'
           } > .chimera-ant-qa/pr-comment.md
-          gh pr comment "${{ github.event.pull_request.number }}" --body-file .chimera-ant-qa/pr-comment.md
+
+          COMMENT_ID="$(gh api "repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/comments" --paginate --jq '[.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("### Chimera Ant Final QA")))] | first | .id // empty')"
+          if [[ -n "${COMMENT_ID}" ]]; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${COMMENT_ID}" -F body=@.chimera-ant-qa/pr-comment.md >/dev/null
+          else
+            gh pr comment "${{ github.event.pull_request.number }}" --body-file .chimera-ant-qa/pr-comment.md
+          fi
 
       - name: Upload desktop QA evidence
         if: always()
