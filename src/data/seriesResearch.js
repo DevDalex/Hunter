@@ -136,8 +136,8 @@ export const seriesChronology = [
 ];
 
 export const seriesResearchStats = {
-  indexedChapters: LATEST_PUBLISHED_CHAPTER,
-  detailedChapters: LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
+  indexedChapters: LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
+  publishedChapters: LATEST_PUBLISHED_CHAPTER,
   pendingPublishedChapters: LATEST_PUBLISHED_CHAPTER - LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
   locallyChapterSpecific: preSuccessionChapterResearch.filter((record) => record.chapterSpecific).length + (LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER - 339),
   preSuccessionContextRecords: preSuccessionChapterResearch.length,

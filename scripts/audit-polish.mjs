@@ -13,6 +13,7 @@ const [
   royalNodesBase,
   royalCss,
   inspectorCss,
+  inspectorFrameCss,
   coverageCss,
   metadata,
   chapters,
@@ -32,6 +33,7 @@ const [
   read('src/components/succession/RoyalFamilyBoardNodesBase.jsx'),
   read('src/components/succession/RoyalFamilyBoardInteractionFixes.css'),
   read('src/components/succession/RoyalFamilyInspector.css'),
+  read('src/components/succession/RoyalFamilyInspectorFrame.css'),
   read('src/components/succession/RoyalFamilyCoverageCurrency.css'),
   read('src/data/latestChapterMetadata.js'),
   read('src/data/chapters.js'),
@@ -51,13 +53,13 @@ assert(royalTree.includes("addEventListener('wheel', onWheel, { passive: false }
 assert(royalNodesBase.includes('MapInspector') && royalNodesBase.includes("['overview', 'Overview']") && royalNodesBase.includes("['evidence', 'Evidence']") && royalNodesBase.includes('royal-map__inspector-dragbar'), 'base dossier must retain preview, tabs, drag, and evidence');
 assert(royalNodes.includes("from './RoyalFamilyBoardNodesBase'") && royalNodes.includes('RoyalCoveragePanel') && royalNodes.includes('getProtectionCoverage') && royalNodes.includes('getRosterCoverage'), 'Royal dossier wrapper must expose chapter, protection, and roster coverage');
 assert(royalCss.includes('.royal-map__controls') && royalCss.includes('touch-action: none'), 'map interaction styling must remain owned');
-assert(inspectorCss.includes('position: fixed !important') && inspectorCss.includes('resize: both'), 'dossier must remain floating, draggable, and resizable');
+assert(inspectorCss.includes("@import './RoyalFamilyInspectorFrame.css'") && inspectorFrameCss.includes('position: fixed !important') && inspectorFrameCss.includes('resize: both'), 'dossier must remain floating, draggable, and resizable in its imported frame layer');
 assert(coverageCss.includes('.royal-map__coverage-companion') && coverageCss.includes('.royal-map__coverage-companion__completeness'), 'Royal coverage panel must be styled and responsive');
 
 assert(metadata.includes('414:') && metadata.includes("title: 'Friends'") && metadata.includes('415:') && metadata.includes("japaneseTitle: '真偽'") && metadata.includes('LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER = 413'), 'latest chapter metadata must separate publication through 415 from detailed research through 413');
 assert(chapters.includes('LATEST_PUBLISHED_CHAPTER') && chapters.includes('Catalogue record') && arcs.includes('LATEST_PUBLISHED_CHAPTER'), 'full-series catalogue and arc endpoint must derive from release metadata');
 assert(successionResearch.includes('sceneSummary: false') && successionResearch.includes('pendingImportedResearch'), 'new releases must remain honest pending research shells');
-assert(seriesResearch.includes('LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER') && seriesResearch.includes('pending annotation'), 'full-series chronology must expose the detailed-research boundary');
+assert(seriesResearch.includes('indexedChapters: LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER') && seriesResearch.includes('publishedChapters: LATEST_PUBLISHED_CHAPTER') && seriesResearch.includes('pending annotation'), 'full-series research totals must separate structured research from published catalogue coverage');
 
 for (const token of ['getEntityCoverage', 'getArchiveCoverageReport', 'getProtectionCoverage', 'getRosterCoverage', 'recentChanges', 'openQuestions']) {
   assert(coverageService.includes(token), `coverage service is missing ${token}`);
