@@ -21,6 +21,7 @@
     "src/data/chimeraAntExperience.js",
     "scripts/build-media-variants.mjs",
     "scripts/verify-media-manifest.mjs",
+    "scripts/verify-archive-records.mjs",
     "tests/**/*.js",
     "tests/**/*.jsx",
     "playwright.config.js",
