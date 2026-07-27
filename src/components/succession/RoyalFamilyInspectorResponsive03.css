@@ -1,0 +1,11 @@
+@media (max-width: 430px) {
+  .royal-map__dossier-hero { grid-template-columns: 56px minmax(0, 1fr); }
+  .royal-map__dossier-hero > .royal-map__portrait,
+  .royal-map__dossier-hero > .royal-map__portrait-fallback { width: 56px; height: 68px; }
+  .royal-map .royal-map__inspector h3 { font-size: 19px; }
+  .royal-map__dossier-facts,
+  .royal-map__dossier-preview-grid { grid-template-columns: 1fr; }
+  .royal-map__dossier-feature.is-beast { grid-template-columns: minmax(0, 1fr) 84px; }
+  .royal-map__dossier-feature.is-beast > img { width: 84px; height: 110px; }
+}
+

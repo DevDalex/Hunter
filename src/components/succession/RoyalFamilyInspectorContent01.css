@@ -1,0 +1,61 @@
+.royal-map__dossier-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  border-bottom: 1px solid #4a453e;
+  background: #201e1a;
+}
+
+.royal-map__dossier-tabs button {
+  min-width: 0;
+  min-height: 38px;
+  padding: 6px 5px;
+  border: 0;
+  border-right: 1px solid #3e3a34;
+  border-bottom: 3px solid transparent;
+  background: transparent;
+  color: #bdb4a6;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.royal-map__dossier-tabs button:last-child { border-right: 0; }
+.royal-map__dossier-tabs button:hover,
+.royal-map__dossier-tabs button:focus-visible { background: #2a2721; color: #fff2d3; }
+.royal-map__dossier-tabs button[aria-selected='true'] {
+  border-bottom-color: var(--dossier-gold);
+  background: #2b271f;
+  color: #ffe9b2;
+}
+
+.royal-map__dossier-panel,
+.royal-map__dossier-preview {
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.royal-map__dossier-panel { padding: 12px; background: #151513; }
+.royal-map__dossier-preview { padding: 10px 12px 12px; background: #151513; }
+
+.royal-map__dossier-status {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.royal-map__dossier-status span {
+  padding: 3px 7px;
+  border: 1px solid #5a544a;
+  border-radius: 3px;
+  background: #25221d;
+  color: #e8d6b3;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}

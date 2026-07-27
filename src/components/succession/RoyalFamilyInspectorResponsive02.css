@@ -1,0 +1,42 @@
+@media (max-width: 760px) {
+  .royal-map .royal-map__inspector,
+  html:has(.succession-royal-hierarchy-workspace) .royal-map .royal-map__inspector,
+  .royal-map .royal-map__inspector.is-expanded,
+  html:has(.succession-royal-hierarchy-workspace) .royal-map .royal-map__inspector.is-expanded {
+    top: auto !important;
+    right: 6px !important;
+    bottom: 6px !important;
+    left: 6px !important;
+    width: auto !important;
+    height: min(72dvh, 660px);
+    min-width: 0;
+    max-width: none;
+    max-height: 72dvh !important;
+    resize: none;
+    border-radius: 8px;
+  }
+
+  .royal-map .royal-map__inspector.is-preview,
+  html:has(.succession-royal-hierarchy-workspace) .royal-map .royal-map__inspector.is-preview {
+    top: auto !important;
+    right: 6px !important;
+    bottom: 6px !important;
+    left: 6px !important;
+    width: auto !important;
+    max-width: none;
+    max-height: min(52dvh, 460px) !important;
+  }
+
+  .royal-map__dossier-card-grid,
+  .royal-map__dossier-nen,
+  .royal-map__dossier-network { grid-template-columns: 1fr; }
+  .royal-map__inspector-sources { grid-template-columns: 1fr; }
+  .royal-map__dossier-hero { grid-template-columns: 68px minmax(0, 1fr); min-height: 108px; padding: 10px; }
+  .royal-map__dossier-hero > .royal-map__portrait,
+  .royal-map__dossier-hero > .royal-map__portrait-fallback { width: 68px; height: 82px; }
+  .royal-map .royal-map__inspector h3 { font-size: 22px; }
+  .royal-map__dossier-tabs { overflow-x: auto; grid-template-columns: repeat(5, minmax(74px, 1fr)); }
+  .royal-map__dossier-footer > span:first-child { display: none; }
+  .royal-map__dossier-footer { justify-content: flex-end; }
+}
+

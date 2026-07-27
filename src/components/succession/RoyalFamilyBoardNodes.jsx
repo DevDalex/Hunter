@@ -1,10 +1,20 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import { ArrowRight, Building2, GripHorizontal, Maximize2, Minimize2, Pin, PinOff } from 'lucide-react';
+import {
+  ArrowRight,
+  Building2,
+  ChevronRight,
+  GripHorizontal,
+  Maximize2,
+  Minimize2,
+  PinOff,
+  X,
+} from 'lucide-react';
 import { princeDossiers } from '../../data/successionDossier';
 import { successionRosterGroups } from '../../data/successionRoster';
 import {
   getAssignmentSnapshot,
   getCharacterCurrentState,
+  getCharacterLifetimeTimeline,
   getCharacterRoleProfile,
   getEntityById,
   getOrganizationMembers,
@@ -25,6 +35,13 @@ import './RoyalFamilyInspector.css';
 const rosterGroupById = new Map(successionRosterGroups.map((group) => [group.id, group]));
 const rosterMemberByName = new Map(successionRosterGroups.flatMap((group) => group.members).map((member) => [normalizeLookup(member.name), member]));
 const royalRoleNames = new Set(['king', 'queen', 'prince', 'royal-parent']);
+const DOSSIER_TABS = Object.freeze([
+  ['overview', 'Overview'],
+  ['nen', 'Nen'],
+  ['network', 'Network'],
+  ['timeline', 'Timeline'],
+  ['evidence', 'Evidence'],
+]);
 
 function triggerProps({ record, active, pinned, onPreview, onClear, onPin }) {
   return {
@@ -71,11 +88,7 @@ export function BeastBackdrop({ beast }) {
 
 export function KingMapNode({ record, beast, active, pinned, onPreview, onClear, onPin }) {
   const props = triggerProps({ record, active, pinned, onPreview, onClear, onPin });
-  return <button
-    type="button"
-    {...props}
-    className={`royal-map__king ${props.className}`}
-  >
+  return <button type="button" {...props} className={`royal-map__king ${props.className}`}>
     <span className="royal-map__king-rank">King</span>
     <Portrait name={record.name} entity={record.entity} eager />
     <span className="royal-map__king-copy">
@@ -184,12 +197,7 @@ export function PrinceMapNode({ prince, record, guards: suppliedGuards, position
     data-guard-count={guards.length}
   >
     <BeastBackdrop beast={beast} />
-    <button
-      type="button"
-      {...princeProps}
-      className={`royal-map__prince-summary ${princeProps.className}`}
-      aria-current={selected ? 'true' : undefined}
-    >
+    <button type="button" {...princeProps} className={`royal-map__prince-summary ${princeProps.className}`} aria-current={selected ? 'true' : undefined}>
       <span className="royal-map__prince-number">{prince.order}</span>
       <Portrait name={prince.name} entity={record.entity} compact eager={prince.order <= 4} />
       <span className="royal-map__prince-copy">
@@ -345,10 +353,16 @@ function assignmentEntityLabel(assignment, entityId) {
     .join(' · ');
 }
 
+function formatChapterRange(range) {
+  if (!range?.start) return 'Current record';
+  if (!range.end || range.end === range.start) return `Ch. ${range.start}`;
+  return `Ch. ${range.start}–${range.end}`;
+}
+
 function inspectorDetails(record) {
   const entityId = record?.entity?.id;
   const archiveEntity = entityId ? getEntityById(entityId) : null;
-  if (!archiveEntity) return { state: null, role: null, assignments: [], relationships: [], sources: [] };
+  if (!archiveEntity) return { state: null, role: null, assignments: [], relationships: [], timeline: [], sources: [] };
   const isCharacter = archiveEntity.entityType === 'character';
   const state = isCharacter ? getCharacterCurrentState(entityId) : null;
   const role = isCharacter ? getCharacterRoleProfile(entityId) : null;
@@ -357,25 +371,51 @@ function inspectorDetails(record) {
   return {
     state,
     role,
-    assignments: (assignmentSnapshot?.assignments || []).slice(0, 10).map((assignment) => ({
+    assignments: (assignmentSnapshot?.assignments || []).slice(0, 12).map((assignment) => ({
       id: assignment.id,
       label: assignment.name || assignment.assignmentType || 'Assignment',
       related: assignmentEntityLabel(assignment, entityId),
       summary: assignment.objective || assignment.summary || assignment.status || '',
       status: assignment.status || assignment.certainty || '',
+      range: assignment.chapterRange,
     })),
-    relationships: (relationshipSnapshot?.relationships || []).slice(0, 10).map((relationship) => ({
-      id: relationship.id,
-      label: relatedEntityLabel(relationship, entityId),
-      type: relationship.relationshipType || relationship.sentiment || relationship.status || '',
-      summary: relationship.operationalState || relationship.summary || relationship.name || '',
-    })),
-    sources: (getSourcesForEntity(entityId) || []).slice(0, 8).map((source) => ({
+    relationships: (relationshipSnapshot?.relationships || []).slice(0, 12).map((relationship) => {
+      const otherId = relationship.sourceEntityId === entityId ? relationship.targetEntityId : relationship.sourceEntityId;
+      return {
+        id: relationship.id,
+        label: relatedEntityLabel(relationship, entityId),
+        type: relationship.relationshipType || relationship.sentiment || relationship.status || '',
+        summary: relationship.operationalState || relationship.summary || relationship.name || '',
+        entity: getEntityById(otherId),
+      };
+    }),
+    timeline: (isCharacter ? getCharacterLifetimeTimeline(entityId) || [] : [])
+      .slice()
+      .sort((left, right) => (right.chapterRange?.start || 0) - (left.chapterRange?.start || 0))
+      .slice(0, 14)
+      .map((entry) => ({
+        id: entry.id,
+        label: entry.label || entry.kind || 'Archive event',
+        summary: entry.summary || '',
+        kind: entry.kind || 'record',
+        range: entry.chapterRange,
+        certainty: entry.certainty || '',
+      })),
+    sources: (getSourcesForEntity(entityId) || []).slice(0, 12).map((source) => ({
       id: source.id,
       label: source.name || source.title || source.id,
       chapter: source.chapter || source.chapterRange?.start || null,
     })),
   };
+}
+
+function beastForRecord(record) {
+  if (record?.kind === 'king') return beastForHost('Nasubi');
+  if (record?.kind === 'prince') {
+    const prince = princeDossiers.find((entry) => entry.order === record.princeOrder);
+    return prince ? beastForHost(prince.short) : null;
+  }
+  return null;
 }
 
 function clampPanelPosition(position, panel) {
@@ -387,16 +427,186 @@ function clampPanelPosition(position, panel) {
   };
 }
 
+function DossierStatus({ record, details, pinned }) {
+  const labels = [record.kind, details.state?.life, details.state?.threatLevel && details.state.threatLevel !== 'unknown' ? `${details.state.threatLevel} threat` : null, pinned ? 'Pinned' : 'Preview'].filter(Boolean);
+  return <div className="royal-map__dossier-status" aria-label="Record classification">
+    {labels.map((label) => <span key={label}>{label}</span>)}
+  </div>;
+}
+
+function QuickFacts({ facts = [], limit = null }) {
+  const filtered = facts.filter(([, value]) => value !== null && value !== undefined && String(value).trim());
+  const shown = limit ? filtered.slice(0, limit) : filtered;
+  if (!shown.length) return null;
+  return <dl className="royal-map__dossier-facts">
+    {shown.map(([label, value]) => <div key={`${label}-${value}`}>
+      <dt>{label}</dt>
+      <dd>{value}</dd>
+    </div>)}
+  </dl>;
+}
+
+function PreviewContent({ record, details, beast }) {
+  const shortFacts = (record.facts || []).filter(([, value]) => String(value).length < 90);
+  return <div className="royal-map__dossier-preview">
+    <DossierStatus record={record} details={details} pinned={false} />
+    <QuickFacts facts={shortFacts} limit={4} />
+    <div className="royal-map__dossier-preview-grid">
+      <article>
+        <small>Nen / ability</small>
+        <p>{record.ability || 'No documented personal ability'}</p>
+      </article>
+      <article>
+        <small>Guardian Beast</small>
+        <p>{record.beast || beast?.ability || 'No Guardian Spirit Beast record'}</p>
+      </article>
+    </div>
+    <p className="royal-map__dossier-hint">Click the record to pin the full case file.</p>
+  </div>;
+}
+
+function OverviewTab({ record, details }) {
+  const overviewFacts = (record.facts || []).filter(([, value]) => String(value).length < 120);
+  return <div className="royal-map__dossier-overview">
+    <DossierStatus record={record} details={details} pinned />
+    <QuickFacts facts={overviewFacts} />
+    <div className="royal-map__dossier-card-grid">
+      {details.state && <article className="royal-map__dossier-card is-state">
+        <small>Current state</small>
+        <h4>{details.state.operationalState || 'No chapter-specific state note'}</h4>
+        <ul>
+          <li><strong>Body</strong><span>{details.state.bodyState}</span></li>
+          <li><strong>Consciousness</strong><span>{details.state.consciousnessState}</span></li>
+          <li><strong>Protection</strong><span>{details.state.protectionState}</span></li>
+          <li><strong>Allegiance</strong><span>{details.state.allegianceState}</span></li>
+        </ul>
+      </article>}
+      {details.role && <article className="royal-map__dossier-card is-role">
+        <small>Role and authority</small>
+        <h4>{details.role.label}</h4>
+        <p>{details.role.mandate}</p>
+        <p>{details.role.authority}</p>
+        {!!details.role.responsibilities?.length && <ul className="royal-map__dossier-bullets">
+          {details.role.responsibilities.slice(0, 5).map((item) => <li key={item}>{item}</li>)}
+        </ul>}
+      </article>}
+    </div>
+  </div>;
+}
+
+function NenTab({ record, beast }) {
+  return <div className="royal-map__dossier-nen">
+    <article className="royal-map__dossier-feature is-ability">
+      <small>Personal Nen / abilities</small>
+      <h4>{record.ability || 'No documented personal ability'}</h4>
+    </article>
+    <article className="royal-map__dossier-feature is-beast">
+      <div>
+        <small>Guardian Spirit Beast</small>
+        <h4>{record.beast || beast?.ability || 'No Guardian Spirit Beast record'}</h4>
+        {beast?.type && <span>Type: {beast.type}</span>}
+        {beast?.conditions && <p>{beast.conditions}</p>}
+      </div>
+      {beast?.image && <SafeImage src={beast.image} alt="" fallbackLabel="" />}
+    </article>
+  </div>;
+}
+
+function NetworkTab({ details }) {
+  return <div className="royal-map__dossier-network">
+    <section>
+      <header><small>Assignments</small><span>{details.assignments.length}</span></header>
+      <div className="royal-map__inspector-ledger">
+        {details.assignments.length ? details.assignments.map((assignment) => <article key={assignment.id}>
+          <div>
+            <strong>{assignment.label}</strong>
+            {assignment.related && <span>{assignment.related}</span>}
+          </div>
+          <em>{formatChapterRange(assignment.range)}</em>
+          {assignment.summary && <p>{assignment.summary}</p>}
+          {assignment.status && <small>{assignment.status}</small>}
+        </article>) : <p className="royal-map__dossier-empty">No active assignment record is indexed.</p>}
+      </div>
+    </section>
+    <section>
+      <header><small>Relationships</small><span>{details.relationships.length}</span></header>
+      <div className="royal-map__dossier-relations">
+        {details.relationships.length ? details.relationships.map((relationship) => <article key={relationship.id}>
+          <Portrait name={relationship.label} entity={relationship.entity} compact />
+          <div>
+            <strong>{relationship.label}</strong>
+            {relationship.type && <span>{relationship.type}</span>}
+            {relationship.summary && <p>{relationship.summary}</p>}
+          </div>
+        </article>) : <p className="royal-map__dossier-empty">No relationship edge is indexed.</p>}
+      </div>
+    </section>
+  </div>;
+}
+
+function TimelineTab({ details }) {
+  return <ol className="royal-map__dossier-timeline">
+    {details.timeline.length ? details.timeline.map((entry) => <li key={entry.id}>
+      <span aria-hidden="true" />
+      <div>
+        <header>
+          <strong>{entry.label}</strong>
+          <em>{formatChapterRange(entry.range)}</em>
+        </header>
+        <p>{entry.summary}</p>
+        <small>{entry.kind}{entry.certainty ? ` · ${entry.certainty}` : ''}</small>
+      </div>
+    </li>) : <li className="is-empty"><div><p>No chapter-bounded timeline entries are indexed for this record.</p></div></li>}
+  </ol>;
+}
+
+function EvidenceTab({ record, details }) {
+  return <div className="royal-map__dossier-evidence">
+    <article>
+      <small>Evidence coverage</small>
+      <strong>{details.sources.length} linked source{details.sources.length === 1 ? '' : 's'}</strong>
+      <p>These entries are taken from the archive entity and its chapter-bounded evidence graph.</p>
+    </article>
+    <ul className="royal-map__inspector-sources">
+      {details.sources.length ? details.sources.map((source) => <li key={source.id}>
+        <span>{source.chapter ? `Ch. ${source.chapter}` : 'Archive'}</span>
+        <strong>{source.label}</strong>
+      </li>) : <li><strong>No direct source record is attached to this entry.</strong></li>}
+    </ul>
+    {(record.facts || []).some(([, value]) => String(value).length >= 90) && <section>
+      <small>Extended record</small>
+      <QuickFacts facts={(record.facts || []).filter(([, value]) => String(value).length >= 90)} />
+    </section>}
+  </div>;
+}
+
+function ActiveTabPanel({ activeTab, record, details, beast }) {
+  if (activeTab === 'nen') return <NenTab record={record} beast={beast} />;
+  if (activeTab === 'network') return <NetworkTab details={details} />;
+  if (activeTab === 'timeline') return <TimelineTab details={details} />;
+  if (activeTab === 'evidence') return <EvidenceTab record={record} details={details} />;
+  return <OverviewTab record={record} details={details} />;
+}
+
 export function MapInspector({ record, pinned, onOpen, onUnpin, onPreviewHold, onPreviewRelease }) {
   const titleId = useId();
+  const panelId = useId();
   const panelRef = useRef(null);
   const dragRef = useRef(null);
   const positionRef = useRef(null);
-  const [expanded, setExpanded] = useState(true);
+  const [activeTab, setActiveTab] = useState('overview');
+  const [expanded, setExpanded] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [position, setPosition] = useState(null);
   const details = useMemo(() => inspectorDetails(record), [record]);
+  const beast = useMemo(() => beastForRecord(record), [record]);
+  const isPreview = !pinned;
+
   useEffect(() => { positionRef.current = position; }, [position]);
+  useEffect(() => {
+    setActiveTab('overview');
+    if (!pinned) setExpanded(false);
+  }, [record?.key, pinned]);
 
   useLayoutEffect(() => {
     if (!record || !panelRef.current || position) return;
@@ -416,13 +626,14 @@ export function MapInspector({ record, pinned, onOpen, onUnpin, onPreviewHold, o
     if (!position || !panelRef.current) return;
     const clamped = clampPanelPosition(position, panelRef.current);
     if (clamped.x !== position.x || clamped.y !== position.y) setPosition(clamped);
-  }, [expanded, position]);
+  }, [expanded, pinned, position]);
 
   if (!record) return null;
 
   const beginDrag = (event) => {
     if (event.pointerType === 'mouse' && event.button !== 0) return;
     if (event.target.closest?.('button, a')) return;
+    onPreviewHold?.();
     const rect = panelRef.current.getBoundingClientRect();
     dragRef.current = { pointerId: event.pointerId, dx: event.clientX - rect.left, dy: event.clientY - rect.top };
     event.currentTarget.setPointerCapture?.(event.pointerId);
@@ -447,9 +658,7 @@ export function MapInspector({ record, pinned, onOpen, onUnpin, onPreviewHold, o
   const moveByKeyboard = (event) => {
     if (!event.altKey || !position) return;
     const delta = event.shiftKey ? 40 : 12;
-    const directions = {
-      ArrowLeft: [-delta, 0], ArrowRight: [delta, 0], ArrowUp: [0, -delta], ArrowDown: [0, delta],
-    };
+    const directions = { ArrowLeft: [-delta, 0], ArrowRight: [delta, 0], ArrowUp: [0, -delta], ArrowDown: [0, delta] };
     const direction = directions[event.key];
     if (!direction) return;
     event.preventDefault();
@@ -458,13 +667,32 @@ export function MapInspector({ record, pinned, onOpen, onUnpin, onPreviewHold, o
     setPosition(next);
     try { sessionStorage.setItem('royal-map-inspector-position', JSON.stringify(next)); } catch { /* session storage may be unavailable */ }
   };
+  const dismiss = () => {
+    onUnpin?.();
+    onPreviewRelease?.();
+  };
+  const moveTabByKeyboard = (event) => {
+    const currentIndex = DOSSIER_TABS.findIndex(([id]) => id === activeTab);
+    let nextIndex = currentIndex;
+    if (event.key === 'ArrowRight') nextIndex = (currentIndex + 1) % DOSSIER_TABS.length;
+    else if (event.key === 'ArrowLeft') nextIndex = (currentIndex - 1 + DOSSIER_TABS.length) % DOSSIER_TABS.length;
+    else if (event.key === 'Home') nextIndex = 0;
+    else if (event.key === 'End') nextIndex = DOSSIER_TABS.length - 1;
+    else return;
+    event.preventDefault();
+    const nextId = DOSSIER_TABS[nextIndex][0];
+    setActiveTab(nextId);
+    requestAnimationFrame(() => document.getElementById(`${panelId}-${nextId}-tab`)?.focus());
+  };
 
   return <aside
     ref={panelRef}
     id="royal-map-inspector"
-    className={`royal-map__inspector${expanded ? ' is-expanded' : ' is-compact'}${dragging ? ' is-dragging' : ''}`}
+    className={`royal-map__inspector${isPreview ? ' is-preview' : ' is-pinned'}${expanded ? ' is-expanded' : ''}${dragging ? ' is-dragging' : ''}`}
     aria-labelledby={titleId}
     aria-live="polite"
+    role={pinned ? 'dialog' : 'status'}
+    aria-modal="false"
     style={position ? { left: position.x, top: position.y, right: 'auto' } : undefined}
     onMouseEnter={onPreviewHold}
     onMouseLeave={onPreviewRelease}
@@ -484,87 +712,54 @@ export function MapInspector({ record, pinned, onOpen, onUnpin, onPreviewHold, o
       aria-label="Drag dossier panel. Hold Alt and use arrow keys to move it."
     >
       <GripHorizontal size={17} aria-hidden="true" />
-      <span>{record.eyebrow}</span>
-      <button type="button" onClick={() => setExpanded((current) => !current)} aria-label={expanded ? 'Use compact dossier view' : 'Expand dossier information'}>
+      <span>{isPreview ? 'Quick intelligence preview' : record.eyebrow}</span>
+      {!isPreview && <button type="button" onClick={() => setExpanded((current) => !current)} aria-label={expanded ? 'Return to standard dossier size' : 'Expand dossier window'}>
         {expanded ? <Minimize2 size={15} aria-hidden="true" /> : <Maximize2 size={15} aria-hidden="true" />}
-      </button>
-      <button type="button" onClick={onUnpin} aria-label={pinned ? 'Unpin record' : 'Clear pinned record'} disabled={!pinned}>
-        {pinned ? <PinOff size={15} aria-hidden="true" /> : <Pin size={15} aria-hidden="true" />}
-      </button>
+      </button>}
+      {pinned && <button type="button" onClick={onUnpin} aria-label="Unpin record"><PinOff size={15} aria-hidden="true" /></button>}
+      <button type="button" onClick={dismiss} aria-label="Close dossier"><X size={15} aria-hidden="true" /></button>
     </header>
 
-    <div className="royal-map__inspector-identity">
+    <div className="royal-map__dossier-hero">
       <Portrait name={record.name} entity={record.entity} portrait={record.portrait} />
       <div>
+        <span>{record.eyebrow}</span>
         <h3 id={titleId}>{record.name}</h3>
         <p>{record.summary}</p>
       </div>
+      {beast?.image && <span className="royal-map__dossier-beast" aria-hidden="true"><SafeImage src={beast.image} alt="" fallbackLabel="" /></span>}
     </div>
 
-    <div className="royal-map__inspector-chips" aria-label="Record classification">
-      <span>{record.kind}</span>
-      {details.state?.life && <span>{details.state.life}</span>}
-      {details.state?.threatLevel && details.state.threatLevel !== 'unknown' && <span>{details.state.threatLevel} threat</span>}
-      {pinned && <span>Pinned</span>}
-    </div>
+    {isPreview ? <PreviewContent record={record} details={details} beast={beast} /> : <>
+      <nav className="royal-map__dossier-tabs" role="tablist" aria-label="Dossier sections" onKeyDown={moveTabByKeyboard}>
+        {DOSSIER_TABS.map(([id, label]) => <button
+          key={id}
+          type="button"
+          role="tab"
+          id={`${panelId}-${id}-tab`}
+          aria-controls={`${panelId}-${id}-panel`}
+          aria-selected={activeTab === id}
+          tabIndex={activeTab === id ? 0 : -1}
+          onClick={() => setActiveTab(id)}
+        >{label}</button>)}
+      </nav>
+      <div
+        className="royal-map__dossier-panel"
+        role="tabpanel"
+        id={`${panelId}-${activeTab}-panel`}
+        aria-labelledby={`${panelId}-${activeTab}-tab`}
+      >
+        <ActiveTabPanel activeTab={activeTab} record={record} details={details} beast={beast} />
+      </div>
+    </>}
 
-    {record.beast && <section><small>Guardian Spirit Beast</small><p>{record.beast}</p></section>}
-    {record.ability && <section><small>Nen / abilities</small><p>{record.ability}</p></section>}
-    {!!record.facts?.length && <dl>{record.facts.map(([label, value]) => <div key={`${label}-${value}`}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
-
-    {expanded && <div className="royal-map__inspector-expanded">
-      {details.state && <section>
-        <small>Current state</small>
-        <p>{details.state.operationalState}</p>
-        <ul>
-          <li><strong>Body:</strong> {details.state.bodyState}</li>
-          <li><strong>Consciousness:</strong> {details.state.consciousnessState}</li>
-          <li><strong>Protection:</strong> {details.state.protectionState}</li>
-          <li><strong>Allegiance:</strong> {details.state.allegianceState}</li>
-        </ul>
-      </section>}
-
-      {details.role && <section>
-        <small>Role and authority</small>
-        <h4>{details.role.label}</h4>
-        <p>{details.role.mandate}</p>
-        <p>{details.role.authority}</p>
-        {!!details.role.responsibilities?.length && <ul>{details.role.responsibilities.slice(0, 6).map((item) => <li key={item}>{item}</li>)}</ul>}
-      </section>}
-
-      {!!details.assignments.length && <section>
-        <small>Assignments</small>
-        <div className="royal-map__inspector-ledger">
-          {details.assignments.map((assignment) => <article key={assignment.id}>
-            <strong>{assignment.label}</strong>
-            {assignment.related && <span>{assignment.related}</span>}
-            {assignment.summary && <p>{assignment.summary}</p>}
-            {assignment.status && <em>{assignment.status}</em>}
-          </article>)}
-        </div>
-      </section>}
-
-      {!!details.relationships.length && <section>
-        <small>Relationships</small>
-        <div className="royal-map__inspector-ledger">
-          {details.relationships.map((relationship) => <article key={relationship.id}>
-            <strong>{relationship.label}</strong>
-            {relationship.type && <span>{relationship.type}</span>}
-            {relationship.summary && <p>{relationship.summary}</p>}
-          </article>)}
-        </div>
-      </section>}
-
-      {!!details.sources.length && <section>
-        <small>Evidence coverage</small>
-        <ul className="royal-map__inspector-sources">
-          {details.sources.map((source) => <li key={source.id}>{source.label}{source.chapter ? ` · Ch. ${source.chapter}` : ''}</li>)}
-        </ul>
-      </section>}
-    </div>}
-
-    {record.openTarget && <button type="button" className="royal-map__inspector-open" onClick={() => onOpen(record)}>
-      Open full dossier <ArrowRight size={14} aria-hidden="true" />
-    </button>}
+    <footer className="royal-map__dossier-footer">
+      <span>{isPreview ? 'Click the map record to pin this dossier.' : 'Drag the title bar · Resize from the lower-right corner'}</span>
+      {record.openTarget && <button type="button" className="royal-map__inspector-open" onClick={() => onOpen(record)}>
+        Open full dossier <ArrowRight size={14} aria-hidden="true" />
+      </button>}
+      {!record.openTarget && !isPreview && <span className="royal-map__dossier-no-route">Group-level archive record</span>}
+      {!isPreview && <ChevronRight className="royal-map__dossier-resize-cue" size={14} aria-hidden="true" />}
+    </footer>
   </aside>;
 }
