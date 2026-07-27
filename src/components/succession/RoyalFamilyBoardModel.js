@@ -26,6 +26,7 @@ export const normalizeLookup = (value = '') => String(value)
 const queenFullNameByShort = new Map(queenDossiers.map((queen) => [queen.name, `${queen.name} Hui Guo Rou`]));
 const princeFullNameByShort = new Map(princeDossiers.map((prince) => [prince.short, prince.name]));
 export const dossierByShort = new Map(princeDossiers.map((prince) => [prince.short, prince]));
+export const dossierByOrder = new Map(princeDossiers.map((prince) => [prince.order, prince]));
 export const queenDossierByShort = new Map(queenDossiers.map((queen) => [queen.name, queen]));
 const guardianBeastByHost = new Map(guardianBeasts.map((beast) => [normalizeLookup(beast.host), beast]));
 const characterEntities = getEntitiesByType('character');

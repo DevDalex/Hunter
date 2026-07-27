@@ -1,0 +1,13 @@
+/* Keep each preview attached to its own trigger even when the surrounding mafia card is active. */
+.royal-guard-tree .royal-board__mafia-card > button:not(:hover):not(:focus-visible):not(.is-locked) > .royal-board__hover-card,
+.royal-guard-tree .royal-board__mafia-card > .royal-board__mafia-members > button:not(:hover):not(:focus-visible):not(.is-locked) > .royal-board__hover-card {
+  display: none;
+}
+
+/* Right-column previews open inward instead of being clipped by the application shell. */
+@media (min-width: 761px) {
+  .royal-board__branch-column:last-child .royal-board__hover-card {
+    right: calc(100% + 8px);
+    left: auto;
+  }
+}

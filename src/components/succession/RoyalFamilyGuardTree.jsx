@@ -4,12 +4,13 @@ import { princeDossiers } from '../../data/successionDossier';
 import { biologicalRoyalFamilyTree, legalRoyalFamilyTree } from '../../data/successionRoster';
 import { entityWorkspaceTarget } from './SuccessionArchivePrimitives';
 import {
-  abilityLabelFor, beastForHost, buildProtectionNodes, cleanBranchName, dossierByShort, entityForName, mafiaConnections,
-  personSummary, queenDossierByShort,
+  abilityLabelFor, beastForHost, buildProtectionNodes, cleanBranchName, dossierByOrder, dossierByShort, entityForName,
+  mafiaConnections, personSummary, queenDossierByShort,
 } from './RoyalFamilyBoardModel';
-import { BeastLayer, HoverCard, MafiaCard, Portrait, PrinceDossier } from './RoyalFamilyBoardNodes';
+import { BeastLayer, HoverCard, MafiaCard, Portrait, PrinceDossier, tooltipIdFor } from './RoyalFamilyBoardNodes';
 import './RoyalFamilyGuardTree.css';
 import './RoyalFamilyGuardTreeFixes.css';
+import './RoyalFamilyBoardInteractionFixes.css';
 
 const branchColumnIndexes = Object.freeze([[0, 2, 7], [1, 3, 4], [5, 6]]);
 
@@ -18,13 +19,15 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
   const initialDossier = princeDossiers.find((prince) => prince.order === initialPrince) || princeDossiers.at(-1);
   const [selectedOrder, setSelectedOrder] = useState(initialDossier.order);
   const [lockedKey, setLockedKey] = useState(null);
-  const [hoveredKey, setHoveredKey] = useState(null);
   const [activePrinceOrder, setActivePrinceOrder] = useState(null);
   const [activeMafiaKey, setActiveMafiaKey] = useState(null);
   const kingEntity = entityForName('Nasubi Hui Guo Rou');
   const kingBeast = beastForHost('Nasubi');
+  const kingKey = 'king:nasubi';
+  const kingTooltipId = tooltipIdFor(kingKey);
   const protectionByPrince = useMemo(() => new Map(princeDossiers.map((prince) => [prince.order, buildProtectionNodes(prince)])), []);
-  const selectedBranchIndex = Math.max(0, royalTree.findIndex((branch) => branch.children.some((child) => dossierByShort.get(cleanBranchName(child))?.order === selectedOrder)));
+  const selectedBranchIndex = royalTree.findIndex((branch) => branch.children.some((child) => dossierByShort.get(cleanBranchName(child))?.order === selectedOrder));
+  const selectedPrince = dossierByOrder.get(selectedOrder);
   const lockedMafiaConnection = mafiaConnections.find((connection) => (
     lockedKey === `mafia:${connection.key}` || lockedKey?.startsWith(`mafia-member:${connection.key}:`)
   ));
@@ -35,8 +38,8 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
     onNavigate?.(entityWorkspaceTarget(entity), { entity: entity.id });
   };
 
+  const openPrince = (prince) => onNavigate?.('princes', { prince: prince.order });
   const toggleLock = (key) => setLockedKey((current) => current === key ? null : key);
-  const activeKey = lockedKey || hoveredKey;
 
   return <section className="royal-guard-tree royal-dossier-board" aria-labelledby="royal-guard-tree-title">
     <header className="royal-board__mast">
@@ -67,7 +70,6 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
           setActiveMafiaKey={setActiveMafiaKey}
           activePrinceOrder={activePrinceOrder}
           setActivePrinceOrder={setActivePrinceOrder}
-          setHoveredKey={setHoveredKey}
           openEntity={openEntity}
         />)}
         <p>Hover a mafia family or member to isolate its royal connection.</p>
@@ -77,19 +79,17 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
         <div className="royal-board__topline">
           <button
             type="button"
-            className={`royal-board__king${lockedKey === 'king:nasubi' ? ' is-locked' : ''}`}
-            aria-pressed={lockedKey === 'king:nasubi'}
-            onMouseEnter={() => setHoveredKey('king:nasubi')}
-            onMouseLeave={() => setHoveredKey(null)}
-            onFocus={() => setHoveredKey('king:nasubi')}
-            onBlur={() => setHoveredKey(null)}
-            onClick={() => toggleLock('king:nasubi')}
+            className={`royal-board__king${lockedKey === kingKey ? ' is-locked' : ''}`}
+            aria-label="Nasubi Hui Guo Rou, King of Kakin"
+            aria-pressed={lockedKey === kingKey}
+            aria-describedby={kingTooltipId}
+            onClick={() => toggleLock(kingKey)}
           >
             <BeastLayer beast={kingBeast} />
             <span className="royal-board__king-label">King of Kakin</span>
             <Portrait name="Nasubi Hui Guo Rou" entity={kingEntity} compact eager />
             <span className="royal-board__king-copy"><strong>Nasubi Hui Guo Rou</strong><small>Royal root · previous contest survivor</small></span>
-            <HoverCard eyebrow="King of Kakin" name="Nasubi Hui Guo Rou" description={personSummary(kingEntity, 'The reigning Kakin king and sponsor of the current succession ritual.')} facts={[["Guardian beast", kingBeast?.ability], ["Beast status", kingBeast?.knowledge], ["Nen / ability", abilityLabelFor(kingEntity)], ["Role", 'Father of the fourteen legitimate princes']]} meta="Click to pin this preview" />
+            <HoverCard id={kingTooltipId} eyebrow="King of Kakin" name="Nasubi Hui Guo Rou" description={personSummary(kingEntity, 'The reigning Kakin king and sponsor of the current succession ritual.')} facts={[["Guardian beast", kingBeast?.ability], ["Beast status", kingBeast?.knowledge], ["Nen / ability", abilityLabelFor(kingEntity)], ["Role", 'Father of the fourteen legitimate princes']]} meta="Click to pin this preview" />
           </button>
           <div className="royal-board__instruction"><Sparkles size={14} aria-hidden="true" /><span>Hover or focus any portrait for essentials. Click to pin a preview.</span></div>
         </div>
@@ -104,23 +104,23 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
               const queen = queenDossierByShort.get(queenShort);
               const active = selectedBranchIndex === branchIndex;
               const queenKey = `queen:${branchIndex + 1}`;
+              const queenTooltipId = tooltipIdFor(queenKey);
               const locked = lockedKey === queenKey;
               const princes = branch.children.map((child) => dossierByShort.get(cleanBranchName(child))).filter(Boolean);
               return <section className={`royal-board__branch${active ? ' is-selected' : ''}`} key={branch.queen}>
                 <button
                   type="button"
                   className={`royal-board__queen-anchor${locked ? ' is-locked' : ''}`}
-                  aria-pressed={active}
-                  onMouseEnter={() => setHoveredKey(queenKey)}
-                  onMouseLeave={() => setHoveredKey(null)}
-                  onFocus={() => setHoveredKey(queenKey)}
-                  onBlur={() => setHoveredKey(null)}
+                  aria-label={`${branch.order} ${branch.queen}. ${princes.length} child${princes.length === 1 ? '' : 'ren'}`}
+                  aria-pressed={locked}
+                  aria-current={active ? 'true' : undefined}
+                  aria-describedby={queenTooltipId}
                   onClick={() => { if (princes[0]) setSelectedOrder(princes[0].order); toggleLock(queenKey); }}
                 >
                   <span className="royal-board__queen-rank">{branch.order}</span>
                   <Portrait name={branch.queen} entity={queenEntity} compact />
                   <span><strong>{queenShort}</strong><small>{princes.length} child{princes.length === 1 ? '' : 'ren'}</small></span>
-                  <HoverCard eyebrow={branch.order} name={branch.queen} description={queen?.role || branch.note || 'Kakin royal household branch.'} facts={[["Children", princes.map((prince) => prince.short).join(', ')], ["Nen / ability", abilityLabelFor(queenEntity)], ["Branch", active ? 'Current selected branch' : 'Royal household']]} meta="Click to pin this preview" />
+                  <HoverCard id={queenTooltipId} eyebrow={branch.order} name={branch.queen} description={queen?.role || branch.note || 'Kakin royal household branch.'} facts={[["Children", princes.map((prince) => prince.short).join(', ')], ["Nen / ability", abilityLabelFor(queenEntity)], ["Branch", active ? 'Current selected branch' : 'Royal household']]} meta="Click to pin this preview" />
                 </button>
 
                 <div className="royal-board__branch-princes">
@@ -134,9 +134,8 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
                     setLockedKey={setLockedKey}
                     activePrinceOrder={activePrinceOrder}
                     setActivePrinceOrder={setActivePrinceOrder}
-                    setHoveredKey={setHoveredKey}
                     activeMafiaKey={highlightedMafiaKey}
-                    openEntity={openEntity}
+                    openPrince={openPrince}
                   />)}
                 </div>
               </section>;
@@ -146,7 +145,7 @@ export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number
       </div>
     </div>
 
-    <span className="sr-only" role="status" aria-live="polite">{activeKey ? `${activeKey.replace(':', ' ')} preview active.` : `Prince ${selectedOrder} selected.`}</span>
+    <span className="sr-only" role="status" aria-live="polite">{`${selectedPrince?.name || `Prince ${selectedOrder}`} selected.${lockedKey ? ' Preview pinned.' : ''}`}</span>
     <footer className="royal-board__footer"><Shield size={14} aria-hidden="true" /><span>Portrait borders identify direct guards, placements and allies, intelligence actors, and group-level complements. A listed person is connected to the household but is not automatically loyal to it.</span><Users size={14} aria-hidden="true" /></footer>
   </section>;
 }

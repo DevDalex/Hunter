@@ -3,9 +3,11 @@ import { ArrowRight, Building2 } from 'lucide-react';
 import { getOrganizationMembers } from '../../data/succession/successionData';
 import SafeImage from '../SafeImage';
 import {
-  abilityLabelFor, beastForHost, entityForName, initials, intelligenceKinds, mafiaConnections, networkKindLabel,
-  organizationForName, personSummary, placementKinds, statusLabel,
+  abilityLabelFor, beastForHost, dossierByOrder, entityForName, initials, intelligenceKinds, mafiaConnections,
+  networkKindLabel, normalizeLookup, organizationForName, personSummary, placementKinds, statusLabel,
 } from './RoyalFamilyBoardModel';
+
+export const tooltipIdFor = (key) => `royal-preview-${String(key).replace(/[^a-z0-9]+/gi, '-')}`;
 
 export function Portrait({ name, entity, compact = false, eager = false }) {
   const portrait = entity?.media?.portrait || '';
@@ -30,17 +32,23 @@ export function Portrait({ name, entity, compact = false, eager = false }) {
 }
 
 export function BeastLayer({ beast }) {
-  if (!beast?.image) {
-    return <span className="royal-board__beast-layer is-unknown" aria-hidden="true"><b>?</b><small>Beast unrevealed</small></span>;
+  const image = beast?.image || '';
+  const [available, setAvailable] = useState(Boolean(image));
+
+  useEffect(() => setAvailable(Boolean(image)), [image]);
+
+  if (!image || !available) {
+    const label = image ? 'Beast image unavailable' : 'Beast unrevealed';
+    return <span className="royal-board__beast-layer is-unknown" aria-hidden="true"><b>?</b><small>{label}</small></span>;
   }
 
   return <span className="royal-board__beast-layer" aria-hidden="true">
-    <SafeImage src={beast.image} alt="" fallbackLabel="" />
+    <SafeImage src={image} alt="" fallbackLabel="" onAvailabilityChange={setAvailable} />
   </span>;
 }
 
-export function HoverCard({ eyebrow, name, description, facts = [], meta }) {
-  return <span className="royal-board__hover-card" role="tooltip">
+export function HoverCard({ id, eyebrow, name, description, facts = [], meta }) {
+  return <span id={id} className="royal-board__hover-card" role="tooltip">
     <small>{eyebrow}</small>
     <strong>{name}</strong>
     <span>{description}</span>
@@ -49,60 +57,70 @@ export function HoverCard({ eyebrow, name, description, facts = [], meta }) {
   </span>;
 }
 
-export function MafiaCard({ connection, lockedKey, setLockedKey, activeMafiaKey, setActiveMafiaKey, activePrinceOrder, setActivePrinceOrder, setHoveredKey, openEntity }) {
+export function MafiaCard({ connection, lockedKey, setLockedKey, activeMafiaKey, setActiveMafiaKey, activePrinceOrder, setActivePrinceOrder, openEntity }) {
   const organization = organizationForName(connection.name);
   const leader = entityForName(connection.leader);
-  const members = organization ? getOrganizationMembers(organization.id).slice(0, 4) : [];
+  const connectedPrince = dossierByOrder.get(connection.princeOrder);
+  const excludedNames = new Set([connection.leader, connectedPrince?.name, connectedPrince?.short].filter(Boolean).map(normalizeLookup));
+  const members = organization
+    ? getOrganizationMembers(organization.id)
+      .filter(({ character }) => character && !excludedNames.has(normalizeLookup(character.name)))
+      .slice(0, 4)
+    : [];
   const organizationKey = `mafia:${connection.key}`;
+  const organizationTooltipId = tooltipIdFor(organizationKey);
   const memberPrefix = `mafia-member:${connection.key}:`;
   const locked = lockedKey === organizationKey;
   const memberLocked = lockedKey?.startsWith(memberPrefix);
   const active = activeMafiaKey === connection.key || activePrinceOrder === connection.princeOrder || locked || memberLocked;
-  const activate = (key) => {
+  const activate = () => {
     setActiveMafiaKey(connection.key);
     setActivePrinceOrder(connection.princeOrder);
-    setHoveredKey(key);
   };
   const release = () => {
     setActiveMafiaKey(null);
     setActivePrinceOrder(null);
-    setHoveredKey(null);
   };
 
   return <article className={`royal-board__mafia-card is-${connection.key}${active ? ' is-active' : ''}${locked || memberLocked ? ' is-locked' : ''}`}>
     <button
       type="button"
       className={`royal-board__mafia-summary${locked ? ' is-locked' : ''}`}
+      aria-label={`${connection.name}, led by ${connection.leader}, linked to Prince ${connection.princeOrder}`}
       aria-pressed={locked}
-      onMouseEnter={() => activate(organizationKey)}
+      aria-describedby={organizationTooltipId}
+      onMouseEnter={activate}
       onMouseLeave={release}
-      onFocus={() => activate(organizationKey)}
+      onFocus={activate}
       onBlur={release}
       onClick={() => setLockedKey(locked ? null : organizationKey)}
     >
       <Portrait name={connection.leader} entity={leader} compact />
       <span><small>Linked to Prince {connection.princeOrder}</small><strong>{connection.name}</strong><em>{connection.leader}</em></span>
-      <HoverCard eyebrow="Mafia relationship" name={connection.name} description={connection.relation} facts={[["Leader", connection.leader], ["Leader ability", abilityLabelFor(leader)], ["Members", members.map(({ character }) => character.name).join(', ') || 'See organization dossier'], ["Royal link", `Prince ${connection.princeOrder}`], ["Record", organization ? 'Organization dossier available' : 'Relationship record']]} meta="Hover highlights the connected royal dossier" />
+      <HoverCard id={organizationTooltipId} eyebrow="Mafia relationship" name={connection.name} description={connection.relation} facts={[["Leader", connection.leader], ["Leader ability", abilityLabelFor(leader)], ["Members", members.map(({ character }) => character.name).join(', ') || 'See organization dossier'], ["Royal link", `Prince ${connection.princeOrder}`], ["Record", organization ? 'Organization dossier available' : 'Relationship record']]} meta="Hover highlights the connected royal dossier" />
     </button>
 
     {!!members.length && <div className="royal-board__mafia-members" aria-label={`${connection.name} documented members`}>
       {members.map(({ character }) => {
         const memberKey = `${memberPrefix}${character.id}`;
+        const memberTooltipId = tooltipIdFor(memberKey);
         const isLocked = lockedKey === memberKey;
         return <button
           type="button"
           className={isLocked ? 'is-locked' : ''}
+          aria-label={`${character.name}, ${connection.name} member`}
           aria-pressed={isLocked}
-          onMouseEnter={() => activate(memberKey)}
+          aria-describedby={memberTooltipId}
+          onMouseEnter={activate}
           onMouseLeave={release}
-          onFocus={() => activate(memberKey)}
+          onFocus={activate}
           onBlur={release}
           onClick={() => setLockedKey(isLocked ? null : memberKey)}
           key={character.id}
         >
           <Portrait name={character.name} entity={character} compact />
           <small>{character.name}</small>
-          <HoverCard eyebrow={connection.name} name={character.name} description={personSummary(character, `Documented member of ${connection.name}.`)} facts={[["Royal link", `Prince ${connection.princeOrder}`], ["Role", (character.roles || []).join(' · ') || 'Mafia member'], ["Nen / ability", abilityLabelFor(character)], ["Relationship", connection.relation]]} meta={character.id ? 'Canonical profile available' : 'Organization record'} />
+          <HoverCard id={memberTooltipId} eyebrow={connection.name} name={character.name} description={personSummary(character, `Documented member of ${connection.name}.`)} facts={[["Royal link", `Prince ${connection.princeOrder}`], ["Role", (character.roles || []).join(' · ') || 'Mafia member'], ["Nen / ability", abilityLabelFor(character)], ["Relationship", connection.relation]]} meta={character.id ? 'Canonical profile available' : 'Organization record'} />
         </button>;
       })}
     </div>}
@@ -111,8 +129,9 @@ export function MafiaCard({ connection, lockedKey, setLockedKey, activeMafiaKey,
   </article>;
 }
 
-function GuardTile({ guard, prince, index, lockedKey, setLockedKey, setActivePrinceOrder, setHoveredKey }) {
+function GuardTile({ guard, prince, index, lockedKey, setLockedKey, setActivePrinceOrder }) {
   const key = `guard:${guard.id}`;
+  const tooltipId = tooltipIdFor(key);
   const locked = lockedKey === key;
   const facts = [
     ['Connected to', prince.short],
@@ -126,23 +145,25 @@ function GuardTile({ guard, prince, index, lockedKey, setLockedKey, setActivePri
     className={`royal-board__guard-tile is-${guard.kind}${guard.isGroup ? ' is-group' : ''}${locked ? ' is-locked' : ''}`}
     aria-label={`${guard.name}. ${guard.eyebrow}`}
     aria-pressed={locked}
-    onMouseEnter={() => { setActivePrinceOrder(prince.order); setHoveredKey(key); }}
-    onMouseLeave={() => { setActivePrinceOrder(null); setHoveredKey(null); }}
-    onFocus={() => { setActivePrinceOrder(prince.order); setHoveredKey(key); }}
-    onBlur={() => { setActivePrinceOrder(null); setHoveredKey(null); }}
+    aria-describedby={tooltipId}
+    onMouseEnter={() => setActivePrinceOrder(prince.order)}
+    onMouseLeave={() => setActivePrinceOrder(null)}
+    onFocus={() => setActivePrinceOrder(prince.order)}
+    onBlur={() => setActivePrinceOrder(null)}
     onClick={() => setLockedKey(locked ? null : key)}
   >
     <Portrait name={guard.name} entity={guard.entity} compact />
     <span>{String(index + 1).padStart(2, '0')}</span>
     <strong>{guard.name}</strong>
-    <HoverCard eyebrow={guard.eyebrow} name={guard.name} description={guard.description} facts={facts} meta={guard.entity ? 'Canonical profile available' : 'Documented group record'} />
+    <HoverCard id={tooltipId} eyebrow={guard.eyebrow} name={guard.name} description={guard.description} facts={facts} meta={guard.entity ? 'Canonical profile available' : 'Documented group record'} />
   </button>;
 }
 
-export function PrinceDossier({ prince, guards, selectedOrder, setSelectedOrder, lockedKey, setLockedKey, activePrinceOrder, setActivePrinceOrder, setHoveredKey, activeMafiaKey, openEntity }) {
+export function PrinceDossier({ prince, guards, selectedOrder, setSelectedOrder, lockedKey, setLockedKey, activePrinceOrder, setActivePrinceOrder, activeMafiaKey, openPrince }) {
   const entity = entityForName(prince.name);
   const beast = beastForHost(prince.short);
   const identityKey = `prince:${prince.order}`;
+  const tooltipId = tooltipIdFor(identityKey);
   const locked = lockedKey === identityKey;
   const selected = selectedOrder === prince.order;
   const mafia = mafiaConnections.find((connection) => connection.princeOrder === prince.order);
@@ -157,11 +178,14 @@ export function PrinceDossier({ prince, guards, selectedOrder, setSelectedOrder,
     <button
       type="button"
       className={`royal-board__prince-identity${locked ? ' is-locked' : ''}`}
-      aria-pressed={selected}
-      onMouseEnter={() => { setActivePrinceOrder(prince.order); setHoveredKey(identityKey); }}
-      onMouseLeave={() => { setActivePrinceOrder(null); setHoveredKey(null); }}
-      onFocus={() => { setActivePrinceOrder(prince.order); setHoveredKey(identityKey); }}
-      onBlur={() => { setActivePrinceOrder(null); setHoverdKey(null); }}
+      aria-label={`${prince.order} Prince ${prince.name}. ${statusLabel(prince.status)}`}
+      aria-pressed={locked}
+      aria-current={selected ? 'true' : undefined}
+      aria-describedby={tooltipId}
+      onMouseEnter={() => setActivePrinceOrder(prince.order)}
+      onMouseLeave={() => setActivePrinceOrder(null)}
+      onFocus={() => setActivePrinceOrder(prince.order)}
+      onBlur={() => setActivePrinceOrder(null)}
       onClick={() => { setSelectedOrder(prince.order); setLockedKey(locked ? null : identityKey); }}
     >
       <span className="royal-board__prince-number">{prince.order}</span>
@@ -173,6 +197,7 @@ export function PrinceDossier({ prince, guards, selectedOrder, setSelectedOrder,
       </span>
       {prince.status === 'deceased' && <span className="royal-board__death-mark" aria-hidden="true" />}
       <HoverCard
+        id={tooltipId}
         eyebrow={`${prince.order}${prince.order === 1 ? 'st' : prince.order === 2 ? 'nd' : prince.order === 3 ? 'rd' : 'th'} Prince`}
         name={prince.name}
         description={prince.strategy}
@@ -212,13 +237,12 @@ export function PrinceDossier({ prince, guards, selectedOrder, setSelectedOrder,
         lockedKey={lockedKey}
         setLockedKey={setLockedKey}
         setActivePrinceOrder={setActivePrinceOrder}
-        setHoveredKey={setHoveredKey}
       />)}
     </div>
 
     <footer>
-      <span {direct} direct · {placed} placed/allied · {intelligence} intelligence</span>
-      {entity && <button type="button" onClick={() => openEntity(entity)}>Open dossier <ArrowRight size={12} aria-hidden="true" /></button>}
+      <span>{direct} direct · {placed} placed/allied · {intelligence} intelligence</span>
+      <button type="button" onClick={() => openPrince(prince)}>Open dossier <ArrowRight size={12} aria-hidden="true" /></button>
     </footer>
   </article>;
 }
