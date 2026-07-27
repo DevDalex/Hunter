@@ -1,0 +1,47 @@
+/* Batch 11 desktop containment fixes discovered through Chromium QA. */
+
+.chimera-dispersal-system__field {
+  grid-template-columns: minmax(560px, 1.35fr) minmax(230px, 0.65fr);
+}
+
+.chimera-dispersal-system__branch {
+  width: clamp(220px, 17vw, 282px);
+}
+
+.chimera-dispersal-system__legend,
+.chimera-dispersal-system__legend > *,
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records,
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records > * {
+  min-width: 0;
+}
+
+.chimera-dispersal-system__legend > strong,
+.chimera-dispersal-system__legend > p {
+  overflow-wrap: anywhere;
+}
+
+.chimera-invasion-system__lane-matrix {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: visible;
+}
+
+.chimera-invasion-system__lane-head,
+.chimera-invasion-system__lane {
+  min-width: 0;
+  grid-template-columns: minmax(190px, 0.95fr) repeat(4, minmax(165px, 1fr));
+}
+
+.chimera-invasion-system__lane-head > div,
+.chimera-invasion-system__lane > header,
+.chimera-invasion-system__lane > section,
+.chimera-invasion-system__lane > header > * {
+  min-width: 0;
+}
+
+.chimera-invasion-system__lane-head strong,
+.chimera-invasion-system__lane h6,
+.chimera-invasion-system__lane p {
+  overflow-wrap: anywhere;
+}
