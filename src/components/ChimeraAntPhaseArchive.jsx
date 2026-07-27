@@ -2,12 +2,25 @@ import { ArrowRight, ExternalLink } from 'lucide-react';
 import { chimeraAntPhaseScaffoldById } from '../data/chimeraAntPhaseScaffold';
 import SafeImage from './SafeImage';
 import ChimeraAntEarlyPhaseSystems from './ChimeraAntEarlyPhaseSystems';
+import ChimeraAntMiddlePhaseSystems from './ChimeraAntMiddlePhaseSystems';
 import './ChimeraAntPhaseArchive.css';
 import './ChimeraAntBatch5.css';
 
 const inclusiveCount = (range) => Array.isArray(range) ? range[1] - range[0] + 1 : 0;
 const phaseDomId = (id) => `chimera-phase-${id}`;
-const finishedEarlyPhaseIds = new Set(['ngl-expedition', 'defeat-birth-return']);
+const finishedPhaseIds = new Set([
+  'ngl-expedition',
+  'defeat-birth-return',
+  'rogue-ants-east-gorteau',
+  'komugi-invasion-preparation',
+]);
+
+const finishedPhaseCopy = new Map([
+  ['ngl-expedition', 'The finished Phase I spread combines verified portraits, an episode-linked expedition route, a five-step threat ladder, and the catastrophic extraction endpoint.'],
+  ['defeat-birth-return', 'The finished Phase II spread aligns the boys, the colony, and the Hunter Association across the same three episode periods before converging them on East Gorteau.'],
+  ['rogue-ants-east-gorteau', 'The finished Phase III spread turns the broken colony into a wide dispersal map, then shows how East Gorteau’s visible government becomes Selection machinery.'],
+  ['komugi-invasion-preparation', 'The finished Phase IV spread pairs Komugi’s Gungi progression with the extermination team’s preparation track and tests every palace assignment against the reality already undermining it.'],
+]);
 
 function PhaseStateLedger({ phase }) {
   return <dl className="chimera-phase-spread__states">
@@ -68,7 +81,7 @@ export default function ChimeraAntPhaseArchive({
       const episodeCount = inclusiveCount(phase.episodes);
       const nextPhase = phases[index + 1];
       const active = activePhase === phase.id;
-      const finishedEarlyPhase = finishedEarlyPhaseIds.has(phase.id);
+      const finishedPhase = finishedPhaseIds.has(phase.id);
 
       return <article
         id={phaseDomId(phase.id)}
@@ -77,7 +90,7 @@ export default function ChimeraAntPhaseArchive({
         data-phase-id={phase.id}
         data-phase-section="true"
         data-composition={phase.composition}
-        data-phase-finish={finishedEarlyPhase ? 'complete' : 'scaffold'}
+        data-phase-finish={finishedPhase ? 'complete' : 'scaffold'}
         aria-labelledby={`${phaseDomId(phase.id)}-title`}
       >
         <header className="chimera-phase-spread__header">
@@ -106,14 +119,13 @@ export default function ChimeraAntPhaseArchive({
         </div>
 
         <ChimeraAntEarlyPhaseSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
+        <ChimeraAntMiddlePhaseSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
 
         <footer className="chimera-phase-spread__footer">
           <div>
-            <span>{finishedEarlyPhase ? 'Finished phase presentation' : 'Shared phase architecture'}</span>
-            <p>{finishedEarlyPhase
-              ? phase.id === 'ngl-expedition'
-                ? 'The finished Phase I spread combines verified portraits, an episode-linked expedition route, a five-step threat ladder, and the catastrophic extraction endpoint.'
-                : 'The finished Phase II spread aligns the boys, the colony, and the Hunter Association across the same three episode periods before converging them on East Gorteau.'
+            <span>{finishedPhase ? 'Finished phase presentation' : 'Shared phase architecture'}</span>
+            <p>{finishedPhase
+              ? finishedPhaseCopy.get(phase.id)
               : 'This spread exposes stable hooks for phase artwork, captions, sources, state changes, episode groups, and a composition-specific visual system.'}</p>
           </div>
           {nextPhase
