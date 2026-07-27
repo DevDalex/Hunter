@@ -74,7 +74,7 @@ try {
     page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
 
     try {
-      await page.goto(`${base}/#/story/chimera-ant`, { waitUntil: 'networkidle', timeout: 45_000 });
+      await page.goto(`${base}/story/chimera-ant`, { waitUntil: 'networkidle', timeout: 45_000 });
       await page.waitForSelector('.chimera-ant-page', { timeout: 20_000 });
       await page.waitForSelector('[data-supporting-archive="characters"]', { timeout: 12_000 });
       await page.waitForSelector('[data-reference-archive="sources"]', { timeout: 12_000 });
