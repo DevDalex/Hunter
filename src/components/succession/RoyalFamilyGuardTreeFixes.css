@@ -31,3 +31,189 @@
   .royal-map__prince-node,
   .royal-map__connectors path { transition: none; }
 }
+
+/*
+ * Royal Family immersive route
+ *
+ * The hierarchy map is a dedicated intelligence workspace. When this renderer
+ * is mounted, it owns the browser viewport while the archive navigation moves
+ * into the existing focus-managed drawer.
+ */
+html:has(.succession-royal-hierarchy-workspace),
+html:has(.succession-royal-hierarchy-workspace) body {
+  height: 100%;
+  overflow: hidden;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .app-shell {
+  width: 100%;
+  height: 100dvh;
+  min-height: 100dvh;
+  overflow: hidden;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .site-header,
+html:has(.succession-royal-hierarchy-workspace) .succession-route-context,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__sidebar {
+  display: none;
+}
+
+html:has(.succession-royal-hierarchy-workspace) #main-content,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__layout,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace-frame,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__content,
+html:has(.succession-royal-hierarchy-workspace) .succession-royal-hierarchy-workspace {
+  width: 100%;
+  height: 100dvh;
+  min-height: 0;
+  max-width: none;
+}
+
+html:has(.succession-royal-hierarchy-workspace) #main-content,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__layout {
+  overflow: hidden;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__layout {
+  display: block;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace {
+  padding: 0;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace::before,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace-frame::before,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace-frame::after {
+  display: none;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace-frame {
+  margin: 0;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__content {
+  display: block;
+  padding: 0;
+  overflow: hidden;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .horizontal-scroll-hint {
+  display: none;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__mobile-bar {
+  position: fixed;
+  z-index: 70;
+  top: 12px;
+  left: 0;
+  display: block;
+  width: 48px;
+  min-height: 48px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__mobile-bar > span,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__mobile-bar > button:last-child {
+  display: none;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__mobile-bar > button:first-child {
+  display: grid;
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
+  min-height: 48px;
+  place-items: center;
+  gap: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 1px solid rgba(205, 172, 97, .42);
+  border-left: 0;
+  border-radius: 0 12px 12px 0;
+  background: #171715;
+  color: #f5dfad;
+  font-size: 0;
+  box-shadow: 4px 5px 18px rgba(0, 0, 0, .28);
+  cursor: pointer;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__mobile-bar > button:first-child:hover,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__mobile-bar > button:first-child:focus-visible {
+  background: #2a261f;
+  color: #fff1c8;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .royal-map {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 10px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .royal-map__toolbar {
+  padding-left: 54px;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .royal-map__viewport {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .royal-map__inspector {
+  top: 98px;
+  right: 18px;
+  max-height: calc(100dvh - 126px);
+}
+
+html:has(.succession-royal-hierarchy-workspace) .royal-map__footer {
+  min-height: 34px;
+  padding: 6px 4px 0;
+}
+
+@media (max-width: 760px) {
+  html:has(.succession-royal-hierarchy-workspace) .succession-archive__mobile-bar {
+    top: max(8px, env(safe-area-inset-top));
+  }
+
+  html:has(.succession-royal-hierarchy-workspace) .royal-map {
+    padding: 6px;
+  }
+
+  html:has(.succession-royal-hierarchy-workspace) .royal-map__toolbar {
+    padding-left: 50px;
+  }
+
+  html:has(.succession-royal-hierarchy-workspace) .royal-map__inspector {
+    display: none;
+  }
+
+  html:has(.succession-royal-hierarchy-workspace) .royal-map__inspector:has(> header button:not(:disabled)) {
+    position: fixed;
+    z-index: 72;
+    inset: auto 8px 8px;
+    display: grid;
+    width: auto;
+    max-height: min(48dvh, 520px);
+    margin: 0;
+  }
+}
+
+@media (max-width: 430px) {
+  html:has(.succession-royal-hierarchy-workspace) .royal-map__toolbar p,
+  html:has(.succession-royal-hierarchy-workspace) .royal-map__footer {
+    display: none;
+  }
+}
