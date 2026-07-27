@@ -95,6 +95,16 @@
   --chimera-royal: var(--chimera-dark-royal);
 }
 
+.chimera-ant-rail nav button {
+  color: rgba(233, 230, 218, 0.72);
+}
+
+.chimera-ant-rail nav button i,
+.chimera-ant-rail__identity small,
+.chimera-ant-rail__phase small {
+  color: rgba(233, 230, 218, 0.72);
+}
+
 /* Enforce a 12px floor for labels, metadata, captions, and navigation indices. */
 .chimera-ant-page dt,
 .chimera-ant-page small,
@@ -107,7 +117,7 @@
 .chimera-ant-page [class*="__ordinal"] > span,
 .chimera-ant-page [class*="__index"] > span,
 .chimera-ant-page .chimera-ant-rail nav button i,
-.chimera-ant-page .chimera-ant-page article > span,
+.chimera-ant-page article > span,
 .chimera-ant-page .chimera-ant-record-summary span,
 .chimera-ant-page .chimera-phase-spread__media figcaption > span,
 .chimera-ant-page .chimera-phase-spread__media figcaption a,
