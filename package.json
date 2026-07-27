@@ -8,7 +8,7 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "lint": "biome lint .",
-    "quality:foundation": "biome check .",
+    "quality:foundation": "biome lint .",
     "typecheck": "tsc -p tsconfig.json",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
