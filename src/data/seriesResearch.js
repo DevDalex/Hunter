@@ -1,9 +1,11 @@
 import { chapterTitles } from './chapterTitles';
+import { publishedChapterTitles, LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER } from './latestChapterReleases';
 import { seriesArcDossiers } from './seriesArcDossiers';
 import { successionPeriods } from './successionDossier';
 import { hunterExamChapterDetails } from './hunterExamChapterDetails';
 
 const wiki = (slug) => `https://hunterxhunter.fandom.com/wiki/${slug}`;
+const CURRENT_CHAPTER_BOUNDARY = publishedChapterTitles.length;
 
 const beatFor = (index, total) => {
   if (total <= 1) return 'Single-chapter turn';
@@ -102,21 +104,23 @@ export const seriesChronology = [
     scope: 'Completed arc',
   }))),
   ...successionPeriods.map((period, index) => {
-    const range = String(period.chapters).match(/\d+/g)?.map(Number) || [340, 413];
+    const range = String(period.chapters).match(/\d+/g)?.map(Number) || [340, CURRENT_CHAPTER_BOUNDARY];
     return {
       id: `succession-${period.status}`,
       arcId: 'succession-contest',
       arcTitle: 'Succession Contest',
       order: `07.${String(index + 1).padStart(2, '0')}`,
       title: period.name,
-      chapters: `Chapters ${period.chapters.replace('current', '413')}`,
-      range: [range[0], range[1] || 413],
+      chapters: `Chapters ${period.chapters.replace('current', String(CURRENT_CHAPTER_BOUNDARY))}`,
+      range: [range[0], range[1] || CURRENT_CHAPTER_BOUNDARY],
       precision: 'Current-arc structural period',
       anchor: period.status,
       route: 'Kakin announcement → Black Whale boarding → voyage',
       summary: period.summary,
       shift: 'This period separates expedition politics, royal preparation, and the active voyage so they are not treated as one undifferentiated contest.',
-      consequence: index === successionPeriods.length - 1 ? 'Ongoing through Chapter 413.' : `Leads into ${successionPeriods[index + 1]?.name || 'the active contest'}.`,
+      consequence: index === successionPeriods.length - 1
+        ? `Official publication extends through Chapter ${CURRENT_CHAPTER_BOUNDARY}; detailed archive research remains verified through Chapter ${LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER}.`
+        : `Leads into ${successionPeriods[index + 1]?.name || 'the active contest'}.`,
       people: period.focus,
       factions: [],
       places: index < 2 ? ['Known World', 'Kakin expedition infrastructure'] : ['Black Whale 1'],
@@ -129,8 +133,10 @@ export const seriesChronology = [
 ];
 
 export const seriesResearchStats = {
-  indexedChapters: chapterTitles.length,
-  locallyChapterSpecific: preSuccessionChapterResearch.filter((record) => record.chapterSpecific).length + (chapterTitles.length - 339),
+  indexedChapters: CURRENT_CHAPTER_BOUNDARY,
+  locallyChapterSpecific: preSuccessionChapterResearch.filter((record) => record.chapterSpecific).length + (CURRENT_CHAPTER_BOUNDARY - 339),
+  detailedResearchThrough: LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
+  pendingCurrentReleases: CURRENT_CHAPTER_BOUNDARY - LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
   preSuccessionContextRecords: preSuccessionChapterResearch.length,
   completedArcPhases: seriesArcDossiers.reduce((total, arc) => total + arc.phases.length, 0),
   chronologyBlocks: seriesChronology.length,
@@ -152,5 +158,5 @@ export const researchFieldDefinitions = [
   ['Arc-phase context', 'Story phase, structural shift, people, factions, places, Nen, conflict scope, and phase consequence.'],
   ['Live source evidence', 'Hunterpedia metadata, title image, synopsis, appearances, locations, adaptations, and notes load from the chapter page when supplied.'],
   ['Continuity', 'Previous and next chapter, phase position, chronology block, and consequence.'],
-  ['Confidence', 'Chapter-specific, phase-context, developing-current, and source-unavailable states remain visually distinct.'],
+  ['Confidence', 'Chapter-specific, phase-context, developing-current, publication-only, and source-unavailable states remain visually distinct.'],
 ];

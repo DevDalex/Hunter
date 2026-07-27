@@ -11,6 +11,7 @@ import { createNenSystemSelectors } from './nenSystemSelectors.js';
 import { createStoryIntelligenceSelectors } from './storyIntelligenceSelectors.js';
 import { createProductClosureSelectors } from './productClosureSelectorsFinal.js';
 import { createFinalReleaseClosure } from './finalReleaseClosure.js';
+import { createRecordCurrencySelectors } from './recordCurrency.js';
 import { assertValidSuccessionArchiveData } from './schemasFinal.js';
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
@@ -25,6 +26,10 @@ export const successionStoryIntelligence = createStoryIntelligenceSelectors({ da
 export const successionProductClosure = createProductClosureSelectors({ data: successionArchiveData, archive: successionArchive, characterStates: successionCharacterStates, organizationStates: successionOrganizationStates, nenSystems: successionNenSystems, storyIntelligence: successionStoryIntelligence });
 export const successionEvidenceGraph = createSuccessionEvidenceGraph(successionArchiveData);
 export const successionFinalReleaseClosure = createFinalReleaseClosure({ data: successionArchiveData, validation: successionArchiveValidation, evidenceGraph: successionEvidenceGraph, peopleClosure: successionPeopleInstitutionClosure, nenSystems: successionNenSystems, storyIntelligence: successionStoryIntelligence, productClosure: successionProductClosure });
+export const successionRecordCurrency = createRecordCurrencySelectors({
+  data: successionArchiveData,
+  archiveBoundary: successionArchiveData.chapters.at(-1)?.number || 413,
+});
 
 export { successionArchiveData };
 
@@ -165,6 +170,13 @@ export const {
 } = successionProductClosure;
 
 export const { getFinalReleaseClosureReport } = successionFinalReleaseClosure;
+
+export const {
+  getRecordCurrency,
+  getRecentChangesForRecord,
+  getOpenQuestionsForRecord,
+  getArchiveCoverageReport,
+} = successionRecordCurrency;
 
 const earliestChapter = (values) => {
   const chapters = values.filter(Number.isFinite);
