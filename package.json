@@ -15,6 +15,7 @@
     "audit:design-system": "node scripts/audit-design-system.mjs",
     "audit:chimera-ant-batch-8": "node scripts/audit-chimera-ant-batch-8.mjs",
     "audit:chimera-ant-batch-9": "node scripts/audit-chimera-ant-batch-9.mjs",
+    "audit:chimera-ant-batch-10": "node scripts/audit-chimera-ant-batch-10.mjs",
     "audit:succession-visual-foundation": "node scripts/audit-succession-visual-foundation.mjs",
     "audit:succession-shell-redesign": "node scripts/audit-succession-shell-redesign.mjs",
     "audit:succession-page-header-redesign": "node scripts/audit-succession-page-header-redesign.mjs",
