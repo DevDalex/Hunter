@@ -1,151 +1,413 @@
 import { useMemo, useState } from 'react';
-import { Building2, Crown, Shield, Sparkles, Users } from 'lucide-react';
+import { Crown, Link2, Shield, Users } from 'lucide-react';
 import { princeDossiers } from '../../data/successionDossier';
 import { biologicalRoyalFamilyTree, legalRoyalFamilyTree } from '../../data/successionRoster';
+import { getOrganizationMembers } from '../../data/succession/successionData';
 import { entityWorkspaceTarget } from './SuccessionArchivePrimitives';
 import {
-  abilityLabelFor, beastForHost, buildProtectionNodes, cleanBranchName, dossierByOrder, dossierByShort, entityForName,
-  mafiaConnections, personSummary, queenDossierByShort,
+  abilityLabelFor,
+  beastForHost,
+  buildProtectionNodes,
+  cleanBranchName,
+  dossierByOrder,
+  dossierByShort,
+  entityForName,
+  mafiaConnections,
+  normalizeLookup,
+  organizationForName,
+  personSummary,
+  queenDossierByShort,
+  statusLabel,
 } from './RoyalFamilyBoardModel';
-import { BeastLayer, HoverCard, MafiaCard, Portrait, PrinceDossier, tooltipIdFor } from './RoyalFamilyBoardNodes';
+import {
+  ForceRail,
+  KingMapNode,
+  MapInspector,
+  PrinceMapNode,
+  QueenMapNode,
+} from './RoyalFamilyBoardNodes';
 import './RoyalFamilyGuardTree.css';
 import './RoyalFamilyGuardTreeFixes.css';
 import './RoyalFamilyBoardInteractionFixes.css';
 
-const branchColumnIndexes = Object.freeze([[0, 2, 7], [1, 3, 4], [5, 6]]);
+const MAP_WIDTH = 1520;
+const MAP_HEIGHT = 900;
+const PRINCE_WIDTH = 318;
+const PRINCE_HEIGHT = 122;
+
+const PRINCE_LAYOUT = Object.freeze({
+  1: { x: 330, y: 155 }, 2: { x: 330, y: 300 }, 5: { x: 330, y: 445 }, 9: { x: 330, y: 590 }, 12: { x: 330, y: 735 },
+  3: { x: 685, y: 155 }, 4: { x: 685, y: 300 }, 7: { x: 685, y: 445 }, 10: { x: 685, y: 590 }, 13: { x: 685, y: 735 },
+  6: { x: 1040, y: 155 }, 8: { x: 1040, y: 300 }, 11: { x: 1040, y: 445 }, 14: { x: 1040, y: 590 },
+});
+
+const QUEEN_LAYOUT = Object.freeze({
+  Unma: { x: 250, y: 170 },
+  Duazul: { x: 250, y: 390 },
+  'Tang Zhao Li': { x: 605, y: 170 },
+  Katrono: { x: 960, y: 170 },
+  'Swinko-swinko': { x: 1385, y: 315 },
+  Seiko: { x: 960, y: 540 },
+  Sevanti: { x: 960, y: 750 },
+  Oito: { x: 1385, y: 620 },
+});
+
+const FORCE_LAYOUT = Object.freeze({
+  allies: { x: 20, y: 74 },
+  'xi-yu': { x: 20, y: 210 },
+  'heil-ly': { x: 20, y: 346 },
+  'cha-r': { x: 20, y: 482 },
+});
+
+const recordKey = (record) => record?.key || '';
+const sameRecord = (a, b) => recordKey(a) === recordKey(b);
+const princeAnchor = (order) => ({
+  x: PRINCE_LAYOUT[order].x + PRINCE_WIDTH / 2,
+  y: PRINCE_LAYOUT[order].y + PRINCE_HEIGHT / 2,
+});
+
+const personRecord = ({ key, kind, name, entity, eyebrow, summary, ability, beast, facts = [], princeOrder = null, linkedOrders = [], openTarget = null }) => ({
+  key, kind, name, entity, eyebrow, summary, ability, beast, facts, princeOrder, linkedOrders, openTarget,
+});
+
+const buildForceGroups = () => {
+  const alliedNames = ['Kurapika', 'Bill', 'Biscuit Krueger', 'Melody'];
+  const allies = {
+    key: 'allies',
+    label: 'Allied placements',
+    relation: 'Hunters and allied specialists placed across lower-prince households.',
+    linkedOrders: [5, 11, 13, 14],
+    members: alliedNames.map((name) => ({ name, entity: entityForName(name) })).filter(({ entity }) => entity),
+  };
+
+  const mafia = mafiaConnections.map((connection) => {
+    const organization = organizationForName(connection.name);
+    const leader = entityForName(connection.leader);
+    const excluded = new Set([normalizeLookup(connection.leader), normalizeLookup(dossierByOrder.get(connection.princeOrder)?.name)]);
+    const members = organization
+      ? getOrganizationMembers(organization.id)
+        .map(({ character }) => character)
+        .filter((character) => character && !excluded.has(normalizeLookup(character.name)))
+        .slice(0, 4)
+        .map((entity) => ({ name: entity.name, entity }))
+      : [];
+    return {
+      key: connection.key,
+      label: connection.name,
+      leader: connection.leader,
+      leaderEntity: leader,
+      organization,
+      relation: connection.relation,
+      linkedOrders: [connection.princeOrder],
+      members,
+    };
+  });
+
+  return [allies, ...mafia];
+};
+
+function orthogonalPath(source, target, bendX = null) {
+  const middleX = bendX ?? Math.round((source.x + target.x) / 2);
+  return `M ${source.x} ${source.y} H ${middleX} V ${target.y} H ${target.x}`;
+}
+
+function RoyalMapConnectors({ branches, forceGroups, activePrinceOrders, activeForceKey }) {
+  const kingSource = { x: 865, y: 126 };
+  return <svg className="royal-map__connectors" viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`} fill="none" aria-hidden="true">
+    <g className="royal-map__royal-lines">
+      {princeDossiers.map((prince) => {
+        const target = { x: princeAnchor(prince.order).x, y: PRINCE_LAYOUT[prince.order].y };
+        return <path
+          key={`royal-${prince.order}`}
+          className={activePrinceOrders.has(prince.order) ? 'is-active' : ''}
+          d={`M ${kingSource.x} ${kingSource.y} V 142 H ${target.x} V ${target.y}`}
+        />;
+      })}
+    </g>
+
+    <g className="royal-map__maternal-lines">
+      {branches.flatMap((branch) => {
+        const queenPosition = QUEEN_LAYOUT[branch.short];
+        if (!queenPosition) return [];
+        const source = { x: queenPosition.x + 35, y: queenPosition.y + 36 };
+        return branch.princes.map((prince) => {
+          const layout = PRINCE_LAYOUT[prince.order];
+          const target = queenPosition.x < layout.x
+            ? { x: layout.x, y: layout.y + 34 }
+            : { x: layout.x + PRINCE_WIDTH, y: layout.y + 34 };
+          return <path
+            key={`maternal-${branch.short}-${prince.order}`}
+            className={activePrinceOrders.has(prince.order) ? 'is-active' : ''}
+            d={orthogonalPath(source, target)}
+          />;
+        });
+      })}
+    </g>
+
+    <g className="royal-map__force-lines">
+      {forceGroups.flatMap((group) => {
+        const position = FORCE_LAYOUT[group.key];
+        if (!position) return [];
+        const source = { x: 236, y: position.y + 54 };
+        return group.linkedOrders.map((order) => {
+          const target = { x: PRINCE_LAYOUT[order].x, y: PRINCE_LAYOUT[order].y + 86 };
+          return <path
+            key={`force-${group.key}-${order}`}
+            className={`is-${group.key}${activeForceKey === group.key || activePrinceOrders.has(order) ? ' is-active' : ''}`}
+            d={orthogonalPath(source, target, 282 + (order % 3) * 14)}
+          />;
+        });
+      })}
+    </g>
+  </svg>;
+}
 
 export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number.MAX_SAFE_INTEGER, initialPrince = 14 }) {
   const royalTree = spoilerLimit >= 401 ? biologicalRoyalFamilyTree : legalRoyalFamilyTree;
-  const initialDossier = princeDossiers.find((prince) => prince.order === initialPrince) || princeDossiers.at(-1);
-  const [selectedOrder, setSelectedOrder] = useState(initialDossier.order);
-  const [lockedKey, setLockedKey] = useState(null);
-  const [activePrinceOrder, setActivePrinceOrder] = useState(null);
-  const [activeMafiaKey, setActiveMafiaKey] = useState(null);
+  const initialOrder = PRINCE_LAYOUT[initialPrince] ? initialPrince : 14;
+  const [selectedOrder, setSelectedOrder] = useState(initialOrder);
+  const [hoveredRecord, setHoveredRecord] = useState(null);
+  const [pinnedRecord, setPinnedRecord] = useState(null);
+
+  const protectionByPrince = useMemo(() => new Map(princeDossiers.map((prince) => [prince.order, buildProtectionNodes(prince)])), []);
+  const forceGroups = useMemo(buildForceGroups, []);
+
+  const princeRecords = useMemo(() => new Map(princeDossiers.map((prince) => {
+    const entity = entityForName(prince.name);
+    const beast = beastForHost(prince.short);
+    const guards = protectionByPrince.get(prince.order) || [];
+    const direct = guards.filter((guard) => guard.kind === 'protection' && !guard.isGroup).length;
+    const placed = guards.filter((guard) => ['kurapika-placement', 'ally'].includes(guard.kind)).length;
+    const intelligence = guards.filter((guard) => ['observer', 'spy', 'hostile'].includes(guard.kind)).length;
+    return [prince.order, personRecord({
+      key: `prince:${prince.order}`,
+      kind: 'prince',
+      name: prince.name,
+      entity,
+      eyebrow: `${prince.order}${prince.order === 1 ? 'st' : prince.order === 2 ? 'nd' : prince.order === 3 ? 'rd' : 'th'} Prince · ${statusLabel(prince.status)}`,
+      summary: prince.strategy,
+      ability: prince.nen,
+      beast: beast?.ability || prince.beast,
+      facts: [
+        ['Mother', `Queen ${prince.mother}`],
+        ['Room', prince.room],
+        ['Bodyguards', String(guards.length)],
+        ['Direct / placed / intel', `${direct} / ${placed} / ${intelligence}`],
+      ],
+      princeOrder: prince.order,
+      linkedOrders: [prince.order],
+      openTarget: { type: 'prince', order: prince.order },
+    })];
+  })), [protectionByPrince]);
+
+  const branches = useMemo(() => royalTree.map((branch, index) => {
+    const short = branch.queen.replace(' Hui Guo Rou', '');
+    const entity = entityForName(branch.queen);
+    const dossier = queenDossierByShort.get(short);
+    const princes = branch.children.map((child) => dossierByShort.get(cleanBranchName(child))).filter(Boolean);
+    return {
+      ...branch,
+      short,
+      princes,
+      record: personRecord({
+        key: `queen:${index + 1}`,
+        kind: 'queen',
+        name: branch.queen,
+        entity,
+        eyebrow: branch.order,
+        summary: dossier?.role || branch.note || 'Kakin maternal household branch.',
+        ability: abilityLabelFor(entity),
+        facts: [['Children', princes.map((prince) => prince.short).join(', ')], ['Branch', branch.note || 'Royal household']],
+        princeOrder: princes[0]?.order || null,
+        linkedOrders: princes.map((prince) => prince.order),
+        openTarget: entity ? { type: 'entity', entity } : null,
+      }),
+    };
+  }), [royalTree]);
+
   const kingEntity = entityForName('Nasubi Hui Guo Rou');
   const kingBeast = beastForHost('Nasubi');
-  const kingKey = 'king:nasubi';
-  const kingTooltipId = tooltipIdFor(kingKey);
-  const protectionByPrince = useMemo(() => new Map(princeDossiers.map((prince) => [prince.order, buildProtectionNodes(prince)])), []);
-  const selectedBranchIndex = royalTree.findIndex((branch) => branch.children.some((child) => dossierByShort.get(cleanBranchName(child))?.order === selectedOrder));
-  const selectedPrince = dossierByOrder.get(selectedOrder);
-  const lockedMafiaConnection = mafiaConnections.find((connection) => (
-    lockedKey === `mafia:${connection.key}` || lockedKey?.startsWith(`mafia-member:${connection.key}:`)
-  ));
-  const highlightedMafiaKey = activeMafiaKey || lockedMafiaConnection?.key || null;
+  const kingRecord = personRecord({
+    key: 'king:nasubi',
+    kind: 'king',
+    name: 'Nasubi Hui Guo Rou',
+    entity: kingEntity,
+    eyebrow: 'King of Kakin',
+    summary: personSummary(kingEntity, 'The reigning Kakin king and sponsor of the current succession ritual.'),
+    ability: abilityLabelFor(kingEntity),
+    beast: kingBeast?.ability,
+    facts: [['Role', 'Father of the fourteen legitimate princes'], ['Contest', 'Previous-generation survivor']],
+    linkedOrders: princeDossiers.map((prince) => prince.order),
+    openTarget: kingEntity ? { type: 'entity', entity: kingEntity } : null,
+  });
 
-  const openEntity = (entity) => {
-    if (!entity) return;
-    onNavigate?.(entityWorkspaceTarget(entity), { entity: entity.id });
+  const forceRecords = useMemo(() => new Map(forceGroups.map((group) => {
+    const linked = group.linkedOrders.map((order) => princeRecords.get(order)?.name).filter(Boolean).join(', ');
+    const entity = group.organization || group.leaderEntity || group.members[0]?.entity || null;
+    return [group.key, personRecord({
+      key: `force:${group.key}`,
+      kind: group.key === 'allies' ? 'alliance' : 'mafia',
+      name: group.label,
+      entity,
+      eyebrow: group.key === 'allies' ? 'Outside force' : 'Mafia / external tie',
+      summary: group.relation,
+      ability: group.leaderEntity ? abilityLabelFor(group.leaderEntity) : 'Mixed documented abilities',
+      facts: [['Linked princes', linked], ['Members shown', String(group.members.length)]],
+      princeOrder: group.linkedOrders[0] || null,
+      linkedOrders: group.linkedOrders,
+      openTarget: group.organization ? { type: 'entity', entity: group.organization } : null,
+    })];
+  })), [forceGroups, princeRecords]);
+
+  const selectedRecord = princeRecords.get(selectedOrder) || princeRecords.get(14);
+  const activeRecord = hoveredRecord || pinnedRecord || selectedRecord;
+  const activeKey = recordKey(activeRecord);
+  const activePrinceOrders = new Set(activeRecord?.linkedOrders?.length ? activeRecord.linkedOrders : [activeRecord?.princeOrder || selectedOrder]);
+  const activeForceKey = activeRecord?.kind === 'mafia' || activeRecord?.kind === 'alliance'
+    ? activeRecord.key.replace('force:', '')
+    : null;
+
+  const preview = (record) => setHoveredRecord(record);
+  const clearPreview = () => setHoveredRecord(null);
+  const pin = (record) => {
+    if (['prince', 'guard', 'force-member'].includes(record.kind) && record.princeOrder) setSelectedOrder(record.princeOrder);
+    setPinnedRecord((current) => sameRecord(current, record) ? null : record);
+  };
+  const openRecord = (record) => {
+    if (record?.openTarget?.type === 'prince') {
+      onNavigate?.('princes', { prince: record.openTarget.order });
+      return;
+    }
+    if (record?.openTarget?.entity) {
+      const entity = record.openTarget.entity;
+      onNavigate?.(entityWorkspaceTarget(entity), { entity: entity.id });
+    }
   };
 
-  const openPrince = (prince) => onNavigate?.('princes', { prince: prince.order });
-  const toggleLock = (key) => setLockedKey((current) => current === key ? null : key);
+  const guardRecordFor = (guard, prince) => personRecord({
+    key: `guard:${prince.order}:${guard.id}`,
+    kind: 'guard',
+    name: guard.name,
+    entity: guard.entity,
+    eyebrow: guard.eyebrow,
+    summary: guard.description,
+    ability: abilityLabelFor(guard.entity),
+    facts: [['Assigned to', prince.name], ['Category', guard.kind], ['Record', guard.isGroup ? 'Group-level complement' : 'Named person']],
+    princeOrder: prince.order,
+    linkedOrders: [prince.order],
+    openTarget: guard.entity ? { type: 'entity', entity: guard.entity } : null,
+  });
 
-  return <section className="royal-guard-tree royal-dossier-board" aria-labelledby="royal-guard-tree-title">
-    <header className="royal-board__mast">
+  const forceMemberRecordFor = (member, group) => personRecord({
+    key: `force-member:${group.key}:${member.entity?.id || normalizeLookup(member.name)}`,
+    kind: 'force-member',
+    name: member.name,
+    entity: member.entity,
+    eyebrow: group.label,
+    summary: personSummary(member.entity, `Documented member of ${group.label}.`),
+    ability: abilityLabelFor(member.entity),
+    facts: [['Linked princes', group.linkedOrders.join(', ')], ['Relationship', group.relation]],
+    princeOrder: group.linkedOrders[0] || null,
+    linkedOrders: group.linkedOrders,
+    openTarget: member.entity ? { type: 'entity', entity: member.entity } : null,
+  });
+
+  return <section
+    className="royal-map"
+    aria-labelledby="royal-map-title"
+    onKeyDown={(event) => {
+      if (event.key === 'Escape') {
+        setPinnedRecord(null);
+        setHoveredRecord(null);
+      }
+    }}
+  >
+    <header className="royal-map__toolbar">
       <div>
-        <span><Crown size={14} aria-hidden="true" /> Royal relationship board</span>
-        <h2 id="royal-guard-tree-title">Kakin Royal Family</h2>
-        <p>King · queens · princes · Guardian Spirit Beasts · protection circles · mafia links · Chapter {spoilerLimit}</p>
+        <span><Crown size={14} aria-hidden="true" /> Royal relationship map</span>
+        <h2 id="royal-map-title">Kakin Royal Family</h2>
+        <p>King · queens · fourteen princes · Guardian Spirit Beasts · protection circles · mafia ties · Chapter {spoilerLimit}</p>
       </div>
-      <div className="royal-board__legend" aria-label="Relationship legend">
-        <span><i className="is-royal" /> Royal household</span>
-        <span><i className="is-guard" /> Direct protection</span>
-        <span><i className="is-placement" /> Placement / ally</span>
-        <span><i className="is-intel" /> Observer / spy</span>
-        <span><i className="is-mafia" /> Mafia connection</span>
-        <span><i className="is-dead" /> Dead / removed</span>
+      <div className="royal-map__legend" aria-label="Relationship legend">
+        <span><i className="is-royal" /> Royal line</span>
+        <span><i className="is-maternal" /> Maternal branch</span>
+        <span><i className="is-protection" /> Protection / ally</span>
+        <span><i className="is-mafia" /> Mafia / external tie</span>
       </div>
     </header>
 
-    <div className="royal-board__canvas">
-      <aside className="royal-board__mafia-rail" aria-labelledby="royal-board-mafia-title">
-        <header><Building2 size={16} aria-hidden="true" /><span>External power</span><h3 id="royal-board-mafia-title">Mafia links</h3></header>
-        {mafiaConnections.map((connection) => <MafiaCard
-          key={connection.key}
-          connection={connection}
-          lockedKey={lockedKey}
-          setLockedKey={setLockedKey}
-          activeMafiaKey={highlightedMafiaKey}
-          setActiveMafiaKey={setActiveMafiaKey}
-          activePrinceOrder={activePrinceOrder}
-          setActivePrinceOrder={setActivePrinceOrder}
-          openEntity={openEntity}
+    <div className="royal-map__viewport" tabIndex="0" aria-label="Scrollable Kakin royal relationship map">
+      <div className="royal-map__canvas" style={{ width: MAP_WIDTH, height: MAP_HEIGHT }}>
+        <RoyalMapConnectors
+          branches={branches}
+          forceGroups={forceGroups}
+          activePrinceOrders={activePrinceOrders}
+          activeForceKey={activeForceKey}
+        />
+
+        <ForceRail
+          groups={forceGroups}
+          forceRecords={forceRecords}
+          activeKey={activeKey}
+          pinnedKey={recordKey(pinnedRecord)}
+          onPreview={preview}
+          onClear={clearPreview}
+          onPin={pin}
+          memberRecordFor={forceMemberRecordFor}
+          layout={FORCE_LAYOUT}
+        />
+
+        <KingMapNode
+          record={kingRecord}
+          beast={kingBeast}
+          active={activeKey === kingRecord.key}
+          pinned={recordKey(pinnedRecord) === kingRecord.key}
+          onPreview={preview}
+          onClear={clearPreview}
+          onPin={pin}
+        />
+
+        {branches.map((branch) => <QueenMapNode
+          key={branch.short}
+          branch={branch}
+          position={QUEEN_LAYOUT[branch.short]}
+          active={activeKey === branch.record.key || branch.princes.some((prince) => activePrinceOrders.has(prince.order))}
+          pinned={recordKey(pinnedRecord) === branch.record.key}
+          onPreview={preview}
+          onClear={clearPreview}
+          onPin={pin}
         />)}
-        <p>Hover a mafia family or member to isolate its royal connection.</p>
-      </aside>
 
-      <div className="royal-board__main">
-        <div className="royal-board__topline">
-          <button
-            type="button"
-            className={`royal-board__king${lockedKey === kingKey ? ' is-locked' : ''}`}
-            aria-label="Nasubi Hui Guo Rou, King of Kakin"
-            aria-pressed={lockedKey === kingKey}
-            aria-describedby={kingTooltipId}
-            onClick={() => toggleLock(kingKey)}
-          >
-            <BeastLayer beast={kingBeast} />
-            <span className="royal-board__king-label">King of Kakin</span>
-            <Portrait name="Nasubi Hui Guo Rou" entity={kingEntity} compact eager />
-            <span className="royal-board__king-copy"><strong>Nasubi Hui Guo Rou</strong><small>Royal root · previous contest survivor</small></span>
-            <HoverCard id={kingTooltipId} eyebrow="King of Kakin" name="Nasubi Hui Guo Rou" description={personSummary(kingEntity, 'The reigning Kakin king and sponsor of the current succession ritual.')} facts={[["Guardian beast", kingBeast?.ability], ["Beast status", kingBeast?.knowledge], ["Nen / ability", abilityLabelFor(kingEntity)], ["Role", 'Father of the fourteen legitimate princes']]} meta="Click to pin this preview" />
-          </button>
-          <div className="royal-board__instruction"><Sparkles size={14} aria-hidden="true" /><span>Hover or focus any portrait for essentials. Click to pin a preview.</span></div>
-        </div>
-
-        <div className="royal-board__branch-grid" aria-label="Eight maternal household dossiers">
-          {branchColumnIndexes.map((branchIndexes, columnIndex) => <div className="royal-board__branch-column" key={`royal-column-${columnIndex + 1}`}>
-            {branchIndexes.map((branchIndex) => {
-              const branch = royalTree[branchIndex];
-              if (!branch) return null;
-              const queenShort = branch.queen.replace(' Hui Guo Rou', '');
-              const queenEntity = entityForName(branch.queen);
-              const queen = queenDossierByShort.get(queenShort);
-              const active = selectedBranchIndex === branchIndex;
-              const queenKey = `queen:${branchIndex + 1}`;
-              const queenTooltipId = tooltipIdFor(queenKey);
-              const locked = lockedKey === queenKey;
-              const princes = branch.children.map((child) => dossierByShort.get(cleanBranchName(child))).filter(Boolean);
-              return <section className={`royal-board__branch${active ? ' is-selected' : ''}`} key={branch.queen}>
-                <button
-                  type="button"
-                  className={`royal-board__queen-anchor${locked ? ' is-locked' : ''}`}
-                  aria-label={`${branch.order} ${branch.queen}. ${princes.length} child${princes.length === 1 ? '' : 'ren'}`}
-                  aria-pressed={locked}
-                  aria-current={active ? 'true' : undefined}
-                  aria-describedby={queenTooltipId}
-                  onClick={() => { if (princes[0]) setSelectedOrder(princes[0].order); toggleLock(queenKey); }}
-                >
-                  <span className="royal-board__queen-rank">{branch.order}</span>
-                  <Portrait name={branch.queen} entity={queenEntity} compact />
-                  <span><strong>{queenShort}</strong><small>{princes.length} child{princes.length === 1 ? '' : 'ren'}</small></span>
-                  <HoverCard id={queenTooltipId} eyebrow={branch.order} name={branch.queen} description={queen?.role || branch.note || 'Kakin royal household branch.'} facts={[["Children", princes.map((prince) => prince.short).join(', ')], ["Nen / ability", abilityLabelFor(queenEntity)], ["Branch", active ? 'Current selected branch' : 'Royal household']]} meta="Click to pin this preview" />
-                </button>
-
-                <div className="royal-board__branch-princes">
-                  {princes.map((prince) => <PrinceDossier
-                    key={prince.order}
-                    prince={prince}
-                    guards={protectionByPrince.get(prince.order) || []}
-                    selectedOrder={selectedOrder}
-                    setSelectedOrder={setSelectedOrder}
-                    lockedKey={lockedKey}
-                    setLockedKey={setLockedKey}
-                    activePrinceOrder={activePrinceOrder}
-                    setActivePrinceOrder={setActivePrinceOrder}
-                    activeMafiaKey={highlightedMafiaKey}
-                    openPrince={openPrince}
-                  />)}
-                </div>
-              </section>;
-            })}
-          </div>)}
-        </div>
+        {princeDossiers.map((prince) => <PrinceMapNode
+          key={prince.order}
+          prince={prince}
+          record={princeRecords.get(prince.order)}
+          guards={protectionByPrince.get(prince.order) || []}
+          position={PRINCE_LAYOUT[prince.order]}
+          selected={selectedOrder === prince.order}
+          active={activePrinceOrders.has(prince.order)}
+          activeKey={activeKey}
+          pinnedKey={recordKey(pinnedRecord)}
+          onPreview={preview}
+          onClear={clearPreview}
+          onPin={pin}
+          guardRecordFor={guardRecordFor}
+        />)}
       </div>
     </div>
 
-    <span className="sr-only" role="status" aria-live="polite">{`${selectedPrince?.name || `Prince ${selectedOrder}`} selected.${lockedKey ? ' Preview pinned.' : ''}`}</span>
-    <footer className="royal-board__footer"><Shield size={14} aria-hidden="true" /><span>Portrait borders identify direct guards, placements and allies, intelligence actors, and group-level complements. A listed person is connected to the household but is not automatically loyal to it.</span><Users size={14} aria-hidden="true" /></footer>
+    <MapInspector
+      record={activeRecord}
+      pinned={sameRecord(pinnedRecord, activeRecord)}
+      onOpen={openRecord}
+      onUnpin={() => setPinnedRecord(null)}
+    />
+
+    <footer className="royal-map__footer">
+      <Shield size={14} aria-hidden="true" />
+      <span>Hover or focus a portrait to inspect essentials. Click or tap to pin. Press Escape to clear a pinned record.</span>
+      <Users size={14} aria-hidden="true" />
+      <Link2 size={14} aria-hidden="true" />
+    </footer>
   </section>;
 }

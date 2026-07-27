@@ -1,13 +1,18 @@
-/* Keep each preview attached to its own trigger even when the surrounding mafia card is active. */
-.royal-guard-tree .royal-board__mafia-card > button:not(:hover):not(:focus-visible):not(.is-locked) > .royal-board__hover-card,
-.royal-guard-tree .royal-board__mafia-card > .royal-board__mafia-members > button:not(:hover):not(:focus-visible):not(.is-locked) > .royal-board__hover-card {
-  display: none;
+.royal-map__force-summary:hover,
+.royal-map__force-member:hover,
+.royal-map__guard-mini:hover,
+.royal-map__prince-summary:hover,
+.royal-map__king:hover,
+.royal-map__queen-node:hover {
+  filter: brightness(.97);
 }
 
-/* Right-column previews open inward instead of being clipped by the application shell. */
-@media (min-width: 761px) {
-  .royal-board__branch-column:last-child .royal-board__hover-card {
-    right: calc(100% + 8px);
-    left: auto;
-  }
+.royal-map__prince-node:has(.royal-map__guard-mini.is-pinned) {
+  z-index: 8;
+  box-shadow: 0 0 0 3px #1769aa, 5px 5px 0 rgba(24, 21, 18, .16);
+}
+
+@media (hover: none) {
+  .royal-map__viewport { scroll-snap-type: x proximity; }
+  .royal-map__canvas { scroll-snap-align: start; }
 }
