@@ -1,5 +1,3 @@
-import { phaseCollectionSchema } from '../schemas/archiveSchemas.js';
-
 export const CHIMERA_ANT_EPISODE_RANGE = Object.freeze([76, 136]);
 
 export const chimeraAntPalette = Object.freeze({
@@ -113,8 +111,6 @@ export const chimeraAntPhases = Object.freeze([
     tone: 'intimate-tragedy',
   }),
 ]);
-
-phaseCollectionSchema.parse(chimeraAntPhases);
 
 export const chimeraAntSectionOrder = Object.freeze([
   'overview',
