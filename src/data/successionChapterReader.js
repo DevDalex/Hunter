@@ -3,6 +3,9 @@ import {
   LATEST_AUTHORIZED_SUCCESSION_CHAPTER,
 } from './successionChapterAvailability.generated.js';
 import { authorizedSuccessionChapterMedia } from './successionChapterMedia.generated.js';
+import { chapterTitles } from './chapterTitles.js';
+import { getChapterCatalogueTitle, getLatestChapterMetadata } from './latestChapterMetadata.js';
+import { successionChapterResearchByNumber } from './succession/successionResearch.js';
 
 export const SUCCESSION_READER_START = 338;
 const importedSuccessionChapterNumbers = Object.keys(authorizedSuccessionChapterMedia)
@@ -25,9 +28,17 @@ export const successionChapterReaderRecords = Object.freeze(
     const chapter = SUCCESSION_READER_START + offset;
     const pages = Object.freeze([...(authorizedSuccessionChapterMedia[chapter] || [])]
       .sort((left, right) => left.page - right.page));
+    const metadata = getLatestChapterMetadata(chapter);
+    const research = successionChapterResearchByNumber.get(chapter);
+    const title = getChapterCatalogueTitle(chapter, chapterTitles);
     return Object.freeze({
       chapter,
-      label: `Chapter ${chapter}`,
+      title,
+      label: `Chapter ${chapter} · ${title}`,
+      releaseDate: metadata?.releaseDate || null,
+      titleStatus: metadata?.titleStatus || 'maintained-reference-title',
+      detailStatus: research?.status || 'Research status unavailable',
+      detailVerified: Boolean(research?.coverage?.chronology || research?.events?.length || research?.prelude?.length),
       pages,
       pageCount: pages.length,
       mediaStatus: pages.length ? 'local-media' : 'awaiting-local-media',

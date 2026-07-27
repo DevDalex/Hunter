@@ -40,6 +40,12 @@ import {
   SourceReference,
   entityWorkspaceTarget,
 } from './SuccessionArchivePrimitives';
+import {
+  ArchiveCoverageReport,
+  CoverageBoundaryProvider,
+  RecordCoverageSections,
+  RecordCurrencyStrip,
+} from './SuccessionCoverageCurrency';
 import './SuccessionArchiveSearch.css';
 
 const FamilyTree = lazy(() => import('../FamilyTree'));
@@ -74,13 +80,14 @@ const sortedForRoute = (routeId, entities) => [...entities].sort((left, right) =
   return String(left.name || left.id).localeCompare(String(right.name || right.id));
 });
 
-function ArchiveHome({ onNavigate }) {
+function ArchiveHome({ onNavigate, spoilerLimit }) {
   const stats = successionArchiveValidation.stats;
   const pictured = characters().filter((entity) => entity.media?.portrait).length;
   const featured = ['story', 'princes', 'reader', 'black-whale', 'research', 'glossary'];
   return <>
     <ArchiveSection id="succession-entry-points" kicker="Independent workspaces" title="One purpose per page." description="Story, reading, people, institutions, systems, records, research, and vocabulary live in focused routes while media provenance remains available through Search and Research."><div className="succession-home-grid">{featured.map((id) => { const route = getSuccessionArchiveRoute(id); return <ArchiveCard key={id} eyebrow={route.group} title={route.label} meta={route.description} onClick={() => onNavigate(id)}><span className="succession-card-action">Open workspace <ArrowRight size={14} /></span></ArchiveCard>; })}</div></ArchiveSection>
     <section className="succession-data-health" aria-labelledby="succession-data-health-title"><div><Database size={19} aria-hidden="true" /><span>Canonical catalogue</span><h2 id="succession-data-health-title">The current-arc archive is connected and validated.</h2><p>People, institutions, Nen systems, story intelligence, vocabulary, media provenance, and evidence share one chapter-bounded graph.</p></div><dl><div><dt>Entities</dt><dd>{stats.entities}</dd></div><div><dt>Characters</dt><dd>{stats.characters}</dd></div><div><dt>Portraits</dt><dd>{pictured}</dd></div><div><dt>Chapters</dt><dd>{stats.chapters}</dd></div></dl></section>
+    <ArchiveCoverageReport boundary={spoilerLimit} onNavigate={onNavigate} />
     <ArchiveSection id="archive-directory" kicker="Route hierarchy" title="Archive directory" description="Every major subject has a stable destination, a bounded record set, and a presentation suited to that subject."><div className="succession-route-matrix">{successionArchiveGroups.map((group) => <section key={group}><h3>{group}</h3><div>{successionArchiveRoutes.filter((route) => route.group === group).map((route) => <button type="button" key={route.id} onClick={() => onNavigate(route.id)}><span>{route.label}</span><small>{route.status}</small><ArrowRight size={13} /></button>)}</div></section>)}</div></ArchiveSection>
   </>;
 }
@@ -149,7 +156,15 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const treeView = route.id === 'princes' && routeParams.view === 'tree';
   const preserved = ['black-whale', 'timeline'].includes(route.id);
   const dedicated = new Set(['story', 'princes', 'queens', 'bodyguards', 'nen', 'guardian-spirit-beasts', 'events', 'relationships', 'chapters', 'characters', 'organizations', 'locations', 'research', 'glossary']);
-  const selectedEntity = routeParams.entity ? getEntityById(routeParams.entity) : null;
+  const requestedPrinceOrder = Number(routeParams.prince);
+  const requestedChapterNumber = Number(routeParams.chapter);
+  const selectedEntity = routeParams.entity
+    ? getEntityById(routeParams.entity)
+    : route.id === 'princes' && Number.isFinite(requestedPrinceOrder)
+      ? characters().find((entity) => entity.princeOrder === requestedPrinceOrder) || null
+      : route.id === 'chapters' && Number.isFinite(requestedChapterNumber)
+        ? getEntitiesByType('chapter').find((entity) => entity.number === requestedChapterNumber) || null
+        : null;
   const specializedRecordRoute = ['characters', 'princes', 'queens', 'chapters', 'events', 'locations', 'bodyguards', 'relationships', 'organizations', 'nen', 'guardian-spirit-beasts'].includes(route.id);
   const royalCharacterRoute = ['princes', 'queens'].includes(route.id);
   const showCharacterDossier = Boolean(selectedEntity?.entityType === 'character' && !treeView && !royalCharacterRoute);
@@ -159,8 +174,18 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const showDomainDetail = Boolean(selectedEntity && !showCharacterDossier && !showOrganizationDossier && !showAbilityDossier && !showGuardianBeastDossier && !treeView && !specializedRecordRoute);
   const showRouteWorkspace = !showCharacterDossier && !showOrganizationDossier && !showAbilityDossier && !showGuardianBeastDossier && !showDomainDetail;
 
-  return <SuccessionArchiveShell activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} onExitArchive={onExitArchive} onOpenSearch={onOpenSearch} onIntent={onIntent}>
-    {route.id === 'archive' && <ArchiveHome onNavigate={navigate} />}
+  const requestedCoverageChapter = Number(routeParams.chapter);
+  const coverageBoundary = Number.isFinite(requestedCoverageChapter)
+    ? Math.min(spoilerLimit, Math.max(340, requestedCoverageChapter))
+    : spoilerLimit;
+  const showSelectedCoverage = Boolean(selectedEntity && !treeView && !showDomainDetail);
+
+  return <CoverageBoundaryProvider boundary={coverageBoundary}><SuccessionArchiveShell activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} onExitArchive={onExitArchive} onOpenSearch={onOpenSearch} onIntent={onIntent}>
+    {route.id === 'archive' && <ArchiveHome onNavigate={navigate} spoilerLimit={spoilerLimit} />}
+    {showSelectedCoverage && <section className="succession-selected-record-coverage" aria-label="Selected record chapter coverage">
+      <RecordCurrencyStrip entity={selectedEntity} boundary={coverageBoundary} />
+      <RecordCoverageSections entity={selectedEntity} boundary={coverageBoundary} />
+    </section>}
     {route.id === 'story' && <StoryIntelligenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {route.id === 'search' && <SearchWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit} />}
     {treeView && <FamilyTreeWorkspace spoilerLimit={spoilerLimit} onNavigate={navigate} />}
@@ -180,9 +205,12 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {showRouteWorkspace && route.id === 'events' && <EventsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'relationships' && <RelationshipsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'chapters' && <ChapterStoryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'research' && <EvidenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
+    {showRouteWorkspace && route.id === 'research' && <>
+      <ArchiveCoverageReport boundary={spoilerLimit} onNavigate={navigate} compact />
+      <EvidenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />
+    </>}
     {showRouteWorkspace && route.id === 'glossary' && <GlossaryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {preserved && <PreservedWorkspace routeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {!['archive', 'story', 'search'].includes(route.id) && !treeView && !preserved && !dedicated.has(route.id) && <DirectoryWorkspace routeId={route.id} routeParams={routeParams} onNavigate={navigate} />}
-  </SuccessionArchiveShell>;
+  </SuccessionArchiveShell></CoverageBoundaryProvider>;
 }

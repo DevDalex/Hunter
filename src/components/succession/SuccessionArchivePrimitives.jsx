@@ -7,6 +7,11 @@ import {
   getRelatedEntities,
   getSourcesForEntity,
 } from '../../data/succession/successionData';
+import {
+  RecordCoverageSections,
+  RecordCurrencyStrip,
+  useCoverageBoundary,
+} from './SuccessionCoverageCurrency';
 
 const cx = (...parts) => parts.filter(Boolean).join(' ');
 const initials = (name = '') => name.split(/\s+/).filter(Boolean).map((part) => part[0]).slice(0, 2).join('').toUpperCase() || '?';
@@ -103,29 +108,34 @@ export function EntityLink({ entity: suppliedEntity, entityId, onNavigate, child
   </button>;
 }
 
-export function EntityHeader({ entity, onNavigate }) {
+export function EntityHeader({ entity, onNavigate, readingBoundary }) {
+  const resolvedBoundary = useCoverageBoundary(readingBoundary);
   if (!entity) return null;
   const sources = getSourcesForEntity(entity.id);
   const chapterBoundary = entity.status?.asOfChapter || entity.chapterRange?.end || entity.chapter || null;
-  return <header className="succession-entity-header">
-    <EntityVisual entity={entity} eager />
-    <div className="succession-entity-header__copy">
-      <span>{entity.entityType.replaceAll('-', ' ')}</span>
-      <h2>{entity.name || entity.id}</h2>
-      {entity.summary && <p>{entity.summary}</p>}
-      <div className="succession-entity-header__badges">
-        <EvidenceBadge state={evidenceState(entity.canonLevel)}>{entity.canonLevel || 'canon'}</EvidenceBadge>
-        {entity.status?.life && <StatusPill tone="neutral">{entity.status.life}</StatusPill>}
-        {chapterBoundary && <StatusPill tone="neutral">As of Ch. {chapterBoundary}</StatusPill>}
-        <StatusPill tone="neutral">{sources.length} source{sources.length === 1 ? '' : 's'}</StatusPill>
+  return <>
+    <header className="succession-entity-header">
+      <EntityVisual entity={entity} eager />
+      <div className="succession-entity-header__copy">
+        <span>{entity.entityType.replaceAll('-', ' ')}</span>
+        <h2>{entity.name || entity.id}</h2>
+        {entity.summary && <p>{entity.summary}</p>}
+        <div className="succession-entity-header__badges">
+          <EvidenceBadge state={evidenceState(entity.canonLevel)}>{entity.canonLevel || 'canon'}</EvidenceBadge>
+          {entity.status?.life && <StatusPill tone="neutral">{entity.status.life}</StatusPill>}
+          {chapterBoundary && <StatusPill tone="neutral">Graph snapshot Ch. {chapterBoundary}</StatusPill>}
+          <StatusPill tone="neutral">{sources.length} source{sources.length === 1 ? '' : 's'}</StatusPill>
+        </div>
+        {!!(entity.aliases || []).length && <div className="succession-entity-header__aliases"><b>Aliases</b><span>{entity.aliases.join(' · ')}</span></div>}
+        <div className="succession-entity-header__actions">
+          {entity.referenceUrl && <a className="succession-button succession-button--quiet" href={entity.referenceUrl} target="_blank" rel="noreferrer noopener">Hunterpedia <ExternalLink size={13} aria-hidden="true" /></a>}
+          {onNavigate && <button type="button" className="succession-button succession-button--quiet" onClick={() => onNavigate(entityWorkspaceTarget(entity), {})}>Back to workspace</button>}
+        </div>
+        <RecordCurrencyStrip entity={entity} boundary={resolvedBoundary} />
       </div>
-      {!!(entity.aliases || []).length && <div className="succession-entity-header__aliases"><b>Aliases</b><span>{entity.aliases.join(' · ')}</span></div>}
-      <div className="succession-entity-header__actions">
-        {entity.referenceUrl && <a className="succession-button succession-button--quiet" href={entity.referenceUrl} target="_blank" rel="noreferrer noopener">Hunterpedia <ExternalLink size={13} aria-hidden="true" /></a>}
-        {onNavigate && <button type="button" className="succession-button succession-button--quiet" onClick={() => onNavigate(entityWorkspaceTarget(entity), {})}>Back to workspace</button>}
-      </div>
-    </div>
-  </header>;
+    </header>
+    <RecordCoverageSections entity={entity} boundary={resolvedBoundary} />
+  </>;
 }
 
 export function SourceReference({ source: suppliedSource, sourceId, onNavigate }) {
