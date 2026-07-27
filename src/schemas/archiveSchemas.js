@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
 const archiveIdPattern = /^[a-z][a-z0-9]*(?::[a-z0-9][a-z0-9-]*)+$/;
+const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const localMediaPathPattern = /^(public|src)\/[a-zA-Z0-9_./-]+$/;
 
 export const archiveIdSchema = z.string().trim().regex(archiveIdPattern, 'Use a namespaced archive id.');
+export const slugSchema = z.string().trim().regex(slugPattern, 'Use a lowercase kebab-case slug.');
 
 /** @param {string} label */
 const orderedRangeSchema = (label) =>
@@ -117,6 +119,49 @@ export const characterRecordSchema = z.object({
   }),
   mediaIds: z.array(archiveIdSchema).default([]),
   sourceIds: z.array(archiveIdSchema).min(1),
+});
+
+export const phaseRecordSchema = z.object({
+  id: slugSchema,
+  number: z.number().int().positive(),
+  episodes: episodeRangeSchema,
+  title: z.string().trim().min(1),
+  shortTitle: z.string().trim().min(1),
+  openingCondition: z.string().trim().min(1),
+  turningPoint: z.string().trim().min(1),
+  closingCondition: z.string().trim().min(1),
+  composition: slugSchema,
+  tone: slugSchema,
+});
+
+export const phaseCollectionSchema = z.array(phaseRecordSchema).min(1).superRefine((phases, context) => {
+  const ids = new Set();
+  const numbers = new Set();
+
+  phases.forEach((phase, index) => {
+    if (ids.has(phase.id)) {
+      context.addIssue({ code: 'custom', path: [index, 'id'], message: `Duplicate phase id: ${phase.id}` });
+    }
+    if (numbers.has(phase.number)) {
+      context.addIssue({ code: 'custom', path: [index, 'number'], message: `Duplicate phase number: ${phase.number}` });
+    }
+    if (phase.number !== index + 1) {
+      context.addIssue({
+        code: 'custom',
+        path: [index, 'number'],
+        message: `Phase numbers must be sequential; expected ${index + 1}.`,
+      });
+    }
+    if (index > 0 && phase.episodes[0] !== phases[index - 1].episodes[1] + 1) {
+      context.addIssue({
+        code: 'custom',
+        path: [index, 'episodes'],
+        message: `Phase ${phase.number} must begin immediately after Phase ${phase.number - 1}.`,
+      });
+    }
+    ids.add(phase.id);
+    numbers.add(phase.number);
+  });
 });
 
 export const mediaManifestSchema = z
