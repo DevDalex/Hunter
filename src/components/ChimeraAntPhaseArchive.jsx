@@ -10,6 +10,7 @@ import ChimeraAntReferenceArchivePortals from './ChimeraAntReferenceArchivePorta
 import './ChimeraAntPhaseArchive.css';
 import './ChimeraAntBatch5.css';
 import './ChimeraAntBatch11.css';
+import './ChimeraAntScreenshotFixes.css';
 
 const inclusiveCount = (range) => Array.isArray(range) ? range[1] - range[0] + 1 : 0;
 const phaseDomId = (id) => `chimera-phase-${id}`;
@@ -23,132 +24,92 @@ const finishedPhaseIds = new Set([
   'poison-memory-homecoming',
 ]);
 
-const finishedPhaseCopy = new Map([
-  ['ngl-expedition', 'The finished Phase I spread combines verified portraits, an episode-linked expedition route, a five-step threat ladder, and the catastrophic extraction endpoint.'],
-  ['defeat-birth-return', 'The finished Phase II spread aligns the boys, the colony, and the Hunter Association across the same three episode periods before converging them on East Gorteau.'],
-  ['rogue-ants-east-gorteau', 'The finished Phase III spread turns the broken colony into a wide dispersal map, then shows how East Gorteau’s visible government becomes Selection machinery.'],
-  ['komugi-invasion-preparation', 'The finished Phase IV spread pairs Komugi’s Gungi progression with the extermination team’s preparation track and tests every palace assignment against the reality already undermining it.'],
-  ['palace-invasion', 'The finished Phase V spread combines an operational palace schematic, relative invasion clock, seven simultaneous event lanes, and a plan-versus-actual disruption ledger.'],
-  ['two-endgames', 'The finished Phase VI spread mirrors the institutional Netero/Meruem endgame against Gon’s personal Pitou endgame across objective, weapon, decision, cost, result, and aftermath without treating the acts as equivalent.'],
-  ['poison-memory-homecoming', 'The finished Phase VII spread follows the Rose’s poison and Meruem’s recovered memory into the final Gungi game, then maps four distinct survivor routes and the Election transition.'],
-]);
-
-function PhaseStateLedger({ phase }) {
-  return <dl className="chimera-phase-spread__states">
-    <div><dt>Opening state</dt><dd>{phase.openingCondition}</dd></div>
-    <div><dt>Turning point</dt><dd>{phase.turningPoint}</dd></div>
-    <div><dt>Closing state</dt><dd>{phase.closingCondition}</dd></div>
-  </dl>;
+function SourceLink({ href, children = 'Source record' }) {
+  if (!href) return null;
+  return <a href={href} target="_blank" rel="noreferrer noopener">{children} <ExternalLink size={12} /></a>;
 }
 
-function PhaseMedia({ phase, detail, artwork, fallbackArtwork }) {
-  const image = detail?.media?.image || artwork?.image || fallbackArtwork;
-  const fallback = artwork?.fallback || fallbackArtwork;
-  if (!image) return null;
-
-  return <figure className="chimera-phase-spread__media">
-    <SafeImage
-      src={image}
-      fallbackSrc={fallback}
-      alt={detail?.media?.alt || `Chimera Ant arc artwork accompanying Phase ${phase.number}: ${phase.title}`}
-      style={{ '--chimera-phase-image-position': detail?.media?.position || artwork?.position || 'center' }}
-    />
-    <figcaption>
-      <span>Visual record · Phase {String(phase.number).padStart(2, '0')}</span>
-      <p>{detail?.media?.caption || `Illustrated record for ${phase.title}.`}</p>
-      {detail?.media?.sourceHref
-        ? <a href={detail.media.sourceHref} target="_blank" rel="noreferrer noopener">{detail.media.creditLabel || 'Image source'} <ExternalLink size={12} /></a>
-        : <small>{detail?.media?.creditLabel || 'Image source hook reserved for verified phase artwork'}</small>}
-    </figcaption>
-  </figure>;
-}
-
-function EpisodeGroups({ groups = [] }) {
-  return <ol className="chimera-phase-spread__episode-groups" aria-label="Episode groups in this phase">
-    {groups.map((group, index) => <li key={`${group.range[0]}-${group.range[1]}`}>
-      <div className="chimera-phase-spread__episode-index">
-        <i>{String(index + 1).padStart(2, '0')}</i>
-        <span>{group.signal}</span>
-      </div>
+function PhaseSpread({ phase, scaffold, fallbackArtwork }) {
+  const episodeCount = inclusiveCount(phase.episodes);
+  const finished = finishedPhaseIds.has(phase.id);
+  return <article
+    id={phaseDomId(phase.id)}
+    className={`chimera-phase-spread chimera-phase-spread--${phase.composition}`}
+    data-phase-id={phase.id}
+    data-phase-tone={phase.tone}
+    data-phase-finish={finished ? 'complete' : 'scaffold'}
+    style={{ '--phase-accent': scaffold.accent }}
+  >
+    <header className="chimera-phase-spread__header">
+      <div className="chimera-phase-spread__ordinal"><span>Phase</span><strong>{String(phase.number).padStart(2, '0')}</strong></div>
       <div>
-        <small>Episodes {group.range[0]}{group.range[1] !== group.range[0] ? `–${group.range[1]}` : ''}</small>
-        <h4>{group.title}</h4>
-        <p>{group.summary}</p>
+        <span className="chimera-phase-spread__eyebrow">Episodes {phase.episodes[0]}–{phase.episodes[1]} · {episodeCount} episodes</span>
+        <h3>{phase.title}</h3>
+        <p>{scaffold.purpose}</p>
       </div>
-    </li>)}
-  </ol>;
+      <dl className="chimera-phase-spread__field-note">
+        <div><dt>Composition</dt><dd>{phase.composition.replaceAll('-', ' ')}</dd></div>
+        <div><dt>Tone</dt><dd>{phase.tone.replaceAll('-', ' ')}</dd></div>
+      </dl>
+    </header>
+
+    <div className="chimera-phase-spread__body">
+      <figure className="chimera-phase-spread__media">
+        <SafeImage src={scaffold.image} fallbackSrc={fallbackArtwork} fallbackLabel={phase.shortTitle} alt={`${phase.shortTitle} phase artwork`} />
+        <figcaption><span>{scaffold.imageRole}</span><SourceLink href={scaffold.sourceHref} /></figcaption>
+      </figure>
+
+      <div className="chimera-phase-spread__episode-index">
+        <span>Episode groups</span>
+        <ol>{scaffold.episodeGroups.map((group, index) => <li key={`${phase.id}-${group.episodes}`}>
+          <i>{String(index + 1).padStart(2, '0')}</i>
+          <div><small>Episodes {group.episodes}</small><strong>{group.label}</strong></div>
+          <p>{group.stateChange}</p>
+        </li>)}</ol>
+      </div>
+
+      <dl className="chimera-phase-spread__state-ledger">
+        <div><dt>Opening condition</dt><dd>{phase.openingCondition}</dd></div>
+        <div><dt>Turning point</dt><dd>{phase.turningPoint}</dd></div>
+        <div><dt>Closing condition</dt><dd>{phase.closingCondition}</dd></div>
+      </dl>
+    </div>
+
+    {phase.id === 'ngl-expedition' || phase.id === 'defeat-birth-return'
+      ? <ChimeraAntEarlyPhaseSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
+      : null}
+    {phase.id === 'rogue-ants-east-gorteau' || phase.id === 'komugi-invasion-preparation'
+      ? <ChimeraAntMiddlePhaseSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
+      : null}
+    {phase.id === 'palace-invasion'
+      ? <ChimeraAntPalaceInvasionSystem phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
+      : null}
+    {phase.id === 'two-endgames' || phase.id === 'poison-memory-homecoming'
+      ? <ChimeraAntEndgameSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
+      : null}
+
+    <footer className="chimera-phase-spread__footer">
+      <span>{finished ? 'Finished visual system' : 'Foundation scaffold'}</span>
+      <strong>{finished ? scaffold.finishedNote : scaffold.nextVisual}</strong>
+      <ArrowRight size={20} aria-hidden="true" />
+    </footer>
+  </article>;
 }
 
-export default function ChimeraAntPhaseArchive({
-  phases,
-  activePhase,
-  onSelectPhase,
-  onNavigate,
-  artwork,
-  fallbackArtwork,
-}) {
+export default function ChimeraAntPhaseArchive({ phases, fallbackArtwork, supportingTargets = {}, referenceTargets = {} }) {
   return <div className="chimera-phase-archive">
-    {phases.map((phase, index) => {
-      const detail = chimeraAntPhaseScaffoldById.get(phase.id);
-      const episodeCount = inclusiveCount(phase.episodes);
-      const nextPhase = phases[index + 1];
-      const active = activePhase === phase.id;
-      const finishedPhase = finishedPhaseIds.has(phase.id);
-
-      return <article
-        id={phaseDomId(phase.id)}
-        key={phase.id}
-        className={`chimera-phase-spread chimera-phase-spread--${phase.composition} ${active ? 'is-active' : ''}`}
-        data-phase-id={phase.id}
-        data-phase-section="true"
-        data-composition={phase.composition}
-        data-phase-finish={finishedPhase ? 'complete' : 'scaffold'}
-        aria-labelledby={`${phaseDomId(phase.id)}-title`}
-      >
-        <header className="chimera-phase-spread__header">
-          <div className="chimera-phase-spread__ordinal">
-            <span>Phase</span>
-            <strong>{String(phase.number).padStart(2, '0')}</strong>
-          </div>
-          <div>
-            <span className="chimera-phase-spread__eyebrow">Episodes {phase.episodes[0]}–{phase.episodes[1]} · {episodeCount} episodes · {phase.tone.replaceAll('-', ' ')}</span>
-            <h3 id={`${phaseDomId(phase.id)}-title`}>{phase.title}</h3>
-            <p>{detail?.deck || phase.openingCondition}</p>
-          </div>
-          <dl className="chimera-phase-spread__field-note">
-            <div><dt>Primary field</dt><dd>{detail?.location || 'Chimera Ant operation'}</dd></div>
-            <div><dt>Key participants</dt><dd>{detail?.participants || 'Human and Chimera Ant forces'}</dd></div>
-            <div><dt>Composition contract</dt><dd>{phase.composition.replaceAll('-', ' ')}</dd></div>
-          </dl>
-        </header>
-
-        <div className="chimera-phase-spread__stage">
-          <PhaseMedia phase={phase} detail={detail} artwork={artwork} fallbackArtwork={fallbackArtwork} />
-          <div className="chimera-phase-spread__body">
-            <PhaseStateLedger phase={phase} />
-            <EpisodeGroups groups={detail?.episodeGroups} />
-          </div>
-        </div>
-
-        <ChimeraAntEarlyPhaseSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
-        <ChimeraAntMiddlePhaseSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
-        <ChimeraAntPalaceInvasionSystem phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
-        <ChimeraAntEndgameSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
-
-        <footer className="chimera-phase-spread__footer">
-          <div>
-            <span>{finishedPhase ? 'Finished phase presentation' : 'Shared phase architecture'}</span>
-            <p>{finishedPhase
-              ? finishedPhaseCopy.get(phase.id)
-              : 'This spread exposes stable hooks for phase artwork, captions, sources, state changes, episode groups, and a composition-specific visual system.'}</p>
-          </div>
-          {nextPhase
-            ? <button type="button" onClick={() => onSelectPhase(nextPhase.id)}>Continue to Phase {String(nextPhase.number).padStart(2, '0')} <ArrowRight size={14} /></button>
-            : <button type="button" onClick={() => document.getElementById('chimera-characters')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>Continue to character records <ArrowRight size={14} /></button>}
-        </footer>
-      </article>;
+    {phases.map((phase) => {
+      const scaffold = chimeraAntPhaseScaffoldById.get(phase.id);
+      if (!scaffold) return null;
+      return <div className="chimera-phase-archive__entry" key={phase.id}>
+        <PhaseSpread phase={phase} scaffold={scaffold} fallbackArtwork={fallbackArtwork} />
+        {phase.id === 'poison-memory-homecoming'
+          ? <>
+            <ChimeraAntSupportingArchivePortals targets={supportingTargets} fallbackArtwork={fallbackArtwork} />
+            <ChimeraAntReferenceArchivePortals targets={referenceTargets} fallbackArtwork={fallbackArtwork} />
+          </>
+          : null}
+      </div>;
     })}
-    <ChimeraAntSupportingArchivePortals />
-    <ChimeraAntReferenceArchivePortals onNavigate={onNavigate} />
   </div>;
 }
