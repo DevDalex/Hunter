@@ -45,9 +45,12 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'Meteor City and East Gorteau',
     participants: 'Phantom Troupe · Meruem · Royal Guards · Ikalgo · Meleoron · Komugi',
     media: Object.freeze({
-      position: '66% center',
-      caption: 'Phase image hook: the composition should behave like a dispersal map, showing the colony breaking into regional threats.',
-      creditLabel: 'Configured Chimera Ant arc artwork',
+      image: '/media/portraits/meruem.webp',
+      position: 'center 14%',
+      alt: 'Meruem during the occupation of East Gorteau as the former colony disperses into separate threats',
+      caption: 'Phase III widens the field: the Queen’s former colony disperses, Meruem captures a state, defectors cross species lines, and Komugi enters the palace.',
+      creditLabel: 'Meruem · Hunterpedia',
+      sourceHref: 'https://hunterxhunter.fandom.com/wiki/Meruem',
     }),
     episodeGroups: freezeGroups([
       { range: Object.freeze([96, 97]), signal: 'Dispersal', title: 'Meteor City interlude', summary: 'The Phantom Troupe destroys Zazan’s independent colony and demonstrates how far the Queen’s offspring have spread.' },
@@ -61,9 +64,12 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'East Gorteau Royal Palace',
     participants: 'Meruem · Komugi · Knov · Morel · Palm · invasion team',
     media: Object.freeze({
-      position: '72% center',
-      caption: 'Phase image hook: pair the palace plan with the private Gungi contest that changes the King before the assault begins.',
-      creditLabel: 'Configured Chimera Ant arc artwork',
+      image: '/media/portraits/komugi.webp',
+      position: 'center 12%',
+      alt: 'Komugi, whose Gungi matches alter Meruem while the Hunter team prepares the palace invasion',
+      caption: 'Komugi is the variable missing from the extermination plan. Her games with Meruem change the target before the Hunters enter the palace.',
+      creditLabel: 'Komugi · Hunterpedia',
+      sourceHref: 'https://hunterxhunter.fandom.com/wiki/Komugi',
     }),
     episodeGroups: freezeGroups([
       { range: Object.freeze([103, 105]), signal: 'Gungi', title: 'An opponent Meruem cannot dominate', summary: 'Repeated defeats force Meruem to reconsider mastery, hierarchy, vulnerability, and the value of an individual life.' },
