@@ -9,8 +9,8 @@ Branch: `chimera-ant-retransform`
 | 1 | Complete | Added `src/data/chimeraAntExperience.js` and `docs/CHIMERA-ANT-RETRANSFORM.md`. |
 | 2 | Complete | Added the dedicated `ChimeraAntPage`, wide desktop canvas, sticky reading rail, route wiring, and section/phase progress behavior. |
 | 3 | Complete | Rebuilt the cinematic hero, Arc at a Glance orientation spread, and proportional seven-phase episode rail. |
-| 4 | Next | Shared phase headers, image spreads, episode-group records, and distinct composition hooks. |
-| 5 | Pending | Phases I and II. |
+| 4 | Complete | Added reusable image-led phase spreads, state ledgers, episode-group records, source hooks, and seven composition contracts. |
+| 5 | Next | Build the finished Phase I expedition route and Phase II three-front development system. |
 | 6 | Pending | Phases III and IV. |
 | 7 | Pending | Phase V palace-invasion system. |
 | 8 | Pending | Phases VI and VII. |
@@ -102,6 +102,38 @@ Branch: `chimera-ant-retransform`
 - The Arc at a Glance copy is now Chimera Ant-specific, while the remaining supporting sections still use generic arc data until their assigned batches.
 - The hero uses the repository’s current single arc artwork; later visual batches may add additional image crops or phase-specific art after provenance review.
 
+## Batch 4 record
+
+### Completed
+
+- Added `src/data/chimeraAntPhaseScaffold.js` with all seven phase records and twenty episode-group records covering Episodes 76–136.
+- Added `src/components/ChimeraAntPhaseArchive.jsx` as the reusable phase-spread system.
+- Replaced the temporary seven-column timeline with seven full phase sections that expose stable DOM ids and `data-phase-section` markers.
+- Added reusable phase headers containing phase number, episode range, episode count, tone, location, participants, and composition contract.
+- Added image-led editorial figures with configurable image, crop position, caption, credit label, and optional external source link.
+- Added opening, turning, and closing state ledgers to every phase.
+- Added episode-group records with exact subranges, signal labels, titles, and summaries.
+- Added next-phase controls and connected the proportional phase rail to the full phase spreads.
+- Added `src/components/ChimeraAntPhaseArchive.css` with separate composition hooks for expedition route, three-front development, dispersal map, plan versus reality, parallel invasion clock, mirrored endgames, and quiet aftermath.
+
+### Verification
+
+- Every phase id in `chimeraAntPhases` has a matching scaffold entry and rendered spread id in the form `chimera-phase-{phaseId}`.
+- The episode-group subranges cover each phase without gaps: 76–85, 86–95, 96–102, 103–110, 111–121, 122–131, and 132–136.
+- The page’s existing `IntersectionObserver` now observes seven real `[data-phase-section="true"]` elements instead of temporary phase controls.
+- Phase-rail selection updates active state and scrolls to the matching spread while respecting reduced-motion preferences.
+- Each figure exposes caption and source-credit hooks; verified phase-specific images can be inserted later without changing the component structure.
+- Each spread receives the composition class declared in the Batch 1 phase contract.
+- No mobile layout breakpoint was added to the new stylesheet.
+- GitHub exposes no CI status for the implementation commit, and the connector cannot execute the Vite build, so compile and screenshot verification remain outstanding.
+
+### Risks carried into Batch 5
+
+- All seven spreads currently reuse the configured arc artwork with different crop positions; phase-specific image selection and provenance remain for the visual content batches.
+- Phase I and II now have complete structural scaffolds, but their expedition route and three-front visual systems are only composition hooks rather than finished diagrams.
+- Phase III through VII content is intentionally scaffold-level until their assigned batches.
+- Supporting archive sections continue to use the generic arc records until Batch 9 and Batch 10.
+
 ### Next action
 
-Build the shared phase architecture: reusable phase headers, image-led editorial spreads, episode-group records, opening/turning/closing state blocks, caption and source hooks, and composition-specific class contracts for all seven phases.
+Finish Phase I and Phase II: build the NGL expedition route and threat-escalation visual, then build the training / colony / Hunter Association three-front development system with phase-specific images, episode evidence, and stronger wide-screen presentation.
