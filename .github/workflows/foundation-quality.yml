@@ -20,6 +20,7 @@ on:
       - src/data/chimeraAntPhaseScaffold.js
       - scripts/build-media-variants.mjs
       - scripts/verify-media-manifest.mjs
+      - scripts/verify-archive-records.mjs
       - tests/**
       - .github/workflows/foundation-quality.yml
   pull_request:
@@ -39,6 +40,7 @@ on:
       - src/data/chimeraAntPhaseScaffold.js
       - scripts/build-media-variants.mjs
       - scripts/verify-media-manifest.mjs
+      - scripts/verify-archive-records.mjs
       - tests/**
       - .github/workflows/foundation-quality.yml
 
@@ -85,7 +87,7 @@ jobs:
           echo "${PIPESTATUS[0]}" > foundation-tests.status
           exit 0
 
-      - name: Build and verify manifest media
+      - name: Build and verify archive media
         shell: bash
         run: |
           set +e
