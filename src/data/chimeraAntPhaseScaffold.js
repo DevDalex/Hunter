@@ -102,9 +102,12 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'Weapons test site and Peijin route',
     participants: 'Netero · Meruem · Gon · Pitou · Killua',
     media: Object.freeze({
-      position: '54% center',
-      caption: 'Phase image hook: split the visual field between institutional violence and personal revenge without claiming the conflicts are identical.',
-      creditLabel: 'Configured Chimera Ant arc artwork',
+      image: '/media/portraits/gon-freecss.webp',
+      position: 'center 12%',
+      alt: 'Gon Freecss during the personal endgame that parallels Netero and Meruem’s institutional confrontation',
+      caption: 'Phase VI is split between two victories bought through self-destruction: Netero’s concealed Rose and Gon’s vow that exchanges his future for one moment of power.',
+      creditLabel: 'Gon Freecss · Hunterpedia',
+      sourceHref: 'https://hunterxhunter.fandom.com/wiki/Gon_Freecss',
     }),
     episodeGroups: freezeGroups([
       { range: Object.freeze([122, 126]), signal: 'Endgame A', title: 'Netero versus Meruem', summary: 'The duel moves from technique and ideology to the hidden condition of the Poor Man’s Rose.' },
@@ -117,9 +120,12 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'East Gorteau and survivor routes',
     participants: 'Meruem · Komugi · Pouf · Youpi · Welfin · surviving Ants',
     media: Object.freeze({
-      position: '70% center',
-      caption: 'Phase image hook: reduce spectacle, leave more negative space, and let Gungi notation and survivor destinations carry the ending.',
-      creditLabel: 'Configured Chimera Ant arc artwork',
+      image: '/media/portraits/komugi.webp',
+      position: 'center 14%',
+      alt: 'Komugi, whose name restores Meruem’s memory and whose final Gungi game closes the Chimera Ant conflict',
+      caption: 'The final phase reduces spectacle. A remembered name returns Meruem to Komugi, the Rose continues its delayed work, and the surviving characters leave through separate routes.',
+      creditLabel: 'Komugi · Hunterpedia',
+      sourceHref: 'https://hunterxhunter.fandom.com/wiki/Komugi',
     }),
     episodeGroups: freezeGroups([
       { range: Object.freeze([132, 134]), signal: 'Poison', title: 'The delayed consequence', summary: 'The Rose’s contamination advances while Meruem searches for the memory his Guards concealed from him.' },
