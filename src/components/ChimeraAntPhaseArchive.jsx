@@ -1,10 +1,12 @@
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import { chimeraAntPhaseScaffoldById } from '../data/chimeraAntPhaseScaffold';
 import SafeImage from './SafeImage';
+import ChimeraAntEarlyPhaseSystems from './ChimeraAntEarlyPhaseSystems';
 import './ChimeraAntPhaseArchive.css';
 
 const inclusiveCount = (range) => Array.isArray(range) ? range[1] - range[0] + 1 : 0;
 const phaseDomId = (id) => `chimera-phase-${id}`;
+const finishedEarlyPhaseIds = new Set(['ngl-expedition', 'defeat-birth-return']);
 
 function PhaseStateLedger({ phase }) {
   return <dl className="chimera-phase-spread__states">
@@ -23,7 +25,7 @@ function PhaseMedia({ phase, detail, artwork, fallbackArtwork }) {
     <SafeImage
       src={image}
       fallbackSrc={fallback}
-      alt={`Chimera Ant arc artwork accompanying Phase ${phase.number}: ${phase.title}`}
+      alt={detail?.media?.alt || `Chimera Ant arc artwork accompanying Phase ${phase.number}: ${phase.title}`}
       style={{ '--chimera-phase-image-position': detail?.media?.position || artwork?.position || 'center' }}
     />
     <figcaption>
@@ -65,6 +67,7 @@ export default function ChimeraAntPhaseArchive({
       const episodeCount = inclusiveCount(phase.episodes);
       const nextPhase = phases[index + 1];
       const active = activePhase === phase.id;
+      const finishedEarlyPhase = finishedEarlyPhaseIds.has(phase.id);
 
       return <article
         id={phaseDomId(phase.id)}
@@ -73,6 +76,7 @@ export default function ChimeraAntPhaseArchive({
         data-phase-id={phase.id}
         data-phase-section="true"
         data-composition={phase.composition}
+        data-phase-finish={finishedEarlyPhase ? 'complete' : 'scaffold'}
         aria-labelledby={`${phaseDomId(phase.id)}-title`}
       >
         <header className="chimera-phase-spread__header">
@@ -100,10 +104,16 @@ export default function ChimeraAntPhaseArchive({
           </div>
         </div>
 
+        <ChimeraAntEarlyPhaseSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
+
         <footer className="chimera-phase-spread__footer">
           <div>
-            <span>Shared phase architecture</span>
-            <p>This spread exposes stable hooks for phase artwork, captions, sources, state changes, episode groups, and a composition-specific visual system.</p>
+            <span>{finishedEarlyPhase ? 'Finished phase presentation' : 'Shared phase architecture'}</span>
+            <p>{finishedEarlyPhase
+              ? phase.id === 'ngl-expedition'
+                ? 'The finished Phase I spread combines verified portraits, an episode-linked expedition route, a five-step threat ladder, and the catastrophic extraction endpoint.'
+                : 'The finished Phase II spread aligns the boys, the colony, and the Hunter Association across the same three episode periods before converging them on East Gorteau.'
+              : 'This spread exposes stable hooks for phase artwork, captions, sources, state changes, episode groups, and a composition-specific visual system.'}</p>
           </div>
           {nextPhase
             ? <button type="button" onClick={() => onSelectPhase(nextPhase.id)}>Continue to Phase {String(nextPhase.number).padStart(2, '0')} <ArrowRight size={14} /></button>
