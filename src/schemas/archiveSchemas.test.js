@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { claimSchema, episodeRangeSchema, mediaManifestSchema, mediaRecordSchema } from './archiveSchemas.js';
+import { chimeraAntPhases } from '../data/chimeraAntExperience.js';
+import {
+  claimSchema,
+  episodeRangeSchema,
+  mediaManifestSchema,
+  mediaRecordSchema,
+  phaseCollectionSchema,
+} from './archiveSchemas.js';
 
 describe('archive schemas', () => {
   it('accepts ordered episode ranges', () => {
@@ -45,5 +52,12 @@ describe('archive schemas', () => {
         reviewStatus: 'draft',
       }),
     ).toThrow();
+  });
+
+  it('validates the production Chimera Ant phase sequence', () => {
+    const phases = phaseCollectionSchema.parse(chimeraAntPhases);
+    expect(phases).toHaveLength(7);
+    expect(phases[0].episodes).toEqual([76, 85]);
+    expect(phases.at(-1)?.episodes).toEqual([132, 136]);
   });
 });
