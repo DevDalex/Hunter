@@ -9,6 +9,7 @@ import ChimeraAntSupportingArchivePortals from './ChimeraAntSupportingArchivePor
 import ChimeraAntReferenceArchivePortals from './ChimeraAntReferenceArchivePortals';
 import './ChimeraAntPhaseArchive.css';
 import './ChimeraAntBatch5.css';
+import './ChimeraAntBatch11.css';
 
 const inclusiveCount = (range) => Array.isArray(range) ? range[1] - range[0] + 1 : 0;
 const phaseDomId = (id) => `chimera-phase-${id}`;
