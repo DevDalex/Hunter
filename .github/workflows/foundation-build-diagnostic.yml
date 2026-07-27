@@ -6,6 +6,9 @@ on:
       - chimera-ant-retransform
     paths:
       - .github/workflows/foundation-build-diagnostic.yml
+  pull_request:
+    paths:
+      - .github/workflows/foundation-build-diagnostic.yml
 
 permissions:
   contents: read
