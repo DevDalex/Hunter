@@ -181,6 +181,32 @@
   line-height: 1.35;
 }
 
+/* Explicit surface-aware contrast for the final audit offenders. */
+.chimera-ant-page .chimera-ant-glance__label,
+.chimera-ant-page .chimera-ant-phase-rail__eyebrow {
+  color: var(--chimera-moss) !important;
+}
+
+.chimera-three-front-system__row--colony > header,
+.chimera-three-front-system__row--association > header {
+  background-color: var(--chimera-charcoal);
+}
+
+.chimera-three-front-system__row--colony > header > small,
+.chimera-three-front-system__row--association > header > small {
+  color: rgba(233, 230, 218, 0.78) !important;
+}
+
+.chimera-phase-spread--parallel-invasion-clock[data-phase-finish="complete"] .chimera-phase-spread__footer,
+.chimera-phase-spread--mirrored-endgames[data-phase-finish="complete"] .chimera-phase-spread__footer {
+  background-color: var(--chimera-charcoal) !important;
+}
+
+.chimera-phase-spread--parallel-invasion-clock[data-phase-finish="complete"] .chimera-phase-spread__footer span,
+.chimera-phase-spread--mirrored-endgames[data-phase-finish="complete"] .chimera-phase-spread__footer span {
+  color: var(--chimera-dark-rose) !important;
+}
+
 /* The two dark phase headers need light accents while their paper bodies retain dark accents. */
 .chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header,
 .chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header {
