@@ -13,10 +13,7 @@ export default defineConfig({
   forbidOnly: isCi,
   retries: isCi ? 1 : 0,
   workers: isCi ? 1 : undefined,
-  reporter: [
-    ['list'],
-    ['html', { outputFolder: 'playwright-report', open: 'never' }],
-  ],
+  reporter: [['list'], ['html', { outputFolder: 'playwright-report', open: 'never' }]],
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:4173',
     trace: 'retain-on-failure',
