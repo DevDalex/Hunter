@@ -54,10 +54,10 @@ function AdaptationArchive() {
   </div>;
 }
 
-const actionHref = (action) => {
-  const path = `#/${action.route.map((segment) => encodeURIComponent(segment)).join('/')}`;
+const fallbackNavigate = (action) => {
+  const path = `/${action.route.map((segment) => encodeURIComponent(segment)).join('/')}`;
   const params = new URLSearchParams(action.params || {}).toString();
-  return params ? `${path}?${params}` : path;
+  window.location.hash = params ? `${path}?${params}` : path;
 };
 
 function RecordsArchive({ onNavigate }) {
@@ -67,9 +67,7 @@ function RecordsArchive({ onNavigate }) {
     <div className="chimera-records-totals">{system.totals.map((record) => <article key={record.label}><span>{record.label}</span><strong>{record.value}</strong><small>{record.range}</small></article>)}</div>
     <div className="chimera-records-rules"><header><span>Boundary rules</span><h4>How to read the archive without confusing editorial structure for canon.</h4></header><ol>{system.boundaryRules.map((rule, index) => <li key={rule}><i>{String(index + 1).padStart(2, '0')}</i><p>{rule}</p></li>)}</ol></div>
     <nav className="chimera-records-actions" aria-label="Chimera Ant record directories">
-      {system.directoryActions.map((action) => onNavigate
-        ? <button type="button" key={action.id} onClick={() => onNavigate(...action.route, action.params)}><span>{action.label}</span><ArrowRight size={15} /></button>
-        : <a key={action.id} href={actionHref(action)}><span>{action.label}</span><ArrowRight size={15} /></a>)}
+      {system.directoryActions.map((action) => <button type="button" key={action.id} onClick={() => onNavigate ? onNavigate(...action.route, action.params) : fallbackNavigate(action)}><span>{action.label}</span><ArrowRight size={15} /></button>)}
     </nav>
   </div>;
 }
