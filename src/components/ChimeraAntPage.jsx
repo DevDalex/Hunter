@@ -17,6 +17,7 @@ import {
   chimeraAntSectionOrder,
 } from '../data/chimeraAntExperience';
 import SafeImage from './SafeImage';
+import ChimeraAntPhaseArchive from './ChimeraAntPhaseArchive';
 import './ChimeraAntPage.css';
 import './ChimeraAntBatch3.css';
 
@@ -50,6 +51,7 @@ const ARC_GLANCE_RECORDS = Object.freeze([
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const rangeText = (range, prefix) => Array.isArray(range) ? `${prefix} ${range[0]}–${range[1]}` : 'Not available';
 const sectionId = (id) => `chimera-${id}`;
+const phaseId = (id) => `chimera-phase-${id}`;
 const inclusiveCount = (range) => Array.isArray(range) ? range[1] - range[0] + 1 : 0;
 const totalEpisodeCount = chimeraAntPhases.reduce((sum, phase) => sum + inclusiveCount(phase.episodes), 0);
 
@@ -302,6 +304,18 @@ export default function ChimeraAntPage({ onNavigate }) {
 
   if (!arc) return null;
 
+  const selectPhase = (nextPhaseId) => {
+    setActivePhase(nextPhaseId);
+    window.requestAnimationFrame(() => {
+      document.getElementById(phaseId(nextPhaseId))?.scrollIntoView({
+        block: 'start',
+        behavior: reducedMotion() ? 'auto' : 'smooth',
+      });
+    });
+  };
+
+  const artwork = storyArcArtworkById.get(arc.id);
+
   return <article className="chimera-ant-page" style={style} ref={pageRef}>
     <CinematicHero arc={arc} onNavigate={onNavigate} />
     <div className="chimera-ant-shell">
@@ -323,14 +337,17 @@ export default function ChimeraAntPage({ onNavigate }) {
         </SectionFrame>
 
         <SectionFrame id="episode-phases" index={3} tone="bone">
-          <EpisodePhaseRail activePhase={activePhase} onSelectPhase={setActivePhase} />
+          <EpisodePhaseRail activePhase={activePhase} onSelectPhase={selectPhase} />
         </SectionFrame>
 
         <SectionFrame id="timeline" index={4}>
-          <ol className="chimera-ant-timeline">{chimeraAntPhases.map((phase) => <li key={phase.id}>
-            <i>{String(phase.number).padStart(2, '0')}</i>
-            <div><span>Episodes {phase.episodes[0]}–{phase.episodes[1]}</span><h3>{phase.shortTitle}</h3><p>{phase.closingCondition}</p></div>
-          </li>)}</ol>
+          <ChimeraAntPhaseArchive
+            phases={chimeraAntPhases}
+            activePhase={activePhase}
+            onSelectPhase={selectPhase}
+            artwork={artwork}
+            fallbackArtwork={arc.visual.hero[0]}
+          />
         </SectionFrame>
 
         <SectionFrame id="characters" index={5} tone="bone"><CharacterLedger arc={arc} onNavigate={onNavigate} /></SectionFrame>
