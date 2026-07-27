@@ -4,6 +4,7 @@ import SafeImage from './SafeImage';
 import ChimeraAntEarlyPhaseSystems from './ChimeraAntEarlyPhaseSystems';
 import ChimeraAntMiddlePhaseSystems from './ChimeraAntMiddlePhaseSystems';
 import ChimeraAntPalaceInvasionSystem from './ChimeraAntPalaceInvasionSystem';
+import ChimeraAntEndgameSystems from './ChimeraAntEndgameSystems';
 import './ChimeraAntPhaseArchive.css';
 import './ChimeraAntBatch5.css';
 
@@ -15,6 +16,8 @@ const finishedPhaseIds = new Set([
   'rogue-ants-east-gorteau',
   'komugi-invasion-preparation',
   'palace-invasion',
+  'two-endgames',
+  'poison-memory-homecoming',
 ]);
 
 const finishedPhaseCopy = new Map([
@@ -23,6 +26,8 @@ const finishedPhaseCopy = new Map([
   ['rogue-ants-east-gorteau', 'The finished Phase III spread turns the broken colony into a wide dispersal map, then shows how East Gorteau’s visible government becomes Selection machinery.'],
   ['komugi-invasion-preparation', 'The finished Phase IV spread pairs Komugi’s Gungi progression with the extermination team’s preparation track and tests every palace assignment against the reality already undermining it.'],
   ['palace-invasion', 'The finished Phase V spread combines an operational palace schematic, relative invasion clock, seven simultaneous event lanes, and a plan-versus-actual disruption ledger.'],
+  ['two-endgames', 'The finished Phase VI spread mirrors the institutional Netero/Meruem endgame against Gon’s personal Pitou endgame across objective, weapon, decision, cost, result, and aftermath without treating the acts as equivalent.'],
+  ['poison-memory-homecoming', 'The finished Phase VII spread follows the Rose’s poison and Meruem’s recovered memory into the final Gungi game, then maps four distinct survivor routes and the Election transition.'],
 ]);
 
 function PhaseStateLedger({ phase }) {
@@ -124,6 +129,7 @@ export default function ChimeraAntPhaseArchive({
         <ChimeraAntEarlyPhaseSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
         <ChimeraAntMiddlePhaseSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
         <ChimeraAntPalaceInvasionSystem phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
+        <ChimeraAntEndgameSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
 
         <footer className="chimera-phase-spread__footer">
           <div>
