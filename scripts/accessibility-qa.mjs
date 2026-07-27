@@ -164,15 +164,19 @@ try {
       if (await trigger.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close the menu');
       if (!await trigger.evaluate((node) => node === document.activeElement)) throw new Error('menu trigger did not regain focus');
     });
-    await recordInteraction('family-tree branch controls activate with keyboard', { width: 1440, height: 1000 }, 'succession/princes?view=tree', async (page) => {
-      const queens = page.locator('.royal-guard-tree__queen');
+    await recordInteraction('family-tree queen junctions activate with keyboard', { width: 1440, height: 1000 }, 'succession/princes?view=tree', async (page) => {
+      const queens = page.locator('.royal-map__queen-node');
       await queens.first().waitFor({ state: 'visible', timeout: 10_000 });
-      if (await queens.count() < 2) throw new Error('family tree did not render multiple queen branches');
+      if (await queens.count() < 2) throw new Error('royal map did not render multiple queen junctions');
       const nextQueen = queens.nth(1);
       await nextQueen.focus();
-      if (!await nextQueen.evaluate((node) => node === document.activeElement)) throw new Error('queen branch control did not receive focus');
+      if (!await nextQueen.evaluate((node) => node === document.activeElement)) throw new Error('queen junction control did not receive focus');
       await page.keyboard.press('Enter');
-      if (await nextQueen.getAttribute('aria-pressed') !== 'true') throw new Error('keyboard activation did not select the queen branch');
+      if (await nextQueen.getAttribute('aria-pressed') !== 'true') throw new Error('keyboard activation did not pin the queen junction');
+      const maternalLines = page.locator('.royal-map__maternal-lines path.is-queen-active');
+      await maternalLines.first().waitFor({ state: 'attached', timeout: 5_000 });
+      if (await maternalLines.count() < 1) throw new Error('queen activation did not highlight maternal connector lines');
+      if (await page.locator('.royal-map__prince-node.is-active').count()) throw new Error('queen activation incorrectly highlighted prince cards');
     });
     await recordInteraction('Succession Archive navigation activates with keyboard', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
       const timelineLink = page.locator('#succession-desktop-navigation a').filter({ hasText: 'Timeline' });
