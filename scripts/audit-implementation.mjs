@@ -106,11 +106,10 @@ assert(packageJson.scripts?.['audit:design-system'] === 'node scripts/audit-desi
 for (const [name, version] of Object.entries({ ...packageJson.dependencies, ...packageJson.devDependencies })) {
   assert(exactVersion(version), `${name} must use an exact pinned version rather than ${version}`);
 }
-for (const requiredTool of ['@biomejs/biome', '@playwright/test', '@testing-library/react', '@testing-library/user-event', '@vitejs/plugin-react', 'typescript', 'vite', 'vitest', 'playwright', 'axe-core', 'knip', 'wrangler']) {
+for (const requiredTool of ['@biomejs/biome', '@playwright/test', '@testing-library/react', '@testing-library/user-event', '@vitejs/plugin-react', 'typescript', 'vite', 'vitest', 'playwright', 'axe-core', 'knip', 'sharp', 'wrangler']) {
   assert(exactVersion(packageJson.devDependencies?.[requiredTool]), `${requiredTool} must be an exact devDependency`);
 }
-for (const requiredTool of ['sharp', 'zod']) {
-  assert(exactVersion(packageJson.dependencies?.[requiredTool]), `${requiredTool} must be an exact runtime dependency`);
-}
+assert(exactVersion(packageJson.dependencies?.zod), 'zod must be an exact runtime dependency');
+assert(!packageJson.dependencies?.sharp, 'sharp must remain build-only and outside the production dependency surface');
 
-console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; foundation quality gate; 15-audit aggregate preflight; split runtime/browser CI; pinned toolchain; route, media, design-system, performance-budget, and Cloudflare contracts synchronized.`);
+console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; foundation quality gate; 15-audit aggregate preflight; split runtime/browser CI; pinned toolchain; build-only Sharp media processing; route, media, design-system, performance-budget, and Cloudflare contracts synchronized.`);
