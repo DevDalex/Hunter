@@ -13,8 +13,8 @@ Branch: `chimera-ant-retransform`
 | 5 | Complete | Finished Phase I’s NGL route/threat system and Phase II’s three-front development matrix. |
 | 6 | Complete | Finished Phase III’s dispersal/occupation map and Phase IV’s Gungi/preparation/blueprint system. |
 | 7 | Complete | Finished Phase V’s palace schematic, relative clock, seven event lanes, and disruption ledger. |
-| 8 | Next | Build Phase VI’s mirrored endgames and Phase VII’s poison, memory, final Gungi, and survivor-route systems. |
-| 9 | Pending | Characters, factions, locations, Nen, conflicts, and objects. |
+| 8 | Complete | Finished Phase VI’s mirrored endgames and Phase VII’s poison, memory, final Gungi, survivor routes, and Election transition. |
+| 9 | Next | Replace the generic characters, factions, locations, Nen, conflicts, and objects sections with Chimera Ant-specific archive systems. |
 | 10 | Pending | Ending, adaptation, records, and sources. |
 | 11 | Pending | Final verification, performance, and bugs. |
 
@@ -47,41 +47,50 @@ Branch: `chimera-ant-retransform`
 
 - Added the colony-dispersal map, East Gorteau occupation stack, dual Gungi/preparation tracks, palace blueprint, and Episode 110 readiness field.
 
-## Batch 7 record
+### Batch 7 — Palace invasion
+
+- Added the Royal Palace schematic, six entry/separation vectors, relative invasion clock, seven simultaneous lanes, and plan-versus-actual disruption ledger.
+
+## Batch 8 record
 
 ### Completed
 
-- Added `src/data/chimeraAntPalaceInvasionSystem.js` with the complete Phase V information model.
-- Added `src/components/ChimeraAntPalaceInvasionSystem.jsx` and dedicated desktop presentation styles.
-- Built a schematic Royal Palace field with seven operational zones: airspace, Royal chamber, central stair, Pouf front, Pitou/Komugi front, underground route, and Meruem extraction vector.
-- Added six sourced entry and separation vectors for Dragon Dive, Netero/Zeno contact, Knov portal entry, Guard separation, Pitou diversion, and Ikalgo’s underground route.
-- Added a six-stage relative invasion clock. Only launch is fixed at `00:00`; later labels remain relative to avoid inventing unsupported second-by-second precision.
-- Added seven simultaneous event lanes for Gon/Pitou, Killua, Knuckle/Shoot/Youpi, Morel/Pouf, Ikalgo/Welfin, Netero/Meruem, and Komugi.
-- Aligned every lane across four shared periods: Impact, Rupture, Separation, and Divergence.
-- Added a plan-versus-actual disruption ledger covering Meruem separation, Pitou containment, Youpi attrition, Pouf containment, and synchronization failure.
-- Added verified local visual records for Netero, Meruem, Gon, Neferpitou, and Komugi.
-- Replaced the Phase V generic image hook with a local Isaac Netero visual record and Hunterpedia source.
-- Marked Phase V as finished while preserving the shared phase id, state ledger, episode groups, and next-phase navigation.
+- Added `src/data/chimeraAntEndgameSystems.js` with the complete Phase VI and Phase VII information models.
+- Added `src/components/ChimeraAntEndgameSystems.jsx` and a dedicated desktop-only stylesheet.
+- Built two complete Phase VI endgame dossiers: Netero/Meruem for Episodes 122–126 and Gon/Pitou for Episodes 127–131.
+- Added four sourced sequence records to each endgame, covering terms, pattern, exhaustion, Rose detonation, coercive escort, Kite’s truth, Gon’s vow, and the postmortem aftermath.
+- Added six explicit comparison axes: starting demand, power system, decision point, accepted price, immediate result, and story carried forward.
+- Added a “mirror without equivalence” interpretation block so the layout compares shared self-destruction without flattening institutional extermination and personal revenge into the same act.
+- Built the Phase VII poison-and-memory progression across Episodes 132, 133, 134, and 135.
+- Added an abstract 9×9 Gungi visual motif with an explicit provenance boundary stating that it is not a reconstructed canonical board position.
+- Added the final Gungi sequence through disclosure, consent, recognition, and death.
+- Added four aftermath routes: Meruem/Komugi, Reina/Bloster, Welfin/Hina/Bizeff, and Gon/the Hunter Association.
+- Added the Election transition connecting Netero’s death, Gon’s condition, institutional succession, and Killua’s rescue objective.
+- Replaced the Phase VI and VII generic image hooks with local Gon and Komugi portrait records and Hunterpedia source links.
+- Integrated both systems into the existing stable phase archive and marked all seven episode phases complete.
+- Added `scripts/audit-chimera-ant-batch-8.mjs` and registered `npm run audit:chimera-ant-batch-8` in `package.json`.
 
 ### Verification
 
-- Phase V remains bounded to Episodes 111–121 through the existing three contiguous groups: 111–113, 114–117, and 118–121.
-- The relative clock contains six ordered records with Hunterpedia episode evidence and does not claim precise timestamps beyond launch.
-- The lane matrix contains seven rows and four event cells per row, producing twenty-eight synchronized state records.
-- The palace schematic contains seven zones and six directional vectors with deterministic ids and source links.
-- The Phase V integration uses the existing `chimera-phase-palace-invasion` id and `data-phase-section="true"` marker.
-- Portraits appear only on lanes with semantically matching local records; other lanes use numbered dossier tokens rather than misleading character images.
-- The Batch 7 comparison is seven commits ahead of the Batch 6 ledger, with six changed files and no branch divergence.
-- No mobile layout breakpoint was added; the only media query respects reduced-motion preferences.
-- GitHub exposes no CI status for the final implementation commit, so Vite compilation and screenshot-level browser verification remain outstanding.
+- Phase VI remains bounded to the two existing contiguous groups: 122–126 and 127–131.
+- The Phase VI model contains exactly two endgames, two portraits per endgame, six dossier fields per endgame, four sequence records per endgame, and six comparison rows.
+- Phase VII contains four ordered poison/memory records for Episodes 132–135, four final Gungi beats, and four survivor routes carrying the ending into Episode 136.
+- Every episode and portrait source in the Batch 8 data points to Hunterpedia/Fandom, while all displayed portraits use repository-local `/media/portraits/` assets.
+- `ChimeraAntPhaseArchive.jsx` imports and renders the Batch 8 component inside the existing Phase VI and VII ids and now marks all seven phase ids complete.
+- The Gungi field renders eighty-one deterministic cells and is labeled as an abstract motif rather than canonical evidence.
+- The Batch 8 stylesheet uses fixed desktop grids for the mirrored two-column field, four-stage progression, and four-route aftermath field. Its only media query is the reduced-motion preference; no mobile width breakpoint was introduced.
+- The dedicated static audit checks system ids, episode boundaries, record counts, source boundaries, local media paths, integration hooks, Gungi provenance, desktop grid contracts, and the absence of mobile-specific width media queries.
+- From the initial Batch 8 data commit to the pre-ledger branch head, GitHub reports seven additional forward commits, six further changed files, and no branch divergence. Including the initial data commit, Batch 8 was implemented through eight pre-ledger commits across seven implementation files.
+- GitHub exposes no CI status for the pre-ledger implementation head. The connector cannot execute the new npm audit, Vite build, or browser rendering, so runtime compilation and screenshot-level verification remain unconfirmed rather than being claimed as passed.
 
-### Risks carried into Batch 8
+### Risks carried into Batch 9
 
-- The palace schematic’s seven absolute-positioned zones and six-column evidence key require browser-level collision testing during Batch 11.
-- The relative clock deliberately prioritizes accuracy over false timestamp precision; exact narrator timestamps can be added later only when individually verified.
-- Phase VI and Phase VII still use scaffold-level composition hooks.
-- Supporting archive sections remain generic until Batches 9 and 10.
+- The two full endgame dossiers, six-row comparison table, and four-column survivor route field are intentionally dense and require browser-level overflow and spacing inspection during Batch 11.
+- The 9×9 Gungi field is a visual motif only; it must never be presented as a canonical game-state reconstruction.
+- Episode stills are not yet used. The finished presentation relies on verified local portraits, explanatory diagrams, and source links.
+- The Batch 8 audit exists in the repository but has not been executed by CI or a connected runtime.
+- Supporting archive sections still use generic records and are the next required replacement.
 
 ### Next action
 
-Build Phase VI and Phase VII: create a mirrored Netero/Meruem versus Gon/Pitou endgame system with cost, weapon, decision, and aftermath comparisons; then create the poison-and-memory progression, final Gungi presentation, and survivor-destination map for Episodes 132–136.
+Build Batch 9: replace the generic character ledger, faction cards, location records, Nen list, conflict list, and object cards with Chimera Ant-specific wide archive systems that connect each record to phase, objective, allegiance, tactical function, outcome, and source evidence.
