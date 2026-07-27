@@ -20,6 +20,32 @@
   overflow-wrap: anywhere;
 }
 
+.chimera-invasion-system__clock ol {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  overflow-x: visible;
+}
+
+.chimera-invasion-system__clock li,
+.chimera-invasion-system__clock-mark,
+.chimera-invasion-system__clock article {
+  min-width: 0;
+}
+
+.chimera-invasion-system__clock-mark {
+  padding-inline: 10px;
+}
+
+.chimera-invasion-system__clock article {
+  padding-inline: 12px;
+}
+
+.chimera-invasion-system__clock-mark strong,
+.chimera-invasion-system__clock h6,
+.chimera-invasion-system__clock article p,
+.chimera-invasion-system__clock article a {
+  overflow-wrap: anywhere;
+}
+
 .chimera-invasion-system__lane-matrix {
   width: 100%;
   max-width: 100%;
