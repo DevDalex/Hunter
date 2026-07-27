@@ -47,6 +47,29 @@ assert(royalTree.includes("onNavigate?.('princes', { prince: record.openTarget.o
 assert(royalTreeCss.includes('.royal-map__connectors') && royalTreeCss.includes('.royal-map__prince-node') && royalTreeCss.includes('.royal-map__queen-node') && royalTreeCss.includes('.royal-map__guard-strip'), 'the map must retain visible cross-canvas relationships, compact prince nodes, queen junctions, and embedded protection strips');
 assert(royalTreeNodes.includes('{guards.map((guard) =>') && !royalTreeNodes.includes('guards.slice(') && royalTreeCss.includes('grid-template-columns: repeat(9, minmax(0, 1fr))'), 'every documented prince guard must render in the owned two-row protection grid instead of being hidden behind a remainder count');
 assert(royalTreeSource.includes('abilityLabelFor') && royalTreeSource.includes('forceMemberRecordFor'), 'the single inspector must surface abilities and essentials for guards and mafia members');
+assert(
+  royalTreeNodes.includes('group.leaderEntity && <Portrait')
+    && royalTreeNodes.includes('royal-map__force-summary${group.leaderEntity')
+    && royalTreeCss.includes('.royal-map__force-summary.has-leader'),
+  'each mafia family must use its boss portrait as the group-level visual anchor',
+);
+assert(
+  royalTree.includes("activeRecord?.kind === 'queen'")
+    && royalTree.includes('activeQueenKey')
+    && royalTreeCss.includes('.royal-map__maternal-lines path.is-queen-active')
+    && royalTreeNodes.includes('royal-map__queen-rank')
+    && royalTreeNodes.includes('royal-map__queen-copy'),
+  'queen hover must emphasize only redesigned maternal junctions and their blue connector lines rather than recoloring prince cards',
+);
+assert(
+  royalTree.includes("addEventListener('wheel', onWheel, { passive: false })")
+    && royalTree.includes('handlePointerDown')
+    && royalTree.includes('pointDistance')
+    && royalTree.includes('fittedView')
+    && royalTreeCss.includes('.royal-map__controls'),
+  'the relationship board must support mouse, touch, pinch, keyboard, fit, and reset map navigation',
+);
+assert(royalTreeCss.includes('width: min(278px') && royalTreeCss.includes('max-height: min(430px') && royalTree.includes('onPreviewHold={holdPreview}') && royalTreeNodes.includes('onMouseEnter={onPreviewHold}'), 'the floating inspector must remain compact, bounded, and reachable from a hovered record');
 assert(royalNetworks.includes('categorizedActorsByPrince') && royalNetworks.includes("actor('Izunavi', 'kurapika-placement'") && !royalNetworks.includes('roomText:'), 'royal networks must use explicit assignments instead of prose-based team inference');
 assert(royalTreeCss.includes('@media (prefers-reduced-motion: reduce)') && royalTreeCss.includes('@media (hover: none)'), 'the relationship map must retain restrained reduced-motion and touch behavior');
 assert(archiveShell.includes("import './SuccessionArchiveContrastFixes.css';") && archiveShell.includes("import './SuccessionArchiveDeepContrastFixes.css';") && archiveShell.includes("import './SuccessionArchiveNenFixes.css';"), 'the archive shell must load shared, deep, and Nen-specific workspace repair layers');
@@ -69,4 +92,4 @@ assert(visualQa.includes('pendingImages') && visualQa.includes('audit.pendingIma
 const readerText = [blackWhale, worldAtlas, worldMap, encyclopedia, familyTree, royalTreeSource, timeline].join('\n');
 assert(!/image placeholder|placeholder image/i.test(readerText), 'reader-facing placeholder-image copy is forbidden');
 
-console.log('Polish audit passed: deterministic media; progressive rooms; clickable ship hotspots; concurrent timeline lanes; wide Royal Family relationship map with spaced maternal junctions, complete guard grids, explicit connectors, embedded beasts, filtered outside forces, and one floating inspector; complete Succession contrast ownership; repaired Nen card layout; contained uncropped imagery.');
+console.log('Polish audit passed: deterministic media; progressive rooms; clickable ship hotspots; concurrent timeline lanes; pannable Royal Family intelligence plane with portrait queen junctions, blue maternal focus lines, complete guards, family-boss portraits, embedded beasts, compact inspector, and accessible view controls; complete Succession contrast ownership; repaired Nen card layout; contained uncropped imagery.');

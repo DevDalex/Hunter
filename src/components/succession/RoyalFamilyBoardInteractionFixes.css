@@ -1,3 +1,49 @@
+/*
+ * Interaction-owned layer for the immersive Royal Family intelligence map.
+ * The viewport behaves like a bounded map: drag to pan, wheel/pinch to zoom,
+ * and use the controls or keyboard without changing the underlying node data.
+ */
+
+.royal-map__viewport {
+  position: relative;
+  overflow: hidden;
+  background: var(--paper);
+  touch-action: auto;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.royal-map__viewport.is-dragging {
+  cursor: grabbing;
+}
+
+.royal-map__king {
+  left: 685px;
+}
+
+.royal-map__canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-width: 1800px;
+  background:
+    linear-gradient(rgba(64, 54, 41, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(64, 54, 41, .03) 1px, transparent 1px),
+    radial-gradient(circle at 60% 8%, rgba(255, 255, 255, .68), transparent 31%),
+    var(--paper);
+  background-size: 24px 24px, 24px 24px, auto, auto;
+  transform-origin: 0 0;
+  touch-action: none;
+  will-change: transform;
+}
+
+.royal-map__viewport button,
+.royal-map__viewport a {
+  user-select: auto;
+  -webkit-user-select: auto;
+}
+
 .royal-map__force-summary:hover,
 .royal-map__force-member:hover,
 .royal-map__guard-mini:hover,
@@ -12,7 +58,285 @@
   box-shadow: 0 0 0 3px #1769aa, 5px 5px 0 rgba(24, 21, 18, .16);
 }
 
+/* Queen records are compact branch junctions, not decorative hanging badges. */
+.royal-map__queen-node {
+  display: grid;
+  grid-template-columns: 22px 28px minmax(0, 1fr);
+  align-items: center;
+  gap: 4px;
+  width: 104px;
+  height: 50px;
+  padding: 4px 6px 4px 4px;
+  clip-path: none;
+  border: 2px solid var(--maternal);
+  border-radius: 5px;
+  background: rgba(255, 253, 247, .98);
+  color: var(--ink);
+  filter: none;
+  box-shadow: 3px 3px 0 rgba(70, 45, 82, .16);
+  text-align: left;
+}
+
+.royal-map__queen-node::before {
+  display: none;
+}
+
+.royal-map__queen-node .royal-map__portrait.is-compact,
+.royal-map__queen-node .royal-map__portrait-fallback.is-compact {
+  width: 28px;
+  height: 34px;
+  border-color: color-mix(in srgb, var(--maternal) 62%, #8d8373);
+}
+
+.royal-map__queen-node > .royal-map__queen-rank {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 32px;
+  border-radius: 3px;
+  background: var(--maternal);
+  color: #fffaf0;
+  font: 800 15px/1 Georgia, serif;
+}
+
+.royal-map__queen-node > .royal-map__queen-copy {
+  display: grid;
+  place-items: initial;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  gap: 1px;
+  border-radius: 0;
+  background: transparent;
+}
+
+.royal-map__queen-copy small {
+  position: static;
+  color: var(--maternal);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.royal-map__queen-copy strong {
+  position: static;
+  max-width: none;
+  overflow: hidden;
+  font: 600 10px/1.05 Georgia, serif;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.royal-map__queen-node.is-active,
+.royal-map__queen-node.is-pinned {
+  border-color: #1769aa;
+  box-shadow: 0 0 0 2px #1769aa, 3px 3px 0 rgba(23, 105, 170, .2);
+}
+
+.royal-map__maternal-lines path.is-queen-active {
+  stroke: #1769aa;
+  stroke-width: 3;
+  opacity: 1;
+}
+
+/* Mafia groups show their actual family boss as the primary visual anchor. */
+.royal-map__force-summary.has-leader {
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+}
+
+.royal-map__force-summary.has-leader > .royal-map__portrait.is-compact,
+.royal-map__force-summary.has-leader > .royal-map__portrait-fallback.is-compact {
+  width: 38px;
+  height: 44px;
+  grid-row: 1;
+}
+
+.royal-map__force-copy {
+  display: grid;
+  min-width: 0;
+  gap: 1px;
+}
+
+.royal-map__force-copy small,
+.royal-map__force-copy em {
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 9px;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.royal-map__force-copy strong {
+  overflow: hidden;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Map controls remain fixed to the viewport while the coordinate plane moves. */
+.royal-map__controls {
+  position: absolute;
+  z-index: 35;
+  right: 12px;
+  bottom: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, 36px) auto;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid #7e7465;
+  border-radius: 6px;
+  background: rgba(23, 23, 21, .94);
+  color: #f5efe2;
+  box-shadow: 4px 6px 18px rgba(0, 0, 0, .24);
+  touch-action: manipulation;
+}
+
+.royal-map__controls button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-right: 1px solid #4d4840;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.royal-map__controls button:hover,
+.royal-map__controls button:focus-visible {
+  background: #342f27;
+  color: #ffe4a7;
+}
+
+.royal-map__controls output {
+  min-width: 54px;
+  padding: 0 8px;
+  color: #dfb55d;
+  font-size: 10px;
+  font-weight: 900;
+  text-align: center;
+}
+
+/* The inspector is a compact viewport overlay, not a large page-level obstruction. */
+.royal-map__inspector,
+html:has(.succession-royal-hierarchy-workspace) .royal-map__inspector {
+  position: absolute;
+  z-index: 40;
+  top: 12px;
+  right: 12px;
+  bottom: auto;
+  width: min(278px, calc(100% - 24px));
+  max-height: min(430px, calc(100% - 70px));
+  margin: 0;
+  border-radius: 4px;
+  box-shadow: 6px 8px 22px rgba(0, 0, 0, .28);
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.royal-map__inspector-identity {
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 8px;
+  padding: 8px;
+}
+
+.royal-map__inspector-identity > .royal-map__portrait,
+.royal-map__inspector-identity > .royal-map__portrait-fallback {
+  width: 58px;
+  height: 64px;
+}
+
+.royal-map__inspector h3 {
+  font-size: 19px;
+}
+
+.royal-map__inspector p {
+  font-size: 10px;
+  line-height: 1.38;
+}
+
+.royal-map__inspector > section {
+  padding: 6px 8px;
+}
+
+.royal-map__inspector dl {
+  padding: 0 8px;
+}
+
+.royal-map__inspector dl > div {
+  grid-template-columns: 88px minmax(0, 1fr);
+  padding: 5px 0;
+}
+
+.royal-map__inspector-open {
+  min-height: 34px;
+  margin: 8px;
+  padding: 5px 8px;
+}
+
+@media (max-width: 760px) {
+  .royal-map__controls {
+    right: 8px;
+    bottom: 8px;
+    grid-template-columns: repeat(4, 34px) auto;
+  }
+
+  .royal-map__controls button {
+    width: 34px;
+    height: 34px;
+  }
+
+  html:has(.succession-royal-hierarchy-workspace) .royal-map__inspector {
+    position: absolute;
+    inset: 8px 8px auto auto;
+    display: grid;
+    width: min(270px, calc(100% - 16px));
+    max-height: min(46dvh, 420px);
+  }
+}
+
+@media (max-width: 430px) {
+  .royal-map__controls {
+    grid-template-columns: repeat(4, 32px);
+  }
+
+  .royal-map__controls button {
+    width: 32px;
+    height: 34px;
+  }
+
+  .royal-map__controls output {
+    grid-column: 1 / -1;
+    min-height: 22px;
+    padding-top: 4px;
+    border-top: 1px solid #4d4840;
+  }
+
+  html:has(.succession-royal-hierarchy-workspace) .royal-map__inspector {
+    top: 6px;
+    right: 6px;
+    width: calc(100% - 12px);
+  }
+}
+
 @media (hover: none) {
-  .royal-map__viewport { scroll-snap-type: x proximity; }
-  .royal-map__canvas { scroll-snap-align: start; }
+  .royal-map__viewport {
+    cursor: default;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .royal-map__canvas,
+  .royal-map__connectors path {
+    transition: none;
+  }
 }

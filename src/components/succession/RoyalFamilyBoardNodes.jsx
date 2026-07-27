@@ -67,6 +67,7 @@ export function KingMapNode({ record, beast, active, pinned, onPreview, onClear,
 export function QueenMapNode({ branch, position, active, pinned, onPreview, onClear, onPin }) {
   if (!position) return null;
   const props = triggerProps({ record: branch.record, active, pinned, onPreview, onClear, onPin });
+  const rank = branch.order.match(/\d+/)?.[0] || '?';
   return <button
     type="button"
     {...props}
@@ -74,9 +75,12 @@ export function QueenMapNode({ branch, position, active, pinned, onPreview, onCl
     style={{ left: position.x, top: position.y }}
     data-queen={branch.short}
   >
-    <small>Queen</small>
-    <strong>{branch.short}</strong>
-    <span>{branch.order.match(/\d+/)?.[0] || '?'}</span>
+    <span className="royal-map__queen-rank">{rank}</span>
+    <Portrait name={branch.record.name} entity={branch.record.entity} compact />
+    <span className="royal-map__queen-copy">
+      <small>Queen</small>
+      <strong>{branch.short}</strong>
+    </span>
   </button>;
 }
 
@@ -164,10 +168,13 @@ export function ForceRail({ groups, forceRecords, activeKey, pinnedKey, onPrevie
       const record = forceRecords.get(group.key);
       const props = triggerProps({ record, active: activeKey === record.key, pinned: pinnedKey === record.key, onPreview, onClear, onPin });
       return <section className={`royal-map__force-group is-${group.key}`} style={{ top: position.y }} key={group.key}>
-        <button type="button" {...props} className={`royal-map__force-summary ${props.className}`}>
-          <span>{group.key === 'allies' ? 'Allies' : `Linked to Prince ${group.linkedOrders[0]}`}</span>
-          <strong>{group.label}</strong>
-          {group.leader && <em>{group.leader}</em>}
+        <button type="button" {...props} className={`royal-map__force-summary${group.leaderEntity ? ' has-leader' : ''} ${props.className}`}>
+          {group.leaderEntity && <Portrait name={group.leader} entity={group.leaderEntity} compact />}
+          <span className="royal-map__force-copy">
+            <small>{group.key === 'allies' ? 'Allies' : `Linked to Prince ${group.linkedOrders[0]}`}</small>
+            <strong>{group.label}</strong>
+            {group.leader && <em>{group.leader}</em>}
+          </span>
         </button>
         <div className="royal-map__force-members">
           {group.members.map((member) => {
@@ -189,10 +196,21 @@ export function ForceRail({ groups, forceRecords, activeKey, pinnedKey, onPrevie
   </aside>;
 }
 
-export function MapInspector({ record, pinned, onOpen, onUnpin }) {
+export function MapInspector({ record, pinned, onOpen, onUnpin, onPreviewHold, onPreviewRelease }) {
   const titleId = useId();
   if (!record) return null;
-  return <aside id="royal-map-inspector" className="royal-map__inspector" aria-labelledby={titleId} aria-live="polite">
+  return <aside
+    id="royal-map-inspector"
+    className="royal-map__inspector"
+    aria-labelledby={titleId}
+    aria-live="polite"
+    onMouseEnter={onPreviewHold}
+    onMouseLeave={onPreviewRelease}
+    onFocusCapture={onPreviewHold}
+    onBlurCapture={(event) => {
+      if (!event.currentTarget.contains(event.relatedTarget)) onPreviewRelease();
+    }}
+  >
     <header>
       <span>{record.eyebrow}</span>
       <button type="button" onClick={onUnpin} aria-label={pinned ? 'Unpin record' : 'Clear pinned record'} disabled={!pinned}>

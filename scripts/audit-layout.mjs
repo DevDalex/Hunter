@@ -66,10 +66,10 @@ assert(css.includes('--content: 1240px') && css.includes('--wide: 1540px'), 'edi
 assert(css.includes('.ship-manifest__table-wrap, .assignment-table-wrap { width: 100%; min-width: 0; max-width: 100%; overflow-x: auto;'), 'wide tables must remain inside named scroll frames');
 assert(familyTree.includes('RoyalFamilyGuardTree'), 'the unified royal family renderer is not mounted');
 assert(familyTree.includes('Tap any royal, guard, or mafia portrait to pin its essentials.') && !familyTree.includes('protection circle below'), 'the Family Tree mobile hint must describe the relationship map rather than the retired orbit layout');
-for (const token of ['PRINCE_LAYOUT', 'QUEEN_LAYOUT', 'FORCE_LAYOUT', 'RoyalMapConnectors', 'royal-map__viewport', 'royal-map__canvas', 'royal-map__king', 'royal-map__forces', 'royal-map__queen-node', 'royal-map__prince-node', 'royal-map__guard-strip', 'royal-map__inspector']) {
+for (const token of ['PRINCE_LAYOUT', 'QUEEN_LAYOUT', 'FORCE_LAYOUT', 'RoyalMapConnectors', 'royal-map__viewport', 'royal-map__canvas', 'royal-map__king', 'royal-map__forces', 'royal-map__queen-node', 'royal-map__prince-node', 'royal-map__guard-strip', 'royal-map__controls', 'royal-map__inspector']) {
   assert(royalTreeSource.includes(token), `the Royal Family relationship map is missing ${token}`);
 }
-for (const selector of ['.royal-map__viewport', '.royal-map__canvas', '.royal-map__connectors', '.royal-map__forces', '.royal-map__king', '.royal-map__queen-node', '.royal-map__prince-node', '.royal-map__guard-strip', '.royal-map__inspector']) {
+for (const selector of ['.royal-map__viewport', '.royal-map__canvas', '.royal-map__connectors', '.royal-map__forces', '.royal-map__king', '.royal-map__queen-node', '.royal-map__prince-node', '.royal-map__guard-strip', '.royal-map__controls', '.royal-map__inspector']) {
   assert(royalTreeCss.includes(selector), `the Royal Family relationship-map CSS is missing ${selector}`);
 }
 assert(!royalTreeSource.includes('royal-board__branch-grid') && !royalTreeSource.includes('royal-board__branch-column'), 'the retired stacked household architecture returned');
@@ -77,7 +77,16 @@ assert(royalTreeSource.includes('guardianBeasts') && royalTreeSource.includes('m
 assert(!royalTreeNodes.includes('<span {direct}') && !royalTreeNodes.includes('setHoverdKey'), 'the Royal Family map contains a known JSX corruption or misspelled state setter');
 assert(royalTree.includes("onNavigate?.('princes', { prince: record.openTarget.order })"), 'prince dossier actions must use the dedicated prince route rather than the generic character workspace');
 assert(royalTree.includes("import './RoyalFamilyBoardInteractionFixes.css';"), 'the Royal Family interaction layer is not loaded');
-assert(royalTreeCss.includes('min-width: 1520px') && royalTreeCss.includes('overflow: auto') && royalTreeCss.includes('position: absolute'), 'the wide coordinate map must preserve spatial relationships inside a scrollable viewport');
+assert(
+  royalTree.includes("addEventListener('wheel', onWheel, { passive: false })")
+    && royalTree.includes('handlePointerMove')
+    && royalTree.includes('fitAll')
+    && royalTree.includes('resetView')
+    && royalTreeCss.includes('touch-action: none')
+    && royalTreeCss.includes('transform-origin: 0 0'),
+  'the coordinate map must support bounded wheel, pointer, pinch, fit, and reset navigation',
+);
+assert(royalTree.includes('MAP_WIDTH = 1800') && royalTreeCss.includes('min-width: 1800px') && royalTreeCss.includes('overflow: hidden'), 'the expandable map plane must preserve its full coordinate space inside a clipped viewport');
 assert(!royalTree.includes('<main className="royal-map__main">'), 'the embedded Royal Family map must not create a nested main landmark');
 assert(css.includes('.interactive-ship-map__canvas { position: relative; min-height: 470px; }') && blackWhale.includes('ship-hotspot-layer'), 'the dominant clickable Black Whale canvas is missing');
 assert(css.includes('.entity-record-image img { width: 100%; height: 100%; max-height: 620px; object-fit: contain;') && css.includes('.room-card > figure img { width: 100%; height: 100%; object-fit: contain;'), 'portrait and room media must use uncropped contain framing');
@@ -86,4 +95,4 @@ assert(royalTreeCss.includes('@media (max-width: 1100px)') && royalTreeCss.inclu
 assert(worldAtlas.includes('Map as MapIcon') && worldAtlas.includes('new Map('), 'the World Atlas constructor guard is missing');
 assert(packageJson.includes('"qa:visual"') && packageJson.includes('"qa:architecture"'), 'the repeatable browser and architecture matrix commands are missing');
 
-console.log(`Layout audit passed: ${jsxFiles.length} JSX modules parsed by Vite Oxc; ${routeManifest.length} unique purposeful routes; ${successionReleaseRoutes.length} curated Succession release workspaces; one global Timeline; ${successionPages.length} legacy Succession screens; ${referencePages.length} Reference screens; Notebook absent; wide Royal Family relationship map with explicit coordinates, SVG connectors, compact prince nodes, queen junctions, outside forces, one inspector, and responsive scrolling; contained media and tables; dominant ship atlas; responsive editorial shell.`);
+console.log(`Layout audit passed: ${jsxFiles.length} JSX modules parsed by Vite Oxc; ${routeManifest.length} unique purposeful routes; ${successionReleaseRoutes.length} curated Succession release workspaces; one global Timeline; ${successionPages.length} legacy Succession screens; ${referencePages.length} Reference screens; Notebook absent; pannable and zoomable Royal Family intelligence plane with explicit coordinates, SVG connectors, compact prince nodes, portrait queen junctions, boss-led outside forces, one inspector, and responsive controls; contained media and tables; dominant ship atlas; responsive editorial shell.`);
