@@ -16,7 +16,7 @@ Branch: `chimera-ant-retransform`
 | 8 | Complete | Finished Phase VI’s mirrored endgames and Phase VII’s poison, memory, final Gungi, survivor routes, and Election transition. |
 | 9 | Complete | Replaced six generic supporting sections with Chimera Ant-specific character, faction, location, Nen, conflict, and object archive systems. |
 | 10 | Complete | Replaced the ending, adaptation, records, and sources sections with causal, correspondence, provenance, and boundary systems. |
-| 11 | Next | Execute final desktop verification, compilation, visual QA, performance checks, source audit, and bug fixes. |
+| 11 | Verification gate | Added final static and four-width browser QA, fixed record navigation fallback, and added a branch QA workflow. Runtime execution evidence is still required before completion. |
 
 ## Completed batch summary
 
@@ -59,46 +59,48 @@ Branch: `chimera-ant-retransform`
 
 - Added forty character, faction, location, Nen, conflict, and object records in six Chimera Ant-specific desktop systems.
 
-## Batch 10 record
+### Batch 10 — Ending and reference systems
 
-### Completed
+- Added the five-step ending causal chain, outcome ledger, manga/anime correspondence, adaptation comparison, record boundaries, source groups, and evidence classes.
 
-- Added `src/data/chimeraAntReferenceArchive.js` with four frozen collections for ending, adaptation, records, and sources.
-- Built a five-step ending causal chain from Rose detonation through delayed poison, recovered memory, final Gungi, and the transfer into the Election arc.
-- Added five outcome records for the royal core, Komugi, Gon, the Hunter Association, and surviving Chimera Ants.
-- Added a manga-versus-anime boundary field recording Chapters 186–318 as 133 chapters and Episodes 76–136 as 61 episodes.
-- Added seven phase correspondence rows connecting each editorial phase to manga and anime ranges without presenting the phase names as official production labels.
-- Added four adaptation comparison records for narration, temporal duration, violence/aftermath, and the final Gungi sequence.
-- Added four record totals, five archive boundary rules, and three directory-action records.
-- Added four source groups separating arc boundaries, places/institutions, people, and episode evidence.
-- Added four evidence classes defining primary canon, secondary reference, editorial interpretation, and image provenance.
-- Added `src/components/ChimeraAntReferenceArchivePortals.jsx` and a dedicated desktop-only stylesheet.
-- Preserved the stable `chimera-ending`, `chimera-adaptation`, `chimera-records`, and `chimera-sources` section shells while hiding only their legacy generic children.
-- Integrated the four reference portals through `ChimeraAntPhaseArchive.jsx`.
-- Added `scripts/audit-chimera-ant-batch-10.mjs` and registered `npm run audit:chimera-ant-batch-10`.
+## Batch 11 record
 
-### Verification
+### Implemented
 
-- The ending model contains exactly five ordered causal records and five unique outcome records.
-- Every ending event has both a stated cause and consequence plus a Hunterpedia episode source.
-- The adaptation model contains exactly seven ordered phase rows, four medium-comparison records, and inclusive totals of 133 manga chapters and 61 anime episodes.
-- The records system explicitly warns that the seven phase labels are editorial navigation rather than official production labels and closes its scope at Chapter 318 and Episode 136.
-- The source directory contains four groups with at least two Hunterpedia/Fandom references each and assigns a stated evidence purpose to every group.
-- The component uses table semantics for chapter/episode correspondence and explicit causal labels for the ending chain.
-- The stylesheet uses fixed desktop fields: five outcome columns, four record/evidence columns, two adaptation/source columns, and no mobile-width breakpoint.
-- Its only media query respects reduced-motion preferences.
-- GitHub reports six forward implementation commits from the Batch 9 ledger, six changed files, and no branch divergence.
-- GitHub exposes no CI status for the pre-ledger implementation head. The connector cannot execute the Batch 8–10 npm audits, Vite build, or browser rendering, so runtime compilation and visual verification remain unconfirmed rather than being claimed as passed.
+- Fixed the Batch 10 records-directory dead-control risk in `ChimeraAntReferenceArchivePortals.jsx`.
+- Record actions now use the page’s `onNavigate` callback when supplied and a deterministic hash-router fallback when the callback is unavailable.
+- Added `scripts/audit-chimera-ant-final.mjs`.
+- The final static audit checks the 1180px minimum desktop contract, 92vw/1760px canvas rules, fifteen section ids, seven contiguous phases, twenty contiguous episode groups, palace/endgame system counts, all forty supporting records, reference-system totals, portal integration, source boundaries, and the absence of mobile-width media queries.
+- Added `scripts/chimera-ant-final-qa.mjs`.
+- The browser QA opens the Chimera Ant route at 1366, 1600, 1920, and 2560 pixels and checks portal mounting, all major record counts, phase and reading-rail interaction, hidden legacy bodies, duplicate ids, broken images, console/runtime errors, horizontal overflow, DOM size, transfer size, and full-page screenshots.
+- Registered `npm run audit:chimera-ant-final`, `npm run qa:chimera-ant`, and `npm run verify:chimera-ant`.
+- Added `.github/workflows/chimera-ant-final-qa.yml` to install dependencies, run the Batch 8–11 audits, execute a Vite production build, install Chromium, run all four desktop viewports, and retain screenshot/report artifacts.
 
-### Risks carried into Batch 11
+### Verification obtained through connected tools
 
-- Both reference systems use React portals and require browser confirmation that all four targets mount after the destination sections exist and that hidden legacy children leave no residual spacing.
-- The records action callbacks are wired through the phase archive contract, but the current route component does not yet pass `onNavigate` into that contract; Batch 11 must either pass the callback or convert the actions to verified links.
-- The five-column outcome field, adaptation table, source groups, and earlier dense systems require collision, overflow, crop, and reading-size inspection at 1366, 1600, 1920, and 2560 pixel widths.
-- The chapter-to-episode phase correspondence is editorial and should be fact-checked against chapter/episode endpoints during the final content audit.
-- Hunterpedia/Fandom remains a secondary reference. Exact scene wording and composition must remain attributed to the manga or anime rather than inferred from the secondary index.
-- The Batch 10 audit exists in the repository but has not been executed by CI or a connected runtime.
+- GitHub accepted every Batch 11 implementation commit on `chimera-ant-retransform` without branch conflict.
+- The final navigation fallback is present in the committed source and uses the project’s established hash-route shape.
+- The QA workflow is committed to the target branch and is configured for both branch pushes and manual dispatch.
+- GitHub currently exposes no combined status or workflow run for the workflow commit through the connected API.
+- The container cannot clone the repository because outbound DNS resolution for `github.com` is unavailable, so the audits, Vite build, Chromium run, screenshots, and measured budgets could not be executed locally during this run.
+
+### Completion gate still open
+
+Batch 11 is not marked complete merely because verification code exists. Completion requires an actual successful run with:
+
+1. `npm run verify:chimera-ant`
+2. `npx vite build`
+3. `npm run qa:chimera-ant`
+4. Passing screenshots and overflow checks at 1366, 1600, 1920, and 2560 pixels
+5. No unresolved runtime, source, image, accessibility, or performance failures
+
+### Risks
+
+- GitHub Actions may be disabled, delayed, or restricted for this branch; no run is currently visible through the connector.
+- The dense palace, endgame, character, Nen, adaptation, and outcome layouts remain visually unproven until Chromium QA runs.
+- The browser script may identify genuine overflow or may require selector adjustment if the production router exposes the route under a different hash shape.
+- The workflow uses `npx vite build` rather than the repository’s broader release command so unrelated Succession or Greed Island release gates do not obscure Chimera Ant-specific verification.
 
 ### Next action
 
-Execute Batch 11: obtain a runnable checkout or CI path, run the dedicated Chimera Ant audits and full Vite build, inspect the page at all four desktop target widths, fix portal mounting and navigation, correct overflow/crops/spacing, verify image and source provenance, measure performance, and only then mark the redesign fully complete and disable the automation.
+Wait for or obtain the first executable QA result. If it fails, read the workflow logs and screenshot artifact, fix only the reported Batch 11 defects, rerun the same gate, and keep this automation active. When all static audits, Vite compilation, and four-width browser checks pass, change Batch 11 to Complete, record the final evidence, and disable the Chimera Ant Redesign automation.
