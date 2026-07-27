@@ -5,7 +5,7 @@ const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(`Polish audit failed: ${message}`); };
 
-const [safeImage, blackWhale, worldAtlas, worldMap, encyclopedia, familyTree, royalTree, royalTreeNodes, royalTreeModel, royalTreeBaseCss, royalTreeModuleCss, royalTreeInteractionCss, royalNetworks, archiveShell, archiveContrast, deepContrast, nenFixes, timeline, successionDossier, css, visualQa] = await Promise.all([
+const [safeImage, blackWhale, worldAtlas, worldMap, encyclopedia, familyTree, royalTree, royalTreeNodes, royalTreeModel, royalTreeBaseCss, royalTreeModuleCss, royalTreeInteractionCss, royalTreeInspectorCss, royalNetworks, archiveShell, archiveContrast, deepContrast, nenFixes, timeline, successionDossier, css, visualQa] = await Promise.all([
   read('src/components/SafeImage.jsx'),
   read('src/components/BlackWhaleGuide.jsx'),
   read('src/components/WorldAtlas.jsx'),
@@ -18,6 +18,7 @@ const [safeImage, blackWhale, worldAtlas, worldMap, encyclopedia, familyTree, ro
   read('src/components/succession/RoyalFamilyGuardTree.css'),
   read('src/components/succession/RoyalFamilyGuardTreeFixes.css'),
   read('src/components/succession/RoyalFamilyBoardInteractionFixes.css'),
+  read('src/components/succession/RoyalFamilyInspector.css'),
   read('src/data/successionProtectionNetworks.js'),
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionArchiveContrastFixes.css'),
@@ -30,7 +31,7 @@ const [safeImage, blackWhale, worldAtlas, worldMap, encyclopedia, familyTree, ro
 ]);
 
 const royalTreeSource = `${royalTree}\n${royalTreeNodes}\n${royalTreeModel}`;
-const royalTreeCss = `${royalTreeBaseCss}\n${royalTreeModuleCss}\n${royalTreeInteractionCss}`;
+const royalTreeCss = `${royalTreeBaseCss}\n${royalTreeModuleCss}\n${royalTreeInteractionCss}\n${royalTreeInspectorCss}`;
 
 assert(safeImage.includes("data-image-loaded={loaded ? 'true' : 'false'}"), 'SafeImage must expose a deterministic loaded state');
 assert(css.includes(".fandom-image:has(.safe-image[data-image-loaded='false'])") && css.includes(".beast-grid figure:has(.safe-image[data-image-loaded='false'])"), 'unavailable media must collapse instead of leaving blank frames');
@@ -45,13 +46,28 @@ assert(royalTreeNodes.includes('onAvailabilityChange={setAvailable}') && royalTr
 assert(royalTree.includes('dossierByOrder.get(connection.princeOrder)') && royalTree.includes('.filter((character) => character && !excluded.has(normalizeLookup(character.name)))'), 'mafia previews must exclude duplicate leaders and connected royal sponsors');
 assert(royalTree.includes("onNavigate?.('princes', { prince: record.openTarget.order })"), 'Open dossier must enter the dedicated prince workspace');
 assert(royalTreeCss.includes('.royal-map__connectors') && royalTreeCss.includes('.royal-map__prince-node') && royalTreeCss.includes('.royal-map__queen-node') && royalTreeCss.includes('.royal-map__guard-strip'), 'the map must retain visible cross-canvas relationships, compact prince nodes, queen junctions, and embedded protection strips');
-assert(royalTreeNodes.includes('{guards.map((guard) =>') && !royalTreeNodes.includes('guards.slice(') && royalTreeCss.includes('grid-template-columns: repeat(9, minmax(0, 1fr))'), 'every documented prince guard must render in the owned two-row protection grid instead of being hidden behind a remainder count');
+assert(royalTreeNodes.includes('{guards.map((guard) =>') && !royalTreeNodes.includes('guards.slice(') && royalTreeCss.includes('grid-template-columns: repeat(9, minmax(0, 1fr))'), 'every documented prince guard must render in the owned protection grid instead of being hidden behind a remainder count');
 assert(royalTreeSource.includes('abilityLabelFor') && royalTreeSource.includes('forceMemberRecordFor'), 'the single inspector must surface abilities and essentials for guards and mafia members');
 assert(
   royalTreeNodes.includes('group.leaderEntity && <Portrait')
     && royalTreeNodes.includes('royal-map__force-summary${group.leaderEntity')
     && royalTreeCss.includes('.royal-map__force-summary.has-leader'),
   'each mafia family must use its boss portrait as the group-level visual anchor',
+);
+assert(
+  royalTreeNodes.includes('completeForceMembers(group)')
+    && royalTreeNodes.includes('rosterGroupById.get(group.key)')
+    && royalTreeNodes.includes('getOrganizationMembers(group.organization.id)')
+    && royalTreeNodes.includes("['Members indexed', String(members.length)]")
+    && royalTreeCss.includes('grid-template-columns: repeat(9, minmax(0, 1fr))'),
+  'mafia families must merge the full canonical and maintained rosters rather than silently truncating member portraits',
+);
+assert(
+  royalTreeNodes.includes('assignedGuardRecords(record, prince)')
+    && royalTreeNodes.includes('getAssignmentSnapshot(entityId)')
+    && royalTreeNodes.includes('rosterMemberByName')
+    && royalTreeNodes.includes('portrait={guard.portrait}'),
+  'prince protection circles must merge named canonical assignments and roster portrait fallbacks with the maintained guard seed',
 );
 assert(
   royalTree.includes("activeRecord?.kind === 'queen'")
@@ -69,7 +85,19 @@ assert(
     && royalTreeCss.includes('.royal-map__controls'),
   'the relationship board must support mouse, touch, pinch, keyboard, fit, and reset map navigation',
 );
-assert(royalTreeCss.includes('width: min(278px') && royalTreeCss.includes('max-height: min(430px') && royalTree.includes('onPreviewHold={holdPreview}') && royalTreeNodes.includes('onMouseEnter={onPreviewHold}'), 'the floating inspector must remain compact, bounded, and reachable from a hovered record');
+assert(
+  royalTreeNodes.includes('royal-map__inspector-dragbar')
+    && royalTreeNodes.includes('onPointerDown={beginDrag}')
+    && royalTreeNodes.includes("sessionStorage.setItem('royal-map-inspector-position'")
+    && royalTreeNodes.includes('getCharacterCurrentState')
+    && royalTreeNodes.includes('getCharacterRoleProfile')
+    && royalTreeNodes.includes('getRelationshipSnapshot')
+    && royalTreeNodes.includes('getAssignmentSnapshot')
+    && royalTreeInspectorCss.includes('position: fixed !important')
+    && royalTreeInspectorCss.includes('.royal-map__inspector-ledger'),
+  'the universal inspector must be draggable and expose canonical state, role, assignment, relationship, and source detail for every record type',
+);
+assert(royalTree.includes('onPreviewHold={holdPreview}') && royalTreeNodes.includes('onMouseEnter={onPreviewHold}'), 'the floating inspector must remain reachable from a hovered record');
 assert(royalNetworks.includes('categorizedActorsByPrince') && royalNetworks.includes("actor('Izunavi', 'kurapika-placement'") && !royalNetworks.includes('roomText:'), 'royal networks must use explicit assignments instead of prose-based team inference');
 assert(royalTreeCss.includes('@media (prefers-reduced-motion: reduce)') && royalTreeCss.includes('@media (hover: none)'), 'the relationship map must retain restrained reduced-motion and touch behavior');
 assert(archiveShell.includes("import './SuccessionArchiveContrastFixes.css';") && archiveShell.includes("import './SuccessionArchiveDeepContrastFixes.css';") && archiveShell.includes("import './SuccessionArchiveNenFixes.css';"), 'the archive shell must load shared, deep, and Nen-specific workspace repair layers');
@@ -92,4 +120,4 @@ assert(visualQa.includes('pendingImages') && visualQa.includes('audit.pendingIma
 const readerText = [blackWhale, worldAtlas, worldMap, encyclopedia, familyTree, royalTreeSource, timeline].join('\n');
 assert(!/image placeholder|placeholder image/i.test(readerText), 'reader-facing placeholder-image copy is forbidden');
 
-console.log('Polish audit passed: deterministic media; progressive rooms; clickable ship hotspots; concurrent timeline lanes; pannable Royal Family intelligence plane with portrait queen junctions, blue maternal focus lines, complete guards, family-boss portraits, embedded beasts, compact inspector, and accessible view controls; complete Succession contrast ownership; repaired Nen card layout; contained uncropped imagery.');
+console.log('Polish audit passed: deterministic media; progressive rooms; clickable ship hotspots; concurrent timeline lanes; pannable Royal Family intelligence plane with complete family and guard rosters, portrait fallbacks, draggable evidence-rich universal dossier, portrait queen junctions, blue maternal focus lines, embedded beasts, and accessible view controls; complete Succession contrast ownership; repaired Nen card layout; contained uncropped imagery.');

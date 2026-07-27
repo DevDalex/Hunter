@@ -1,0 +1,268 @@
+/* Universal draggable intelligence dossier and complete roster presentation. */
+
+.royal-map .royal-map__force-members {
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 2px;
+  padding-top: 4px;
+}
+
+.royal-map .royal-map__force-member {
+  gap: 0;
+  min-width: 0;
+  padding: 1px;
+}
+
+.royal-map .royal-map__force-member .royal-map__portrait.is-compact,
+.royal-map .royal-map__force-member .royal-map__portrait-fallback.is-compact {
+  width: 19px;
+  height: 22px;
+}
+
+.royal-map .royal-map__force-member small {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.royal-map .royal-map__force-group {
+  min-height: 0;
+  padding: 5px;
+}
+
+.royal-map .royal-map__guard-strip {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.royal-map .royal-map__inspector,
+html:has(.succession-royal-hierarchy-workspace) .royal-map .royal-map__inspector {
+  position: fixed !important;
+  z-index: 120;
+  top: 86px;
+  right: 18px;
+  bottom: auto;
+  display: grid;
+  width: min(360px, calc(100vw - 16px)) !important;
+  max-height: min(78dvh, 720px) !important;
+  overflow: auto;
+  border: 1px solid #5f584d;
+  border-radius: 9px;
+  background: #171715;
+  color: #f5efe2;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .42), 0 0 0 1px rgba(223, 181, 93, .12);
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.royal-map .royal-map__inspector.is-expanded,
+html:has(.succession-royal-hierarchy-workspace) .royal-map .royal-map__inspector.is-expanded {
+  width: min(480px, calc(100vw - 16px)) !important;
+}
+
+.royal-map .royal-map__inspector > .royal-map__inspector-dragbar {
+  position: sticky;
+  z-index: 4;
+  top: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 6px 8px;
+  border-bottom: 1px solid #4c4740;
+  background: #211f1b;
+  cursor: grab;
+  touch-action: none;
+}
+
+.royal-map .royal-map__inspector.is-dragging > .royal-map__inspector-dragbar { cursor: grabbing; }
+.royal-map .royal-map__inspector > .royal-map__inspector-dragbar:focus-visible { outline: 3px solid #4aa3e5; outline-offset: -3px; }
+.royal-map .royal-map__inspector > .royal-map__inspector-dragbar > svg { color: #dfb55d; }
+.royal-map .royal-map__inspector > .royal-map__inspector-dragbar > span {
+  overflow: hidden;
+  color: #dfb55d;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .09em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.royal-map .royal-map__inspector > .royal-map__inspector-dragbar button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid #625c52;
+  border-radius: 4px;
+  background: #171715;
+  color: #f5efe2;
+  cursor: pointer;
+}
+
+.royal-map .royal-map__inspector > .royal-map__inspector-dragbar button:hover,
+.royal-map .royal-map__inspector > .royal-map__inspector-dragbar button:focus-visible {
+  border-color: #dfb55d;
+  color: #ffe7ad;
+}
+
+.royal-map .royal-map__inspector > .royal-map__inspector-dragbar button:disabled { opacity: .35; cursor: default; }
+
+.royal-map .royal-map__inspector-identity {
+  grid-template-columns: 82px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid #3f3b35;
+}
+
+.royal-map .royal-map__inspector-identity > .royal-map__portrait,
+.royal-map .royal-map__inspector-identity > .royal-map__portrait-fallback {
+  width: 82px;
+  height: 92px;
+  border-color: #7c7468;
+  background: #f4efe4;
+}
+
+.royal-map .royal-map__inspector h3 {
+  margin: 0;
+  color: #fff8e8;
+  font: 600 24px/1.02 Georgia, serif;
+}
+
+.royal-map .royal-map__inspector p {
+  margin: 6px 0 0;
+  color: #d8d0c5;
+  font-size: 11px;
+  line-height: 1.48;
+}
+
+.royal-map__inspector-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #3f3b35;
+}
+
+.royal-map__inspector-chips span {
+  padding: 3px 7px;
+  border: 1px solid #5d574e;
+  border-radius: 999px;
+  background: #24211c;
+  color: #e7d7b7;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.royal-map .royal-map__inspector > section,
+.royal-map__inspector-expanded > section {
+  padding: 9px 11px;
+  border-top: 1px solid #3f3b35;
+}
+
+.royal-map .royal-map__inspector section > small,
+.royal-map__inspector-expanded section > small {
+  color: #dfb55d;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.royal-map .royal-map__inspector dl {
+  margin: 0;
+  padding: 0 11px 8px;
+}
+
+.royal-map .royal-map__inspector dl > div {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 8px;
+  padding: 7px 0;
+  border-top: 1px solid #3f3b35;
+}
+
+.royal-map .royal-map__inspector dt {
+  color: #bdb4a8;
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.royal-map .royal-map__inspector dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.royal-map__inspector-expanded h4 {
+  margin: 5px 0 0;
+  color: #fff5dd;
+  font-size: 13px;
+}
+
+.royal-map__inspector-expanded ul {
+  margin: 7px 0 0;
+  padding-left: 18px;
+  color: #d8d0c5;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.royal-map__inspector-ledger {
+  display: grid;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.royal-map__inspector-ledger article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 8px;
+  padding: 7px 8px;
+  border: 1px solid #454038;
+  border-radius: 5px;
+  background: #201e1a;
+}
+
+.royal-map__inspector-ledger strong { color: #fff3d4; font-size: 11px; }
+.royal-map__inspector-ledger span,
+.royal-map__inspector-ledger em { color: #c2b69f; font-size: 9px; font-style: normal; }
+.royal-map__inspector-ledger p { grid-column: 1 / -1; margin: 2px 0 0 !important; }
+
+.royal-map__inspector-sources { columns: 2; column-gap: 20px; }
+.royal-map__inspector-sources li { break-inside: avoid; margin-bottom: 4px; }
+
+.royal-map .royal-map__inspector-open {
+  position: sticky;
+  bottom: 0;
+  min-height: 42px;
+  margin: 10px;
+  padding: 8px 11px;
+  border-radius: 4px;
+  background: #2b271f;
+}
+
+.royal-map__inspector.is-compact .royal-map__inspector-expanded { display: none; }
+
+@media (max-width: 760px) {
+  .royal-map .royal-map__inspector,
+  html:has(.succession-royal-hierarchy-workspace) .royal-map .royal-map__inspector,
+  .royal-map .royal-map__inspector.is-expanded,
+  html:has(.succession-royal-hierarchy-workspace) .royal-map .royal-map__inspector.is-expanded {
+    width: min(390px, calc(100vw - 12px)) !important;
+    max-height: min(72dvh, 620px) !important;
+  }
+
+  .royal-map__inspector-sources { columns: 1; }
+}
