@@ -8,8 +8,8 @@ Branch: `chimera-ant-retransform`
 |---:|---|---|
 | 1 | Complete | Added `src/data/chimeraAntExperience.js` and `docs/CHIMERA-ANT-RETRANSFORM.md`. |
 | 2 | Complete | Added the dedicated `ChimeraAntPage`, wide desktop canvas, sticky reading rail, route wiring, and section/phase progress behavior. |
-| 3 | Next | Hero, Arc at a Glance overview, and proportional episode-phase rail. |
-| 4 | Pending | Shared phase architecture. |
+| 3 | Complete | Rebuilt the cinematic hero, Arc at a Glance orientation spread, and proportional seven-phase episode rail. |
+| 4 | Next | Shared phase headers, image spreads, episode-group records, and distinct composition hooks. |
 | 5 | Pending | Phases I and II. |
 | 6 | Pending | Phases III and IV. |
 | 7 | Pending | Phase V palace-invasion system. |
@@ -73,6 +73,35 @@ Branch: `chimera-ant-retransform`
 - The seven-phase list is functional but not yet the proportional episode rail approved for Batch 3.
 - Existing generic story data still supplies the supporting section copy until the later content-specific batches replace it.
 
+## Batch 3 record
+
+### Completed
+
+- Replaced the temporary shell hero with a full cinematic composition using the existing arc artwork, layered veil, subtle dossier grid, large editorial title, route controls, field classification, and a five-column factual strip.
+- Added explicit inclusive counts for the manga and anime ranges so the hero shows 133 chapters and 61 episodes without hardcoding the totals.
+- Added a complete Arc at a Glance spread with the central conflict, a three-step Discover → Contain → Survive escalation path, and six dense orientation records.
+- Replaced the temporary vertical phase ledger with a proportional seven-segment episode rail. Segment widths are derived from each phase’s inclusive episode count: 10, 10, 7, 8, 11, 10, and 5.
+- Added interactive selected-phase detail showing its episode range, share of the arc, opening condition, turning point, and closing condition.
+- Preserved the Batch 2 reading rail while decoupling phase scroll observation until Batch 4 supplies real phase-section markers.
+- Added `src/components/ChimeraAntBatch3.css` as a focused visual layer so the Batch 2 shell remains stable and later batches can extend the page without rewriting the base stylesheet.
+
+### Verification
+
+- `ChimeraAntPage.jsx` imports the Batch 3 stylesheet after the base shell stylesheet, allowing the new hero and overview rules to override only their intended systems.
+- The proportional rail uses `flex: var(--phase-weight)` where each weight is calculated from the phase episode range rather than manually assigned percentages.
+- The phase totals add to 61 episodes, matching Episodes 76–136 inclusively.
+- Every rail segment remains keyboard-operable, exposes `aria-pressed`, and updates an `aria-live` detail region.
+- Hero navigation preserves the Greed Island, all-arcs, and Election destinations.
+- No mobile breakpoint was added; the only new media query disables transition motion when reduced motion is requested.
+- The connector still provides no browser runtime or Vite build execution, so screenshot-level layout verification and compile verification remain outstanding.
+
+### Risks carried into Batch 4
+
+- The phase rail currently changes the orientation detail only; it cannot yet jump to full phase spreads because those spreads do not exist.
+- The timeline beneath the rail is still the temporary generic seven-column record and will be replaced by the shared phase architecture.
+- The Arc at a Glance copy is now Chimera Ant-specific, while the remaining supporting sections still use generic arc data until their assigned batches.
+- The hero uses the repository’s current single arc artwork; later visual batches may add additional image crops or phase-specific art after provenance review.
+
 ### Next action
 
-Recompose the hero, build the Arc at a Glance overview, and replace the temporary phase ledger entry point with a proportional seven-phase episode rail while preserving the Batch 2 shell and reading rail.
+Build the shared phase architecture: reusable phase headers, image-led editorial spreads, episode-group records, opening/turning/closing state blocks, caption and source hooks, and composition-specific class contracts for all seven phases.
