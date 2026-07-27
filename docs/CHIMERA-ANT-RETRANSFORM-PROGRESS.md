@@ -16,7 +16,7 @@ Branch: `chimera-ant-retransform`
 | 8 | Complete | Finished Phase VI’s mirrored endgames and Phase VII’s poison, memory, final Gungi, survivor routes, and Election transition. |
 | 9 | Complete | Replaced six generic supporting sections with Chimera Ant-specific character, faction, location, Nen, conflict, and object archive systems. |
 | 10 | Complete | Replaced the ending, adaptation, records, and sources sections with causal, correspondence, provenance, and boundary systems. |
-| 11 | Complete | Static audits, Vite production build, Chromium interaction checks, performance budgets, and full-page desktop QA passed at 1366, 1600, 1920, and 2560 pixels. |
+| 11 | Complete | Static audits, Vite production build, Chromium interaction checks, text-size and contrast checks, performance budgets, segmented section evidence, and desktop QA passed at 1366, 1600, 1920, and 2560 pixels. |
 
 ## Completed batch summary
 
@@ -71,37 +71,42 @@ Branch: `chimera-ant-retransform`
 - Added `scripts/audit-chimera-ant-final.mjs`, `scripts/chimera-ant-final-qa.mjs`, and the `Chimera Ant Final QA` GitHub Actions workflow.
 - Opened draft pull request #57 solely to expose pull-request-triggered execution evidence without merging or claiming deployment.
 - Corrected the browser harness to open the application’s clean `/story/chimera-ant` route.
-- Added `src/components/ChimeraAntBatch11.css` as a desktop-only containment layer imported after the earlier phase styles.
+- Added `src/components/ChimeraAntBatch11.css` as a desktop-only containment and readability layer imported after the earlier phase styles.
 - Rebalanced the Phase III dispersal field and legend after the 1366px run exposed a right-edge collision.
 - Made the Phase V lane matrix fluid after the 1600px run exposed a fixed-width overflow.
 - Made the six-stage invasion clock fluid after the next 1366px run exposed its remaining horizontal overflow.
+- Added a 12px minimum for labels, metadata, captions, links, and compact record copy found below the readability floor.
+- Added surface-aware olive, royal, rose, and moss tokens for light and charcoal surfaces.
+- Added explicit opaque fallbacks beneath gradient-only Phase II headers so contrast remains deterministic.
+- Corrected the Arc at a Glance label, phase-rail eyebrow, and the two dark-phase footer labels that failed the contrast audit.
+- Added segmented 1600px screenshots for all fifteen sections and all seven phase systems in addition to viewport captures at every target width.
 - Added no viewport-width media query and no mobile-specific interaction or layout.
 
 ### Verification evidence
 
-- The final successful behavior commit is `b4eb963cab66202a9edec39da7f0d1a6eebb5ac5` on `chimera-ant-retransform`.
-- Pull request #57 produced successful `Chimera Ant Final QA` run `30294368506` against GitHub’s merge-test commit `13aba429aafbd7fba2659af017a75e4abc18a1df`.
+- The final successful visual-fix commit is `935ede1999ee1711899f01ef1e5e81d8b34a5ccd` on `chimera-ant-retransform`.
+- Pull request #57 produced successful `Chimera Ant Final QA` run `30301579522` against GitHub’s merge-test commit `765a54c4b96a22fc59a7b1fa69e70903b7d6a1df`.
 - `npm run verify:chimera-ant` passed, covering the Batch 8, Batch 9, Batch 10, and final Batch 11 structural audits.
 - `npx vite build` passed before browser execution.
 - Chromium installation and the four-width browser suite passed.
 - All fifteen page sections, seven episode phases, six supporting portals, four reference portals, seven phase controls, eight character dossiers, five faction records, six location stops, eight Nen rows, seven conflict rows, six object records, five ending-chain records, and seven adaptation rows mounted with their expected counts.
 - Phase selection and reading-rail navigation passed.
-- Hidden legacy bodies remained hidden; no duplicate ids, broken images, runtime errors, console errors, or horizontal viewport overflows were reported.
-- DOM and transfer budgets passed at every viewport with 4,742 DOM nodes, 27 loaded resources, and 2,657,355 transferred bytes.
-- Full-page results:
-  - 1366px: passed; page height 58,792px; screenshot `.chimera-ant-qa/chimera-ant-1366.png`.
-  - 1600px: passed; page height 53,490px; screenshot `.chimera-ant-qa/chimera-ant-1600.png`.
-  - 1920px: passed; page height 50,849px; screenshot `.chimera-ant-qa/chimera-ant-1920.png`.
-  - 2560px: passed; page height 51,300px; screenshot `.chimera-ant-qa/chimera-ant-2560.png`.
+- Hidden legacy bodies remained hidden; no duplicate ids, broken images, runtime errors, console errors, horizontal viewport overflows, text below 12px, or low-contrast audited microcopy were reported.
+- DOM and transfer budgets passed at every viewport with 4,742 DOM nodes, 27 loaded resources, and 2,663,757 transferred bytes.
+- Viewport results:
+  - 1366px: passed; page height 59,301px; screenshot `.chimera-ant-qa/chimera-ant-1366-viewport.png`.
+  - 1600px: passed; page height 53,772px; viewport screenshot plus fifteen section captures and seven phase captures.
+  - 1920px: passed; page height 51,107px; screenshot `.chimera-ant-qa/chimera-ant-1920-viewport.png`.
+  - 2560px: passed; page height 51,597px; screenshot `.chimera-ant-qa/chimera-ant-2560-viewport.png`.
 - The final report contained an empty `failures` collection.
 
 ### Remaining non-blocking risks
 
-- The page is intentionally very long and information-dense. Automated Chromium checks prove containment, interaction, media loading, and budgets, but future content additions should rerun the same four-width suite.
-- Screenshot artifacts are QA evidence rather than a substitute for optional human art-direction review.
-- Pull request #57 remains draft and unmerged; this ledger does not claim that the branch is deployed or released to production.
-- The repository’s separate Cloudflare full-stack workflow is outside this page-specific Batch 11 gate and is not treated as a deployment claim.
+- The page is intentionally very long and information-dense. Future content additions should rerun the same four-width suite because text growth can reintroduce clipping, overflow, or contrast regressions.
+- Automated checks verify size, contrast, containment, interaction, media loading, and budgets. Screenshot evidence still benefits from optional human art-direction review for subjective composition and image choice.
+- Pull request #57 remains draft and unmerged; this ledger does not by itself claim release through the repository’s normal merge process.
+- No mobile layout was added or evaluated because the redesign contract is desktop-only.
 
 ### Next action
 
-The eleven-batch desktop retransform is complete. Review pull request #57 and merge it through the repository’s normal process when ready; no further redesign batch remains.
+Review the segmented section and phase screenshots, then merge pull request #57 through the repository’s normal process when satisfied. No redesign batch remains.
