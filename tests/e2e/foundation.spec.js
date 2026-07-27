@@ -7,6 +7,7 @@ const routes = [
 
 for (const route of routes) {
   test(`${route.name} renders without runtime errors`, async ({ page }) => {
+    /** @type {string[]} */
     const runtimeErrors = [];
     page.on('pageerror', (error) => runtimeErrors.push(error.message));
 
