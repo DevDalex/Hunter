@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  claimSchema,
-  episodeRangeSchema,
-  mediaManifestSchema,
-  mediaRecordSchema,
-} from './archiveSchemas.js';
+import { claimSchema, episodeRangeSchema, mediaManifestSchema, mediaRecordSchema } from './archiveSchemas.js';
 
 describe('archive schemas', () => {
   it('accepts ordered episode ranges', () => {
