@@ -1,6 +1,7 @@
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
+import './verify-archive-records.mjs';
 import { mediaManifest } from '../src/media/mediaManifest.js';
 import { mediaManifestSchema } from '../src/schemas/archiveSchemas.js';
 
