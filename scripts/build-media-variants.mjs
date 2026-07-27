@@ -2,8 +2,10 @@ import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import sharp from 'sharp';
 import { mediaManifest } from '../src/media/mediaManifest.js';
+import { mediaManifestSchema } from '../src/schemas/archiveSchemas.js';
 
 const root = process.cwd();
+const validatedManifest = mediaManifestSchema.parse(mediaManifest);
 
 /** @param {number} value @param {number} minimum @param {number} maximum */
 const clamp = (value, minimum, maximum) => Math.min(Math.max(value, minimum), maximum);
@@ -50,7 +52,7 @@ function applyFormat(pipeline, format, quality) {
 
 let generated = 0;
 
-for (const record of mediaManifest.records) {
+for (const record of validatedManifest.records) {
   if (!record.sourcePath) continue;
 
   const sourcePath = path.resolve(root, record.sourcePath);
