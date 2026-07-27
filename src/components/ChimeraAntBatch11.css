@@ -166,7 +166,9 @@
 .chimera-ant-page .chimera-dispersal-system__occupation li p,
 .chimera-ant-page .chimera-preparation-system__track li p,
 .chimera-ant-page .chimera-preparation-system__readiness article p,
-.chimera-ant-page .chimera-invasion-system__zone p {
+.chimera-ant-page .chimera-invasion-system__zone p,
+.chimera-ant-page .chimera-supporting-portal-root dd,
+.chimera-ant-page .chimera-reference-root dd {
   font-size: 0.78rem !important;
   line-height: 1.45;
 }
