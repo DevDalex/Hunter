@@ -65,25 +65,25 @@ assert(!app.includes('StudyNotebook') && !app.includes("import SourceRegistry"),
 assert(css.includes('--content: 1240px') && css.includes('--wide: 1540px'), 'editorial content and visual-wide measures are missing');
 assert(css.includes('.ship-manifest__table-wrap, .assignment-table-wrap { width: 100%; min-width: 0; max-width: 100%; overflow-x: auto;'), 'wide tables must remain inside named scroll frames');
 assert(familyTree.includes('RoyalFamilyGuardTree'), 'the unified royal family renderer is not mounted');
-assert(familyTree.includes('Tap any royal, guard, or mafia portrait to pin its essentials.') && !familyTree.includes('protection circle below'), 'the Family Tree mobile hint must describe the embedded dossier board rather than the retired orbit layout');
-for (const token of ['royal-board__king', 'royal-board__mafia-rail', 'royal-board__mafia-members', 'royal-board__branch-grid', 'royal-board__branch-column', 'royal-board__queen-anchor', 'royal-board__prince-card', 'royal-board__guard-grid']) {
-  assert(royalTreeSource.includes(token), `the Royal Family dossier board is missing ${token}`);
+assert(familyTree.includes('Tap any royal, guard, or mafia portrait to pin its essentials.') && !familyTree.includes('protection circle below'), 'the Family Tree mobile hint must describe the relationship map rather than the retired orbit layout');
+for (const token of ['PRINCE_LAYOUT', 'QUEEN_LAYOUT', 'FORCE_LAYOUT', 'RoyalMapConnectors', 'royal-map__viewport', 'royal-map__canvas', 'royal-map__king', 'royal-map__forces', 'royal-map__queen-node', 'royal-map__prince-node', 'royal-map__guard-strip', 'royal-map__inspector']) {
+  assert(royalTreeSource.includes(token), `the Royal Family relationship map is missing ${token}`);
 }
-for (const selector of ['.royal-board__canvas', '.royal-board__mafia-card', '.royal-board__mafia-members', '.royal-board__branch-column', '.royal-board__branch', '.royal-board__beast-layer', '.royal-board__guard-tile']) {
-  assert(royalTreeCss.includes(selector), `the Royal Family dossier-board CSS is missing ${selector}`);
+for (const selector of ['.royal-map__viewport', '.royal-map__canvas', '.royal-map__connectors', '.royal-map__forces', '.royal-map__king', '.royal-map__queen-node', '.royal-map__prince-node', '.royal-map__guard-strip', '.royal-map__inspector']) {
+  assert(royalTreeCss.includes(selector), `the Royal Family relationship-map CSS is missing ${selector}`);
 }
-assert(royalTreeSource.includes('guardianBeasts') && royalTreeSource.includes('mafiaConnections') && royalTreeSource.includes('buildProtectionNodes') && royalTreeSource.includes('getOrganizationMembers'), 'the dossier board must combine beasts, mafia members, selective links, and protection circles');
-assert(!royalTreeNodes.includes('<span {direct}') && !royalTreeNodes.includes('setHoverdKey'), 'the Royal Family board contains a known JSX corruption or misspelled state setter');
-assert(royalTree.includes('const selectedBranchIndex = royalTree.findIndex') && !royalTree.includes('Math.max(0, royalTree.findIndex'), 'an unresolved prince must not silently highlight the first maternal branch');
-assert(royalTree.includes("onNavigate?.('princes', { prince: prince.order })") && royalTreeNodes.includes('openPrince(prince)'), 'prince dossier actions must use the dedicated prince route rather than the generic character workspace');
-assert(royalTree.includes("import './RoyalFamilyBoardInteractionFixes.css';"), 'the Royal Family interaction repair layer is not loaded');
-assert(royalTreeInteractionCss.includes('.royal-board__mafia-card > button:not(:hover):not(:focus-visible):not(.is-locked)') && royalTreeInteractionCss.includes('.royal-board__branch-column:last-child .royal-board__hover-card'), 'mafia tooltip isolation and inward right-column placement are missing');
-assert(!royalTree.includes('<main className="royal-board__main">'), 'the embedded Royal Family board must not create a nested main landmark');
+assert(!royalTreeSource.includes('royal-board__branch-grid') && !royalTreeSource.includes('royal-board__branch-column'), 'the retired stacked household architecture returned');
+assert(royalTreeSource.includes('guardianBeasts') && royalTreeSource.includes('mafiaConnections') && royalTreeSource.includes('buildProtectionNodes') && royalTreeSource.includes('getOrganizationMembers'), 'the map must combine beasts, mafia members, selective links, and protection circles');
+assert(!royalTreeNodes.includes('<span {direct}') && !royalTreeNodes.includes('setHoverdKey'), 'the Royal Family map contains a known JSX corruption or misspelled state setter');
+assert(royalTree.includes("onNavigate?.('princes', { prince: record.openTarget.order })"), 'prince dossier actions must use the dedicated prince route rather than the generic character workspace');
+assert(royalTree.includes("import './RoyalFamilyBoardInteractionFixes.css';"), 'the Royal Family interaction layer is not loaded');
+assert(royalTreeCss.includes('min-width: 1520px') && royalTreeCss.includes('overflow: auto') && royalTreeCss.includes('position: absolute'), 'the wide coordinate map must preserve spatial relationships inside a scrollable viewport');
+assert(!royalTree.includes('<main className="royal-map__main">'), 'the embedded Royal Family map must not create a nested main landmark');
 assert(css.includes('.interactive-ship-map__canvas { position: relative; min-height: 470px; }') && blackWhale.includes('ship-hotspot-layer'), 'the dominant clickable Black Whale canvas is missing');
 assert(css.includes('.entity-record-image img { width: 100%; height: 100%; max-height: 620px; object-fit: contain;') && css.includes('.room-card > figure img { width: 100%; height: 100%; object-fit: contain;'), 'portrait and room media must use uncropped contain framing');
 assert(css.includes('@media (max-width: 900px)') && css.includes('@media (max-width: 640px)') && css.includes('@media (max-width: 420px)'), 'tablet and phone layout boundaries are required');
-assert(royalTreeCss.includes('@media(max-width:1100px)') && royalTreeCss.includes('@media(max-width:760px)') && royalTreeCss.includes('@media(max-width:430px)'), 'the royal family dossier board needs desktop-collapse, tablet, and phone adaptations');
+assert(royalTreeCss.includes('@media (max-width: 1100px)') && royalTreeCss.includes('@media (max-width: 760px)') && royalTreeCss.includes('@media (max-width: 430px)'), 'the relationship map needs desktop-collapse, tablet, and phone adaptations');
 assert(worldAtlas.includes('Map as MapIcon') && worldAtlas.includes('new Map('), 'the World Atlas constructor guard is missing');
 assert(packageJson.includes('"qa:visual"') && packageJson.includes('"qa:architecture"'), 'the repeatable browser and architecture matrix commands are missing');
 
-console.log(`Layout audit passed: ${jsxFiles.length} JSX modules parsed by Vite Oxc; ${routeManifest.length} unique purposeful routes; ${successionReleaseRoutes.length} curated Succession release workspaces; one global Timeline; ${successionPages.length} legacy Succession screens; ${referencePages.length} Reference screens; Notebook absent; repaired Royal Family dossier board with embedded guards, beasts, queen anchors, mafia links, dedicated prince routing, isolated previews, and responsive inward tooltips; contained media and tables; dominant ship atlas; responsive editorial shell.`);
+console.log(`Layout audit passed: ${jsxFiles.length} JSX modules parsed by Vite Oxc; ${routeManifest.length} unique purposeful routes; ${successionReleaseRoutes.length} curated Succession release workspaces; one global Timeline; ${successionPages.length} legacy Succession screens; ${referencePages.length} Reference screens; Notebook absent; wide Royal Family relationship map with explicit coordinates, SVG connectors, compact prince nodes, queen junctions, outside forces, one inspector, and responsive scrolling; contained media and tables; dominant ship atlas; responsive editorial shell.`);
