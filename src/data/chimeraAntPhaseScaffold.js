@@ -7,6 +7,7 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'Kakin coast and NGL',
     participants: 'Gon · Killua · Kite · Neferpitou',
     media: Object.freeze({
+      mediaId: 'media:chimera-ant:kite-phase',
       image: '/media/portraits/kite.webp',
       position: 'center 16%',
       alt: 'Kite during the Chimera Ant investigation that leads Gon and Killua into NGL',
@@ -26,6 +27,7 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'NGL perimeter and Hunter staging areas',
     participants: 'Gon · Killua · Biscuit · Knuckle · Shoot · Meruem · Colt',
     media: Object.freeze({
+      mediaId: 'media:chimera-ant:meruem-phase',
       image: '/media/portraits/meruem.webp',
       position: 'center 14%',
       alt: 'Meruem, whose birth fractures the Chimera Ant colony while the Hunters rebuild their operation',
@@ -45,6 +47,7 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'Meteor City and East Gorteau',
     participants: 'Phantom Troupe · Meruem · Royal Guards · Ikalgo · Meleoron · Komugi',
     media: Object.freeze({
+      mediaId: 'media:chimera-ant:meruem-phase',
       image: '/media/portraits/meruem.webp',
       position: 'center 14%',
       alt: 'Meruem during the occupation of East Gorteau as the former colony disperses into separate threats',
@@ -64,6 +67,7 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'East Gorteau Royal Palace',
     participants: 'Meruem · Komugi · Knov · Morel · Palm · invasion team',
     media: Object.freeze({
+      mediaId: 'media:chimera-ant:komugi-phase',
       image: '/media/portraits/komugi.webp',
       position: 'center 12%',
       alt: 'Komugi, whose Gungi matches alter Meruem while the Hunter team prepares the palace invasion',
@@ -83,6 +87,7 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'Royal Palace and underground levels',
     participants: 'Extermination team · Royal Guards · Meruem · Komugi',
     media: Object.freeze({
+      mediaId: 'media:chimera-ant:netero-phase',
       image: '/media/portraits/isaac-netero.webp',
       position: 'center 10%',
       alt: 'Isaac Netero leading the aerial separation of Meruem during the Royal Palace invasion',
@@ -102,6 +107,7 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'Weapons test site and Peijin route',
     participants: 'Netero · Meruem · Gon · Pitou · Killua',
     media: Object.freeze({
+      mediaId: 'media:chimera-ant:gon-phase',
       image: '/media/portraits/gon-freecss.webp',
       position: 'center 12%',
       alt: 'Gon Freecss during the personal endgame that parallels Netero and Meruem’s institutional confrontation',
@@ -120,6 +126,7 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'East Gorteau and survivor routes',
     participants: 'Meruem · Komugi · Pouf · Youpi · Welfin · surviving Ants',
     media: Object.freeze({
+      mediaId: 'media:chimera-ant:komugi-phase',
       image: '/media/portraits/komugi.webp',
       position: 'center 14%',
       alt: 'Komugi, whose name restores Meruem’s memory and whose final Gungi game closes the Chimera Ant conflict',
