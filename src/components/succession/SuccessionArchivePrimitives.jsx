@@ -1,12 +1,14 @@
 import { useRef } from 'react';
-import { ArrowRight, BookOpen, ExternalLink, Link2 } from 'lucide-react';
+import { AlertTriangle, ArrowRight, BookOpen, Clock3, ExternalLink, Link2 } from 'lucide-react';
 import { EvidenceBadge, StatusPill } from '../ArchiveUI';
 import SafeImage from '../SafeImage';
 import {
   getEntityById,
+  getRecordCurrency,
   getRelatedEntities,
   getSourcesForEntity,
 } from '../../data/succession/successionData';
+import './SuccessionArchiveCurrency.css';
 
 const cx = (...parts) => parts.filter(Boolean).join(' ');
 const initials = (name = '') => name.split(/\s+/).filter(Boolean).map((part) => part[0]).slice(0, 2).join('').toUpperCase() || '?';
@@ -103,29 +105,64 @@ export function EntityLink({ entity: suppliedEntity, entityId, onNavigate, child
   </button>;
 }
 
+export function RecordCurrencyPanel({ entity: suppliedEntity, entityId, readingBoundary }) {
+  const entity = suppliedEntity || getEntityById(entityId);
+  const currency = entity ? getRecordCurrency(entity, readingBoundary) : null;
+  if (!currency) return null;
+  const gapLabel = currency.coverageGap?.from
+    ? `Ch. ${currency.coverageGap.from}–${currency.coverageGap.to}`
+    : currency.coverageGap
+      ? `Through Ch. ${currency.coverageGap.to}`
+      : 'None';
+  return <section className={cx('succession-record-currency', `is-${currency.state}`)} aria-label={`${entity.name || entity.id} research currency`}>
+    <dl className="succession-record-currency__metrics">
+      <div><dt>Reading boundary</dt><dd>Chapter {currency.readingBoundary}</dd></div>
+      <div><dt>Record verified through</dt><dd>{currency.verifiedLabel}</dd></div>
+      <div><dt>Coverage gap</dt><dd>{gapLabel}</dd></div>
+    </dl>
+    {currency.coverageGap && <div className="succession-record-currency__warning" role="status">
+      <AlertTriangle size={17} aria-hidden="true" />
+      <div><strong>This record is behind the selected boundary.</strong><span>Published material after {currency.verifiedLabel} is not represented as maintained evidence for this active record.</span></div>
+    </div>}
+    {!!(currency.recentChanges.length || currency.openQuestions.length) && <div className="succession-record-currency__details">
+      {!!currency.recentChanges.length && <section className="succession-record-currency__section">
+        <header><Clock3 size={14} aria-hidden="true" /><span>Recent changes</span></header>
+        <ul>{currency.recentChanges.map((change) => <li key={change}>{change}</li>)}</ul>
+      </section>}
+      {!!currency.openQuestions.length && <section className="succession-record-currency__section">
+        <header><AlertTriangle size={14} aria-hidden="true" /><span>Open questions</span></header>
+        <ul>{currency.openQuestions.map((question) => <li key={question}>{question}</li>)}</ul>
+      </section>}
+    </div>}
+  </section>;
+}
+
 export function EntityHeader({ entity, onNavigate }) {
   if (!entity) return null;
   const sources = getSourcesForEntity(entity.id);
   const chapterBoundary = entity.status?.asOfChapter || entity.chapterRange?.end || entity.chapter || null;
-  return <header className="succession-entity-header">
-    <EntityVisual entity={entity} eager />
-    <div className="succession-entity-header__copy">
-      <span>{entity.entityType.replaceAll('-', ' ')}</span>
-      <h2>{entity.name || entity.id}</h2>
-      {entity.summary && <p>{entity.summary}</p>}
-      <div className="succession-entity-header__badges">
-        <EvidenceBadge state={evidenceState(entity.canonLevel)}>{entity.canonLevel || 'canon'}</EvidenceBadge>
-        {entity.status?.life && <StatusPill tone="neutral">{entity.status.life}</StatusPill>}
-        {chapterBoundary && <StatusPill tone="neutral">As of Ch. {chapterBoundary}</StatusPill>}
-        <StatusPill tone="neutral">{sources.length} source{sources.length === 1 ? '' : 's'}</StatusPill>
+  return <>
+    <header className="succession-entity-header">
+      <EntityVisual entity={entity} eager />
+      <div className="succession-entity-header__copy">
+        <span>{entity.entityType.replaceAll('-', ' ')}</span>
+        <h2>{entity.name || entity.id}</h2>
+        {entity.summary && <p>{entity.summary}</p>}
+        <div className="succession-entity-header__badges">
+          <EvidenceBadge state={evidenceState(entity.canonLevel)}>{entity.canonLevel || 'canon'}</EvidenceBadge>
+          {entity.status?.life && <StatusPill tone="neutral">{entity.status.life}</StatusPill>}
+          {chapterBoundary && <StatusPill tone="neutral">As of Ch. {chapterBoundary}</StatusPill>}
+          <StatusPill tone="neutral">{sources.length} source{sources.length === 1 ? '' : 's'}</StatusPill>
+        </div>
+        {!!(entity.aliases || []).length && <div className="succession-entity-header__aliases"><b>Aliases</b><span>{entity.aliases.join(' · ')}</span></div>}
+        <div className="succession-entity-header__actions">
+          {entity.referenceUrl && <a className="succession-button succession-button--quiet" href={entity.referenceUrl} target="_blank" rel="noreferrer noopener">Hunterpedia <ExternalLink size={13} aria-hidden="true" /></a>}
+          {onNavigate && <button type="button" className="succession-button succession-button--quiet" onClick={() => onNavigate(entityWorkspaceTarget(entity), {})}>Back to workspace</button>}
+        </div>
       </div>
-      {!!(entity.aliases || []).length && <div className="succession-entity-header__aliases"><b>Aliases</b><span>{entity.aliases.join(' · ')}</span></div>}
-      <div className="succession-entity-header__actions">
-        {entity.referenceUrl && <a className="succession-button succession-button--quiet" href={entity.referenceUrl} target="_blank" rel="noreferrer noopener">Hunterpedia <ExternalLink size={13} aria-hidden="true" /></a>}
-        {onNavigate && <button type="button" className="succession-button succession-button--quiet" onClick={() => onNavigate(entityWorkspaceTarget(entity), {})}>Back to workspace</button>}
-      </div>
-    </div>
-  </header>;
+    </header>
+    <RecordCurrencyPanel entity={entity} />
+  </>;
 }
 
 export function SourceReference({ source: suppliedSource, sourceId, onNavigate }) {
