@@ -45,14 +45,14 @@ function PalaceSchematic({ palace }) {
         <strong>{zone.title}</strong>
         <p>{zone.state}</p>
       </article>)}
+    </div>
 
-      <div className="chimera-invasion-system__vector-key" aria-label="Entry vector evidence">
-        {palace.vectors.map((vector) => <article key={vector.id}>
-          <i className={`is-${vector.kind}`} />
-          <div><span>Episodes {vector.episodes}</span><strong>{vector.label}</strong></div>
-          <SourceLink href={vector.sourceHref}>Evidence</SourceLink>
-        </article>)}
-      </div>
+    <div className="chimera-invasion-system__vector-key" aria-label="Entry vector evidence">
+      {palace.vectors.map((vector) => <article key={vector.id}>
+        <i className={`is-${vector.kind}`} />
+        <div><span>Episodes {vector.episodes}</span><strong>{vector.label}</strong></div>
+        <SourceLink href={vector.sourceHref}>Evidence</SourceLink>
+      </article>)}
     </div>
   </section>;
 }
