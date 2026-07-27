@@ -5,17 +5,16 @@ const localMediaPathPattern = /^(public|src)\/[a-zA-Z0-9_./-]+$/;
 
 export const archiveIdSchema = z.string().trim().regex(archiveIdPattern, 'Use a namespaced archive id.');
 
+/** @param {string} label */
 const orderedRangeSchema = (label) =>
-  z
-    .tuple([z.number().int().nonnegative(), z.number().int().nonnegative()])
-    .superRefine(([start, end], context) => {
-      if (end < start) {
-        context.addIssue({
-          code: 'custom',
-          message: `${label} range must end at or after its start.`,
-        });
-      }
-    });
+  z.tuple([z.number().int().nonnegative(), z.number().int().nonnegative()]).superRefine(([start, end], context) => {
+    if (end < start) {
+      context.addIssue({
+        code: 'custom',
+        message: `${label} range must end at or after its start.`,
+      });
+    }
+  });
 
 export const episodeRangeSchema = orderedRangeSchema('Episode');
 export const chapterRangeSchema = orderedRangeSchema('Chapter');
@@ -140,4 +139,5 @@ export const mediaManifestSchema = z
     }
   });
 
+/** @param {unknown} input */
 export const parseMediaManifest = (input) => mediaManifestSchema.parse(input);
