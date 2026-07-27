@@ -1,0 +1,58 @@
+name: Foundation dependency bootstrap
+
+on:
+  push:
+    branches:
+      - chimera-ant-retransform
+    paths:
+      - .github/workflows/foundation-dependencies.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: foundation-dependency-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: chimera-ant-retransform
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install exact foundation dependencies
+        run: |
+          npm install --save-dev --save-exact \
+            @biomejs/biome \
+            @playwright/test \
+            @testing-library/dom \
+            @testing-library/jest-dom \
+            @testing-library/react \
+            @testing-library/user-event \
+            jsdom \
+            knip \
+            typescript \
+            vitest
+          npm install --save-exact sharp zod
+
+      - name: Commit synchronized manifest and lockfile
+        run: |
+          if git diff --quiet -- package.json package-lock.json; then
+            echo "Dependency files already synchronized."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          git commit -m "Add archive foundation dependencies"
+          git push origin HEAD:chimera-ant-retransform
