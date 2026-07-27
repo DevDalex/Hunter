@@ -1,0 +1,783 @@
+.chimera-ant-section[data-section-id="characters"] > .chimera-ant-character-ledger,
+.chimera-ant-section[data-section-id="factions"] > .chimera-ant-record-grid,
+.chimera-ant-section[data-section-id="locations"] > .chimera-ant-record-grid,
+.chimera-ant-section[data-section-id="nen"] > .chimera-ant-nen-ledger,
+.chimera-ant-section[data-section-id="nen"] > .chimera-ant-inline-action,
+.chimera-ant-section[data-section-id="conflicts"] > .chimera-ant-conflict-ledger,
+.chimera-ant-section[data-section-id="objects"] > .chimera-ant-record-grid {
+  display: none;
+}
+
+.chimera-supporting-portal-root {
+  position: relative;
+  margin-top: 34px;
+}
+
+.chimera-supporting-intro {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 24px;
+  align-items: start;
+  margin-bottom: 30px;
+  padding: 24px 26px;
+  border-top: 2px solid var(--chimera-moss);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.16);
+  background: color-mix(in srgb, var(--chimera-moss) 7%, transparent);
+}
+
+.chimera-ant-section--paper .chimera-supporting-intro {
+  border-top-color: var(--chimera-royal);
+  border-bottom-color: rgba(233, 230, 218, 0.16);
+  background: rgba(233, 230, 218, 0.055);
+}
+
+.chimera-supporting-intro__icon {
+  display: grid;
+  width: 50px;
+  height: 50px;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  color: var(--chimera-moss);
+}
+
+.chimera-ant-section--paper .chimera-supporting-intro__icon {
+  color: var(--chimera-bone);
+}
+
+.chimera-supporting-intro > div:nth-child(2) > span,
+.chimera-supporting-intro aside span,
+.chimera-supporting-phases span,
+.chimera-character-dossier__identity span,
+.chimera-character-dossier__fields dt,
+.chimera-faction-record > header > div > span,
+.chimera-faction-record dt,
+.chimera-location-route article > header > div > span,
+.chimera-location-route dt,
+.chimera-nen-matrix__head,
+.chimera-nen-matrix article header span,
+.chimera-conflict-operations__legend,
+.chimera-conflict-operations > ol > li > header span,
+.chimera-conflict-operations__sequence span,
+.chimera-object-cabinet > .chimera-object-cabinet__grid > article > header > div > span,
+.chimera-object-cabinet__body span {
+  font-size: 0.65rem;
+  font-weight: 760;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.chimera-supporting-intro > div:nth-child(2) > span {
+  color: var(--chimera-moss);
+}
+
+.chimera-ant-section--paper .chimera-supporting-intro > div:nth-child(2) > span {
+  color: var(--chimera-mist);
+}
+
+.chimera-supporting-intro h3 {
+  max-width: 900px;
+  margin: 7px 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 2.8vw, 3.5rem);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.chimera-supporting-intro p {
+  max-width: 86ch;
+  margin: 0;
+  color: rgba(29, 33, 26, 0.7);
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.chimera-ant-section--paper .chimera-supporting-intro p {
+  color: rgba(233, 230, 218, 0.72);
+}
+
+.chimera-supporting-intro aside {
+  display: grid;
+  min-width: 116px;
+  justify-items: end;
+  padding-left: 20px;
+  border-left: 1px solid rgba(29, 33, 26, 0.16);
+}
+
+.chimera-ant-section--paper .chimera-supporting-intro aside {
+  border-left-color: rgba(233, 230, 218, 0.16);
+}
+
+.chimera-supporting-intro aside strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 3.1rem;
+  font-weight: 500;
+  line-height: 0.95;
+}
+
+.chimera-supporting-intro aside span {
+  margin-top: 8px;
+  color: rgba(29, 33, 26, 0.56);
+}
+
+.chimera-ant-section--paper .chimera-supporting-intro aside span {
+  color: rgba(233, 230, 218, 0.55);
+}
+
+.chimera-supporting-source {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  width: fit-content;
+  color: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.chimera-supporting-source span {
+  border-bottom: 1px solid currentColor;
+}
+
+.chimera-supporting-phases {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.chimera-supporting-phases span {
+  padding: 5px 7px;
+  border: 1px solid rgba(29, 33, 26, 0.18);
+  background: rgba(255, 255, 255, 0.26);
+  color: rgba(29, 33, 26, 0.68);
+  font-size: 0.58rem;
+}
+
+.chimera-ant-section--paper .chimera-supporting-phases span,
+.chimera-nen-matrix .chimera-supporting-phases span,
+.chimera-object-cabinet .chimera-supporting-phases span {
+  border-color: rgba(233, 230, 218, 0.18);
+  background: rgba(233, 230, 218, 0.045);
+  color: rgba(233, 230, 218, 0.68);
+}
+
+/* Character command board */
+
+.chimera-character-command__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid rgba(29, 33, 26, 0.18);
+  border-left: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-character-dossier {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+  grid-template-rows: auto 1fr auto;
+  gap: 18px 24px;
+  min-height: 420px;
+  padding: 24px;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.chimera-character-dossier:nth-child(4n + 2),
+.chimera-character-dossier:nth-child(4n + 3) {
+  background: color-mix(in srgb, var(--chimera-moss) 5%, transparent);
+}
+
+.chimera-character-dossier__identity {
+  display: grid;
+  grid-column: 1;
+  grid-row: 1 / 3;
+  grid-template-rows: 230px auto;
+  gap: 16px;
+  align-content: start;
+}
+
+.chimera-character-dossier__identity figure,
+.chimera-character-dossier__token {
+  width: 100%;
+  height: 230px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(29, 33, 26, 0.2);
+  background: var(--chimera-charcoal);
+}
+
+.chimera-character-dossier__identity figure img,
+.chimera-character-dossier__identity figure .safe-image-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 14%;
+  filter: saturate(0.72) contrast(1.05);
+}
+
+.chimera-character-dossier__token {
+  display: grid;
+  place-items: center;
+  color: var(--chimera-bone);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 6rem;
+}
+
+.chimera-character-dossier__identity span {
+  color: var(--chimera-moss);
+}
+
+.chimera-character-dossier__identity h4 {
+  margin: 7px 0 4px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.chimera-character-dossier__identity small {
+  color: rgba(29, 33, 26, 0.58);
+  font-size: 0.72rem;
+}
+
+.chimera-character-dossier > .chimera-supporting-phases {
+  grid-column: 2;
+  align-self: start;
+}
+
+.chimera-character-dossier__fields {
+  display: grid;
+  grid-column: 2;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid rgba(29, 33, 26, 0.16);
+}
+
+.chimera-character-dossier__fields > div {
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr);
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.12);
+}
+
+.chimera-character-dossier__fields dt {
+  color: rgba(29, 33, 26, 0.56);
+}
+
+.chimera-character-dossier__fields dd {
+  margin: 0;
+  font-size: 0.79rem;
+  line-height: 1.52;
+}
+
+.chimera-character-dossier > .chimera-supporting-source {
+  grid-column: 2;
+  align-self: end;
+  color: var(--chimera-moss);
+}
+
+/* Faction field */
+
+.chimera-faction-field__axis {
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 20px;
+  color: rgba(233, 230, 218, 0.55);
+  font-size: 0.64rem;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.chimera-faction-field__axis i {
+  height: 1px;
+  background: linear-gradient(90deg, var(--chimera-moss), var(--chimera-royal));
+}
+
+.chimera-faction-field__grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.chimera-faction-record {
+  grid-column: span 6;
+  padding: 24px;
+  border-top: 4px solid var(--chimera-mist);
+  background: rgba(233, 230, 218, 0.055);
+}
+
+.chimera-faction-record:nth-child(3),
+.chimera-faction-record:nth-child(4),
+.chimera-faction-record:nth-child(5) {
+  grid-column: span 4;
+}
+
+.chimera-faction-record--human {
+  border-top-color: var(--chimera-moss);
+}
+
+.chimera-faction-record--ant {
+  border-top-color: var(--chimera-royal);
+}
+
+.chimera-faction-record--hybrid {
+  border-top-color: var(--chimera-olive);
+}
+
+.chimera-faction-record--occupied {
+  border-top-color: var(--chimera-rose);
+}
+
+.chimera-faction-record > header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.14);
+}
+
+.chimera-faction-record > header > i {
+  color: var(--chimera-mist);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  font-style: normal;
+}
+
+.chimera-faction-record > header > .chimera-supporting-phases {
+  grid-column: 1 / -1;
+}
+
+.chimera-faction-record > header > div > span,
+.chimera-faction-record dt {
+  color: var(--chimera-mist);
+}
+
+.chimera-faction-record h4 {
+  margin: 6px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.55rem;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.chimera-faction-record dl {
+  margin: 0;
+}
+
+.chimera-faction-record dl > div {
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.1);
+}
+
+.chimera-faction-record dd {
+  margin: 6px 0 0;
+  color: rgba(233, 230, 218, 0.75);
+  font-size: 0.79rem;
+  line-height: 1.55;
+}
+
+.chimera-faction-record > .chimera-supporting-source {
+  margin-top: 18px;
+  color: var(--chimera-mist);
+}
+
+/* Geographic route */
+
+.chimera-location-route {
+  --route-line: rgba(29, 33, 26, 0.22);
+}
+
+.chimera-location-route__line {
+  height: 3px;
+  margin: 0 7.5% -35px;
+  background: linear-gradient(90deg, var(--chimera-moss), var(--chimera-olive), var(--chimera-rose), var(--chimera-royal));
+}
+
+.chimera-location-route > ol {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chimera-location-route > ol > li {
+  display: grid;
+  grid-template-rows: 70px 1fr;
+  min-width: 0;
+}
+
+.chimera-location-route__marker {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+}
+
+.chimera-location-route__marker i {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 3px solid var(--chimera-bone);
+  border-radius: 50%;
+  background: var(--chimera-moss);
+  color: var(--chimera-bone);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  font-style: normal;
+  box-shadow: 0 0 0 1px rgba(29, 33, 26, 0.24);
+}
+
+.chimera-location-route > ol > li:nth-child(4) .chimera-location-route__marker i,
+.chimera-location-route > ol > li:nth-child(5) .chimera-location-route__marker i,
+.chimera-location-route > ol > li:nth-child(6) .chimera-location-route__marker i {
+  background: var(--chimera-rose);
+}
+
+.chimera-location-route__marker span {
+  width: 1px;
+  height: 28px;
+  background: var(--route-line);
+}
+
+.chimera-location-route > ol > li > article {
+  display: flex;
+  min-height: 455px;
+  flex-direction: column;
+  padding: 18px 16px;
+  border-top: 2px solid var(--chimera-moss);
+  background: rgba(255, 255, 255, 0.23);
+}
+
+.chimera-location-route > ol > li:nth-child(even) > article {
+  margin-top: 42px;
+}
+
+.chimera-location-route > ol > li:nth-child(4) > article,
+.chimera-location-route > ol > li:nth-child(5) > article,
+.chimera-location-route > ol > li:nth-child(6) > article {
+  border-top-color: var(--chimera-rose);
+}
+
+.chimera-location-route article > header > div > span,
+.chimera-location-route dt {
+  color: rgba(29, 33, 26, 0.55);
+}
+
+.chimera-location-route article > header > .chimera-supporting-phases {
+  margin-top: 10px;
+}
+
+.chimera-location-route h4 {
+  margin: 6px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.chimera-location-route dl {
+  margin: 16px 0 18px;
+}
+
+.chimera-location-route dl > div {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.12);
+}
+
+.chimera-location-route dd {
+  margin: 5px 0 0;
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.chimera-location-route .chimera-supporting-source {
+  margin-top: auto;
+  color: var(--chimera-moss);
+}
+
+/* Nen matrix */
+
+.chimera-nen-matrix__table {
+  border-top: 1px solid rgba(233, 230, 218, 0.18);
+  border-left: 1px solid rgba(233, 230, 218, 0.18);
+}
+
+.chimera-nen-matrix__head,
+.chimera-nen-matrix__table > article {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) repeat(3, minmax(0, 1fr));
+}
+
+.chimera-nen-matrix__head {
+  background: var(--chimera-moss);
+  color: var(--chimera-bone);
+}
+
+.chimera-nen-matrix__head span {
+  padding: 12px 16px;
+  border-right: 1px solid rgba(233, 230, 218, 0.16);
+}
+
+.chimera-nen-matrix__table > article > * {
+  min-width: 0;
+  padding: 18px;
+  border-right: 1px solid rgba(233, 230, 218, 0.14);
+  border-bottom: 1px solid rgba(233, 230, 218, 0.14);
+}
+
+.chimera-nen-matrix__table > article:nth-child(odd) {
+  background: rgba(233, 230, 218, 0.045);
+}
+
+.chimera-nen-matrix article header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+}
+
+.chimera-nen-matrix article header > i {
+  color: var(--chimera-mist);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.7rem;
+  font-style: normal;
+}
+
+.chimera-nen-matrix article header span {
+  color: var(--chimera-mist);
+}
+
+.chimera-nen-matrix h4 {
+  margin: 5px 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.chimera-nen-matrix article p {
+  margin: 0;
+  color: rgba(233, 230, 218, 0.72);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.chimera-nen-matrix article header p {
+  margin-bottom: 10px;
+  color: rgba(233, 230, 218, 0.58);
+}
+
+.chimera-nen-matrix article [role="cell"]:nth-of-type(2) {
+  background: rgba(123, 53, 56, 0.08);
+}
+
+.chimera-nen-matrix article [role="cell"]:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.chimera-nen-matrix .chimera-supporting-source {
+  margin-top: auto;
+  color: var(--chimera-mist);
+}
+
+/* Conflict ledger */
+
+.chimera-conflict-operations__legend {
+  display: grid;
+  grid-template-columns: repeat(7, auto);
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 18px;
+  color: rgba(29, 33, 26, 0.58);
+}
+
+.chimera-conflict-operations > ol {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chimera-conflict-operations > ol > li {
+  display: grid;
+  grid-template-columns: minmax(310px, 0.72fr) minmax(0, 2.28fr);
+  border: 1px solid rgba(29, 33, 26, 0.16);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.chimera-conflict-operations > ol > li > header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-content: start;
+  padding: 20px;
+  border-right: 1px solid rgba(29, 33, 26, 0.14);
+  border-left: 5px solid var(--chimera-moss);
+}
+
+.chimera-conflict-operations > ol > li:nth-child(4),
+.chimera-conflict-operations > ol > li:nth-child(6),
+.chimera-conflict-operations > ol > li:nth-child(7) {
+  background: color-mix(in srgb, var(--chimera-rose) 5%, transparent);
+}
+
+.chimera-conflict-operations > ol > li:nth-child(4) > header,
+.chimera-conflict-operations > ol > li:nth-child(6) > header,
+.chimera-conflict-operations > ol > li:nth-child(7) > header {
+  border-left-color: var(--chimera-rose);
+}
+
+.chimera-conflict-operations > ol > li > header > i {
+  color: var(--chimera-moss);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  font-style: normal;
+}
+
+.chimera-conflict-operations > ol > li > header span {
+  color: rgba(29, 33, 26, 0.56);
+}
+
+.chimera-conflict-operations h4 {
+  margin: 6px 0 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.chimera-conflict-operations > ol > li > header p {
+  margin: 0 0 16px;
+  color: rgba(29, 33, 26, 0.68);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.chimera-conflict-operations > ol > li > header .chimera-supporting-source {
+  grid-column: 2;
+  color: var(--chimera-moss);
+}
+
+.chimera-conflict-operations__sequence {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.chimera-conflict-operations__sequence article {
+  padding: 20px 16px;
+  border-right: 1px solid rgba(29, 33, 26, 0.12);
+}
+
+.chimera-conflict-operations__sequence article:last-child {
+  border-right: 0;
+}
+
+.chimera-conflict-operations__sequence span {
+  color: var(--chimera-moss);
+}
+
+.chimera-conflict-operations__sequence p {
+  margin: 9px 0 0;
+  font-size: 0.76rem;
+  line-height: 1.52;
+}
+
+/* Object cabinet */
+
+.chimera-object-cabinet__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.chimera-object-cabinet__grid > article {
+  display: flex;
+  min-height: 430px;
+  flex-direction: column;
+  padding: 24px;
+  border-top: 4px solid var(--chimera-moss);
+  background: rgba(233, 230, 218, 0.055);
+}
+
+.chimera-object-cabinet__grid > article:nth-child(2),
+.chimera-object-cabinet__grid > article:nth-child(3) {
+  border-top-color: var(--chimera-olive);
+}
+
+.chimera-object-cabinet__grid > article:nth-child(5),
+.chimera-object-cabinet__grid > article:nth-child(6) {
+  border-top-color: var(--chimera-rose);
+}
+
+.chimera-object-cabinet__grid > article > header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.15);
+}
+
+.chimera-object-cabinet__grid > article > header > i {
+  color: var(--chimera-mist);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.15rem;
+  font-style: normal;
+}
+
+.chimera-object-cabinet__grid > article > header > div > span,
+.chimera-object-cabinet__body span {
+  color: var(--chimera-mist);
+}
+
+.chimera-object-cabinet__grid > article > header > .chimera-supporting-phases {
+  grid-column: 1 / -1;
+}
+
+.chimera-object-cabinet h4 {
+  margin: 6px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.55rem;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+.chimera-object-cabinet__body {
+  flex: 1;
+}
+
+.chimera-object-cabinet__body section {
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.1);
+}
+
+.chimera-object-cabinet__body p {
+  margin: 7px 0 0;
+  color: rgba(233, 230, 218, 0.73);
+  font-size: 0.79rem;
+  line-height: 1.55;
+}
+
+.chimera-object-cabinet .chimera-supporting-source {
+  margin-top: 18px;
+  color: var(--chimera-mist);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chimera-supporting-portal-root *,
+  .chimera-supporting-portal-root *::before,
+  .chimera-supporting-portal-root *::after {
+    scroll-behavior: auto;
+    transition: none !important;
+  }
+}
