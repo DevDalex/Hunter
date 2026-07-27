@@ -135,6 +135,20 @@
   line-height: 1.45;
 }
 
+/* Phase-system labels are intentionally compact, but must remain legible. */
+.chimera-ant-page .chimera-early-system span,
+.chimera-ant-page .chimera-early-system small,
+.chimera-ant-page .chimera-early-system a {
+  font-size: 0.78rem !important;
+  line-height: 1.45;
+}
+
+.chimera-ant-page .chimera-expedition-system__threat li p,
+.chimera-ant-page .chimera-expedition-system__route article > strong {
+  font-size: 0.78rem !important;
+  line-height: 1.45;
+}
+
 /* The two dark phase headers need light accents while their paper bodies retain dark accents. */
 .chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header,
 .chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header {
