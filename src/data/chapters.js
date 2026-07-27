@@ -1,12 +1,12 @@
 import { getArcByChapter } from './arcs';
-import { chapterTitles } from './chapterTitles';
+import { getCurrentChapterRelease, publishedChapterTitles } from './latestChapterReleases';
 import { getVolumeByChapter } from './volumes';
 import { chapterFocus } from './successionDossier';
 import { getSeriesPhaseByChapter } from './seriesArcDossiers';
 import { getPreSuccessionResearch } from './seriesResearch';
 import { hunterExamChapterDetails } from './hunterExamChapterDetails';
 
-export const LATEST_CHAPTER = 413;
+export const LATEST_CHAPTER = publishedChapterTitles.length;
 export const FANDOM_BASE = 'https://hunterxhunter.fandom.com/wiki';
 
 const verifiedDetails = {
@@ -41,35 +41,49 @@ const makeStudyPrompt = (arc, number, title) => {
   return `While reading “${title},” track ${lens.toLowerCase()} and note what changes between the chapter’s opening and closing scene.`;
 };
 
-export const chapters = chapterTitles.map((title, index) => {
+export const chapters = publishedChapterTitles.map((title, index) => {
   const number = index + 1;
   const arc = getArcByChapter(number);
   const volume = getVolumeByChapter(number);
   const studyPhase = getSeriesPhaseByChapter(number);
   const preSuccessionResearch = number <= 339 ? getPreSuccessionResearch(number) : null;
+  const currentRelease = getCurrentChapterRelease(number);
   const phaseContextDetail = preSuccessionResearch ? {
     summary: `“${title}” sits in the ${preSuccessionResearch.phaseTitle} study phase. ${preSuccessionResearch.phaseSummary} This local account supplies verified arc-phase context; the chapter page remains the source for exact scene order and appearance data.`,
     notes: ['Phase-grounded local study record.', 'Chapter-specific source evidence is kept separate from arc-phase context.'],
     researchStatus: 'Arc-phase study record',
     lastReviewed: 'July 14, 2026',
   } : {};
-  const successionDetail = number >= 340 ? {
+  const successionDetail = number >= 340 && chapterFocus[number] ? {
     summary: chapterFocus[number],
     notes: ['Locally maintained current-arc study summary.', 'Hunterpedia chapter record linked; chronology is cross-indexed in the Succession dossier.'],
     researchStatus: 'Locally summarized Succession record',
     lastReviewed: 'July 14, 2026',
   } : {};
-  const detail = { ...phaseContextDetail, ...successionDetail, ...(hunterExamChapterDetails[number] || {}), ...(verifiedDetails[number] || {}) };
+  const releaseDetail = currentRelease ? {
+    releaseDate: currentRelease.releaseDate,
+    summary: `Chapter ${number} is officially published and available in the authorized reader. Detailed scene, appearance, location, relationship, and Nen claims remain pending maintained source review.`,
+    notes: [
+      'Official publication identity verified through VIZ Shonen Jump.',
+      'Detailed archive annotation is intentionally pending rather than inferred from unreviewed material.',
+    ],
+    researchStatus: currentRelease.researchStatus,
+    lastReviewed: 'July 27, 2026',
+  } : {};
+  const detail = { ...phaseContextDetail, ...successionDetail, ...(hunterExamChapterDetails[number] || {}), ...(verifiedDetails[number] || {}), ...releaseDetail };
 
   return {
     number,
     label: `Chapter ${String(number).padStart(3, '0')}`,
     title,
+    titleStatus: currentRelease?.titleStatus || 'maintained',
     arcId: arc.id,
     arcTitle: arc.title,
     volume: volume?.number || null,
     volumeStatus: volume?.number === 39 ? 'Fandom lists chapters 401–410 for Volume 39' : volume ? `Collected in Volume ${volume.number}` : 'Not yet listed in a collected volume',
-    sourceUrl: `${FANDOM_BASE}/Chapter_${number}`,
+    sourceUrl: currentRelease?.referenceUrl || `${FANDOM_BASE}/Chapter_${number}`,
+    officialUrl: currentRelease?.officialUrl || null,
+    publicationStatus: currentRelease?.publicationStatus || 'published',
     summary: detail.summary || `${title} is Chapter ${number} of the ${arc.title} arc${volume ? ` and is collected in Volume ${volume.number}` : ''}. Use the linked Hunterpedia entry for the full community synopsis and appearance list.`,
     studyPrompt: makeStudyPrompt(arc, number, title),
     pages: detail.pages || null,
@@ -79,7 +93,7 @@ export const chapters = chapterTitles.map((title, index) => {
     characters: detail.characters || [],
     locations: detail.locations || [],
     notes: detail.notes || [],
-    tags: [arc.short, volume ? `Volume ${volume.number}` : 'Uncollected', preSuccessionResearch?.phaseTitle, preSuccessionResearch?.beat].filter(Boolean),
+    tags: [arc.short, volume ? `Volume ${volume.number}` : 'Uncollected', preSuccessionResearch?.phaseTitle, preSuccessionResearch?.beat, currentRelease && 'Current release'].filter(Boolean),
     studyPhase: studyPhase?.title || null,
     phaseContext: studyPhase?.summary || null,
     phaseLens: studyPhase?.shift || null,
