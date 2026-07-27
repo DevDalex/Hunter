@@ -3,6 +3,7 @@ import { chimeraAntPhaseScaffoldById } from '../data/chimeraAntPhaseScaffold';
 import SafeImage from './SafeImage';
 import ChimeraAntEarlyPhaseSystems from './ChimeraAntEarlyPhaseSystems';
 import './ChimeraAntPhaseArchive.css';
+import './ChimeraAntBatch5.css';
 
 const inclusiveCount = (range) => Array.isArray(range) ? range[1] - range[0] + 1 : 0;
 const phaseDomId = (id) => `chimera-phase-${id}`;
