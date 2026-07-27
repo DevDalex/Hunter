@@ -75,7 +75,7 @@ assert(componentSource.includes('Survivor destinations'), 'survivor destination 
 
 const mediaQueries = [...cssSource.matchAll(/@media\s*\(([^)]+)\)/g)].map((match) => match[1]);
 assert(mediaQueries.every((query) => query.includes('prefers-reduced-motion')), `unexpected responsive media query found: ${mediaQueries.join(', ')}`);
-assert(!cssSource.includes('max-width:'), 'Batch 8 stylesheet contains a mobile-style max-width media contract');
+assert(!/@media\s*\(\s*(?:max|min)-width/i.test(cssSource), 'Batch 8 stylesheet contains a mobile-specific width media query');
 assert(cssSource.includes('grid-template-columns: repeat(2, minmax(0, 1fr))'), 'mirrored two-column desktop field is missing');
 assert(cssSource.includes('grid-template-columns: repeat(4, minmax(0, 1fr))'), 'four-route desktop field is missing');
 
