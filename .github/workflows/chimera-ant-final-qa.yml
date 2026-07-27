@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   verify:
@@ -39,7 +40,39 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run four-width desktop QA
-        run: npm run qa:chimera-ant
+        id: desktop_qa
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p .chimera-ant-qa
+          npm run qa:chimera-ant 2>&1 | tee .chimera-ant-qa/console.log
+
+      - name: Publish desktop QA report to pull request
+        if: always() && github.event_name == 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          QA_OUTCOME: ${{ steps.desktop_qa.outcome }}
+        run: |
+          {
+            echo '### Chimera Ant Final QA'
+            echo
+            echo "Commit: \`${GITHUB_SHA}\`"
+            echo "Desktop QA outcome: **${QA_OUTCOME}**"
+            echo
+            echo '<details><summary>Viewport report</summary>'
+            echo
+            echo '```json'
+            if [[ -f .chimera-ant-qa/report.json ]]; then
+              cat .chimera-ant-qa/report.json
+            else
+              echo '{"error":"No report.json was produced"}'
+            fi
+            echo '```'
+            echo '</details>'
+          } > .chimera-ant-qa/pr-comment.md
+          gh pr comment "${{ github.event.pull_request.number }}" --body-file .chimera-ant-qa/pr-comment.md
 
       - name: Upload desktop QA evidence
         if: always()
@@ -49,3 +82,7 @@ jobs:
           path: .chimera-ant-qa
           if-no-files-found: warn
           retention-days: 14
+
+      - name: Enforce desktop QA result
+        if: steps.desktop_qa.outcome == 'failure'
+        run: exit 1
