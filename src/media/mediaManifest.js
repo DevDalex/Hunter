@@ -1,17 +1,11 @@
-import { parseMediaManifest } from '../schemas/archiveSchemas.js';
-
 /** @param {string} value */
 const toPublicUrl = (value) => (value.startsWith('public/') ? `/${value.slice('public/'.length)}` : value);
 
 /**
- * Canonical media inventory.
- *
- * New local originals should live under public/media/originals or an existing
- * verified public media directory and declare generated delivery variants under
- * public/media/generated. External-only records remain valid for provenance,
- * but the Sharp pipeline processes only records with sourcePath.
+ * Canonical media inventory. This module is browser-safe data; build scripts
+ * validate it with Zod before generating or packaging any variants.
  */
-export const mediaManifest = parseMediaManifest({
+export const mediaManifest = {
   schemaVersion: 1,
   records: [
     {
@@ -100,7 +94,7 @@ export const mediaManifest = parseMediaManifest({
       },
     },
   ],
-});
+};
 
 export const mediaRecordById = new Map(mediaManifest.records.map((record) => [record.id, record]));
 
