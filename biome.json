@@ -4,6 +4,9 @@
     "includes": [
       "src/schemas/**",
       "src/media/**",
+      "src/components/SafeImage.jsx",
+      "src/data/chimeraAntExperience.js",
+      "src/data/chimeraAntPhaseScaffold.js",
       "scripts/build-media-variants.mjs",
       "scripts/verify-media-manifest.mjs",
       "tests/**",
