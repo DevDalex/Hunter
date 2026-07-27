@@ -94,9 +94,10 @@ const preflightScripts = [...preflight.matchAll(/^\s*'audit:[^']+',?$/gm)].map((
 assert(preflightScripts.length === 15, `aggregate preflight must list 15 audits, found ${preflightScripts.length}`);
 assert(preflight.includes("'audit:design-system'"), 'aggregate preflight must include audit:design-system');
 assert(packageJson.scripts?.check === 'npm run foundation:check && npm run generate:build-info && npm run preflight:build', 'check must run the foundation gate, generate build identity, and run aggregate preflight');
-assert(packageJson.scripts?.['foundation:check'] === 'npm run quality:foundation && npm run typecheck && npm run test:unit && npm run media:verify', 'foundation:check must compose formatting, typing, unit tests, and media validation');
+assert(packageJson.scripts?.['foundation:check'] === 'npm run quality:foundation && npm run typecheck && npm run test:unit && npm run media:check', 'foundation:check must compose linting, typing, unit tests, and generated-media verification');
+assert(packageJson.scripts?.['media:check'] === 'npm run media:build && npm run media:verify', 'media:check must generate and verify canonical media variants');
 assert(packageJson.scripts?.['build:runtime']?.includes('vite build') && packageJson.scripts['build:runtime'].includes('audit:release'), 'build:runtime must build and audit the Cloudflare artifact');
-assert(packageJson.scripts?.['build:runtime']?.includes('media:build') && packageJson.scripts['build:runtime'].includes('media:verify'), 'build:runtime must generate and verify canonical media variants');
+assert(packageJson.scripts?.['build:runtime']?.includes('media:check'), 'build:runtime must execute the canonical media generation and verification gate');
 assert(packageJson.scripts?.build === 'npm run check && npm run build:runtime', 'build must compose check and build:runtime');
 assert(packageJson.scripts?.['qa:browser:ci'] === 'npm run generate:build-info && npm run build:runtime && npm run qa:browser:verify', 'browser CI must build the runtime without duplicating aggregate preflight');
 assert(packageJson.scripts?.['qa:browser'] === 'npm run build && npm run qa:browser:verify', 'local browser QA must retain the full build gate');
@@ -112,4 +113,4 @@ for (const requiredTool of ['@biomejs/biome', '@playwright/test', '@testing-libr
 assert(exactVersion(packageJson.dependencies?.zod), 'zod must be an exact runtime dependency');
 assert(!packageJson.dependencies?.sharp, 'sharp must remain build-only and outside the production dependency surface');
 
-console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; foundation quality gate; 15-audit aggregate preflight; split runtime/browser CI; pinned toolchain; build-only Sharp media processing; route, media, design-system, performance-budget, and Cloudflare contracts synchronized.`);
+console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; foundation lint/type/test gate; generated-media verification; 15-audit aggregate preflight; split runtime/browser CI; pinned toolchain; build-only Sharp media processing; route, media, design-system, performance-budget, and Cloudflare contracts synchronized.`);
