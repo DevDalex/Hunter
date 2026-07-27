@@ -3,6 +3,7 @@ import { chimeraAntPhaseScaffoldById } from '../data/chimeraAntPhaseScaffold';
 import SafeImage from './SafeImage';
 import ChimeraAntEarlyPhaseSystems from './ChimeraAntEarlyPhaseSystems';
 import ChimeraAntMiddlePhaseSystems from './ChimeraAntMiddlePhaseSystems';
+import ChimeraAntPalaceInvasionSystem from './ChimeraAntPalaceInvasionSystem';
 import './ChimeraAntPhaseArchive.css';
 import './ChimeraAntBatch5.css';
 
@@ -13,6 +14,7 @@ const finishedPhaseIds = new Set([
   'defeat-birth-return',
   'rogue-ants-east-gorteau',
   'komugi-invasion-preparation',
+  'palace-invasion',
 ]);
 
 const finishedPhaseCopy = new Map([
@@ -20,6 +22,7 @@ const finishedPhaseCopy = new Map([
   ['defeat-birth-return', 'The finished Phase II spread aligns the boys, the colony, and the Hunter Association across the same three episode periods before converging them on East Gorteau.'],
   ['rogue-ants-east-gorteau', 'The finished Phase III spread turns the broken colony into a wide dispersal map, then shows how East Gorteau’s visible government becomes Selection machinery.'],
   ['komugi-invasion-preparation', 'The finished Phase IV spread pairs Komugi’s Gungi progression with the extermination team’s preparation track and tests every palace assignment against the reality already undermining it.'],
+  ['palace-invasion', 'The finished Phase V spread combines an operational palace schematic, relative invasion clock, seven simultaneous event lanes, and a plan-versus-actual disruption ledger.'],
 ]);
 
 function PhaseStateLedger({ phase }) {
@@ -120,6 +123,7 @@ export default function ChimeraAntPhaseArchive({
 
         <ChimeraAntEarlyPhaseSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
         <ChimeraAntMiddlePhaseSystems phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
+        <ChimeraAntPalaceInvasionSystem phaseId={phase.id} fallbackArtwork={fallbackArtwork} />
 
         <footer className="chimera-phase-spread__footer">
           <div>
