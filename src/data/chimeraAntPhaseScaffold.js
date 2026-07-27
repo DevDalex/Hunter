@@ -7,9 +7,12 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'Kakin coast and NGL',
     participants: 'Gon · Killua · Kite · Neferpitou',
     media: Object.freeze({
-      position: '58% center',
-      caption: 'Phase image hook: the visual should move from open expedition terrain toward the oppressive scale of the nest.',
-      creditLabel: 'Configured Chimera Ant arc artwork',
+      image: '/media/portraits/kite.webp',
+      position: 'center 16%',
+      alt: 'Kite during the Chimera Ant investigation that leads Gon and Killua into NGL',
+      caption: 'Kite leads the first field investigation. By Episode 85, the route he opened toward the nest has become the escape line he protects alone.',
+      creditLabel: 'Kite · Hunterpedia',
+      sourceHref: 'https://hunterxhunter.fandom.com/wiki/Kite',
     }),
     episodeGroups: freezeGroups([
       { range: Object.freeze([76, 78]), signal: 'Discovery', title: 'The biological trail', summary: 'Gon and Killua reunite with Kite, investigate the Queen’s remains, and learn how phagogenesis transfers traits into new offspring.' },
@@ -23,9 +26,12 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'NGL perimeter and Hunter staging areas',
     participants: 'Gon · Killua · Biscuit · Knuckle · Shoot · Meruem · Colt',
     media: Object.freeze({
-      position: '48% center',
-      caption: 'Phase image hook: training pressure, the Queen’s collapse, and Meruem’s birth should read as simultaneous escalation.',
-      creditLabel: 'Configured Chimera Ant arc artwork',
+      image: '/media/portraits/meruem.webp',
+      position: 'center 14%',
+      alt: 'Meruem, whose birth fractures the Chimera Ant colony while the Hunters rebuild their operation',
+      caption: 'Meruem’s birth is the central rupture of Episodes 86–95: the Queen’s purpose is completed, the colony loses its center, and every human plan must be rewritten.',
+      creditLabel: 'Meruem · Hunterpedia',
+      sourceHref: 'https://hunterxhunter.fandom.com/wiki/Meruem',
     }),
     episodeGroups: freezeGroups([
       { range: Object.freeze([86, 90]), signal: 'Training', title: 'Readiness under a deadline', summary: 'Biscuit, Knuckle, and Shoot force the boys to confront the gap between raw potential and operational readiness.' },
