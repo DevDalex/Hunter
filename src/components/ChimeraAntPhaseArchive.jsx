@@ -5,6 +5,7 @@ import ChimeraAntEarlyPhaseSystems from './ChimeraAntEarlyPhaseSystems';
 import ChimeraAntMiddlePhaseSystems from './ChimeraAntMiddlePhaseSystems';
 import ChimeraAntPalaceInvasionSystem from './ChimeraAntPalaceInvasionSystem';
 import ChimeraAntEndgameSystems from './ChimeraAntEndgameSystems';
+import ChimeraAntSupportingArchivePortals from './ChimeraAntSupportingArchivePortals';
 import './ChimeraAntPhaseArchive.css';
 import './ChimeraAntBatch5.css';
 
@@ -144,5 +145,6 @@ export default function ChimeraAntPhaseArchive({
         </footer>
       </article>;
     })}
+    <ChimeraAntSupportingArchivePortals />
   </div>;
 }
