@@ -28,6 +28,7 @@ const audits = Object.freeze([
   ['batch-5-black-whale', 'scripts/audit-succession-batch-5-black-whale.mjs'],
   ['batch-5-assignments', 'scripts/audit-succession-batch-5-assignments.mjs'],
   ['batch-5-final', 'scripts/audit-succession-batch-5-final.mjs'],
+  ['chapter-currency', 'scripts/audit-succession-chapter-currency.mjs'],
   ['foundation', 'scripts/audit-succession-foundation-closure.mjs'],
   ['reader', 'scripts/audit-succession-reader.mjs'],
   ['production-surface', 'scripts/audit-succession-production-surface.mjs'],
