@@ -138,13 +138,22 @@
 /* Phase-system labels are intentionally compact, but must remain legible. */
 .chimera-ant-page .chimera-early-system span,
 .chimera-ant-page .chimera-early-system small,
-.chimera-ant-page .chimera-early-system a {
+.chimera-ant-page .chimera-early-system a,
+.chimera-ant-page .chimera-middle-system span,
+.chimera-ant-page .chimera-middle-system small,
+.chimera-ant-page .chimera-middle-system a,
+.chimera-ant-page .chimera-phase-spread__episode-index > span,
+.chimera-ant-page .chimera-phase-spread__episode-groups small {
   font-size: 0.78rem !important;
   line-height: 1.45;
 }
 
 .chimera-ant-page .chimera-expedition-system__threat li p,
-.chimera-ant-page .chimera-expedition-system__route article > strong {
+.chimera-ant-page .chimera-expedition-system__route article > strong,
+.chimera-ant-page .chimera-dispersal-system__branch > p,
+.chimera-ant-page .chimera-dispersal-system__occupation li p,
+.chimera-ant-page .chimera-preparation-system__track li p,
+.chimera-ant-page .chimera-preparation-system__readiness article p {
   font-size: 0.78rem !important;
   line-height: 1.45;
 }
