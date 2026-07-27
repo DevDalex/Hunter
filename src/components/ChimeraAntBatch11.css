@@ -142,6 +142,18 @@
 .chimera-ant-page .chimera-middle-system span,
 .chimera-ant-page .chimera-middle-system small,
 .chimera-ant-page .chimera-middle-system a,
+.chimera-ant-page .chimera-invasion-system span,
+.chimera-ant-page .chimera-invasion-system small,
+.chimera-ant-page .chimera-invasion-system a,
+.chimera-ant-page .chimera-endgame-system span,
+.chimera-ant-page .chimera-endgame-system small,
+.chimera-ant-page .chimera-endgame-system a,
+.chimera-ant-page .chimera-supporting-portal-root span,
+.chimera-ant-page .chimera-supporting-portal-root small,
+.chimera-ant-page .chimera-supporting-portal-root a,
+.chimera-ant-page .chimera-reference-root span,
+.chimera-ant-page .chimera-reference-root small,
+.chimera-ant-page .chimera-reference-root a,
 .chimera-ant-page .chimera-phase-spread__episode-index > span,
 .chimera-ant-page .chimera-phase-spread__episode-groups small {
   font-size: 0.78rem !important;
@@ -153,9 +165,18 @@
 .chimera-ant-page .chimera-dispersal-system__branch > p,
 .chimera-ant-page .chimera-dispersal-system__occupation li p,
 .chimera-ant-page .chimera-preparation-system__track li p,
-.chimera-ant-page .chimera-preparation-system__readiness article p {
+.chimera-ant-page .chimera-preparation-system__readiness article p,
+.chimera-ant-page .chimera-invasion-system__zone p {
   font-size: 0.78rem !important;
   line-height: 1.45;
+}
+
+.chimera-ant-page .chimera-invasion-system__clock-mark strong,
+.chimera-ant-page .chimera-endgame-system__portraits figcaption strong,
+.chimera-ant-page .chimera-endgame-card > header > div > strong,
+.chimera-ant-page .chimera-mirrored-endgames__axis strong {
+  font-size: 0.78rem !important;
+  line-height: 1.35;
 }
 
 /* The two dark phase headers need light accents while their paper bodies retain dark accents. */
