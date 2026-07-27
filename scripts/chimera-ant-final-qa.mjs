@@ -8,6 +8,10 @@ const dist = path.join(root, 'dist/client');
 const output = path.resolve(root, process.env.CHIMERA_ANT_QA_OUTPUT || '.chimera-ant-qa');
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
 const widths = [1366, 1600, 1920, 2560];
+const sectionEvidenceIds = [
+  'overview', 'before-the-arc', 'premise', 'episode-phases', 'characters', 'factions', 'locations',
+  'nen', 'conflicts', 'objects', 'ending', 'adaptation', 'records', 'sources',
+];
 
 const mime = {
   '.css': 'text/css; charset=utf-8', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -131,6 +135,107 @@ try {
       });
       assert(duplicateIds.length === 0, `Duplicate ids: ${JSON.stringify(duplicateIds)}`);
 
+      const undersizedText = await page.evaluate(() => {
+        const records = [];
+        const selector = '.chimera-ant-page :is(dt, small, figcaption, a, button, span, p, li, dd)';
+        for (const node of document.querySelectorAll(selector)) {
+          const style = getComputedStyle(node);
+          const rect = node.getBoundingClientRect();
+          if (rect.width <= 0 || rect.height <= 0 || style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) continue;
+          const directText = [...node.childNodes]
+            .filter((child) => child.nodeType === Node.TEXT_NODE)
+            .map((child) => child.textContent)
+            .join(' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+          const text = directText || (node.matches('dt, small, a, button, figcaption') ? node.textContent.replace(/\s+/g, ' ').trim() : '');
+          if (!text) continue;
+          const fontSize = Number.parseFloat(style.fontSize);
+          if (fontSize < 11.9) {
+            records.push({
+              tag: node.tagName,
+              className: String(node.className).slice(0, 140),
+              text: text.slice(0, 90),
+              fontSize,
+            });
+            if (records.length >= 24) break;
+          }
+        }
+        return records;
+      });
+      assert(undersizedText.length === 0, `Text below 12px: ${JSON.stringify(undersizedText)}`);
+
+      const lowContrastText = await page.evaluate(() => {
+        const parseColor = (value) => {
+          const match = value.match(/rgba?\(([^)]+)\)/);
+          if (!match) return null;
+          const parts = match[1].split(/[ ,/]+/).filter(Boolean).map(Number);
+          return { r: parts[0], g: parts[1], b: parts[2], a: Number.isFinite(parts[3]) ? parts[3] : 1 };
+        };
+        const blend = (foreground, background) => ({
+          r: foreground.r * foreground.a + background.r * (1 - foreground.a),
+          g: foreground.g * foreground.a + background.g * (1 - foreground.a),
+          b: foreground.b * foreground.a + background.b * (1 - foreground.a),
+          a: 1,
+        });
+        const luminance = ({ r, g, b }) => {
+          const channel = (value) => {
+            const normalized = value / 255;
+            return normalized <= 0.04045 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
+          };
+          return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
+        };
+        const ratio = (first, second) => {
+          const [light, dark] = [luminance(first), luminance(second)].sort((a, b) => b - a);
+          return (light + 0.05) / (dark + 0.05);
+        };
+        const opaqueBackground = (node) => {
+          for (let current = node; current; current = current.parentElement) {
+            const parsed = parseColor(getComputedStyle(current).backgroundColor);
+            if (parsed && parsed.a >= 0.98) return parsed;
+          }
+          return { r: 255, g: 255, b: 255, a: 1 };
+        };
+
+        const selectors = [
+          'dt', 'small', '[class*="__eyebrow"]', '[class*="__kicker"]', '[class*="__label"]',
+          '[class*="__meta"]', '[class*="__badge"]', '[class*="__tag"]', '[class*="__ordinal"] > span',
+          '[class*="__index"] > span', '.chimera-ant-rail nav button', '.chimera-phase-spread__media figcaption > span',
+          '.chimera-phase-spread__media figcaption a', '.chimera-phase-spread__footer span',
+        ].join(',');
+        const records = [];
+        for (const node of document.querySelectorAll(`.chimera-ant-page :is(${selectors})`)) {
+          if (node.closest('.chimera-ant-shell-hero')) continue;
+          const style = getComputedStyle(node);
+          const rect = node.getBoundingClientRect();
+          const text = node.textContent.replace(/\s+/g, ' ').trim();
+          if (!text || rect.width <= 0 || rect.height <= 0 || style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) continue;
+          const foreground = parseColor(style.color);
+          const background = opaqueBackground(node);
+          if (!foreground || !background) continue;
+          const effectiveForeground = foreground.a < 1 ? blend(foreground, background) : foreground;
+          const contrast = ratio(effectiveForeground, background);
+          const fontSize = Number.parseFloat(style.fontSize);
+          const fontWeight = Number.parseInt(style.fontWeight, 10) || 400;
+          const isLarge = fontSize >= 24 || (fontSize >= 18.66 && fontWeight >= 700);
+          const minimum = isLarge ? 3 : 4.5;
+          if (contrast + 0.02 < minimum) {
+            records.push({
+              tag: node.tagName,
+              className: String(node.className).slice(0, 140),
+              text: text.slice(0, 90),
+              contrast: Number(contrast.toFixed(2)),
+              minimum,
+              color: style.color,
+              background: getComputedStyle(node).backgroundColor,
+            });
+            if (records.length >= 24) break;
+          }
+        }
+        return records;
+      });
+      assert(lowContrastText.length === 0, `Low-contrast microcopy: ${JSON.stringify(lowContrastText)}`);
+
       await page.locator('.chimera-ant-phase-rail__segment').last().click();
       await page.waitForFunction(() => document.querySelector('#chimera-phase-poison-memory-homecoming')?.classList.contains('is-active'), null, { timeout: 8_000 });
 
@@ -152,13 +257,36 @@ try {
       assert(metrics.domNodes < 9000, `DOM node budget exceeded: ${metrics.domNodes}`);
       assert(metrics.transferBytes < 25 * 1024 * 1024, `Transfer budget exceeded: ${metrics.transferBytes} bytes`);
 
-      const screenshot = path.join(output, `chimera-ant-${width}.png`);
-      await page.screenshot({ path: screenshot, fullPage: true });
-      report.widths.push({ width, status: 'passed', metrics, screenshot: path.relative(root, screenshot) });
+      const screenshots = [];
+      const viewportScreenshot = path.join(output, `chimera-ant-${width}-viewport.png`);
+      await page.screenshot({ path: viewportScreenshot });
+      screenshots.push(path.relative(root, viewportScreenshot));
+
+      if (width === 1600) {
+        for (const id of sectionEvidenceIds) {
+          const section = page.locator(`[data-section-id="${id}"]`);
+          await section.scrollIntoViewIfNeeded();
+          const screenshot = path.join(output, `chimera-ant-1600-section-${id}.png`);
+          await section.screenshot({ path: screenshot, animations: 'disabled' });
+          screenshots.push(path.relative(root, screenshot));
+        }
+
+        const phases = page.locator('[data-phase-section="true"]');
+        for (let index = 0; index < await phases.count(); index += 1) {
+          const phase = phases.nth(index);
+          const id = (await phase.getAttribute('id')) || `phase-${index + 1}`;
+          await phase.scrollIntoViewIfNeeded();
+          const screenshot = path.join(output, `chimera-ant-1600-${id}.png`);
+          await phase.screenshot({ path: screenshot, animations: 'disabled' });
+          screenshots.push(path.relative(root, screenshot));
+        }
+      }
+
+      report.widths.push({ width, status: 'passed', metrics, screenshots });
       process.stdout.write(`✓ Chimera Ant desktop QA ${width}px\n`);
     } catch (error) {
       const screenshot = path.join(output, `chimera-ant-${width}-failure.png`);
-      await page.screenshot({ path: screenshot, fullPage: true }).catch(() => {});
+      await page.screenshot({ path: screenshot }).catch(() => {});
       report.failures.push({ width, error: error.message, runtimeErrors, consoleErrors, screenshot: path.relative(root, screenshot) });
       report.widths.push({ width, status: 'failed', error: error.message });
       process.stdout.write(`✗ Chimera Ant desktop QA ${width}px · ${error.message}\n`);
