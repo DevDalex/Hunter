@@ -84,6 +84,14 @@ Branch: `chimera-ant-retransform`
 - GitHub currently exposes no combined status or workflow run for the workflow commit through the connected API.
 - The container cannot clone the repository because outbound DNS resolution for `github.com` is unavailable, so the audits, Vite build, Chromium run, screenshots, and measured budgets could not be executed locally during this run.
 
+### Verification retry — 2026-07-27
+
+- Re-read the design contract and current progress ledger before acting.
+- Reconfirmed that Batch 11 is the only unfinished batch and that its remaining requirement is executable QA evidence rather than more feature implementation.
+- Reconfirmed the workflow trigger for pushes to `chimera-ant-retransform` and manual dispatch.
+- Retried a direct repository clone from the connected container; DNS resolution for `github.com` still fails.
+- Committed this ledger-only retry to produce a new branch push and give the final QA workflow another opportunity to start without changing completed product work.
+
 ### Completion gate still open
 
 Batch 11 is not marked complete merely because verification code exists. Completion requires an actual successful run with:
