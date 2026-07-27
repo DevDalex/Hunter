@@ -1,0 +1,319 @@
+/* Screenshot-verified structural corrections. Desktop-only by design. */
+
+/* Phase III: replace collision-prone absolute cards with a stable editorial grid. */
+.chimera-dispersal-system__map {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) 230px minmax(220px, 1fr);
+  grid-template-rows: auto auto auto;
+  gap: 24px 20px;
+  align-items: stretch;
+  min-height: 0;
+  padding: 36px 24px 42px;
+  overflow: hidden;
+}
+
+.chimera-dispersal-system__connections {
+  display: none;
+}
+
+.chimera-dispersal-system__origin,
+.chimera-dispersal-system__branch {
+  position: relative;
+  left: auto !important;
+  top: auto !important;
+  transform: none;
+}
+
+.chimera-dispersal-system__origin {
+  grid-column: 2;
+  grid-row: 2;
+  align-self: center;
+  width: auto;
+  min-height: 0;
+  padding: 24px 22px;
+}
+
+.chimera-dispersal-system__branch {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  min-height: 280px;
+  padding: 20px;
+}
+
+.chimera-dispersal-system__branch--meteor-city {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.chimera-dispersal-system__branch--east-gorteau {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.chimera-dispersal-system__branch--defectors {
+  grid-column: 1;
+  grid-row: 3;
+}
+
+.chimera-dispersal-system__branch--komugi {
+  grid-column: 3;
+  grid-row: 3;
+}
+
+.chimera-dispersal-system__branch footer {
+  margin-top: auto;
+}
+
+.chimera-dispersal-system__branch header span,
+.chimera-dispersal-system__branch footer strong {
+  color: #3e4d24 !important;
+}
+
+.chimera-dispersal-system__branch--east-gorteau header span,
+.chimera-dispersal-system__branch--east-gorteau footer strong {
+  color: #7a3039 !important;
+}
+
+.chimera-dispersal-system__branch--komugi header span,
+.chimera-dispersal-system__branch--komugi footer strong {
+  color: #4d4568 !important;
+}
+
+.chimera-dispersal-system__branch header small,
+.chimera-dispersal-system__branch > p,
+.chimera-dispersal-system__branch footer a {
+  color: #394038 !important;
+}
+
+.chimera-dispersal-system__origin > span,
+.chimera-dispersal-system__legend > span {
+  color: #d8dfd1 !important;
+}
+
+.chimera-dispersal-system__origin p,
+.chimera-dispersal-system__legend > p {
+  color: #e2e7de !important;
+}
+
+.chimera-dispersal-system__origin h5,
+.chimera-dispersal-system__legend > strong {
+  color: #fffdf5;
+}
+
+/* Phase III portraits: keep labels off faces and use a solid caption surface. */
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records figure {
+  display: grid;
+  grid-template-rows: 138px auto;
+  height: auto;
+  min-height: 0;
+  overflow: hidden;
+  background: #0b0e0a;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records img,
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records .safe-image-placeholder {
+  width: 100%;
+  height: 138px;
+  min-height: 138px;
+  object-fit: cover;
+  filter: saturate(0.92) contrast(1.08) brightness(1.04);
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records > a:nth-child(1) img {
+  object-position: center 25%;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records > a:nth-child(2) img {
+  object-position: center 30%;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records > a:nth-child(3) img {
+  object-position: center 24%;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records figcaption {
+  position: static;
+  inset: auto;
+  min-height: 64px;
+  padding: 11px 13px 12px;
+  background: #0b0e0a;
+  color: #fffdf5;
+  text-shadow: none;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records figcaption span {
+  color: #d8dfd1 !important;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records figcaption strong {
+  color: #fffdf5;
+}
+
+/* Phase V: the evidence row is now outside the map and can no longer cover nodes. */
+.chimera-invasion-system__palace-field {
+  min-height: 900px;
+  overflow: hidden;
+}
+
+.chimera-invasion-system__zone--airspace {
+  top: 12% !important;
+}
+
+.chimera-invasion-system__zone--underground,
+.chimera-invasion-system__zone--extraction {
+  top: 78% !important;
+}
+
+.chimera-invasion-system__zone {
+  background: #0c100b;
+  border-color: rgba(233, 230, 218, 0.38);
+}
+
+.chimera-invasion-system__zone > span {
+  color: #d8dfd1 !important;
+}
+
+.chimera-invasion-system__zone strong {
+  color: #fffdf5;
+}
+
+.chimera-invasion-system__zone p {
+  color: #dce2d7 !important;
+}
+
+.chimera-invasion-system__vector-key {
+  position: static;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 0;
+  border-top: 0;
+  border-left: 1px solid rgba(233, 230, 218, 0.26);
+  background: #0a0d09;
+  box-shadow: none;
+}
+
+.chimera-invasion-system__vector-key article {
+  min-height: 128px;
+  padding: 16px 14px;
+}
+
+.chimera-invasion-system__vector-key span {
+  color: #d4dbcf !important;
+}
+
+.chimera-invasion-system__vector-key strong {
+  color: #fffdf5;
+}
+
+.chimera-invasion-system__vector-key a {
+  color: #e2e7dd !important;
+}
+
+/* Explicit dark-surface tokens for the entire invasion and endgame systems. */
+.chimera-invasion-system,
+.chimera-preparation-system,
+.chimera-endgame-system {
+  --chimera-olive: #c4d08c !important;
+  --chimera-moss: #cdd7ba !important;
+  --chimera-rose: #e2a4a8 !important;
+  --chimera-royal: #c8c0df !important;
+  --chimera-mist: #d0d7cb !important;
+}
+
+.chimera-invasion-system p,
+.chimera-preparation-system .chimera-middle-system__header p,
+.chimera-endgame-system p {
+  color: #d8ded4;
+}
+
+/* Phase VII: give the board and portraits their own space; captions never cover faces. */
+.chimera-aftermath-system__final-game {
+  grid-template-columns: minmax(540px, 1.08fr) minmax(460px, 0.92fr);
+  min-height: 720px;
+}
+
+.chimera-aftermath-system__game-visual {
+  display: grid;
+  grid-template-rows: auto auto;
+  place-items: center;
+  align-content: center;
+  gap: 28px;
+  min-height: 720px;
+  padding: 38px;
+}
+
+.chimera-aftermath-system__gungi-board {
+  grid-template-columns: repeat(9, 45px);
+  grid-template-rows: repeat(9, 45px);
+  margin: 0;
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits {
+  position: static;
+  display: grid;
+  grid-template-columns: repeat(2, 190px);
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits figure {
+  display: grid;
+  grid-template-rows: 152px auto;
+  width: 190px;
+  height: auto;
+  min-height: 0;
+  background: #0a0d09;
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits img,
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits .safe-image-placeholder {
+  width: 100%;
+  height: 152px;
+  object-fit: cover;
+  object-position: center 22%;
+  filter: saturate(0.92) contrast(1.08) brightness(1.04);
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits figcaption {
+  position: static;
+  inset: auto;
+  min-height: 70px;
+  padding: 11px 13px 13px;
+  background: #0a0d09;
+  color: #fffdf5;
+  text-shadow: none;
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits figcaption span {
+  color: #d8dfd1 !important;
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits figcaption strong {
+  color: #fffdf5;
+}
+
+.chimera-aftermath-system__final-game > article {
+  --chimera-royal: #493f66 !important;
+  background: #f3efe3;
+  color: #171a15;
+}
+
+.chimera-aftermath-system__final-game > article > span,
+.chimera-aftermath-system__final-game > article > ol li > i,
+.chimera-aftermath-system__final-game > article > a {
+  color: #493f66 !important;
+}
+
+.chimera-aftermath-system__final-game > article > p,
+.chimera-aftermath-system__final-game > article > ol p {
+  color: #353c34 !important;
+}
+
+.chimera-aftermath-system__final-game > article > ol strong {
+  color: #171a15;
+}
