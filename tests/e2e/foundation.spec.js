@@ -29,3 +29,15 @@ test('Chimera Ant respects its minimum desktop viewport', async ({ page }) => {
 
   expect(horizontalOverflow).toBeLessThanOrEqual(1);
 });
+
+test('Chimera Ant phase artwork uses generated manifest media', async ({ page }) => {
+  await page.goto('/#/series/chimera-ant', { waitUntil: 'domcontentloaded' });
+  const phaseImage = page.locator('[data-phase-id="ngl-expedition"] .chimera-phase-spread__media img');
+
+  await expect(phaseImage).toBeVisible();
+  await expect(phaseImage).toHaveAttribute('data-media-id', 'media:chimera-ant:kite-phase');
+  await expect(phaseImage).toHaveAttribute('data-media-variant', 'phase');
+  await expect(phaseImage).toHaveAttribute('src', '/media/generated/chimera-ant/kite-phase.avif');
+  await expect(phaseImage).toHaveJSProperty('naturalWidth', 1200);
+  await expect(phaseImage).toHaveJSProperty('naturalHeight', 800);
+});
