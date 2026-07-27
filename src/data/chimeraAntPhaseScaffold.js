@@ -83,9 +83,12 @@ export const chimeraAntPhaseScaffold = Object.freeze([
     location: 'Royal Palace and underground levels',
     participants: 'Extermination team · Royal Guards · Meruem · Komugi',
     media: Object.freeze({
-      position: '62% center',
-      caption: 'Phase image hook: the final system will use a palace plan, entry vectors, and a visible invasion clock rather than a single linear timeline.',
-      creditLabel: 'Configured Chimera Ant arc artwork',
+      image: '/media/portraits/isaac-netero.webp',
+      position: 'center 10%',
+      alt: 'Isaac Netero leading the aerial separation of Meruem during the Royal Palace invasion',
+      caption: 'Netero is the spearhead of the palace plan, but the operation below him fractures into simultaneous fronts the instant Komugi is injured.',
+      creditLabel: 'Isaac Netero · Hunterpedia',
+      sourceHref: 'https://hunterxhunter.fandom.com/wiki/Isaac_Netero',
     }),
     episodeGroups: freezeGroups([
       { range: Object.freeze([111, 113]), signal: '00:00', title: 'Entry and disruption', summary: 'Dragon Dive, Komugi’s injury, and Meruem’s decision to protect her break the expected target structure immediately.' },
