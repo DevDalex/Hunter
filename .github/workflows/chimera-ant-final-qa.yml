@@ -1,0 +1,48 @@
+name: Chimera Ant Final QA
+
+on:
+  push:
+    branches:
+      - chimera-ant-retransform
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Chimera Ant audits
+        run: npm run verify:chimera-ant
+
+      - name: Build Vite application
+        run: npx vite build
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run four-width desktop QA
+        run: npm run qa:chimera-ant
+
+      - name: Upload desktop QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chimera-ant-desktop-qa
+          path: .chimera-ant-qa
+          if-no-files-found: warn
+          retention-days: 14
