@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - chimera-ant-retransform
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
