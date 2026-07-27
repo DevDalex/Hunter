@@ -143,21 +143,33 @@ jobs:
         run: npm ci
 
       - name: Build runtime with generated media
-        run: npm run build:runtime
+        id: runtime
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run build:runtime 2>&1 | tee foundation-runtime.log
 
       - name: Install Chromium
+        if: steps.runtime.outcome == 'success'
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright Test projects
+        if: steps.runtime.outcome == 'success'
         run: npm run test:e2e:ci
 
-      - name: Upload Playwright evidence
+      - name: Upload runtime and Playwright evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: foundation-playwright-${{ github.sha }}
           path: |
+            foundation-runtime.log
             playwright-report
             test-results
           if-no-files-found: ignore
           retention-days: 14
+
+      - name: Enforce runtime result
+        if: steps.runtime.outcome == 'failure'
+        run: exit 1
