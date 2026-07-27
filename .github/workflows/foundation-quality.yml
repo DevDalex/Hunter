@@ -104,6 +104,15 @@ jobs:
           npm run report:deadcode 2>&1 | tee foundation-knip.log
           exit 0
 
+      - name: Run aggregate preflight
+        shell: bash
+        run: |
+          set +e
+          npm run generate:build-info
+          npm run preflight:build 2>&1 | tee foundation-preflight.log
+          echo "${PIPESTATUS[0]}" > foundation-preflight.status
+          exit 0
+
       - name: Upload complete foundation logs
         if: always()
         uses: actions/upload-artifact@v4
