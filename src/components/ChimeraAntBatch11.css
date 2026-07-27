@@ -71,3 +71,108 @@
 .chimera-invasion-system__lane p {
   overflow-wrap: anywhere;
 }
+
+/* Readability tokens keep small accent copy compliant on both paper and dark surfaces. */
+.chimera-ant-page {
+  --chimera-readable-olive: #59652f;
+  --chimera-readable-royal: #58516f;
+  --chimera-dark-olive: #b6c47d;
+  --chimera-dark-moss: #c1caa9;
+  --chimera-dark-rose: #d99a9d;
+  --chimera-dark-royal: #b8b1d1;
+}
+
+.chimera-ant-canvas {
+  --chimera-olive: var(--chimera-readable-olive);
+  --chimera-royal: var(--chimera-readable-royal);
+}
+
+.chimera-ant-shell-hero,
+.chimera-ant-rail {
+  --chimera-olive: var(--chimera-dark-olive);
+  --chimera-moss: var(--chimera-dark-moss);
+  --chimera-rose: var(--chimera-dark-rose);
+  --chimera-royal: var(--chimera-dark-royal);
+}
+
+/* Enforce a 12px floor for labels, metadata, captions, and navigation indices. */
+.chimera-ant-page dt,
+.chimera-ant-page small,
+.chimera-ant-page [class*="__eyebrow"],
+.chimera-ant-page [class*="__kicker"],
+.chimera-ant-page [class*="__label"],
+.chimera-ant-page [class*="__meta"],
+.chimera-ant-page [class*="__badge"],
+.chimera-ant-page [class*="__tag"],
+.chimera-ant-page [class*="__ordinal"] > span,
+.chimera-ant-page [class*="__index"] > span,
+.chimera-ant-page .chimera-ant-rail nav button i,
+.chimera-ant-page .chimera-ant-page article > span,
+.chimera-ant-page .chimera-ant-record-summary span,
+.chimera-ant-page .chimera-phase-spread__media figcaption > span,
+.chimera-ant-page .chimera-phase-spread__media figcaption a,
+.chimera-ant-page .chimera-phase-spread__footer span {
+  font-size: 0.75rem;
+  line-height: 1.45;
+}
+
+/* The two dark phase headers need light accents while their paper bodies retain dark accents. */
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header {
+  --phase-header-accent: var(--chimera-dark-rose);
+}
+
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header .chimera-phase-spread__ordinal span,
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header .chimera-phase-spread__eyebrow,
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header .chimera-phase-spread__field-note dt,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header .chimera-phase-spread__ordinal span,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header .chimera-phase-spread__eyebrow,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header .chimera-phase-spread__field-note dt {
+  color: var(--phase-header-accent);
+}
+
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header .chimera-phase-spread__field-note,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header .chimera-phase-spread__field-note {
+  border-top-color: var(--phase-header-accent);
+}
+
+.chimera-phase-spread--dispersal-map {
+  --phase-accent: #52603c;
+}
+
+/* Make long record copy resilient without introducing a mobile layout. */
+.chimera-ant-page section,
+.chimera-ant-page article,
+.chimera-ant-page header,
+.chimera-ant-page footer,
+.chimera-ant-page aside,
+.chimera-ant-page figure,
+.chimera-ant-page figcaption,
+.chimera-ant-page div,
+.chimera-ant-page dl,
+.chimera-ant-page ol,
+.chimera-ant-page ul {
+  min-width: 0;
+}
+
+.chimera-ant-page p,
+.chimera-ant-page li,
+.chimera-ant-page dd,
+.chimera-ant-page dt,
+.chimera-ant-page h2,
+.chimera-ant-page h3,
+.chimera-ant-page h4,
+.chimera-ant-page h5,
+.chimera-ant-page h6,
+.chimera-ant-page a,
+.chimera-ant-page button,
+.chimera-ant-page small {
+  overflow-wrap: anywhere;
+}
+
+.chimera-ant-page p,
+.chimera-ant-page li,
+.chimera-ant-page dd,
+.chimera-ant-page figcaption {
+  text-wrap: pretty;
+}
