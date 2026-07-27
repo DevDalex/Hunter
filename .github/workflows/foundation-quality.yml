@@ -1,0 +1,111 @@
+name: Foundation Quality
+
+on:
+  push:
+    branches:
+      - chimera-ant-retransform
+    paths:
+      - package.json
+      - package-lock.json
+      - biome.json
+      - tsconfig.json
+      - knip.json
+      - playwright.config.js
+      - vitest.config.js
+      - wrangler.jsonc
+      - src/schemas/**
+      - src/media/**
+      - scripts/build-media-variants.mjs
+      - scripts/verify-media-manifest.mjs
+      - tests/**
+      - .github/workflows/foundation-quality.yml
+  pull_request:
+    paths:
+      - package.json
+      - package-lock.json
+      - biome.json
+      - tsconfig.json
+      - knip.json
+      - playwright.config.js
+      - vitest.config.js
+      - wrangler.jsonc
+      - src/schemas/**
+      - src/media/**
+      - scripts/build-media-variants.mjs
+      - scripts/verify-media-manifest.mjs
+      - tests/**
+      - .github/workflows/foundation-quality.yml
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Run Biome
+        shell: bash
+        run: |
+          set +e
+          npm run quality:foundation 2>&1 | tee foundation-biome.log
+          echo "${PIPESTATUS[0]}" > foundation-biome.status
+          exit 0
+
+      - name: Run TypeScript checkJs
+        shell: bash
+        run: |
+          set +e
+          npm run typecheck 2>&1 | tee foundation-typescript.log
+          echo "${PIPESTATUS[0]}" > foundation-typescript.status
+          exit 0
+
+      - name: Run Vitest and Testing Library
+        shell: bash
+        run: |
+          set +e
+          npm run test:unit 2>&1 | tee foundation-tests.log
+          echo "${PIPESTATUS[0]}" > foundation-tests.status
+          exit 0
+
+      - name: Verify media manifest
+        shell: bash
+        run: |
+          set +e
+          npm run media:verify 2>&1 | tee foundation-media.log
+          echo "${PIPESTATUS[0]}" > foundation-media.status
+          exit 0
+
+      - name: Upload complete foundation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: foundation-quality-${{ github.sha }}
+          path: |
+            foundation-*.log
+            foundation-*.status
+          retention-days: 14
+
+      - name: Enforce foundation result
+        shell: bash
+        run: |
+          failed=0
+          for status in foundation-*.status; do
+            value="$(cat "$status")"
+            if [ "$value" != "0" ]; then
+              echo "$(basename "$status" .status) failed with exit code $value"
+              failed=1
+            fi
+          done
+          exit "$failed"
