@@ -12,8 +12,8 @@ Branch: `chimera-ant-retransform`
 | 4 | Complete | Added reusable phase spreads, image/source hooks, state ledgers, episode groups, and composition contracts. |
 | 5 | Complete | Finished Phase I’s NGL route/threat system and Phase II’s three-front development matrix. |
 | 6 | Complete | Finished Phase III’s dispersal/occupation map and Phase IV’s Gungi/preparation/blueprint system. |
-| 7 | Next | Build the Phase V palace-invasion plan, entry vectors, clock, and simultaneous event lanes. |
-| 8 | Pending | Phases VI and VII. |
+| 7 | Complete | Finished Phase V’s palace schematic, relative clock, seven event lanes, and disruption ledger. |
+| 8 | Next | Build Phase VI’s mirrored endgames and Phase VII’s poison, memory, final Gungi, and survivor-route systems. |
 | 9 | Pending | Characters, factions, locations, Nen, conflicts, and objects. |
 | 10 | Pending | Ending, adaptation, records, and sources. |
 | 11 | Pending | Final verification, performance, and bugs. |
@@ -23,70 +23,65 @@ Branch: `chimera-ant-retransform`
 ### Batch 1 — Design contract
 
 - Set the desktop-only working canvas to approximately 92vw with a 1760px preferred maximum.
-- Defined the bone, charcoal, olive, moss, rose, royal, and mist visual language.
-- Defined contiguous episode phases: 76–85, 86–95, 96–102, 103–110, 111–121, 122–131, and 132–136.
+- Defined the arc palette, seven contiguous episode phases, final section order, and eleven-batch plan.
 - Removed standalone Themes and Character Transformations sections.
 
 ### Batch 2 — Dedicated shell
 
-- Added `src/components/ChimeraAntPage.jsx` and the dedicated route before the generic arc fallback.
-- Replaced the crowded horizontal navigation with a sticky left reading rail.
-- Added active-section, active-phase, and page-progress tracking.
+- Added the route-specific `ChimeraAntPage`, sticky left reading rail, active-section tracking, active-phase tracking, and page progress.
 - Added no mobile-specific layout.
 
 ### Batch 3 — Hero and orientation
 
-- Added the cinematic hero with arc navigation, field classification, factual strip, and two entry actions.
-- Added an Arc at a Glance orientation spread.
-- Added a seven-segment rail weighted by the inclusive phase episode counts: 10, 10, 7, 8, 11, 10, and 5.
+- Added the cinematic hero, field classification, Arc at a Glance spread, and seven-segment rail weighted by episode count.
 
 ### Batch 4 — Shared phase architecture
 
-- Added seven stable phase spreads and twenty episode-group records covering Episodes 76–136.
-- Added opening, turning, and closing state ledgers.
-- Added phase artwork, crop, caption, credit, and source hooks.
-- Added composition contracts for route, three-front, dispersal, preparation, invasion, endgames, and aftermath systems.
+- Added seven stable phase spreads, twenty episode-group records, state ledgers, image/source hooks, and composition contracts.
 
 ### Batch 5 — Phases I and II
 
-- Added a six-stop NGL expedition route and five-level threat escalation visual.
-- Added episode evidence links and a Kite/Gon/Killua/Pitou visual field.
-- Added a three-front matrix aligning the boys, the colony, and the Hunter Association across Episodes 86–95.
-- Added the convergence into the East Gorteau operation.
+- Added the six-stop NGL expedition route, threat ladder, visual field, three-front development matrix, and East Gorteau convergence.
 
-## Batch 6 record
+### Batch 6 — Phases III and IV
+
+- Added the colony-dispersal map, East Gorteau occupation stack, dual Gungi/preparation tracks, palace blueprint, and Episode 110 readiness field.
+
+## Batch 7 record
 
 ### Completed
 
-- Added `src/data/chimeraAntMiddlePhaseSystems.js` with finished Phase III and Phase IV information architecture.
-- Added `src/components/ChimeraAntMiddlePhaseSystems.jsx` and its dedicated wide-screen stylesheet.
-- Built a four-branch colony-dispersal map from the former Queen’s nest toward Meteor City, East Gorteau, human-aligned defectors, and Komugi’s palace entry.
-- Added a central origin record, scalable SVG connection lines, episode ranges, outcomes, and Hunterpedia evidence links for every branch.
-- Added an East Gorteau occupation stack showing government shell, puppet control, population movement, and Selection.
-- Added verified local visual records for Meruem, Komugi, and Neferpitou.
-- Built Phase IV as two parallel four-step tracks: Komugi’s Gungi progression and the extermination team’s military preparation.
-- Added a plan-versus-known-reality palace blueprint covering Meruem, Pitou, Pouf, and Youpi assignments.
-- Added the Episode 110 launch-readiness field for portals, inside intelligence, Guard positions, and the Selection deadline.
-- Replaced Phase III and IV’s generic artwork hooks with local Meruem and Komugi visual records and Hunterpedia credit links.
-- Marked Phases I–IV as finished while preserving the shared phase shell, state ledger, episode groups, navigation, and stable ids.
+- Added `src/data/chimeraAntPalaceInvasionSystem.js` with the complete Phase V information model.
+- Added `src/components/ChimeraAntPalaceInvasionSystem.jsx` and dedicated desktop presentation styles.
+- Built a schematic Royal Palace field with seven operational zones: airspace, Royal chamber, central stair, Pouf front, Pitou/Komugi front, underground route, and Meruem extraction vector.
+- Added six sourced entry and separation vectors for Dragon Dive, Netero/Zeno contact, Knov portal entry, Guard separation, Pitou diversion, and Ikalgo’s underground route.
+- Added a six-stage relative invasion clock. Only launch is fixed at `00:00`; later labels remain relative to avoid inventing unsupported second-by-second precision.
+- Added seven simultaneous event lanes for Gon/Pitou, Killua, Knuckle/Shoot/Youpi, Morel/Pouf, Ikalgo/Welfin, Netero/Meruem, and Komugi.
+- Aligned every lane across four shared periods: Impact, Rupture, Separation, and Divergence.
+- Added a plan-versus-actual disruption ledger covering Meruem separation, Pitou containment, Youpi attrition, Pouf containment, and synchronization failure.
+- Added verified local visual records for Netero, Meruem, Gon, Neferpitou, and Komugi.
+- Replaced the Phase V generic image hook with a local Isaac Netero visual record and Hunterpedia source.
+- Marked Phase V as finished while preserving the shared phase id, state ledger, episode groups, and next-phase navigation.
 
 ### Verification
 
-- Phase III evidence ranges cover Episodes 96–97, 98–100, and 101–102, matching the phase’s 96–102 boundary.
-- Phase IV uses two aligned progress tracks covering 103, 104–105, 106–108, and 109–110 on the Gungi side, and 103–105, 106–107, 108–109, and 110 on the operation side.
-- The Phase IV blueprint contains one row for each intended Royal target: Meruem, Neferpitou, Shaiapouf, and Menthuthuyoupi.
-- `ChimeraAntPhaseArchive.jsx` renders the middle-phase systems inside the existing Phase III and IV ids and marks all four completed phases with `data-phase-finish="complete"`.
-- The Batch 6 comparison is six commits ahead of the Batch 5 ledger with five changed files and no branch divergence.
-- The new stylesheet contains no mobile layout breakpoint; its only media query respects reduced-motion preferences.
+- Phase V remains bounded to Episodes 111–121 through the existing three contiguous groups: 111–113, 114–117, and 118–121.
+- The relative clock contains six ordered records with Hunterpedia episode evidence and does not claim precise timestamps beyond launch.
+- The lane matrix contains seven rows and four event cells per row, producing twenty-eight synchronized state records.
+- The palace schematic contains seven zones and six directional vectors with deterministic ids and source links.
+- The Phase V integration uses the existing `chimera-phase-palace-invasion` id and `data-phase-section="true"` marker.
+- Portraits appear only on lanes with semantically matching local records; other lanes use numbered dossier tokens rather than misleading character images.
+- The Batch 7 comparison is seven commits ahead of the Batch 6 ledger, with six changed files and no branch divergence.
+- No mobile layout breakpoint was added; the only media query respects reduced-motion preferences.
 - GitHub exposes no CI status for the final implementation commit, so Vite compilation and screenshot-level browser verification remain outstanding.
 
-### Risks carried into Batch 7
+### Risks carried into Batch 8
 
-- The Phase III map deliberately uses a dense 780px desktop field and needs browser-level collision and crop verification during Batch 11.
-- Phase IV’s blueprint records assumptions already under pressure by Episode 110; the full consequences belong to the Phase V clock rather than this preparation section.
-- Episode stills have not been added; verified repository-local portraits and source hooks are used instead.
+- The palace schematic’s seven absolute-positioned zones and six-column evidence key require browser-level collision testing during Batch 11.
+- The relative clock deliberately prioritizes accuracy over false timestamp precision; exact narrator timestamps can be added later only when individually verified.
+- Phase VI and Phase VII still use scaffold-level composition hooks.
 - Supporting archive sections remain generic until Batches 9 and 10.
 
 ### Next action
 
-Build Phase V as the page’s most technically ambitious system: a Royal Palace plan, Dragon Dive and portal entry vectors, a visible invasion clock, parallel lanes for Gon/Pitou, Killua, Knuckle/Shoot/Youpi, Morel/Pouf, Ikalgo/Welfin, Netero/Meruem, and Komugi, plus clear plan-versus-actual disruption states.
+Build Phase VI and Phase VII: create a mirrored Netero/Meruem versus Gon/Pitou endgame system with cost, weapon, decision, and aftermath comparisons; then create the poison-and-memory progression, final Gungi presentation, and survivor-destination map for Episodes 132–136.
