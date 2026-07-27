@@ -15,8 +15,8 @@ Branch: `chimera-ant-retransform`
 | 7 | Complete | Finished Phase V’s palace schematic, relative clock, seven event lanes, and disruption ledger. |
 | 8 | Complete | Finished Phase VI’s mirrored endgames and Phase VII’s poison, memory, final Gungi, survivor routes, and Election transition. |
 | 9 | Complete | Replaced six generic supporting sections with Chimera Ant-specific character, faction, location, Nen, conflict, and object archive systems. |
-| 10 | Next | Build ending/aftermath, manga-versus-anime, records, and source systems. |
-| 11 | Pending | Final verification, performance, browser QA, and bugs. |
+| 10 | Complete | Replaced the ending, adaptation, records, and sources sections with causal, correspondence, provenance, and boundary systems. |
+| 11 | Next | Execute final desktop verification, compilation, visual QA, performance checks, source audit, and bug fixes. |
 
 ## Completed batch summary
 
@@ -55,43 +55,50 @@ Branch: `chimera-ant-retransform`
 
 - Added mirrored Netero/Meruem and Gon/Pitou endgame dossiers, six comparison axes, poison/memory progression, final Gungi motif, survivor routes, and the Election transition.
 
-## Batch 9 record
+### Batch 9 — Supporting archive systems
+
+- Added forty character, faction, location, Nen, conflict, and object records in six Chimera Ant-specific desktop systems.
+
+## Batch 10 record
 
 ### Completed
 
-- Added `src/data/chimeraAntSupportingArchive.js` with six frozen archive collections and forty supporting records.
-- Added eight character dossiers linking phase coverage, episode range, allegiance, objective, tactical function, outcome, local portrait evidence where available, and Hunterpedia sources.
-- Added five faction records for the Extermination Team, royal core, dispersed colony, human-aligned Ants, and occupied East Gorteau state machinery.
-- Added a six-stop geographic escalation route from the Kakin coast through NGL, East Gorteau, the Royal Palace, the weapons test site, and the final Peijin/Gungi route.
-- Added an eight-row tactical Nen matrix separating user, phase, battlefield function, constraint, and consequence.
-- Added seven conflict and operation rows using a shared objective → disruption → cost → outcome sequence.
-- Added a six-record object and evidence cabinet that keeps interpretive reading attached to operational evidence rather than restoring a standalone Themes section.
-- Added `src/components/ChimeraAntSupportingArchivePortals.jsx` and `src/components/ChimeraAntSupportingArchive.css`.
-- Preserved the six stable section ids and reading-rail destinations while replacing the rendered generic section bodies through React portals.
-- Hid the six legacy generic wrappers only inside their matching Chimera Ant sections; the generic arc data remains untouched for every other story page.
-- Added `scripts/audit-chimera-ant-batch-9.mjs` and registered `npm run audit:chimera-ant-batch-9`.
+- Added `src/data/chimeraAntReferenceArchive.js` with four frozen collections for ending, adaptation, records, and sources.
+- Built a five-step ending causal chain from Rose detonation through delayed poison, recovered memory, final Gungi, and the transfer into the Election arc.
+- Added five outcome records for the royal core, Komugi, Gon, the Hunter Association, and surviving Chimera Ants.
+- Added a manga-versus-anime boundary field recording Chapters 186–318 as 133 chapters and Episodes 76–136 as 61 episodes.
+- Added seven phase correspondence rows connecting each editorial phase to manga and anime ranges without presenting the phase names as official production labels.
+- Added four adaptation comparison records for narration, temporal duration, violence/aftermath, and the final Gungi sequence.
+- Added four record totals, five archive boundary rules, and three directory-action records.
+- Added four source groups separating arc boundaries, places/institutions, people, and episode evidence.
+- Added four evidence classes defining primary canon, secondary reference, editorial interpretation, and image provenance.
+- Added `src/components/ChimeraAntReferenceArchivePortals.jsx` and a dedicated desktop-only stylesheet.
+- Preserved the stable `chimera-ending`, `chimera-adaptation`, `chimera-records`, and `chimera-sources` section shells while hiding only their legacy generic children.
+- Integrated the four reference portals through `ChimeraAntPhaseArchive.jsx`.
+- Added `scripts/audit-chimera-ant-batch-10.mjs` and registered `npm run audit:chimera-ant-batch-10`.
 
 ### Verification
 
-- Collection counts are fixed at 8 characters, 5 factions, 6 locations, 8 Nen records, 7 conflicts, and 6 objects.
-- Every record has a deterministic unique id and a Hunterpedia/Fandom source boundary.
-- Seven character records use repository-local `/media/portraits/` assets; Morel uses a numbered dossier token instead of an invented or misleading image.
-- The location route is explicitly ordered `01` through `06`; the object cabinet is explicitly ordered `01` through `06`.
-- The Nen matrix uses table semantics and the conflict ledger exposes four synchronized operational columns.
-- The integration imports and renders the supporting archive portal system once from `ChimeraAntPhaseArchive.jsx` while targeting the existing `chimera-characters`, `chimera-factions`, `chimera-locations`, `chimera-nen`, `chimera-conflicts`, and `chimera-objects` section shells.
-- The Batch 9 stylesheet uses fixed desktop grids for the two-column character board, twelve-column faction field, six-stop location route, four-column Nen and conflict matrices, and three-column object cabinet.
-- Its only media query respects reduced-motion preferences; no mobile-width breakpoint was introduced.
-- GitHub reports six forward implementation commits from the Batch 8 ledger, six changed files, and no branch divergence.
-- GitHub exposes no CI status for the pre-ledger implementation head. The connector cannot execute the new npm audit, Vite build, or browser rendering, so compile success and visual QA remain unconfirmed rather than being claimed as passed.
+- The ending model contains exactly five ordered causal records and five unique outcome records.
+- Every ending event has both a stated cause and consequence plus a Hunterpedia episode source.
+- The adaptation model contains exactly seven ordered phase rows, four medium-comparison records, and inclusive totals of 133 manga chapters and 61 anime episodes.
+- The records system explicitly warns that the seven phase labels are editorial navigation rather than official production labels and closes its scope at Chapter 318 and Episode 136.
+- The source directory contains four groups with at least two Hunterpedia/Fandom references each and assigns a stated evidence purpose to every group.
+- The component uses table semantics for chapter/episode correspondence and explicit causal labels for the ending chain.
+- The stylesheet uses fixed desktop fields: five outcome columns, four record/evidence columns, two adaptation/source columns, and no mobile-width breakpoint.
+- Its only media query respects reduced-motion preferences.
+- GitHub reports six forward implementation commits from the Batch 9 ledger, six changed files, and no branch divergence.
+- GitHub exposes no CI status for the pre-ledger implementation head. The connector cannot execute the Batch 8–10 npm audits, Vite build, or browser rendering, so runtime compilation and visual verification remain unconfirmed rather than being claimed as passed.
 
-### Risks carried into Batch 10
+### Risks carried into Batch 11
 
-- The React portal integration preserves stable page shells without rewriting the large route component, but it requires browser verification that all six targets mount after commit and that hidden legacy wrappers leave no spacing residue.
-- The character board, Nen matrix, six-column route, and four-stage conflict rows are intentionally dense and require overflow, typography, and crop inspection during Batch 11.
-- Several supporting records use character or episode pages as evidence where no dedicated object/location page is guaranteed; Batch 10’s source directory must make those boundaries explicit.
-- Episode stills remain out of scope for this batch; local portraits and explanatory systems carry the presentation.
-- The Batch 9 audit exists in the repository but has not been executed by CI or a connected runtime.
+- Both reference systems use React portals and require browser confirmation that all four targets mount after the destination sections exist and that hidden legacy children leave no residual spacing.
+- The records action callbacks are wired through the phase archive contract, but the current route component does not yet pass `onNavigate` into that contract; Batch 11 must either pass the callback or convert the actions to verified links.
+- The five-column outcome field, adaptation table, source groups, and earlier dense systems require collision, overflow, crop, and reading-size inspection at 1366, 1600, 1920, and 2560 pixel widths.
+- The chapter-to-episode phase correspondence is editorial and should be fact-checked against chapter/episode endpoints during the final content audit.
+- Hunterpedia/Fandom remains a secondary reference. Exact scene wording and composition must remain attributed to the manga or anime rather than inferred from the secondary index.
+- The Batch 10 audit exists in the repository but has not been executed by CI or a connected runtime.
 
 ### Next action
 
-Build Batch 10: replace the generic ending, manga-versus-anime, record-summary, and source-list sections with Chimera Ant-specific systems covering the final causal chain, survivor outcomes, chapter/episode correspondence, adaptation choices, source provenance, and archive boundaries.
+Execute Batch 11: obtain a runnable checkout or CI path, run the dedicated Chimera Ant audits and full Vite build, inspect the page at all four desktop target widths, fix portal mounting and navigation, correct overflow/crops/spacing, verify image and source provenance, measure performance, and only then mark the redesign fully complete and disable the automation.
