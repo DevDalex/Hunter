@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true,
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": false,
+    "types": ["node", "vitest/globals", "@testing-library/jest-dom"]
+  },
+  "include": [
+    "src/schemas/**/*.js",
+    "src/media/**/*.js",
+    "scripts/build-media-variants.mjs",
+    "scripts/verify-media-manifest.mjs",
+    "tests/**/*.js",
+    "tests/**/*.jsx",
+    "playwright.config.js",
+    "vitest.config.js"
+  ]
+}
