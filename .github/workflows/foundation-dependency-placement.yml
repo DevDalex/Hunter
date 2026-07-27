@@ -6,6 +6,9 @@ on:
       - chimera-ant-retransform
     paths:
       - .github/workflows/foundation-dependency-placement.yml
+  pull_request:
+    paths:
+      - .github/workflows/foundation-dependency-placement.yml
 
 permissions:
   contents: write
