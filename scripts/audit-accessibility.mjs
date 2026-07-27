@@ -43,12 +43,22 @@ for (const token of ['royal-map__viewport', 'royal-map__queen-node', 'royal-map_
 assert(royalTreeSource.includes("'aria-pressed': pinned") && royalTreeSource.includes("aria-current={selected ? 'true' : undefined}"), 'pin state and current prince state must remain semantically distinct');
 assert(royalTreeSource.includes("'aria-controls': 'royal-map-inspector'") && royalTreeSource.includes('id="royal-map-inspector"'), 'every map trigger must identify the single controlled inspector');
 assert(royalTreeSource.includes('onFocus: () => onPreview(record)') && royalTreeSource.includes('onBlur: onClear') && royalTreeSource.includes('onMouseEnter: () => onPreview(record)'), 'Royal Family previews must remain keyboard and pointer accessible');
-assert(royalTreeSource.includes('aria-live="polite"') && royalTree.includes('activeRecord = hoveredRecord || pinnedRecord || selectedRecord'), 'the single inspector must announce human-readable active records');
+assert(
+  royalTreeNodes.includes('aria-live="polite"')
+    && royalTreeNodes.includes('<h3 id={titleId}>{record.name}</h3>')
+    && royalTree.includes('const activeRecord = hoveredRecord || pinnedRecord;'),
+  'the interaction-driven inspector must announce the active record name without forcing a default panel',
+);
 assert(!royalTreeSource.includes('setHoverdKey'), 'the misspelled blur setter must remain absent');
 assert(royalTreeSource.includes('abilityLabelFor') && royalTreeSource.includes('getOrganizationMembers'), 'guards and mafia members must expose essential profile information through the inspector');
 assert(!royalTree.includes('<main className="royal-map__main">'), 'the embedded Royal Family map must not create a nested main landmark');
 assert(royalTreeSource.includes("status === 'deceased'") && royalTreeSource.includes("? 'Deceased'"), 'the royal visualization must expose a written nonvisual death status');
-assert(royalTreeSource.includes('aria-label={`${prince.short} protection and intelligence circle`}') && royalTreeSource.includes('aria-label="Scrollable Kakin royal relationship map"'), 'the map and every protection circle must be named');
+assert(
+  royalTreeNodes.includes('aria-label={`${prince.short} protection and intelligence circle.')
+    && royalTreeNodes.includes('All ${guards.length} documented records shown.')
+    && royalTree.includes('aria-label="Scrollable Kakin royal relationship map"'),
+  'the map and every complete protection circle must have meaningful accessible names',
+);
 assert(royalTree.includes("if (event.key === 'Escape')") && royalTree.includes('setPinnedRecord(null)'), 'keyboard users must be able to clear pinned records with Escape');
 assert(blackWhale.includes('aria-label="Black Whale passenger manifest" tabIndex="0"'), 'the scrollable ship manifest must be keyboard-focusable and named');
 assert(worldMap.includes('Skip map and open location list') && worldMap.includes('world-map-inspector__mobile-toggle') && worldMap.includes('aria-label={`${location.name}, ${location.kind}'), 'the world map needs equivalent keyboard, list, and mobile-inspector access');
@@ -57,4 +67,4 @@ assert(search.includes('role="status" aria-live="polite"'), 'archive-search resu
 assert(drawer.includes('role="status" aria-live="polite"') && drawer.includes("event.key === 'Escape'"), 'chapter source changes and drawer dismissal must be announced and keyboard-operable');
 assert(packageJson.includes('"qa:accessibility"') && packageJson.includes('"audit:accessibility"'), 'repeatable accessibility commands are missing');
 
-console.log('Accessibility audit passed: semantic contrast layer; legacy ARIA parent-role preservation; skip navigation; contained menus; keyboard-accessible Royal Family coordinate map; distinct pinned/current states; one controlled live inspector; named map and protection regions; Escape clearing; reduced motion and written status.');
+console.log('Accessibility audit passed: semantic contrast layer; legacy ARIA parent-role preservation; skip navigation; contained menus; keyboard-accessible Royal Family coordinate map; distinct pinned/current states; interaction-driven live inspector; complete named protection regions; Escape clearing; reduced motion and written status.');
