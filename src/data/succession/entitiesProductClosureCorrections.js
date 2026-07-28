@@ -1,4 +1,5 @@
 import { successionArchiveData as productFoundationData } from './entitiesProductClosureFoundation.js';
+import { applySuccession414415ArchiveCorrections } from '../succession414415Research.js';
 
 const systemIdCorrections = Object.freeze({
   'nen-system:post-mortem-nen-continuation': 'nen-system:post-mortem-nen',
@@ -12,7 +13,7 @@ const glossaryEntries = Object.freeze((productFoundationData.glossaryEntries || 
   relatedEntityIds: Object.freeze((entry.relatedEntityIds || []).map((id) => systemIdCorrections[id] || id)),
 })));
 
-export const successionArchiveData = Object.freeze({
+export const successionArchiveData = applySuccession414415ArchiveCorrections(Object.freeze({
   ...productFoundationData,
   glossaryEntries,
-});
+}));
