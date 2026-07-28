@@ -38,7 +38,12 @@ const changelog = await readFile(path.join(root, 'src/data/referenceEntities.js'
 
 assert(!/\bfetch\s*\(|api\.php|localStorage|sessionStorage/.test(fandomImage), 'FandomImage must not perform network discovery or browser caching');
 assert(fandomImage.includes('if (!fallbackImage || !available) return null'), 'image-less records must collapse instead of leaving a frame');
-assert(safeImage.includes('width={media?.width') && safeImage.includes('height={media?.height') && safeImage.includes('objectPosition: media.focal'), 'SafeImage must apply dimensions and focal metadata');
+assert(
+  safeImage.includes('width={resolvedMedia?.width || media?.width || undefined}')
+    && safeImage.includes('height={resolvedMedia?.height || media?.height || undefined}')
+    && safeImage.includes('objectPosition: resolvedMedia?.focal || media?.focal'),
+  'SafeImage must apply manifest-first dimensions and focal metadata with legacy media fallback',
+);
 assert(mediaRegistry.includes("from './mediaSchema'")
   && mediaRegistry.includes("from './sourcePolicy'")
   && mediaRegistry.includes('state: mediaStateFor(record)')
@@ -52,7 +57,7 @@ assert(
     && !/\bfetch\s*\(|api\.php|localStorage|sessionStorage/.test(sourcePortrait),
   'source portraits must use explicit stored/verified image records or an immediate text fallback without runtime filename discovery',
 );
-assert(roster.includes("character.image && <div className=\"roster-card__image\""), 'Succession roster must omit the media area when no portrait exists');
+assert(roster.includes('character.image && <div className="roster-card__image"'), 'Succession roster must omit the media area when no portrait exists');
 assert(connectionBoard.includes('member.image && <span data-image-frame>'), 'connection board must omit the media area when no portrait exists');
 assert(changelog.includes('Phase 7B media stabilization'), 'archive changelog is missing Phase 7B');
 
@@ -69,4 +74,4 @@ let legacyResolverExists = true;
 try { await access(path.join(root, 'src/lib/hunterpediaMedia.js')); } catch { legacyResolverExists = false; }
 assert(!legacyResolverExists, 'legacy runtime portrait resolver must remain removed');
 
-console.log(`Media audit passed under source policy ${SOURCE_POLICY_VERSION}: ${priorityPortraits.length} local portraits and ${blackWhaleRoomMedia.length} Black Whale derivatives satisfy the shared schema; source portraits use explicit-only media records.`);
+console.log(`Media audit passed under source policy ${SOURCE_POLICY_VERSION}: ${priorityPortraits.length} local portraits and ${blackWhaleRoomMedia.length} Black Whale derivatives satisfy the shared schema; SafeImage uses manifest-first metadata; source portraits use explicit-only media records.`);
