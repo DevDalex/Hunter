@@ -112,7 +112,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
         requestedPanel={routeParams.panel}
         onNavigate={(readerRoute) => onNavigate('series', 'succession-contest', { section: 'chapters', ...readerRoute })}
         onExitArchive={() => onNavigate('succession', 'archive')}
-        onOpenChapterRecord={(chapter) => onNavigate('succession', 'chapters', { entity: `chapter:${chapter}` })}
+        onOpenChapterRecord={(chapter) => window.setTimeout(() => onNavigate('succession', 'chapters', { entity: `chapter:${chapter}` }), 0)}
       />
     </Suspense>
   </section>;
@@ -122,12 +122,12 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     ? { kicker: '2011 television anime', title: 'The adaptation guide', description: 'Map all 148 episodes to the completed manga arcs and their source ranges without mixing the adaptation reference into any individual arc page.' }
     : chronologyPage
       ? { kicker: 'Cross-arc reference', title: 'The complete chronology', description: 'Follow selected events, flashbacks, dated periods, and movements across the Story archive. Every arc keeps its own internal timeline on its dedicated page.' }
-      : { kicker: 'Complete manga reference', title: 'The chapter directory', description: 'Search Chapters 1–339 here. Every dedicated arc page also contains its own scoped chapter directory, while the Succession archive maintains Chapters 340–413.' };
+      : { kicker: 'Complete manga reference', title: 'The chapter directory', description: `Search Chapters 1–339 here. Every dedicated arc page also contains its own scoped chapter directory, while the Succession archive maintains Chapters 340–${LATEST_CHAPTER}.` };
 
   return <section className="story-utility-shell">
     <nav className="story-utility-shell__back" aria-label="Story utility navigation"><button type="button" onClick={() => onNavigate('series')}>← All arcs</button></nav>
     <PageIntro kicker={pageIntro.kicker} title={pageIntro.title} description={pageIntro.description} compact>
-      <dl className="page-intro__facts"><div><dt>Story arcs</dt><dd>9 pages</dd></div><div><dt>Numbered chapters</dt><dd>413</dd></div><div><dt>2011 anime</dt><dd>148 episodes</dd></div></dl>
+      <dl className="page-intro__facts"><div><dt>Story arcs</dt><dd>9 pages</dd></div><div><dt>Numbered chapters</dt><dd>{LATEST_CHAPTER}</dd></div><div><dt>2011 anime</dt><dd>148 episodes</dd></div></dl>
     </PageIntro>
     <WorkspaceNav items={utilityPages} activeId={routeTarget} onSelect={(id) => onNavigate('series', id)} label="Story reference tools" />
     <details className="spoiler-settings"><summary>Reading boundary <b>Chapter {spoilerLimit}</b></summary><SpoilerControl value={spoilerLimit} latestChapter={LATEST_CHAPTER} onChange={onSpoilerChange} /></details>
