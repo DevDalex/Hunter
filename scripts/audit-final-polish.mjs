@@ -47,7 +47,7 @@ assert(lockedAuditPositions.every((position, index) => index === 0 || position >
 for (const auditText of [storyAudit, referenceAudit, characterAudit]) {
   assert(auditText.includes('Hunterpedia') || auditText.includes('isApprovedSourceUrl'), 'batch audits must keep the approved source policy visible');
 }
-assert(storyAudit.includes('mobile work must remain deferred') || storyArchitecture.toLowerCase().includes('mobile') && storyArchitecture.toLowerCase().includes('deferred'), 'mobile must remain explicitly deferred');
+assert(storyArchitecture.includes('desktop-first redesign') && storyArchitecture.includes('no batch may silently expand its scope'), 'Story architecture must keep the desktop-only scope explicit');
 assert(referenceAudit.includes('referenceBackbone') && characterAudit.includes('No cast deletion'), 'Batch 8 and Batch 9 contracts must stay visible');
 
 for (const docName of ['CHIMERA-ANT-PROTOTYPE.md', 'REFERENCE-BACKBONE.md', 'CHARACTER-PROFILES.md', 'FINAL-POLISH.md']) {
@@ -55,4 +55,4 @@ for (const docName of ['CHIMERA-ANT-PROTOTYPE.md', 'REFERENCE-BACKBONE.md', 'CHA
   assert(docs.includes('Batch 10') || docName !== 'FINAL-POLISH.md', 'final polish documentation must identify Batch 10');
 }
 
-console.log('Final polish audit passed: Black Archive palette locked, final CSS loaded last, Batch 7–9 audits preserved inside aggregate preflight, mobile deferred, and Batch 10 documented.');
+console.log('Final polish audit passed: Black Archive palette locked, final CSS loaded last, Batch 7–9 audits preserved inside aggregate preflight, desktop-only scope retained, and Batch 10 documented.');

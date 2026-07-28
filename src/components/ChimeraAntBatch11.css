@@ -1,0 +1,572 @@
+/* Batch 11 desktop containment fixes discovered through Chromium QA. */
+
+.chimera-dispersal-system__field {
+  grid-template-columns: minmax(560px, 1.35fr) minmax(230px, 0.65fr);
+}
+
+.chimera-dispersal-system__branch {
+  width: clamp(220px, 17vw, 282px);
+}
+
+.chimera-dispersal-system__legend,
+.chimera-dispersal-system__legend > *,
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records,
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records > * {
+  min-width: 0;
+}
+
+.chimera-dispersal-system__legend > strong,
+.chimera-dispersal-system__legend > p {
+  overflow-wrap: anywhere;
+}
+
+.chimera-invasion-system__clock ol {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  overflow-x: visible;
+}
+
+.chimera-invasion-system__clock li,
+.chimera-invasion-system__clock-mark,
+.chimera-invasion-system__clock article {
+  min-width: 0;
+}
+
+.chimera-invasion-system__clock-mark {
+  padding-inline: 10px;
+}
+
+.chimera-invasion-system__clock article {
+  padding-inline: 12px;
+}
+
+.chimera-invasion-system__clock-mark strong,
+.chimera-invasion-system__clock h6,
+.chimera-invasion-system__clock article p,
+.chimera-invasion-system__clock article a {
+  overflow-wrap: anywhere;
+}
+
+.chimera-invasion-system__lane-matrix {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: visible;
+}
+
+.chimera-invasion-system__lane-head,
+.chimera-invasion-system__lane {
+  min-width: 0;
+  grid-template-columns: minmax(190px, 0.95fr) repeat(4, minmax(165px, 1fr));
+}
+
+.chimera-invasion-system__lane-head > div,
+.chimera-invasion-system__lane > header,
+.chimera-invasion-system__lane > section,
+.chimera-invasion-system__lane > header > * {
+  min-width: 0;
+}
+
+.chimera-invasion-system__lane-head strong,
+.chimera-invasion-system__lane h6,
+.chimera-invasion-system__lane p {
+  overflow-wrap: anywhere;
+}
+
+/* Readability tokens keep small accent copy compliant on both paper and dark surfaces. */
+.chimera-ant-page {
+  --chimera-readable-olive: #59652f;
+  --chimera-readable-royal: #58516f;
+  --chimera-dark-olive: #b6c47d;
+  --chimera-dark-moss: #c1caa9;
+  --chimera-dark-rose: #d99a9d;
+  --chimera-dark-royal: #b8b1d1;
+}
+
+.chimera-ant-canvas {
+  --chimera-olive: var(--chimera-readable-olive) !important;
+  --chimera-royal: var(--chimera-readable-royal) !important;
+}
+
+.chimera-ant-hero-v2,
+.chimera-ant-shell-hero,
+.chimera-ant-rail {
+  --chimera-olive: var(--chimera-dark-olive) !important;
+  --chimera-moss: var(--chimera-dark-moss) !important;
+  --chimera-rose: var(--chimera-dark-rose) !important;
+  --chimera-royal: var(--chimera-dark-royal) !important;
+}
+
+.chimera-ant-rail nav button {
+  color: rgba(233, 230, 218, 0.72) !important;
+}
+
+.chimera-ant-rail nav button i,
+.chimera-ant-rail__identity small,
+.chimera-ant-rail__phase small {
+  color: rgba(233, 230, 218, 0.72) !important;
+}
+
+/* Enforce a comfortable desktop floor for labels, metadata, captions, and indices. */
+.chimera-ant-page dt,
+.chimera-ant-page small,
+.chimera-ant-page [class*="__eyebrow"],
+.chimera-ant-page [class*="__kicker"],
+.chimera-ant-page [class*="__label"],
+.chimera-ant-page [class*="__meta"],
+.chimera-ant-page [class*="__badge"],
+.chimera-ant-page [class*="__tag"],
+.chimera-ant-page [class*="__ordinal"] > span,
+.chimera-ant-page [class*="__index"] > span,
+.chimera-ant-page .chimera-ant-hero-v2__field-note > span,
+.chimera-ant-page .chimera-ant-rail__identity > span,
+.chimera-ant-page .chimera-ant-rail__phase > span,
+.chimera-ant-page .chimera-ant-rail nav button i,
+.chimera-ant-page .chimera-ant-glance__record > span,
+.chimera-ant-page .chimera-ant-reading-spread aside > span,
+.chimera-ant-page .chimera-ant-ending aside > span,
+.chimera-ant-page .chimera-ant-premise-ledger article > span,
+.chimera-ant-page .chimera-ant-phase-rail__segment > span,
+.chimera-ant-page article > span,
+.chimera-ant-page .chimera-ant-record-summary span,
+.chimera-ant-page .chimera-phase-spread__media figcaption > span,
+.chimera-ant-page .chimera-phase-spread__media figcaption a,
+.chimera-ant-page .chimera-phase-spread__footer span {
+  font-size: 0.78rem !important;
+  line-height: 1.45;
+}
+
+/* Phase-system labels are intentionally compact, but must remain legible. */
+.chimera-ant-page .chimera-early-system span,
+.chimera-ant-page .chimera-early-system small,
+.chimera-ant-page .chimera-early-system a,
+.chimera-ant-page .chimera-middle-system span,
+.chimera-ant-page .chimera-middle-system small,
+.chimera-ant-page .chimera-middle-system a,
+.chimera-ant-page .chimera-invasion-system span,
+.chimera-ant-page .chimera-invasion-system small,
+.chimera-ant-page .chimera-invasion-system a,
+.chimera-ant-page .chimera-endgame-system span,
+.chimera-ant-page .chimera-endgame-system small,
+.chimera-ant-page .chimera-endgame-system a,
+.chimera-ant-page .chimera-supporting-portal-root span,
+.chimera-ant-page .chimera-supporting-portal-root small,
+.chimera-ant-page .chimera-supporting-portal-root a,
+.chimera-ant-page .chimera-reference-root span,
+.chimera-ant-page .chimera-reference-root small,
+.chimera-ant-page .chimera-reference-root a,
+.chimera-ant-page .chimera-phase-spread__episode-index > span,
+.chimera-ant-page .chimera-phase-spread__episode-groups small {
+  font-size: 0.78rem !important;
+  line-height: 1.45;
+}
+
+.chimera-ant-page .chimera-expedition-system__threat li p,
+.chimera-ant-page .chimera-expedition-system__route article > strong,
+.chimera-ant-page .chimera-dispersal-system__branch > p,
+.chimera-ant-page .chimera-dispersal-system__occupation li p,
+.chimera-ant-page .chimera-preparation-system__track li p,
+.chimera-ant-page .chimera-preparation-system__readiness article p,
+.chimera-ant-page .chimera-invasion-system__zone p,
+.chimera-ant-page .chimera-supporting-portal-root dd,
+.chimera-ant-page .chimera-reference-root dd {
+  font-size: 0.78rem !important;
+  line-height: 1.45;
+}
+
+.chimera-ant-page .chimera-invasion-system__clock-mark strong,
+.chimera-ant-page .chimera-endgame-system__portraits figcaption strong,
+.chimera-ant-page .chimera-endgame-card > header > div > strong,
+.chimera-ant-page .chimera-mirrored-endgames__axis strong {
+  font-size: 0.78rem !important;
+  line-height: 1.35;
+}
+
+/* Explicit surface-aware contrast for the final audit offenders. */
+.chimera-ant-page .chimera-ant-glance__label,
+.chimera-ant-page .chimera-ant-phase-rail__eyebrow {
+  color: var(--chimera-moss) !important;
+}
+
+.chimera-three-front-system__row--colony > header,
+.chimera-three-front-system__row--association > header {
+  background-color: var(--chimera-charcoal);
+}
+
+.chimera-three-front-system__row--colony > header > small,
+.chimera-three-front-system__row--association > header > small {
+  color: rgba(233, 230, 218, 0.78) !important;
+}
+
+.chimera-phase-spread--parallel-invasion-clock[data-phase-finish="complete"] .chimera-phase-spread__footer,
+.chimera-phase-spread--mirrored-endgames[data-phase-finish="complete"] .chimera-phase-spread__footer {
+  background-color: var(--chimera-charcoal) !important;
+}
+
+.chimera-phase-spread--parallel-invasion-clock[data-phase-finish="complete"] .chimera-phase-spread__footer span,
+.chimera-phase-spread--mirrored-endgames[data-phase-finish="complete"] .chimera-phase-spread__footer span {
+  color: var(--chimera-dark-rose) !important;
+}
+
+/* The two dark phase headers need light accents while their paper bodies retain dark accents. */
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header {
+  --phase-header-accent: var(--chimera-dark-rose);
+}
+
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header .chimera-phase-spread__ordinal span,
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header .chimera-phase-spread__eyebrow,
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header .chimera-phase-spread__field-note dt,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header .chimera-phase-spread__ordinal span,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header .chimera-phase-spread__eyebrow,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header .chimera-phase-spread__field-note dt {
+  color: var(--phase-header-accent) !important;
+}
+
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header .chimera-phase-spread__field-note,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header .chimera-phase-spread__field-note {
+  border-top-color: var(--phase-header-accent) !important;
+}
+
+.chimera-phase-spread--dispersal-map {
+  --phase-accent: #52603c !important;
+}
+
+/* Make long record copy resilient without introducing a mobile layout. */
+.chimera-ant-page section,
+.chimera-ant-page article,
+.chimera-ant-page header,
+.chimera-ant-page footer,
+.chimera-ant-page aside,
+.chimera-ant-page figure,
+.chimera-ant-page figcaption,
+.chimera-ant-page div,
+.chimera-ant-page dl,
+.chimera-ant-page ol,
+.chimera-ant-page ul {
+  min-width: 0;
+}
+
+.chimera-ant-page p,
+.chimera-ant-page li,
+.chimera-ant-page dd,
+.chimera-ant-page dt,
+.chimera-ant-page h2,
+.chimera-ant-page h3,
+.chimera-ant-page h4,
+.chimera-ant-page h5,
+.chimera-ant-page h6,
+.chimera-ant-page a,
+.chimera-ant-page button,
+.chimera-ant-page small {
+  overflow-wrap: anywhere;
+}
+
+.chimera-ant-page p,
+.chimera-ant-page li,
+.chimera-ant-page dd,
+.chimera-ant-page figcaption {
+  text-wrap: pretty;
+}
+
+/* Screenshot-driven art direction: Phase III map and portraits. */
+.chimera-dispersal-system__legend {
+  --chimera-olive: var(--chimera-dark-olive) !important;
+  --chimera-moss: var(--chimera-dark-moss) !important;
+  --chimera-rose: var(--chimera-dark-rose) !important;
+  --chimera-royal: var(--chimera-dark-royal) !important;
+  background:
+    linear-gradient(180deg, rgba(182, 196, 125, 0.09), transparent 42%),
+    #151912 !important;
+  box-shadow: inset 1px 0 rgba(233, 230, 218, 0.08);
+}
+
+.chimera-dispersal-system__legend > span {
+  color: #d0d8c6 !important;
+}
+
+.chimera-dispersal-system__legend > strong {
+  color: #fffdf4;
+  text-shadow: 0 1px 18px rgba(0, 0, 0, 0.28);
+}
+
+.chimera-dispersal-system__legend > p {
+  color: #dfe4d8 !important;
+}
+
+.chimera-dispersal-system__origin {
+  border-color: rgba(233, 230, 218, 0.26);
+  background: #161a14;
+  box-shadow: 0 24px 50px rgba(17, 20, 15, 0.34);
+}
+
+.chimera-dispersal-system__origin > span {
+  color: #cdd6c4 !important;
+}
+
+.chimera-dispersal-system__origin h5 {
+  color: #fffdf4;
+}
+
+.chimera-dispersal-system__origin p {
+  color: #e2e7dc !important;
+}
+
+.chimera-dispersal-system__branch {
+  border-right: 1px solid rgba(29, 33, 26, 0.1);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.12);
+  background: #f8f5eb;
+  color: #171a15;
+  box-shadow: 0 18px 38px rgba(17, 20, 15, 0.16);
+}
+
+.chimera-dispersal-system__branch header small,
+.chimera-dispersal-system__branch > p,
+.chimera-dispersal-system__branch footer a {
+  color: #454b42 !important;
+}
+
+.chimera-dispersal-system__branch footer a {
+  text-decoration: underline;
+  text-decoration-color: rgba(69, 75, 66, 0.42);
+  text-underline-offset: 3px;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records {
+  gap: 12px;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records figure,
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records img,
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records .safe-image-placeholder {
+  height: 176px;
+  min-height: 176px;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records figure {
+  border-color: rgba(233, 230, 218, 0.3);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.24);
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records img {
+  filter: saturate(0.9) contrast(1.09) brightness(1.02);
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records > a:nth-child(1) img {
+  object-position: center 28%;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records > a:nth-child(2) img {
+  object-position: center 24%;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records > a:nth-child(3) img {
+  object-position: center 22%;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records figcaption {
+  padding: 48px 14px 14px;
+  background: linear-gradient(0deg, rgba(7, 10, 7, 0.98) 0%, rgba(7, 10, 7, 0.82) 58%, transparent 100%);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records figcaption span {
+  color: #f0eee5 !important;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records figcaption strong {
+  color: #fffdf4;
+  font-size: 1.08rem;
+}
+
+/* Screenshot-driven art direction: Palace schematic readability and clipping. */
+.chimera-invasion-system {
+  --chimera-olive: var(--chimera-dark-olive) !important;
+  --chimera-moss: var(--chimera-dark-moss) !important;
+  --chimera-rose: var(--chimera-dark-rose) !important;
+  --chimera-royal: var(--chimera-dark-royal) !important;
+  --invasion-line: rgba(233, 230, 218, 0.23);
+  --invasion-soft: rgba(233, 230, 218, 0.86);
+}
+
+.chimera-invasion-system__palace-field {
+  min-height: 1040px;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(184, 177, 209, 0.19), transparent 31%),
+    linear-gradient(90deg, transparent 49.75%, rgba(233, 230, 218, 0.12) 50%, transparent 50.25%),
+    linear-gradient(rgba(233, 230, 218, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(233, 230, 218, 0.06) 1px, transparent 1px),
+    #12160f;
+  background-size: auto, auto, 40px 40px, 40px 40px, auto;
+}
+
+.chimera-invasion-system__zone {
+  width: 220px;
+  padding: 17px 18px;
+  border-color: rgba(233, 230, 218, 0.34);
+  background: rgba(10, 13, 9, 0.97);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(8px);
+}
+
+.chimera-invasion-system__zone--airspace {
+  top: 11% !important;
+}
+
+.chimera-invasion-system__zone--underground {
+  top: 70% !important;
+}
+
+.chimera-invasion-system__zone--extraction {
+  top: 72% !important;
+}
+
+.chimera-invasion-system__zone > span {
+  color: #d3dbc9 !important;
+}
+
+.chimera-invasion-system__zone strong {
+  color: #fffdf4;
+  font-size: 1.08rem;
+  line-height: 1.28;
+}
+
+.chimera-invasion-system__zone p {
+  color: #dfe4d9 !important;
+}
+
+.chimera-invasion-system__vectors line {
+  stroke-width: 0.7;
+  opacity: 0.96;
+}
+
+.chimera-invasion-system__vectors line.is-disruption {
+  stroke-width: 0.86;
+}
+
+.chimera-invasion-system__vector-key {
+  bottom: 18px;
+  border-color: rgba(233, 230, 218, 0.28);
+  background: rgba(8, 11, 8, 0.98);
+  box-shadow: 0 -12px 34px rgba(0, 0, 0, 0.28);
+}
+
+.chimera-invasion-system__vector-key article {
+  min-height: 122px;
+  border-color: rgba(233, 230, 218, 0.2);
+}
+
+.chimera-invasion-system__vector-key span {
+  color: #d5dccd !important;
+}
+
+.chimera-invasion-system__vector-key strong {
+  color: #fffdf4;
+  font-size: 0.86rem;
+  line-height: 1.35;
+}
+
+.chimera-invasion-system__vector-key a {
+  color: #d9dfd3 !important;
+  text-decoration: underline;
+  text-decoration-color: rgba(217, 223, 211, 0.38);
+  text-underline-offset: 3px;
+}
+
+/* Screenshot-driven art direction: Final Gungi visual and light-panel contrast. */
+.chimera-aftermath-system {
+  --chimera-olive: var(--chimera-dark-olive) !important;
+  --chimera-moss: var(--chimera-dark-moss) !important;
+  --chimera-rose: var(--chimera-dark-rose) !important;
+  --chimera-royal: var(--chimera-dark-royal) !important;
+}
+
+.chimera-aftermath-system__final-game {
+  grid-template-columns: minmax(520px, 1.08fr) minmax(470px, 0.92fr);
+  min-height: 700px;
+}
+
+.chimera-aftermath-system__game-visual {
+  grid-template-rows: auto auto;
+  align-content: center;
+  gap: 28px;
+  min-height: 700px;
+  padding: 42px;
+  background:
+    radial-gradient(circle at 50% 36%, rgba(184, 177, 209, 0.18), transparent 46%),
+    linear-gradient(180deg, #11150f, #090c09);
+}
+
+.chimera-aftermath-system__gungi-board {
+  grid-template-columns: repeat(9, 46px);
+  grid-template-rows: repeat(9, 46px);
+  border-width: 12px;
+  border-color: #7d6c49;
+  background: #a58f60;
+  box-shadow: 0 30px 78px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(233, 230, 218, 0.13);
+}
+
+.chimera-aftermath-system__gungi-board > i {
+  border-color: rgba(20, 23, 18, 0.48);
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits {
+  position: static;
+  justify-content: center;
+  gap: 14px;
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits figure {
+  width: 154px;
+  height: 174px;
+  border-color: rgba(233, 230, 218, 0.34);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34);
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits img {
+  object-position: center 18%;
+  filter: saturate(0.88) contrast(1.09) brightness(1.03);
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits figcaption {
+  padding: 46px 12px 12px;
+  background: linear-gradient(transparent, rgba(7, 10, 7, 0.98));
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.92);
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits figcaption span {
+  color: #f0eee6 !important;
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits figcaption strong {
+  color: #fffdf4;
+  font-size: 0.94rem !important;
+}
+
+.chimera-aftermath-system__final-game > article {
+  --chimera-royal: #4d4568 !important;
+  padding: 48px;
+  background: #f0ecdf;
+  color: #171a15;
+}
+
+.chimera-aftermath-system__final-game > article > span,
+.chimera-aftermath-system__final-game > article > ol li > i,
+.chimera-aftermath-system__final-game > article > a {
+  color: #4d4568 !important;
+}
+
+.chimera-aftermath-system__final-game > article > p,
+.chimera-aftermath-system__final-game > article > ol p {
+  color: #444a40 !important;
+}
+
+.chimera-aftermath-system__final-game > article > ol strong {
+  color: #20251e;
+}
+
+.chimera-aftermath-system__final-game > article > a {
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-color: rgba(77, 69, 104, 0.42);
+  text-underline-offset: 4px;
+}

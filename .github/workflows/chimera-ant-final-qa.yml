@@ -1,0 +1,94 @@
+name: Chimera Ant Final QA
+
+on:
+  push:
+    branches:
+      - chimera-ant-retransform
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Chimera Ant audits
+        run: npm run verify:chimera-ant
+
+      - name: Build Vite application
+        run: npx vite build
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run four-width desktop QA
+        id: desktop_qa
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p .chimera-ant-qa
+          npm run qa:chimera-ant 2>&1 | tee .chimera-ant-qa/console.log
+
+      - name: Publish desktop QA report to pull request
+        if: always() && github.event_name == 'pull_request'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          QA_OUTCOME: ${{ steps.desktop_qa.outcome }}
+        run: |
+          {
+            echo '### Chimera Ant Final QA'
+            echo
+            echo "Commit: \`${GITHUB_SHA}\`"
+            echo "Desktop QA outcome: **${QA_OUTCOME}**"
+            echo
+            echo '<details><summary>Viewport report</summary>'
+            echo
+            echo '```json'
+            if [[ -f .chimera-ant-qa/report.json ]]; then
+              cat .chimera-ant-qa/report.json
+            else
+              echo '{"error":"No report.json was produced"}'
+            fi
+            echo '```'
+            echo '</details>'
+          } > .chimera-ant-qa/pr-comment.md
+
+          COMMENT_ID="$(gh api "repos/${GITHUB_REPOSITORY}/issues/${{ github.event.pull_request.number }}/comments" --paginate --jq '[.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("### Chimera Ant Final QA")))] | first | .id // empty')"
+          if [[ -n "${COMMENT_ID}" ]]; then
+            gh api --method PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${COMMENT_ID}" -F body=@.chimera-ant-qa/pr-comment.md >/dev/null
+          else
+            gh pr comment "${{ github.event.pull_request.number }}" --body-file .chimera-ant-qa/pr-comment.md
+          fi
+
+      - name: Upload desktop QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chimera-ant-desktop-qa
+          path: .chimera-ant-qa
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Enforce desktop QA result
+        if: steps.desktop_qa.outcome == 'failure'
+        run: exit 1

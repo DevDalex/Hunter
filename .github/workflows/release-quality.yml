@@ -1,0 +1,259 @@
+name: Release Quality
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      full:
+        description: Run the complete cross-browser and arc-specific release matrix
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: release-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    name: Foundation and canonical contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Run lint, types, unit tests, and media verification
+        run: npm run foundation:check
+
+      - name: Generate build identity
+        run: npm run generate:build-info
+
+      - name: Run aggregate repository preflight
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p .release-quality
+          npm run preflight:build 2>&1 | tee .release-quality/preflight.log
+
+      - name: Record dead-code inventory
+        continue-on-error: true
+        run: npm run report:deadcode > .release-quality/knip.log 2>&1
+
+      - name: Upload foundation diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-foundation-${{ github.sha }}
+          path: .release-quality
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+
+  required_release:
+    name: Production and required Chromium checks
+    needs: foundation
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Build production runtime from validated sources
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p .release-quality
+          npm run generate:build-info
+          npm run build:runtime 2>&1 | tee .release-quality/build.log
+
+      - name: Verify deployment artifact and Worker routing
+        shell: bash
+        run: |
+          test -f dist/server/index.js
+          test -f dist/server/chapter-admin.js
+          test -f dist/client/index.html
+          test ! -e dist/.openai
+          ! find dist/client -maxdepth 1 -type f -name 'hxh-archive-phase-*.zip' | grep -q .
+          node scripts/verify-cloudflare-worker.mjs
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run focused Playwright projects
+        run: npm run test:e2e:ci
+
+      - name: Run complete Chromium verification
+        env:
+          VISUAL_QA_SCREENSHOTS: failures
+          VISUAL_QA_STRICT_TOUCH: 0
+        run: npm run qa:browser:verify
+
+      - name: Upload release diagnostics and browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-required-${{ github.sha }}
+          path: |
+            .release-quality/build.log
+            cloudflare-worker-diagnostic.json
+            playwright-report
+            test-results
+            .search-qa
+            .visual-qa
+            .accessibility-qa
+            .interaction-qa
+            .performance-qa
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+
+  cross_browser:
+    name: Full Succession cross-browser release matrix
+    if: github.event_name != 'pull_request' || inputs.full == true
+    needs: foundation
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Build standalone runtime
+        run: npm run generate:build-info && npm run build:runtime
+
+      - name: Install Chromium, Firefox, and WebKit
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Run Succession desktop release matrix
+        run: npm run qa:succession-final-release
+
+      - name: Run Succession Firefox and WebKit matrix
+        run: npm run qa:succession-cross-browser
+
+      - name: Upload cross-browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-cross-browser-${{ github.sha }}
+          path: |
+            .succession-final-qa
+            .succession-cross-browser-qa
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+
+  arc_release:
+    name: Full arc-specific release suites
+    if: github.event_name != 'pull_request' || inputs.full == true
+    needs: foundation
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Build standalone runtime
+        run: npm run generate:build-info && npm run build:runtime
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify Chimera Ant structural contracts
+        run: npm run verify:chimera-ant
+
+      - name: Run Chimera Ant four-width desktop QA
+        run: npm run qa:chimera-ant
+
+      - name: Run Greed Island release suite
+        run: npm run qa:greed-island
+
+      - name: Upload arc-specific evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-arcs-${{ github.sha }}
+          path: |
+            .chimera-ant-qa
+            .greed-island-qa
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+
+  release_gate:
+    name: Authoritative release gate
+    if: always()
+    needs: [foundation, required_release, cross_browser, arc_release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce required results
+        env:
+          FOUNDATION: ${{ needs.foundation.result }}
+          REQUIRED_RELEASE: ${{ needs.required_release.result }}
+          CROSS_BROWSER: ${{ needs.cross_browser.result }}
+          ARC_RELEASE: ${{ needs.arc_release.result }}
+          FULL_RELEASE: ${{ github.event_name != 'pull_request' || inputs.full == true }}
+        shell: bash
+        run: |
+          failed=0
+          for result in "$FOUNDATION" "$REQUIRED_RELEASE"; do
+            if [[ "$result" != "success" ]]; then failed=1; fi
+          done
+
+          if [[ "$FULL_RELEASE" == "true" ]]; then
+            for result in "$CROSS_BROWSER" "$ARC_RELEASE"; do
+              if [[ "$result" != "success" ]]; then failed=1; fi
+            done
+          fi
+
+          {
+            echo '### Release Quality'
+            echo
+            echo "- Foundation: **$FOUNDATION**"
+            echo "- Production + required Chromium QA: **$REQUIRED_RELEASE**"
+            echo "- Cross-browser matrix: **$CROSS_BROWSER**"
+            echo "- Arc-specific suites: **$ARC_RELEASE**"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          exit "$failed"

@@ -1,0 +1,404 @@
+.chimera-phase-archive {
+  display: grid;
+  gap: 88px;
+}
+
+.chimera-phase-spread {
+  --phase-accent: var(--chimera-olive);
+  position: relative;
+  scroll-margin-top: 104px;
+  overflow: hidden;
+  border: 1px solid rgba(29, 33, 26, 0.24);
+  background: var(--chimera-bone);
+  color: var(--chimera-ink);
+  box-shadow: 0 18px 50px rgba(17, 20, 15, 0.12);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.chimera-phase-spread::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 5px;
+  background: var(--phase-accent);
+}
+
+.chimera-phase-spread.is-active {
+  border-color: color-mix(in srgb, var(--phase-accent) 68%, transparent);
+  box-shadow: 0 22px 64px rgba(17, 20, 15, 0.2);
+}
+
+.chimera-phase-spread__header {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr) minmax(280px, 0.48fr);
+  gap: 28px;
+  align-items: start;
+  padding: 32px 34px 30px 40px;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-phase-spread__ordinal {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-phase-spread__ordinal span,
+.chimera-phase-spread__eyebrow,
+.chimera-phase-spread__field-note dt,
+.chimera-phase-spread__states dt,
+.chimera-phase-spread__episode-index span,
+.chimera-phase-spread__episode-groups small,
+.chimera-phase-spread__media figcaption > span,
+.chimera-phase-spread__footer span {
+  font-size: 0.66rem;
+  font-weight: 750;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.chimera-phase-spread__ordinal span,
+.chimera-phase-spread__eyebrow,
+.chimera-phase-spread__field-note dt,
+.chimera-phase-spread__states dt,
+.chimera-phase-spread__episode-index span,
+.chimera-phase-spread__episode-groups small,
+.chimera-phase-spread__footer span {
+  color: var(--phase-accent);
+}
+
+.chimera-phase-spread__ordinal strong {
+  margin-top: 5px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 3.4rem;
+  font-weight: 500;
+  line-height: 0.9;
+}
+
+.chimera-phase-spread__header h3 {
+  max-width: 800px;
+  margin: 8px 0 12px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.3rem, 3.4vw, 4.2rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+.chimera-phase-spread__header > div:nth-child(2) > p {
+  max-width: 72ch;
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
+.chimera-phase-spread__field-note {
+  margin: 0;
+  border-top: 2px solid var(--phase-accent);
+}
+
+.chimera-phase-spread__field-note div {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.16);
+}
+
+.chimera-phase-spread__field-note dd {
+  margin: 5px 0 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.chimera-phase-spread__stage {
+  display: grid;
+  grid-template-columns: minmax(420px, 1.05fr) minmax(440px, 0.95fr);
+  min-height: 660px;
+}
+
+.chimera-phase-spread__media {
+  display: grid;
+  grid-template-rows: minmax(430px, 1fr) auto;
+  min-width: 0;
+  margin: 0;
+  background: var(--chimera-charcoal);
+  color: var(--chimera-bone);
+}
+
+.chimera-phase-spread__media > img {
+  width: 100%;
+  height: 100%;
+  min-height: 430px;
+  object-fit: cover;
+  object-position: var(--chimera-phase-image-position, center);
+  filter: saturate(0.82) contrast(1.04);
+}
+
+.chimera-phase-spread__media figcaption {
+  min-height: 132px;
+  padding: 20px 24px;
+  border-top: 1px solid rgba(233, 230, 218, 0.16);
+  background:
+    linear-gradient(135deg, rgba(111, 122, 69, 0.14), transparent 45%),
+    var(--chimera-charcoal);
+}
+
+.chimera-phase-spread__media figcaption > span {
+  color: var(--chimera-mist);
+}
+
+.chimera-phase-spread__media figcaption p {
+  margin: 8px 0;
+  color: rgba(233, 230, 218, 0.78);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.chimera-phase-spread__media figcaption small,
+.chimera-phase-spread__media figcaption a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(233, 230, 218, 0.52);
+  font-size: 0.72rem;
+}
+
+.chimera-phase-spread__body {
+  min-width: 0;
+  padding: 28px 30px 34px;
+  background:
+    linear-gradient(rgba(29, 33, 26, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 33, 26, 0.035) 1px, transparent 1px),
+    var(--chimera-paper);
+  background-size: 28px 28px;
+}
+
+.chimera-phase-spread__states {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 0 30px;
+  border-top: 1px solid rgba(29, 33, 26, 0.35);
+  border-left: 1px solid rgba(29, 33, 26, 0.16);
+}
+
+.chimera-phase-spread__states div {
+  min-height: 155px;
+  padding: 18px;
+  border-right: 1px solid rgba(29, 33, 26, 0.16);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.16);
+}
+
+.chimera-phase-spread__states dd {
+  margin: 9px 0 0;
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.chimera-phase-spread__episode-groups {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(29, 33, 26, 0.35);
+}
+
+.chimera-phase-spread__episode-groups li {
+  display: grid;
+  grid-template-columns: 74px minmax(0, 1fr);
+  gap: 18px;
+  min-height: 150px;
+  padding: 20px 4px;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-phase-spread__episode-index {
+  position: relative;
+  padding-right: 14px;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-phase-spread__episode-index i {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  font-style: normal;
+  color: var(--phase-accent);
+}
+
+.chimera-phase-spread__episode-index span {
+  display: block;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+}
+
+.chimera-phase-spread__episode-groups h4 {
+  margin: 6px 0 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.34rem;
+  font-weight: 500;
+}
+
+.chimera-phase-spread__episode-groups p {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.chimera-phase-spread__footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  align-items: center;
+  padding: 22px 34px 22px 40px;
+  border-top: 1px solid rgba(29, 33, 26, 0.18);
+  background: var(--chimera-bone);
+}
+
+.chimera-phase-spread__footer p {
+  max-width: 76ch;
+  margin: 5px 0 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.chimera-phase-spread__footer button {
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border: 1px solid var(--phase-accent);
+  background: transparent;
+  color: var(--chimera-moss);
+  cursor: pointer;
+}
+
+.chimera-phase-spread__footer button:hover,
+.chimera-phase-spread__footer button:focus-visible {
+  background: rgba(111, 122, 69, 0.1);
+}
+
+/* Composition contracts: later batches fill these hooks with phase-specific systems. */
+.chimera-phase-spread--expedition-route {
+  --phase-accent: var(--chimera-moss);
+}
+
+.chimera-phase-spread--expedition-route .chimera-phase-spread__episode-groups {
+  position: relative;
+}
+
+.chimera-phase-spread--expedition-route .chimera-phase-spread__episode-groups::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 35px;
+  width: 1px;
+  background: rgba(77, 91, 57, 0.35);
+}
+
+.chimera-phase-spread--three-front-development {
+  --phase-accent: var(--chimera-olive);
+}
+
+.chimera-phase-spread--three-front-development .chimera-phase-spread__episode-groups {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.chimera-phase-spread--three-front-development .chimera-phase-spread__episode-groups li {
+  grid-template-columns: 1fr;
+  padding: 18px;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-phase-spread--three-front-development .chimera-phase-spread__episode-index {
+  border-right: 0;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.16);
+  padding: 0 0 12px;
+}
+
+.chimera-phase-spread--dispersal-map {
+  --phase-accent: #596746;
+}
+
+.chimera-phase-spread--dispersal-map .chimera-phase-spread__stage,
+.chimera-phase-spread--quiet-aftermath .chimera-phase-spread__stage {
+  grid-template-columns: minmax(460px, 0.88fr) minmax(520px, 1.12fr);
+}
+
+.chimera-phase-spread--plan-versus-reality {
+  --phase-accent: var(--chimera-royal);
+}
+
+.chimera-phase-spread--plan-versus-reality .chimera-phase-spread__states div:nth-child(2) {
+  background: rgba(108, 102, 128, 0.08);
+}
+
+.chimera-phase-spread--parallel-invasion-clock,
+.chimera-phase-spread--mirrored-endgames {
+  --phase-accent: var(--chimera-rose);
+  background: var(--chimera-charcoal);
+  color: var(--chimera-bone);
+  border-color: rgba(233, 230, 218, 0.18);
+}
+
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__header,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__header {
+  border-color: rgba(233, 230, 218, 0.16);
+}
+
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__ordinal,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__ordinal {
+  border-color: rgba(233, 230, 218, 0.16);
+}
+
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__field-note,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__field-note,
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__field-note div,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__field-note div {
+  border-color: rgba(233, 230, 218, 0.16);
+}
+
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__body,
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__body {
+  color: var(--chimera-ink);
+}
+
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__episode-groups li {
+  grid-template-columns: 108px minmax(0, 1fr);
+}
+
+.chimera-phase-spread--parallel-invasion-clock .chimera-phase-spread__episode-index i {
+  font-size: 1.35rem;
+}
+
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__episode-groups {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__episode-groups li {
+  grid-template-columns: 1fr;
+  padding: 22px;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-phase-spread--mirrored-endgames .chimera-phase-spread__episode-index {
+  border-right: 0;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.16);
+  padding: 0 0 12px;
+}
+
+.chimera-phase-spread--quiet-aftermath {
+  --phase-accent: var(--chimera-royal);
+}
+
+.chimera-phase-spread--quiet-aftermath .chimera-phase-spread__media img {
+  filter: saturate(0.62) contrast(0.96);
+}
+
+.chimera-phase-spread--quiet-aftermath .chimera-phase-spread__body {
+  background: var(--chimera-bone);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chimera-phase-spread {
+    transition: none;
+  }
+}

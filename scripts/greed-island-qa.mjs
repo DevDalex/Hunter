@@ -221,58 +221,7 @@ try {
   });
   await desktop.close();
 
-  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Greed Island separate Eta and Binder routes mobile reduced motion', mobile, async () => {
-    await openGreedIsland(mobile, base, 'eta');
-    await openLesson(mobile, '“Gain”');
-    const tutorialState = await mobile.evaluate(() => {
-      const gainCard = document.querySelector('.gi-gain-card');
-      const progress = document.querySelector('.gi-eta-course__progress > i span');
-      return {
-        overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-        reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-        gainTransition: gainCard ? getComputedStyle(gainCard).transitionDuration : '',
-        progressTransition: progress ? getComputedStyle(progress).transitionDuration : '',
-        tutorialLiveRegion: document.querySelector('.gi-eta-course__announcement')?.getAttribute('aria-live'),
-      };
-    });
-    if (tutorialState.overflow > 1) throw new Error(`mobile tutorial overflowed horizontally by ${tutorialState.overflow}px`);
-    if (!tutorialState.reducedMotion) throw new Error('reduced-motion emulation was not active');
-    if (transitionSeconds(tutorialState.gainTransition).some((duration) => duration > 0.001)) throw new Error(`Gain transition remains ${tutorialState.gainTransition} under reduced motion`);
-    if (transitionSeconds(tutorialState.progressTransition).some((duration) => duration > 0.001)) throw new Error(`Tutorial progress transition remains ${tutorialState.progressTransition} under reduced motion`);
-    if (tutorialState.tutorialLiveRegion !== 'polite') throw new Error('Eta tutorial status is not exposed as a polite live region');
 
-    await mobile.goto(`${base}/#/series/greed-island/binder`, { waitUntil: 'domcontentloaded' });
-    await mobile.waitForSelector('.gi-binder-device[data-book-state="open"]');
-    const binder = mobile.locator('.gi-binder-section');
-    if (await binder.locator('[data-binder-card-id]').count() !== 9) throw new Error('Mobile Binder first page does not contain nine cards');
-    if (await binder.locator('.gi-binder-dpad button').count() !== 5) throw new Error('Mobile Binder does not expose five functioning red controls');
-    await binder.getByRole('button', { name: 'Move highlight right' }).click();
-    if (await binder.locator('.gi-binder-device').getAttribute('data-binder-selected-card') !== '005') throw new Error('Mobile red control did not update the selected card');
-    await binder.getByRole('button', { name: 'Open extended selected-card record' }).click();
-    await binder.locator('.gi-binder-screen__deep.is-open').waitFor();
-    await binder.getByRole('button', { name: 'Open Binder page 12', exact: true }).click();
-    if (await binder.locator('[data-binder-card-id="099"]').count() !== 1) throw new Error('Final Binder page does not expose card 099');
-    if (await binder.locator('.gi-binder-card--empty').count() !== 8) throw new Error('Final Binder page does not retain eight deliberate empty pockets');
-
-    const state = await mobile.evaluate(() => {
-      const card = document.querySelector('.gi-binder-card');
-      const device = document.querySelector('.gi-binder-device');
-      return {
-        overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-        cardTransition: card ? getComputedStyle(card).transitionDuration : '',
-        deviceTransition: device ? getComputedStyle(device).transitionDuration : '',
-        liveRegion: document.querySelector('.gi-binder-status')?.getAttribute('aria-live'),
-        deviceWidth: device?.getBoundingClientRect().width || 0,
-      };
-    });
-    if (state.overflow > 1) throw new Error(`mobile Binder overflowed horizontally by ${state.overflow}px`);
-    if (state.deviceWidth > 390.5) throw new Error(`mobile Binder device exceeds the viewport at ${state.deviceWidth}px`);
-    if (transitionSeconds(state.cardTransition).some((duration) => duration > 0.001)) throw new Error(`Binder card transition remains ${state.cardTransition} under reduced motion`);
-    if (transitionSeconds(state.deviceTransition).some((duration) => duration > 0.001)) throw new Error(`Binder device transition remains ${state.deviceTransition} under reduced motion`);
-    if (state.liveRegion !== 'polite') throw new Error('Binder status is not exposed as a polite live region');
-  });
-  await mobile.close();
 } finally {
   await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));

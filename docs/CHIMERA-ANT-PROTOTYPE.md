@@ -1,7 +1,7 @@
 # Chimera Ant prototype page
 
 Status: **Batch 7 Story redesign**  
-Mobile status: **deferred**
+unsupported narrow-width status: **deferred**
 
 Batch 7 moves Chimera Ant forward now, before the later Nen / World / Organizations / Fights and Characters redesign batches. It keeps the locked architecture rule: Chimera Ant begins as one comprehensive `/story/chimera-ant` route and may earn nested pages later only if the finished page proves a subject needs an independently shareable destination.
 
@@ -14,11 +14,11 @@ Batch 7 moves Chimera Ant forward now, before the later Nen / World / Organizati
 5. The character material is arc-specific. It does not attempt to replace the future Characters redesign or full character-profile routes.
 6. The Nen material is arc-specific. It does not attempt to replace the later Nen encyclopedia redesign.
 7. The World, Organizations, and Fights material is intentionally represented through locations, factions, conflict records, and source links so Batch 8 can reuse those lenses.
-8. `npm run audit:story` now checks Chimera Ant routing, module coverage, data counts, approved source hosts, the one-route depth rule, and deferred mobile scope.
+8. `npm run audit:story` now checks Chimera Ant routing, module coverage, data counts, approved source hosts, the one-route depth rule, and deferred unsupported narrow-width scope.
 
 ## What this batch does not own
 
-Batch 7 does not redesign the global Characters section, the global Nen encyclopedia, World atlas, Organizations archive, Fights archive, Chairman Election page, Succession Contest archive, or mobile layouts. It does not create nested Chimera Ant routes yet.
+Batch 7 does not redesign the global Characters section, the global Nen encyclopedia, World atlas, Organizations archive, Fights archive, Chairman Election page, Succession Contest archive, or unsupported narrow-width layouts. It does not create nested Chimera Ant routes yet.
 
 ## Runtime files
 

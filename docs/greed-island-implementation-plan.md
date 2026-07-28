@@ -14,7 +14,7 @@ Primary research source: Hunterpedia / Hunter × Hunter Fandom until the project
 4. Important media may not fall back to an unrelated portrait. Missing card artwork uses a designed card back.
 5. Every factual record carries a source reference and field-level verification state.
 6. Drag-and-drop always has tap/click and keyboard alternatives.
-7. Reduced-motion, responsive layout, focus visibility, screen-reader status, and non-image descriptions are release requirements.
+7. Reduced-motion, desktop layout, focus visibility, screen-reader status, and non-image descriptions are release requirements.
 8. The pull request stays unmerged until production build and Browser Verification pass.
 9. A successful repository build is not evidence that a Workers deployment is live. Deployment requires an independent public-route check.
 
@@ -138,7 +138,7 @@ Every merge candidate must pass:
 - Binder summon, close, page navigation, search, hold, valid insert, invalid insert, lift, reset, and persistence checks
 - card `000` lock and unlock checks
 - keyboard-only flow
-- tap/mobile flow at narrow viewport
+- tap/unsupported narrow-width flow at narrow viewport
 - reduced-motion flow
 - screen-reader names and live announcements
 - focus visibility and no hover-only content

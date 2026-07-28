@@ -198,45 +198,7 @@ try {
   });
   await freeAndGm.close();
 
-  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Card library Binders mobile rendered-image containment and reduced motion', mobile, async () => {
-    await openLibraries(mobile, base, 'spells');
-    const library = mobile.locator('.gi-card-libraries');
-    await waitForRenderedImages(mobile, '[data-library-card] .gi-library-card-face__image', 9);
-    await library.getByRole('button', { name: 'Move library highlight right' }).click();
-    if (await library.getAttribute('data-library-selected-card') !== '1007') throw new Error('Mobile red control did not update the Spell Binder');
-    await library.getByRole('button', { name: 'Open Spell Cards page 5', exact: true }).click();
-    if (await library.locator('[data-library-card]').count() !== 4) throw new Error('Spell Binder final page does not contain cards 1037–1040');
-    if (await library.locator('.gi-library-book__card.is-empty').count() !== 5) throw new Error('Spell Binder final page does not retain five empty pockets');
-    await waitForRenderedImages(mobile, '[data-library-card] .gi-library-card-face__image', 4);
 
-    const state = await mobile.evaluate(() => {
-      const library = document.querySelector('.gi-card-libraries');
-      const book = document.querySelector('.gi-library-book');
-      const card = document.querySelector('.gi-library-book__card');
-      const image = document.querySelector('.gi-library-card-face__image');
-      const recordPanel = document.querySelector('.gi-card-libraries__record');
-      return {
-        overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-        reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-        libraryWidth: library?.getBoundingClientRect().width || 0,
-        bookWidth: book?.getBoundingClientRect().width || 0,
-        recordWidth: recordPanel?.getBoundingClientRect().width || 0,
-        imageWidth: image?.getBoundingClientRect().width || 0,
-        imageNaturalWidth: image?.naturalWidth || 0,
-        cardWidth: card?.getBoundingClientRect().width || 0,
-        cardTransition: card ? getComputedStyle(card).transitionDuration : '',
-        liveRegion: document.querySelector('.gi-card-libraries__status')?.getAttribute('aria-live'),
-      };
-    });
-    if (state.overflow > 1) throw new Error(`card library Binders overflowed mobile viewport by ${state.overflow}px`);
-    if (!state.reducedMotion) throw new Error('reduced-motion emulation was not active');
-    if (state.libraryWidth > 390.5 || state.bookWidth > 390.5 || state.recordWidth > 390.5) throw new Error(`library panels exceed mobile width: ${JSON.stringify(state)}`);
-    if (state.imageWidth > state.cardWidth + 1 || state.imageNaturalWidth < 1) throw new Error(`card artwork is broken or exceeds its mobile pocket: ${JSON.stringify(state)}`);
-    if (state.cardTransition.split(',').map(Number.parseFloat).some((duration) => duration > 0.001)) throw new Error(`library card transition remains ${state.cardTransition} under reduced motion`);
-    if (state.liveRegion !== 'polite') throw new Error('Library Binder status is not exposed as a polite live region');
-  });
-  await mobile.close();
 } finally {
   await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));

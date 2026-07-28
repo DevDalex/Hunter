@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { access, mkdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import { performanceBudgetFor } from '../src/data/performanceBudgets.js';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
@@ -10,8 +11,6 @@ const playwrightSpecifier = process.env.PLAYWRIGHT_CORE_PATH || 'playwright-core
 const executablePath = process.env.CHROMIUM_PATH;
 const manifest = JSON.parse(await readFile(path.join(dist, '.vite/manifest.json'), 'utf8'));
 const dynamicFiles = new Set(Object.values(manifest).filter((record) => record.isDynamicEntry).map((record) => `/${record.file}`));
-const clsBudget = 0.15;
-const designSystemDebtClsRoutes = new Set(['series-research']);
 
 const routes = [
   { id: 'home', hash: 'home/' },
@@ -23,14 +22,15 @@ const routes = [
 ];
 
 const profiles = [
-  { id: 'desktop', viewport: { width: 1440, height: 1000 }, constrained: false },
-  { id: 'constrained-mobile', viewport: { width: 390, height: 844 }, constrained: true },
+  { id: 'desktop-minimum', viewport: { width: 1366, height: 900 }, constrained: false },
+  { id: 'desktop', viewport: { width: 1600, height: 1000 }, constrained: false },
 ];
 
 const mime = {
   '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8',
   '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp',
+  '.avif': 'image/avif',
 };
 
 const resolvePlaywright = async () => {
@@ -112,6 +112,7 @@ try {
     });
     await session.send('Emulation.setCPUThrottlingRate', { rate: profile.constrained ? 4 : 1 });
     for (const route of routes) {
+      const budget = performanceBudgetFor(route.id, profile.id);
       const runtimeErrors = [];
       const failedRequests = [];
       const requestedPaths = [];
@@ -150,20 +151,22 @@ try {
         };
       });
       const dynamicRequests = requestedPaths.filter((pathname) => dynamicFiles.has(pathname));
-      const clsDebt = metrics.cls > clsBudget && designSystemDebtClsRoutes.has(route.id) ? `settled CLS ${metrics.cls} exceeds ${clsBudget}; tracked for Batch 12 design-system cleanup` : null;
       const defects = [
         ...(fatal ? [fatal] : []),
         ...runtimeErrors,
         ...failedRequests,
-        ...(readyMs > 13_000 ? [`route ready time ${readyMs}ms exceeds 13,000ms`] : []),
+        ...(readyMs > budget.readyMs ? [`route ready time ${readyMs}ms exceeds ${budget.readyMs}ms`] : []),
+        ...(metrics.transferBytes > budget.transferBytes ? [`transfer ${metrics.transferBytes} bytes exceeds ${budget.transferBytes}`] : []),
+        ...(metrics.resourceCount > budget.resourceCount ? [`${metrics.resourceCount} resources exceeds ${budget.resourceCount}`] : []),
+        ...(metrics.cls > budget.cls ? [`settled CLS ${metrics.cls} exceeds ${budget.cls}`] : []),
+        ...(metrics.longTasks > budget.longTasks ? [`${metrics.longTasks} long tasks exceeds ${budget.longTasks}`] : []),
         ...(metrics.mainText === 0 ? ['main content is empty'] : []),
-        ...(metrics.cls > clsBudget && !designSystemDebtClsRoutes.has(route.id) ? [`settled CLS ${metrics.cls} exceeds ${clsBudget}`] : []),
         ...(route.id === 'home' && dynamicRequests.length ? [`home loaded dynamic entries: ${dynamicRequests.join(', ')}`] : []),
         ...(route.id === 'home' && metrics.highPriorityImages !== 1 ? [`home has ${metrics.highPriorityImages} high-priority images; expected 1`] : []),
         ...(metrics.serviceWorkers ? [`${metrics.serviceWorkers} service worker registration(s) found`] : []),
       ];
-      results.push({ profile: profile.id, route: route.id, readyMs, dynamicRequests, runtimeErrors, failedRequests, clsDebt, ...metrics, defects });
-      process.stdout.write(`${defects.length ? '✗' : '✓'} ${profile.id.padEnd(18)} ${route.id.padEnd(18)} ${readyMs}ms${clsDebt ? ' · CLS debt' : ''}\n`);
+      results.push({ profile: profile.id, route: route.id, budget, readyMs, dynamicRequests, runtimeErrors, failedRequests, ...metrics, defects });
+      process.stdout.write(`${defects.length ? '✗' : '✓'} ${profile.id.padEnd(18)} ${route.id.padEnd(18)} ${readyMs}/${budget.readyMs}ms\n`);
       if (defects.length) await page.screenshot({ path: path.join(output, `${profile.id}-${route.id}.png`), fullPage: true }).catch(() => {});
       page.off('pageerror', onPageError);
       page.off('requestfailed', onRequestFailed);
@@ -178,7 +181,6 @@ try {
 }
 
 const failures = results.filter((record) => record.defects.length);
-const clsDebt = results.filter((record) => record.clsDebt);
 const summary = {
   generatedAt: new Date().toISOString(),
   routes: routes.length,
@@ -186,10 +188,9 @@ const summary = {
   checks: results.length,
   passed: results.length - failures.length,
   failed: failures.length,
-  clsDebt: clsDebt.length,
   slowestReadyMs: Math.max(...results.map((record) => record.readyMs)),
 };
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results }, null, 2)}\n`);
 await writeFile(path.join(output, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
-console.log(`\nPerformance QA: ${summary.passed}/${summary.checks} route/profile checks passed; ${summary.clsDebt} CLS debt item(s) tracked for Batch 12; slowest ready state ${summary.slowestReadyMs}ms.`);
+console.log(`\nPerformance QA: ${summary.passed}/${summary.checks} route/profile checks passed; slowest ready state ${summary.slowestReadyMs}ms.`);
 if (failures.length) process.exitCode = 1;

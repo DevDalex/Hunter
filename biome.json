@@ -1,0 +1,40 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.5/schema.json",
+  "files": {
+    "includes": [
+      "src/schemas/**",
+      "src/media/**",
+      "src/components/SafeImage.jsx",
+      "src/data/chimeraAntExperience.js",
+      "src/data/chimeraAntPhaseScaffold.js",
+      "scripts/build-media-variants.mjs",
+      "scripts/verify-media-manifest.mjs",
+      "scripts/verify-archive-records.mjs",
+      "tests/**",
+      "playwright.config.js",
+      "vitest.config.js",
+      "package.json",
+      "wrangler.jsonc"
+    ],
+    "ignoreUnknown": true
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 120
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended"
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "always",
+      "trailingCommas": "all"
+    }
+  }
+}

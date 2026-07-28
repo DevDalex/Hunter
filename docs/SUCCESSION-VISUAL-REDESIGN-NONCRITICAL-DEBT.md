@@ -17,7 +17,7 @@ This record separates acceptable remaining constraints from release-blocking def
 ## Compatibility constraints
 
 - Import-only compatibility entries may remain where removing a stable stylesheet path would create unnecessary component churn. They must contain no competing declarations.
-- The final Chromium matrix covers every curated Succession release route. Firefox and WebKit cover representative high-complexity routes at desktop and mobile sizes rather than duplicating the entire Chromium screenshot matrix.
+- The final Chromium matrix covers every curated Succession release route. Firefox and WebKit cover representative high-complexity routes at desktop and unsupported narrow-width sizes rather than duplicating the entire Chromium screenshot matrix.
 - Intentional wide structures—relationship matrices, timeline swimlanes, the ship atlas, and advanced tables—may remain horizontally navigable on narrow screens only when an ordinary semantic list or card alternative is present.
 
 ## Integration status

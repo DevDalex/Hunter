@@ -65,7 +65,7 @@ Do not invent decorative badge colors for evidence states when this vocabulary f
 The layer must keep:
 
 - an explicit 11px minimum for compact badge/metadata text;
-- responsive collapse for shared card grids;
+- desktop collapse for shared card grids;
 - Black Archive color tokens;
 - safe focus treatment for interactive cards;
 - source blocks with clear Hunterpedia/Fandom source framing.
@@ -92,6 +92,6 @@ Batch 12 does not:
 - change the Hunterpedia/Fandom source policy;
 - complete the visible governance UI;
 - resolve all legacy color-contrast design debt;
-- reopen mobile-specific redesign.
+- reopen unsupported narrow-width-specific redesign.
 
 The next natural feature after this batch is the visible governance UI: bibliography desk, evidence-state viewer, review queue, and source-policy dashboard.

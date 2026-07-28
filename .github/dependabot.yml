@@ -1,0 +1,48 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: '05:00'
+      timezone: Asia/Kuwait
+    open-pull-requests-limit: 5
+    versioning-strategy: increase-if-necessary
+    groups:
+      testing-and-quality:
+        patterns:
+          - '@biomejs/*'
+          - '@playwright/*'
+          - '@testing-library/*'
+          - '@types/*'
+          - axe-core
+          - jsdom
+          - knip
+          - playwright
+          - typescript
+          - vite
+          - vitest
+      cloudflare:
+        patterns:
+          - wrangler
+      runtime:
+        dependency-type: production
+    ignore:
+      - dependency-name: react
+        update-types: [version-update:semver-major]
+      - dependency-name: react-dom
+        update-types: [version-update:semver-major]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+      day: monday
+      time: '05:30'
+      timezone: Asia/Kuwait
+    open-pull-requests-limit: 5
+    groups:
+      github-actions:
+        patterns:
+          - '*'

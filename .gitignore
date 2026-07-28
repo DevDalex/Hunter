@@ -5,6 +5,12 @@ dist/
 .visual-qa/
 .accessibility-qa/
 .performance-qa/
+.chimera-ant-qa/
+playwright-report/
+test-results/
+coverage/
+.media-cache/
+public/media/generated/
 
 .env
 .env.*

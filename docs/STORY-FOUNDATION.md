@@ -1,7 +1,7 @@
 # Story foundation layer
 
 Status: **Batch 3 active foundation**  
-Mobile status: **deferred**
+unsupported narrow-width status: **deferred**
 
 This document records the first runtime Story foundation after the architecture lock and clean route migration.
 
@@ -12,7 +12,7 @@ Batch 3 adds the shared Story scaffolding that later arc pages will inherit:
 1. a real `/story` hub foundation backed by the nine-destination Story taxonomy;
 2. a desktop-first chronological Story rail;
 3. shared breadcrumbs for Home → Story → destination;
-4. a context rail for reading boundary, factual spine, visual direction, mobile scope, and standard sections;
+4. a context rail for reading boundary, factual spine, visual direction, unsupported narrow-width scope, and standard sections;
 5. an arc foundation header for route-level arc pages with previous/next navigation and manga/anime/depth/accent facts;
 6. a Zoldyck Family workspace bridge that keeps the route inside the Story foundation while its full page remains scheduled for the Early Arcs batch;
 7. a Story foundation stylesheet with the approved Black Archive palette: dark shell, warm paper, crimson, gold, steel blue, and no global green branding.

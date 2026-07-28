@@ -121,24 +121,7 @@ try {
   });
   await direct.close();
 
-  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Mobile module drawer stays contained', mobile, async () => {
-    await mobile.goto(`${base}/story/greed-island`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await waitForModule(mobile, 'home');
-    await mobile.locator('.gi-app__mobile-menu').click();
-    const state = await mobile.evaluate(() => {
-      const nav = document.querySelector('.gi-app__nav');
-      return {
-        overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-        navLeft: nav?.getBoundingClientRect().left || 0,
-        navRight: nav?.getBoundingClientRect().right || 0,
-        reduced: matchMedia('(prefers-reduced-motion: reduce)').matches,
-      };
-    });
-    if (state.overflow > 1 || state.navLeft < -0.5 || state.navRight > 390.5) throw new Error(`Mobile module drawer escaped the viewport: ${JSON.stringify(state)}.`);
-    if (!state.reduced) throw new Error('Reduced-motion emulation was not active.');
-  });
-  await mobile.close();
+
 } finally {
   await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));

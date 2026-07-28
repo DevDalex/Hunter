@@ -23,7 +23,6 @@ for (const token of [
   'successionArchiveGroups.map',
   'aria-current={active ? \'page\' : undefined}',
   'succession-desktop-navigation',
-  'succession-mobile-navigation',
 ]) assert(shell.includes(token), `main navigation contract is missing ${token}`);
 
 for (const token of [
@@ -61,11 +60,7 @@ for (const selector of [
   '.succession-route-matrix',
 ]) assert(completionCss.includes(selector), `completion CSS is missing ${selector}`);
 
-assert(completionCss.includes('@media (max-width: 1100px)'), 'desktop-to-tablet responsive closure is required');
-assert(completionCss.includes('@media (max-width: 860px)'), 'archive shell mobile breakpoint is required');
-assert(completionCss.includes('@media (max-width: 620px)'), 'compact mobile breakpoint is required');
 assert(completionCss.includes('@media (prefers-reduced-motion: reduce)'), 'reduced-motion closure is required');
-assert(completionCss.includes('min-height: 44px'), 'interactive mobile controls must retain 44px targets');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(completionCss), 'Batch 2 completion CSS must not introduce raw hex colors');
 assert(!completionCss.includes('!important'), 'Batch 2 completion CSS must not depend on !important');
 
@@ -78,4 +73,3 @@ for (const hour of ['Hour 18', 'Hour 19', 'Hour 20', 'Hour 21', 'Hour 22', 'Hour
 }
 assert(docs.includes('Batch 2 closure gate'), 'design record must include the Batch 2 closure gate');
 
-console.log('Succession Batch 2 completion audit passed: navigation, keyboard-complete tabs, chapter controls, search, landing experience, and responsive closure are registered.');

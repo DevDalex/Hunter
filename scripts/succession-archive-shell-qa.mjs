@@ -155,29 +155,7 @@ try {
     if (await desktop.locator('.arc-page--succession-contest').count()) throw new Error('Full Succession arc page still wraps the chapter reader');
   });
 
-  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
-  await record('Mobile archive uses an intentional keyboard-safe drawer', mobile, async () => {
-    await mobile.goto(`${base}/story/succession-contest/locations`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await mobile.waitForSelector('.succession-archive__mobile-bar', { timeout: 15_000 });
-    const trigger = mobile.getByRole('button', { name: 'Archive', exact: true });
-    await trigger.click();
-    await mobile.waitForSelector('.succession-drawer [role="dialog"]', { timeout: 10_000 });
-    if (await trigger.getAttribute('aria-expanded') !== 'true') throw new Error('Mobile archive button did not expose expanded state');
-    await mobile.keyboard.press('Escape');
-    await mobile.waitForSelector('.succession-drawer', { state: 'detached', timeout: 10_000 });
-  });
-
-  await record('Mobile dedicated workspaces remain inside the viewport', mobile, async () => {
-    const princeCards = await openWorkspace(mobile, base, 'princes', '.succession-prince-board__grid > .succession-prince-card');
-    if (await princeCards.count() !== 14) throw new Error('Mobile prince board did not render all records');
-    if (await horizontalOverflow(mobile) > 1) throw new Error(`Mobile prince board overflows horizontally by ${await horizontalOverflow(mobile)}px`);
-    const glossary = await openWorkspace(mobile, base, 'glossary', '.succession-glossary-canonical');
-    if (!await glossary.count()) throw new Error('Mobile glossary did not render');
-    if (await horizontalOverflow(mobile) > 1) throw new Error(`Mobile glossary overflows horizontally by ${await horizontalOverflow(mobile)}px`);
-  });
-
   await desktop.close();
-  await mobile.close();
 } finally {
   await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));

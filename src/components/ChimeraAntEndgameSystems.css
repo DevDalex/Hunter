@@ -1,0 +1,782 @@
+.chimera-endgame-system {
+  position: relative;
+  padding: 42px;
+  border-top: 1px solid rgba(233, 230, 218, 0.16);
+  background: var(--chimera-charcoal);
+  color: var(--chimera-bone);
+}
+
+.chimera-endgame-system__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 0.65fr);
+  gap: 44px;
+  align-items: start;
+  margin-bottom: 38px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.18);
+}
+
+.chimera-endgame-system__header > div > span,
+.chimera-endgame-system__header aside > span,
+.chimera-endgame-card > header > div > span,
+.chimera-endgame-card__dossier dt,
+.chimera-endgame-card__sequence span,
+.chimera-mirrored-endgames__comparison-head,
+.chimera-mirrored-endgames__verdict > span,
+.chimera-aftermath-system__progression > header span,
+.chimera-aftermath-system__progression li span,
+.chimera-aftermath-system__final-game article > span,
+.chimera-aftermath-system__routes > header span,
+.chimera-aftermath-system__route > span,
+.chimera-aftermath-system__route-origin > span,
+.chimera-aftermath-system__transition span {
+  font-size: 0.66rem;
+  font-weight: 760;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.chimera-endgame-system__header > div > span,
+.chimera-endgame-system__header aside > span,
+.chimera-endgame-card > header > div > span,
+.chimera-mirrored-endgames__verdict > span,
+.chimera-aftermath-system__progression > header span,
+.chimera-aftermath-system__final-game article > span,
+.chimera-aftermath-system__routes > header span,
+.chimera-aftermath-system__transition span {
+  color: var(--chimera-mist);
+}
+
+.chimera-endgame-system__header h4 {
+  max-width: 900px;
+  margin: 8px 0 14px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.6rem, 4vw, 5rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+}
+
+.chimera-endgame-system__header p {
+  max-width: 78ch;
+  margin: 0;
+  color: rgba(233, 230, 218, 0.76);
+  font-size: 0.96rem;
+  line-height: 1.7;
+}
+
+.chimera-endgame-system__header aside {
+  padding: 20px 22px;
+  border-top: 2px solid var(--chimera-rose);
+  background: rgba(233, 230, 218, 0.055);
+}
+
+.chimera-endgame-system__header aside strong {
+  display: block;
+  margin: 8px 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.34rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.chimera-endgame-system__header aside p {
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.chimera-endgame-system__portraits {
+  display: flex;
+  gap: 10px;
+}
+
+.chimera-endgame-system__portraits a {
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.chimera-endgame-system__portraits figure {
+  position: relative;
+  width: 112px;
+  height: 136px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(233, 230, 218, 0.18);
+  background: var(--chimera-void);
+}
+
+.chimera-endgame-system__portraits img,
+.chimera-endgame-system__portraits .safe-image-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 16%;
+  filter: saturate(0.72) contrast(1.05);
+}
+
+.chimera-endgame-system__portraits figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 26px 8px 8px;
+  background: linear-gradient(transparent, rgba(17, 20, 15, 0.94));
+}
+
+.chimera-endgame-system__portraits figcaption span,
+.chimera-endgame-system__portraits figcaption strong {
+  display: block;
+}
+
+.chimera-endgame-system__portraits figcaption span {
+  color: rgba(233, 230, 218, 0.62);
+  font-size: 0.57rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chimera-endgame-system__portraits figcaption strong {
+  margin-top: 2px;
+  font-size: 0.74rem;
+  line-height: 1.1;
+}
+
+.chimera-mirrored-endgames__field {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 70px;
+  align-items: stretch;
+}
+
+.chimera-mirrored-endgames__axis {
+  position: absolute;
+  z-index: 3;
+  top: 52px;
+  bottom: 52px;
+  left: 50%;
+  display: grid;
+  grid-template-rows: auto 1fr auto 1fr auto;
+  justify-items: center;
+  gap: 12px;
+  width: 42px;
+  transform: translateX(-50%);
+}
+
+.chimera-mirrored-endgames__axis i {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(var(--chimera-rose), rgba(233, 230, 218, 0.24), var(--chimera-moss));
+}
+
+.chimera-mirrored-endgames__axis span {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  color: var(--chimera-mist);
+}
+
+.chimera-mirrored-endgames__axis strong {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: rgba(233, 230, 218, 0.54);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.chimera-endgame-card {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(233, 230, 218, 0.18);
+  background:
+    linear-gradient(rgba(233, 230, 218, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(233, 230, 218, 0.025) 1px, transparent 1px),
+    rgba(17, 20, 15, 0.72);
+  background-size: 26px 26px;
+}
+
+.chimera-endgame-card--netero-meruem {
+  border-top: 4px solid var(--chimera-rose);
+}
+
+.chimera-endgame-card--gon-pitou {
+  border-top: 4px solid var(--chimera-moss);
+}
+
+.chimera-endgame-card > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 176px;
+  padding: 24px;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.15);
+}
+
+.chimera-endgame-card > header h5 {
+  margin: 7px 0 5px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  font-weight: 500;
+  letter-spacing: -0.025em;
+}
+
+.chimera-endgame-card > header > div > strong {
+  color: rgba(233, 230, 218, 0.58);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chimera-endgame-card__dossier {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.15);
+}
+
+.chimera-endgame-card__dossier div {
+  min-height: 134px;
+  padding: 18px;
+  border-right: 1px solid rgba(233, 230, 218, 0.12);
+  border-bottom: 1px solid rgba(233, 230, 218, 0.12);
+}
+
+.chimera-endgame-card__dossier div:nth-child(even) {
+  border-right: 0;
+}
+
+.chimera-endgame-card__dossier dt {
+  color: var(--chimera-mist);
+}
+
+.chimera-endgame-card__dossier dd {
+  margin: 8px 0 0;
+  color: rgba(233, 230, 218, 0.78);
+  font-size: 0.79rem;
+  line-height: 1.55;
+}
+
+.chimera-endgame-card__sequence {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chimera-endgame-card__sequence li {
+  display: grid;
+  grid-template-columns: 54px minmax(0, 1fr);
+  gap: 16px;
+  min-height: 156px;
+  padding: 21px 24px;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.13);
+}
+
+.chimera-endgame-card__sequence li > i {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.75rem;
+  font-style: normal;
+  color: var(--chimera-mist);
+}
+
+.chimera-endgame-card__sequence span {
+  color: rgba(233, 230, 218, 0.52);
+}
+
+.chimera-endgame-card__sequence h6 {
+  margin: 6px 0 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.chimera-endgame-card__sequence p {
+  margin: 0 0 8px;
+  color: rgba(233, 230, 218, 0.72);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.chimera-endgame-card__sequence a,
+.chimera-aftermath-system a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--chimera-mist);
+  font-size: 0.68rem;
+  text-decoration: none;
+}
+
+.chimera-endgame-card__sequence a:hover,
+.chimera-endgame-card__sequence a:focus-visible,
+.chimera-aftermath-system a:hover,
+.chimera-aftermath-system a:focus-visible {
+  color: var(--chimera-bone);
+}
+
+.chimera-mirrored-endgames__comparison {
+  margin-top: 48px;
+  border: 1px solid rgba(233, 230, 218, 0.18);
+}
+
+.chimera-mirrored-endgames__comparison-head,
+.chimera-mirrored-endgames__comparison article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 190px minmax(0, 1fr);
+}
+
+.chimera-mirrored-endgames__comparison-head {
+  background: rgba(233, 230, 218, 0.08);
+}
+
+.chimera-mirrored-endgames__comparison-head > * {
+  padding: 13px 18px;
+  color: var(--chimera-mist);
+  text-align: center;
+}
+
+.chimera-mirrored-endgames__comparison article {
+  border-top: 1px solid rgba(233, 230, 218, 0.13);
+}
+
+.chimera-mirrored-endgames__comparison article > * {
+  margin: 0;
+  padding: 18px;
+}
+
+.chimera-mirrored-endgames__comparison article p {
+  color: rgba(233, 230, 218, 0.76);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.chimera-mirrored-endgames__comparison article p:first-child {
+  border-right: 1px solid rgba(233, 230, 218, 0.13);
+}
+
+.chimera-mirrored-endgames__comparison article p:last-child {
+  border-left: 1px solid rgba(233, 230, 218, 0.13);
+}
+
+.chimera-mirrored-endgames__comparison article h6 {
+  display: grid;
+  place-items: center;
+  color: var(--chimera-mist);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.chimera-mirrored-endgames__verdict {
+  display: grid;
+  grid-template-columns: 180px minmax(280px, 0.8fr) minmax(0, 1.2fr);
+  gap: 24px;
+  align-items: start;
+  margin-top: 28px;
+  padding: 24px;
+  border-left: 5px solid var(--chimera-rose);
+  background: linear-gradient(90deg, rgba(123, 53, 56, 0.16), rgba(77, 91, 57, 0.12));
+}
+
+.chimera-mirrored-endgames__verdict h5 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.chimera-mirrored-endgames__verdict p {
+  margin: 0;
+  color: rgba(233, 230, 218, 0.76);
+  font-size: 0.82rem;
+  line-height: 1.65;
+}
+
+.chimera-aftermath-system {
+  background:
+    radial-gradient(circle at 72% 22%, rgba(108, 102, 128, 0.16), transparent 32%),
+    linear-gradient(180deg, var(--chimera-charcoal), var(--chimera-void));
+}
+
+.chimera-aftermath-system__progression {
+  padding: 30px;
+  border: 1px solid rgba(233, 230, 218, 0.17);
+  background: rgba(233, 230, 218, 0.035);
+}
+
+.chimera-aftermath-system__progression > header {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 28px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.chimera-aftermath-system__progression h5,
+.chimera-aftermath-system__routes > header h5,
+.chimera-aftermath-system__transition h5 {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.8rem;
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.chimera-aftermath-system__progression ol {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 0;
+  padding: 32px 0 0;
+  list-style: none;
+}
+
+.chimera-aftermath-system__progression ol::before {
+  content: "";
+  position: absolute;
+  top: 13px;
+  left: 4%;
+  right: 4%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--chimera-rose), var(--chimera-royal), var(--chimera-mist));
+}
+
+.chimera-aftermath-system__progression li {
+  position: relative;
+  min-height: 250px;
+  padding: 18px;
+  border-top: 2px solid var(--chimera-royal);
+  background: rgba(17, 20, 15, 0.7);
+}
+
+.chimera-aftermath-system__progression li > i {
+  position: absolute;
+  top: -29px;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--chimera-bone);
+  border-radius: 50%;
+  background: var(--chimera-royal);
+  color: var(--chimera-bone);
+  font-size: 0.62rem;
+  font-style: normal;
+  transform: translateX(-50%);
+}
+
+.chimera-aftermath-system__progression li span {
+  color: var(--chimera-mist);
+}
+
+.chimera-aftermath-system__progression li h6 {
+  margin: 8px 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.chimera-aftermath-system__progression li p {
+  margin: 0 0 10px;
+  color: rgba(233, 230, 218, 0.7);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.chimera-aftermath-system__final-game {
+  display: grid;
+  grid-template-columns: minmax(480px, 1.05fr) minmax(420px, 0.95fr);
+  min-height: 610px;
+  margin-top: 44px;
+  border: 1px solid rgba(233, 230, 218, 0.17);
+}
+
+.chimera-aftermath-system__game-visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 610px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at center, rgba(108, 102, 128, 0.22), transparent 50%),
+    var(--chimera-void);
+}
+
+.chimera-aftermath-system__gungi-board {
+  display: grid;
+  grid-template-columns: repeat(9, 42px);
+  grid-template-rows: repeat(9, 42px);
+  border: 10px solid #716244;
+  background: #9b875d;
+  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.42);
+  transform: rotate(-3deg);
+}
+
+.chimera-aftermath-system__gungi-board > i {
+  position: relative;
+  border-right: 1px solid rgba(29, 33, 26, 0.42);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.42);
+}
+
+.chimera-aftermath-system__gungi-board > i.has-piece span {
+  position: absolute;
+  inset: 7px;
+  border: 2px solid rgba(29, 33, 26, 0.62);
+  transform: rotate(45deg);
+  box-shadow: 0 4px 8px rgba(17, 20, 15, 0.3);
+}
+
+.chimera-aftermath-system__gungi-board > i.has-piece--royal span {
+  background: var(--chimera-royal);
+}
+
+.chimera-aftermath-system__gungi-board > i.has-piece--bone span {
+  background: var(--chimera-bone);
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits {
+  position: absolute;
+  right: 22px;
+  bottom: 22px;
+}
+
+.chimera-aftermath-system__final-game > article {
+  padding: 38px;
+  background: var(--chimera-bone);
+  color: var(--chimera-ink);
+}
+
+.chimera-aftermath-system__final-game > article > span {
+  color: var(--chimera-royal);
+}
+
+.chimera-aftermath-system__final-game > article > h5 {
+  margin: 8px 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.3rem;
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+.chimera-aftermath-system__final-game > article > p {
+  margin: 0;
+  color: rgba(29, 33, 26, 0.62);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.chimera-aftermath-system__final-game > article > ol {
+  margin: 28px 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(29, 33, 26, 0.24);
+}
+
+.chimera-aftermath-system__final-game > article > ol li {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-aftermath-system__final-game > article > ol li > i {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  font-style: normal;
+  color: var(--chimera-royal);
+}
+
+.chimera-aftermath-system__final-game > article > ol strong {
+  font-size: 0.7rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.chimera-aftermath-system__final-game > article > ol p {
+  margin: 5px 0 0;
+  color: rgba(29, 33, 26, 0.72);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.chimera-aftermath-system__final-game > article > a {
+  color: var(--chimera-royal);
+}
+
+.chimera-aftermath-system__routes {
+  margin-top: 44px;
+  padding: 30px;
+  border: 1px solid rgba(233, 230, 218, 0.17);
+}
+
+.chimera-aftermath-system__routes > header {
+  display: grid;
+  grid-template-columns: 200px minmax(280px, 0.8fr) minmax(0, 1.2fr);
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 30px;
+}
+
+.chimera-aftermath-system__routes > header p {
+  margin: 0;
+  color: rgba(233, 230, 218, 0.68);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+
+.chimera-aftermath-system__route-field {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  padding-top: 154px;
+}
+
+.chimera-aftermath-system__route-origin {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 50%;
+  width: 280px;
+  padding: 18px;
+  border: 1px solid var(--chimera-royal);
+  background: var(--chimera-void);
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.chimera-aftermath-system__route-origin > span,
+.chimera-aftermath-system__route-origin > strong,
+.chimera-aftermath-system__route-origin > small {
+  display: block;
+}
+
+.chimera-aftermath-system__route-origin > span {
+  color: var(--chimera-mist);
+}
+
+.chimera-aftermath-system__route-origin > strong {
+  margin: 7px 0 5px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+}
+
+.chimera-aftermath-system__route-origin > small {
+  color: rgba(233, 230, 218, 0.56);
+}
+
+.chimera-aftermath-system__route-line {
+  position: absolute;
+  top: 103px;
+  left: 11%;
+  right: 11%;
+  height: 52px;
+  border-top: 1px solid rgba(158, 166, 147, 0.52);
+  border-left: 1px solid rgba(158, 166, 147, 0.52);
+  border-right: 1px solid rgba(158, 166, 147, 0.52);
+}
+
+.chimera-aftermath-system__route {
+  position: relative;
+  min-height: 250px;
+  padding: 20px;
+  border-top: 3px solid var(--chimera-royal);
+  background: rgba(233, 230, 218, 0.055);
+}
+
+.chimera-aftermath-system__route::before {
+  content: "";
+  position: absolute;
+  top: -51px;
+  left: 50%;
+  width: 1px;
+  height: 48px;
+  background: rgba(158, 166, 147, 0.52);
+}
+
+.chimera-aftermath-system__route > i {
+  display: block;
+  margin-bottom: 22px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  font-style: normal;
+  color: var(--chimera-royal);
+}
+
+.chimera-aftermath-system__route > span {
+  color: var(--chimera-mist);
+}
+
+.chimera-aftermath-system__route h6 {
+  margin: 7px 0 9px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+.chimera-aftermath-system__route p {
+  margin: 0 0 12px;
+  color: rgba(233, 230, 218, 0.7);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.chimera-aftermath-system__route--final-room {
+  border-top-color: var(--chimera-rose);
+}
+
+.chimera-aftermath-system__route--reina-home {
+  border-top-color: var(--chimera-moss);
+}
+
+.chimera-aftermath-system__route--gyro-search {
+  border-top-color: var(--chimera-olive);
+}
+
+.chimera-aftermath-system__transition {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 34px;
+  align-items: center;
+  margin-top: 28px;
+  padding: 26px 30px;
+  border-left: 5px solid var(--chimera-royal);
+  background: rgba(108, 102, 128, 0.13);
+}
+
+.chimera-aftermath-system__transition p {
+  max-width: 92ch;
+  margin: 8px 0 0;
+  color: rgba(233, 230, 218, 0.72);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+.chimera-phase-spread--mirrored-endgames[data-phase-finish="complete"] .chimera-phase-spread__stage,
+.chimera-phase-spread--quiet-aftermath[data-phase-finish="complete"] .chimera-phase-spread__stage {
+  min-height: 600px;
+}
+
+.chimera-phase-spread--mirrored-endgames[data-phase-finish="complete"] .chimera-phase-spread__media > img {
+  object-position: center 12%;
+  filter: saturate(0.68) contrast(1.09);
+}
+
+.chimera-phase-spread--quiet-aftermath[data-phase-finish="complete"] .chimera-phase-spread__media > img {
+  object-position: center 14%;
+  filter: saturate(0.54) contrast(0.98);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chimera-endgame-system *,
+  .chimera-endgame-system *::before,
+  .chimera-endgame-system *::after {
+    scroll-behavior: auto;
+    transition: none !important;
+  }
+}

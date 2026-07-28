@@ -3,7 +3,7 @@
 Status: Batch 10 locked
 Date: 2026-07-20
 Scope: desktop-first stabilization, visual identity lock, regression contracts, and release-readiness notes
-Mobile status: deferred
+unsupported narrow-width status: deferred
 
 ## Purpose
 
@@ -13,7 +13,7 @@ Batch 10 is not a new content feature. It closes the redesign sequence by making
 2. Nen, World, Organizations, and Conflicts remain the reference backbone.
 3. Characters remain a full directory with additive dossier profiles, not a reduced cast list.
 4. The Black Archive visual direction stays visible across the shell.
-5. Mobile-specific redesign remains deferred until explicitly reopened.
+5. unsupported narrow-width-specific redesign remains deferred until explicitly reopened.
 
 ## Final visual correction
 
@@ -60,7 +60,7 @@ Batch 10 does not:
 - split Chimera Ant into nested pages;
 - delete character records;
 - turn source-index characters into full profiles automatically;
-- reopen mobile-specific redesign;
+- reopen unsupported narrow-width-specific redesign;
 - replace the Hunterpedia/Fandom source policy;
 - prove external CI or browser QA without a completed successful run.
 
@@ -84,7 +84,7 @@ The final audit checks that:
 5. shared shell, Story prototypes, Nen, and character profiles receive final coverage;
 6. Story, Reference, Characters, and Final audits remain present;
 7. `scripts/run-build-preflight.mjs` runs those locks in that order;
-8. Hunterpedia/Fandom sourcing and deferred mobile scope remain explicit.
+8. Hunterpedia/Fandom sourcing and deferred unsupported narrow-width scope remain explicit.
 
 ## Current redesign sequence
 

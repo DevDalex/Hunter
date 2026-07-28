@@ -20,6 +20,7 @@ const VolumeZeroPage = lazy(() => import('./VolumeZeroPage'));
 const HunterExamPage = lazy(() => import('./HunterExamPage'));
 const SuccessionChapterReader = lazy(() => import('./SuccessionChapterReader'));
 const GreedIslandPage = lazy(() => import('./GreedIslandPage'));
+const ChimeraAntPage = lazy(() => import('./ChimeraAntPage'));
 
 const utilityPages = [
   { id: 'chronology', label: 'Chronology' },
@@ -100,6 +101,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   if (routeTarget === 'volume-0') return <Suspense fallback={<StoryLoading label="Kurapika’s Memories" />}><VolumeZeroPage onNavigate={onNavigate} /></Suspense>;
   if (routeTarget === 'hunter-exam') return <Suspense fallback={<StoryLoading label="287th Hunter Examination" />}><HunterExamPage onNavigate={onNavigate} /></Suspense>;
   if (routeTarget === 'greed-island') return <Suspense fallback={<StoryLoading label="Greed Island" />}><GreedIslandPage onNavigate={onNavigate} routeParams={routeParams} /></Suspense>;
+  if (routeTarget === 'chimera-ant') return <Suspense fallback={<StoryLoading label="Chimera Ant illustrated archive" />}><ChimeraAntPage onNavigate={onNavigate} /></Suspense>;
   if (successionChaptersPage) return <section className="story-utility-shell story-utility-shell--succession-reader">
     <h1 className="sr-only">Succession Contest chapter reader</h1>
     <Suspense fallback={<StoryLoading label="Succession chapter reader" />}>

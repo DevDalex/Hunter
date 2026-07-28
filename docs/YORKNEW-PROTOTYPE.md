@@ -1,7 +1,7 @@
 # Yorknew prototype page
 
 Status: **Batch 4 prototype**  
-Mobile status: **deferred**
+unsupported narrow-width status: **deferred**
 
 Batch 4 makes `/story/yorknew-city` the first full Story redesign prototype.
 
@@ -16,7 +16,7 @@ Batch 4 makes `/story/yorknew-city` the first full Story redesign prototype.
 
 ## What this batch does not own
 
-Batch 4 does not redesign Hunter Exam, Zoldyck Family, Heavens Arena, Greed Island, Chimera Ant, Chairman Election, Succession, Characters, Nen, World, Organizations, or Fights. It also does not perform a full mobile implementation pass.
+Batch 4 does not redesign Hunter Exam, Zoldyck Family, Heavens Arena, Greed Island, Chimera Ant, Chairman Election, Succession, Characters, Nen, World, Organizations, or Fights. It also does not perform a full unsupported narrow-width implementation pass.
 
 ## Source boundary
 

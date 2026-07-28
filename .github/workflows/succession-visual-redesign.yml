@@ -1,34 +1,14 @@
-name: Succession Visual Redesign
+name: Succession Visual Redesign Legacy Diagnostics
 
+# Historical branch family retained for audit provenance: succession-visual-redesign-batch-*
 on:
-  push:
-    branches:
-      - 'succession-visual-redesign-batch-*'
-  pull_request:
-    paths:
-      - 'src/components/succession/**'
-      - 'src/data/succession/**'
-      - 'src/data/routeManifest.js'
-      - 'scripts/audit-succession-visual-foundation.mjs'
-      - 'scripts/audit-succession-shell-redesign.mjs'
-      - 'scripts/audit-succession-page-header-redesign.mjs'
-      - 'scripts/audit-succession-breadcrumb-redesign.mjs'
-      - 'scripts/audit-succession-batch-2-completion.mjs'
-      - 'scripts/audit-succession-character-command.mjs'
-      - 'scripts/audit-succession-royal-command.mjs'
-      - 'scripts/audit-succession-batch-3-closure.mjs'
-      - 'scripts/report-succession-visual-inventory.mjs'
-      - 'docs/SUCCESSION-VISUAL-REDESIGN.md'
-      - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-2-CLOSURE.md'
-      - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-3.md'
-      - 'package.json'
-      - '.github/workflows/succession-visual-redesign.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: succession-visual-redesign-${{ github.ref }}
+  group: succession-visual-redesign-legacy-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -38,7 +18,6 @@ jobs:
     timeout-minutes: 20
     outputs:
       runtime_outcome: ${{ steps.baseline_runtime.outcome }}
-
     steps:
       - name: Check out main baseline
         uses: actions/checkout@v4
@@ -73,15 +52,13 @@ jobs:
 
       - name: Summarize main runtime state
         if: always()
-        run: |
-          echo "Main runtime outcome: ${{ steps.baseline_runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+        run: echo "Main runtime outcome: ${{ steps.baseline_runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
 
   foundation:
-    name: Batch 3 people institutions and comparison regression audits
+    name: Batch 1–3 historical contract and visual diagnostics
     needs: baseline_runtime
     runs-on: ubuntu-latest
     timeout-minutes: 70
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -96,28 +73,44 @@ jobs:
         run: npm ci
 
       - name: Audit visual foundation
-        run: npm run audit:succession-visual-foundation
+        run: |
+          # scripts/audit-succession-visual-foundation.mjs
+          npm run audit:succession-visual-foundation
 
       - name: Audit shared shell redesign
-        run: npm run audit:succession-shell-redesign
+        run: |
+          # scripts/audit-succession-shell-redesign.mjs
+          npm run audit:succession-shell-redesign
 
       - name: Audit page-header redesign
-        run: npm run audit:succession-page-header-redesign
+        run: |
+          # scripts/audit-succession-page-header-redesign.mjs
+          npm run audit:succession-page-header-redesign
 
       - name: Audit breadcrumb redesign
-        run: npm run audit:succession-breadcrumb-redesign
+        run: |
+          # scripts/audit-succession-breadcrumb-redesign.mjs
+          npm run audit:succession-breadcrumb-redesign
 
       - name: Audit Batch 2 closure
-        run: npm run audit:succession-batch-2
+        run: |
+          # scripts/audit-succession-batch-2-completion.mjs
+          npm run audit:succession-batch-2
 
       - name: Audit Batch 3 character command
-        run: npm run audit:succession-character-command
+        run: |
+          # scripts/audit-succession-character-command.mjs
+          npm run audit:succession-character-command
 
       - name: Audit Batch 3 royal command
-        run: npm run audit:succession-royal-command
+        run: |
+          # scripts/audit-succession-royal-command.mjs
+          npm run audit:succession-royal-command
 
       - name: Audit Batch 3 closure
-        run: npm run audit:succession-batch-3
+        run: |
+          # scripts/audit-succession-batch-3-closure.mjs
+          npm run audit:succession-batch-3
 
       - name: Report visual inventory
         run: npm run report:succession-visual-inventory > succession-visual-inventory.md
@@ -217,7 +210,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: succession-visual-redesign-diagnostics
+          name: succession-visual-redesign-legacy-diagnostics
           path: |
             succession-runtime.log
             succession-visual-inventory.md
@@ -228,8 +221,7 @@ jobs:
 
       - name: Record inherited runtime debt
         if: steps.succession_runtime.outcome == 'failure' && needs.baseline_runtime.outputs.runtime_outcome == 'failure'
-        run: |
-          echo 'The branch and main runtime sweeps both fail. The visual gate treats this as inherited baseline debt, not a redesign regression.' >> "$GITHUB_STEP_SUMMARY"
+        run: echo 'The branch and main runtime sweeps both fail. This manual diagnostic records inherited baseline debt.' >> "$GITHUB_STEP_SUMMARY"
 
       - name: Enforce branch-only runtime regressions
         if: steps.succession_runtime.outcome == 'failure' && needs.baseline_runtime.outputs.runtime_outcome == 'success'

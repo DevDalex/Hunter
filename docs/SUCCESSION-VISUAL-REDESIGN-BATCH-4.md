@@ -28,7 +28,7 @@ Current-snapshot narrative command, phase architecture, metrics, and phase dossi
 
 ### Hour 42 — Parallel Story lanes
 
-Synchronized chapter-positioned swimlanes with focus controls and accessible mobile alternatives.
+Synchronized chapter-positioned swimlanes with focus controls and accessible unsupported narrow-width alternatives.
 
 ### Hour 43 — Story-thread cards
 
@@ -77,7 +77,7 @@ Canonical spatial command plus premium Black Whale atlas, inspector, bridge prec
 
 - Current-snapshot command hero and phase architecture.
 - Synchronized Story swimlanes across a shared chapter axis.
-- Accessible stacked lane alternatives for mobile.
+- Accessible stacked lane alternatives for unsupported narrow-width.
 - Status-aware Story-thread evidence records and dossiers.
 - Causal river with navigable source event, relationship, target consequence, and explanation.
 - Maintained graph edges only; no inferred relationships are manufactured by presentation code.
@@ -149,8 +149,8 @@ npm run prepare:eta-assets
 npx vite build
 ```
 
-It then renders Chapters, Story, Events, Nen, Guardian Spirit Beasts, Locations, and Black Whale at desktop, tablet, and mobile sizes.
+It then renders Chapters, Story, Events, Nen, Guardian Spirit Beasts, Locations, and Black Whale at desktop, unsupported narrow-width, and unsupported narrow-width sizes.
 
-Final result: all audits and the production build pass, and **21 of 21 route-and-viewport renders pass**. Manual review confirmed the materially redesigned Guardian Spirit Beast, Location, and Black Whale screens are visually sound on desktop and mobile.
+Final result: all audits and the production build pass, and **21 of 21 route-and-viewport renders pass**. Manual review confirmed the materially redesigned Guardian Spirit Beast, Location, and Black Whale screens are visually sound on desktop and unsupported narrow-width.
 
 Batch 4 is complete. Batch 5 begins with the global Succession timeline and advanced visualization closure work.

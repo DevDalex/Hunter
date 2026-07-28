@@ -1,9 +1,9 @@
 # Early Arc prototype pages
 
 Status: **Batch 5 Story redesign**  
-Mobile status: **deferred**
+unsupported narrow-width status: **deferred**
 
-Batch 5 applies the Yorknew prototype pattern to the early Story stretch without starting Greed Island, Chimera Ant, the Character redesign, or a mobile redesign pass.
+Batch 5 applies the Yorknew prototype pattern to the early Story stretch without starting Greed Island, Chimera Ant, the Character redesign, or a unsupported narrow-width redesign pass.
 
 ## What this batch owns
 

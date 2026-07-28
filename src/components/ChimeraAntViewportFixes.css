@@ -1,0 +1,31 @@
+/* Final 1366px containment fix without introducing viewport breakpoints. */
+
+.chimera-aftermath-system__final-game {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+}
+
+.chimera-aftermath-system__game-visual,
+.chimera-aftermath-system__final-game > article {
+  min-width: 0;
+}
+
+.chimera-aftermath-system__game-visual {
+  padding: clamp(24px, 2.4vw, 38px);
+}
+
+.chimera-aftermath-system__gungi-board {
+  grid-template-columns: repeat(9, clamp(38px, 2.8vw, 45px));
+  grid-template-rows: repeat(9, clamp(38px, 2.8vw, 45px));
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits {
+  grid-template-columns: repeat(2, minmax(0, 190px));
+}
+
+.chimera-aftermath-system__game-visual .chimera-endgame-system__portraits figure {
+  width: 100%;
+}
+
+.chimera-aftermath-system__final-game > article {
+  padding: clamp(34px, 3vw, 48px);
+}

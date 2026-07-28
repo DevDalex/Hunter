@@ -204,46 +204,7 @@ try {
   });
   await desktopControls.close();
 
-  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Island map mobile containment and reduced motion', mobile, async () => {
-    await openSystems(mobile, base, 'map');
-    const systems = mobile.locator('.gi-systems');
-    await assertMapGeometry(systems, 'mobile');
-    await systems.locator('.gi-systems__search input').fill('limeiro');
-    await systems.locator('[data-location-id="limeiro"]').click();
-    const mobileText = (await systems.innerText()).toLowerCase();
-    if (!mobileText.includes('limeiro') || !mobileText.includes('capital')) throw new Error('Mobile map view did not expose Limeiro');
 
-    const state = await mobile.evaluate(() => {
-      const systems = document.querySelector('.gi-systems');
-      const mapButton = document.querySelector('.gi-systems-map button');
-      return {
-        overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-        reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-        width: systems?.getBoundingClientRect().width || 0,
-        transition: mapButton ? getComputedStyle(mapButton).transitionDuration : '',
-      };
-    });
-    if (state.overflow > 1) throw new Error(`island systems overflowed mobile viewport by ${state.overflow}px`);
-    if (!state.reducedMotion) throw new Error('reduced-motion emulation was not active');
-    if (state.width > 390.5) throw new Error(`systems section exceeds mobile viewport at ${state.width}px`);
-    const durations = state.transition.split(',').map((value) => Number.parseFloat(value)).filter(Number.isFinite);
-    if (durations.some((duration) => duration > 0.001)) throw new Error(`systems transition remains ${state.transition} under reduced motion`);
-  });
-  await mobile.close();
-
-  const mobileLocations = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Location directory mobile containment', mobileLocations, async () => {
-    await openSystems(mobileLocations, base, 'locations');
-    const systems = mobileLocations.locator('.gi-systems');
-    if (await systems.locator('[data-location-directory-id]').count() !== 9) throw new Error('Mobile location directory is incomplete');
-    await systems.locator('[data-location-directory-id="starting-point"]').click();
-    const panelText = (await systems.locator('.gi-systems-location-card').innerText()).toLowerCase();
-    if (!panelText.includes('starting point') || !panelText.includes('entry zone')) throw new Error('Mobile Starting Point detail is incomplete');
-    const overflow = await mobileLocations.evaluate(() => Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth);
-    if (overflow > 1) throw new Error(`location directory overflowed mobile viewport by ${overflow}px`);
-  });
-  await mobileLocations.close();
 } finally {
   await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));

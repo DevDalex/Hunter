@@ -11,9 +11,8 @@ const dist = path.join(root, 'dist/client');
 const output = path.join(root, '.succession-final-qa');
 const axePath = require.resolve('axe-core/axe.min.js');
 const viewports = [
-  { id: 'desktop', width: 1440, height: 1000 },
-  { id: 'tablet', width: 768, height: 1024 },
-  { id: 'mobile', width: 390, height: 844 },
+  { id: 'desktop-minimum', width: 1366, height: 900 },
+  { id: 'desktop', width: 1600, height: 1000 },
 ];
 const routes = [
   { id: 'global-timeline', path: 'timeline/', label: 'Global timeline' },
@@ -190,7 +189,7 @@ try {
         await settle(page);
         const audit = await page.evaluate(inspect);
         let axeViolations = [];
-        if (viewport.id !== 'tablet') {
+        {
           await page.addScriptTag({ path: axePath });
           const axe = await page.evaluate(async () => globalThis.axe.run(document, {
             runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
@@ -209,7 +208,6 @@ try {
           ...(!audit.mainVisible ? [{ mainVisible: false }] : []),
           ...(route.path.startsWith('succession/') && !audit.workspaceRegion ? [{ workspaceRegion: false }] : []),
           ...(audit.h1Count !== 1 ? [{ h1Count: audit.h1Count }] : []),
-          ...(viewport.id !== 'desktop' ? audit.smallTargets : []),
           ...(audit.cls > .18 ? [{ cls: audit.cls }] : []),
         ];
         const result = { viewport: viewport.id, route: route.path, label: route.label, runtimeErrors, failedRequests, axeViolations, ...audit, defects };
@@ -233,15 +231,6 @@ try {
     await page.keyboard.press('Enter');
     await page.waitForSelector('.succession-archive[data-archive-route="timeline"]', { timeout: 10_000 });
     await page.waitForFunction(() => document.activeElement?.id === 'succession-workspace-content');
-  });
-
-  await runInteraction('mobile archive drawer traps Escape and restores focus', { width: 390, height: 844 }, 'succession/story', async (page) => {
-    const trigger = page.locator('.succession-archive__mobile-bar button').first();
-    await trigger.click();
-    await page.waitForSelector('.succession-drawer [role="dialog"]');
-    await page.keyboard.press('Escape');
-    await page.waitForSelector('.succession-drawer', { state: 'detached' });
-    await page.waitForFunction(() => document.activeElement?.matches('.succession-archive__mobile-bar button:first-child'));
   });
 
   await runInteraction('assignment result modes are keyboard operable', { width: 1440, height: 1000 }, 'succession/bodyguards', async (page) => {
@@ -288,5 +277,5 @@ const summary = {
   failed: failedRoutes.length + failedInteractions.length,
 };
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, routes: results, interactions }, null, 2)}\n`);
-console.log(`\nSuccession final release QA: ${summary.routePasses}/${summary.routeChecks} responsive route renders and ${summary.interactionPasses}/${summary.interactionChecks} interaction flows passed; maximum CLS ${summary.maximumCls.toFixed(3)}.`);
+console.log(`\nSuccession final release QA: ${summary.routePasses}/${summary.routeChecks} desktop route renders and ${summary.interactionPasses}/${summary.interactionChecks} interaction flows passed; maximum CLS ${summary.maximumCls.toFixed(3)}.`);
 if (summary.failed) process.exitCode = 1;

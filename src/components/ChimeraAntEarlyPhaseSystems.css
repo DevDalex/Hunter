@@ -1,0 +1,647 @@
+.chimera-early-system {
+  position: relative;
+  padding: 42px 40px 46px;
+  border-top: 1px solid rgba(29, 33, 26, 0.2);
+  background: var(--chimera-paper);
+  color: var(--chimera-ink);
+}
+
+.chimera-early-system::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(29, 33, 26, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 33, 26, 0.035) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(to bottom, black, transparent 72%);
+}
+
+.chimera-early-system > * {
+  position: relative;
+  z-index: 1;
+}
+
+.chimera-early-system__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(310px, 0.7fr);
+  gap: clamp(44px, 6vw, 96px);
+  align-items: start;
+  margin-bottom: 34px;
+}
+
+.chimera-early-system__header > div > span,
+.chimera-early-system__header aside > span,
+.chimera-expedition-system__route-label,
+.chimera-expedition-system__node span,
+.chimera-expedition-system__route article div span,
+.chimera-expedition-system__route article div small,
+.chimera-expedition-system__threat header span,
+.chimera-expedition-system__cast header span,
+.chimera-expedition-system__threat li div > span,
+.chimera-expedition-system__portraits figcaption span,
+.chimera-three-front-system__corner span,
+.chimera-three-front-system__period span,
+.chimera-three-front-system__row header > span,
+.chimera-three-front-system__row section > span,
+.chimera-three-front-system__convergence header span,
+.chimera-three-front-system__convergence article span {
+  color: var(--phase-accent);
+  font-size: 0.66rem;
+  font-weight: 750;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.chimera-early-system__header h4 {
+  max-width: 850px;
+  margin: 8px 0 12px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.2rem, 3.2vw, 4rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+.chimera-early-system__header > div > p {
+  max-width: 76ch;
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.68;
+}
+
+.chimera-early-system__header aside {
+  padding: 18px 0 0 22px;
+  border-top: 2px solid var(--phase-accent);
+}
+
+.chimera-early-system__header aside strong {
+  display: block;
+  margin: 8px 0 9px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.chimera-early-system__header aside p {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.58;
+}
+
+.chimera-expedition-system {
+  --phase-accent: var(--chimera-moss);
+}
+
+.chimera-expedition-system__route-field {
+  position: relative;
+  overflow: hidden;
+  padding: 24px 24px 34px;
+  border: 1px solid rgba(29, 33, 26, 0.2);
+  background:
+    radial-gradient(circle at 88% 58%, rgba(123, 53, 56, 0.13), transparent 18%),
+    linear-gradient(120deg, rgba(111, 122, 69, 0.08), transparent 42%),
+    var(--chimera-bone);
+}
+
+.chimera-expedition-system__route-field::after {
+  content: "NGL";
+  position: absolute;
+  right: 22px;
+  bottom: -20px;
+  color: rgba(77, 91, 57, 0.08);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 8rem;
+  font-weight: 700;
+  letter-spacing: -0.08em;
+}
+
+.chimera-expedition-system__route-label {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.chimera-expedition-system__route-label i {
+  height: 1px;
+  background: linear-gradient(90deg, var(--chimera-moss), var(--chimera-rose));
+}
+
+.chimera-expedition-system__route {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 14px;
+  min-height: 420px;
+  margin: 0;
+  padding: 44px 0 30px;
+  list-style: none;
+}
+
+.chimera-expedition-system__route::before {
+  content: "";
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  top: 49%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--chimera-moss), #7b6b43 62%, var(--chimera-rose));
+  box-shadow: 0 0 0 1px rgba(233, 230, 218, 0.72);
+  transform: rotate(-1.4deg);
+}
+
+.chimera-expedition-system__route li {
+  position: relative;
+  display: grid;
+  grid-template-rows: 52px 1fr;
+  align-self: start;
+}
+
+.chimera-expedition-system__route li:nth-child(even) {
+  margin-top: 96px;
+}
+
+.chimera-expedition-system__route li:nth-child(3),
+.chimera-expedition-system__route li:nth-child(5) {
+  margin-top: 30px;
+}
+
+.chimera-expedition-system__node {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 0 4px;
+}
+
+.chimera-expedition-system__node::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -7px;
+  width: 15px;
+  height: 15px;
+  border: 3px solid var(--chimera-bone);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--chimera-moss) calc(22% + (var(--route-order) * 11%)), var(--chimera-rose));
+  box-shadow: 0 0 0 1px rgba(29, 33, 26, 0.28);
+  transform: translateX(-50%);
+}
+
+.chimera-expedition-system__node i {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--phase-accent);
+  font-size: 1.8rem;
+  font-style: normal;
+}
+
+.chimera-expedition-system__route article {
+  min-height: 252px;
+  padding: 18px 16px 16px;
+  border-top: 2px solid color-mix(in srgb, var(--chimera-moss) 64%, var(--chimera-rose));
+  background: rgba(233, 230, 218, 0.92);
+  box-shadow: 0 14px 28px rgba(17, 20, 15, 0.1);
+  backdrop-filter: blur(4px);
+}
+
+.chimera-expedition-system__route li[data-severity="5"] article,
+.chimera-expedition-system__route li[data-severity="6"] article {
+  border-top-color: var(--chimera-rose);
+  background: rgba(235, 225, 218, 0.95);
+}
+
+.chimera-expedition-system__route article > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.chimera-expedition-system__route article > strong {
+  display: block;
+  margin-top: 10px;
+  color: rgba(29, 33, 26, 0.6);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.chimera-expedition-system__route h5 {
+  margin: 7px 0 9px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1.15;
+}
+
+.chimera-expedition-system__route p {
+  margin: 0 0 12px;
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.chimera-expedition-system__route a,
+.chimera-three-front-system__row section a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--phase-accent);
+  font-size: 0.7rem;
+  text-decoration: none;
+}
+
+.chimera-expedition-system__evidence {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(430px, 0.92fr);
+  gap: 26px;
+  margin-top: 26px;
+}
+
+.chimera-expedition-system__threat,
+.chimera-expedition-system__cast {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid rgba(29, 33, 26, 0.18);
+  background: var(--chimera-bone);
+}
+
+.chimera-expedition-system__threat header h5,
+.chimera-expedition-system__cast header h5 {
+  margin: 5px 0 20px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+}
+
+.chimera-expedition-system__threat ol {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chimera-expedition-system__threat li {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  width: var(--threat-width);
+  min-height: 78px;
+  border-left: 4px solid color-mix(in srgb, var(--chimera-moss) 62%, var(--chimera-rose));
+  background: rgba(29, 33, 26, 0.045);
+}
+
+.chimera-expedition-system__threat li:nth-child(4),
+.chimera-expedition-system__threat li:nth-child(5) {
+  border-left-color: var(--chimera-rose);
+  background: rgba(123, 53, 56, 0.07);
+}
+
+.chimera-expedition-system__threat li > i {
+  display: grid;
+  place-items: center;
+  border-right: 1px solid rgba(29, 33, 26, 0.14);
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--phase-accent);
+  font-size: 1.2rem;
+  font-style: normal;
+}
+
+.chimera-expedition-system__threat li > div {
+  padding: 11px 14px;
+}
+
+.chimera-expedition-system__threat li strong {
+  display: block;
+  margin: 3px 0;
+  font-size: 0.88rem;
+}
+
+.chimera-expedition-system__threat li p {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.chimera-expedition-system__portraits {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-height: 280px;
+  overflow: hidden;
+  border: 1px solid rgba(29, 33, 26, 0.2);
+  background: var(--chimera-charcoal);
+}
+
+.chimera-expedition-system__portraits > a {
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.chimera-expedition-system__portraits figure {
+  position: relative;
+  height: 100%;
+  min-height: 280px;
+  margin: 0;
+  overflow: hidden;
+  border-right: 1px solid rgba(233, 230, 218, 0.14);
+}
+
+.chimera-expedition-system__portraits img,
+.chimera-expedition-system__portraits .safe-image-placeholder {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+  filter: saturate(0.78) contrast(1.04);
+  transition: transform 220ms ease, filter 220ms ease;
+}
+
+.chimera-expedition-system__portraits a:hover img,
+.chimera-expedition-system__portraits a:focus-visible img {
+  transform: scale(1.035);
+  filter: saturate(0.96) contrast(1.06);
+}
+
+.chimera-expedition-system__portraits figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 46px 12px 13px;
+  color: var(--chimera-bone);
+  background: linear-gradient(transparent, rgba(17, 20, 15, 0.96));
+}
+
+.chimera-expedition-system__portraits figcaption span,
+.chimera-expedition-system__portraits figcaption strong {
+  display: block;
+}
+
+.chimera-expedition-system__portraits figcaption strong {
+  margin-top: 4px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.chimera-expedition-system__cast > p {
+  margin: 17px 0 0;
+  padding-left: 16px;
+  border-left: 2px solid var(--phase-accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+.chimera-three-front-system {
+  --phase-accent: var(--chimera-olive);
+  background:
+    radial-gradient(circle at 50% 10%, rgba(108, 102, 128, 0.12), transparent 26%),
+    var(--chimera-paper);
+}
+
+.chimera-three-front-system__matrix {
+  overflow: hidden;
+  border: 1px solid rgba(29, 33, 26, 0.22);
+  background: var(--chimera-bone);
+  box-shadow: 0 18px 42px rgba(17, 20, 15, 0.1);
+}
+
+.chimera-three-front-system__period-row,
+.chimera-three-front-system__row {
+  display: grid;
+  grid-template-columns: minmax(250px, 0.72fr) repeat(3, minmax(0, 1fr));
+}
+
+.chimera-three-front-system__period-row {
+  min-height: 112px;
+  color: var(--chimera-bone);
+  background: var(--chimera-charcoal);
+}
+
+.chimera-three-front-system__corner,
+.chimera-three-front-system__period {
+  padding: 18px;
+  border-right: 1px solid rgba(233, 230, 218, 0.15);
+}
+
+.chimera-three-front-system__corner strong,
+.chimera-three-front-system__period strong,
+.chimera-three-front-system__period small {
+  display: block;
+}
+
+.chimera-three-front-system__corner strong {
+  margin-top: 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  font-weight: 500;
+}
+
+.chimera-three-front-system__period {
+  position: relative;
+}
+
+.chimera-three-front-system__period i {
+  position: absolute;
+  right: 14px;
+  top: 10px;
+  color: rgba(233, 230, 218, 0.17);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.3rem;
+  font-style: normal;
+}
+
+.chimera-three-front-system__period strong {
+  margin: 8px 0 3px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.chimera-three-front-system__period small {
+  color: rgba(233, 230, 218, 0.56);
+  font-size: 0.72rem;
+}
+
+.chimera-three-front-system__row {
+  min-height: 286px;
+  border-top: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-three-front-system__row > header,
+.chimera-three-front-system__row > section {
+  min-width: 0;
+  padding: 20px;
+  border-right: 1px solid rgba(29, 33, 26, 0.16);
+}
+
+.chimera-three-front-system__row > header {
+  position: relative;
+  overflow: hidden;
+  color: var(--chimera-bone);
+  background: var(--chimera-charcoal);
+}
+
+.chimera-three-front-system__row--colony > header {
+  background: linear-gradient(145deg, #1b1e18, #25241d 70%, rgba(108, 102, 128, 0.46));
+}
+
+.chimera-three-front-system__row--association > header {
+  background: linear-gradient(145deg, #1b1e18, #25291f 72%, rgba(111, 122, 69, 0.4));
+}
+
+.chimera-three-front-system__portraits {
+  display: flex;
+  height: 98px;
+  margin: -20px -20px 17px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.16);
+}
+
+.chimera-three-front-system__portraits img,
+.chimera-three-front-system__portraits .safe-image-placeholder {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  filter: saturate(0.72) contrast(1.05);
+}
+
+.chimera-three-front-system__row header h5 {
+  margin: 6px 0 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.55rem;
+  font-weight: 500;
+}
+
+.chimera-three-front-system__row header p {
+  margin: 0 0 12px;
+  color: rgba(233, 230, 218, 0.72);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.chimera-three-front-system__row header > small {
+  display: block;
+  padding-top: 11px;
+  border-top: 1px solid rgba(233, 230, 218, 0.15);
+  color: rgba(233, 230, 218, 0.54);
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.chimera-three-front-system__row > section {
+  position: relative;
+  background: rgba(233, 230, 218, 0.74);
+}
+
+.chimera-three-front-system__row > section::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 3px;
+  background: var(--phase-accent);
+  opacity: 0.35;
+}
+
+.chimera-three-front-system__row--colony > section::before {
+  background: var(--chimera-royal);
+  opacity: 0.72;
+}
+
+.chimera-three-front-system__row--association > section::before {
+  background: var(--chimera-moss);
+  opacity: 0.72;
+}
+
+.chimera-three-front-system__row section h6 {
+  margin: 8px 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.chimera-three-front-system__row section p {
+  margin: 0 0 14px;
+  font-size: 0.78rem;
+  line-height: 1.56;
+}
+
+.chimera-three-front-system__convergence {
+  margin-top: 26px;
+  padding: 26px;
+  color: var(--chimera-bone);
+  background:
+    linear-gradient(120deg, rgba(111, 122, 69, 0.16), transparent 34%),
+    linear-gradient(240deg, rgba(108, 102, 128, 0.16), transparent 34%),
+    var(--chimera-charcoal);
+}
+
+.chimera-three-front-system__convergence header {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: end;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.16);
+}
+
+.chimera-three-front-system__convergence header strong {
+  max-width: 760px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-align: right;
+}
+
+.chimera-three-front-system__convergence > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 18px;
+  border-top: 1px solid rgba(233, 230, 218, 0.14);
+  border-left: 1px solid rgba(233, 230, 218, 0.14);
+}
+
+.chimera-three-front-system__convergence article {
+  position: relative;
+  min-height: 130px;
+  padding: 18px 44px 18px 18px;
+  border-right: 1px solid rgba(233, 230, 218, 0.14);
+  border-bottom: 1px solid rgba(233, 230, 218, 0.14);
+}
+
+.chimera-three-front-system__convergence article p {
+  margin: 8px 0 0;
+  color: rgba(233, 230, 218, 0.75);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.chimera-three-front-system__convergence article svg {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  color: var(--phase-accent);
+}
+
+.chimera-three-front-system__convergence > p {
+  max-width: 1000px;
+  margin: 20px 0 0;
+  color: rgba(233, 230, 218, 0.68);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.02rem;
+  line-height: 1.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chimera-expedition-system__portraits img {
+    transition: none;
+  }
+}

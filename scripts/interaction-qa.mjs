@@ -161,14 +161,6 @@ try {
     if (health.unavailable.length) throw new Error('advanced gallery displays unavailable-image placeholders');
   });
 
-  await run('Nen mobile state has no horizontal spill', { width: 390, height: 844 }, 'reference/nen', async (page) => {
-    await page.waitForSelector('.nen-principle-workbench');
-    const health = await pageHealth(page, '.nen-principle-workbench');
-    if (health.bodyOverflow > 1) throw new Error(`mobile page overflowed horizontally by ${health.bodyOverflow}px`);
-    if (health.brokenImages.length) throw new Error(`mobile broken images: ${JSON.stringify(health.brokenImages)}`);
-    if (health.unavailable.length) throw new Error(`mobile unavailable visuals: ${health.unavailable.join(', ')}`);
-  });
-
   await run('Dedicated relationship workspace filters and links remain readable', { width: 1440, height: 1000 }, 'succession/relationships', async (page) => {
     await page.waitForSelector('.succession-canonical-relationships .succession-relationship-network');
     const rootNode = page.locator('.succession-canonical-relationships');
@@ -208,14 +200,6 @@ try {
     if (health.bodyOverflow > 1) throw new Error(`relationship-linked canonical dossier overflowed by ${health.bodyOverflow}px`);
   });
 
-  await run('Dedicated relationship workspace remains contained on mobile', { width: 390, height: 844 }, 'succession/relationships', async (page) => {
-    await page.waitForSelector('.succession-canonical-relationships .succession-relationship-network');
-    const rootNode = page.locator('.succession-canonical-relationships');
-    await rootNode.getByRole('button', { name: /Accessible edge list/i }).click();
-    await page.waitForSelector('.succession-relationship-accessible > ol > li');
-    const health = await pageHealth(page, '.succession-canonical-relationships');
-    if (health.bodyOverflow > 1) throw new Error(`relationship workspace overflowed horizontally by ${health.bodyOverflow}px`);
-  });
 } finally {
   await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));

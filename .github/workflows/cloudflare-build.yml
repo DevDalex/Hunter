@@ -1,8 +1,6 @@
 name: Cloudflare full-stack build
 
 on:
-  pull_request:
-    branches: [main]
   push:
     branches: [main]
   workflow_dispatch:
@@ -51,7 +49,19 @@ jobs:
       - name: Verify chapter-admin Worker routing
         run: node scripts/verify-cloudflare-worker.mjs
 
-      - name: Publish complete dist artifact
+      - name: Publish compact build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudflare-build-diagnostic-${{ github.sha }}
+          path: |
+            cloudflare-worker-diagnostic.json
+            .ci/build.log
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Publish complete dist artifact for release runs
         if: always()
         uses: actions/upload-artifact@v4
         with:

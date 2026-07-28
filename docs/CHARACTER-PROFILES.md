@@ -1,7 +1,7 @@
 # Character profile dossiers
 
 Status: Batch 9
-Mobile status: deferred
+unsupported narrow-width status: deferred
 Source boundary: Hunterpedia/Fandom only
 
 Batch 9 upgrades the Characters section without deleting the broad cast directory. The design rule is a directory/dossier split:
@@ -37,7 +37,7 @@ The first six profiles are deliberately chosen to stress the character system:
 - Does not create separate clean URL routes such as `/characters/gon-freecss` yet.
 - Does not make every character a long biography in this batch.
 - Does not copy long Hunterpedia biography text.
-- Does not reopen mobile layout work.
+- Does not reopen unsupported narrow-width layout work.
 
 ## Future route candidates
 

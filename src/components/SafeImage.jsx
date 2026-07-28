@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { resolveMediaAsset } from '../media/mediaManifest.js';
 
-const normalizeSubject = (value = '') => value
-  .toLowerCase()
-  .replaceAll(/[^a-z0-9]+/g, ' ')
-  .trim()
-  .replaceAll(/\s+/g, ' ');
+const normalizeSubject = (value = '') =>
+  value
+    .toLowerCase()
+    .replaceAll(/[^a-z0-9]+/g, ' ')
+    .trim()
+    .replaceAll(/\s+/g, ' ');
 
 const localPortraitBySubject = new Map([
   ['gon freecss', '/media/portraits/gon-freecss.webp'],
@@ -31,6 +33,8 @@ const localPortraitBySubject = new Map([
 ]);
 
 const approvedExternalMediaHosts = new Set(['hunterxhunter.fandom.com', 'static.wikia.nocookie.net']);
+
+/** @param {string} value */
 const isApprovedExternalMedia = (value = '') => {
   try {
     const url = new URL(value, window.location.href);
@@ -40,6 +44,7 @@ const isApprovedExternalMedia = (value = '') => {
   }
 };
 
+/** @param {{ fallbackLabel?: string; alt?: string }} options */
 const inferLocalPortraitFallback = ({ fallbackLabel, alt }) => {
   const candidates = [fallbackLabel, String(alt || '').split(',')[0]];
   for (const candidate of candidates) {
@@ -49,36 +54,59 @@ const inferLocalPortraitFallback = ({ fallbackLabel, alt }) => {
   return '';
 };
 
-export default function SafeImage({
-  src,
-  fallbackSrc = '',
-  fallbackLabel = '',
-  alt,
-  className = '',
-  loading = 'lazy',
-  eager = false,
-  priority,
-  media = null,
-  onAvailabilityChange,
-  style,
-  ...props
-}) {
+/**
+ * @typedef {import('react').ImgHTMLAttributes<HTMLImageElement> & {
+ *   fallbackSrc?: string;
+ *   fallbackLabel?: string;
+ *   eager?: boolean;
+ *   priority?: 'high' | 'low' | 'auto';
+ *   mediaId?: string;
+ *   mediaVariant?: string;
+ *   media?: { width?: number; height?: number; storage?: string; focal?: string } | null;
+ *   onAvailabilityChange?: (available: boolean) => void;
+ * }} SafeImageProps
+ */
+
+/** @param {SafeImageProps} imageProps */
+export default function SafeImage(imageProps) {
+  const {
+    src,
+    fallbackSrc = '',
+    fallbackLabel = '',
+    alt = '',
+    className = '',
+    loading = 'lazy',
+    eager = false,
+    priority,
+    mediaId,
+    mediaVariant = 'phase',
+    media = null,
+    onAvailabilityChange,
+    style,
+    ...props
+  } = imageProps;
+
+  const resolvedMedia = useMemo(() => resolveMediaAsset(mediaId, mediaVariant), [mediaId, mediaVariant]);
+  const resolvedAlt = alt || resolvedMedia?.alt || fallbackLabel;
   const inferredFallbackSrc = useMemo(
-    () => inferLocalPortraitFallback({ fallbackLabel, alt }),
-    [alt, fallbackLabel],
+    () => inferLocalPortraitFallback({ fallbackLabel, alt: resolvedAlt }),
+    [fallbackLabel, resolvedAlt],
   );
   const sources = useMemo(
-    () => [...new Set([src, fallbackSrc, inferredFallbackSrc].filter(Boolean))],
-    [fallbackSrc, inferredFallbackSrc, src],
+    () => [...new Set([resolvedMedia?.src, src, fallbackSrc, inferredFallbackSrc].filter(Boolean))],
+    [fallbackSrc, inferredFallbackSrc, resolvedMedia?.src, src],
   );
   const [sourceIndex, setSourceIndex] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
   const [nearViewport, setNearViewport] = useState(eager);
   const availabilityCallback = useRef(onAvailabilityChange);
-  const imageRef = useRef(null);
+  const imageRef = useRef(/** @type {HTMLImageElement | null} */ (null));
 
-  useEffect(() => { availabilityCallback.current = onAvailabilityChange; }, [onAvailabilityChange]);
+  useEffect(() => {
+    availabilityCallback.current = onAvailabilityChange;
+  }, [onAvailabilityChange]);
+
   useEffect(() => {
     setSourceIndex(0);
     setLoaded(false);
@@ -96,14 +124,17 @@ export default function SafeImage({
       setNearViewport(true);
       return undefined;
     }
-    const observer = new IntersectionObserver((entries) => {
-      if (!entries.some((entry) => entry.isIntersecting)) return;
-      setNearViewport(true);
-      observer.disconnect();
-    }, { rootMargin: '480px 0px' });
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        setNearViewport(true);
+        observer.disconnect();
+      },
+      { rootMargin: '480px 0px' },
+    );
     observer.observe(image);
     return () => observer.disconnect();
-  }, [activeSrc, eager, nearViewport]);
+  }, [eager, nearViewport]);
 
   useEffect(() => {
     if (!activeSrc || loaded || unavailable || !nearViewport || !isApprovedExternalMedia(activeSrc)) return undefined;
@@ -119,7 +150,16 @@ export default function SafeImage({
   }, [activeSrc, loaded, nearViewport, sourceIndex, sources.length, unavailable]);
 
   if (!activeSrc || unavailable) {
-    return fallbackLabel ? <span className={`safe-image-placeholder${className ? ` ${className}` : ''}`} role="img" aria-label={alt || fallbackLabel}><b>{fallbackLabel}</b><small>Visual unavailable</small></span> : null;
+    return fallbackLabel ? (
+      <span
+        className={`safe-image-placeholder${className ? ` ${className}` : ''}`}
+        role="img"
+        aria-label={resolvedAlt || fallbackLabel}
+      >
+        <b>{fallbackLabel}</b>
+        <small>Visual unavailable</small>
+      </span>
+    ) : null;
   }
 
   return (
@@ -128,17 +168,20 @@ export default function SafeImage({
       ref={imageRef}
       className={`safe-image${className ? ` ${className}` : ''}`}
       src={activeSrc}
-      alt={alt}
-      width={media?.width || undefined}
-      height={media?.height || undefined}
+      alt={resolvedAlt}
+      width={resolvedMedia?.width || media?.width || undefined}
+      height={resolvedMedia?.height || media?.height || undefined}
       loading={eager ? 'eager' : loading}
       decoding="async"
       fetchPriority={priority || (eager ? 'high' : 'auto')}
       referrerPolicy="no-referrer"
       data-image-loaded={loaded ? 'true' : 'false'}
       data-image-fallback={sourceIndex > 0 ? 'true' : 'false'}
-      data-media-storage={activeSrc.startsWith('/media/') ? 'local' : media?.storage || undefined}
-      style={{ ...style, ...(media?.focal ? { objectPosition: media.focal } : {}) }}
+      data-media-id={resolvedMedia?.id || undefined}
+      data-media-variant={resolvedMedia ? mediaVariant : undefined}
+      data-media-safe-text={resolvedMedia?.safeTextRegion || undefined}
+      data-media-storage={resolvedMedia?.storage || (activeSrc.startsWith('/media/') ? 'local' : media?.storage || undefined)}
+      style={{ ...style, ...(resolvedMedia?.focal || media?.focal ? { objectPosition: resolvedMedia?.focal || media?.focal } : {}) }}
       onLoad={() => {
         setLoaded(true);
         availabilityCallback.current?.(true);

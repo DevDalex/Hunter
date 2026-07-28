@@ -40,7 +40,7 @@ concurrency:
 
 jobs:
   final_closure:
-    name: Batch 5 final responsive, accessibility, performance, and cross-browser gate
+    name: Batch 5 final desktop, accessibility, performance, and cross-browser gate
     runs-on: ubuntu-latest
     timeout-minutes: 120
 
@@ -137,13 +137,13 @@ jobs:
       - name: Install Chromium, Firefox, and WebKit
         run: npx playwright install --with-deps chromium firefox webkit
 
-      - name: Run complete Chromium release matrix
+      - name: Run complete Chromium desktop release matrix
         shell: bash
         run: |
           set -o pipefail
           npm run qa:succession-final-release 2>&1 | tee batch5-final-release.log
 
-      - name: Run Firefox and WebKit regression matrix
+      - name: Run Firefox and WebKit desktop regression matrix
         shell: bash
         run: |
           set -o pipefail

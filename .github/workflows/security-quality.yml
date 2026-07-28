@@ -1,0 +1,72 @@
+name: Security Quality
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '23 4 * * 1'
+  workflow_dispatch:
+
+concurrency:
+  group: security-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  runtime_dependencies:
+    name: Runtime dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Reject high-severity runtime vulnerabilities
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Upload dependency audit report
+        if: always()
+        shell: bash
+        run: npm audit --omit=dev --json > npm-audit-runtime.json || true
+
+      - name: Publish dependency evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-runtime-dependencies-${{ github.sha }}
+          path: npm-audit-runtime.json
+          if-no-files-found: error
+          retention-days: 14
+
+  codeql:
+    name: CodeQL JavaScript and TypeScript analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          build-mode: none
+
+      - name: Analyze application and tooling
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:javascript-typescript'

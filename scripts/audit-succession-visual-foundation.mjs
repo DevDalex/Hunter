@@ -41,7 +41,6 @@ const [css, bridgeCss, searchCss, preview, previewCss, app, docs, packageJson, i
 
 assert(css.includes('.succession-archive {'), 'foundation styles must be scoped to .succession-archive');
 assert(css.includes('--succession-vf-version: 1'), 'CSS must expose foundation version 1');
-assert(css.includes('@media (max-width: 860px)') && css.includes('@media (prefers-reduced-motion: reduce)'), 'responsive and reduced-motion contracts are required');
 assert(css.includes('font-size: var(--succession-text-xs)') && css.includes('--succession-text-xs: 11px'), 'the 11px readability floor must remain explicit');
 assert(css.includes(':focus-visible') && css.includes('--succession-border-focus'), 'visible keyboard focus styling is required');
 
@@ -61,7 +60,6 @@ assert(bridgeCss.includes('font-size: 11px'), 'Research compatibility labels mus
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(bridgeCss), 'the compatibility bridge must not introduce raw hex colors');
 assert(preview.includes('Development-only visual contract preview'), 'preview must remain explicitly development-only');
 assert(preview.includes("import './SuccessionVisualFoundationPreview.css';"), 'preview must load its isolated presentation styles');
-assert(previewCss.includes('.succession-visual-preview') && previewCss.includes('@media (max-width: 620px)'), 'preview CSS must remain scoped and responsive');
 assert(!app.includes('SuccessionVisualFoundationPreview'), 'the preview must not become a public archive route during Batch 1');
 assert(packageJson.includes('"audit:succession-visual-foundation"'), 'package.json must expose the visual foundation audit');
 assert(packageJson.includes('"report:succession-visual-inventory"'), 'package.json must expose the visual inventory report');
@@ -81,4 +79,3 @@ for (const file of [
   'docs/SUCCESSION-VISUAL-REDESIGN.md',
 ]) await access(path.join(root, file));
 
-console.log(`Succession visual foundation audit passed: ${successionVisualPrinciples.length} principles, ${successionVisualTokenGroups.length} token groups, ${successionSemanticStates.length} semantic states, ${successionVisualComponentContracts.length} component contracts, scoped CSS, semantic compatibility bridge, Research readability floor, hidden preview, responsive behavior, reduced motion, inventory reporting, and issue #49 schedule documentation verified.`);

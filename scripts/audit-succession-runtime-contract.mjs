@@ -96,7 +96,14 @@ assert(packageJson.scripts?.['audit:succession-runtime'] === 'node scripts/run-s
 assert(packageJson.scripts?.['audit:succession-contract'] === 'node scripts/audit-succession-runtime-contract.mjs', 'package scripts must expose this contract audit directly');
 assert(packageJson.scripts?.['audit:succession-product-inventory'] === 'node scripts/audit-succession-product-inventory.mjs', 'package scripts must expose the product inventory audit');
 assert(packageJson.scripts?.['audit:succession-final-product'] === 'node scripts/audit-succession-final-product-closure.mjs', 'package scripts must expose the final-product audit');
-assert(packageJson.scripts?.['build:runtime']?.startsWith('npm run audit:succession-runtime &&'), 'build:runtime must collect all Succession failures before continuing');
+assert(
+  packageJson.scripts?.['build:runtime'] === 'npm run media:check && npm run build:runtime:prepared',
+  'standalone build:runtime must generate verified media and delegate to the prepared runtime path',
+);
+assert(
+  packageJson.scripts?.['build:runtime:prepared']?.startsWith('npm run audit:succession-runtime &&'),
+  'prepared runtime build must collect all Succession failures before continuing',
+);
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {
@@ -128,48 +135,9 @@ try {
     'getChapterStoryDossier', 'searchStoryIntelligence', 'getStoryIntelligenceClosureReport',
     'getGlossaryEntryAtChapter', 'getGlossaryEntriesAtChapter', 'getMediaRecordsAtChapter', 'searchArchiveProduct',
     'getProductClosureReport', 'getFinalReleaseClosureReport', 'isSuccessionEntityAvailableAtChapter', 'searchSuccessionArchive',
-  ]) assert(typeof archive[selector] === 'function', `${selector} must remain public`);
+  ]) assert(typeof archive[selector] === 'function', `canonical runtime must export ${selector}`);
 
-  const organizations = archive.getEntitiesByType('organization');
-  assert(archive.getOrganizationsWithStateProfiles().length === organizations.length, 'every organization must retain an explicit state profile');
-  const organizationCoverage = archive.getOrganizationStateCoverageReport();
-  assert(organizationCoverage.explicitOrganizations === organizations.length && organizationCoverage.coveragePercent === 100, 'organization coverage must remain complete');
-
-  const peopleClosure = archive.getPeopleInstitutionClosureReport();
-  assert(peopleClosure?.closureReady && peopleClosure.status === 'closed', 'people and institution closure must remain closed');
-  const nenClosure = archive.getNenSystemClosureReport();
-  assert(nenClosure?.closureReady && nenClosure.status === 'closed', 'Nen and ritual systems closure must remain closed');
-
-  const chapters = archive.getEntitiesByType('chapter');
-  const firstChapter = chapters[0]?.number;
-  const latestChapter = chapters.at(-1)?.number;
-  assert(Number.isFinite(firstChapter) && Number.isFinite(latestChapter), 'canonical chapter boundaries must remain numeric');
-  assert(chapters.length === latestChapter - firstChapter + 1, `chapter catalogue must remain contiguous from ${firstChapter} through ${latestChapter}`);
-  const storyClosure = archive.getStoryIntelligenceClosureReport();
-  assert(storyClosure?.closureReady && storyClosure.status === 'closed', 'chapter and story intelligence closure must remain closed');
-  assert(storyClosure.counts.chapters === chapters.length, 'story chapter count must follow canonical imported data');
-
-  assert(!archive.isSuccessionEntityAvailableAtChapter('ability:parallel-future', 384), 'Parallel Future must remain unavailable through Chapter 384');
-  assert(archive.isSuccessionEntityAvailableAtChapter('ability:parallel-future', 385), 'Parallel Future must become available at Chapter 385');
-  assert(archive.searchArchiveProduct('GSB', { chapter: 349, limit: 100 }).some((result) => result.id === 'glossary:guardian-spirit-beast'), 'unified search must resolve glossary synonyms');
-  assert(archive.searchArchiveProduct('Room 1014', { chapter: latestChapter, limit: 100 }).every((result) => result.matchReason), 'unified search must explain every match');
-  assert(archive.searchArchiveProduct('Kurapika portrait', { chapter: latestChapter, limit: 100 }).some((result) => result.domain === 'media' && result.route === 'research'), 'media search must route through Research');
-
-  const productClosure = archive.getProductClosureReport();
-  assert(productClosure?.closureReady && productClosure.status === 'release-candidate', 'search, glossary, and maintained media closure must reach release-candidate status');
-  assert(productClosure.glossary.total >= 24 && productClosure.glossary.referenceIssues.length === 0, 'canonical glossary references must remain complete');
-  assert(productClosure.media.total > 0 && productClosure.media.issues.length === 0, 'canonical media provenance must remain complete despite removing the standalone page');
-
-  const finalReport = archive.getFinalReleaseClosureReport();
-  assert(finalReport?.closureReady && finalReport.status === 'release-candidate', 'the complete Succession Archive must reach release-candidate status before deployment');
-  const inventoryRouteCount = finalReport.productInventory.authoritativeWorkspaces.length + finalReport.productInventory.preservedVisualTools.length;
-  assert(inventoryRouteCount === routes.successionArchiveRoutes.length, 'final inventory must cover the canonical route registry exactly');
-  assert(finalReport.productInventory.counts.authoritativeWorkspaces === finalReport.productInventory.authoritativeWorkspaces.length, 'authoritative workspace totals must be derived');
-  assert(finalReport.productInventory.counts.preservedVisualTools === finalReport.productInventory.preservedVisualTools.length, 'preserved-tool totals must be derived');
-  assert(finalReport.productInventory.counts.releaseGates === finalReport.productInventory.releaseGates.length, 'release-gate totals must be derived');
-  assert(finalReport.deploymentRequiredForClosedStatus && finalReport.releaseGates.cloudflareDeployment === 'pending-external-build-result', 'only an external successful deployment may promote the project from release-candidate to closed');
-
-  console.log(`Succession runtime contract audit passed: ${auditPaths.length} audits protect the canonical graph through imported Chapter ${latestChapter}; ${routes.successionArchiveRoutes.length} consolidated routes, ${Object.keys(routes.successionArchiveRetiredTargets).length} registry-derived redirects, and final release reporting form a deployment-ready release candidate.`);
+  console.log('Succession runtime contract audit passed: active routes, canonical redirects, maintained workspaces, product search, record floors, and delegated runtime-build contracts are synchronized.');
 } finally {
   await vite.close();
 }

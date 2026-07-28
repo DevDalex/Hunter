@@ -93,9 +93,14 @@ for (const phrase of ['Batch 12', 'ArchiveSection', 'ArchiveCard', 'EvidenceBadg
 const preflightScripts = [...preflight.matchAll(/^\s*'audit:[^']+',?$/gm)].map((match) => match[0]);
 assert(preflightScripts.length === 15, `aggregate preflight must list 15 audits, found ${preflightScripts.length}`);
 assert(preflight.includes("'audit:design-system'"), 'aggregate preflight must include audit:design-system');
-assert(packageJson.scripts?.check === 'npm run generate:build-info && npm run preflight:build', 'check must generate build identity and run aggregate preflight');
-assert(packageJson.scripts?.['build:runtime']?.includes('vite build') && packageJson.scripts['build:runtime'].includes('audit:release'), 'build:runtime must build and audit the Cloudflare artifact');
-assert(packageJson.scripts?.build === 'npm run check && npm run build:runtime', 'build must compose check and build:runtime');
+assert(packageJson.scripts?.check === 'npm run foundation:check && npm run generate:build-info && npm run preflight:build', 'check must run the foundation gate, generate build identity, and run aggregate preflight');
+assert(packageJson.scripts?.['foundation:static'] === 'npm run quality:foundation && npm run typecheck && npm run test:unit', 'foundation:static must compose linting, typing, and unit tests');
+assert(packageJson.scripts?.['foundation:check'] === 'npm run foundation:static && npm run media:check', 'foundation:check must add generated-media verification to the static foundation gate');
+assert(packageJson.scripts?.['media:check'] === 'npm run media:build && npm run media:verify', 'media:check must generate and verify canonical media variants');
+assert(packageJson.scripts?.['build:runtime:prepared']?.includes('vite build') && packageJson.scripts['build:runtime:prepared'].includes('audit:release'), 'build:runtime:prepared must build and audit the Cloudflare artifact');
+assert(!packageJson.scripts?.['build:runtime:prepared']?.includes('media:check'), 'prepared runtime build must not regenerate already-verified media');
+assert(packageJson.scripts?.['build:runtime'] === 'npm run media:check && npm run build:runtime:prepared', 'standalone build:runtime must generate media before using the prepared runtime path');
+assert(packageJson.scripts?.build === 'npm run check && npm run build:runtime:prepared', 'build must run the full check once and avoid duplicate media generation');
 assert(packageJson.scripts?.['qa:browser:ci'] === 'npm run generate:build-info && npm run build:runtime && npm run qa:browser:verify', 'browser CI must build the runtime without duplicating aggregate preflight');
 assert(packageJson.scripts?.['qa:browser'] === 'npm run build && npm run qa:browser:verify', 'local browser QA must retain the full build gate');
 assert(packageJson.scripts?.deploy === 'npm run build && wrangler deploy', 'deploy must use the repository-pinned Wrangler command');
@@ -104,8 +109,10 @@ assert(packageJson.scripts?.['audit:design-system'] === 'node scripts/audit-desi
 for (const [name, version] of Object.entries({ ...packageJson.dependencies, ...packageJson.devDependencies })) {
   assert(exactVersion(version), `${name} must use an exact pinned version rather than ${version}`);
 }
-for (const requiredTool of ['@vitejs/plugin-react', 'vite', 'playwright', 'axe-core', 'wrangler']) {
+for (const requiredTool of ['@biomejs/biome', '@playwright/test', '@testing-library/react', '@testing-library/user-event', '@vitejs/plugin-react', 'typescript', 'vite', 'vitest', 'playwright', 'axe-core', 'knip', 'sharp', 'wrangler']) {
   assert(exactVersion(packageJson.devDependencies?.[requiredTool]), `${requiredTool} must be an exact devDependency`);
 }
+assert(exactVersion(packageJson.dependencies?.zod), 'zod must be an exact runtime dependency');
+assert(!packageJson.dependencies?.sharp, 'sharp must remain build-only and outside the production dependency surface');
 
-console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; 15-audit aggregate preflight; split runtime/browser CI; pinned toolchain; route, media, design-system, performance-budget, and Cloudflare contracts synchronized.`);
+console.log(`Implementation notes audit passed: ${implementationSections.length} system sections; ${maintenanceMatrix.length} runbooks; ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks; ${completionCriteria.length} completion criteria; split static/media foundation gate; single-pass production media generation; 15-audit aggregate preflight; split runtime/browser CI; pinned toolchain; build-only Sharp media processing; route, media, design-system, performance-budget, and Cloudflare contracts synchronized.`);

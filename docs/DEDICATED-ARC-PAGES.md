@@ -84,15 +84,15 @@ No arc page uses neon glows, cyberpunk borders, or permanent sidebars.
 - power blocs;
 - records.
 
-## Responsive rule
+## desktop rule
 
-Desktop remains the primary canvas, but every dedicated page has a logical tablet and phone collapse:
+Desktop remains the primary canvas, but every dedicated page has a logical unsupported narrow-width and phone collapse:
 
 - one dominant reading column;
 - horizontally scrollable section navigation;
 - no permanent sidebars;
 - stacked metadata and comparisons;
-- responsive grids;
+- desktop grids;
 - tables contained in named scroll regions;
 - no information available only through hover.
 

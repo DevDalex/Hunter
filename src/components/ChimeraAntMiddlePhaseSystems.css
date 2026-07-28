@@ -1,0 +1,767 @@
+.chimera-middle-system {
+  margin: 0;
+  border-top: 1px solid rgba(29, 33, 26, 0.2);
+  background: var(--chimera-paper);
+  color: var(--chimera-ink);
+}
+
+.chimera-middle-system__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(330px, 0.75fr);
+  gap: 64px;
+  align-items: start;
+  padding: 42px 44px 36px;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+  background:
+    linear-gradient(90deg, rgba(89, 103, 70, 0.08), transparent 58%),
+    var(--chimera-bone);
+}
+
+.chimera-middle-system__header > div > span,
+.chimera-middle-system__header aside > span,
+.chimera-dispersal-system__origin > span,
+.chimera-dispersal-system__branch header span,
+.chimera-dispersal-system__legend > span,
+.chimera-dispersal-system__occupation header > span,
+.chimera-dispersal-system__occupation li span,
+.chimera-preparation-system__track > header span,
+.chimera-preparation-system__track li span,
+.chimera-preparation-system__portraits > div > span,
+.chimera-preparation-system__blueprint > header span,
+.chimera-preparation-system__blueprint-grid span,
+.chimera-preparation-system__readiness header span,
+.chimera-preparation-system__readiness article > span,
+.chimera-middle-system__visual-records figcaption span {
+  color: var(--phase-accent);
+  font-size: 0.66rem;
+  font-weight: 760;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.chimera-middle-system__header h4 {
+  max-width: 860px;
+  margin: 8px 0 14px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.3rem, 3.5vw, 4.5rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+.chimera-middle-system__header > div > p {
+  max-width: 80ch;
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
+.chimera-middle-system__header aside {
+  padding: 18px 0 0 24px;
+  border-top: 2px solid var(--phase-accent);
+}
+
+.chimera-middle-system__header aside strong {
+  display: block;
+  margin-top: 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.chimera-middle-system__header aside p {
+  margin: 10px 0 0;
+  color: rgba(29, 33, 26, 0.68);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.chimera-middle-system a {
+  color: inherit;
+}
+
+.chimera-middle-system__visual-records {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.chimera-middle-system__visual-records a {
+  text-decoration: none;
+}
+
+.chimera-middle-system__visual-records figure {
+  position: relative;
+  min-height: 190px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid rgba(233, 230, 218, 0.18);
+  background: var(--chimera-charcoal);
+}
+
+.chimera-middle-system__visual-records img,
+.chimera-middle-system__visual-records .safe-image-placeholder {
+  width: 100%;
+  height: 190px;
+  object-fit: cover;
+  object-position: center 18%;
+  filter: saturate(0.72) contrast(1.05);
+}
+
+.chimera-middle-system__visual-records figcaption {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 32px 12px 12px;
+  background: linear-gradient(0deg, rgba(17, 20, 15, 0.94), transparent);
+  color: var(--chimera-bone);
+}
+
+.chimera-middle-system__visual-records figcaption span {
+  display: block;
+  color: var(--chimera-mist);
+}
+
+.chimera-middle-system__visual-records figcaption strong {
+  display: block;
+  margin-top: 4px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Phase III — dispersal map */
+.chimera-dispersal-system__field {
+  display: grid;
+  grid-template-columns: minmax(760px, 1.35fr) minmax(300px, 0.65fr);
+  min-height: 780px;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-dispersal-system__map {
+  position: relative;
+  min-height: 780px;
+  overflow: hidden;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(89, 103, 70, 0.15), transparent 24%),
+    linear-gradient(rgba(29, 33, 26, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 33, 26, 0.05) 1px, transparent 1px),
+    linear-gradient(135deg, #ebe9dd, #dedfd4);
+  background-size: auto, 32px 32px, 32px 32px, auto;
+}
+
+.chimera-dispersal-system__map::after {
+  content: "COLONY DISPERSAL / EAST GORTEAU OCCUPATION";
+  position: absolute;
+  right: 18px;
+  bottom: 14px;
+  color: rgba(29, 33, 26, 0.25);
+  font-size: 0.58rem;
+  font-weight: 760;
+  letter-spacing: 0.14em;
+}
+
+.chimera-dispersal-system__connections {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.chimera-dispersal-system__connections line {
+  stroke: rgba(89, 103, 70, 0.48);
+  stroke-width: 0.45;
+  stroke-dasharray: 1.2 1.1;
+  vector-effect: non-scaling-stroke;
+}
+
+.chimera-dispersal-system__origin {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  width: 260px;
+  min-height: 190px;
+  padding: 24px;
+  border: 1px solid rgba(29, 33, 26, 0.3);
+  background: rgba(29, 33, 26, 0.94);
+  color: var(--chimera-bone);
+  box-shadow: 0 22px 46px rgba(17, 20, 15, 0.22);
+  transform: translate(-50%, -50%);
+}
+
+.chimera-dispersal-system__origin::before {
+  content: "";
+  position: absolute;
+  inset: -9px;
+  border: 1px solid rgba(89, 103, 70, 0.34);
+  pointer-events: none;
+}
+
+.chimera-dispersal-system__origin > span {
+  color: var(--chimera-mist);
+}
+
+.chimera-dispersal-system__origin h5,
+.chimera-dispersal-system__branch h5,
+.chimera-dispersal-system__occupation h5,
+.chimera-preparation-system__track h5,
+.chimera-preparation-system__blueprint h5 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+}
+
+.chimera-dispersal-system__origin h5 {
+  margin: 9px 0 10px;
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+
+.chimera-dispersal-system__origin p {
+  margin: 0;
+  color: rgba(233, 230, 218, 0.74);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.chimera-dispersal-system__branch {
+  position: absolute;
+  z-index: 1;
+  left: var(--branch-x);
+  top: var(--branch-y);
+  width: 282px;
+  min-height: 230px;
+  padding: 18px;
+  border-top: 3px solid var(--phase-accent);
+  background: rgba(245, 243, 234, 0.96);
+  box-shadow: 0 16px 36px rgba(17, 20, 15, 0.13);
+  transform: translate(-50%, -50%);
+}
+
+.chimera-dispersal-system__branch::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border: 3px solid var(--chimera-bone);
+  border-radius: 50%;
+  background: var(--phase-accent);
+  box-shadow: 0 0 0 1px rgba(29, 33, 26, 0.26);
+  transform: translate(-50%, -50%) translate(calc((50% - var(--branch-x)) * 0), calc((50% - var(--branch-y)) * 0));
+  opacity: 0;
+}
+
+.chimera-dispersal-system__branch header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.chimera-dispersal-system__branch header i {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--phase-accent);
+  font-size: 1.7rem;
+  font-style: normal;
+  line-height: 1;
+}
+
+.chimera-dispersal-system__branch header div {
+  text-align: right;
+}
+
+.chimera-dispersal-system__branch header span,
+.chimera-dispersal-system__branch header small {
+  display: block;
+}
+
+.chimera-dispersal-system__branch header small {
+  margin-top: 4px;
+  color: rgba(29, 33, 26, 0.52);
+  font-size: 0.68rem;
+}
+
+.chimera-dispersal-system__branch h5 {
+  margin: 16px 0 9px;
+  font-size: 1.18rem;
+  line-height: 1.25;
+}
+
+.chimera-dispersal-system__branch > p {
+  margin: 0;
+  color: rgba(29, 33, 26, 0.74);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.chimera-dispersal-system__branch footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(29, 33, 26, 0.15);
+}
+
+.chimera-dispersal-system__branch footer strong {
+  color: var(--phase-accent);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.chimera-dispersal-system__branch footer a,
+.chimera-preparation-system__track a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: rgba(29, 33, 26, 0.58);
+  font-size: 0.68rem;
+}
+
+.chimera-dispersal-system__branch--east-gorteau {
+  border-top-color: var(--chimera-rose);
+}
+
+.chimera-dispersal-system__branch--komugi {
+  border-top-color: var(--chimera-royal);
+}
+
+.chimera-dispersal-system__legend {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 26px;
+  padding: 40px 30px;
+  background:
+    linear-gradient(180deg, rgba(89, 103, 70, 0.14), transparent 44%),
+    var(--chimera-charcoal);
+  color: var(--chimera-bone);
+}
+
+.chimera-dispersal-system__legend > span {
+  color: var(--chimera-mist);
+}
+
+.chimera-dispersal-system__legend > strong {
+  display: block;
+  margin-top: -12px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.7rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.chimera-dispersal-system__legend > p {
+  margin: -12px 0 0;
+  color: rgba(233, 230, 218, 0.7);
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records {
+  grid-template-columns: 1fr;
+}
+
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records figure,
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records img,
+.chimera-dispersal-system__legend .chimera-middle-system__visual-records .safe-image-placeholder {
+  height: 150px;
+  min-height: 150px;
+}
+
+.chimera-dispersal-system__occupation {
+  padding: 38px 44px 42px;
+  background: var(--chimera-bone);
+}
+
+.chimera-dispersal-system__occupation > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  align-items: end;
+  margin-bottom: 22px;
+}
+
+.chimera-dispersal-system__occupation h5 {
+  max-width: 760px;
+  margin: 8px 0 0;
+  font-size: 2rem;
+}
+
+.chimera-dispersal-system__occupation ol {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(29, 33, 26, 0.34);
+  border-left: 1px solid rgba(29, 33, 26, 0.17);
+}
+
+.chimera-dispersal-system__occupation li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) 20px;
+  gap: 12px;
+  min-height: 210px;
+  padding: 20px 16px;
+  border-right: 1px solid rgba(29, 33, 26, 0.17);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.17);
+}
+
+.chimera-dispersal-system__occupation li > i {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--phase-accent);
+  font-size: 1.65rem;
+  font-style: normal;
+}
+
+.chimera-dispersal-system__occupation li strong {
+  display: block;
+  margin-top: 9px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.06rem;
+  font-weight: 500;
+}
+
+.chimera-dispersal-system__occupation li p {
+  margin: 9px 0 0;
+  color: rgba(29, 33, 26, 0.68);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.chimera-dispersal-system__occupation li > svg {
+  align-self: center;
+  color: rgba(89, 103, 70, 0.55);
+}
+
+.chimera-dispersal-system__occupation li:last-child > svg {
+  display: none;
+}
+
+.chimera-dispersal-system__occupation > p {
+  max-width: 100ch;
+  margin: 22px 0 0;
+  padding-left: 18px;
+  border-left: 3px solid var(--phase-accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+/* Phase IV — Gungi and palace preparation */
+.chimera-preparation-system {
+  background: var(--chimera-charcoal);
+  color: var(--chimera-bone);
+}
+
+.chimera-preparation-system .chimera-middle-system__header {
+  border-color: rgba(233, 230, 218, 0.15);
+  background:
+    linear-gradient(90deg, rgba(108, 102, 128, 0.15), transparent 58%),
+    var(--chimera-charcoal);
+}
+
+.chimera-preparation-system .chimera-middle-system__header aside {
+  border-top-color: var(--chimera-royal);
+}
+
+.chimera-preparation-system .chimera-middle-system__header aside p,
+.chimera-preparation-system .chimera-middle-system__header > div > p {
+  color: rgba(233, 230, 218, 0.72);
+}
+
+.chimera-preparation-system__dual-track {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px minmax(0, 1fr);
+  min-height: 780px;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.15);
+}
+
+.chimera-preparation-system__track {
+  padding: 34px 30px 38px;
+  background: var(--chimera-paper);
+  color: var(--chimera-ink);
+}
+
+.chimera-preparation-system__track:first-child {
+  background:
+    linear-gradient(180deg, rgba(108, 102, 128, 0.11), transparent 45%),
+    var(--chimera-paper);
+}
+
+.chimera-preparation-system__track:last-child {
+  background:
+    linear-gradient(180deg, rgba(111, 122, 69, 0.11), transparent 45%),
+    var(--chimera-paper);
+}
+
+.chimera-preparation-system__track > header {
+  min-height: 110px;
+  border-bottom: 2px solid var(--phase-accent);
+}
+
+.chimera-preparation-system__track h5 {
+  margin: 8px 0 18px;
+  font-size: 1.9rem;
+  line-height: 1.15;
+}
+
+.chimera-preparation-system__track ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chimera-preparation-system__track li {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 16px;
+  min-height: 146px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.16);
+}
+
+.chimera-preparation-system__track li > i {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--phase-accent);
+  font-size: 1.7rem;
+  font-style: normal;
+}
+
+.chimera-preparation-system__track li strong {
+  display: block;
+  margin-top: 7px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.chimera-preparation-system__track li p {
+  margin: 8px 0;
+  color: rgba(29, 33, 26, 0.7);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.chimera-preparation-system__portraits {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 26px;
+  padding: 32px 20px;
+  border-inline: 1px solid rgba(233, 230, 218, 0.15);
+  background:
+    radial-gradient(circle at 50% 28%, rgba(108, 102, 128, 0.24), transparent 30%),
+    var(--chimera-charcoal);
+}
+
+.chimera-preparation-system__portraits .chimera-middle-system__visual-records {
+  grid-template-columns: 1fr;
+}
+
+.chimera-preparation-system__portraits .chimera-middle-system__visual-records figure,
+.chimera-preparation-system__portraits .chimera-middle-system__visual-records img,
+.chimera-preparation-system__portraits .chimera-middle-system__visual-records .safe-image-placeholder {
+  height: 255px;
+  min-height: 255px;
+}
+
+.chimera-preparation-system__portraits > div:last-child {
+  padding: 20px 16px;
+  border-top: 2px solid var(--chimera-royal);
+  background: rgba(233, 230, 218, 0.05);
+}
+
+.chimera-preparation-system__portraits > div:last-child strong {
+  display: block;
+  margin-top: 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.chimera-preparation-system__portraits > div:last-child p {
+  margin: 10px 0 0;
+  color: rgba(233, 230, 218, 0.68);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.chimera-preparation-system__blueprint {
+  padding: 40px 44px;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.15);
+  background:
+    linear-gradient(rgba(233, 230, 218, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(233, 230, 218, 0.045) 1px, transparent 1px),
+    #20241d;
+  background-size: 30px 30px;
+}
+
+.chimera-preparation-system__blueprint > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  align-items: end;
+  margin-bottom: 24px;
+}
+
+.chimera-preparation-system__blueprint h5 {
+  margin: 8px 0 0;
+  font-size: 2.1rem;
+}
+
+.chimera-preparation-system__blueprint > header > p {
+  max-width: 54ch;
+  margin: 0;
+  color: rgba(233, 230, 218, 0.62);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.chimera-preparation-system__blueprint-grid {
+  border-top: 1px solid rgba(233, 230, 218, 0.28);
+  border-left: 1px solid rgba(233, 230, 218, 0.16);
+}
+
+.chimera-preparation-system__blueprint-head,
+.chimera-preparation-system__blueprint-grid article {
+  display: grid;
+  grid-template-columns: minmax(230px, 0.72fr) minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.chimera-preparation-system__blueprint-head span,
+.chimera-preparation-system__blueprint-grid article > * {
+  padding: 16px 18px;
+  border-right: 1px solid rgba(233, 230, 218, 0.16);
+  border-bottom: 1px solid rgba(233, 230, 218, 0.16);
+}
+
+.chimera-preparation-system__blueprint-head {
+  background: rgba(233, 230, 218, 0.07);
+}
+
+.chimera-preparation-system__blueprint-head span {
+  color: var(--chimera-mist);
+}
+
+.chimera-preparation-system__blueprint-grid article header span {
+  display: block;
+  color: var(--chimera-rose);
+}
+
+.chimera-preparation-system__blueprint-grid article header strong {
+  display: block;
+  margin-top: 7px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.03rem;
+  font-weight: 500;
+}
+
+.chimera-preparation-system__blueprint-grid article p {
+  margin: 0;
+  color: rgba(233, 230, 218, 0.76);
+  font-size: 0.79rem;
+  line-height: 1.6;
+}
+
+.chimera-preparation-system__blueprint-grid article p:last-child {
+  background: rgba(108, 102, 128, 0.1);
+}
+
+.chimera-preparation-system__readiness {
+  padding: 36px 44px 42px;
+  background: var(--chimera-bone);
+  color: var(--chimera-ink);
+}
+
+.chimera-preparation-system__readiness > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  align-items: baseline;
+  margin-bottom: 20px;
+}
+
+.chimera-preparation-system__readiness > header strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.55rem;
+  font-weight: 500;
+}
+
+.chimera-preparation-system__readiness > div {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-top: 1px solid rgba(29, 33, 26, 0.34);
+  border-left: 1px solid rgba(29, 33, 26, 0.16);
+}
+
+.chimera-preparation-system__readiness article {
+  min-height: 155px;
+  padding: 18px;
+  border-right: 1px solid rgba(29, 33, 26, 0.16);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.16);
+}
+
+.chimera-preparation-system__readiness article strong {
+  display: block;
+  margin-top: 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.chimera-preparation-system__readiness article p {
+  margin: 9px 0 0;
+  color: rgba(29, 33, 26, 0.68);
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+.chimera-preparation-system__readiness > p {
+  max-width: 96ch;
+  margin: 22px 0 0;
+  padding-left: 18px;
+  border-left: 3px solid var(--chimera-royal);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+
+/* Finished spread adjustments for Batch 6. */
+.chimera-phase-spread--dispersal-map[data-phase-finish="complete"] .chimera-phase-spread__stage {
+  grid-template-columns: minmax(430px, 0.9fr) minmax(520px, 1.1fr);
+  min-height: 610px;
+}
+
+.chimera-phase-spread--plan-versus-reality[data-phase-finish="complete"] .chimera-phase-spread__stage {
+  grid-template-columns: minmax(430px, 0.9fr) minmax(520px, 1.1fr);
+  min-height: 610px;
+}
+
+.chimera-phase-spread--dispersal-map[data-phase-finish="complete"] .chimera-phase-spread__media > img {
+  object-position: center 14%;
+  filter: saturate(0.72) contrast(1.08);
+}
+
+.chimera-phase-spread--plan-versus-reality[data-phase-finish="complete"] .chimera-phase-spread__media > img {
+  object-position: center 12%;
+  filter: saturate(0.68) contrast(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chimera-dispersal-system__branch,
+  .chimera-preparation-system__blueprint-grid article {
+    transition: none;
+  }
+}

@@ -1,0 +1,72 @@
+.chimera-phase-spread[data-phase-finish="complete"] {
+  border-color: color-mix(in srgb, var(--phase-accent) 72%, transparent);
+}
+
+.chimera-phase-spread[data-phase-finish="complete"]::after {
+  content: "Finished phase system";
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  padding: 8px 13px;
+  background: var(--phase-accent);
+  color: var(--chimera-bone);
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.chimera-phase-spread--expedition-route[data-phase-finish="complete"] .chimera-phase-spread__stage {
+  grid-template-columns: minmax(400px, 0.82fr) minmax(540px, 1.18fr);
+  min-height: 610px;
+}
+
+.chimera-phase-spread--three-front-development[data-phase-finish="complete"] .chimera-phase-spread__stage {
+  grid-template-columns: minmax(430px, 0.92fr) minmax(500px, 1.08fr);
+  min-height: 610px;
+}
+
+.chimera-phase-spread--expedition-route[data-phase-finish="complete"] .chimera-phase-spread__media > img {
+  object-position: center 16%;
+  filter: saturate(0.7) contrast(1.08);
+}
+
+.chimera-phase-spread--three-front-development[data-phase-finish="complete"] .chimera-phase-spread__media > img {
+  object-position: center 14%;
+  filter: saturate(0.74) contrast(1.08);
+}
+
+.chimera-phase-spread[data-phase-finish="complete"] .chimera-phase-spread__footer {
+  background: color-mix(in srgb, var(--phase-accent) 8%, var(--chimera-bone));
+}
+
+.chimera-expedition-system__route li[data-severity="1"] .chimera-expedition-system__node::after {
+  background: #53633d;
+}
+
+.chimera-expedition-system__route li[data-severity="2"] .chimera-expedition-system__node::after {
+  background: #687044;
+}
+
+.chimera-expedition-system__route li[data-severity="3"] .chimera-expedition-system__node::after {
+  background: #7b7648;
+}
+
+.chimera-expedition-system__route li[data-severity="4"] .chimera-expedition-system__node::after {
+  background: #8a6745;
+}
+
+.chimera-expedition-system__route li[data-severity="5"] .chimera-expedition-system__node::after {
+  background: #87504a;
+}
+
+.chimera-expedition-system__route li[data-severity="6"] .chimera-expedition-system__node::after {
+  background: var(--chimera-rose);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chimera-phase-spread[data-phase-finish="complete"] {
+    transition: none;
+  }
+}

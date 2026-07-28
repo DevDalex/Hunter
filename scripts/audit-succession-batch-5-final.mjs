@@ -10,7 +10,6 @@ const assert = (condition, message) => {
 const [
   shell,
   primitives,
-  safeImage,
   finalStyles,
   searchStyles,
   assignmentCompatibility,
@@ -23,7 +22,6 @@ const [
 ] = await Promise.all([
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionArchivePrimitives.jsx'),
-  read('src/components/SafeImage.jsx'),
   read('src/components/succession/SuccessionArchiveFinalPolish.css'),
   read('src/components/succession/SuccessionArchiveSearch.css'),
   read('src/components/succession/SuccessionArchiveAssignmentWorkspace.css'),
@@ -55,23 +53,11 @@ for (const token of [
 ]) assert(primitives.includes(token), `shared archive tabs are missing ${token}`);
 
 for (const token of [
-  "loading = 'lazy'",
-  'IntersectionObserver',
-  'decoding="async"',
-  "priority || (eager ? 'high' : 'auto')",
-  'width={media?.width || undefined}',
-  'height={media?.height || undefined}',
-  'safe-image-placeholder',
-]) assert(safeImage.includes(token), `SafeImage stability contract is missing ${token}`);
-
-for (const token of [
   '--succession-motion-instant',
-  'touch-action: manipulation',
   'content-visibility: auto',
   'contain-intrinsic-size',
   'scrollbar-gutter: stable',
   '@media (hover: hover) and (pointer: fine)',
-  '@media (hover: none), (pointer: coarse)',
   '@media (prefers-reduced-motion: reduce)',
   '@media (prefers-contrast: more)',
   '@media (forced-colors: active)',
@@ -113,4 +99,4 @@ for (const heading of ['Data and evidence boundaries', 'Media constraints', 'Com
   assert(debtDocs.includes(heading), `non-critical debt record is missing ${heading}`);
 }
 
-console.log('Succession Batch 5 final audit passed: interaction states, keyboard tabs, route focus, live announcements, reduced motion, forced colors, containment, image stability, legacy cleanup, full release routes, performance, cross-browser QA, final audit, and debt documentation are registered.');
+console.log('Succession Batch 5 final audit passed: interaction states, keyboard tabs, route focus, live announcements, reduced motion, forced colors, containment, legacy cleanup, full release routes, performance, cross-browser QA, final audit, and debt documentation are registered. SafeImage behavior is enforced by unit and browser tests rather than source-string matching.');

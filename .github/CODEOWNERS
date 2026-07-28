@@ -1,0 +1,14 @@
+# Default repository ownership
+* @DevDalex
+
+# Release, deployment, and security contracts
+/.github/workflows/ @DevDalex
+/wrangler.jsonc @DevDalex
+/server/ @DevDalex
+/scripts/ @DevDalex
+
+# Canonical archive data and media
+/src/data/ @DevDalex
+/src/schemas/ @DevDalex
+/src/media/ @DevDalex
+/public/media/ @DevDalex

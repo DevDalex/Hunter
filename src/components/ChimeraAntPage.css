@@ -1,0 +1,775 @@
+.chimera-ant-page {
+  min-width: 1180px;
+  background: var(--chimera-void);
+  color: var(--chimera-ink);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.chimera-ant-page button,
+.chimera-ant-page a {
+  font: inherit;
+}
+
+.chimera-ant-shell-hero {
+  position: relative;
+  width: min(92vw, 1760px);
+  min-height: clamp(500px, 64vh, 730px);
+  margin: 0 auto;
+  overflow: hidden;
+  border-inline: 1px solid rgba(233, 230, 218, 0.12);
+  background: var(--chimera-charcoal);
+  color: var(--chimera-bone);
+}
+
+.chimera-ant-shell-hero figure,
+.chimera-ant-shell-hero figure img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.chimera-ant-shell-hero figure img {
+  object-fit: var(--chimera-hero-fit, cover);
+  object-position: var(--chimera-hero-position, center);
+}
+
+.chimera-ant-shell-hero__shade {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(17, 20, 15, 0.97) 0%, rgba(17, 20, 15, 0.86) 35%, rgba(17, 20, 15, 0.28) 68%, rgba(17, 20, 15, 0.08) 100%),
+    linear-gradient(0deg, rgba(17, 20, 15, 0.9) 0%, transparent 45%);
+}
+
+.chimera-ant-shell-hero__route {
+  position: absolute;
+  z-index: 2;
+  top: 28px;
+  left: 36px;
+  right: 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chimera-ant-shell-hero__route button,
+.chimera-ant-shell-hero__content button,
+.chimera-ant-inline-action,
+.chimera-ant-page article button,
+.chimera-ant-record-summary button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.chimera-ant-shell-hero__route button {
+  min-height: 38px;
+  padding: 8px 12px;
+  border-color: rgba(233, 230, 218, 0.32);
+  color: var(--chimera-bone);
+}
+
+.chimera-ant-shell-hero__route button:hover,
+.chimera-ant-shell-hero__route button:focus-visible,
+.chimera-ant-shell-hero__content button:hover,
+.chimera-ant-shell-hero__content button:focus-visible {
+  border-color: var(--chimera-bone);
+  background: rgba(233, 230, 218, 0.1);
+}
+
+.chimera-ant-shell-hero__content {
+  position: absolute;
+  z-index: 2;
+  left: clamp(46px, 5vw, 96px);
+  bottom: clamp(56px, 8vh, 110px);
+  width: min(700px, 48%);
+}
+
+.chimera-ant-shell-hero__content > span,
+.chimera-ant-section__kicker,
+.chimera-ant-rail__identity span,
+.chimera-ant-rail__phase span,
+.chimera-ant-page article > span,
+.chimera-ant-record-summary span {
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.chimera-ant-shell-hero__content > span {
+  color: var(--chimera-mist);
+}
+
+.chimera-ant-shell-hero h1 {
+  max-width: 760px;
+  margin: 12px 0 18px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(5rem, 7vw, 8rem);
+  font-weight: 500;
+  letter-spacing: -0.055em;
+  line-height: 0.86;
+}
+
+.chimera-ant-shell-hero__content p {
+  max-width: 62ch;
+  margin: 0 0 26px;
+  color: rgba(233, 230, 218, 0.82);
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.chimera-ant-shell-hero__content button {
+  padding: 11px 15px;
+  border-color: var(--chimera-olive);
+  background: rgba(111, 122, 69, 0.12);
+}
+
+.chimera-ant-shell {
+  display: grid;
+  grid-template-columns: 205px minmax(0, 1fr);
+  gap: clamp(34px, 3.2vw, 68px);
+  width: min(92vw, 1760px);
+  margin: 0 auto;
+  padding: 42px 0 120px;
+  align-items: start;
+}
+
+.chimera-ant-rail {
+  position: relative;
+  min-width: 0;
+  color: var(--chimera-bone);
+}
+
+.chimera-ant-rail__sticky {
+  position: sticky;
+  top: 86px;
+  display: grid;
+  grid-template-columns: 4px minmax(0, 1fr);
+  column-gap: 18px;
+  max-height: calc(100vh - 110px);
+}
+
+.chimera-ant-rail__progress {
+  grid-row: 1 / span 4;
+  position: relative;
+  width: 2px;
+  min-height: 620px;
+  background: rgba(233, 230, 218, 0.12);
+}
+
+.chimera-ant-rail__progress span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: var(--chimera-progress, 0%);
+  background: var(--chimera-olive);
+  transition: height 120ms linear;
+}
+
+.chimera-ant-rail__identity {
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(233, 230, 218, 0.15);
+}
+
+.chimera-ant-rail__identity span,
+.chimera-ant-rail__phase span {
+  display: block;
+  color: var(--chimera-mist);
+}
+
+.chimera-ant-rail__identity strong,
+.chimera-ant-rail__phase strong {
+  display: block;
+  margin-top: 5px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.chimera-ant-rail__identity small,
+.chimera-ant-rail__phase small {
+  color: rgba(233, 230, 218, 0.58);
+}
+
+.chimera-ant-rail nav {
+  overflow: auto;
+  padding: 12px 4px 12px 0;
+  scrollbar-width: thin;
+}
+
+.chimera-ant-rail nav button {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  width: 100%;
+  min-height: 31px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: rgba(233, 230, 218, 0.5);
+  text-align: left;
+  cursor: pointer;
+}
+
+.chimera-ant-rail nav button i {
+  color: rgba(158, 166, 147, 0.58);
+  font-size: 0.66rem;
+  font-style: normal;
+  line-height: 1.8;
+}
+
+.chimera-ant-rail nav button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.chimera-ant-rail nav button:hover,
+.chimera-ant-rail nav button:focus-visible,
+.chimera-ant-rail nav button.is-active {
+  color: var(--chimera-bone);
+}
+
+.chimera-ant-rail nav button.is-active i {
+  color: var(--chimera-olive);
+}
+
+.chimera-ant-rail__phase {
+  padding-top: 14px;
+  border-top: 1px solid rgba(233, 230, 218, 0.15);
+}
+
+.chimera-ant-canvas {
+  min-width: 0;
+  overflow: hidden;
+  background: var(--chimera-paper);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+}
+
+.chimera-ant-section {
+  position: relative;
+  scroll-margin-top: 92px;
+  min-height: 360px;
+  padding: clamp(52px, 5vw, 86px) clamp(48px, 5vw, 92px);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.17);
+}
+
+.chimera-ant-section--paper {
+  background: var(--chimera-paper);
+  color: var(--chimera-ink);
+}
+
+.chimera-ant-section--bone {
+  background: var(--chimera-bone);
+  color: var(--chimera-ink);
+}
+
+.chimera-ant-section__heading {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+  margin-bottom: 38px;
+}
+
+.chimera-ant-section__number {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid rgba(29, 33, 26, 0.34);
+  border-radius: 50%;
+  color: var(--chimera-moss);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.chimera-ant-section__kicker {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--chimera-moss);
+}
+
+.chimera-ant-section h2,
+.chimera-ant-section h3,
+.chimera-ant-section p,
+.chimera-ant-section dl,
+.chimera-ant-section ol,
+.chimera-ant-section ul,
+.chimera-ant-section figure {
+  margin-top: 0;
+}
+
+.chimera-ant-section h2 {
+  max-width: 900px;
+  margin-bottom: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.8rem, 4.2vw, 4.9rem);
+  font-weight: 500;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+}
+
+.chimera-ant-section p,
+.chimera-ant-section dd,
+.chimera-ant-section li {
+  line-height: 1.7;
+}
+
+.chimera-ant-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(440px, 0.75fr);
+  gap: clamp(46px, 6vw, 110px);
+  align-items: start;
+}
+
+.chimera-ant-overview > p {
+  max-width: 38ch;
+  margin-bottom: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.65rem, 2.25vw, 2.5rem);
+  line-height: 1.35;
+}
+
+.chimera-ant-overview dl,
+.chimera-ant-adaptation dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid rgba(29, 33, 26, 0.35);
+}
+
+.chimera-ant-overview dl div,
+.chimera-ant-adaptation dl div {
+  min-height: 92px;
+  padding: 18px 16px;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-ant-overview dt,
+.chimera-ant-adaptation dt,
+.chimera-ant-page article dt,
+.chimera-ant-phase-ledger dt {
+  color: var(--chimera-moss);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.chimera-ant-overview dd,
+.chimera-ant-adaptation dd {
+  margin: 8px 0 0;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.chimera-ant-reading-spread {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(330px, 0.65fr);
+  gap: clamp(44px, 7vw, 120px);
+  align-items: start;
+}
+
+.chimera-ant-reading-spread > p,
+.chimera-ant-ending > p {
+  max-width: 60ch;
+  margin-bottom: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.35rem, 1.8vw, 2rem);
+  line-height: 1.55;
+}
+
+.chimera-ant-reading-spread aside,
+.chimera-ant-ending aside {
+  padding: 22px 0 0 24px;
+  border-top: 2px solid var(--chimera-olive);
+}
+
+.chimera-ant-reading-spread aside span,
+.chimera-ant-ending aside span {
+  color: var(--chimera-moss);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.chimera-ant-premise-ledger {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid rgba(29, 33, 26, 0.35);
+  border-left: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-ant-premise-ledger article {
+  min-height: 190px;
+  padding: 26px;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-ant-premise-ledger article > span {
+  color: var(--chimera-moss);
+}
+
+.chimera-ant-premise-ledger p {
+  max-width: 58ch;
+  margin: 18px 0 0;
+}
+
+.chimera-ant-phase-ledger {
+  border-top: 1px solid rgba(29, 33, 26, 0.35);
+}
+
+.chimera-ant-phase-ledger > article {
+  border-bottom: 1px solid rgba(29, 33, 26, 0.2);
+  transition: background 180ms ease;
+}
+
+.chimera-ant-phase-ledger > article.is-active {
+  background: rgba(111, 122, 69, 0.09);
+}
+
+.chimera-ant-phase-ledger > article > button {
+  display: grid;
+  grid-template-columns: 62px minmax(0, 1fr) 24px;
+  gap: 24px;
+  width: 100%;
+  padding: 28px 20px;
+  border: 0;
+  color: var(--chimera-ink);
+  text-align: left;
+}
+
+.chimera-ant-phase-ledger > article > button:hover,
+.chimera-ant-phase-ledger > article > button:focus-visible {
+  background: rgba(111, 122, 69, 0.08);
+}
+
+.chimera-ant-phase-ledger__number {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2.3rem;
+  color: var(--chimera-moss);
+}
+
+.chimera-ant-phase-ledger h3,
+.chimera-ant-character-ledger h3,
+.chimera-ant-record-grid h3,
+.chimera-ant-conflict-ledger h3,
+.chimera-ant-timeline h3 {
+  margin: 6px 0 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  font-weight: 500;
+}
+
+.chimera-ant-phase-ledger > article > button div > span,
+.chimera-ant-timeline li div > span,
+.chimera-ant-character-ledger article div > span,
+.chimera-ant-record-grid article > span {
+  color: var(--chimera-moss);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.chimera-ant-phase-ledger p {
+  max-width: 72ch;
+  margin-bottom: 0;
+}
+
+.chimera-ant-phase-ledger dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0 20px 22px 106px;
+  border-top: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-ant-phase-ledger dl div {
+  padding: 14px 18px 0 0;
+}
+
+.chimera-ant-phase-ledger dd {
+  margin: 7px 0 0;
+  font-size: 0.9rem;
+}
+
+.chimera-ant-timeline {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(150px, 1fr));
+  gap: 0;
+  overflow-x: auto;
+  padding: 0 0 16px;
+  margin: 0;
+  list-style: none;
+  border-top: 1px solid rgba(29, 33, 26, 0.35);
+}
+
+.chimera-ant-timeline li {
+  min-height: 285px;
+  padding: 24px 20px;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-ant-timeline li > i {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--chimera-moss);
+  font-size: 1.6rem;
+  font-style: normal;
+}
+
+.chimera-ant-timeline h3 {
+  font-size: 1.18rem;
+}
+
+.chimera-ant-timeline p {
+  font-size: 0.88rem;
+}
+
+.chimera-ant-character-ledger {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid rgba(29, 33, 26, 0.35);
+}
+
+.chimera-ant-character-ledger article {
+  display: grid;
+  grid-template-columns: 145px minmax(0, 1fr);
+  min-height: 250px;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-ant-character-ledger figure {
+  min-height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--chimera-charcoal);
+}
+
+.chimera-ant-character-ledger figure img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.chimera-ant-character-ledger article > div {
+  padding: 22px;
+}
+
+.chimera-ant-character-ledger p {
+  font-size: 0.92rem;
+}
+
+.chimera-ant-character-ledger dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 18px 0;
+}
+
+.chimera-ant-character-ledger dd,
+.chimera-ant-record-grid dd {
+  margin: 5px 0 0;
+  font-size: 0.82rem;
+}
+
+.chimera-ant-character-ledger button,
+.chimera-ant-record-grid button,
+.chimera-ant-ending button {
+  padding: 8px 10px;
+  color: var(--chimera-moss);
+  font-size: 0.78rem;
+}
+
+.chimera-ant-record-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid rgba(29, 33, 26, 0.35);
+  border-left: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-ant-record-grid article {
+  min-height: 230px;
+  padding: 24px;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-ant-record-grid article > svg {
+  color: var(--chimera-moss);
+}
+
+.chimera-ant-record-grid article dl {
+  margin-bottom: 0;
+}
+
+.chimera-ant-record-grid article dl div + div {
+  margin-top: 12px;
+}
+
+.chimera-ant-record-grid p,
+.chimera-ant-record-grid small {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.chimera-ant-record-grid small {
+  color: rgba(29, 33, 26, 0.65);
+  line-height: 1.55;
+}
+
+.chimera-ant-nen-ledger,
+.chimera-ant-conflict-ledger {
+  border-top: 1px solid rgba(29, 33, 26, 0.35);
+}
+
+.chimera-ant-nen-ledger article {
+  display: grid;
+  grid-template-columns: 45px 28px minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  min-height: 62px;
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.16);
+}
+
+.chimera-ant-nen-ledger i {
+  color: var(--chimera-moss);
+  font-style: normal;
+  font-size: 0.72rem;
+}
+
+.chimera-ant-inline-action {
+  margin-top: 24px;
+  padding: 10px 13px;
+  color: var(--chimera-moss);
+}
+
+.chimera-ant-conflict-ledger article {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 18px;
+  padding: 22px 14px;
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-ant-conflict-ledger article > svg {
+  margin-top: 4px;
+  color: var(--chimera-rose);
+}
+
+.chimera-ant-conflict-ledger p {
+  margin: 7px 0 0;
+  font-size: 0.9rem;
+}
+
+.chimera-ant-ending {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(350px, 0.8fr);
+  gap: clamp(48px, 7vw, 118px);
+}
+
+.chimera-ant-ending aside p {
+  font-size: 0.92rem;
+}
+
+.chimera-ant-adaptation {
+  display: grid;
+  grid-template-columns: minmax(430px, 0.7fr) minmax(0, 1.3fr);
+  gap: 54px;
+}
+
+.chimera-ant-adaptation ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.chimera-ant-adaptation li + li {
+  margin-top: 12px;
+}
+
+.chimera-ant-record-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  align-items: center;
+  border-top: 1px solid rgba(29, 33, 26, 0.35);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-ant-record-summary > div,
+.chimera-ant-record-summary > button {
+  min-height: 110px;
+  padding: 24px;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+}
+
+.chimera-ant-record-summary strong {
+  display: block;
+  margin-top: 8px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.35rem;
+  font-weight: 500;
+}
+
+.chimera-ant-record-summary button {
+  justify-content: center;
+  border-top: 0;
+  border-bottom: 0;
+  border-left: 0;
+  color: var(--chimera-moss);
+}
+
+.chimera-ant-source-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid rgba(29, 33, 26, 0.35);
+}
+
+.chimera-ant-source-list a {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: center;
+  min-height: 70px;
+  padding: 16px 18px;
+  border-right: 1px solid rgba(29, 33, 26, 0.18);
+  border-bottom: 1px solid rgba(29, 33, 26, 0.18);
+  color: var(--chimera-ink);
+  text-decoration: none;
+}
+
+.chimera-ant-source-list a:hover,
+.chimera-ant-source-list a:focus-visible {
+  background: rgba(111, 122, 69, 0.09);
+}
+
+.chimera-ant-page button:focus-visible,
+.chimera-ant-page a:focus-visible {
+  outline: 2px solid var(--chimera-olive);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chimera-ant-page *,
+  .chimera-ant-page *::before,
+  .chimera-ant-page *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

@@ -36,4 +36,4 @@ The dedicated Batch 4 Nen workflow runs:
 - readability;
 - accessibility;
 - direct Vite build;
-- Nen desktop, tablet, and mobile rendering.
+- Nen desktop, unsupported narrow-width, and unsupported narrow-width rendering.

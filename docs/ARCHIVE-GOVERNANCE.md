@@ -67,7 +67,7 @@ The aggregate preflight continues through the remaining independent audits after
 ## Preserved boundaries
 
 - no character deletion;
-- no mobile-specific redesign;
+- no unsupported narrow-width-specific redesign;
 - no change to the Hunterpedia/Fandom-approved source policy;
 - no new graph/search/chapter UI yet;
 - no source-tier or media-legality system from removed roadmap items;
