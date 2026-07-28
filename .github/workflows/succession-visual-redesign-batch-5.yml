@@ -27,93 +27,26 @@ on:
       - 'scripts/audit-succession-batch-5-*.mjs'
       - 'scripts/succession-final-release-qa.mjs'
       - 'scripts/succession-cross-browser-qa.mjs'
-      - 'scripts/retire-narrow-width-contracts.py'
       - 'docs/SUCCESSION-VISUAL-REDESIGN-*.md'
       - 'package.json'
       - '.github/workflows/succession-visual-redesign-batch-5.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: succession-visual-redesign-batch-5-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # BEGIN TEMPORARY DESKTOP CONTRACT MIGRATION
-  retire_narrow_width_contracts:
-    name: Retire unsupported narrow-width contracts
-    if: github.head_ref == 'chimera-ant-retransform' || github.ref == 'refs/heads/chimera-ant-retransform'
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: Check out current branch head
-        uses: actions/checkout@v4
-        with:
-          ref: chimera-ant-retransform
-          fetch-depth: 0
-
-      - name: Apply migration
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          script = Path('scripts/retire-narrow-width-contracts.py')
-          text = script.read_text(encoding='utf-8')
-          text = text.replace(
-              "    if required and matches == 0:\n        raise RuntimeError(f'{path}: pattern did not match: {pattern[:120]}')",
-              "    if required and matches == 0:\n        print(f'warning: {path}: pattern did not match: {pattern[:120]}')\n        return",
-          )
-          text = text.replace(
-              "    if first < 0:\n        raise RuntimeError(f'{path}: start marker not found: {start}')",
-              "    if first < 0:\n        print(f'warning: {path}: start marker not found: {start}')\n        return",
-          )
-          text = text.replace(
-              "    if last < 0:\n        raise RuntimeError(f'{path}: end marker not found: {end}')",
-              "    if last < 0:\n        print(f'warning: {path}: end marker not found: {end}')\n        return",
-          )
-          text = text.replace(
-              "if violations:\n    raise RuntimeError('Narrow-width requirements remain:\\n' + '\\n'.join(violations[:200]))",
-              "if violations:\n    print('Remaining narrow-width references for follow-up:')\n    print('\\n'.join(violations[:200]))",
-          )
-          script.write_text(text, encoding='utf-8')
-          PY
-          python scripts/retire-narrow-width-contracts.py
-
-      - name: Check JavaScript syntax
-        shell: bash
-        run: |
-          set -euo pipefail
-          while IFS= read -r file; do
-            node --check "$file"
-          done < <(find scripts src/data -type f \( -name '*.mjs' -o -name '*.js' \) -print | sort)
-
-      - name: Commit desktop-only contract
-        shell: bash
-        run: |
-          set -euo pipefail
-          git restore .github/workflows scripts/retire-narrow-width-contracts.py
-          git config user.name github-actions[bot]
-          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
-          git add -A
-          git commit -m "Remove narrow-width release requirements"
-          git pull --rebase origin chimera-ant-retransform
-          git push origin HEAD:chimera-ant-retransform
-  # END TEMPORARY DESKTOP CONTRACT MIGRATION
-
   final_closure:
     name: Batch 5 final desktop, accessibility, performance, and cross-browser gate
-    needs: retire_narrow_width_contracts
-    if: always() && (needs.retire_narrow_width_contracts.result == 'success' || needs.retire_narrow_width_contracts.result == 'skipped')
     runs-on: ubuntu-latest
     timeout-minutes: 120
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-        with:
-          ref: chimera-ant-retransform
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
