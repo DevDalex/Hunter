@@ -4,24 +4,60 @@ const INSPECT_PATH = '/api/admin/chapter/inspect';
 const ADMIN_PATHS = new Set(['/admin/chapters', '/admin/chapters/']);
 const INSPECTION_CONTRACT_PATH = '/admin/chapters/inspect-contract.js';
 
-const CONTENT_SECURITY_POLICY = [
-  "default-src 'self'",
-  "base-uri 'self'",
-  "object-src 'none'",
-  "frame-ancestors 'none'",
-  "form-action 'self'",
-  "script-src 'self' 'unsafe-inline'",
-  "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://hunterxhunter.fandom.com https://static.wikia.nocookie.net",
-  "font-src 'self' data:",
-  "connect-src 'self'",
-  "media-src 'self'",
-  "worker-src 'self' blob:",
-  'upgrade-insecure-requests',
-].join('; ');
+const REQUIRED_CSP_DIRECTIVES = Object.freeze({
+  'default-src': Object.freeze(["'self'"]),
+  'base-uri': Object.freeze(["'self'"]),
+  'object-src': Object.freeze(["'none'"]),
+  'frame-ancestors': Object.freeze(["'none'"]),
+  'form-action': Object.freeze(["'self'"]),
+  'script-src': Object.freeze(["'self'", "'unsafe-inline'"]),
+  'style-src': Object.freeze(["'self'", "'unsafe-inline'"]),
+  'img-src': Object.freeze([
+    "'self'",
+    'data:',
+    'blob:',
+    'https://hunterxhunter.fandom.com',
+    'https://static.wikia.nocookie.net',
+  ]),
+  'font-src': Object.freeze(["'self'", 'data:']),
+  'connect-src': Object.freeze(["'self'"]),
+  'media-src': Object.freeze(["'self'"]),
+  'worker-src': Object.freeze(["'self'", 'blob:']),
+  'upgrade-insecure-requests': Object.freeze([]),
+});
+
+/** @param {string | null} existingPolicy */
+const mergeContentSecurityPolicy = (existingPolicy) => {
+  /** @type {Map<string, string[]>} */
+  const directives = new Map();
+  for (const section of String(existingPolicy || '').split(';')) {
+    const [name, ...values] = section.trim().split(/\s+/).filter(Boolean);
+    if (name) directives.set(name.toLowerCase(), values);
+  }
+
+  for (const [name, requiredValues] of Object.entries(REQUIRED_CSP_DIRECTIVES)) {
+    const existingValues = directives.get(name);
+    if (!existingValues) {
+      directives.set(name, [...requiredValues]);
+      continue;
+    }
+
+    // Preserve stricter singleton directives such as base-uri 'none'.
+    if ((name === 'base-uri' || name === 'object-src' || name === 'frame-ancestors') && existingValues.includes("'none'")) {
+      continue;
+    }
+
+    const mergedValues = new Set(existingValues);
+    for (const value of requiredValues) mergedValues.add(value);
+    directives.set(name, [...mergedValues]);
+  }
+
+  return [...directives.entries()]
+    .map(([name, values]) => `${name}${values.length ? ` ${values.join(' ')}` : ''}`)
+    .join('; ');
+};
 
 const SECURITY_HEADERS = Object.freeze({
-  'content-security-policy': CONTENT_SECURITY_POLICY,
   'cross-origin-opener-policy': 'same-origin',
   'cross-origin-resource-policy': 'same-origin',
   'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
@@ -33,6 +69,10 @@ const SECURITY_HEADERS = Object.freeze({
 /** @param {Response} response */
 const withSecurityHeaders = (response) => {
   const headers = new Headers(response.headers);
+  headers.set(
+    'content-security-policy',
+    mergeContentSecurityPolicy(headers.get('content-security-policy')),
+  );
   for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
     if (!headers.has(name)) headers.set(name, value);
   }
