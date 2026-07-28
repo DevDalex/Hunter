@@ -9,6 +9,19 @@ export const performanceBudgets = Object.freeze({
   portraitLibrary: 2_200_000,
 });
 
+/**
+ * @typedef {{
+ *   readyMs: number;
+ *   transferBytes: number;
+ *   resourceCount: number;
+ *   cls: number;
+ *   longTasks: number;
+ * }} RoutePerformanceBudget
+ */
+
+/** @typedef {'desktop' | 'constrained-mobile'} PerformanceProfileId */
+/** @typedef {Readonly<Record<PerformanceProfileId, Readonly<RoutePerformanceBudget>>>} RoutePerformanceProfile */
+
 const desktopDefault = Object.freeze({
   readyMs: 13_000,
   transferBytes: 15_000_000,
@@ -25,6 +38,7 @@ const constrainedDefault = Object.freeze({
   longTasks: 80,
 });
 
+/** @type {Readonly<Record<string, RoutePerformanceProfile>>} */
 export const routePerformanceBudgets = Object.freeze({
   default: Object.freeze({
     desktop: desktopDefault,
@@ -58,10 +72,12 @@ export const routePerformanceBudgets = Object.freeze({
 
 /**
  * @param {string} routeId
- * @param {'desktop' | 'constrained-mobile'} profileId
+ * @param {PerformanceProfileId} profileId
+ * @returns {Readonly<RoutePerformanceBudget>}
  */
 export function performanceBudgetFor(routeId, profileId) {
   return routePerformanceBudgets[routeId]?.[profileId] ?? routePerformanceBudgets.default[profileId];
 }
 
+/** @param {number} value */
 export const formatPerformanceBudget = (value) => Number(value).toLocaleString('en-US');
