@@ -1,5 +1,6 @@
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import { chimeraAntMiddlePhaseSystemById } from '../data/chimeraAntMiddlePhaseSystems';
+import { chimeraPortraitMediaId } from '../data/chimeraAntMedia';
 import SafeImage from './SafeImage';
 import './ChimeraAntMiddlePhaseSystems.css';
 
@@ -13,6 +14,8 @@ function VisualRecords({ records, fallbackArtwork, label }) {
     {records.map((record) => <a href={record.sourceHref} target="_blank" rel="noreferrer noopener" key={record.name}>
       <figure>
         <SafeImage
+          mediaId={chimeraPortraitMediaId(record.name)}
+          mediaVariant="card"
           src={record.image}
           fallbackSrc={fallbackArtwork}
           fallbackLabel={record.name}
