@@ -1,5 +1,6 @@
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import { chimeraAntEndgameSystemById } from '../data/chimeraAntEndgameSystems';
+import { chimeraPortraitMediaId } from '../data/chimeraAntMedia';
 import SafeImage from './SafeImage';
 import './ChimeraAntEndgameSystems.css';
 
@@ -25,6 +26,8 @@ function PortraitRecords({ portraits, fallbackArtwork, label }) {
     {portraits.map((portrait) => <a href={portrait.sourceHref} target="_blank" rel="noreferrer noopener" key={portrait.name}>
       <figure>
         <SafeImage
+          mediaId={chimeraPortraitMediaId(portrait.name)}
+          mediaVariant="portrait"
           src={portrait.image}
           fallbackSrc={fallbackArtwork}
           fallbackLabel={portrait.name}
