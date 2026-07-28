@@ -1,0 +1,66 @@
+name: Production Smoke
+
+on:
+  workflow_run:
+    workflows: ['Cloudflare full-stack build']
+    types: [completed]
+    branches: [main]
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Production URL to verify
+        required: false
+        default: https://hunter.oa7oa71.workers.dev
+        type: string
+
+concurrency:
+  group: production-smoke
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Verify deployed application and release identity
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out smoke-test script
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Wait for deployment and run smoke test
+        env:
+          DEPLOYMENT_URL: ${{ inputs.url || 'https://hunter.oa7oa71.workers.dev' }}
+          EXPECTED_COMMIT: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || '' }}
+        shell: bash
+        run: |
+          set -o pipefail
+          : > production-smoke.log
+          for attempt in {1..8}; do
+            echo "Smoke attempt ${attempt}/8" | tee -a production-smoke.log
+            if node scripts/smoke-deployment.mjs "$DEPLOYMENT_URL" 2>&1 | tee -a production-smoke.log; then
+              exit 0
+            fi
+            if [[ "$attempt" -lt 8 ]]; then sleep 20; fi
+          done
+          exit 1
+
+      - name: Upload production smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-smoke-${{ github.run_id }}
+          path: production-smoke.log
+          if-no-files-found: error
+          retention-days: 14
