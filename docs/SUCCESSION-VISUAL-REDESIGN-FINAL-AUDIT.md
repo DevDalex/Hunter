@@ -2,57 +2,31 @@
 
 ## Closure objective
 
-The final six tasks close the redesign as a product rather than adding another content domain. The acceptance target is a coherent, keyboard-complete, responsive, stable, and cross-browser Succession Archive whose presentation remains separate from canonical data and research ownership.
+Close the redesign as a coherent, keyboard-complete, stable, desktop-only, cross-browser product while keeping presentation separate from canonical data and research ownership.
 
 ## Hour 59 — Interaction and motion states
 
-- Add consistent pressed feedback, focus-visible treatment, disabled treatment, coarse-pointer sizing, and touch-action behavior.
-- Restrict hover-dependent elevation and translation to devices that actually support hover.
-- Add route-change focus management and a polite workspace announcement.
-- Add complete Arrow Left, Arrow Right, Home, and End keyboard behavior to shared archive tabs with roving `tabIndex`.
-- Add a global reduced-motion contract that removes meaningful transitions, animation repetition, and smooth scrolling.
-- Add stable image-loading transitions without replacing the existing lazy loading, IntersectionObserver prefetch, async decoding, fetch priority, fallback, and intrinsic-size behavior.
+Verify pressed, focus-visible, disabled, keyboard-tab, route-focus, live-announcement, and reduced-motion behavior. Preserve image loading, lazy decoding, fallback, and intrinsic sizing.
 
-## Hour 60 — Complete responsive review
+## Hour 60 — Complete desktop review
 
-- Render every curated Succession release route at 1440×1000, 768×1024, and 390×844.
-- Include the global Timeline in addition to the Succession Archive release routes.
-- Check page errors, failed local requests, uncontained spill, body overflow, tiny text, broken images, duplicate IDs, heading structure, workspace landmarks, and mobile target size.
-- Preserve intentional horizontal navigation only inside labelled and keyboard-focusable scroll regions.
-- Save one viewport screenshot for every route-and-viewport check.
+Render every curated Succession route at 1366×900 and 1600×1000. Check runtime errors, failed requests, uncontained spill, body overflow, unreadable text, broken images, duplicate IDs, heading structure, workspace landmarks, and layout shift. Save one screenshot for every route and width.
 
 ## Hour 61 — Accessibility review
 
-- Run axe against every curated Succession route at desktop and mobile sizes using WCAG 2.0/2.1 A and AA tags.
-- Treat color contrast as part of the final gate rather than a deferred warning.
-- Verify route-change focus, mobile drawer focus containment and restoration, assignment result-mode keyboard operation, reduced-motion behavior, and forced-colors focus visibility.
-- Preserve skip navigation, semantic headings, labelled regions, current-page state, selected-tab state, accessible tables, and text alternatives for graphs and maps.
+Run Axe against every curated route at both supported desktop widths using WCAG A and AA tags. Verify route-change focus, assignment result modes, reduced motion, forced-colors focus visibility, skip navigation, semantic headings, labelled regions, accessible tables, and text alternatives.
 
 ## Hour 62 — Performance and visual stability
 
-- Retain route-level dynamic imports and the existing startup, stylesheet, chunk, portrait, and portrait-library budgets.
-- Run the production performance audit after the final Vite build.
-- Add `content-visibility: auto` and `contain-intrinsic-size` to long repeated intelligence records while keeping print output fully visible.
-- Stabilize horizontal scroll regions with overscroll containment and scrollbar gutters.
-- Measure cumulative layout shift for every final Chromium route render and reject any route above 0.18.
-- Keep `SafeImage` lazy loading, near-viewport prefetch, async decoding, fetch priority, width/height support, and failure fallback intact.
+Retain route-level dynamic imports and existing startup, stylesheet, chunk, portrait, and portrait-library budgets. Run production performance checks, preserve content visibility and intrinsic containment, measure layout shift, and keep `SafeImage` behavior intact.
 
 ## Hour 63 — Legacy cleanup and cross-browser regression
 
-- Remove the obsolete Assignment workspace declarations and retain only an import-only compatibility entry for the stable component import.
-- Prevent duplicate loading of the Assignment command stylesheet.
-- Keep the final shared interaction layer last in the Succession style chain.
-- Run representative high-complexity routes in Firefox and WebKit at desktop and mobile sizes.
-- Check runtime errors, console errors, failed local requests, body overflow, uncontained spill, broken images, heading structure, workspace landmarks, visible focus, Assignment table interaction, and Black Whale mode interaction.
+Remove obsolete declarations and duplicate imports, retain the final shared interaction layer, and run representative high-complexity routes in Firefox and WebKit at 1366×900 and 1600×1000.
 
 ## Hour 64 — Final visual audit and release record
 
-- Run every Batch 1–5 structural audit and inherited visual contract.
-- Run CSS ownership, readability, layout, accessibility, performance, and production-build checks.
-- Run the complete responsive/accessibility/stability matrix and representative Firefox/WebKit matrix.
-- Review generated screenshots and reports.
-- Record non-critical debt explicitly rather than hiding it.
-- Update Issue #49 and PR #54 only after the latest branch head passes the complete gate.
+Run structural, CSS, readability, layout, accessibility, performance, production-build, desktop Chromium, Firefox, and WebKit checks. Review generated screenshots and reports and record non-critical debt explicitly.
 
 ## Final command set
 
@@ -71,12 +45,4 @@ node scripts/succession-cross-browser-qa.mjs
 
 ## July 28, 2026 release hardening
 
-- Raised the Research coverage-census metadata to a 12px floor and assigned explicit light- and dark-surface colors instead of weakening contrast thresholds.
-- Replaced brittle `SafeImage` source-string assertions with unit and browser behavior checks.
-- Added one authoritative `Release Quality` workflow; the broad Foundation and Browser matrices are retained as scheduled/manual diagnostics rather than duplicate pull-request gates.
-- Removed the obsolete pre-Batch-5 Succession workflow.
-- Removed four unreferenced arc prototype stacks identified by Knip, including their page, data, and style modules.
-- Added versioned archive migrations, route-level performance budgets, Worker security headers, CodeQL, runtime dependency auditing, preview/production smoke infrastructure, and documented rollback ownership.
-- Restricted multi-gigabyte distribution artifacts to actual release runs; pull requests retain compact logs, diagnostics, traces, screenshots, and reports.
-
-Tasks 59–64 remain incomplete until the latest PR head passes the maintained Batch 5 gate and the generated artifacts are reviewed.
+The maintained release architecture uses one authoritative workflow, versioned archive migrations, route-level budgets, Worker security headers, CodeQL, runtime dependency auditing, deployment smoke checks, rollback ownership, and compact diagnostic artifacts. Final closure requires the latest branch head to pass the maintained desktop gate and receive human screenshot review.
