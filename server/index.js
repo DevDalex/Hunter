@@ -4,14 +4,54 @@ const INSPECT_PATH = '/api/admin/chapter/inspect';
 const ADMIN_PATHS = new Set(['/admin/chapters', '/admin/chapters/']);
 const INSPECTION_CONTRACT_PATH = '/admin/chapters/inspect-contract.js';
 
-const jsonError = (status, message) => new Response(JSON.stringify({ error: message }), {
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'none'",
+  "form-action 'self'",
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://hunterxhunter.fandom.com https://static.wikia.nocookie.net",
+  "font-src 'self' data:",
+  "connect-src 'self'",
+  "media-src 'self'",
+  "worker-src 'self' blob:",
+  'upgrade-insecure-requests',
+].join('; ');
+
+const SECURITY_HEADERS = Object.freeze({
+  'content-security-policy': CONTENT_SECURITY_POLICY,
+  'cross-origin-opener-policy': 'same-origin',
+  'cross-origin-resource-policy': 'same-origin',
+  'permissions-policy': 'camera=(), microphone=(), geolocation=(), payment=(), usb=()',
+  'referrer-policy': 'strict-origin-when-cross-origin',
+  'x-content-type-options': 'nosniff',
+  'x-frame-options': 'DENY',
+});
+
+/** @param {Response} response */
+const withSecurityHeaders = (response) => {
+  const headers = new Headers(response.headers);
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) {
+    if (!headers.has(name)) headers.set(name, value);
+  }
+  headers.delete('server');
+  headers.delete('x-powered-by');
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+};
+
+const jsonError = (status, message) => withSecurityHeaders(new Response(JSON.stringify({ error: message }), {
   status,
   headers: {
     'content-type': 'application/json; charset=utf-8',
     'cache-control': 'no-store',
-    'x-content-type-options': 'nosniff',
   },
-});
+}));
 
 // Await importer handlers at the Worker boundary so rejected promises are
 // normalized into JSON instead of escaping as unhandled exceptions.
@@ -26,7 +66,7 @@ const runDirectChapterImport = async (request, env) => {
 };
 
 const validateInspectionResponse = async (response) => {
-  if (!response.ok) return response;
+  if (!response.ok) return withSecurityHeaders(response);
 
   const text = await response.text();
   let payload;
@@ -42,11 +82,11 @@ const validateInspectionResponse = async (response) => {
 
   const headers = new Headers(response.headers);
   headers.delete('content-length');
-  return new Response(text, {
+  return withSecurityHeaders(new Response(text, {
     status: response.status,
     statusText: response.statusText,
     headers,
-  });
+  }));
 };
 
 const normalizeInspectionGet = async (request, env) => {
@@ -95,7 +135,7 @@ const inlineInspectionContract = `<script data-inspection-contract="inline">
 
     if (payload && Array.isArray(payload.pages)) return response;
 
-    const looksLikeHtml = /^\\s*</.test(text);
+    const looksLikeHtml = /^\s*</.test(text);
     const message = payload?.error
       || (looksLikeHtml
         ? 'The inspection request was rewritten to a webpage instead of reaching the chapter-import API.'
@@ -114,7 +154,7 @@ const inlineInspectionContract = `<script data-inspection-contract="inline">
 </script>`;
 
 const injectInspectionContract = async (response) => {
-  if (!response.ok || !String(response.headers.get('content-type') || '').includes('text/html')) return response;
+  if (!response.ok || !String(response.headers.get('content-type') || '').includes('text/html')) return withSecurityHeaders(response);
 
   const html = await response.text();
   const externalScript = `<script src="${INSPECTION_CONTRACT_PATH}"></script>`;
@@ -125,19 +165,11 @@ const injectInspectionContract = async (response) => {
   const headers = new Headers(response.headers);
   headers.delete('content-length');
 
-  const contentSecurityPolicy = headers.get('content-security-policy');
-  if (contentSecurityPolicy && !contentSecurityPolicy.includes("script-src 'self'")) {
-    headers.set(
-      'content-security-policy',
-      contentSecurityPolicy.replace("script-src 'unsafe-inline'", "script-src 'self' 'unsafe-inline'"),
-    );
-  }
-
-  return new Response(patched, {
+  return withSecurityHeaders(new Response(patched, {
     status: response.status,
     statusText: response.statusText,
     headers,
-  });
+  }));
 };
 
 // Full-stack Cloudflare Worker. Vite's built assets are exposed through the ASSETS
@@ -148,7 +180,7 @@ export default {
 
     if (url.pathname === '/admin/chapters/index.html' || url.pathname === '/admin/chapters/direct.html') {
       url.pathname = '/admin/chapters';
-      return Response.redirect(url, 302);
+      return withSecurityHeaders(Response.redirect(url, 302));
     }
 
     // Inspection is read-only. Some hosting/proxy layers reject its JSON POST,
@@ -164,18 +196,18 @@ export default {
 
     if (isDirectChapterImportRequest(url)) {
       const response = await runDirectChapterImport(request, env);
-      return url.pathname === INSPECT_PATH ? validateInspectionResponse(response) : response;
+      return url.pathname === INSPECT_PATH ? validateInspectionResponse(response) : withSecurityHeaders(response);
     }
 
     const response = await env.ASSETS.fetch(request);
 
-    if (response.status !== 404) return response;
+    if (response.status !== 404) return withSecurityHeaders(response);
 
     const acceptsHtml = request.headers.get('accept')?.includes('text/html');
-    if (!acceptsHtml) return response;
+    if (!acceptsHtml) return withSecurityHeaders(response);
 
     const fallbackUrl = new URL(request.url);
     fallbackUrl.pathname = '/index.html';
-    return env.ASSETS.fetch(new Request(fallbackUrl, request));
+    return withSecurityHeaders(await env.ASSETS.fetch(new Request(fallbackUrl, request)));
   },
 };
