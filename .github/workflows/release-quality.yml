@@ -1,0 +1,313 @@
+name: Release Quality
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      full:
+        description: Run the complete cross-browser and arc-specific release matrix
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: release-quality-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    name: Foundation and canonical contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Run lint, types, unit tests, and media verification
+        run: npm run foundation:check
+
+      - name: Generate build identity
+        run: npm run generate:build-info
+
+      - name: Run aggregate repository preflight
+        run: npm run preflight:build
+
+      - name: Record dead-code inventory
+        continue-on-error: true
+        run: npm run report:deadcode > release-knip.log 2>&1
+
+      - name: Upload foundation diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-foundation-${{ github.sha }}
+          path: release-knip.log
+          if-no-files-found: ignore
+          retention-days: 14
+
+  production:
+    name: Production artifact and Worker routing
+    needs: foundation
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Build production application
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p .release-quality
+          npm run build 2>&1 | tee .release-quality/build.log
+
+      - name: Verify deployment artifact
+        shell: bash
+        run: |
+          test -f dist/server/index.js
+          test -f dist/server/chapter-admin.js
+          test -f dist/client/index.html
+          test ! -e dist/.openai
+          ! find dist/client -maxdepth 1 -type f -name 'hxh-archive-phase-*.zip' | grep -q .
+          node scripts/verify-cloudflare-worker.mjs
+
+      - name: Upload production artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-dist-${{ github.sha }}
+          path: |
+            dist
+            cloudflare-worker-diagnostic.json
+            .release-quality/build.log
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+  browser:
+    name: Required Chromium release checks
+    needs: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Download production artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dist-${{ github.sha }}
+          path: .release-artifact
+
+      - name: Restore production directories
+        shell: bash
+        run: |
+          rm -rf dist
+          mv .release-artifact/dist dist
+          if [[ -f .release-artifact/cloudflare-worker-diagnostic.json ]]; then
+            cp .release-artifact/cloudflare-worker-diagnostic.json .
+          fi
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run focused Playwright projects
+        run: npm run test:e2e:ci
+
+      - name: Run complete Chromium verification
+        env:
+          VISUAL_QA_SCREENSHOTS: failures
+        run: npm run qa:browser:verify
+
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-browser-${{ github.sha }}
+          path: |
+            playwright-report
+            test-results
+            .search-qa
+            .visual-qa
+            .accessibility-qa
+            .interaction-qa
+            .performance-qa
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+
+  cross_browser:
+    name: Full Succession cross-browser release matrix
+    if: github.event_name != 'pull_request' || inputs.full == true
+    needs: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Download production artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dist-${{ github.sha }}
+          path: .release-artifact
+
+      - name: Restore production directories
+        run: |
+          rm -rf dist
+          mv .release-artifact/dist dist
+
+      - name: Install Chromium, Firefox, and WebKit
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Run Succession responsive release matrix
+        run: npm run qa:succession-final-release
+
+      - name: Run Succession Firefox and WebKit matrix
+        run: npm run qa:succession-cross-browser
+
+      - name: Upload cross-browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-cross-browser-${{ github.sha }}
+          path: |
+            .succession-final-qa
+            .succession-cross-browser-qa
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+
+  arc_release:
+    name: Full arc-specific release suites
+    if: github.event_name != 'pull_request' || inputs.full == true
+    needs: production
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Download production artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-dist-${{ github.sha }}
+          path: .release-artifact
+
+      - name: Restore production directories
+        run: |
+          rm -rf dist
+          mv .release-artifact/dist dist
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify Chimera Ant structural contracts
+        run: npm run verify:chimera-ant
+
+      - name: Run Chimera Ant four-width desktop QA
+        run: npm run qa:chimera-ant
+
+      - name: Run Greed Island release suite
+        run: npm run qa:greed-island
+
+      - name: Upload arc-specific evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-arcs-${{ github.sha }}
+          path: |
+            .chimera-ant-qa
+            .greed-island-qa
+          include-hidden-files: true
+          if-no-files-found: ignore
+          retention-days: 14
+
+  release_gate:
+    name: Authoritative release gate
+    if: always()
+    needs: [foundation, production, browser, cross_browser, arc_release]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enforce required results
+        env:
+          FOUNDATION: ${{ needs.foundation.result }}
+          PRODUCTION: ${{ needs.production.result }}
+          BROWSER: ${{ needs.browser.result }}
+          CROSS_BROWSER: ${{ needs.cross_browser.result }}
+          ARC_RELEASE: ${{ needs.arc_release.result }}
+          FULL_RELEASE: ${{ github.event_name != 'pull_request' || inputs.full == true }}
+        shell: bash
+        run: |
+          failed=0
+          for result in "$FOUNDATION" "$PRODUCTION" "$BROWSER"; do
+            if [[ "$result" != "success" ]]; then failed=1; fi
+          done
+
+          if [[ "$FULL_RELEASE" == "true" ]]; then
+            for result in "$CROSS_BROWSER" "$ARC_RELEASE"; do
+              if [[ "$result" != "success" ]]; then failed=1; fi
+            done
+          fi
+
+          {
+            echo '### Release Quality'
+            echo
+            echo "- Foundation: **$FOUNDATION**"
+            echo "- Production artifact: **$PRODUCTION**"
+            echo "- Required Chromium QA: **$BROWSER**"
+            echo "- Cross-browser matrix: **$CROSS_BROWSER**"
+            echo "- Arc-specific suites: **$ARC_RELEASE**"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          exit "$failed"
