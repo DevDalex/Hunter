@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+# One-time migration: remove every narrow-width release obligation from active QA.
+
 import re
 from pathlib import Path
 
