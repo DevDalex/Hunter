@@ -1,4 +1,5 @@
 const deploymentUrl = process.argv[2] || process.env.DEPLOYMENT_URL;
+const expectedCommit = process.env.EXPECTED_COMMIT || '';
 
 if (!deploymentUrl) {
   throw new Error('Usage: node scripts/smoke-deployment.mjs <deployment-url>');
@@ -31,6 +32,9 @@ const buildInfoResponse = await request('/build-info.json');
 const buildInfo = await buildInfoResponse.json();
 if (buildInfo.app !== 'Hunter × Hunter Archive' || !buildInfo.commit) {
   throw new Error('Deployment build-info.json is missing the expected application identity.');
+}
+if (expectedCommit && !String(buildInfo.commit).startsWith(expectedCommit) && !expectedCommit.startsWith(String(buildInfo.commit))) {
+  throw new Error(`Deployment commit ${buildInfo.commit} does not match expected commit ${expectedCommit}.`);
 }
 
 const mediaResponse = await request('/media/generated/chimera-ant/kite-phase.avif');
