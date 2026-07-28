@@ -1,52 +1,9 @@
 name: Foundation Quality
 
 on:
-  push:
-    branches:
-      - chimera-ant-retransform
-    paths:
-      - package.json
-      - package-lock.json
-      - biome.json
-      - tsconfig.json
-      - knip.json
-      - playwright.config.js
-      - vitest.config.js
-      - wrangler.jsonc
-      - src/schemas/**
-      - src/media/**
-      - src/components/SafeImage.jsx
-      - src/data/chimeraAntExperience.js
-      - src/data/chimeraAntPhaseScaffold.js
-      - scripts/audit-media.mjs
-      - scripts/audit-succession-batch-5-final.mjs
-      - scripts/build-media-variants.mjs
-      - scripts/verify-media-manifest.mjs
-      - scripts/verify-archive-records.mjs
-      - tests/**
-      - .github/workflows/foundation-quality.yml
-  pull_request:
-    paths:
-      - package.json
-      - package-lock.json
-      - biome.json
-      - tsconfig.json
-      - knip.json
-      - playwright.config.js
-      - vitest.config.js
-      - wrangler.jsonc
-      - src/schemas/**
-      - src/media/**
-      - src/components/SafeImage.jsx
-      - src/data/chimeraAntExperience.js
-      - src/data/chimeraAntPhaseScaffold.js
-      - scripts/audit-media.mjs
-      - scripts/audit-succession-batch-5-final.mjs
-      - scripts/build-media-variants.mjs
-      - scripts/verify-media-manifest.mjs
-      - scripts/verify-archive-records.mjs
-      - tests/**
-      - .github/workflows/foundation-quality.yml
+  workflow_dispatch:
+  schedule:
+    - cron: '11 3 * * 3'
 
 permissions:
   contents: read
