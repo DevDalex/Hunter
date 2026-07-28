@@ -47,3 +47,11 @@
 .succession-nen-command select {
   min-height: 44px;
 }
+
+.succession-nen-command__filters {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.succession-nen-command__filters label.is-search {
+  grid-column: span 2;
+}
