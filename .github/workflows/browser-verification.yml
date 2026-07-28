@@ -1,10 +1,9 @@
 name: Browser Verification
 
 on:
-  pull_request:
-  push:
-    branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '37 2 * * 4'
 
 concurrency:
   group: browser-verification-${{ github.workflow }}-${{ github.ref }}
