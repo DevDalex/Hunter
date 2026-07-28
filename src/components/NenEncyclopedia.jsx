@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, ExternalLink, Image as ImageIcon, Search } from 'lucide-react';
+import { ArrowRight, BookOpen, Droplets, ExternalLink, Image as ImageIcon, Orbit, Search, Sparkles } from 'lucide-react';
 import SourcePortrait from './SourcePortrait';
 import SafeImage from './SafeImage';
 import { nenAbilityDirectory, nenGroups, nenRecords, nenSource } from '../data/nenEncyclopedia';
@@ -8,12 +8,12 @@ import { priorityPortraitByName } from '../data/priorityMedia.generated';
 const nenAsset = (name) => `/media/nen/${name}.svg`;
 
 const categories = [
-  { name: 'Enhancement', position: 'Top', result: 'Water volume changes', idea: 'Strengthen what already exists', example: 'Gon Freecss' },
-  { name: 'Transmutation', position: 'Upper-right', result: 'Water taste changes', idea: 'Give aura another quality', example: 'Killua Zoldyck' },
-  { name: 'Conjuration', position: 'Lower-right', result: 'Impurities appear', idea: 'Materialize an object or structure', example: 'Kurapika' },
-  { name: 'Specialization', position: 'Bottom', result: 'A different change occurs', idea: 'Produce an effect outside the regular five', example: 'Chrollo Lucilfer' },
-  { name: 'Manipulation', position: 'Lower-left', result: 'The leaf moves', idea: 'Control a target or process', example: 'Illumi Zoldyck' },
-  { name: 'Emission', position: 'Upper-left', result: 'Water color changes', idea: 'Separate aura and retain its function', example: 'Leorio Paradinight' },
+  { name: 'Enhancement', slug: 'enhancement', position: 'Top', result: 'Water volume changes', idea: 'Strengthen what already exists', example: 'Gon Freecss', axis: 'Reinforcement', neighbors: ['Emission', 'Transmutation'] },
+  { name: 'Transmutation', slug: 'transmutation', position: 'Upper-right', result: 'Water taste changes', idea: 'Give aura another quality', example: 'Killua Zoldyck', axis: 'Aura properties', neighbors: ['Enhancement', 'Conjuration'] },
+  { name: 'Conjuration', slug: 'conjuration', position: 'Lower-right', result: 'Impurities appear', idea: 'Materialize an object or structure', example: 'Kurapika', axis: 'Materialization', neighbors: ['Transmutation', 'Specialization'] },
+  { name: 'Specialization', slug: 'specialization', position: 'Bottom', result: 'A different change occurs', idea: 'Produce an effect outside the regular five', example: 'Chrollo Lucilfer', axis: 'Exceptional effects', neighbors: ['Conjuration', 'Manipulation'] },
+  { name: 'Manipulation', slug: 'manipulation', position: 'Lower-left', result: 'The leaf moves', idea: 'Control a target or process', example: 'Illumi Zoldyck', axis: 'Control', neighbors: ['Specialization', 'Emission'] },
+  { name: 'Emission', slug: 'emission', position: 'Upper-left', result: 'Water color changes', idea: 'Separate aura and retain its function', example: 'Leorio Paradinight', axis: 'Aura separation', neighbors: ['Manipulation', 'Enhancement'] },
 ];
 
 const foundations = [
@@ -77,6 +77,61 @@ const portraitItem = (name) => {
 
 function Portrait({ name }) {
   return <SourcePortrait item={portraitItem(name)} alt={`${name} portrait from Hunterpedia`} />;
+}
+
+function NenTypeAtlas({ activeCategory, onSelectCategory, onOpenRecord }) {
+  const selected = categories.find((item) => item.name === activeCategory) || categories[0];
+
+  return <section className="nen-category-view nen-category-view--visual nen-type-atlas" aria-labelledby="nen-type-atlas-title">
+    <header className="nen-type-atlas__heading">
+      <div><span className="section-kicker"><Orbit size={15} /> Interactive affinity atlas</span><h3 id="nen-type-atlas-title">Six categories, one readable spectrum.</h3></div>
+      <p>Hover, focus, or tap a category. The board keeps type position, Water Divination, a verified example subject, and affinity distance visible at the same time.</p>
+    </header>
+
+    <div className="nen-type-atlas__layout">
+      <div className="nen-category-hex nen-type-spectrum" aria-label="Interactive Nen category spectrum">
+        <SafeImage src={nenAsset('categories')} fallbackLabel="Nen categories" alt="Local diagram of Nen category positions and affinities" />
+        <svg className="nen-type-spectrum__geometry" viewBox="0 0 100 100" aria-hidden="true">
+          <polygon points="50,8 86,29 86,71 50,92 14,71 14,29" />
+          <line x1="50" y1="50" x2="50" y2="8" />
+          <line x1="50" y1="50" x2="86" y2="29" />
+          <line x1="50" y1="50" x2="86" y2="71" />
+          <line x1="50" y1="50" x2="50" y2="92" />
+          <line x1="50" y1="50" x2="14" y2="71" />
+          <line x1="50" y1="50" x2="14" y2="29" />
+        </svg>
+        <div className="nen-type-spectrum__center" aria-hidden="true"><Sparkles size={22} /><strong>Nen</strong><small>Natural affinity</small></div>
+        <div className="nen-category-hex__nodes nen-type-spectrum__nodes">
+          {categories.map((item) => <button
+            type="button"
+            data-type={item.slug}
+            data-position={item.position.toLowerCase()}
+            className={activeCategory === item.name ? 'is-active' : ''}
+            aria-pressed={activeCategory === item.name}
+            onMouseEnter={() => onSelectCategory(item.name)}
+            onFocus={() => onSelectCategory(item.name)}
+            onClick={() => onSelectCategory(item.name)}
+            key={item.name}
+          ><span className="nen-type-node__portrait"><Portrait name={item.example} /></span><span className="nen-type-node__copy"><small>{item.axis}</small><strong>{item.name}</strong><em>{item.example}</em></span></button>)}
+        </div>
+        <span className="nen-type-spectrum__caption">Original interactive presentation using the project’s maintained category records and portraits.</span>
+      </div>
+
+      <article className={`nen-type-inspector is-${selected.slug}`} aria-live="polite">
+        <header><span className="nen-type-inspector__portrait"><Portrait name={selected.example} /></span><div><small>{selected.position} position · {selected.axis}</small><h3>{selected.name}</h3><p>{selected.idea}</p></div></header>
+        <div className="nen-type-inspector__water"><Droplets size={24} aria-hidden="true" /><div><small>Water Divination</small><strong>{selected.result}</strong></div></div>
+        <dl>
+          <div><dt>Example subject</dt><dd>{selected.example}</dd></div>
+          <div><dt>Adjacent categories</dt><dd>{selected.neighbors.join(' · ')}</dd></div>
+          <div><dt>Affinity rule</dt><dd>Adjacent types are normally easier and more efficient than distant types; Specialization remains an exception.</dd></div>
+          <div><dt>Important limit</dt><dd>Affinity does not equal mastery, output, personality, or a complete future ability.</dd></div>
+        </dl>
+        <div className="nen-type-inspector__actions"><button type="button" onClick={() => onOpenRecord(selected.name)}>Open {selected.name} records <ArrowRight size={13} /></button><a href={`${nenSource}#Aura_Types`} target="_blank" rel="noreferrer"><BookOpen size={13} /> Category source <ExternalLink size={12} /></a></div>
+      </article>
+    </div>
+
+    <div className="nen-type-atlas__legend" aria-label="Nen category color legend">{categories.map((item) => <button type="button" data-type={item.slug} className={activeCategory === item.name ? 'is-active' : ''} onClick={() => onSelectCategory(item.name)} key={item.name}><i /><span><strong>{item.name}</strong><small>{item.axis}</small></span></button>)}</div>
+  </section>;
 }
 
 function NenPrincipleMap({ onOpenRecord }) {
@@ -161,12 +216,11 @@ export default function NenEncyclopedia({ initialQuery = '', spoilerLimit = Numb
   const [query, setQuery] = useState(initialQuery);
   const [group, setGroup] = useState('all');
   const [recordType, setRecordType] = useState('all');
-  const [lessonView, setLessonView] = useState('foundations');
+  const [lessonView, setLessonView] = useState('categories');
   const [lessonIndex, setLessonIndex] = useState(1);
   const [activeCategory, setActiveCategory] = useState('Enhancement');
   const [selectedId, setSelectedId] = useState(nenRecords[0].id);
   const selectedLesson = foundations[lessonIndex] || foundations[0];
-  const selectedCategory = categories.find((item) => item.name === activeCategory) || categories[0];
   const visible = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return nenRecords.filter((item) => (
@@ -186,14 +240,16 @@ export default function NenEncyclopedia({ initialQuery = '', spoilerLimit = Numb
   const openRecordSearch = (value, nextGroup = 'all') => { setGroup(nextGroup); setRecordType('all'); setQuery(value); };
 
   return <section className="nen-encyclopedia nen-image-desk" id="nen">
-    <header className="nen-desk-hero">
-      <div><span className="section-kicker">Visual Nen curriculum</span><h2>Understand the rule before memorizing the name.</h2><p>Each lesson uses a stable local concept diagram, while the evidence cards and record links keep the Hunterpedia sourcing visible. The visual explains the rule; the linked source supports the record.</p><div><a href={nenSource} target="_blank" rel="noreferrer">Nen source <ExternalLink size={12} /></a><a href={nenAbilityDirectory} target="_blank" rel="noreferrer">Ability directory <ExternalLink size={12} /></a></div></div>
-      <div className="nen-desk-hero__portraits"><Portrait name="Wing" /><Portrait name="Gon Freecss" /><Portrait name="Killua Zoldyck" /><Portrait name="Kurapika" /><span><ImageIcon size={17} /> Verified Hunterpedia portraits</span></div>
+    <header className="nen-desk-hero nen-atlas-hero">
+      <div><span className="section-kicker"><Orbit size={15} /> Visual Nen atlas</span><h2>See the system before reading the directory.</h2><p>The redesigned entrance puts the six-category spectrum first, then connects affinity, Water Divination, foundational principles, advanced techniques, and named abilities without flattening them into one chart.</p><div><a href={nenSource} target="_blank" rel="noreferrer">Nen source <ExternalLink size={12} /></a><a href={nenAbilityDirectory} target="_blank" rel="noreferrer">Ability directory <ExternalLink size={12} /></a></div></div>
+      <div className="nen-atlas-hero__roster" aria-label="Six Nen category examples">{categories.map((item) => <button type="button" data-type={item.slug} onClick={() => { setActiveCategory(item.name); setLessonView('categories'); }} key={item.name}><Portrait name={item.example} /><span><small>{item.axis}</small><strong>{item.name}</strong></span></button>)}<em><ImageIcon size={15} /> Verified project portraits</em></div>
     </header>
 
     <nav className="nen-lesson-tabs" aria-label="Nen visual lessons">
-      {[['foundations', 'Four principles + divination'], ['categories', 'Six categories'], ['techniques', 'Advanced techniques'], ['anatomy', 'Ability anatomy']].map(([id, label], index) => <button className={lessonView === id ? 'is-active' : ''} onClick={() => setLessonView(id)} aria-pressed={lessonView === id} key={id}><i>{String(index + 1).padStart(2, '0')}</i><span>{label}</span></button>)}
+      {[['categories', 'Six categories'], ['foundations', 'Four principles + divination'], ['techniques', 'Advanced techniques'], ['anatomy', 'Ability anatomy']].map(([id, label], index) => <button className={lessonView === id ? 'is-active' : ''} onClick={() => setLessonView(id)} aria-pressed={lessonView === id} key={id}><i>{String(index + 1).padStart(2, '0')}</i><span>{label}</span></button>)}
     </nav>
+
+    {lessonView === 'categories' && <NenTypeAtlas activeCategory={activeCategory} onSelectCategory={setActiveCategory} onOpenRecord={openRecordSearch} />}
 
     {lessonView === 'foundations' && <section className="nen-foundation-view">
       <NenPrincipleMap onOpenRecord={openRecordSearch} />
@@ -204,15 +260,6 @@ export default function NenEncyclopedia({ initialQuery = '', spoilerLimit = Numb
           <div className="nen-evidence-card__copy"><span>Lesson {selectedLesson.number} · sourced visual subjects</span><h3>{selectedLesson.name}</h3><p>{selectedLesson.summary}</p><blockquote><b>What to notice</b>{selectedLesson.look}</blockquote><a href={selectedLesson.source} target="_blank" rel="noreferrer">Open the exact Hunterpedia section <ExternalLink size={12} /></a></div>
         </article>
       </div>
-    </section>}
-
-    {lessonView === 'categories' && <section className="nen-category-view nen-category-view--visual">
-      <div className="nen-category-hex">
-        <SafeImage src={nenAsset('categories')} fallbackLabel="Nen categories" alt="Local diagram of Nen category positions and affinities" />
-        <div className="nen-category-hex__nodes">{categories.map((item) => <button type="button" data-position={item.position.toLowerCase()} className={activeCategory === item.name ? 'is-active' : ''} onMouseEnter={() => setActiveCategory(item.name)} onFocus={() => setActiveCategory(item.name)} onClick={() => setActiveCategory(item.name)} key={item.name}><strong>{item.name}</strong><small>{item.position}</small></button>)}</div>
-        <span>Local category relationship diagram beneath the interaction layer</span>
-      </div>
-      <article><Portrait name={selectedCategory.example} /><div><span>{selectedCategory.position} position · natural affinity example</span><h3>{selectedCategory.name}</h3><p>{selectedCategory.idea}</p><dl><div><dt>Water Divination</dt><dd>{selectedCategory.result}</dd></div><div><dt>Example subject</dt><dd>{selectedCategory.example}</dd></div><div><dt>Affinity distance</dt><dd>Adjacent types are normally easier and more efficient than distant types; Specialization is an exception.</dd></div><div><dt>Important limit</dt><dd>Affinity does not equal mastery, output, personality, or a complete future ability.</dd></div></dl><button onClick={() => openRecordSearch(selectedCategory.name)}>Open {selectedCategory.name} records <ArrowRight size={13} /></button></div></article>
     </section>}
 
     {lessonView === 'techniques' && <section className="nen-technique-view"><header><div><span className="section-kicker">Local concept diagrams</span><h3>Advanced techniques as operational rules</h3></div><p>Every card pairs its dependency formula with a dedicated local diagram. The visual describes the operation; the text states the rule and limitation.</p></header><div className="nen-technique-gallery">{techniques.map((item, index) => <article key={item.name}><figure><SafeImage src={item.image} alt={`${item.name} Nen concept diagram`} /><i>{String(index + 1).padStart(2, '0')}</i></figure><div><small>{item.base}</small><h3>{item.name}</h3><p>{item.detail}</p><button onClick={() => openRecordSearch(item.name, 'Advanced applications')}>Open records <ArrowRight size={12} /></button></div></article>)}</div></section>}
