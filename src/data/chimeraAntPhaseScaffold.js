@@ -1,3 +1,8 @@
+/**
+ * @template T
+ * @param {readonly T[]} groups
+ * @returns {readonly Readonly<T>[]}
+ */
 const freezeGroups = (groups) => Object.freeze(groups.map((group) => Object.freeze(group)));
 
 export const chimeraAntPhaseScaffold = Object.freeze([
