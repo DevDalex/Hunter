@@ -123,7 +123,7 @@ export default function NenEncyclopedia({ initialQuery = '', spoilerLimit = Numb
   const openRecordSearch = (value, nextGroup = 'all') => { setGroup(nextGroup); setRecordType('all'); setQuery(value); };
 
   return <section className="nen-encyclopedia nen-image-desk" id="nen">
-    <NenSystemReferenceMap activeCategory={activeCategory} onSelectCategory={setActiveCategory} onOpenRecord={openRecordSearch} />
+    <NenSystemReferenceMap activeCategory={activeCategory} onSelectCategory={setActiveCategory} onOpenRecord={openRecordSearch} portraitItemFor={portraitItem} />
 
     <nav className="nen-lesson-tabs" aria-label="Nen visual lessons">
       {[['foundations', 'Four principles + divination'], ['techniques', 'Advanced techniques'], ['anatomy', 'Ability anatomy']].map(([id, label], index) => <button className={lessonView === id ? 'is-active' : ''} onClick={() => setLessonView(id)} aria-pressed={lessonView === id} key={id}><i>{String(index + 1).padStart(2, '0')}</i><span>{label}</span></button>)}
