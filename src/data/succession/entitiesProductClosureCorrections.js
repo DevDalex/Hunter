@@ -18,6 +18,20 @@ const chapterCurrencyData = applySuccession414415ArchiveCorrections(Object.freez
   glossaryEntries,
 }));
 
+const closeSupersededStateRanges = (profiles = {}) => Object.freeze(Object.fromEntries(
+  Object.entries(profiles).map(([characterId, records]) => {
+    const sorted = [...records].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id));
+    return [characterId, Object.freeze(sorted.map((record, index) => {
+      const next = sorted[index + 1];
+      if (!next || (record.chapterRange.end !== null && record.chapterRange.end !== undefined)) return record;
+      return Object.freeze({
+        ...record,
+        chapterRange: Object.freeze({ ...record.chapterRange, end: next.chapterRange.start - 1 }),
+      });
+    }))];
+  }),
+));
+
 export const successionArchiveData = Object.freeze({
   ...chapterCurrencyData,
   characters: Object.freeze(chapterCurrencyData.characters.map((character) => (
@@ -31,4 +45,5 @@ export const successionArchiveData = Object.freeze({
       })
       : character
   ))),
+  characterStateProfiles: closeSupersededStateRanges(chapterCurrencyData.characterStateProfiles),
 });
