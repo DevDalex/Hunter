@@ -110,24 +110,30 @@ try {
     const princeNames = await princeCards.locator('h3').allInnerTexts();
     if (!princeNames[0]?.includes('Benjamin') || !princeNames[13]?.includes('Woble')) throw new Error('Princes are not ordered First through Fourteenth');
     await desktop.getByRole('button', { name: /Open family hierarchy/i }).click();
-    await desktop.waitForSelector('.royal-guard-tree', { timeout: 15_000 });
+    await desktop.waitForSelector('.royal-map', { timeout: 15_000 });
     if (!desktop.url().includes('view=tree')) throw new Error('Family tree did not open as an explicit optional view');
+    if (await desktop.locator('.royal-map__queen-node').count() !== 8) throw new Error(`Royal map queen count is ${await desktop.locator('.royal-map__queen-node').count()}, expected 8`);
     const queenCards = await openWorkspace(desktop, base, 'queens', '.succession-queen-command__grid > .succession-queen-card');
     if (await queenCards.count() !== 8) throw new Error(`Queen board count is ${await queenCards.count()}, expected 8`);
   });
 
-  await record('Assignment Hunter mafia and military workspaces expose canonical structures', desktop, async () => {
+  await record('Assignment and retired people-power routes resolve canonical workspaces', desktop, async () => {
     const assignmentRoot = await openWorkspace(desktop, base, 'bodyguards', '.succession-assignment-command');
     const assignmentTotal = Number((await assignmentRoot.locator('.succession-assignment-command__metrics strong').first().innerText()).trim());
     if (!Number.isFinite(assignmentTotal) || assignmentTotal < 30) throw new Error(`Assignment archive total is incomplete: ${assignmentTotal}`);
     const assignments = assignmentRoot.locator('.succession-assignment-card');
     if (await assignments.count() < 15) throw new Error(`Assignment command rendered too few initial records: ${await assignments.count()}`);
-    const hunters = await openWorkspace(desktop, base, 'hunters', '.succession-hunter-missions button');
-    if (await hunters.count() < 20) throw new Error(`Hunter mission workspace is incomplete: ${await hunters.count()}`);
-    const mafiaFamilies = await openWorkspace(desktop, base, 'mafia', '.succession-mafia-workspace__families > div > article');
-    if (await mafiaFamilies.count() !== 3) throw new Error(`Mafia comparison has ${await mafiaFamilies.count()} families; expected 3`);
-    const military = await openWorkspace(desktop, base, 'military', '.succession-military-people .succession-extended-entity');
-    if (await military.count() < 20) throw new Error(`Military personnel workspace is incomplete: ${await military.count()}`);
+
+    const hunters = await openWorkspace(desktop, base, 'hunters', '.succession-character-grid > article');
+    if (await hunters.count() < 150) throw new Error(`Retired Hunter route did not resolve the canonical character archive: ${await hunters.count()} cards`);
+
+    const mafiaOrganizations = await openWorkspace(desktop, base, 'mafia', '.succession-organization-workspace');
+    if (await mafiaOrganizations.count() !== 1) throw new Error('Retired Mafia route did not resolve the canonical Organizations workspace');
+    if (await mafiaOrganizations.locator('.succession-organization-grid > article').count() < 10) throw new Error('Canonical organization directory is unexpectedly sparse after Mafia redirect');
+
+    const militaryOrganizations = await openWorkspace(desktop, base, 'military', '.succession-organization-workspace');
+    if (await militaryOrganizations.count() !== 1) throw new Error('Retired Military route did not resolve the canonical Organizations workspace');
+    if (await militaryOrganizations.locator('.succession-organization-grid > article').count() < 10) throw new Error('Canonical organization directory is unexpectedly sparse after Military redirect');
   });
 
   await record(`Beast and chapter workspaces are complete through Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}`, desktop, async () => {
@@ -139,13 +145,14 @@ try {
     if (!await latest.count()) throw new Error(`Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER} research record is missing`);
   });
 
-  await record('Research glossary and media routes use final canonical workspaces', desktop, async () => {
+  await record('Research glossary and retired media route use final canonical workspaces', desktop, async () => {
     const sources = await openWorkspace(desktop, base, 'research', '.succession-evidence-source-catalogue article');
     if (await sources.count() < 75) throw new Error(`Research source catalogue is incomplete: ${await sources.count()}`);
     const glossary = await openWorkspace(desktop, base, 'glossary', '.succession-glossary-canonical__grid > article');
     if (await glossary.count() < 20) throw new Error(`Glossary is incomplete: ${await glossary.count()} terms`);
-    const media = await openWorkspace(desktop, base, 'media', '.succession-media-canonical__grid > article');
-    if (await media.count() < 20) throw new Error(`Media archive is unexpectedly sparse: ${await media.count()} records`);
+    const mediaResearch = await openWorkspace(desktop, base, 'media', '.succession-evidence-workspace');
+    if (await mediaResearch.count() !== 1) throw new Error('Retired Media route did not resolve the canonical Research workspace');
+    if (await mediaResearch.locator('.succession-evidence-hero').count() !== 1) throw new Error('Research evidence hero is missing after Media redirect');
   });
 
   await record('Existing chapter reader route remains separate and functional', desktop, async () => {
