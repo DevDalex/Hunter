@@ -6,6 +6,7 @@ import { installAccessibilityRuntime } from './lib/accessibilityRuntime';
 import './styles.css';
 import './nen.css';
 import './styles/final-polish.css';
+import './nen-spectrum.css';
 
 installAccessibilityRuntime();
 
