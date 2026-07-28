@@ -16,6 +16,15 @@ const record = (name, details) => {
   diagnostic.checks.push({ name, ...details });
 };
 
+/** @param {string} policy @param {string} directiveName */
+const cspValues = (policy, directiveName) => {
+  const section = policy
+    .split(';')
+    .map((value) => value.trim())
+    .find((value) => value === directiveName || value.startsWith(`${directiveName} `));
+  return section ? section.split(/\s+/).slice(1) : [];
+};
+
 const verifySecurityHeaders = (response, label) => {
   const policy = response.headers.get('content-security-policy') || '';
   const headers = {
@@ -29,12 +38,15 @@ const verifySecurityHeaders = (response, label) => {
   };
   record('security-headers', { label, ...headers });
 
-  assert.match(policy, /default-src 'self'/, `${label} must define a self-only default CSP source.`);
-  assert.match(policy, /object-src 'none'/, `${label} must block plugin content.`);
-  assert.match(policy, /frame-ancestors 'none'/, `${label} must block framing through CSP.`);
+  assert(cspValues(policy, 'default-src').includes("'self'"), `${label} must define a self-only default CSP source.`);
+  assert.deepEqual(cspValues(policy, 'object-src'), ["'none'"], `${label} must block plugin content.`);
+  assert.deepEqual(cspValues(policy, 'frame-ancestors'), ["'none'"], `${label} must block framing through CSP.`);
   assert.equal(headers.contentTypeOptions, 'nosniff', `${label} must prevent MIME sniffing.`);
   assert.equal(headers.frameOptions, 'DENY', `${label} must deny legacy framing.`);
-  assert.equal(headers.referrerPolicy, 'strict-origin-when-cross-origin', `${label} must define the referrer boundary.`);
+  assert(
+    ['no-referrer', 'same-origin', 'strict-origin', 'strict-origin-when-cross-origin'].includes(headers.referrerPolicy),
+    `${label} must define an approved referrer boundary.`,
+  );
   assert.match(headers.permissionsPolicy, /camera=\(\)/, `${label} must disable unneeded browser permissions.`);
   assert.equal(headers.openerPolicy, 'same-origin', `${label} must isolate its browsing context.`);
   assert.equal(headers.resourcePolicy, 'same-origin', `${label} must define a same-origin resource policy.`);
@@ -60,7 +72,11 @@ try {
         if (pathname === '/admin/chapters/direct.html') {
           return new Response('<!doctype html><html><body>Temporary chapter importer</body></html>', {
             status: 200,
-            headers: { 'content-type': 'text/html; charset=utf-8' },
+            headers: {
+              'content-type': 'text/html; charset=utf-8',
+              'content-security-policy': "default-src 'self'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'",
+              'referrer-policy': 'no-referrer',
+            },
           });
         }
         return new Response('Not found', { status: 404 });
@@ -123,7 +139,9 @@ try {
     assetFetchesAfter: diagnostic.assetFetches,
   });
   verifySecurityHeaders(page, 'chapter importer page');
-  assert.match(page.headers.get('content-security-policy') || '', /script-src 'self' 'unsafe-inline'/, 'The importer CSP must permit its owned inline inspection contract.');
+  const importerScripts = cspValues(page.headers.get('content-security-policy') || '', 'script-src');
+  assert(importerScripts.includes("'self'") && importerScripts.includes("'unsafe-inline'"), 'The importer CSP must permit its owned external and inline inspection contracts.');
+  assert.equal(page.headers.get('referrer-policy'), 'no-referrer', 'The importer must preserve its stricter no-referrer policy.');
   assert.equal(page.status, 200, 'The temporary chapter importer page must load.');
   assert.match(pageBody, /Temporary chapter importer/i, 'The temporary importer asset must be served instead of the login page.');
   assert.equal(diagnostic.assetFetches, assetsBeforePage + 1, 'The importer page must use exactly one ASSETS fetch.');
@@ -134,7 +152,7 @@ try {
 
   diagnostic.passed = true;
   await writeFile(diagnosticPath, `${JSON.stringify(diagnostic, null, 2)}\n`, 'utf8');
-  console.log('Cloudflare Worker verification passed: login is disabled, submission validates inspected pages, chapter APIs bypass the SPA fallback, application routes retain fallback behavior, and every response carries the security policy.');
+  console.log('Cloudflare Worker verification passed: login is disabled, submission validates inspected pages, chapter APIs bypass the SPA fallback, application routes retain fallback behavior, existing CSP directives are safely merged, and every response carries the security policy.');
 } catch (error) {
   diagnostic.error = {
     name: error?.name || 'Error',
