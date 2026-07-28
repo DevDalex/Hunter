@@ -51,6 +51,15 @@ jobs:
       - name: Verify chapter-admin Worker routing
         run: node scripts/verify-cloudflare-worker.mjs
 
+      - name: Publish Worker diagnostic
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudflare-worker-diagnostic-${{ github.sha }}
+          path: cloudflare-worker-diagnostic.json
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Publish complete dist artifact
         if: always()
         uses: actions/upload-artifact@v4
