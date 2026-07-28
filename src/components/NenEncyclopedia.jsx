@@ -4,6 +4,7 @@ import SourcePortrait from './SourcePortrait';
 import SafeImage from './SafeImage';
 import { nenAbilityDirectory, nenGroups, nenRecords, nenSource } from '../data/nenEncyclopedia';
 import { priorityPortraitByName } from '../data/priorityMedia.generated';
+import '../nen-spectrum.css';
 
 const nenAsset = (name) => `/media/nen/${name}.svg`;
 
