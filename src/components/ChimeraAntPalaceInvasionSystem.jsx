@@ -1,10 +1,17 @@
 import { ExternalLink } from 'lucide-react';
 import { chimeraAntPalaceInvasionSystem } from '../data/chimeraAntPalaceInvasionSystem';
+import { chimeraPortraitMediaId } from '../data/chimeraAntMedia';
 import SafeImage from './SafeImage';
 import './ChimeraAntPalaceInvasionSystem.css';
 import './ChimeraAntBatch7.css';
 
 const portraitLaneIds = new Set(['gon-pitou', 'killua', 'king-front', 'komugi']);
+const portraitNameByLaneId = new Map([
+  ['gon-pitou', 'Neferpitou'],
+  ['killua', 'Killua'],
+  ['king-front', 'Meruem'],
+  ['komugi', 'Komugi'],
+]);
 
 function SourceLink({ href, children = 'Episode record' }) {
   if (!href) return null;
@@ -87,7 +94,14 @@ function LaneMatrix({ periods, lanes, fallbackArtwork }) {
       {lanes.map((lane) => <article className={`chimera-invasion-system__lane is-${lane.accent}`} role="row" key={lane.id}>
         <header role="rowheader">
           <figure>{portraitLaneIds.has(lane.id)
-            ? <SafeImage src={lane.portrait} fallbackSrc={fallbackArtwork} fallbackLabel={lane.title} alt="" />
+            ? <SafeImage
+              mediaId={chimeraPortraitMediaId(portraitNameByLaneId.get(lane.id))}
+              mediaVariant="portrait"
+              src={lane.portrait}
+              fallbackSrc={fallbackArtwork}
+              fallbackLabel={lane.title}
+              alt=""
+            />
             : <span className="chimera-invasion-system__lane-token" aria-hidden="true">{lane.number}</span>}
           </figure>
           <div><span>Lane {lane.number}</span><h6>{lane.title}</h6><p>{lane.objective}</p></div>
@@ -126,7 +140,14 @@ function VisualRecords({ records, fallbackArtwork }) {
     <header><span>Visual field</span><h5 id="chimera-invasion-visuals-title">Five figures who redefine the operation</h5></header>
     <div>{records.map((record) => <a href={record.sourceHref} target="_blank" rel="noreferrer noopener" key={record.name}>
       <figure>
-        <SafeImage src={record.image} fallbackSrc={fallbackArtwork} fallbackLabel={record.name} alt={`${record.name}, ${record.role} during the palace invasion`} />
+        <SafeImage
+          mediaId={chimeraPortraitMediaId(record.name)}
+          mediaVariant="card"
+          src={record.image}
+          fallbackSrc={fallbackArtwork}
+          fallbackLabel={record.name}
+          alt={`${record.name}, ${record.role} during the palace invasion`}
+        />
         <figcaption><span>{record.role}</span><strong>{record.name}</strong></figcaption>
       </figure>
     </a>)}</div>
