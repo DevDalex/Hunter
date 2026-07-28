@@ -9,9 +9,9 @@ describe('route performance budgets', () => {
     expect(performanceBudgetFor('home', 'desktop')).toBe(routePerformanceBudgets.home.desktop);
   });
 
-  it('falls back to the reviewed default budget', () => {
-    expect(performanceBudgetFor('unregistered-route', 'constrained-mobile')).toBe(
-      routePerformanceBudgets.default['constrained-mobile'],
+  it('falls back to the reviewed desktop-minimum default budget', () => {
+    expect(performanceBudgetFor('unregistered-route', 'desktop-minimum')).toBe(
+      routePerformanceBudgets.default['desktop-minimum'],
     );
   });
 
