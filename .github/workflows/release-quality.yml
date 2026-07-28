@@ -45,18 +45,23 @@ jobs:
         run: npm run generate:build-info
 
       - name: Run aggregate repository preflight
-        run: npm run preflight:build
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p .release-quality
+          npm run preflight:build 2>&1 | tee .release-quality/preflight.log
 
       - name: Record dead-code inventory
         continue-on-error: true
-        run: npm run report:deadcode > release-knip.log 2>&1
+        run: npm run report:deadcode > .release-quality/knip.log 2>&1
 
       - name: Upload foundation diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: release-foundation-${{ github.sha }}
-          path: release-knip.log
+          path: .release-quality
+          include-hidden-files: true
           if-no-files-found: ignore
           retention-days: 14
 
@@ -151,7 +156,7 @@ jobs:
       - name: Install Chromium, Firefox, and WebKit
         run: npx playwright install --with-deps chromium firefox webkit
 
-      - name: Run Succession responsive release matrix
+      - name: Run Succession desktop release matrix
         run: npm run qa:succession-final-release
 
       - name: Run Succession Firefox and WebKit matrix
