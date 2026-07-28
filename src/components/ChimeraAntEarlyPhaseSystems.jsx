@@ -1,5 +1,6 @@
 import { ArrowRight, ExternalLink } from 'lucide-react';
 import { chimeraAntEarlyPhaseSystemById } from '../data/chimeraAntEarlyPhaseSystems';
+import { chimeraPortraitMediaId } from '../data/chimeraAntMedia';
 import SafeImage from './SafeImage';
 import './ChimeraAntEarlyPhaseSystems.css';
 
@@ -13,6 +14,8 @@ function ExpeditionPortraits({ portraits, fallbackArtwork }) {
     {portraits.map((portrait) => <a href={portrait.sourceHref} target="_blank" rel="noreferrer noopener" key={portrait.name}>
       <figure>
         <SafeImage
+          mediaId={chimeraPortraitMediaId(portrait.name)}
+          mediaVariant="portrait"
           src={portrait.image}
           fallbackSrc={fallbackArtwork}
           alt={`${portrait.name}, ${portrait.role} during the NGL expedition`}
@@ -68,6 +71,8 @@ function FrontPortraits({ portraits, fallbackArtwork, title }) {
   return <div className="chimera-three-front-system__portraits" aria-hidden="true">
     {portraits.map((portrait) => <SafeImage
       key={portrait.name}
+      mediaId={chimeraPortraitMediaId(portrait.name)}
+      mediaVariant="card"
       src={portrait.image}
       fallbackSrc={fallbackArtwork}
       alt=""
