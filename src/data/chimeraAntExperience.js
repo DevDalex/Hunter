@@ -112,6 +112,12 @@ export const chimeraAntPhases = Object.freeze([
   }),
 ]);
 
+export const chimeraAntPhaseDataset = Object.freeze({
+  schemaVersion: 1,
+  dataset: 'chimera-ant-phases',
+  records: chimeraAntPhases,
+});
+
 export const chimeraAntSectionOrder = Object.freeze([
   'overview',
   'before-the-arc',
