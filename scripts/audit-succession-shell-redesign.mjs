@@ -13,7 +13,7 @@ const [shell, shellCss, searchCss, packageJson, docs, workflow] = await Promise.
   read('src/components/succession/SuccessionArchiveSearch.css'),
   read('package.json'),
   read('docs/SUCCESSION-VISUAL-REDESIGN.md'),
-  read('.github/workflows/succession-visual-redesign.yml'),
+  read('.github/workflows/succession-visual-redesign-batch-5.yml'),
 ]);
 
 for (const requiredMarkup of [
@@ -60,8 +60,8 @@ assert(!shellCss.includes('!important'), 'shell redesign must not depend on !imp
 const expectedImports = "@import './SuccessionVisualFoundation.css';\n@import './SuccessionVisualFoundationBridge.css';\n@import './SuccessionArchiveShellRedesign.css';";
 assert(searchCss.trimStart().startsWith(expectedImports), 'shell redesign must load after the Batch 1 foundation and compatibility bridge');
 assert(packageJson.includes('"audit:succession-shell-redesign"'), 'package.json must expose the Batch 2 shell audit');
-assert(workflow.includes('audit:succession-shell-redesign'), 'visual workflow must run the Batch 2 shell audit');
-assert(workflow.includes("succession-visual-redesign-batch-*"), 'visual workflow must cover stacked Batch branches');
+assert(workflow.includes('audit:succession-shell-redesign'), 'maintained Batch 5 workflow must run the Batch 2 shell audit');
+assert(workflow.includes('qa:succession-final-release') && workflow.includes('qa:succession-cross-browser'), 'maintained workflow must run responsive and cross-browser release QA');
 assert(docs.includes('## Batch 2 — Shell, navigation, and landing experience'), 'design record must include the Batch 2 contract');
 assert(docs.includes('### Hour 15 — Shared shell and layout'), 'design record must document Hour 15');
 assert(docs.includes('Preserved wide-workspace containment'), 'design record must explain the Timeline containment exception');
@@ -72,4 +72,4 @@ for (const file of [
   'scripts/audit-succession-shell-redesign.mjs',
 ]) await access(path.join(root, file));
 
-console.log('Succession shell redesign audit passed: shared desktop shell, sticky dossier sidebar, controlled workspace stage, preserved wide-workspace containment, mobile command bar, modal drawer, skip navigation, semantic tokens, responsive geometry, and reduced-motion behavior verified.');
+console.log('Succession shell redesign audit passed: shared desktop shell, sticky dossier sidebar, controlled workspace stage, preserved wide-workspace containment, mobile command bar, modal drawer, skip navigation, semantic tokens, responsive geometry, reduced-motion behavior, and maintained Batch 5 release workflow verified.');
