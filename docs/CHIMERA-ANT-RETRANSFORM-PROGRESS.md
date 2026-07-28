@@ -29,7 +29,7 @@ Branch: `chimera-ant-retransform`
 ### Batch 2 — Dedicated shell
 
 - Added the route-specific `ChimeraAntPage`, sticky left reading rail, active-section tracking, active-phase tracking, and page progress.
-- Added no mobile-specific layout.
+- Added no unsupported narrow-width-specific layout.
 
 ### Batch 3 — Hero and orientation
 
@@ -80,7 +80,7 @@ Branch: `chimera-ant-retransform`
 - Added explicit opaque fallbacks beneath gradient-only Phase II headers so contrast remains deterministic.
 - Corrected the Arc at a Glance label, phase-rail eyebrow, and the two dark-phase footer labels that failed the contrast audit.
 - Added segmented 1600px screenshots for all fifteen sections and all seven phase systems in addition to viewport captures at every target width.
-- Added no viewport-width media query and no mobile-specific interaction or layout.
+- Added no viewport-width media query and no unsupported narrow-width-specific interaction or layout.
 
 ### Verification evidence
 
@@ -105,7 +105,7 @@ Branch: `chimera-ant-retransform`
 - The page is intentionally very long and information-dense. Future content additions should rerun the same four-width suite because text growth can reintroduce clipping, overflow, or contrast regressions.
 - Automated checks verify size, contrast, containment, interaction, media loading, and budgets. Screenshot evidence still benefits from optional human art-direction review for subjective composition and image choice.
 - Pull request #57 remains draft and unmerged; this ledger does not by itself claim release through the repository’s normal merge process.
-- No mobile layout was added or evaluated because the redesign contract is desktop-only.
+- No unsupported narrow-width layout was added or evaluated because the redesign contract is desktop-only.
 
 ### Next action
 

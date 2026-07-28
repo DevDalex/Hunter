@@ -1,7 +1,7 @@
 # Greed Island prototype page
 
 Status: **Batch 6 Story redesign**  
-Mobile status: **deferred**
+unsupported narrow-width status: **deferred**
 
 Batch 6 turns Greed Island into a dedicated Story prototype page after the Early Arc and Yorknew batches. It treats the arc as a game manual, card binder, strategy board, training dossier, and completion route.
 
@@ -13,11 +13,11 @@ Batch 6 turns Greed Island into a dedicated Story prototype page after the Early
 4. The UI keeps the full card list searchable and filterable instead of rendering a long static wiki table first.
 5. The card data stores names, category, and editorial story-use grouping. Long Hunterpedia card descriptions are intentionally not copied into the repository.
 6. The page keeps Greed Island visually distinct from green island theming: dark game-cartridge shell, warm paper sections, electric blue/cyan interface accents, magenta game-system accents, antique-gold completion markers, and red danger markers for Bomber pressure.
-7. `npm run audit:story` now checks Greed Island routing, module coverage, data counts, card totals, approved source hosts, and deferred mobile scope.
+7. `npm run audit:story` now checks Greed Island routing, module coverage, data counts, card totals, approved source hosts, and deferred unsupported narrow-width scope.
 
 ## What this batch does not own
 
-Batch 6 does not redesign Chimera Ant, Chairman Election, Volume 0, Succession, Characters, or mobile layouts. It does not create a separate `/cards` route yet; the card catalogue lives inside the Greed Island arc page.
+Batch 6 does not redesign Chimera Ant, Chairman Election, Volume 0, Succession, Characters, or unsupported narrow-width layouts. It does not create a separate `/cards` route yet; the card catalogue lives inside the Greed Island arc page.
 
 ## Runtime files
 

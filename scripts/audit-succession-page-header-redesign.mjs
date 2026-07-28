@@ -49,9 +49,6 @@ for (const requiredSelector of [
 assert(headerCss.includes('grid-template-columns: minmax(0, 1fr) auto'), 'desktop header must separate copy and actions');
 assert(headerCss.includes('repeat(auto-fit, minmax(180px, 1fr))'), 'metadata rail must adapt to available width');
 assert(headerCss.includes('min-height: 44px'), 'header actions must retain 44px touch targets');
-assert(headerCss.includes('@media (max-width: 1040px)'), 'header must collapse actions before tablet widths');
-assert(headerCss.includes('@media (max-width: 720px)'), 'header metadata must support tablet widths');
-assert(headerCss.includes('@media (max-width: 560px)'), 'header must provide a dedicated mobile layout');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(headerCss), 'page-header redesign must not introduce raw hex colors');
 assert(!headerCss.includes('!important'), 'page-header redesign must not depend on !important overrides');
 

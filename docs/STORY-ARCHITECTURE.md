@@ -3,7 +3,7 @@
 Status: **locked and routing-active**  
 Version: **2026-07-20**  
 Runtime status: **clean history routing is live; legacy hashes redirect when possible**  
-Mobile status: **deferred**
+unsupported narrow-width status: **deferred**
 
 This document is the design and routing contract for the Story redesign. The machine-readable companion is `architecture/storyArchitecture.mjs`; `npm run audit:story` blocks accidental drift from the decisions below and now checks the clean route adapter in `src/lib/appRouter.js`.
 
@@ -20,7 +20,7 @@ The approved identity is **The Black Archive**:
 - steel blue for neutral information and controlled purple for royal/Succession material;
 - green used only when the subject itself justifies it, never as the site-wide brand color.
 
-This is a desktop-first redesign. Mobile-specific layout, navigation, touch and acceptance work is deliberately postponed. New architecture must remain adaptable, but no batch may silently expand its scope to include mobile implementation.
+This is a desktop-first redesign. unsupported narrow-width-specific layout, navigation, touch and acceptance work is deliberately postponed. New architecture must remain adaptable, but no batch may silently expand its scope to include unsupported narrow-width implementation.
 
 ## 2. Locked Story taxonomy
 
@@ -303,7 +303,7 @@ This patch does **not**:
 - complete the Zoldyck Family content page;
 - move the Succession components into new page folders;
 - create Yorknew’s prototype layout;
-- add responsive/mobile layouts;
+- add desktop/unsupported narrow-width layouts;
 - replace the old Story workspace component.
 
 Those changes begin in Batch 3 and later batches against this locked router.

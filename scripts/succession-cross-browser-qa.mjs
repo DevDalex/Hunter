@@ -11,8 +11,8 @@ const browsers = [
   { id: 'webkit', engine: webkit },
 ];
 const viewports = [
-  { id: 'desktop', width: 1440, height: 1000 },
-  { id: 'mobile', width: 390, height: 844 },
+  { id: 'desktop-minimum', width: 1366, height: 900 },
+  { id: 'desktop', width: 1600, height: 1000 },
 ];
 const routes = [
   ['story', 'succession/story'],

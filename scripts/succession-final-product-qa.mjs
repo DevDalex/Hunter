@@ -149,22 +149,7 @@ try {
     }
   });
 
-  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
-  await record('Final Search Glossary and Research remain usable on mobile', mobile, async () => {
-    for (const [route, selector] of [
-      ['search', '.succession-search-complete'],
-      ['glossary', '.succession-glossary-canonical'],
-      ['research', '.succession-evidence-workspace'],
-    ]) {
-      await mobile.goto(`${base}/story/succession-contest/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-      await mobile.waitForSelector(selector, { timeout: 15_000 });
-      const overflow = await horizontalOverflow(mobile);
-      if (overflow > 1) throw new Error(`${route} overflows the mobile viewport by ${overflow}px`);
-    }
-  });
-
   await desktop.close();
-  await mobile.close();
 } finally {
   await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));

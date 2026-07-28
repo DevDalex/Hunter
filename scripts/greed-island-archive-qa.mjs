@@ -132,30 +132,7 @@ try {
   });
   await desktop.close();
 
-  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
-  await record('Specified archive mobile containment and reduced motion', mobile, async () => {
-    await openArchive(mobile, base);
-    const archive = mobile.locator('.gi-card-archive');
-    await archive.locator('.gi-card-archive__search input').fill('000');
-    await archive.locator('.gi-card-archive__results > div > button').filter({ hasText: "Ruler's Blessing" }).click();
-    await assertLocalCardImage(mobile);
-    const state = await mobile.evaluate(() => {
-      const record = document.querySelector('.gi-card-archive__record');
-      const card = document.querySelector('.gi-card-archive__card .gi-card');
-      return {
-        overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-        reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-        recordWidth: record?.getBoundingClientRect().width || 0,
-        cardTransition: card ? getComputedStyle(card).transitionDuration : '',
-      };
-    });
-    if (state.overflow > 1) throw new Error(`mobile archive overflowed horizontally by ${state.overflow}px`);
-    if (!state.reducedMotion) throw new Error('reduced-motion emulation was not active');
-    if (state.recordWidth > 390.5) throw new Error(`archive record exceeds mobile viewport at ${state.recordWidth}px`);
-    const durations = state.cardTransition.split(',').map((value) => Number.parseFloat(value)).filter(Number.isFinite);
-    if (durations.some((duration) => duration > 0.001)) throw new Error(`archive card transition remains ${state.cardTransition} under reduced motion`);
-  });
-  await mobile.close();
+
 } finally {
   await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));

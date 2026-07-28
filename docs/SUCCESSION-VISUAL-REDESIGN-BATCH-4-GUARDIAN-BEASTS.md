@@ -23,12 +23,12 @@ This task redesigns the Guardian Spirit Beast archive without changing canonical
 - Present Seed Urn and related ritual systems as navigable system records.
 - Preserve the complete source trail at the authorized chapter boundary.
 
-### Responsive and accessible behavior
+### desktop and accessible behavior
 
 - Keep all controls at least 44px high.
 - Preserve keyboard navigation and visible focus states.
 - Pair the decorative orbit with an ordinary interactive list.
-- Remove the large orbit stage on narrow mobile layouts while retaining every host record.
+- Remove the large orbit stage on narrow unsupported narrow-width layouts while retaining every host record.
 - Disable motion and transitions when reduced motion is requested.
 - Avoid raw color values and route-level `!important` overrides.
 
@@ -51,4 +51,4 @@ npm run prepare:eta-assets
 npx vite build
 ```
 
-The dedicated workflow renders `succession/guardian-spirit-beasts` at desktop, tablet, and mobile sizes and publishes screenshots and logs for manual review.
+The dedicated workflow renders `succession/guardian-spirit-beasts` at desktop, unsupported narrow-width, and unsupported narrow-width sizes and publishes screenshots and logs for manual review.

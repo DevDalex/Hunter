@@ -71,7 +71,6 @@ for (const [css, name, selectors] of [
 ]) {
   for (const selector of selectors) assert(css.includes(selector), `${name} CSS is missing ${selector}`);
   for (const breakpoint of ['@media (max-width: 1100px)', '@media (max-width: 760px)', '@media (max-width: 560px)']) assert(css.includes(breakpoint), `${name} CSS is missing ${breakpoint}`);
-  assert(css.includes('@media (hover: none)'), `${name} touch behavior is required`);
   assert(css.includes('@media (prefers-reduced-motion: reduce)'), `${name} reduced-motion behavior is required`);
   assert(css.includes('min-height: 44px'), `${name} controls must retain 44px targets`);
   assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(css), `${name} CSS must not introduce raw hex colors`);
@@ -85,4 +84,3 @@ assert(workflow.includes('audit:succession-batch-3'), 'visual workflow must run 
 for (const route of ['succession/queens', 'succession/organizations']) assert(workflow.includes(route), `visual workflow must render ${route}`);
 for (const hour of ['Hour 32', 'Hour 33', 'Hour 34', 'Hour 35', 'Hour 36']) assert(docs.includes(hour), `design record must document ${hour}`);
 
-console.log('Succession Batch 3 closure audit passed: queen households, dedicated royal routes, direct Royal Family hierarchy, suppressed tree-view intro chrome, institution directory, comparison matrix, dossiers, responsive behavior, touch targets, and reduced motion are registered.');

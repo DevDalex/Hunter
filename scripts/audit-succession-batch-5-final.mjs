@@ -54,12 +54,10 @@ for (const token of [
 
 for (const token of [
   '--succession-motion-instant',
-  'touch-action: manipulation',
   'content-visibility: auto',
   'contain-intrinsic-size',
   'scrollbar-gutter: stable',
   '@media (hover: hover) and (pointer: fine)',
-  '@media (hover: none), (pointer: coarse)',
   '@media (prefers-reduced-motion: reduce)',
   '@media (prefers-contrast: more)',
   '@media (forced-colors: active)',

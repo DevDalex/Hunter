@@ -14,7 +14,7 @@ This task visually unifies the canonical location graph and the Black Whale refe
 - Redesign type, tier, access, and chapter-snapshot controls with paper intelligence surfaces.
 - Elevate location cards with hierarchy paths, access state, occupancy history, event totals, and spatial identity.
 - Redesign location dossiers with chapter snapshot, contained locations, occupants, assignments, events, abilities, movement history, breadcrumbs, and evidence.
-- Retain mobile stacking, 44px controls, keyboard focus, touch behavior, and reduced-motion support.
+- Retain unsupported narrow-width stacking, 44px controls, keyboard focus, touch behavior, and reduced-motion support.
 
 ### Black Whale reference command
 
@@ -28,7 +28,7 @@ This task visually unifies the canonical location graph and the Black Whale refe
 
 ### Batch 4 closure
 
-The closure workflow runs all Batch 4 chapter, Story, Event, Nen, Guardian Spirit Beast, and spatial audits; inherited Batch 1–3 contracts; CSS ownership; readability; accessibility; the production build; and responsive rendering for Locations and Black Whale.
+The closure workflow runs all Batch 4 chapter, Story, Event, Nen, Guardian Spirit Beast, and spatial audits; inherited Batch 1–3 contracts; CSS ownership; readability; accessibility; the production build; and desktop rendering for Locations and Black Whale.
 
 ```bash
 node scripts/audit-succession-batch-4-spatial.mjs
@@ -49,6 +49,6 @@ Final closure result:
 - every Batch 4 and inherited visual audit passed;
 - CSS ownership, readability, and accessibility passed;
 - the production presentation build passed;
-- Chapters, Story, Events, Nen, Guardian Spirit Beasts, Locations, and Black Whale passed at desktop, tablet, and mobile;
+- Chapters, Story, Events, Nen, Guardian Spirit Beasts, Locations, and Black Whale passed at desktop, unsupported narrow-width, and unsupported narrow-width;
 - **21 of 21 route-and-viewport renders passed**;
-- manual screenshot review confirmed Location and Black Whale desktop/mobile hierarchy, contrast, controls, wrapping, map navigation, inspector actions, and room-directory stacking are visually sound.
+- manual screenshot review confirmed Location and Black Whale desktop/unsupported narrow-width hierarchy, contrast, controls, wrapping, map navigation, inspector actions, and room-directory stacking are visually sound.

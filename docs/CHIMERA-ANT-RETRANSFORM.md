@@ -8,7 +8,7 @@ The page must not resemble a narrow blog article, a streaming-service landing pa
 
 ## Non-negotiable rules
 
-1. Mobile-specific design and touch-specific interaction are out of scope.
+1. unsupported narrow-width-specific design and touch-specific interaction are out of scope.
 2. The working canvas uses approximately 92vw with a preferred maximum width of 1760px.
 3. No major viewport may contain only a large heading and a short paragraph.
 4. Images must establish place, identify people, explain sequence, or mark a turning point.

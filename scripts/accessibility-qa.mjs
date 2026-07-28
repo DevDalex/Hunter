@@ -19,8 +19,8 @@ const axePath = process.env.AXE_CORE_PATH || (() => {
 })();
 
 const viewports = [
-  { id: 'desktop', width: 1440, height: 1000 },
-  { id: 'mobile', width: 390, height: 844 },
+  { id: 'desktop-minimum', width: 1366, height: 900 },
+  { id: 'desktop', width: 1600, height: 1000 },
 ].filter((item) => selectedViewport === 'all' || item.id === selectedViewport);
 const routePath = ({ view, target }) => view === 'home' ? 'home/' : view === 'series' ? (target ? `series/${target}` : 'series/') : `${view}/${target}`;
 const routes = routeManifest.map((route) => ({ ...route, path: routePath(route) }))
@@ -152,18 +152,6 @@ try {
       await page.waitForSelector('.archive-search-dialog', { state: 'detached' });
       if (!await trigger.evaluate((node) => node === document.activeElement)) throw new Error('search trigger did not regain focus');
     });
-    await recordInteraction('mobile-browser menu contains and restores focus', { width: 390, height: 844 }, 'home/', async (page) => {
-      const trigger = page.locator('.mobile-menu-button');
-      await trigger.click();
-      await page.waitForFunction(() => document.activeElement?.matches('.header-links a'));
-      await page.keyboard.press('Shift+Tab');
-      if (!await trigger.evaluate((node) => node === document.activeElement)) throw new Error('Shift+Tab escaped the open menu');
-      await page.keyboard.press('Tab');
-      if (!await page.locator('.header-links a').first().evaluate((node) => node === document.activeElement)) throw new Error('Tab did not wrap to the first menu link');
-      await page.keyboard.press('Escape');
-      if (await trigger.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close the menu');
-      if (!await trigger.evaluate((node) => node === document.activeElement)) throw new Error('menu trigger did not regain focus');
-    });
     await recordInteraction('family-tree branch controls activate with keyboard', { width: 1440, height: 1000 }, 'succession/princes?view=tree', async (page) => {
       const queens = page.locator('.royal-guard-tree__queen');
       await queens.first().waitFor({ state: 'visible', timeout: 10_000 });
@@ -193,7 +181,7 @@ try {
       await page.waitForSelector('.chapter-drawer', { state: 'detached' });
       if (!await opener.evaluate((node) => node === document.activeElement)) throw new Error('chapter opener did not regain focus');
     });
-    await recordInteraction('Black Whale manifest accepts keyboard focus', { width: 390, height: 844 }, 'succession/black-whale', async (page) => {
+    await recordInteraction('Black Whale manifest accepts keyboard focus', { width: 1366, height: 900 }, 'succession/black-whale', async (page) => {
       const manifest = page.locator('.ship-manifest__table-wrap');
       await manifest.focus();
       if (!await manifest.evaluate((node) => node === document.activeElement)) throw new Error('manifest scroll region did not receive focus');

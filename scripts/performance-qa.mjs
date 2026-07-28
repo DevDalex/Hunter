@@ -22,8 +22,8 @@ const routes = [
 ];
 
 const profiles = [
-  { id: 'desktop', viewport: { width: 1440, height: 1000 }, constrained: false },
-  { id: 'constrained-mobile', viewport: { width: 390, height: 844 }, constrained: true },
+  { id: 'desktop-minimum', viewport: { width: 1366, height: 900 }, constrained: false },
+  { id: 'desktop', viewport: { width: 1600, height: 1000 }, constrained: false },
 ];
 
 const mime = {

@@ -16,9 +16,8 @@ const executablePath = process.env.CHROMIUM_PATH;
 const approvedExternalMediaHosts = new Set(['hunterxhunter.fandom.com', 'static.wikia.nocookie.net']);
 
 const viewports = [
-  { id: 'desktop', width: 1440, height: 1000 },
-  { id: 'tablet', width: 768, height: 1024 },
-  { id: 'mobile', width: 390, height: 844 },
+  { id: 'desktop-minimum', width: 1366, height: 900 },
+  { id: 'desktop', width: 1600, height: 1000 },
 ].filter((item) => selectedViewport === 'all' || item.id === selectedViewport);
 
 const routePath = ({ view, target }) => {

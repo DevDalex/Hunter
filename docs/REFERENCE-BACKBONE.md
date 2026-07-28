@@ -1,7 +1,7 @@
 # Reference backbone batch
 
 Status: Batch 8 reference redesign  
-Mobile status: deferred  
+unsupported narrow-width status: deferred  
 Primary source policy: Hunterpedia/Fandom only
 
 ## Purpose
@@ -88,7 +88,7 @@ The conflict panel emphasizes:
 3. Nen surfaces the backbone while preserving the existing visual Nen workbench and record directory.
 4. World, Organizations, and Conflicts each render the shared `ReferenceBackbonePanel` inside their route chunks.
 5. The shared panel renders prototype records and source links from canonical data.
-6. Mobile remains deferred.
+6. unsupported narrow-width remains deferred.
 
 ## Deferred work
 
