@@ -60,11 +60,11 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-  production:
-    name: Production artifact and Worker routing
+  required_release:
+    name: Production and required Chromium checks
     needs: foundation
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 80
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -78,14 +78,15 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
-      - name: Build production application
+      - name: Build production runtime from validated sources
         shell: bash
         run: |
           set -o pipefail
           mkdir -p .release-quality
-          npm run build 2>&1 | tee .release-quality/build.log
+          npm run generate:build-info
+          npm run build:runtime 2>&1 | tee .release-quality/build.log
 
-      - name: Verify deployment artifact
+      - name: Verify deployment artifact and Worker routing
         shell: bash
         run: |
           test -f dist/server/index.js
@@ -94,51 +95,6 @@ jobs:
           test ! -e dist/.openai
           ! find dist/client -maxdepth 1 -type f -name 'hxh-archive-phase-*.zip' | grep -q .
           node scripts/verify-cloudflare-worker.mjs
-
-      - name: Upload production artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: release-dist-${{ github.sha }}
-          path: |
-            dist
-            cloudflare-worker-diagnostic.json
-            .release-quality/build.log
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 7
-
-  browser:
-    name: Required Chromium release checks
-    needs: production
-    runs-on: ubuntu-latest
-    timeout-minutes: 55
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install locked dependencies
-        run: npm ci
-
-      - name: Download production artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: release-dist-${{ github.sha }}
-          path: .release-artifact
-
-      - name: Restore production directories
-        shell: bash
-        run: |
-          rm -rf dist
-          mv .release-artifact/dist dist
-          if [[ -f .release-artifact/cloudflare-worker-diagnostic.json ]]; then
-            cp .release-artifact/cloudflare-worker-diagnostic.json .
-          fi
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -151,12 +107,14 @@ jobs:
           VISUAL_QA_SCREENSHOTS: failures
         run: npm run qa:browser:verify
 
-      - name: Upload browser evidence
+      - name: Upload release diagnostics and browser evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: release-browser-${{ github.sha }}
+          name: release-required-${{ github.sha }}
           path: |
+            .release-quality/build.log
+            cloudflare-worker-diagnostic.json
             playwright-report
             test-results
             .search-qa
@@ -171,7 +129,7 @@ jobs:
   cross_browser:
     name: Full Succession cross-browser release matrix
     if: github.event_name != 'pull_request' || inputs.full == true
-    needs: production
+    needs: foundation
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -187,16 +145,8 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
-      - name: Download production artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: release-dist-${{ github.sha }}
-          path: .release-artifact
-
-      - name: Restore production directories
-        run: |
-          rm -rf dist
-          mv .release-artifact/dist dist
+      - name: Build standalone runtime
+        run: npm run generate:build-info && npm run build:runtime
 
       - name: Install Chromium, Firefox, and WebKit
         run: npx playwright install --with-deps chromium firefox webkit
@@ -222,7 +172,7 @@ jobs:
   arc_release:
     name: Full arc-specific release suites
     if: github.event_name != 'pull_request' || inputs.full == true
-    needs: production
+    needs: foundation
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -238,16 +188,8 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
-      - name: Download production artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: release-dist-${{ github.sha }}
-          path: .release-artifact
-
-      - name: Restore production directories
-        run: |
-          rm -rf dist
-          mv .release-artifact/dist dist
+      - name: Build standalone runtime
+        run: npm run generate:build-info && npm run build:runtime
 
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
@@ -276,21 +218,20 @@ jobs:
   release_gate:
     name: Authoritative release gate
     if: always()
-    needs: [foundation, production, browser, cross_browser, arc_release]
+    needs: [foundation, required_release, cross_browser, arc_release]
     runs-on: ubuntu-latest
     steps:
       - name: Enforce required results
         env:
           FOUNDATION: ${{ needs.foundation.result }}
-          PRODUCTION: ${{ needs.production.result }}
-          BROWSER: ${{ needs.browser.result }}
+          REQUIRED_RELEASE: ${{ needs.required_release.result }}
           CROSS_BROWSER: ${{ needs.cross_browser.result }}
           ARC_RELEASE: ${{ needs.arc_release.result }}
           FULL_RELEASE: ${{ github.event_name != 'pull_request' || inputs.full == true }}
         shell: bash
         run: |
           failed=0
-          for result in "$FOUNDATION" "$PRODUCTION" "$BROWSER"; do
+          for result in "$FOUNDATION" "$REQUIRED_RELEASE"; do
             if [[ "$result" != "success" ]]; then failed=1; fi
           done
 
@@ -304,8 +245,7 @@ jobs:
             echo '### Release Quality'
             echo
             echo "- Foundation: **$FOUNDATION**"
-            echo "- Production artifact: **$PRODUCTION**"
-            echo "- Required Chromium QA: **$BROWSER**"
+            echo "- Production + required Chromium QA: **$REQUIRED_RELEASE**"
             echo "- Cross-browser matrix: **$CROSS_BROWSER**"
             echo "- Arc-specific suites: **$ARC_RELEASE**"
           } >> "$GITHUB_STEP_SUMMARY"
