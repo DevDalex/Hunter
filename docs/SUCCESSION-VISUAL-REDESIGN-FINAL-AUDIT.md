@@ -69,4 +69,14 @@ node scripts/succession-final-release-qa.mjs
 node scripts/succession-cross-browser-qa.mjs
 ```
 
-Tasks 59–64 remain incomplete until the latest PR head passes this gate and the generated artifacts are reviewed.
+## July 28, 2026 release hardening
+
+- Raised the Research coverage-census metadata to a 12px floor and assigned explicit light- and dark-surface colors instead of weakening contrast thresholds.
+- Replaced brittle `SafeImage` source-string assertions with unit and browser behavior checks.
+- Added one authoritative `Release Quality` workflow; the broad Foundation and Browser matrices are retained as scheduled/manual diagnostics rather than duplicate pull-request gates.
+- Removed the obsolete pre-Batch-5 Succession workflow.
+- Removed four unreferenced arc prototype stacks identified by Knip, including their page, data, and style modules.
+- Added versioned archive migrations, route-level performance budgets, Worker security headers, CodeQL, runtime dependency auditing, preview/production smoke infrastructure, and documented rollback ownership.
+- Restricted multi-gigabyte distribution artifacts to actual release runs; pull requests retain compact logs, diagnostics, traces, screenshots, and reports.
+
+Tasks 59–64 remain incomplete until the latest PR head passes the maintained Batch 5 gate and the generated artifacts are reviewed.
