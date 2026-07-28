@@ -13,7 +13,22 @@ const glossaryEntries = Object.freeze((productFoundationData.glossaryEntries || 
   relatedEntityIds: Object.freeze((entry.relatedEntityIds || []).map((id) => systemIdCorrections[id] || id)),
 })));
 
-export const successionArchiveData = applySuccession414415ArchiveCorrections(Object.freeze({
+const chapterCurrencyData = applySuccession414415ArchiveCorrections(Object.freeze({
   ...productFoundationData,
   glossaryEntries,
 }));
+
+export const successionArchiveData = Object.freeze({
+  ...chapterCurrencyData,
+  characters: Object.freeze(chapterCurrencyData.characters.map((character) => (
+    character.id === 'character:furykov'
+      ? Object.freeze({
+        ...character,
+        nen: Object.freeze({
+          ...(character.nen || {}),
+          naturalType: 'conjuration',
+        }),
+      })
+      : character
+  ))),
+});
