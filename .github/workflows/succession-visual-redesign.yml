@@ -1,0 +1,85 @@
+name: Succession Visual Redesign Legacy Diagnostics
+
+# Historical branch family retained for audit provenance: succession-visual-redesign-batch-*
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: succession-visual-redesign-legacy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  legacy_contracts:
+    name: Batch 1–3 historical contract diagnostics
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Audit visual foundation
+        run: |
+          # scripts/audit-succession-visual-foundation.mjs
+          npm run audit:succession-visual-foundation
+
+      - name: Audit shared shell redesign
+        run: |
+          # scripts/audit-succession-shell-redesign.mjs
+          npm run audit:succession-shell-redesign
+
+      - name: Audit page-header redesign
+        run: |
+          # scripts/audit-succession-page-header-redesign.mjs
+          npm run audit:succession-page-header-redesign
+
+      - name: Audit breadcrumb redesign
+        run: |
+          # scripts/audit-succession-breadcrumb-redesign.mjs
+          npm run audit:succession-breadcrumb-redesign
+
+      - name: Audit Batch 2 closure
+        run: |
+          # scripts/audit-succession-batch-2-completion.mjs
+          npm run audit:succession-batch-2
+
+      - name: Audit Batch 3 character command
+        run: |
+          # scripts/audit-succession-character-command.mjs
+          npm run audit:succession-character-command
+
+      - name: Audit Batch 3 royal command
+        run: |
+          # scripts/audit-succession-royal-command.mjs
+          npm run audit:succession-royal-command
+
+      - name: Audit Batch 3 closure
+        run: |
+          # scripts/audit-succession-batch-3-closure.mjs
+          npm run audit:succession-batch-3
+
+      - name: Run current runtime compatibility sweep
+        run: npm run audit:succession-runtime
+
+      - name: Record visual inventory
+        run: npm run report:succession-visual-inventory > succession-legacy-inventory.md
+
+      - name: Upload manual diagnostic record
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-legacy-diagnostics-${{ github.sha }}
+          path: succession-legacy-inventory.md
+          if-no-files-found: ignore
+          retention-days: 14
