@@ -7,6 +7,8 @@ import { mediaManifestSchema } from '../src/schemas/archiveSchemas.js';
 
 const root = process.cwd();
 const validatedManifest = mediaManifestSchema.parse(mediaManifest);
+const requestedConcurrency = Number.parseInt(process.env.MEDIA_BUILD_CONCURRENCY || '4', 10);
+const workerCount = Math.max(1, Math.min(4, Number.isFinite(requestedConcurrency) ? requestedConcurrency : 4));
 
 /** @param {number} value @param {number} minimum @param {number} maximum */
 const clamp = (value, minimum, maximum) => Math.min(Math.max(value, minimum), maximum);
@@ -51,7 +53,22 @@ function applyFormat(pipeline, format, quality) {
   return pipeline.png({ quality, compressionLevel: 9 });
 }
 
-let generated = 0;
+/**
+ * @typedef {{
+ *   key: string;
+ *   recordId: string;
+ *   variantName: string;
+ *   sourcePath: string;
+ *   outputPath: string;
+ *   outputRelative: string;
+ *   source: { width: number; height: number };
+ *   focalPoint: { x: number; y: number };
+ *   variant: { width: number; height: number; format: 'avif' | 'webp' | 'jpeg' | 'png'; quality: number };
+ * }} MediaTask
+ */
+
+/** @type {MediaTask[]} */
+const tasks = [];
 
 for (const record of validatedManifest.records) {
   if (!record.sourcePath) continue;
@@ -63,24 +80,47 @@ for (const record of validatedManifest.records) {
   }
 
   for (const [variantName, variant] of Object.entries(record.variants)) {
-    const outputPath = path.resolve(root, variant.outputPath);
-    await mkdir(path.dirname(outputPath), { recursive: true });
-
-    const crop = focalCrop(
-      { width: metadata.width, height: metadata.height },
-      { width: variant.width, height: variant.height },
-      record.focalPoint,
-    );
-
-    const pipeline = sharp(sourcePath)
-      .extract(crop)
-      .resize(variant.width, variant.height, { fit: 'fill' })
-      .withMetadata({ orientation: undefined });
-
-    await applyFormat(pipeline, variant.format, variant.quality).toFile(outputPath);
-    generated += 1;
-    console.log(`Generated ${record.id}:${variantName} -> ${variant.outputPath}`);
+    tasks.push({
+      key: `${record.id}:${variantName}`,
+      recordId: record.id,
+      variantName,
+      sourcePath,
+      outputPath: path.resolve(root, variant.outputPath),
+      outputRelative: variant.outputPath,
+      source: { width: metadata.width, height: metadata.height },
+      focalPoint: record.focalPoint,
+      variant,
+    });
   }
 }
 
-console.log(`Media pipeline complete: ${generated} variant${generated === 1 ? '' : 's'} generated.`);
+/** @type {string[]} */
+const completed = [];
+let taskIndex = 0;
+
+async function runWorker() {
+  while (taskIndex < tasks.length) {
+    const currentIndex = taskIndex;
+    taskIndex += 1;
+    const task = tasks[currentIndex];
+    await mkdir(path.dirname(task.outputPath), { recursive: true });
+
+    const crop = focalCrop(
+      task.source,
+      { width: task.variant.width, height: task.variant.height },
+      task.focalPoint,
+    );
+
+    const pipeline = sharp(task.sourcePath)
+      .extract(crop)
+      .resize(task.variant.width, task.variant.height, { fit: 'fill' })
+      .withMetadata({ orientation: undefined });
+
+    await applyFormat(pipeline, task.variant.format, task.variant.quality).toFile(task.outputPath);
+    completed.push(`Generated ${task.key} -> ${task.outputRelative}`);
+  }
+}
+
+await Promise.all(Array.from({ length: Math.min(workerCount, tasks.length) }, () => runWorker()));
+for (const message of completed.sort()) console.log(message);
+console.log(`Media pipeline complete: ${completed.length} variants generated with ${workerCount} worker${workerCount === 1 ? '' : 's'}.`);
