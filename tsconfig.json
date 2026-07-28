@@ -21,8 +21,6 @@
     "src/data/chimeraAntExperience.js",
     "src/data/chimeraAntPhaseScaffold.js",
     "src/data/performanceBudgets.js",
-    "src/data/routeManifest.js",
-    "src/lib/routePreload.js",
     "scripts/build-media-variants.mjs",
     "scripts/verify-media-manifest.mjs",
     "scripts/verify-archive-records.mjs",
