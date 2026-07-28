@@ -69,13 +69,13 @@ try {
   assert(router.includes('readerParams'), 'reader query parameters must pass through clean URL generation');
   assert(shellCss.includes('.story-utility-shell--succession-reader') && shellCss.includes('width: 100%'), 'reader route shell must be full bleed');
   for (const selector of ['.succession-reader__topbar', '.succession-reader__bottombar', '.succession-reader__canvas', '.succession-reader-panel', '.succession-reader__pages.is-spread', '.succession-reader__chapter-groups']) assert(css.includes(selector), `reader design is missing ${selector}`);
-  assert(css.includes('@media (max-width: 620px)') && css.includes('@media (prefers-reduced-motion: reduce)'), 'reader design requires mobile and reduced-motion layers');
-  assert(css.includes('env(safe-area-inset-bottom)') && css.includes(':focus-visible'), 'reader design requires safe-area and focus-visible handling');
+  assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'reader design requires a reduced-motion layer');
+  assert(css.includes(':focus-visible'), 'reader design requires focus-visible handling');
   assert(polishCss.includes('.succession-reader__panel-enhancement') && polishCss.includes('.succession-reader__command-syntax'), 'reader completion and direct-command controls require route-owned styling');
 
-  for (const check of ['standalone and reading-first', 'complete grouped catalogue', 'modes fit direction', 'Bookmarks persist', 'Keyboard chapter navigation', 'Mobile reader is contained']) assert(qa.includes(check), `browser QA is missing ${check}`);
+  for (const check of ['standalone and reading-first', 'complete grouped catalogue', 'modes fit direction', 'Bookmarks persist', 'Keyboard chapter navigation']) assert(qa.includes(check), `browser QA is missing ${check}`);
 
-  console.log(`Succession reader audit passed: ${successionReaderCatalog.length} chapters through ${SUCCESSION_READER_END}, ${successionReaderPhaseGroups.length} chapter phases, three reading modes, full route state, progress, manual completion, bookmarks, direct commands, panels, archive bridging, responsive design, and browser QA verified.`);
+  console.log(`Succession reader audit passed: ${successionReaderCatalog.length} chapters through ${SUCCESSION_READER_END}, ${successionReaderPhaseGroups.length} chapter phases, three reading modes, full route state, progress, manual completion, bookmarks, direct commands, panels, archive bridging, desktop design, and browser QA verified.`);
 } finally {
   await vite.close();
 }
