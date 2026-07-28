@@ -12,21 +12,64 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  legacy_contracts:
-    name: Batch 1–3 historical contract diagnostics
+  baseline_runtime:
+    name: Main runtime baseline
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
+    outputs:
+      runtime_outcome: ${{ steps.baseline_runtime.outcome }}
+    steps:
+      - name: Check out main baseline
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Capture main Succession runtime
+        id: baseline_runtime
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run audit:succession-runtime 2>&1 | tee succession-runtime-main.log
+
+      - name: Publish main runtime baseline
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-runtime-main-baseline
+          path: succession-runtime-main.log
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Summarize main runtime state
+        if: always()
+        run: echo "Main runtime outcome: ${{ steps.baseline_runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
+
+  foundation:
+    name: Batch 1–3 historical contract and visual diagnostics
+    needs: baseline_runtime
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js 22
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: '22'
           cache: npm
 
-      - name: Install locked dependencies
+      - name: Install dependencies
         run: npm ci
 
       - name: Audit visual foundation
@@ -69,17 +112,119 @@ jobs:
           # scripts/audit-succession-batch-3-closure.mjs
           npm run audit:succession-batch-3
 
-      - name: Run current runtime compatibility sweep
-        run: npm run audit:succession-runtime
+      - name: Report visual inventory
+        run: npm run report:succession-visual-inventory > succession-visual-inventory.md
 
-      - name: Record visual inventory
-        run: npm run report:succession-visual-inventory > succession-legacy-inventory.md
+      - name: Audit CSS ownership
+        run: npm run audit:css
 
-      - name: Upload manual diagnostic record
+      - name: Audit readability
+        run: npm run audit:readability
+
+      - name: Audit accessibility contracts
+        run: npm run audit:accessibility
+
+      - name: Audit Succession runtime
+        id: succession_runtime
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run audit:succession-runtime 2>&1 | tee succession-runtime.log
+
+      - name: Build presentation bundle
+        run: |
+          npm run prepare:eta-assets
+          npx vite build
+
+      - name: Install Chromium for visual QA
+        shell: bash
+        run: |
+          npx playwright install --with-deps chromium
+          echo "CHROMIUM_PATH=$(node -e "import('playwright').then(({ chromium }) => console.log(chromium.executablePath()))")" >> "$GITHUB_ENV"
+
+      - name: Inspect Story workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/story
+          VISUAL_QA_OUTPUT: .visual-qa/succession-story
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Timeline workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/timeline
+          VISUAL_QA_OUTPUT: .visual-qa/succession-timeline
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Character workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/characters
+          VISUAL_QA_OUTPUT: .visual-qa/succession-characters
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Prince command at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/princes
+          VISUAL_QA_OUTPUT: .visual-qa/succession-princes
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Queen households at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/queens
+          VISUAL_QA_OUTPUT: .visual-qa/succession-queens
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Institution command at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/organizations
+          VISUAL_QA_OUTPUT: .visual-qa/succession-organizations
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Black Whale workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/black-whale
+          VISUAL_QA_OUTPUT: .visual-qa/succession-black-whale
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Nen workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/nen
+          VISUAL_QA_OUTPUT: .visual-qa/succession-nen
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Inspect Research workspace at all viewports
+        env:
+          VISUAL_QA_ROUTE: succession/research
+          VISUAL_QA_OUTPUT: .visual-qa/succession-research
+          VISUAL_QA_SCREENSHOTS: all
+        run: npm run qa:visual
+
+      - name: Publish visual and runtime diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: succession-legacy-diagnostics-${{ github.sha }}
-          path: succession-legacy-inventory.md
-          if-no-files-found: ignore
+          name: succession-visual-redesign-legacy-diagnostics
+          path: |
+            succession-runtime.log
+            succession-visual-inventory.md
+            .visual-qa
+          include-hidden-files: true
+          if-no-files-found: warn
           retention-days: 14
+
+      - name: Record inherited runtime debt
+        if: steps.succession_runtime.outcome == 'failure' && needs.baseline_runtime.outputs.runtime_outcome == 'failure'
+        run: echo 'The branch and main runtime sweeps both fail. This manual diagnostic records inherited baseline debt.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Enforce branch-only runtime regressions
+        if: steps.succession_runtime.outcome == 'failure' && needs.baseline_runtime.outputs.runtime_outcome == 'success'
+        run: |
+          echo 'The Succession runtime passes on main but fails on this branch.'
+          exit 1
