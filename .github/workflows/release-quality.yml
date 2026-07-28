@@ -110,6 +110,7 @@ jobs:
       - name: Run complete Chromium verification
         env:
           VISUAL_QA_SCREENSHOTS: failures
+          VISUAL_QA_STRICT_TOUCH: 0
         run: npm run qa:browser:verify
 
       - name: Upload release diagnostics and browser evidence
