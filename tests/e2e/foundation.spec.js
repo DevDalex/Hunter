@@ -43,3 +43,18 @@ test('Chimera Ant phase artwork uses generated manifest media', async ({ page })
   await expect(phaseImage).toHaveJSProperty('naturalWidth', 1200);
   await expect(phaseImage).toHaveJSProperty('naturalHeight', 800);
 });
+
+test('Palace invasion records use generated card variants', async ({ page }) => {
+  await page.goto('/#/series/chimera-ant', { waitUntil: 'domcontentloaded' });
+  const pitouFigure = page.locator('.chimera-invasion-system__visuals figure').filter({ hasText: 'Neferpitou' });
+  const pitouImage = pitouFigure.locator('img');
+
+  await pitouImage.scrollIntoViewIfNeeded();
+  await expect(pitouFigure).toBeVisible();
+  await expect(pitouImage).toHaveAttribute('data-media-id', 'media:chimera-ant:neferpitou');
+  await expect(pitouImage).toHaveAttribute('data-media-variant', 'card');
+  await expect(pitouImage).toHaveAttribute('src', '/media/generated/chimera-ant/neferpitou-card.avif');
+  await expect(pitouImage).toHaveAttribute('data-image-loaded', 'true', { timeout: 15_000 });
+  await expect(pitouImage).toHaveJSProperty('naturalWidth', 720);
+  await expect(pitouImage).toHaveJSProperty('naturalHeight', 480);
+});
