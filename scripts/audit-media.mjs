@@ -20,7 +20,7 @@ await Promise.all(priorityPortraits.map((record) => access(path.join(root, 'publ
 
 assert(blackWhaleRoomMedia.length === 29, `expected 29 stabilized Black Whale images, found ${blackWhaleRoomMedia.length}`);
 assert(unique(blackWhaleRoomMedia.map((record) => record.key)), 'Black Whale media keys must be unique');
-assert(unique(blackWhaleRoomMedia.map((record) => record.src)), 'Black Whale local image paths must be unique');
+assert(unique(blackWhaleRoomMedia.map((record) => record.src)), 'local Black Whale image paths must be unique');
 assert(blackWhaleRoomMedia.every(mediaRecordIsComplete), 'every Black Whale image must satisfy the canonical local-media schema');
 await Promise.all(blackWhaleRoomMedia.map((record) => access(path.join(root, 'public', record.src.slice(1)))));
 
@@ -29,7 +29,6 @@ assert(portraitFiles.length === priorityPortraits.length, `portrait directory co
 assert(portraitFiles.every((file) => file.endsWith('.webp')), 'portrait directory may contain only normalized WebP files');
 
 const fandomImage = await readFile(path.join(root, 'src/components/FandomImage.jsx'), 'utf8');
-const safeImage = await readFile(path.join(root, 'src/components/SafeImage.jsx'), 'utf8');
 const mediaRegistry = await readFile(path.join(root, 'src/data/mediaRegistry.js'), 'utf8');
 const sourcePortrait = await readFile(path.join(root, 'src/components/SourcePortrait.jsx'), 'utf8');
 const roster = await readFile(path.join(root, 'src/components/SuccessionRoster.jsx'), 'utf8');
@@ -38,12 +37,6 @@ const changelog = await readFile(path.join(root, 'src/data/referenceEntities.js'
 
 assert(!/\bfetch\s*\(|api\.php|localStorage|sessionStorage/.test(fandomImage), 'FandomImage must not perform network discovery or browser caching');
 assert(fandomImage.includes('if (!fallbackImage || !available) return null'), 'image-less records must collapse instead of leaving a frame');
-assert(
-  safeImage.includes('width={resolvedMedia?.width || media?.width || undefined}')
-    && safeImage.includes('height={resolvedMedia?.height || media?.height || undefined}')
-    && safeImage.includes('objectPosition: resolvedMedia?.focal || media?.focal'),
-  'SafeImage must apply manifest-first dimensions and focal metadata with legacy media fallback',
-);
 assert(mediaRegistry.includes("from './mediaSchema'")
   && mediaRegistry.includes("from './sourcePolicy'")
   && mediaRegistry.includes('state: mediaStateFor(record)')
@@ -74,4 +67,4 @@ let legacyResolverExists = true;
 try { await access(path.join(root, 'src/lib/hunterpediaMedia.js')); } catch { legacyResolverExists = false; }
 assert(!legacyResolverExists, 'legacy runtime portrait resolver must remain removed');
 
-console.log(`Media audit passed under source policy ${SOURCE_POLICY_VERSION}: ${priorityPortraits.length} local portraits and ${blackWhaleRoomMedia.length} Black Whale derivatives satisfy the shared schema; SafeImage uses manifest-first metadata; source portraits use explicit-only media records.`);
+console.log(`Media audit passed under source policy ${SOURCE_POLICY_VERSION}: ${priorityPortraits.length} local portraits and ${blackWhaleRoomMedia.length} Black Whale derivatives satisfy the shared schema; source portraits use explicit-only media records. SafeImage behavior is enforced by unit and browser tests.`);
