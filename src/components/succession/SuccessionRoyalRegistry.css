@@ -1,0 +1,380 @@
+/* Royal Family: a state registry and threat board inside the ship interface. */
+
+.succession-prince-board,
+.succession-prince-dossier {
+  --royal-canvas: #131d23;
+  --royal-surface: #19252c;
+  --royal-surface-raised: #23323a;
+  --royal-paper: #eceeea;
+  --royal-paper-muted: #dfe3df;
+  --royal-ink: #eef2ef;
+  --royal-ink-muted: #aeb9bd;
+  --royal-paper-ink: #1b2a32;
+  --royal-paper-muted-ink: #5e6c72;
+  --royal-gold: var(--succession-royal-gold);
+  --royal-crimson: #96343f;
+  --royal-line: rgba(215, 224, 225, .18);
+  --royal-line-strong: rgba(215, 224, 225, .3);
+  --royal-focus: #83a9bf;
+}
+
+.succession-royal-command {
+  grid-template-columns: minmax(0, 1.25fr) minmax(330px, .75fr);
+  border-radius: 5px;
+  padding: clamp(28px, 4.5vw, 58px);
+  background:
+    linear-gradient(90deg, rgba(150, 52, 63, .16), transparent 42%),
+    linear-gradient(145deg, #162128, #0f171c);
+  box-shadow: none;
+}
+
+.succession-royal-command::before {
+  left: 28px;
+  bottom: -6px;
+  color: rgba(236, 240, 236, .025);
+  font-size: clamp(30px, 5vw, 72px);
+  letter-spacing: -.035em;
+}
+
+.succession-royal-command::after {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 5px;
+  background: var(--royal-crimson);
+  content: "";
+}
+
+.succession-royal-command__eyebrow,
+.succession-royal-label {
+  color: #c2ad79;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: .14em;
+}
+
+.succession-royal-command h2 {
+  color: #f3f5f2;
+  font-family: var(--sans);
+  font-size: clamp(38px, 5vw, 70px);
+  font-weight: 760;
+  line-height: .96;
+  letter-spacing: -.055em;
+}
+
+.succession-royal-command__copy > p {
+  color: #aeb9bd;
+  font-size: 14px;
+}
+
+.succession-royal-command__actions button {
+  border-radius: 4px;
+  background: #223039;
+  color: #edf1ef;
+}
+
+.succession-royal-command__actions button:first-child {
+  border-color: #96343f;
+  background: #96343f;
+  color: #fff;
+}
+
+.succession-royal-orbit {
+  border-radius: 4px;
+  background:
+    linear-gradient(rgba(152, 177, 190, .05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(152, 177, 190, .05) 1px, transparent 1px),
+    #111a20;
+  background-size: 22px 22px;
+  backdrop-filter: none;
+}
+
+.succession-royal-orbit__outer,
+.succession-royal-orbit__inner {
+  stroke: rgba(132, 162, 178, .42);
+}
+
+.succession-royal-orbit__axis,
+.succession-royal-orbit__node line {
+  stroke: rgba(132, 162, 178, .25);
+}
+
+.succession-royal-orbit__node circle {
+  fill: #23313a;
+  stroke: #8199a6;
+}
+
+.succession-royal-orbit__node text,
+.succession-royal-orbit__center text {
+  fill: #edf1ef;
+  font-family: var(--mono);
+}
+
+.succession-royal-orbit__center circle {
+  fill: #18242b;
+  stroke: var(--royal-gold);
+  filter: none;
+}
+
+.succession-royal-orbit__center .is-number {
+  font-family: var(--mono);
+  font-size: 34px;
+}
+
+.succession-royal-orbit__center .is-label {
+  fill: #c2ad79;
+}
+
+.succession-royal-orbit figcaption {
+  color: #9eaaae;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.succession-royal-status-strip {
+  gap: 1px;
+  border: 1px solid rgba(25, 40, 48, .28);
+  background: rgba(25, 40, 48, .24);
+}
+
+.succession-royal-status-strip div {
+  border: 0;
+  border-radius: 0;
+  background: #e7e9e5;
+  box-shadow: none;
+}
+
+.succession-royal-status-strip dt {
+  color: #65747a;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.succession-royal-status-strip dd {
+  color: #1a2931;
+  font-family: var(--mono);
+  font-size: clamp(24px, 3vw, 36px);
+}
+
+.succession-royal-filter-bar {
+  top: calc(var(--header-height) + 46px);
+  border-radius: 4px;
+  background: rgba(232, 235, 231, .96);
+  box-shadow: 0 8px 20px rgba(9, 14, 17, .08);
+}
+
+.succession-royal-filter-bar > div:first-child span {
+  color: #66747a;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.succession-royal-filter-bar > div:first-child strong {
+  color: #1c2b33;
+  font-family: var(--sans);
+  font-size: 17px;
+}
+
+.succession-prince-board__filters button {
+  border-radius: 3px;
+  background: #dce0dc;
+  color: #4f5f67;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.succession-prince-board__filters button.is-active {
+  border-color: #31586f;
+  background: #31586f;
+  color: #fff;
+}
+
+.succession-prince-board__grid {
+  gap: 8px;
+}
+
+.succession-prince-card {
+  min-height: 360px;
+  border-radius: 4px;
+  background: #172229;
+  box-shadow: none;
+  transform: none !important;
+}
+
+.succession-prince-card:hover,
+.succession-prince-card:focus-visible {
+  border-color: #83a9bf;
+  box-shadow: inset 0 0 0 1px rgba(131, 169, 191, .25);
+}
+
+.succession-prince-card__visual {
+  background: #10181d;
+}
+
+.succession-prince-card__rank {
+  border: 1px solid rgba(182, 154, 89, .66);
+  border-radius: 2px;
+  background: rgba(7, 11, 14, .88);
+  color: #d8c38e;
+  font-family: var(--mono);
+}
+
+.succession-prince-card__status {
+  border-radius: 2px;
+  background: rgba(8, 13, 16, .88);
+  font-family: var(--mono);
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.succession-prince-card__body {
+  background: #edf0ec;
+  color: #1b2a32;
+}
+
+.succession-prince-card__body > span,
+.succession-prince-card__body footer span,
+.succession-prince-card__body dt {
+  color: #617078;
+  font-family: var(--mono);
+  font-size: 8px;
+  text-transform: uppercase;
+}
+
+.succession-prince-card__body h3 {
+  color: #17272f;
+  font-family: var(--sans);
+  letter-spacing: -.035em;
+}
+
+.succession-prince-card__body p,
+.succession-prince-card__body dd {
+  color: #526169;
+}
+
+.succession-prince-card__body dl {
+  gap: 1px;
+  background: rgba(25, 40, 48, .2);
+}
+
+.succession-prince-card__body dl div {
+  border-radius: 0;
+  background: #e0e4e0;
+}
+
+.succession-prince-card__body footer {
+  border-top-color: rgba(25, 40, 48, .16);
+}
+
+.succession-prince-card__body footer b {
+  color: #294f64;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.succession-prince-dossier__toolbar button,
+.succession-prince-dossier__pager button {
+  border-radius: 4px;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.succession-prince-intelligence-hero {
+  border-radius: 4px;
+  background:
+    linear-gradient(90deg, rgba(150, 52, 63, .14), transparent 48%),
+    #131d23;
+  box-shadow: none;
+}
+
+.succession-prince-intelligence-hero__copy > span {
+  color: #c2ad79;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.succession-prince-intelligence-hero__copy h2 {
+  color: #fff;
+  font-family: var(--sans);
+  font-weight: 760;
+}
+
+.succession-prince-intelligence-hero__copy p {
+  color: #b3bec1;
+}
+
+.succession-prince-intelligence-hero__facts span,
+.succession-prince-intelligence-hero__facts a {
+  border-radius: 3px;
+  background: #202d35;
+  color: #c7d0d0;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.succession-prince-risk-board {
+  gap: 1px;
+  border: 1px solid rgba(25, 40, 48, .28);
+  background: rgba(25, 40, 48, .24);
+}
+
+.succession-prince-risk-board article {
+  border-radius: 0;
+  background: #e8eae6;
+  box-shadow: none;
+}
+
+.succession-prince-risk-board span,
+.succession-prince-dossier__core span,
+.succession-prince-dossier__network header span,
+.succession-prince-evidence header span {
+  color: #5d717d;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.succession-prince-dossier__core,
+.succession-prince-dossier__network {
+  gap: 8px;
+}
+
+.succession-prince-dossier__core > section,
+.succession-prince-dossier__network > section,
+.succession-prince-evidence {
+  border-radius: 4px;
+  background: #eceeea;
+  box-shadow: none;
+}
+
+@media (max-width: 960px) {
+  .succession-royal-command {
+    grid-template-columns: 1fr;
+  }
+
+  .succession-royal-orbit {
+    max-width: 520px;
+    margin-inline: auto;
+  }
+
+  .succession-royal-status-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 680px) {
+  .succession-royal-status-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .succession-prince-card {
+    grid-template-columns: 118px minmax(0, 1fr);
+    min-height: 320px;
+  }
+}
