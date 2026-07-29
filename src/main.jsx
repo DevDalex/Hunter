@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './data/normalizeNenSpectrumFocusOrder';
 import App from './App';
 import SiteErrorBoundary from './components/SiteErrorBoundary';
 import { installAccessibilityRuntime } from './lib/accessibilityRuntime';
