@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { ExternalLink, Grid2X2, List, Search } from 'lucide-react';
 import PageIntro from './PageIntro';
 import WorkspaceNav from './WorkspaceNav';
@@ -51,6 +51,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   const [density, setDensity] = useState('comfortable');
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [studied, setStudied] = useState(readProgress);
+  const readerNavigationTimerRef = useRef(null);
   const currentArc = activeArc === 'all' ? null : preSuccessionArcs.find((arc) => arc.id === activeArc);
 
   const visibleChapters = useMemo(() => {
@@ -72,6 +73,12 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   useEffect(() => {
     if (routeParams.arc && preSuccessionArcs.some((arc) => arc.id === routeParams.arc)) setActiveArc(routeParams.arc);
   }, [routeParams.arc]);
+
+  useEffect(() => {
+    if (!successionChaptersPage) return undefined;
+    void onPrefetch?.('succession', 'chapters');
+    return () => window.clearTimeout(readerNavigationTimerRef.current);
+  }, [onPrefetch, successionChaptersPage]);
 
   const updateChapterRoute = (chapter) => {
     setSelectedChapter(chapter);
@@ -97,11 +104,15 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   };
 
   const navigateSuccessionReader = (readerRoute) => {
-    onNavigate('series', 'succession-contest', { section: 'chapters', ...readerRoute });
+    window.clearTimeout(readerNavigationTimerRef.current);
+    readerNavigationTimerRef.current = window.setTimeout(() => {
+      onNavigate('series', 'succession-contest', { section: 'chapters', ...readerRoute });
+    }, 0);
   };
 
   const openSuccessionChapterRecord = (chapter) => {
-    window.setTimeout(() => onNavigate('succession', 'chapters', { entity: `chapter:${chapter}` }), 0);
+    window.clearTimeout(readerNavigationTimerRef.current);
+    onNavigate('succession', 'chapters', { entity: `chapter:${chapter}` });
   };
 
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
