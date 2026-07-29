@@ -19,6 +19,8 @@ const [
   chapters,
   arcs,
   successionResearch,
+  maintainedResearch,
+  chapterCurrency,
   seriesResearch,
   coverageService,
   coverageUi,
@@ -39,6 +41,8 @@ const [
   read('src/data/chapters.js'),
   read('src/data/arcs.js'),
   read('src/data/succession/successionResearch.js'),
+  read('src/data/successionDossier.js'),
+  read('src/data/succession414415Research.js'),
   read('src/data/seriesResearch.js'),
   read('src/data/succession/coverageCurrency.js'),
   read('src/components/succession/SuccessionCoverageCurrency.jsx'),
@@ -56,9 +60,10 @@ assert(royalCss.includes('.royal-map__controls') && royalCss.includes('touch-act
 assert(inspectorCss.includes("@import './RoyalFamilyInspectorFrame.css'") && inspectorFrameCss.includes('position: fixed !important') && inspectorFrameCss.includes('resize: both'), 'dossier must remain floating, draggable, and resizable in its imported frame layer');
 assert(coverageCss.includes('.royal-map__coverage-companion') && coverageCss.includes('.royal-map__coverage-companion__completeness'), 'Royal coverage panel must be styled and responsive');
 
-assert(metadata.includes('414:') && metadata.includes("title: 'Friends'") && metadata.includes('415:') && metadata.includes("japaneseTitle: '真偽'") && metadata.includes('LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER = 413'), 'latest chapter metadata must separate publication through 415 from detailed research through 413');
+assert(metadata.includes('414:') && metadata.includes("japaneseTitle: '仲間'") && metadata.includes('415:') && metadata.includes("japaneseTitle: '真偽'") && metadata.includes('LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER = 415'), 'latest chapter metadata must expose detailed research through Chapter 415');
 assert(chapters.includes('LATEST_PUBLISHED_CHAPTER') && chapters.includes('Catalogue record') && arcs.includes('LATEST_PUBLISHED_CHAPTER'), 'full-series catalogue and arc endpoint must derive from release metadata');
-assert(successionResearch.includes('sceneSummary: false') && successionResearch.includes('pendingImportedResearch'), 'new releases must remain honest pending research shells');
+assert(successionResearch.includes('pendingImportedResearch') && successionResearch.includes('maintainedDetailedMaximum'), 'research loader must preserve honest generated boundaries');
+assert(maintainedResearch.includes('succession414415ChapterResearch') && chapterCurrency.includes('actual-Woble') && chapterCurrency.includes('fullmetal-alchemist-combo-master') && chapterCurrency.includes('succession414415CrossChecks'), 'Chapters 414–415 must include maintained chapter, royal, Nen, and independent-source records');
 assert(seriesResearch.includes('indexedChapters: LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER') && seriesResearch.includes('publishedChapters: LATEST_PUBLISHED_CHAPTER') && seriesResearch.includes('pending annotation'), 'full-series research totals must separate structured research from published catalogue coverage');
 
 for (const token of ['getEntityCoverage', 'getArchiveCoverageReport', 'getProtectionCoverage', 'getRosterCoverage', 'recentChanges', 'openQuestions']) {
@@ -71,4 +76,4 @@ assert(archiveApp.includes('<CoverageBoundaryProvider') && archiveApp.includes('
 assert(primitives.includes('useCoverageBoundary(readingBoundary)') && primitives.includes('<RecordCurrencyStrip') && primitives.includes('<RecordCoverageSections'), 'generic entity dossiers must expose chapter-safe currency and gaps');
 assert(visualQa.includes('pendingImages') && visualQa.includes('mediaTextOverlaps'), 'visual QA must still reject unsettled images and text collisions');
 
-console.log('Polish audit passed: deterministic media, pannable Royal map, draggable tabbed dossier, modular Royal coverage wrapper, complete protection and roster accounting, Chapter 415 publication metadata, Chapter 413 detailed boundary, generated coverage census, Recent Changes, Open Questions, and chapter-safe dossier wiring.');
+console.log('Polish audit passed: deterministic media, pannable Royal map, draggable tabbed dossier, complete protection and roster accounting, Chapter 415 publication and detailed-research boundaries, maintained 414–415 timeline, royal, Nen, assignment, and independent-source records, generated coverage census, Recent Changes, Open Questions, and chapter-safe dossier wiring.');
