@@ -74,9 +74,21 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   }, [routeParams.arc]);
 
   useEffect(() => {
-    if (!successionChaptersPage) return;
+    if (!successionChaptersPage) return undefined;
     void onPrefetch?.('succession', 'chapters');
-  }, [onPrefetch, successionChaptersPage]);
+    const handleChapterRecordClick = (event) => {
+      const button = event.target.closest?.('.succession-reader__chapter-info-actions .is-primary');
+      if (!button) return;
+      const activeChapter = Number(document.querySelector('.succession-reader')?.dataset.readerChapter || routeParams.chapter);
+      if (!activeChapter) return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      onNavigate('succession', 'chapters', { entity: `chapter:${activeChapter}` });
+    };
+    document.addEventListener('click', handleChapterRecordClick, true);
+    return () => document.removeEventListener('click', handleChapterRecordClick, true);
+  }, [onNavigate, onPrefetch, routeParams.chapter, successionChaptersPage]);
 
   const updateChapterRoute = (chapter) => {
     setSelectedChapter(chapter);
@@ -109,21 +121,11 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     onNavigate('succession', 'chapters', { entity: `chapter:${chapter}` });
   };
 
-  const interceptChapterRecordClick = (event) => {
-    const button = event.target.closest?.('.succession-reader__chapter-info-actions .is-primary');
-    if (!button) return;
-    const activeChapter = Number(event.currentTarget.querySelector('.succession-reader')?.dataset.readerChapter || routeParams.chapter);
-    if (!activeChapter) return;
-    event.preventDefault();
-    event.stopPropagation();
-    openSuccessionChapterRecord(activeChapter);
-  };
-
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
   if (routeTarget === 'volume-0') return <Suspense fallback={<StoryLoading label="Kurapika’s Memories" />}><VolumeZeroPage onNavigate={onNavigate} /></Suspense>;
   if (routeTarget === 'hunter-exam') return <Suspense fallback={<StoryLoading label="287th Hunter Examination" />}><HunterExamPage onNavigate={onNavigate} /></Suspense>;
   if (routeTarget === 'greed-island') return <Suspense fallback={<StoryLoading label="Greed Island" />}><GreedIslandPage onNavigate={onNavigate} routeParams={routeParams} /></Suspense>;
-  if (successionChaptersPage) return <section className="story-utility-shell story-utility-shell--succession-reader" onClickCapture={interceptChapterRecordClick}>
+  if (successionChaptersPage) return <section className="story-utility-shell story-utility-shell--succession-reader">
     <h1 className="sr-only">Succession Contest chapter reader</h1>
     <Suspense fallback={<StoryLoading label="Succession chapter reader" />}>
       <SuccessionChapterReader
