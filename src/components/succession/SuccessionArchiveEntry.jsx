@@ -15,6 +15,7 @@ import './SuccessionReaderCommand.css';
 import './SuccessionAccessibilityClosure.css';
 import './SuccessionBrowserQaClosure.css';
 import './SuccessionBrowserQaClosureFinal.css';
+import './SuccessionFinalReleasePatch.css';
 import SuccessionArchiveApp from './SuccessionArchiveApp';
 import SuccessionArchiveReaderRoute from './SuccessionArchiveReaderRoute';
 
