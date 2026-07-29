@@ -9,6 +9,7 @@ import './SuccessionRoyalRegistry.css';
 import './SuccessionVesselAtlas.css';
 import './SuccessionNenContainment.css';
 import './SuccessionIntelligenceOperations.css';
+import './SuccessionTimelineCommand.css';
 import './SuccessionReaderCommand.css';
 import SuccessionArchiveApp from './SuccessionArchiveApp';
 import SuccessionArchiveReaderRoute from './SuccessionArchiveReaderRoute';
