@@ -101,7 +101,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   };
 
   const openSuccessionChapterRecord = (chapter) => {
-    onNavigate('succession', 'chapters', { entity: `chapter:${chapter}` });
+    queueMicrotask(() => onNavigate('succession', 'chapters', { entity: `chapter:${chapter}` }));
   };
 
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
