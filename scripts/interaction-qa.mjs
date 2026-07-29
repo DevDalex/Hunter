@@ -73,7 +73,6 @@ const pageHealth = async (page, selector = 'main') => page.evaluate((rootSelecto
   return { brokenImages, unavailable, bodyOverflow, rootRect: rootRect ? { left: rootRect.left, right: rootRect.right, width: rootRect.width } : null };
 }, selector);
 
-const expectedApplications = { Ten: 4, Zetsu: 2, Ren: 4, Hatsu: 1 };
 const results = [];
 const failures = [];
 
@@ -114,59 +113,60 @@ const run = async (name, viewport, route, test) => {
 };
 
 try {
-  await run('Nen principle states remain contained', { width: 1440, height: 1000 }, 'reference/nen', async (page) => {
-    await page.waitForSelector('.nen-principle-workbench');
-    for (const [principle, expected] of Object.entries(expectedApplications)) {
-      const node = page.locator('.nen-principle-node').filter({ hasText: principle }).first();
-      await node.click();
-      await page.waitForTimeout(80);
-      if (await node.getAttribute('aria-pressed') !== 'true') throw new Error(`${principle} did not become active`);
-      const state = await page.evaluate(({ expectedCount }) => {
-        const map = document.querySelector('.nen-principle-map');
-        const mapRect = map.getBoundingClientRect();
-        const visible = (element) => {
-          const style = getComputedStyle(element);
-          const rect = element.getBoundingClientRect();
-          return style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) !== 0 && rect.width > 0 && rect.height > 0;
-        };
-        const related = [...document.querySelectorAll('.nen-advanced-node.is-related')].filter(visible);
-        const malformed = related.map((element) => {
-          const rect = element.getBoundingClientRect();
-          return { width: Math.round(rect.width), height: Math.round(rect.height), outside: rect.left < mapRect.left - 2 || rect.right > mapRect.right + 2 || rect.top < mapRect.top - 2 || rect.bottom > mapRect.bottom + 2 };
-        }).filter((item) => item.width > 180 || item.height > 100 || item.width < 35 || item.height < 24 || item.outside);
-        const inspectorImages = [...document.querySelectorAll('.nen-principle-inspector img')].filter(visible).map((image) => ({ complete: image.complete, naturalWidth: image.naturalWidth }));
-        const placeholders = [...document.querySelectorAll('.nen-principle-inspector .safe-image-placeholder')].filter(visible).length;
-        return { expectedCount, relatedCount: related.length, malformed, inspectorImages, placeholders };
-      }, { expectedCount: expected });
-      if (state.relatedCount !== expected) throw new Error(`${principle} shows ${state.relatedCount} related techniques; expected ${expected}`);
-      if (state.malformed.length) throw new Error(`${principle} has malformed advanced cards`);
-      if (state.placeholders) throw new Error(`${principle} displays unavailable-image placeholders`);
-      if (state.inspectorImages.length < 2 || state.inspectorImages.some((image) => !image.complete || image.naturalWidth === 0)) throw new Error(`${principle} inspector images did not render`);
+  await run('Nen hex category focus reveals users and abilities', { width: 1440, height: 1000 }, 'reference/nen', async (page) => {
+    await page.waitForSelector('.nen-expansion-map[data-qa-pan-zoom-canvas="true"]');
+    const enhancement = page.locator('.nen-pipe-node.is-category').filter({ hasText: 'Enhancement' }).first();
+    const clipPath = await enhancement.evaluate((element) => getComputedStyle(element).clipPath);
+    if (!clipPath.includes('polygon')) throw new Error(`Enhancement category is not hexagonal: ${clipPath}`);
+    if (await page.locator('.nen-pipe-node.is-expanded-user').count()) throw new Error('secondary users are visible before category focus');
+    if (await page.locator('.nen-pipe-node.is-named-ability').count()) throw new Error('named abilities are visible before category focus');
+
+    await enhancement.click();
+    await page.waitForSelector('.nen-pipe-node.is-expanded-user');
+    await page.waitForSelector('.nen-pipe-node.is-named-ability');
+    if (await enhancement.getAttribute('aria-expanded') !== 'true') throw new Error('Enhancement did not enter expanded state');
+    const expandedUsers = await page.locator('.nen-pipe-node.is-expanded-user').count();
+    const expandedAbilities = await page.locator('.nen-pipe-node.is-named-ability').count();
+    if (expandedUsers < 3) throw new Error(`Enhancement exposed only ${expandedUsers} secondary users`);
+    if (expandedAbilities < 2) throw new Error(`Enhancement exposed only ${expandedAbilities} named abilities`);
+
+    const jajanken = page.locator('.nen-pipe-node.is-named-ability').filter({ hasText: 'Jajanken' }).first();
+    await jajanken.click();
+    await page.waitForFunction(() => document.querySelector('.nen-pipe-inspector h2')?.textContent?.includes('Jajanken'));
+    const inspectorText = await page.locator('.nen-pipe-inspector').innerText();
+    for (const label of ['Natural category', 'Supporting categories', 'Activation', 'Cost / restriction']) {
+      if (!inspectorText.includes(label)) throw new Error(`Jajanken inspector is missing ${label}`);
     }
-    const health = await pageHealth(page, '.nen-principle-workbench');
-    if (health.bodyOverflow > 1) throw new Error(`page overflowed horizontally by ${health.bodyOverflow}px`);
-    if (health.brokenImages.length) throw new Error(`broken images: ${JSON.stringify(health.brokenImages)}`);
+
+    await enhancement.click();
+    await page.waitForTimeout(80);
+    if (await enhancement.getAttribute('aria-expanded') !== 'false') throw new Error('Enhancement did not collapse');
+    if (await page.locator('.nen-pipe-node.is-expanded-user').count()) throw new Error('secondary users remained after collapse');
+    if (await page.locator('.nen-pipe-node.is-named-ability').count()) throw new Error('named abilities remained after collapse');
   });
 
-  await run('Nen advanced gallery renders every visual', { width: 1440, height: 1000 }, 'reference/nen', async (page) => {
-    await page.getByRole('button', { name: /Advanced techniques/i }).click();
-    await page.waitForSelector('.nen-technique-gallery article');
-    const images = page.locator('.nen-technique-gallery article img');
-    for (let index = 0; index < await images.count(); index += 1) await images.nth(index).scrollIntoViewIfNeeded();
-    await page.waitForFunction(() => {
-      const galleryImages = [...document.querySelectorAll('.nen-technique-gallery article img')];
-      return galleryImages.length === 7 && galleryImages.every((image) => image.complete && image.naturalWidth > 0);
-    }, null, { timeout: 15_000 });
-    const health = await pageHealth(page, '.nen-technique-gallery');
-    if (health.unavailable.length) throw new Error('advanced gallery displays unavailable-image placeholders');
+  await run('Nen spectrum markers preserve midpoint and leaning placements', { width: 1440, height: 1000 }, 'reference/nen', async (page) => {
+    await page.waitForSelector('.nen-placement-marker');
+    const markerCount = await page.locator('.nen-placement-marker').count();
+    if (markerCount < 15) throw new Error(`only ${markerCount} spectrum placement markers rendered`);
+    const franklin = page.getByRole('button', { name: /Franklin Bordeau.*placed between Emission and Enhancement/i });
+    await franklin.click();
+    await page.waitForFunction(() => document.querySelector('.nen-pipe-inspector h2')?.textContent?.includes('Franklin Bordeau'));
+    const inspector = await page.locator('.nen-pipe-inspector').innerText();
+    if (!inspector.includes('Emission') || !inspector.includes('Enhancement')) throw new Error('Franklin placement did not identify both spectrum endpoints');
   });
 
-  await run('Nen mobile state has no horizontal spill', { width: 390, height: 844 }, 'reference/nen', async (page) => {
-    await page.waitForSelector('.nen-principle-workbench');
-    const health = await pageHealth(page, '.nen-principle-workbench');
+  await run('Nen pan and zoom canvas stays contained on mobile', { width: 390, height: 844 }, 'reference/nen', async (page) => {
+    await page.waitForSelector('.nen-expansion-map[data-qa-pan-zoom-canvas="true"] [data-qa-scaled-canvas="true"]');
+    const controls = page.locator('.nen-pipe-controls button');
+    if (await controls.count() !== 4) throw new Error('map controls are incomplete');
+    for (let index = 0; index < await controls.count(); index += 1) {
+      const box = await controls.nth(index).boundingBox();
+      if (!box || box.width < 43.5 || box.height < 43.5) throw new Error(`fixed map control ${index + 1} is undersized`);
+    }
+    const health = await pageHealth(page, '.nen-expansion-map');
     if (health.bodyOverflow > 1) throw new Error(`mobile page overflowed horizontally by ${health.bodyOverflow}px`);
     if (health.brokenImages.length) throw new Error(`mobile broken images: ${JSON.stringify(health.brokenImages)}`);
-    if (health.unavailable.length) throw new Error(`mobile unavailable visuals: ${health.unavailable.join(', ')}`);
   });
 
   await run('Dedicated relationship workspace filters and links remain readable', { width: 1440, height: 1000 }, 'succession/relationships', async (page) => {
