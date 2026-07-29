@@ -1,0 +1,191 @@
+.nen-expansion-map .nen-pipe-node.is-category {
+  isolation: isolate;
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+}
+
+.nen-expansion-map .nen-pipe-node.is-category::before,
+.nen-expansion-map .nen-pipe-node.is-category::after {
+  position: absolute;
+  content: "";
+  clip-path: inherit;
+  pointer-events: none;
+}
+
+.nen-expansion-map .nen-pipe-node.is-category::before {
+  inset: 0;
+  z-index: -2;
+  background: var(--line);
+  filter: drop-shadow(5px 6px 0 rgba(23,23,23,.08));
+}
+
+.nen-expansion-map .nen-pipe-node.is-category::after {
+  inset: 2px;
+  z-index: -1;
+  background: #fffefa;
+}
+
+.nen-expansion-map .nen-pipe-node.is-category:hover::before,
+.nen-expansion-map .nen-pipe-node.is-category:focus-visible::before,
+.nen-expansion-map .nen-pipe-node.is-category.is-active::before,
+.nen-expansion-map .nen-pipe-node.is-category.is-pinned::before,
+.nen-expansion-map .nen-pipe-node.is-category.is-expanded::before {
+  background: var(--red);
+}
+
+.nen-expansion-map .nen-pipe-node.is-category:hover,
+.nen-expansion-map .nen-pipe-node.is-category:focus-visible,
+.nen-expansion-map .nen-pipe-node.is-category.is-active {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.nen-expansion-map .nen-pipe-node.is-category.is-expanded::after {
+  background: #fff;
+}
+
+.nen-expansion-map .nen-pipe-node.is-category .nen-pipe-node__copy {
+  position: relative;
+  z-index: 2;
+  max-width: 142px;
+}
+
+.nen-expansion-map .nen-placement-marker {
+  position: absolute;
+  z-index: 9;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: 2px solid #fffefa;
+  border-radius: 50%;
+  background: #31302e;
+  box-shadow: 0 0 0 1px rgba(23,23,23,.7);
+  cursor: pointer;
+  transition: transform .15s, background .15s, box-shadow .15s;
+}
+
+.nen-expansion-map .nen-placement-marker:hover,
+.nen-expansion-map .nen-placement-marker:focus-visible,
+.nen-expansion-map .nen-placement-marker.is-active {
+  z-index: 18;
+  outline: none;
+  background: var(--red);
+  box-shadow: 0 0 0 3px rgba(158,48,36,.25), 0 0 0 1px var(--red);
+  transform: scale(1.45);
+}
+
+.nen-expansion-map .nen-expansion-anchor {
+  fill: #fffefa;
+  stroke: var(--red);
+  stroke-width: 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.nen-expansion-map .nen-pipe-connectors .is-placement {
+  stroke: rgba(52,50,47,.55);
+  stroke-width: 2;
+}
+
+.nen-expansion-map .nen-pipe-connectors .is-named-ability {
+  stroke: rgba(43,42,39,.72);
+  stroke-width: 3;
+}
+
+.nen-expansion-map .nen-pipe-connectors .is-support {
+  stroke: rgba(158,48,36,.65);
+  stroke-width: 2;
+  stroke-dasharray: 7 6;
+}
+
+.nen-expansion-map .nen-pipe-node.is-expanded-user {
+  display: grid;
+  grid-template-columns: 44px minmax(0,1fr);
+  padding: 4px;
+  border-color: rgba(23,23,23,.52);
+  background: #fffefa;
+  animation: nen-focus-reveal .18s ease-out both;
+}
+
+.nen-expansion-map .nen-pipe-node.is-expanded-user .source-portrait {
+  width: 44px;
+  height: 54px;
+  overflow: hidden;
+  border: 1px solid rgba(23,23,23,.55);
+  background: #e7e2d8;
+  filter: grayscale(1);
+}
+
+.nen-expansion-map .nen-pipe-node.is-expanded-user .source-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center top;
+}
+
+.nen-expansion-map .nen-pipe-node.is-expanded-user strong {
+  font-size: 13px;
+  white-space: normal;
+}
+
+.nen-expansion-map .nen-pipe-node.is-expanded-user em {
+  font-size: 11px;
+}
+
+.nen-expansion-map .nen-pipe-node.is-named-ability {
+  justify-content: flex-start;
+  padding: 10px 12px;
+  border-width: 2px;
+  border-left: 5px solid var(--red);
+  background: #fffefa;
+  animation: nen-focus-reveal .22s ease-out both;
+}
+
+.nen-expansion-map .nen-pipe-node.is-named-ability strong {
+  font-size: 16px;
+  line-height: 1.05;
+}
+
+.nen-expansion-map .nen-pipe-node.is-named-ability em {
+  color: var(--red);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.nen-expansion-map.has-expanded-category .nen-pipe-node.is-category:not(.is-expanded):not(.is-active),
+.nen-expansion-map.has-expanded-category .nen-pipe-node.is-user:not(.is-active) {
+  opacity: .72;
+}
+
+.nen-expansion-map .nen-category-focus-note {
+  padding-top: 8px;
+  border-top: 1px solid var(--line-soft);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.nen-expansion-map .nen-pipe-inspector {
+  max-height: 310px;
+}
+
+.nen-expansion-map .nen-pipe-inspector section > p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+@keyframes nen-focus-reveal {
+  from { opacity: 0; transform: translateY(5px) scale(.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nen-expansion-map .nen-pipe-node.is-expanded-user,
+  .nen-expansion-map .nen-pipe-node.is-named-ability {
+    animation: none;
+  }
+}
