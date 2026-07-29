@@ -104,8 +104,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     onNavigate('series', 'succession-contest', { section: 'chapters', ...readerRoute });
   };
 
-  const openSuccessionChapterRecord = async (chapter) => {
-    await onPrefetch?.('succession', 'chapters');
+  const openSuccessionChapterRecord = (chapter) => {
     onNavigate('succession', 'chapters', {
       entity: `chapter:${chapter}`,
       chapter,
