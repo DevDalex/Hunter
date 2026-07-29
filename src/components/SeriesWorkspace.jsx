@@ -101,7 +101,8 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   };
 
   const openSuccessionChapterRecord = (chapter) => {
-    queueMicrotask(() => onNavigate('succession', 'chapters', { entity: `chapter:${chapter}` }));
+    const entity = encodeURIComponent(`chapter:${chapter}`);
+    window.location.assign(`/story/succession-contest/chapter-records?entity=${entity}`);
   };
 
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
