@@ -47,7 +47,8 @@ assert(shell.includes('<Ship size={14}'), 'status strip no longer identifies the
 assert(shell.includes('Succession Intelligence'), 'archive command identity is missing');
 
 assert(readerRoute.includes('<SuccessionChapterReader'), 'integrated reader no longer mounts SuccessionChapterReader');
-assert(readerRoute.includes("onOpenChapterRecord={(chapter) => onNavigate('chapters', { chapter })}"), 'reader-to-chapter-record bridge is missing');
+assert(readerRoute.includes('entity: `chapter:${chapter}`'), 'reader-to-chapter-record bridge does not preserve the canonical chapter entity ID');
+assert(readerRoute.includes('chapter,'), 'reader-to-chapter-record bridge does not preserve the chapter number');
 assert(readerRoute.includes("onExitArchive={() => onNavigate('archive')}"), 'reader cannot return to the archive');
 
 const combined = styles.join('\n');
@@ -84,4 +85,4 @@ for (const [index, source] of styles.entries()) {
   assert(opening === closing, `${cssFiles[index]} has unbalanced CSS blocks (${opening} opening, ${closing} closing)`);
 }
 
-console.log(`Succession Black Whale redesign audit passed: ${cssFiles.length} themed layers, integrated Reader route, operational shell, route coverage, and accessibility closure verified.`);
+console.log(`Succession Black Whale redesign audit passed: ${cssFiles.length} themed layers, integrated Reader route, operational shell, route coverage, accessibility closure, and canonical chapter bridge verified.`);
