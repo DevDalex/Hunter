@@ -240,7 +240,14 @@ export default function NenSystemReferenceMap({ records = [], portraitItemFor })
         if (edge.type !== 'user' && edge.type !== 'spoke') walkUpstream(edge.from, visited);
       });
     };
-    walkUpstream(active.key);
+    if (active.kind === 'center' || active.kind === 'core') {
+      (incoming.get(active.key) || []).forEach((edge) => {
+        edgeIds.add(edge.id);
+        nodeKeys.add(edge.from);
+      });
+    } else {
+      walkUpstream(active.key);
+    }
 
     (outgoing.get(active.key) || []).forEach((edge) => {
       edgeIds.add(edge.id);
@@ -392,7 +399,8 @@ export default function NenSystemReferenceMap({ records = [], portraitItemFor })
   const inspectorX = 2050;
   const inspectorY = 34;
   const inspectorAnchor = { x: inspectorX, y: inspectorY + 122 };
-  const inspectorPath = activeNode ? edgePath({ points: [[Math.max(center(activeNode).x + 70, 1900), center(activeNode).y], [1900, inspectorAnchor.y]] }, activeNode, { x: inspectorAnchor.x, y: inspectorAnchor.y, w: 0, h: 0 }) : null;
+  const inspectorSource = activeNode || enrichedByKey.get('nen');
+  const inspectorPath = inspectorSource ? edgePath({ points: [[Math.max(center(inspectorSource).x + 70, 1900), center(inspectorSource).y], [1900, inspectorAnchor.y]] }, inspectorSource, { x: inspectorAnchor.x, y: inspectorAnchor.y, w: 0, h: 0 }) : null;
 
   return <section className={`nen-pipe-map${active ? ' has-active' : ''}`} aria-label="Interactive Nen system pipeline map" onKeyDown={(event) => {
     if (event.key === 'Escape') {
@@ -426,8 +434,8 @@ export default function NenSystemReferenceMap({ records = [], portraitItemFor })
             if (!from || !to) return null;
             return <path key={edge.id} className={`is-graph-edge is-${edge.type}${activeGraph.edgeIds.has(edge.id) ? ' is-active' : ''}`} d={edgePath(edge, from, to)} />;
           })}
-          {inspectorPath && <path className="is-inspector-link is-active" d={inspectorPath} />}
-          {active && <circle className="is-inspector-junction" cx={inspectorAnchor.x} cy={inspectorAnchor.y} r="7" />}
+          {inspectorPath && <path className={`is-inspector-link${active ? ' is-active' : ''}`} d={inspectorPath} />}
+          <circle className={`is-inspector-junction${active ? ' is-active' : ''}`} cx={inspectorAnchor.x} cy={inspectorAnchor.y} r="7" />
         </svg>
         {enriched.map((node) => <MapNode key={node.key} node={node} record={node.record} active={activeGraph.nodeKeys.has(node.key)} pinned={pinned?.key === node.key} onPreview={preview} onClear={clearPreview} onPin={pin} portraitItemFor={portraitItemFor} />)}
         <aside className={`nen-pipe-inspector${pinned?.key === inspected?.key ? ' is-pinned' : ''}`} style={{ left: inspectorX, top: inspectorY }} onMouseEnter={() => window.clearTimeout(clearTimerRef.current)} onMouseLeave={clearPreview} aria-live="polite">
