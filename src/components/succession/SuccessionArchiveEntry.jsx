@@ -8,5 +8,6 @@ import './SuccessionOperationalWorkspaces.css';
 import './SuccessionRoyalRegistry.css';
 import './SuccessionVesselAtlas.css';
 import './SuccessionNenContainment.css';
+import './SuccessionIntelligenceOperations.css';
 
 export { default } from './SuccessionArchiveApp';
