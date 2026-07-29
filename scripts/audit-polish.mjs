@@ -66,7 +66,14 @@ assert(metadata.includes('414:') && metadata.includes("japaneseTitle: '仲間'")
 assert(chapters.includes('LATEST_PUBLISHED_CHAPTER') && chapters.includes('Catalogue record') && arcs.includes('LATEST_PUBLISHED_CHAPTER'), 'full-series catalogue and arc endpoint must derive from release metadata');
 assert(successionResearch.includes('pendingImportedResearch') && successionResearch.includes('maintainedDetailedMaximum'), 'research loader must preserve honest generated boundaries');
 assert(maintainedResearch.includes('succession414415ChapterResearch') && chapterCurrency.includes('actual-Woble') && chapterCurrency.includes('fullmetal-alchemist-combo-master') && chapterCurrency.includes('succession414415CrossChecks'), 'Chapters 414–415 must include maintained chapter, royal, Nen, and source-linked records');
-assert(sourcePolicy.includes('succession414415SourcePolicy') && sourcePolicy.includes('Succession Contest Encyclopedia V2') && sourcePolicy.includes('https://www.hunterxnen.com/') && !sourcePolicy.includes('comic-watch.com') && !sourcePolicy.includes('skypenguin.net'), 'active Chapter 414–415 source policy must retain approved community context and exclude retired source URLs');
+assert(
+  sourcePolicy.includes('succession414415SourcePolicy')
+    && sourcePolicy.includes('Succession Contest Encyclopedia V2')
+    && sourcePolicy.includes('https://www.hunterxnen.com/')
+    && sourcePolicy.includes('forbiddenActiveSourceFragments')
+    && sourcePolicy.includes('Disallowed Chapter 414–415 source remained active'),
+  'active Chapter 414–415 source policy must retain approved community context and enforce the retired-source blocklist',
+);
 assert(seriesResearch.includes('indexedChapters: LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER') && seriesResearch.includes('publishedChapters: LATEST_PUBLISHED_CHAPTER') && seriesResearch.includes('pending annotation'), 'full-series research totals must separate structured research from published catalogue coverage');
 
 for (const token of ['getEntityCoverage', 'getArchiveCoverageReport', 'getProtectionCoverage', 'getRosterCoverage', 'recentChanges', 'openQuestions']) {
