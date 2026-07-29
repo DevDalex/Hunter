@@ -51,13 +51,15 @@ try {
   for (const mode of ['page', 'spread', 'scroll']) assert(reader.includes(`value="${mode}"`) || reader.includes(`'${mode}'`), `missing ${mode} reading mode`);
   for (const feature of ['succession-reader__topbar', 'succession-reader__bottombar', 'succession-reader__canvas', 'succession-reader__chapter-groups', 'succession-reader__thumbnails', 'succession-reader__settings', 'succession-reader__bookmark-list', 'succession-reader__command-list', 'succession-reader__shortcuts']) assert(reader.includes(feature), `missing reader feature ${feature}`);
   for (const state of ['requestedChapter', 'requestedPage', 'requestedMode', 'requestedFit', 'requestedDirection', 'requestedPanel']) assert(reader.includes(state) && series.includes(state), `route state ${state} is not wired end to end`);
-  assert(reader.includes('onOpenChapterRecord') && series.includes('entity: `chapter:${chapter}`'), 'reader must bridge into canonical Chapter Records');
+  const canonicalRecordBridge = series.includes('entity: `chapter:${chapter}`')
+    || (series.includes('/story/succession-contest/chapter-records') && series.includes('encodeURIComponent(`chapter:${chapter}`)'));
+  assert(reader.includes('onOpenChapterRecord') && canonicalRecordBridge, 'reader must bridge into canonical Chapter Records');
   assert(reader.includes('requestFullscreen') && reader.includes('IntersectionObserver') && reader.includes('navigator.clipboard'), 'fullscreen, scroll tracking, and share-link behavior are required');
   assert(reader.includes('toggleReaderBookmark') && reader.includes('chapterProgressFor'), 'bookmarks and chapter progress must use the versioned reader state');
   assert(!reader.includes('public/media/succession-contest/chapters'), 'public reader must not expose internal media paths');
   assert(!reader.includes('succession-reader__heading') && !reader.includes('succession-reader__directory'), 'legacy dashboard reader architecture must be removed');
 
-  assert(storage.includes("hxh-succession-reader-state-v2") && storage.includes('chapters: {}') && storage.includes('bookmarks: []'), 'reader storage must be versioned and include progress plus bookmarks');
+  assert(storage.includes('hxh-succession-reader-state-v2') && storage.includes('chapters: {}') && storage.includes('bookmarks: []'), 'reader storage must be versioned and include progress plus bookmarks');
   assert(storage.includes("if (value === 'continuous') return 'scroll'") && storage.includes("if (value === 'single') return 'page'"), 'legacy reader mode URLs must remain compatible');
   assert(storage.includes('setChapterCompleted') && storage.includes('clearReaderBookmarks'), 'manual completion and bookmark-only reset helpers are required');
   assert(panel.includes('aria-modal="true"') && panel.includes("event.key === 'Escape'") && panel.includes('focusableSelector'), 'reader panels must trap focus, close on Escape, and expose modal semantics');
