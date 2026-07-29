@@ -41,13 +41,17 @@ for (const domain of referenceBackboneDomains) {
 
 const app = await readFile(path.resolve('src/App.jsx'), 'utf8');
 const nen = await readFile(path.resolve('src/components/NenEncyclopedia.jsx'), 'utf8');
+const nenMap = await readFile(path.resolve('src/components/NenSystemReferenceMap.jsx'), 'utf8');
+const nenShell = await readFile(path.resolve('src/nen-map-shell.css'), 'utf8');
 const atlas = await readFile(path.resolve('src/components/WorldAtlas.jsx'), 'utf8');
 const organizations = await readFile(path.resolve('src/components/OrganizationArchive.jsx'), 'utf8');
 const conflicts = await readFile(path.resolve('src/components/ConflictArchive.jsx'), 'utf8');
 const panel = await readFile(path.resolve('src/components/ReferenceBackbonePanel.jsx'), 'utf8');
 
-assert(app.includes('ReferenceBackbonePanel') && app.includes('domain="nen"'), 'Nen route must surface the reference backbone before the visual workbench');
-assert(nen.includes('NenPrincipleMap') && nen.includes('nenRecords'), 'Nen workbench and record directory must remain intact after Batch 8');
+assert(nen.includes('NenSystemReferenceMap') && nen.includes('nenRecords'), 'Nen route must retain canonical records while rendering the full system map');
+assert(!nen.includes('NenPrincipleMap') && !nen.includes('nen-browser'), 'retired Nen workbench and directory must not return');
+assert(nenMap.includes('nen-pipe-connectors') && nenMap.includes('nen-pipe-inspector') && nenMap.includes('zoomAt') && nenMap.includes('fitAll'), 'Nen system map must preserve pipes, inspector, pan, and zoom interaction');
+assert(nenShell.includes('.page-intro') && nenShell.includes('.workspace-nav') && nenShell.includes('.reference-backbone') && nenShell.includes('display:none'), 'Nen map-only shell must remove the legacy reference wrappers');
 assert(atlas.includes('ReferenceBackbonePanel') && atlas.includes('domain="world"'), 'World Atlas must surface the reference backbone');
 assert(organizations.includes('ReferenceBackbonePanel') && organizations.includes('domain="organizations"'), 'Organization archive must surface the reference backbone');
 assert(conflicts.includes('ReferenceBackbonePanel') && conflicts.includes('domain="conflicts"'), 'Conflict archive must surface the reference backbone');
@@ -66,4 +70,4 @@ await access(path.resolve('src/components/ReferenceBackbonePanel.css'));
 await access(path.resolve('src/data/referenceBackbonePrototype.js'));
 await access(path.resolve('docs/REFERENCE-BACKBONE.md'));
 
-console.log(`Reference backbone audit passed: ${referenceBackboneStats.domains} domains, ${referenceBackboneStats.lanes} lanes, ${referenceBackboneStats.records} records, ${referenceBackboneStats.chimeraBridgeItems} Chimera bridge items, ${referenceBackboneStats.sources} approved sources, and the retired /notebook route and navigation button remain absent.`);
+console.log(`Reference backbone audit passed: ${referenceBackboneStats.domains} domains, ${referenceBackboneStats.lanes} lanes, ${referenceBackboneStats.records} records, ${referenceBackboneStats.chimeraBridgeItems} Chimera bridge items, ${referenceBackboneStats.sources} approved sources, the full-page Nen pipe map is enforced, and the retired /notebook route remains absent.`);
