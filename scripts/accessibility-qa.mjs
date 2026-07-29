@@ -165,7 +165,7 @@ try {
       if (!await trigger.evaluate((node) => node === document.activeElement)) throw new Error('menu trigger did not regain focus');
     });
     await recordInteraction('family-tree branch controls activate with keyboard', { width: 1440, height: 1000 }, 'succession/princes?view=tree', async (page) => {
-      const queens = page.locator('.royal-guard-tree__queen');
+      const queens = page.locator('.royal-map__queen-node');
       await queens.first().waitFor({ state: 'visible', timeout: 10_000 });
       if (await queens.count() < 2) throw new Error('family tree did not render multiple queen branches');
       const nextQueen = queens.nth(1);
