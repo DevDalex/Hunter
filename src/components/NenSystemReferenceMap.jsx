@@ -6,7 +6,7 @@ const MAP_WIDTH = 1920;
 const MAP_HEIGHT = 1160;
 const MIN_SCALE = 0.38;
 const MAX_SCALE = 1.85;
-const VIEW_MARGIN = 32;
+const VIEW_MARGIN = 12;
 const PAN_STEP = 72;
 
 const categories = [
@@ -105,7 +105,8 @@ export default function NenSystemReferenceMap({ records = [], spoilerLimit = 415
   const enrichedByKey = useMemo(() => new Map(enriched.map((node) => [node.key, node])), [enriched]);
   const [hovered, setHovered] = useState(null);
   const [pinned, setPinned] = useState(null);
-  const active = hovered || pinned || enrichedByKey.get('nen')?.record;
+  const active = hovered || pinned;
+  const inspected = active || enrichedByKey.get('nen')?.record;
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
   const [view, setView] = useState({ x: 0, y: 0, scale: 1 });
   const [dragging, setDragging] = useState(false);
@@ -204,24 +205,22 @@ export default function NenSystemReferenceMap({ records = [], spoilerLimit = 415
     let key = active?.key;
     while (key) { set.add(key); key = nodeByKey.get(key)?.parent; }
     const addChildren = (parent) => (childrenByParent.get(parent) || []).forEach((child) => { set.add(child); addChildren(child); });
-    if (active?.kind === 'root' || active?.kind === 'hub' || active?.kind === 'category') addChildren(active.key);
+    if (active?.kind === 'hub' || active?.kind === 'category') addChildren(active.key);
     return set;
   }, [active, childrenByParent, nodeByKey]);
   const preview = (record) => { window.clearTimeout(clearTimerRef.current); setHovered(record); };
   const clearPreview = () => { window.clearTimeout(clearTimerRef.current); clearTimerRef.current = window.setTimeout(() => setHovered(null), 100); };
   const pin = (record) => setPinned((current) => current?.key === record.key ? null : record);
-  const relatedNodes = (active?.related || []).map((name) => enriched.find((node) => node.name === name)).filter(Boolean).slice(0, 5);
+  const relatedNodes = (inspected?.related || []).map((name) => enriched.find((node) => node.name === name)).filter(Boolean).slice(0, 5);
 
-  return <section className="nen-pipe-map" aria-labelledby="nen-pipe-map-title" onKeyDown={(event) => { if (event.key === 'Escape') { setPinned(null); setHovered(null); } }}>
-    <header className="nen-pipe-toolbar"><div><span>Interactive Nen relationship map</span><h1 id="nen-pipe-map-title">Nen System</h1><p>Aura · principles · affinities · users · applications · contracts · special states · Chapter {spoilerLimit}</p></div><div className="nen-pipe-legend"><span><i className="is-core" /> Core system</span><span><i className="is-category" /> Affinity branch</span><span><i className="is-user" /> Example user</span><span><i className="is-rule" /> Rule / special state</span></div></header>
+  return <section className="nen-pipe-map" aria-label="Interactive Nen system map" onKeyDown={(event) => { if (event.key === 'Escape') { setPinned(null); setHovered(null); } }}>
     <div ref={viewportRef} className={`nen-pipe-viewport${dragging ? ' is-dragging' : ''}`} tabIndex="0" aria-label="Pan and zoom the complete Nen map. Use arrows to pan, plus and minus to zoom, zero to fit, and R to reset." onKeyDown={keyDown} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerEnd} onPointerCancel={pointerEnd} onClickCapture={(event) => { if (performance.now() < suppressClickUntilRef.current) { event.preventDefault(); event.stopPropagation(); } }}>
       <div className="nen-pipe-canvas" style={{ width: MAP_WIDTH, height: MAP_HEIGHT, transform: `translate3d(${view.x}px,${view.y}px,0) scale(${view.scale})` }}>
         <svg className="nen-pipe-connectors" viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`} fill="none" aria-hidden="true">{enriched.filter((node) => node.parent).map((node) => { const parent = enrichedByKey.get(node.parent); return <path key={`${node.parent}-${node.key}`} className={`${node.kind === 'user' ? 'is-user' : node.kind === 'category' ? 'is-category' : node.parent === 'branch:contracts' || node.key === 'branch:contracts' ? 'is-rule' : 'is-core'}${activeKeys.has(node.key) && activeKeys.has(node.parent) ? ' is-active' : ''}`} d={pipePath(parent, node)} />; })}</svg>
         {enriched.map((node) => <MapNode key={node.key} node={node} record={node.record} active={activeKeys.has(node.key)} pinned={pinned?.key === node.key} onPreview={preview} onClear={clearPreview} onPin={pin} portraitItemFor={portraitItemFor} />)}
       </div>
       <div className="nen-pipe-controls" role="group" aria-label="Map controls"><button type="button" onClick={() => zoomAt(viewRef.current.scale * 1.2)} aria-label="Zoom in"><ZoomIn size={18} /></button><button type="button" onClick={() => zoomAt(viewRef.current.scale / 1.2)} aria-label="Zoom out"><ZoomOut size={18} /></button><button type="button" onClick={fitAll} aria-label="Fit entire map"><Maximize2 size={18} /></button><button type="button" onClick={resetView} aria-label="Reset to one hundred percent"><RotateCcw size={18} /></button><output aria-live="polite">{Math.round(view.scale * 100)}%</output></div>
-      <aside className={`nen-pipe-inspector${pinned?.key === active?.key ? ' is-pinned' : ''}`} onMouseEnter={() => window.clearTimeout(clearTimerRef.current)} onMouseLeave={clearPreview} aria-live="polite"><header><span>{active?.eyebrow || active?.kind?.replaceAll('-', ' ')}</span><h2>{active?.name}</h2>{pinned?.key === active?.key && <button type="button" onClick={() => setPinned(null)}>Unpin</button>}</header><p>{active?.summary}</p>{active?.water && <dl><div><dt>Water Divination</dt><dd>{active.water}</dd></div><div><dt>Affinity code</dt><dd>{active.code}</dd></div></dl>}{active?.ability && <dl><div><dt>Ability</dt><dd>{active.ability}</dd></div><div><dt>Category</dt><dd>{active.category}</dd></div></dl>}{active?.mechanics?.length > 0 && <section><h3>Mechanics</h3><ul>{active.mechanics.slice(0, 3).map((item) => <li key={item}>{item}</li>)}</ul></section>}{active?.study && <section><h3>Reading note</h3><p>{active.study}</p></section>}{relatedNodes.length > 0 && <section><h3>Connected records</h3><div>{relatedNodes.map((node) => <button type="button" onClick={() => setPinned(node.record)} key={node.key}>{node.name}</button>)}</div></section>}{active?.source && <a href={active.source} target="_blank" rel="noreferrer">Open source <ExternalLink size={13} /></a>}<small>Hover or focus to preview. Click a node to pin this explanation.</small></aside>
+      <aside className={`nen-pipe-inspector${pinned?.key === inspected?.key ? ' is-pinned' : ''}`} onMouseEnter={() => window.clearTimeout(clearTimerRef.current)} onMouseLeave={clearPreview} aria-live="polite"><header><span>{inspected?.eyebrow || inspected?.kind?.replaceAll('-', ' ')}</span><h2>{inspected?.name}</h2>{pinned?.key === inspected?.key && <button type="button" onClick={() => setPinned(null)}>Unpin</button>}</header><p>{inspected?.summary}</p>{inspected?.water && <dl><div><dt>Water Divination</dt><dd>{inspected.water}</dd></div><div><dt>Affinity code</dt><dd>{inspected.code}</dd></div></dl>}{inspected?.ability && <dl><div><dt>Ability</dt><dd>{inspected.ability}</dd></div><div><dt>Category</dt><dd>{inspected.category}</dd></div></dl>}{inspected?.mechanics?.length > 0 && <section><h3>Mechanics</h3><ul>{inspected.mechanics.slice(0, 3).map((item) => <li key={item}>{item}</li>)}</ul></section>}{inspected?.study && <section><h3>Reading note</h3><p>{inspected.study}</p></section>}{relatedNodes.length > 0 && <section><h3>Connected records</h3><div>{relatedNodes.map((node) => <button type="button" onClick={() => setPinned(node.record)} key={node.key}>{node.name}</button>)}</div></section>}{inspected?.source && <a href={inspected.source} target="_blank" rel="noreferrer">Open source <ExternalLink size={13} /></a>}<small>Hover or focus to preview. Click a node to pin this explanation.</small></aside>
     </div>
-    <footer className="nen-pipe-footer">Drag to pan · scroll or pinch to zoom · hover, focus, or tap any connected node</footer>
   </section>;
 }
