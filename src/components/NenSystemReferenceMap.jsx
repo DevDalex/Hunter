@@ -2,51 +2,48 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { ExternalLink, Maximize2, RotateCcw, ZoomIn, ZoomOut } from 'lucide-react';
 import SourcePortrait from './SourcePortrait';
 
-const MAP_WIDTH = 1920;
-const MAP_HEIGHT = 1160;
-const MIN_SCALE = 0.38;
-const MAX_SCALE = 1.85;
-const VIEW_MARGIN = 12;
+const MAP_WIDTH = 1800;
+const MAP_HEIGHT = 1080;
+const MIN_SCALE = 0.42;
+const MAX_SCALE = 1.9;
+const VIEW_MARGIN = 8;
 const PAN_STEP = 72;
 
 const categories = [
-  { key: 'category:enhancement', name: 'Enhancement', code: 'En', mark: '強', x: 860, y: 165, water: 'Water volume changes', summary: 'Strengthen the body, aura, objects, or an existing quality.', users: [['Gon Freecss', 'Jajanken', 730, 42], ['Uvogin', 'Big Bang Impact', 1040, 42]] },
-  { key: 'category:transmutation', name: 'Transmutation', code: 'Tr', mark: '変', x: 1165, y: 315, water: 'Water taste changes', summary: 'Give aura the properties of another substance or phenomenon.', users: [['Killua Zoldyck', 'Godspeed', 1375, 255], ['Hisoka Morow', 'Bungee Gum', 1375, 365]] },
-  { key: 'category:conjuration', name: 'Conjuration', code: 'Co', mark: '具', x: 1165, y: 650, water: 'Impurities appear', summary: 'Materialize an object, structure, creature, or rule-bearing construct.', users: [['Kurapika', 'Conjured chains', 1375, 605], ['Shizuku Murasaki', 'Blinky', 1375, 715]] },
-  { key: 'category:specialization', name: 'Specialization', code: 'Sp', mark: '特', x: 860, y: 840, water: 'A unique change occurs', summary: 'Produce an exceptional effect outside the regular five categories.', users: [['Chrollo Lucilfer', 'Skill Hunter', 730, 990], ['Neon Nostrade', 'Lovely Ghostwriter', 1040, 990]] },
-  { key: 'category:manipulation', name: 'Manipulation', code: 'Ma', mark: '操', x: 555, y: 650, water: 'The leaf moves', summary: 'Control a person, object, creature, substance, or process.', users: [['Illumi Zoldyck', 'Needle People', 345, 605], ['Shalnark', 'Black Voice', 345, 715]] },
-  { key: 'category:emission', name: 'Emission', code: 'Em', mark: '放', x: 555, y: 315, water: 'Water color changes', summary: 'Separate aura from the body while retaining its force or function.', users: [['Leorio Paradinight', 'Remote Punch', 345, 255], ['Razor', '14 Devils', 345, 365]] },
-];
-
-const conceptNodes = [
-  { key: 'branch:foundations', parent: 'nen', kind: 'hub', name: 'Four Major Principles', eyebrow: 'Foundations', x: 42, y: 135, w: 255, h: 82, summary: 'The base controls for retaining, suppressing, producing, and expressing aura.' },
-  { key: 'concept:ten', parent: 'branch:foundations', kind: 'concept', name: 'Ten', mark: '纏', x: 42, y: 265, w: 255, h: 78 },
-  { key: 'concept:zetsu', parent: 'branch:foundations', kind: 'concept', name: 'Zetsu', mark: '絶', x: 42, y: 365, w: 255, h: 78 },
-  { key: 'concept:ren', parent: 'branch:foundations', kind: 'concept', name: 'Ren', mark: '練', x: 42, y: 465, w: 255, h: 78 },
-  { key: 'concept:hatsu', parent: 'branch:foundations', kind: 'concept', name: 'Hatsu', mark: '発', x: 42, y: 565, w: 255, h: 78 },
-  { key: 'branch:advanced', parent: 'branch:foundations', kind: 'hub', name: 'Advanced Applications', eyebrow: 'Operations', x: 42, y: 705, w: 255, h: 82, summary: 'Operational techniques built from the foundational controls.' },
-  ...['Gyo', 'In', 'En', 'Shu', 'Ko', 'Ken', 'Ryu'].map((name, index) => ({ key: `concept:${name.toLowerCase()}`, parent: 'branch:advanced', kind: 'mini', name, x: 42 + (index % 2) * 132, y: 825 + Math.floor(index / 2) * 78, w: 123, h: 62 })),
-  { key: 'concept:aura', parent: 'nen', kind: 'concept', name: 'Aura', mark: '気', x: 520, y: 35, w: 185, h: 82 },
-  { key: 'concept:aura-nodes', parent: 'concept:aura', kind: 'concept', name: 'Aura nodes', mark: '点', x: 520, y: 135, w: 185, h: 72 },
-  { key: 'concept:water-divination', parent: 'nen', kind: 'concept', name: 'Water Divination', mark: '水', x: 1215, y: 35, w: 220, h: 82 },
-  { key: 'concept:category-affinity', parent: 'concept:water-divination', kind: 'concept', name: 'Category affinity', mark: '%', x: 1215, y: 135, w: 220, h: 72 },
-  { key: 'branch:contracts', parent: 'nen', kind: 'hub', name: 'Contracts & Special States', eyebrow: 'Rules', x: 1620, y: 135, w: 255, h: 82, summary: 'Rules that reshape activation, power, persistence, inheritance, and risk.' },
-  { key: 'concept:conditions-and-limitations', parent: 'branch:contracts', kind: 'concept', name: 'Conditions and limitations', mark: '鎖', x: 1620, y: 265, w: 255, h: 78 },
-  { key: 'concept:vows', parent: 'branch:contracts', kind: 'concept', name: 'Vows', mark: '誓', x: 1620, y: 365, w: 255, h: 78 },
-  { key: 'concept:post-mortem-nen', parent: 'branch:contracts', kind: 'concept', name: 'Post-mortem Nen', mark: '死', x: 1620, y: 465, w: 255, h: 78 },
-  { key: 'concept:nen-curses-and-exorcism', parent: 'branch:contracts', kind: 'concept', name: 'Nen curses and exorcism', mark: '呪', x: 1620, y: 565, w: 255, h: 78 },
-  { key: 'concept:nen-beasts', parent: 'branch:contracts', kind: 'concept', name: 'Nen beasts', mark: '獣', x: 1620, y: 665, w: 255, h: 78 },
-  { key: 'concept:parasitic-nen', parent: 'branch:contracts', kind: 'concept', name: 'Parasitic Nen', mark: '寄', x: 1620, y: 765, w: 255, h: 78 },
-  { key: 'concept:collaborative-abilities', parent: 'branch:contracts', kind: 'concept', name: 'Collaborative abilities', mark: '協', x: 1620, y: 865, w: 255, h: 78 },
-  { key: 'concept:loaned-stolen-and-inherited-abilities', parent: 'branch:contracts', kind: 'concept', name: 'Loaned, stolen & inherited', mark: '継', x: 1620, y: 965, w: 255, h: 78 },
+  { key: 'category:enhancement', name: 'Enhancement', code: 'En', mark: '強', cx: 820, cy: 165, water: 'Water volume changes', summary: 'Strengthen the body, aura, objects, or an existing quality.', users: [['Gon Freecss', 'Jajanken', 675, 22], ['Uvogin', 'Big Bang Impact', 875, 22]] },
+  { key: 'category:transmutation', name: 'Transmutation', code: 'Tr', mark: '変', cx: 1100, cy: 330, water: 'Water taste changes', summary: 'Give aura the properties of another substance or phenomenon.', users: [['Killua Zoldyck', 'Godspeed', 1235, 245], ['Hisoka Morow', 'Bungee Gum', 1235, 355]] },
+  { key: 'category:conjuration', name: 'Conjuration', code: 'Co', mark: '具', cx: 1100, cy: 660, water: 'Impurities appear', summary: 'Materialize an object, structure, creature, or rule-bearing construct.', users: [['Kurapika', 'Conjured chains', 1235, 620], ['Shizuku Murasaki', 'Blinky', 1235, 730]] },
+  { key: 'category:specialization', name: 'Specialization', code: 'Sp', mark: '特', cx: 820, cy: 825, water: 'A unique change occurs', summary: 'Produce an exceptional effect outside the regular five categories.', users: [['Chrollo Lucilfer', 'Skill Hunter', 675, 925], ['Neon Nostrade', 'Lovely Ghostwriter', 875, 925]] },
+  { key: 'category:manipulation', name: 'Manipulation', code: 'Ma', mark: '操', cx: 540, cy: 660, water: 'The leaf moves', summary: 'Control a person, object, creature, substance, or process.', users: [['Illumi Zoldyck', 'Needle People', 335, 620], ['Shalnark', 'Black Voice', 335, 730]] },
+  { key: 'category:emission', name: 'Emission', code: 'Em', mark: '放', cx: 540, cy: 330, water: 'Water color changes', summary: 'Separate aura from the body while retaining its force or function.', users: [['Leorio Paradinight', 'Remote Punch', 335, 245], ['Razor', '14 Devils', 335, 355]] },
 ];
 
 const categoryNodes = categories.flatMap((category) => [
-  { ...category, parent: 'nen', kind: 'category', w: 185, h: 112 },
-  ...category.users.map(([name, ability, x, y], index) => ({ key: `user:${name}`, parent: category.key, kind: 'user', name, ability, category: category.name, x, y, w: 190, h: 90, portraitName: name, userIndex: index })),
+  { ...category, kind: 'category', x: category.cx - 74, y: category.cy - 74, w: 148, h: 148 },
+  ...category.users.map(([name, ability, x, y]) => ({ key: `user:${name}`, parent: category.key, kind: 'user', name, ability, category: category.name, x, y, w: 176, h: 82, portraitName: name })),
 ]);
-const rawNodes = [{ key: 'nen', kind: 'root', name: 'Nen', eyebrow: 'Complete system', x: 835, y: 475, w: 250, h: 190, summary: 'Life energy controlled through principles, affinity, training, conditions, and individual ability design.' }, ...categoryNodes, ...conceptNodes];
 
+const topicNodes = [
+  { key: 'concept:ten', kind: 'topic', group: 'practice', name: 'Ten', mark: '纏', x: 42, y: 240, w: 218, h: 58, summary: 'Keep aura around the body to reduce leakage and create a stable defensive layer.' },
+  { key: 'concept:zetsu', kind: 'topic', group: 'practice', name: 'Zetsu', mark: '絶', x: 42, y: 310, w: 218, h: 58, summary: 'Close aura nodes and suppress outward aura, trading defense for concealment and recovery.' },
+  { key: 'concept:ren', kind: 'topic', group: 'practice', name: 'Ren', mark: '練', x: 42, y: 380, w: 218, h: 58, summary: 'Produce and maintain a larger quantity of aura.' },
+  { key: 'concept:hatsu', kind: 'topic', group: 'practice', name: 'Hatsu', mark: '発', x: 42, y: 450, w: 218, h: 58, summary: 'Express aura through an individual style, category training, or developed ability.' },
+  ...['Gyo', 'In', 'En', 'Shu', 'Ko', 'Ken', 'Ryu'].map((name, index) => ({ key: `concept:${name.toLowerCase()}`, kind: 'mini', group: 'practice', name, x: 42 + (index % 2) * 112, y: 620 + Math.floor(index / 2) * 62, w: 106, h: 50 })),
+  { key: 'concept:conditions-and-limitations', kind: 'topic', group: 'rules', name: 'Conditions & limitations', mark: '鎖', x: 1488, y: 560, w: 270, h: 58 },
+  { key: 'concept:vows', kind: 'topic', group: 'rules', name: 'Vows', mark: '誓', x: 1488, y: 630, w: 270, h: 58 },
+  { key: 'concept:post-mortem-nen', kind: 'topic', group: 'rules', name: 'Post-mortem Nen', mark: '死', x: 1488, y: 700, w: 270, h: 58 },
+  { key: 'concept:nen-curses-and-exorcism', kind: 'topic', group: 'rules', name: 'Curses & exorcism', mark: '呪', x: 1488, y: 770, w: 270, h: 58 },
+  { key: 'concept:nen-beasts', kind: 'topic', group: 'rules', name: 'Nen beasts', mark: '獣', x: 1488, y: 840, w: 270, h: 58 },
+  { key: 'concept:parasitic-nen', kind: 'topic', group: 'rules', name: 'Parasitic Nen', mark: '寄', x: 1488, y: 910, w: 270, h: 58 },
+];
+
+const rawNodes = [
+  { key: 'nen', kind: 'root', name: 'Nen', eyebrow: 'Complete system', x: 690, y: 430, w: 260, h: 145, summary: 'Life energy controlled through principles, affinities, training, conditions, and individual ability design.' },
+  ...categoryNodes,
+  ...topicNodes,
+];
+
+const ringPairs = categories.map((category, index) => [category.key, categories[(index + 1) % categories.length].key]);
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const center = (node) => ({ x: node.x + node.w / 2, y: node.y + node.h / 2 });
 const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
@@ -64,14 +61,14 @@ const boundedView = (next, viewport) => {
   const fixedY = scaledHeight <= viewport.height ? (viewport.height - scaledHeight) / 2 : clamp(next.y, viewport.height - scaledHeight - VIEW_MARGIN, VIEW_MARGIN);
   return { scale, x: fixedX, y: fixedY };
 };
-const pipePath = (source, target) => {
+const branchPath = (source, target) => {
   const a = center(source);
   const b = center(target);
-  if (Math.abs(a.x - b.x) > Math.abs(a.y - b.y)) {
-    const bend = (a.x + b.x) / 2;
+  if (Math.abs(a.x - b.x) >= Math.abs(a.y - b.y)) {
+    const bend = a.x + (b.x - a.x) * 0.54;
     return `M ${a.x} ${a.y} H ${bend} V ${b.y} H ${b.x}`;
   }
-  const bend = (a.y + b.y) / 2;
+  const bend = a.y + (b.y - a.y) * 0.54;
   return `M ${a.x} ${a.y} V ${bend} H ${b.x} V ${b.y}`;
 };
 
@@ -89,7 +86,6 @@ function MapNode({ node, record, active, pinned, onPreview, onClear, onPin, port
       <strong>{node.name}</strong>
       {node.code && <em>{node.code} · {node.water}</em>}
       {node.ability && <em>{node.ability}</em>}
-      {node.kind === 'hub' && <em>{record.childCount} connected records</em>}
     </span>
   </button>;
 }
@@ -97,16 +93,24 @@ function MapNode({ node, record, active, pinned, onPreview, onClear, onPin, port
 export default function NenSystemReferenceMap({ records = [], spoilerLimit = 415, portraitItemFor }) {
   const recordsByName = useMemo(() => new Map(records.map((record) => [record.name, record])), [records]);
   const nodeByKey = useMemo(() => new Map(rawNodes.map((node) => [node.key, node])), []);
-  const childrenByParent = useMemo(() => rawNodes.reduce((map, node) => { if (node.parent) map.set(node.parent, [...(map.get(node.parent) || []), node.key]); return map; }, new Map()), []);
   const enriched = useMemo(() => rawNodes.map((node) => {
     const source = recordsByName.get(node.name);
-    return { ...node, record: { ...node, summary: source?.summary || node.summary || `${node.name} is connected to the wider Nen system.`, mechanics: source?.mechanics || [], study: source?.study || '', related: source?.related || [], source: source?.source || (node.portraitName ? portraitItemFor(node.portraitName)?.source : null), childCount: (childrenByParent.get(node.key) || []).length } };
-  }), [childrenByParent, portraitItemFor, recordsByName]);
+    return { ...node, record: { ...node, summary: source?.summary || node.summary || `${node.name} is connected to the wider Nen system.`, mechanics: source?.mechanics || [], study: source?.study || '', related: source?.related || [], source: source?.source || (node.portraitName ? portraitItemFor(node.portraitName)?.source : null) } };
+  }), [portraitItemFor, recordsByName]);
   const enrichedByKey = useMemo(() => new Map(enriched.map((node) => [node.key, node])), [enriched]);
   const [hovered, setHovered] = useState(null);
   const [pinned, setPinned] = useState(null);
   const active = hovered || pinned;
   const inspected = active || enrichedByKey.get('nen')?.record;
+  const activeCategoryKey = active?.kind === 'category' ? active.key : active?.kind === 'user' ? active.parent : null;
+  const activeKeys = useMemo(() => {
+    const keys = new Set();
+    if (!active) return keys;
+    keys.add(active.key);
+    if (active.kind === 'user' && active.parent) keys.add(active.parent);
+    if (active.kind === 'category') enriched.filter((node) => node.parent === active.key).forEach((node) => keys.add(node.key));
+    return keys;
+  }, [active, enriched]);
   const [viewportSize, setViewportSize] = useState({ width: 0, height: 0 });
   const [view, setView] = useState({ x: 0, y: 0, scale: 1 });
   const [dragging, setDragging] = useState(false);
@@ -200,27 +204,37 @@ export default function NenSystemReferenceMap({ records = [], spoilerLimit = 415
     event.preventDefault();
   };
 
-  const activeKeys = useMemo(() => {
-    const set = new Set();
-    let key = active?.key;
-    while (key) { set.add(key); key = nodeByKey.get(key)?.parent; }
-    const addChildren = (parent) => (childrenByParent.get(parent) || []).forEach((child) => { set.add(child); addChildren(child); });
-    if (active?.kind === 'hub' || active?.kind === 'category') addChildren(active.key);
-    return set;
-  }, [active, childrenByParent, nodeByKey]);
   const preview = (record) => { window.clearTimeout(clearTimerRef.current); setHovered(record); };
-  const clearPreview = () => { window.clearTimeout(clearTimerRef.current); clearTimerRef.current = window.setTimeout(() => setHovered(null), 100); };
+  const clearPreview = () => { window.clearTimeout(clearTimerRef.current); clearTimerRef.current = window.setTimeout(() => setHovered(null), 90); };
   const pin = (record) => setPinned((current) => current?.key === record.key ? null : record);
   const relatedNodes = (inspected?.related || []).map((name) => enriched.find((node) => node.name === name)).filter(Boolean).slice(0, 5);
 
-  return <section className="nen-pipe-map" aria-label="Interactive Nen system map" onKeyDown={(event) => { if (event.key === 'Escape') { setPinned(null); setHovered(null); } }}>
+  return <section className="nen-pipe-map" aria-label="Interactive Nen affinity spectrum" onKeyDown={(event) => { if (event.key === 'Escape') { setPinned(null); setHovered(null); } }}>
     <div ref={viewportRef} className={`nen-pipe-viewport${dragging ? ' is-dragging' : ''}`} tabIndex="0" aria-label="Pan and zoom the complete Nen map. Use arrows to pan, plus and minus to zoom, zero to fit, and R to reset." onKeyDown={keyDown} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerEnd} onPointerCancel={pointerEnd} onClickCapture={(event) => { if (performance.now() < suppressClickUntilRef.current) { event.preventDefault(); event.stopPropagation(); } }}>
       <div className="nen-pipe-canvas" style={{ width: MAP_WIDTH, height: MAP_HEIGHT, transform: `translate3d(${view.x}px,${view.y}px,0) scale(${view.scale})` }}>
-        <svg className="nen-pipe-connectors" viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`} fill="none" aria-hidden="true">{enriched.filter((node) => node.parent).map((node) => { const parent = enrichedByKey.get(node.parent); return <path key={`${node.parent}-${node.key}`} className={`${node.kind === 'user' ? 'is-user' : node.kind === 'category' ? 'is-category' : node.parent === 'branch:contracts' || node.key === 'branch:contracts' ? 'is-rule' : 'is-core'}${activeKeys.has(node.key) && activeKeys.has(node.parent) ? ' is-active' : ''}`} d={pipePath(parent, node)} />; })}</svg>
+        <section className="nen-reference-panel is-practice" aria-hidden="true"><span>Foundations</span><h2>Four major principles</h2><p>Aura control and advanced applications</p></section>
+        <section className="nen-reference-panel is-rules" aria-hidden="true"><span>Rules</span><h2>Contracts & special states</h2><p>Risk, persistence, curses, beasts, and transfer</p></section>
+        <svg className="nen-pipe-connectors" viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`} fill="none" aria-hidden="true">
+          {ringPairs.map(([fromKey, toKey]) => {
+            const from = enrichedByKey.get(fromKey); const to = enrichedByKey.get(toKey);
+            const a = center(from); const b = center(to);
+            const activeRing = activeCategoryKey && (activeCategoryKey === fromKey || activeCategoryKey === toKey);
+            return <g key={`${fromKey}-${toKey}`} className={activeRing ? 'is-active-ring' : ''}>
+              <path className="is-ring-under" d={`M ${a.x} ${a.y} L ${b.x} ${b.y}`} />
+              <path className="is-ring" d={`M ${a.x} ${a.y} L ${b.x} ${b.y}`} />
+              {[0.28, 0.5, 0.72].map((ratio, index) => <circle key={ratio} className={index === 1 ? 'is-halfway' : ''} cx={a.x + (b.x - a.x) * ratio} cy={a.y + (b.y - a.y) * ratio} r={index === 1 ? 8 : 6} />)}
+            </g>;
+          })}
+          {enriched.filter((node) => node.kind === 'user').map((node) => {
+            const parent = enrichedByKey.get(node.parent);
+            const branchActive = activeKeys.has(node.key) || activeKeys.has(node.parent);
+            return <path key={`${node.parent}-${node.key}`} className={`is-user-branch${branchActive ? ' is-active' : ''}`} d={branchPath(parent, node)} />;
+          })}
+        </svg>
         {enriched.map((node) => <MapNode key={node.key} node={node} record={node.record} active={activeKeys.has(node.key)} pinned={pinned?.key === node.key} onPreview={preview} onClear={clearPreview} onPin={pin} portraitItemFor={portraitItemFor} />)}
       </div>
       <div className="nen-pipe-controls" role="group" aria-label="Map controls"><button type="button" onClick={() => zoomAt(viewRef.current.scale * 1.2)} aria-label="Zoom in"><ZoomIn size={18} /></button><button type="button" onClick={() => zoomAt(viewRef.current.scale / 1.2)} aria-label="Zoom out"><ZoomOut size={18} /></button><button type="button" onClick={fitAll} aria-label="Fit entire map"><Maximize2 size={18} /></button><button type="button" onClick={resetView} aria-label="Reset to one hundred percent"><RotateCcw size={18} /></button><output aria-live="polite">{Math.round(view.scale * 100)}%</output></div>
-      <aside className={`nen-pipe-inspector${pinned?.key === inspected?.key ? ' is-pinned' : ''}`} onMouseEnter={() => window.clearTimeout(clearTimerRef.current)} onMouseLeave={clearPreview} aria-live="polite"><header><span>{inspected?.eyebrow || inspected?.kind?.replaceAll('-', ' ')}</span><h2>{inspected?.name}</h2>{pinned?.key === inspected?.key && <button type="button" onClick={() => setPinned(null)}>Unpin</button>}</header><p>{inspected?.summary}</p>{inspected?.water && <dl><div><dt>Water Divination</dt><dd>{inspected.water}</dd></div><div><dt>Affinity code</dt><dd>{inspected.code}</dd></div></dl>}{inspected?.ability && <dl><div><dt>Ability</dt><dd>{inspected.ability}</dd></div><div><dt>Category</dt><dd>{inspected.category}</dd></div></dl>}{inspected?.mechanics?.length > 0 && <section><h3>Mechanics</h3><ul>{inspected.mechanics.slice(0, 3).map((item) => <li key={item}>{item}</li>)}</ul></section>}{inspected?.study && <section><h3>Reading note</h3><p>{inspected.study}</p></section>}{relatedNodes.length > 0 && <section><h3>Connected records</h3><div>{relatedNodes.map((node) => <button type="button" onClick={() => setPinned(node.record)} key={node.key}>{node.name}</button>)}</div></section>}{inspected?.source && <a href={inspected.source} target="_blank" rel="noreferrer">Open source <ExternalLink size={13} /></a>}<small>Hover or focus to preview. Click a node to pin this explanation.</small></aside>
+      <aside className={`nen-pipe-inspector${pinned?.key === inspected?.key ? ' is-pinned' : ''}`} onMouseEnter={() => window.clearTimeout(clearTimerRef.current)} onMouseLeave={clearPreview} aria-live="polite"><header><span>{inspected?.eyebrow || inspected?.group || inspected?.kind?.replaceAll('-', ' ')}</span><h2>{inspected?.name}</h2>{pinned?.key === inspected?.key && <button type="button" onClick={() => setPinned(null)}>Unpin</button>}</header><p>{inspected?.summary}</p>{inspected?.water && <dl><div><dt>Water Divination</dt><dd>{inspected.water}</dd></div><div><dt>Affinity code</dt><dd>{inspected.code}</dd></div></dl>}{inspected?.ability && <dl><div><dt>Ability</dt><dd>{inspected.ability}</dd></div><div><dt>Category</dt><dd>{inspected.category}</dd></div></dl>}{inspected?.mechanics?.length > 0 && <section><h3>Mechanics</h3><ul>{inspected.mechanics.slice(0, 3).map((item) => <li key={item}>{item}</li>)}</ul></section>}{inspected?.study && <section><h3>Reading note</h3><p>{inspected.study}</p></section>}{relatedNodes.length > 0 && <section><h3>Connected records</h3><div>{relatedNodes.map((node) => <button type="button" onClick={() => setPinned(node.record)} key={node.key}>{node.name}</button>)}</div></section>}{inspected?.source && <a href={inspected.source} target="_blank" rel="noreferrer">Open source <ExternalLink size={13} /></a>}<small>Chapter boundary {spoilerLimit}. Hover or focus to preview; click to pin.</small></aside>
     </div>
   </section>;
 }
