@@ -53,7 +53,7 @@
     "audit:succession-media": "node --check scripts/import-succession-chapter.mjs && node --check scripts/import-succession-chapter-url.mjs && node --check scripts/succession-chapter-admin.mjs && node --check scripts/lib/succession-chapter-url-source.mjs && npm run audit:succession-url-import && npm run audit:hosted-admin && node scripts/audit-succession-chapter-media.mjs",
     "audit:greed-island-runtime": "node scripts/run-greed-island-runtime-audits.mjs",
     "audit:greed-island-route": "node scripts/audit-greed-island-route.mjs",
-    "qa:visual": "node scripts/visual-qa.mjs",
+    "qa:visual": "node scripts/visual-qa-aware.mjs",
     "qa:accessibility": "node scripts/accessibility-qa.mjs",
     "qa:performance": "node scripts/audit-performance.mjs && node scripts/performance-qa.mjs",
     "qa:succession-final-release": "node scripts/succession-final-release-qa.mjs",
