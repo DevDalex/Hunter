@@ -137,7 +137,8 @@
 
 .nen-expansion-map .nen-pipe-node.is-named-ability {
   justify-content: flex-start;
-  padding: 10px 12px;
+  width: 116px !important;
+  padding: 8px 9px;
   border-width: 2px;
   border-left: 5px solid var(--red);
   background: #fffefa;
@@ -145,14 +146,21 @@
 }
 
 .nen-expansion-map .nen-pipe-node.is-named-ability strong {
-  font-size: 16px;
-  line-height: 1.05;
+  font-size: 14px;
+  line-height: 1.02;
 }
 
 .nen-expansion-map .nen-pipe-node.is-named-ability em {
   color: var(--red);
   font-size: 11px;
   font-weight: 800;
+}
+
+/* Enhancement's outward ability rail begins above the nominal map bounds. Move
+   the complete canvas down only while that first category hex is expanded; the
+   pipes and nodes therefore stay perfectly registered. */
+.nen-expansion-map:has(.nen-pipe-canvas > .nen-pipe-node.is-category.is-expanded:nth-of-type(35)) .nen-pipe-canvas {
+  top: 96px;
 }
 
 .nen-expansion-map.has-expanded-category .nen-pipe-node.is-category:not(.is-expanded):not(.is-active),
@@ -169,6 +177,11 @@
 
 .nen-expansion-map .nen-pipe-inspector {
   max-height: 310px;
+}
+
+.nen-expansion-map .nen-pipe-inspector dt,
+.nen-expansion-map .nen-pipe-inspector h3 {
+  text-transform: none;
 }
 
 .nen-expansion-map .nen-pipe-inspector section > p {
