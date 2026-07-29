@@ -9,5 +9,11 @@ import './SuccessionRoyalRegistry.css';
 import './SuccessionVesselAtlas.css';
 import './SuccessionNenContainment.css';
 import './SuccessionIntelligenceOperations.css';
+import './SuccessionReaderCommand.css';
+import SuccessionArchiveApp from './SuccessionArchiveApp';
+import SuccessionArchiveReaderRoute from './SuccessionArchiveReaderRoute';
 
-export { default } from './SuccessionArchiveApp';
+export default function SuccessionArchiveEntry(props) {
+  if (props.routeTarget === 'reader') return <SuccessionArchiveReaderRoute {...props} />;
+  return <SuccessionArchiveApp {...props} />;
+}
