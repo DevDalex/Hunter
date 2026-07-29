@@ -1,5 +1,14 @@
-import SuccessionChapterReader from '../SuccessionChapterReader';
+import { lazy, Suspense } from 'react';
 import SuccessionArchiveShell from './SuccessionArchiveShell';
+
+const SuccessionChapterReader = lazy(() => import('../SuccessionChapterReader'));
+
+function ReaderLoadingState() {
+  return <div className="succession-reader-command__loading" role="status" aria-live="polite">
+    <span>Reader module</span>
+    <strong>Opening chapter workspace…</strong>
+  </div>;
+}
 
 export default function SuccessionArchiveReaderRoute({
   routeParams = {},
@@ -24,17 +33,19 @@ export default function SuccessionArchiveReaderRoute({
   >
     <section className="succession-reader-command" aria-label="Succession Contest manga reader">
       <h1 className="sr-only">Succession Contest manga reader</h1>
-      <SuccessionChapterReader
-        requestedChapter={routeParams.chapter}
-        requestedPage={routeParams.page}
-        requestedMode={routeParams.mode}
-        requestedFit={routeParams.fit}
-        requestedDirection={routeParams.direction}
-        requestedPanel={routeParams.panel}
-        onNavigate={navigateReader}
-        onExitArchive={() => onNavigate('archive')}
-        onOpenChapterRecord={(chapter) => onNavigate('chapters', { chapter })}
-      />
+      <Suspense fallback={<ReaderLoadingState />}>
+        <SuccessionChapterReader
+          requestedChapter={routeParams.chapter}
+          requestedPage={routeParams.page}
+          requestedMode={routeParams.mode}
+          requestedFit={routeParams.fit}
+          requestedDirection={routeParams.direction}
+          requestedPanel={routeParams.panel}
+          onNavigate={navigateReader}
+          onExitArchive={() => onNavigate('archive')}
+          onOpenChapterRecord={(chapter) => onNavigate('chapters', { chapter })}
+        />
+      </Suspense>
     </section>
   </SuccessionArchiveShell>;
 }
