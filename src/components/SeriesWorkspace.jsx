@@ -12,7 +12,6 @@ import { arcs } from '../data/arcs';
 import { chapters, LATEST_CHAPTER } from '../data/chapters';
 import { storyArcIds } from '../data/storyArcPages';
 import { readStoredJson, writeStoredJson } from '../lib/browserStorage';
-import { routeToHref } from '../lib/appRouter';
 import './StoryUtilities.css';
 
 const ArcPage = lazy(() => import('./ArcPage'));
@@ -74,6 +73,10 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     if (routeParams.arc && preSuccessionArcs.some((arc) => arc.id === routeParams.arc)) setActiveArc(routeParams.arc);
   }, [routeParams.arc]);
 
+  useEffect(() => {
+    if (successionChaptersPage) onPrefetch?.('succession', 'chapters');
+  }, [onPrefetch, successionChaptersPage]);
+
   const updateChapterRoute = (chapter) => {
     setSelectedChapter(chapter);
     onNavigate('series', 'chapters', { ...routeParams, chapter: chapter?.number || undefined });
@@ -101,12 +104,12 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     onNavigate('series', 'succession-contest', { section: 'chapters', ...readerRoute });
   };
 
-  const openSuccessionChapterRecord = (chapter) => {
-    const href = routeToHref('succession', 'chapters', {
+  const openSuccessionChapterRecord = async (chapter) => {
+    await onPrefetch?.('succession', 'chapters');
+    onNavigate('succession', 'chapters', {
       entity: `chapter:${chapter}`,
       chapter,
     });
-    window.location.assign(href);
   };
 
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
