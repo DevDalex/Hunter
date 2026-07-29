@@ -2,6 +2,7 @@ import NenSystemReferenceMap from './NenSystemReferenceMap';
 import { nenRecords } from '../data/nenEncyclopedia';
 import { priorityPortraitByName } from '../data/priorityMedia.generated';
 import '../nen-reference-map.css';
+import '../nen-map-shell.css';
 
 const portraitItemFor = (name) => {
   const media = priorityPortraitByName.get(name);
