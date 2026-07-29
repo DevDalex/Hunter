@@ -77,7 +77,7 @@
     "qa:search": "node scripts/search-qa.mjs",
     "qa:interaction": "node scripts/interaction-qa.mjs",
     "qa:nen-final": "node scripts/nen-final-qa.mjs",
-    "qa:succession-reader": "node scripts/succession-reader-qa.mjs && node scripts/succession-reader-enhancements-qa.mjs",
+    "qa:succession-reader": "node scripts/reader-chapter-record-bridge-qa.mjs && node scripts/succession-reader-qa.mjs && node scripts/succession-reader-enhancements-qa.mjs",
     "qa:succession-shell": "node scripts/succession-archive-shell-qa.mjs",
     "qa:succession-final-product": "node scripts/succession-final-product-qa.mjs",
     "qa:architecture": "node scripts/architecture-navigation-qa.mjs",
