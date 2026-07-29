@@ -43,7 +43,10 @@ export default function SuccessionArchiveReaderRoute({
           requestedPanel={routeParams.panel}
           onNavigate={navigateReader}
           onExitArchive={() => onNavigate('archive')}
-          onOpenChapterRecord={(chapter) => onNavigate('chapters', { chapter })}
+          onOpenChapterRecord={(chapter) => onNavigate('chapters', {
+            entity: `chapter:${chapter}`,
+            chapter,
+          })}
         />
       </Suspense>
     </section>
