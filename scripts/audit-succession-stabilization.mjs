@@ -43,7 +43,10 @@ const [app, entry, contrast, chapterCss, storyCss, cssAudit] = await Promise.all
 let temporaryWrapperExists = true;
 try { await access(path.join(root, 'src/components/succession/SuccessionArchiveApp.js')); } catch { temporaryWrapperExists = false; }
 assert(!temporaryWrapperExists, 'temporary SuccessionArchiveApp.js wrapper must not coexist with the canonical JSX module');
-assert(entry.includes("export { default } from './SuccessionArchiveApp'"), 'archive entry must resolve the canonical app module');
+const canonicalReexport = entry.includes("export { default } from './SuccessionArchiveApp'");
+const canonicalExplicitResolver = entry.includes("import SuccessionArchiveApp from './SuccessionArchiveApp';")
+  && entry.includes('return <SuccessionArchiveApp {...props} />;');
+assert(canonicalReexport || canonicalExplicitResolver, 'archive entry must resolve and render the canonical app module');
 assert(app.includes('princes.find((record) => record.princeOrder === Number(order))'), 'family-tree navigation must compare the candidate record');
 assert(!app.includes('princes.find((record) => entity.princeOrder'), 'family-tree callback must not reference its result variable during initialization');
 
