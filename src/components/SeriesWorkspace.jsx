@@ -12,7 +12,6 @@ import { arcs } from '../data/arcs';
 import { chapters, LATEST_CHAPTER } from '../data/chapters';
 import { storyArcIds } from '../data/storyArcPages';
 import { readStoredJson, writeStoredJson } from '../lib/browserStorage';
-import { routeToHref } from '../lib/appRouter';
 import './StoryUtilities.css';
 
 const ArcPage = lazy(() => import('./ArcPage'));
@@ -102,10 +101,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   };
 
   const openSuccessionChapterRecord = (chapter) => {
-    const params = { entity: `chapter:${chapter}`, chapter };
-    const href = routeToHref('succession', 'chapters', params);
-    window.history.pushState({ hxhRoute: href }, '', href);
-    window.dispatchEvent(new PopStateEvent('popstate', { state: { hxhRoute: href } }));
+    onNavigate('succession', 'chapters', { entity: `chapter:${chapter}`, chapter });
   };
 
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
