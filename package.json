@@ -80,7 +80,7 @@
     "qa:succession-shell": "node scripts/succession-archive-shell-qa.mjs",
     "qa:succession-final-product": "node scripts/succession-final-product-qa.mjs",
     "qa:architecture": "node scripts/architecture-navigation-qa.mjs",
-    "qa:browser:verify": "npm run qa:search && npm run qa:interaction && npm run qa:visual && npm run qa:accessibility && npm run qa:succession-shell && npm run qa:succession-final-product && npm run qa:succession-reader && npm run qa:architecture && npm run qa:greed-island && node scripts/performance-qa.mjs",
+    "qa:browser:verify": "npm run qa:search && npm run qa:interaction && npm run qa:accessibility && npm run qa:visual && npm run qa:succession-shell && npm run qa:succession-final-product && npm run qa:succession-reader && npm run qa:architecture && npm run qa:greed-island && node scripts/performance-qa.mjs",
     "qa:browser:ci": "npm run generate:build-info && npm run build:runtime && npm run qa:browser:verify",
     "qa:browser": "npm run build && npm run qa:browser:verify",
     "prepare:eta-assets": "node scripts/prepare-eta-tutorial-component.mjs && node scripts/install-eta-tutorial-assets.mjs",
