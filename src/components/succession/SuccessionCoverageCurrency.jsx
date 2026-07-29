@@ -48,17 +48,20 @@ export function RecordCoverageSections({ entity, boundary }) {
   const resolvedBoundary = useCoverageBoundary(boundary);
   const coverage = getEntityCoverage(entity, resolvedBoundary);
   if (!coverage) return null;
+  const recentChanges = coverage.recentChanges || [];
+  const openQuestions = coverage.openQuestions || [];
+  const detailedMaximum = coverage.archiveDetailedMaximum ?? coverage.verifiedThrough ?? coverage.identityVerifiedThrough;
   return <div className="succession-record-coverage">
     <section className="succession-record-coverage__recent" aria-labelledby={`recent-${entity.id}`}>
-      <header><RefreshCw size={16} aria-hidden="true" /><div><span>Recent changes</span><h3 id={`recent-${entity.id}`}>Changed since Chapter {coverage.archiveDetailedMaximum}</h3></div><b>{coverage.recentChanges.length}</b></header>
-      {coverage.recentChanges.length ? <ol>{coverage.recentChanges.map((change) => <li key={change.id}>
+      <header><RefreshCw size={16} aria-hidden="true" /><div><span>Recent changes</span><h3 id={`recent-${entity.id}`}>Changed since Chapter {detailedMaximum}</h3></div><b>{recentChanges.length}</b></header>
+      {recentChanges.length ? <ol>{recentChanges.map((change) => <li key={change.id}>
         <span>{change.chapterRange?.start ? `Ch. ${change.chapterRange.start}` : 'Unbounded'}</span>
         <div><b>{change.label}</b>{change.summary && <p>{change.summary}</p>}<small>{change.kind} · {change.certainty}{change.active ? ' · active' : ''}</small></div>
-      </li>)}</ol> : <p>No maintained change record after Chapter {coverage.archiveDetailedMaximum} is attached yet. This does not claim that the manga contains no change; it marks the archive gap honestly.</p>}
+      </li>)}</ol> : <p>No maintained change record after Chapter {detailedMaximum} is attached yet. This does not claim that the manga contains no change; it marks the archive gap honestly.</p>}
     </section>
     <section className="succession-record-coverage__questions" aria-labelledby={`questions-${entity.id}`}>
-      <header><CircleHelp size={16} aria-hidden="true" /><div><span>Open questions</span><h3 id={`questions-${entity.id}`}>Unresolved intelligence</h3></div><b>{coverage.openQuestions.length}</b></header>
-      {coverage.openQuestions.length ? <ul>{coverage.openQuestions.map((question) => <li key={question}>{question}</li>)}</ul> : <p>No unresolved question is currently indexed for this record.</p>}
+      <header><CircleHelp size={16} aria-hidden="true" /><div><span>Open questions</span><h3 id={`questions-${entity.id}`}>Unresolved intelligence</h3></div><b>{openQuestions.length}</b></header>
+      {openQuestions.length ? <ul>{openQuestions.map((question) => <li key={question}>{question}</li>)}</ul> : <p>No unresolved question is currently indexed for this record.</p>}
     </section>
   </div>;
 }
