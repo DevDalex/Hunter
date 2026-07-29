@@ -1,7 +1,4 @@
-# Hunter × Hunter — The Black Archive
-
-A desktop-first Hunter × Hunter research archive deployed as one full-stack Cloudflare Workers application. Hunterpedia/Fandom is the factual and image-source boundary.
-
+# Hunter × Hunter #
 ## Runtime architecture
 
 - React and Vite build the reader application into `dist/client/`.
