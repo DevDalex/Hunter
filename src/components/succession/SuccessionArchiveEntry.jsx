@@ -13,6 +13,7 @@ import './SuccessionTimelineCommand.css';
 import './SuccessionResearchLibrary.css';
 import './SuccessionReaderCommand.css';
 import './SuccessionAccessibilityClosure.css';
+import './SuccessionBrowserQaClosure.css';
 import SuccessionArchiveApp from './SuccessionArchiveApp';
 import SuccessionArchiveReaderRoute from './SuccessionArchiveReaderRoute';
 
