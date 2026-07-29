@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { ExternalLink, Grid2X2, List, Search } from 'lucide-react';
 import PageIntro from './PageIntro';
 import WorkspaceNav from './WorkspaceNav';
@@ -51,6 +51,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   const [density, setDensity] = useState('comfortable');
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [studied, setStudied] = useState(readProgress);
+  const chapterRecordNavigationRef = useRef(false);
   const currentArc = activeArc === 'all' ? null : preSuccessionArcs.find((arc) => arc.id === activeArc);
 
   const visibleChapters = useMemo(() => {
@@ -96,6 +97,16 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     if (next) updateChapterRoute(next);
   };
 
+  const navigateSuccessionReader = (readerRoute) => {
+    if (chapterRecordNavigationRef.current) return;
+    onNavigate('series', 'succession-contest', { section: 'chapters', ...readerRoute });
+  };
+
+  const openSuccessionChapterRecord = (chapter) => {
+    chapterRecordNavigationRef.current = true;
+    onNavigate('succession', 'chapters', { entity: `chapter:${chapter}` });
+  };
+
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
   if (routeTarget === 'volume-0') return <Suspense fallback={<StoryLoading label="Kurapika’s Memories" />}><VolumeZeroPage onNavigate={onNavigate} /></Suspense>;
   if (routeTarget === 'hunter-exam') return <Suspense fallback={<StoryLoading label="287th Hunter Examination" />}><HunterExamPage onNavigate={onNavigate} /></Suspense>;
@@ -110,9 +121,9 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
         requestedFit={routeParams.fit}
         requestedDirection={routeParams.direction}
         requestedPanel={routeParams.panel}
-        onNavigate={(readerRoute) => onNavigate('series', 'succession-contest', { section: 'chapters', ...readerRoute })}
+        onNavigate={navigateSuccessionReader}
         onExitArchive={() => onNavigate('succession', 'archive')}
-        onOpenChapterRecord={(chapter) => onNavigate('succession', 'chapters', { entity: `chapter:${chapter}` })}
+        onOpenChapterRecord={openSuccessionChapterRecord}
       />
     </Suspense>
   </section>;
