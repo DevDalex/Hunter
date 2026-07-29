@@ -104,10 +104,9 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   const openSuccessionChapterRecord = (chapter) => {
     const params = { entity: `chapter:${chapter}`, chapter };
     const href = routeToHref('succession', 'chapters', params);
-    onNavigate('succession', 'chapters', params);
-    window.setTimeout(() => {
-      if (!document.querySelector('.succession-archive[data-archive-route="chapters"]')) window.location.replace(href);
-    }, 500);
+    const state = { hxhRoute: href };
+    window.history.pushState(state, '', href);
+    window.dispatchEvent(new PopStateEvent('popstate', { state }));
   };
 
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
