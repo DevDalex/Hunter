@@ -121,6 +121,10 @@
   text-transform: uppercase;
 }
 
+/* The nodes already name these branches; suppress duplicate labels where they share the top lane. */
+.nen-edge-label[x="1320"][y="132"],
+.nen-edge-label[x="1340"][y="116"] { display: none; }
+
 .nen-edge-group.is-active .nen-edge-label { fill: var(--red); }
 
 .nen-junction {
@@ -185,12 +189,18 @@
 .nen-pipe-node__copy em { color: var(--muted); font-size: 11px; font-style: normal; line-height: 1.22; }
 
 .nen-pipe-node.is-core {
+  left: 715px !important;
+  width: 200px !important;
   border: 2px solid var(--line);
   border-radius: 999px;
   text-align: center;
 }
 .nen-pipe-node.is-core .nen-pipe-node__copy { justify-items: center; }
 .nen-pipe-node.is-core strong { font-size: 32px; font-style: italic; font-weight: 550; }
+
+/* Keep both Enhancement examples attached while clearing the Nen backbone. */
+.nen-pipe-node.is-user:has(img[alt^="Gon Freecss"]) { left: 920px !important; }
+.nen-pipe-node.is-user:has(img[alt^="Uvogin"]) { left: 1110px !important; }
 
 .nen-pipe-node.is-center {
   border: 2px solid var(--line);
@@ -200,7 +210,7 @@
 }
 .nen-pipe-node.is-center .nen-pipe-node__copy { justify-items: center; }
 .nen-pipe-node.is-center strong { font-size: 50px; font-style: italic; font-weight: 500; letter-spacing: -.035em; }
-.nen-pipe-node.is-center small { max-width: 180px; font-size: 10px; line-height: 1.2; }
+.nen-pipe-node.is-center small { max-width: 180px; font-size: 11px; line-height: 1.2; }
 
 .nen-pipe-node.is-category {
   border: 2px solid var(--line);
