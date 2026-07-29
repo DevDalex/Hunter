@@ -73,6 +73,11 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     if (routeParams.arc && preSuccessionArcs.some((arc) => arc.id === routeParams.arc)) setActiveArc(routeParams.arc);
   }, [routeParams.arc]);
 
+  useEffect(() => {
+    if (!successionChaptersPage) return;
+    void onPrefetch?.('succession', 'chapters');
+  }, [onPrefetch, successionChaptersPage]);
+
   const updateChapterRoute = (chapter) => {
     setSelectedChapter(chapter);
     onNavigate('series', 'chapters', { ...routeParams, chapter: chapter?.number || undefined });
