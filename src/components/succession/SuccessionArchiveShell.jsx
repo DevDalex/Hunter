@@ -167,15 +167,22 @@ export default function SuccessionArchiveShell({
       <button type="button" onClick={onOpenSearch} aria-label="Search Succession Contest Archive"><Search size={18} aria-hidden="true" /></button>
     </div>
 
+    <div className="succession-archive__status-strip" aria-label="Black Whale archive context">
+      <span><Ship size={14} aria-hidden="true" /><strong>Black Whale 1</strong></span>
+      <span><b>Desk</b> {route.group}</span>
+      <span><b>Boundary</b> Chapter {spoilerLimit}</span>
+      <span><b>Evidence</b> Canon separated</span>
+    </div>
+
     <div className="succession-archive__layout" aria-hidden={drawerOpen ? 'true' : undefined}>
       <aside className="succession-archive__sidebar">
         <div className="succession-archive__sidebar-inner">
           <div className="succession-archive__brand">
-            <div className="succession-archive__brand-seal" aria-hidden="true"><Archive size={21} /></div>
+            <div className="succession-archive__brand-seal" aria-hidden="true"><Ship size={21} /></div>
             <div className="succession-archive__brand-copy">
-              <span>Hunter × Hunter</span>
-              <strong>Succession Contest Archive</strong>
-              <p>Canonical research interface</p>
+              <span>Black Whale 1</span>
+              <strong>Succession Intelligence</strong>
+              <p>Chapter-bounded operations archive</p>
             </div>
           </div>
 
@@ -226,9 +233,9 @@ export default function SuccessionArchiveShell({
             description={route.description}
             actions={headerActions}
             meta={[
+              { label: 'Vessel', value: 'Black Whale 1' },
               { label: 'Reading boundary', value: `Chapter ${spoilerLimit}` },
               { label: 'Evidence mode', value: 'Canon separated' },
-              { label: 'Workspace', value: route.status === 'foundation' ? 'Foundation' : 'Available' },
             ]}
           />}
           <div
@@ -245,7 +252,7 @@ export default function SuccessionArchiveShell({
 
     {drawerOpen && <div className="succession-drawer" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDrawerOpen(false); }}>
       <aside ref={drawerRef} role="dialog" aria-modal="true" aria-label="Succession Archive navigation">
-        <header><div><span>Hunter × Hunter</span><strong>Succession Archive</strong></div><button type="button" onClick={() => { setDrawerOpen(false); window.setTimeout(() => menuButtonRef.current?.focus(), 0); }} aria-label="Close archive navigation"><X size={20} aria-hidden="true" /></button></header>
+        <header><div><span>Black Whale 1</span><strong>Succession Intelligence</strong></div><button type="button" onClick={() => { setDrawerOpen(false); window.setTimeout(() => menuButtonRef.current?.focus(), 0); }} aria-label="Close archive navigation"><X size={20} aria-hidden="true" /></button></header>
         <ArchiveNavigation id="succession-mobile-navigation" activeId={route.id} onNavigate={navigate} onIntent={onIntent} />
       </aside>
     </div>}
