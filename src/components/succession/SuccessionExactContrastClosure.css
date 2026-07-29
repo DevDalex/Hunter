@@ -10,6 +10,12 @@
     color: #fff !important;
   }
 
+  .succession-archive[data-archive-route="chapters"] .succession-button--search {
+    border-color: #6f93a7 !important;
+    background: #26485d !important;
+    color: #fff !important;
+  }
+
   .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__sequence-grid > section {
     background: #eef0ec !important;
     color: #17272f !important;
