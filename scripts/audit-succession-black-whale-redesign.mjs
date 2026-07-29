@@ -54,9 +54,9 @@ const combined = styles.join('\n');
 const requiredSelectors = [
   '.succession-archive__status-strip',
   '.succession-home-grid',
-  '.succession-prince-command',
-  '.black-whale',
-  '.succession-nen',
+  '.succession-royal-command',
+  '.black-whale-intelligence',
+  '.succession-nen-command',
   '.succession-assignment-command',
   '.succession-event-command',
   '.succession-canonical-relationships',
