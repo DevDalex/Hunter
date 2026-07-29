@@ -101,8 +101,10 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   };
 
   const openSuccessionChapterRecord = (chapter) => {
-    const entity = encodeURIComponent(`chapter:${chapter}`);
-    window.location.assign(`/story/succession-contest/chapter-records?entity=${entity}`);
+    onNavigate('succession', 'chapters', {
+      entity: `chapter:${chapter}`,
+      chapter,
+    });
   };
 
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
@@ -136,7 +138,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   return <section className="story-utility-shell">
     <nav className="story-utility-shell__back" aria-label="Story utility navigation"><button type="button" onClick={() => onNavigate('series')}>← All arcs</button></nav>
     <PageIntro kicker={pageIntro.kicker} title={pageIntro.title} description={pageIntro.description} compact>
-      <dl className="page-intro__facts"><div><dt>Story arcs</dt><dd>9 pages</dd></div><div><dt>Numbered chapters</dt><dd>{LATEST_CHAPTER}</dd></div><div><dt>2011 anime</dt><dd>148 episodes</dd></div></dl>
+      <dl className="page-intro__facts"><div><dt>Story arcs</dt><dd>9 pages</dd></div><div><dt>Numbered chapters</dt><dd>{LATEST_CHAPTER}</dd></div><div><dt>Reading boundary</dt><dd>Ch. {spoilerLimit}</dd></div></dl>
     </PageIntro>
     <WorkspaceNav items={utilityPages} activeId={routeTarget} onSelect={(id) => onNavigate('series', id)} label="Story reference tools" />
     <details className="spoiler-settings"><summary>Reading boundary <b>Chapter {spoilerLimit}</b></summary><SpoilerControl value={spoilerLimit} latestChapter={LATEST_CHAPTER} onChange={onSpoilerChange} /></details>
