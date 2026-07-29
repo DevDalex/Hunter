@@ -1,0 +1,267 @@
+/* Browser-rendered release closure: contrast, readable metadata, and route containment. */
+
+/* The command masthead is always a dark operational surface. */
+.succession-archive .succession-page-header {
+  color: #f5f8f6;
+}
+
+.succession-archive .succession-page-header h1 {
+  color: #f7faf8 !important;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .24);
+}
+
+.succession-archive .succession-page-header__copy > span {
+  color: #efd58f !important;
+}
+
+.succession-archive .succession-page-header__copy > p {
+  color: #dce4e1 !important;
+}
+
+.succession-archive .succession-page-header__meta > div {
+  background: #243139 !important;
+}
+
+.succession-archive .succession-page-header__meta dt {
+  color: #c5cfcc !important;
+}
+
+.succession-archive .succession-page-header__meta dd {
+  color: #fff !important;
+}
+
+/* Runtime QA measures rendered text, including plain spans and paragraphs. */
+.succession-archive .succession-archive__status-strip > span,
+.succession-archive .succession-event-command-card > p,
+.succession-archive .succession-assignment-command__metrics > div > span:last-child,
+.succession-archive .succession-assignment-card dd,
+.succession-archive .succession-evidence-chapter__score > div > span,
+.succession-archive .succession-evidence-source-catalogue > div > article p,
+.succession-archive .black-whale-intelligence [class*="bridge"] > span,
+.succession-archive .black-whale-intelligence [class*="precision"] > span {
+  font-size: 11px !important;
+  line-height: 1.4;
+}
+
+/* Event, assignment, and evidence ledgers use readable document ink. */
+.succession-archive .succession-event-command-card > p,
+.succession-archive .succession-evidence-source-catalogue > div > article p {
+  color: #405159 !important;
+}
+
+.succession-archive .succession-assignment-command__metrics > div > span:last-child {
+  color: #4a5b63 !important;
+}
+
+.succession-archive .succession-assignment-card dd {
+  color: #263940 !important;
+}
+
+.succession-archive .succession-evidence-chapter__score > div > span {
+  color: #354951 !important;
+}
+
+/* Royal registry labels remain ceremonial, but no longer whisper into the hull. */
+.succession-archive .succession-royal-command__eyebrow,
+.succession-archive .succession-royal-label,
+.succession-archive .succession-prince-intelligence-hero__copy > span {
+  color: #ead49a !important;
+}
+
+.succession-archive .succession-prince-card__body > span,
+.succession-archive .succession-prince-card__body footer span,
+.succession-archive .succession-prince-card__body dt,
+.succession-archive .succession-royal-filter-bar > div:first-child span,
+.succession-archive .succession-royal-status-strip dt,
+.succession-archive .succession-prince-risk-board span,
+.succession-archive .succession-prince-dossier__core span,
+.succession-archive .succession-prince-dossier__network header span,
+.succession-archive .succession-prince-evidence header span {
+  color: #3e515a !important;
+}
+
+.succession-archive .succession-prince-card__body p,
+.succession-archive .succession-prince-card__body dd {
+  color: #33474f !important;
+}
+
+.succession-archive .succession-prince-board__filters button {
+  color: #33474f !important;
+}
+
+.succession-archive .succession-prince-card__status {
+  color: #f5f8f6 !important;
+}
+
+/* Chapter records are document surfaces, not inherited dark archive cards. */
+.succession-archive .succession-chapter-intel {
+  --archive-panel: #eef0ec;
+  --archive-surface: #e1e5e1;
+  --archive-line: rgba(24, 40, 48, .28);
+  --archive-muted: #405159;
+  color: #17272f;
+}
+
+.succession-archive .succession-chapter-intel__index,
+.succession-archive .succession-chapter-intel__dossier > section,
+.succession-archive .succession-chapter-intel__event-columns > section,
+.succession-archive .succession-chapter-intel__entity-columns > section {
+  color: #17272f;
+}
+
+.succession-archive .succession-chapter-intel__index > label,
+.succession-archive .succession-chapter-intel__index select,
+.succession-archive .succession-chapter-intel__lanes button,
+.succession-archive .succession-chapter-intel__threads button,
+.succession-archive .succession-chapter-intel__events article,
+.succession-archive .succession-chapter-intel__causal article {
+  background: #f7f8f5;
+  color: #17272f;
+}
+
+/* Guardian Beast records receive their own legible containment palette. */
+.succession-archive .succession-gsb-workspace,
+.succession-archive .succession-gsb-dossier {
+  --archive-panel: #18242b;
+  --archive-panel-strong: #22323a;
+  --archive-surface: #24343c;
+  --archive-line: rgba(219, 227, 226, .28);
+  --archive-text: #f4f7f5;
+  --archive-muted: #c9d2d0;
+  --archive-accent: #e1ca91;
+  --archive-accent-soft: rgba(225, 202, 145, .15);
+  --archive-accent-contrast: #10171b;
+  color: #f4f7f5;
+}
+
+.succession-archive .succession-gsb-grid p,
+.succession-archive .succession-gsb-dossier p,
+.succession-archive .succession-gsb-grid dt,
+.succession-archive .succession-gsb-dossier dt,
+.succession-archive .succession-gsb-timeline small,
+.succession-archive .succession-gsb-dossier__columns ul,
+.succession-archive .succession-gsb-boundary p {
+  color: #d3dcda !important;
+}
+
+/* Timeline: keep every broad legacy surface inside the archive workspace. */
+.succession-archive[data-archive-route="timeline"] :where(
+  .succession-archive__workspace,
+  .succession-archive__workspace-frame,
+  .succession-archive__content,
+  .timeline-workspace,
+  .timeline-command,
+  .timeline-command__hero,
+  .timeline-command__navigation,
+  .timeline-command__scope-deck,
+  .timeline-workspace__events,
+  .timeline-section,
+  .timeline-command-voyage,
+  .timeline-command-voyage__hero,
+  .timeline-command-voyage__controls,
+  .timeline-command-voyage__selected,
+  .timeline-workbench
+) {
+  width: 100% !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.succession-archive[data-archive-route="timeline"] .succession-archive__content {
+  overflow-x: clip;
+}
+
+.succession-archive[data-archive-route="timeline"] .timeline-workspace__arc-rail,
+.succession-archive[data-archive-route="timeline"] .timeline-day-rail,
+.succession-archive[data-archive-route="timeline"] .timeline-swimlanes {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.succession-archive[data-archive-route="timeline"] .timeline-workspace__arc-rail > button {
+  flex: 0 0 min(210px, 72vw);
+  min-width: min(210px, 72vw);
+}
+
+.succession-archive :where(
+  .timeline-command__hero-copy > span,
+  .timeline-command__signal > span,
+  .timeline-command__navigation > header span,
+  .timeline-workspace__arc-rail button > span,
+  .timeline-command-voyage__hero > div > span,
+  .timeline-command-voyage__boundary > span,
+  .timeline-confidence-legend span,
+  .timeline-day-rail button > span
+) {
+  font-size: 11px !important;
+  line-height: 1.4;
+}
+
+.succession-archive .timeline-command__hero-copy > span,
+.succession-archive .timeline-command-voyage__hero > div > span {
+  color: #efd58f !important;
+}
+
+.succession-archive .timeline-command__signal > span,
+.succession-archive .timeline-command-voyage__boundary > span,
+.succession-archive .timeline-confidence-legend span,
+.succession-archive .timeline-day-rail button > span {
+  color: #d4ddda !important;
+}
+
+.succession-archive .timeline-workspace__arc-rail button > span {
+  color: #3f5159 !important;
+}
+
+/* Nen filters are dense, but may not push their archive compartment sideways. */
+.succession-archive[data-archive-route="nen"] :where(
+  .succession-archive__content,
+  .succession-nen-command,
+  .succession-nen-command__filters,
+  .succession-nen-command__filters > header,
+  .succession-nen-command__active-filters
+) {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.succession-archive[data-archive-route="nen"] .succession-nen-command__filters {
+  overflow: clip;
+}
+
+.succession-archive[data-archive-route="nen"] .succession-nen-command__active-filters {
+  overflow-wrap: anywhere;
+}
+
+/* Mobile browser checks use WCAG contrast against the rendered command surface. */
+@media (max-width: 860px) {
+  .succession-archive .succession-page-header {
+    background:
+      linear-gradient(120deg, rgba(112, 38, 48, .32), transparent 56%),
+      #111a20 !important;
+  }
+
+  .succession-archive .succession-page-header :where(h1, h2, h3, strong, b, dd) {
+    color: #f7faf8 !important;
+  }
+
+  .succession-archive .succession-page-header :where(p, span, dt, small) {
+    color: #dbe3e0 !important;
+  }
+
+  .succession-archive .succession-page-header__copy > span {
+    color: #f0d794 !important;
+  }
+
+  .succession-archive .succession-breadcrumbs,
+  .succession-archive .succession-return-path {
+    overflow: hidden;
+  }
+
+  .succession-archive .succession-breadcrumbs ol {
+    min-width: 0;
+  }
+}
