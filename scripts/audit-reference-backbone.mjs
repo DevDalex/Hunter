@@ -41,16 +41,22 @@ for (const domain of referenceBackboneDomains) {
 
 const app = await readFile(path.resolve('src/App.jsx'), 'utf8');
 const nen = await readFile(path.resolve('src/components/NenEncyclopedia.jsx'), 'utf8');
-const nenMap = await readFile(path.resolve('src/components/NenSystemReferenceMap.jsx'), 'utf8');
+const nenMap = await readFile(path.resolve('src/components/NenSystemExpansionMap.jsx'), 'utf8');
+const nenExpansionData = await readFile(path.resolve('src/data/nenSpectrumExpansion.js'), 'utf8');
+const nenExpansionCss = await readFile(path.resolve('src/nen-spectrum-expansion.css'), 'utf8');
 const nenShell = await readFile(path.resolve('src/nen-map-shell.css'), 'utf8');
 const atlas = await readFile(path.resolve('src/components/WorldAtlas.jsx'), 'utf8');
 const organizations = await readFile(path.resolve('src/components/OrganizationArchive.jsx'), 'utf8');
 const conflicts = await readFile(path.resolve('src/components/ConflictArchive.jsx'), 'utf8');
 const panel = await readFile(path.resolve('src/components/ReferenceBackbonePanel.jsx'), 'utf8');
 
-assert(nen.includes('NenSystemReferenceMap') && nen.includes('nenRecords'), 'Nen route must retain canonical records while rendering the full system map');
+assert(nen.includes('NenSystemExpansionMap') && nen.includes('nenRecords'), 'Nen route must retain canonical records while rendering the expanded system map');
 assert(!nen.includes('NenPrincipleMap') && !nen.includes('nen-browser'), 'retired Nen workbench and directory must not return');
 assert(nenMap.includes('nen-pipe-connectors') && nenMap.includes('nen-pipe-inspector') && nenMap.includes('zoomAt') && nenMap.includes('fitAll'), 'Nen system map must preserve pipes, inspector, pan, and zoom interaction');
+assert(nenMap.includes('expandedCategoryKey') && nenMap.includes('PlacementMarker') && nenMap.includes('named-ability'), 'Nen map must preserve category focus, exact placement markers, and named-ability expansion');
+assert(nenMap.includes('data-qa-pan-zoom-canvas="true"') && nenMap.includes('data-qa-scaled-canvas="true"'), 'Nen map must declare its intentional scaled-canvas QA contract');
+assert(nenExpansionData.includes('spectrumPlacements') && nenExpansionData.includes('namedAbilityProfiles') && nenExpansionData.includes('supportingCategories'), 'Nen expansion data must retain placements and ability-category metadata');
+assert(nenExpansionCss.includes('clip-path: polygon') && nenExpansionCss.includes('.nen-placement-marker') && nenExpansionCss.includes('.is-named-ability'), 'Nen expansion styling must preserve hexagonal categories, placement markers, and named-ability cards');
 assert(nenShell.includes('.page-intro') && nenShell.includes('.workspace-nav') && nenShell.includes('.reference-backbone') && nenShell.includes('display:none'), 'Nen map-only shell must remove the legacy reference wrappers');
 assert(atlas.includes('ReferenceBackbonePanel') && atlas.includes('domain="world"'), 'World Atlas must surface the reference backbone');
 assert(organizations.includes('ReferenceBackbonePanel') && organizations.includes('domain="organizations"'), 'Organization archive must surface the reference backbone');
@@ -70,4 +76,4 @@ await access(path.resolve('src/components/ReferenceBackbonePanel.css'));
 await access(path.resolve('src/data/referenceBackbonePrototype.js'));
 await access(path.resolve('docs/REFERENCE-BACKBONE.md'));
 
-console.log(`Reference backbone audit passed: ${referenceBackboneStats.domains} domains, ${referenceBackboneStats.lanes} lanes, ${referenceBackboneStats.records} records, ${referenceBackboneStats.chimeraBridgeItems} Chimera bridge items, ${referenceBackboneStats.sources} approved sources, the full-page Nen pipe map is enforced, and the retired /notebook route remains absent.`);
+console.log(`Reference backbone audit passed: ${referenceBackboneStats.domains} domains, ${referenceBackboneStats.lanes} lanes, ${referenceBackboneStats.records} records, ${referenceBackboneStats.chimeraBridgeItems} Chimera bridge items, ${referenceBackboneStats.sources} approved sources, the expanded full-page Nen pipe map is enforced, and the retired /notebook route remains absent.`);
