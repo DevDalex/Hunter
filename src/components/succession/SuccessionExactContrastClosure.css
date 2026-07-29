@@ -1,6 +1,34 @@
 /* Exact mobile contrast closure. Only selectors reported by the rendered axe matrix. */
 
 @media (max-width: 860px) {
+  /* Chapter route: selected command surfaces and evidence records. */
+  .succession-archive[data-archive-route="chapters"] .succession-page-header__actions > button,
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-command__card.is-selected :where(p, span, small, strong, b, em, dt, dd),
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-command__rail nav > button,
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-command__rail > button,
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__hero > dl :where(dt, dd) {
+    color: #fff !important;
+  }
+
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__sequence-grid > section {
+    background: #eef0ec !important;
+    color: #17272f !important;
+  }
+
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__sequence-grid > section > header {
+    background: #dfe3df !important;
+  }
+
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__sequence-grid > section > header :where(span, b, small),
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__sequence-grid > section > p,
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-intel__events > p {
+    color: #17272f !important;
+  }
+
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-sequence-card.is-starts .succession-chapter-sequence-card__topline > em {
+    color: #6b531f !important;
+  }
+
   /* Chapter route: dark evidence and entity-link surfaces keep light text. */
   .succession-archive[data-archive-route="chapters"] .succession-entity-link,
   .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__evidence-board > div,
