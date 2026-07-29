@@ -6,5 +6,6 @@ import './SuccessionBlackWhaleTheme.css';
 import './SuccessionCommandHome.css';
 import './SuccessionOperationalWorkspaces.css';
 import './SuccessionRoyalRegistry.css';
+import './SuccessionVesselAtlas.css';
 
 export { default } from './SuccessionArchiveApp';
