@@ -109,7 +109,7 @@
 }
 
 .nen-pipe-connectors .is-inspector-link {
-  stroke: var(--red);
+  stroke: rgba(52,50,47,.48);
   stroke-width: 3;
   stroke-dasharray: 8 7;
   stroke-linecap: round;
@@ -117,10 +117,11 @@
 }
 
 .nen-pipe-connectors .is-inspector-junction {
-  fill: var(--red);
-  stroke: #fffefa;
+  fill: #fffefa;
+  stroke: rgba(52,50,47,.6);
   stroke-width: 2;
 }
+.nen-pipe-connectors .is-inspector-junction.is-active { fill: var(--red); stroke: #fffefa; }
 
 .nen-pipe-map.has-active .nen-pipe-connectors .is-graph-edge:not(.is-active) { opacity: .18; }
 .nen-pipe-map.has-active .nen-pipe-connectors > g:not(.is-active-ring) { opacity: .32; }
