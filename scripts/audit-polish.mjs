@@ -82,6 +82,7 @@ for (const token of ['getEntityCoverage', 'getArchiveCoverageReport', 'getProtec
 for (const token of ['CoverageBoundaryProvider', 'RecordCurrencyStrip', 'RecordCoverageSections', 'ArchiveCoverageReport']) {
   assert(coverageUi.includes(token), `coverage UI is missing ${token}`);
 }
+assert(coverageUi.includes('coverage.recentChanges || []') && coverageUi.includes('coverage.openQuestions || []'), 'selected chapter coverage must tolerate optional change and question collections');
 assert(archiveApp.includes('<CoverageBoundaryProvider') && archiveApp.includes('showSelectedCoverage') && archiveApp.includes('<ArchiveCoverageReport'), 'Archive Home, Research, and selected dossiers must receive generated currency');
 assert(primitives.includes('useCoverageBoundary(readingBoundary)') && primitives.includes('<RecordCurrencyStrip') && primitives.includes('<RecordCoverageSections'), 'generic entity dossiers must expose chapter-safe currency and gaps');
 assert(visualQa.includes('pendingImages') && visualQa.includes('mediaTextOverlaps'), 'visual QA must still reject unsettled images and text collisions');
