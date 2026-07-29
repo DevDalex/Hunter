@@ -2,10 +2,12 @@ export const latestChapterMetadata = Object.freeze({
   414: Object.freeze({
     number: 414,
     title: 'Friends',
-    japaneseTitle: null,
+    japaneseTitle: '仲間',
+    alternateTitles: Object.freeze(['Companions', 'Comrades']),
     releaseDate: 'July 19, 2026',
     titleStatus: 'verified',
-    detailStatus: 'pending-maintained-research',
+    detailStatus: 'maintained-research',
+    researchReviewedAt: 'July 29, 2026',
     sourceUrl: 'https://hunterxhunter.fandom.com/wiki/Chapter_414',
     officialReaderUrl: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-414/chapter/50800',
   }),
@@ -13,16 +15,18 @@ export const latestChapterMetadata = Object.freeze({
     number: 415,
     title: 'Truth and Falsehood',
     japaneseTitle: '真偽',
+    alternateTitles: Object.freeze(['Authenticity', 'Veracity']),
     releaseDate: 'July 26, 2026',
-    titleStatus: 'provisional-english-rendering',
-    detailStatus: 'pending-maintained-research',
+    titleStatus: 'cross-checked-english-rendering',
+    detailStatus: 'maintained-research',
+    researchReviewedAt: 'July 29, 2026',
     sourceUrl: 'https://hunterxhunter.fandom.com/wiki/Chapter_415',
     officialReaderUrl: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-415/chapter/50829',
   }),
 });
 
 export const LATEST_PUBLISHED_CHAPTER = Math.max(...Object.keys(latestChapterMetadata).map(Number));
-export const LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER = 413;
+export const LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER = 415;
 
 export const getLatestChapterMetadata = (number) => latestChapterMetadata[Number(number)] || null;
 

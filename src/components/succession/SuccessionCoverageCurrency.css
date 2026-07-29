@@ -27,7 +27,7 @@
 
 .succession-currency-strip span {
   color: var(--succession-muted, #6c6256);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 900;
   letter-spacing: .07em;
   text-transform: uppercase;
@@ -73,7 +73,7 @@
 .succession-record-coverage header span,
 .succession-coverage-report header span {
   color: var(--succession-accent, #8d2838);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 900;
   letter-spacing: .08em;
   text-transform: uppercase;
@@ -86,7 +86,7 @@
 .succession-record-coverage li { margin: 5px 0; line-height: 1.42; }
 .succession-record-coverage__recent ol { list-style: none; padding-left: 12px; }
 .succession-record-coverage__recent li { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 8px; }
-.succession-record-coverage__recent li > span { color: var(--succession-accent, #8d2838); font-size: 10px; font-weight: 900; }
+.succession-record-coverage__recent li > span { color: var(--succession-accent, #8d2838); font-size: 11px; font-weight: 900; }
 .succession-record-coverage__recent p { margin: 3px 0; }
 .succession-record-coverage__recent small { color: var(--succession-muted, #6c6256); }
 
@@ -113,7 +113,7 @@
 .succession-coverage-report header p { margin: 5px 0 0; color: #cfc5b8; }
 .succession-coverage-report > header > dl { display: flex; gap: 8px; margin: 0; }
 .succession-coverage-report > header > dl > div { min-width: 92px; padding: 7px 8px; border: 1px solid #4d473f; border-radius: 4px; }
-.succession-coverage-report dt { color: #bdb2a4; font-size: 8px; text-transform: uppercase; }
+.succession-coverage-report dt { color: #bdb2a4; font-size: 11px; text-transform: uppercase; }
 .succession-coverage-report dd { margin: 3px 0 0; font-weight: 900; }
 
 .succession-coverage-report__warning {
