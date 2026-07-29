@@ -84,7 +84,7 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
-      onNavigate('succession', 'chapters', { entity: `chapter:${activeChapter}` });
+      window.setTimeout(() => onNavigate('succession', 'chapters', { entity: `chapter:${activeChapter}` }), 0);
     };
     document.addEventListener('click', handleChapterRecordClick, true);
     return () => document.removeEventListener('click', handleChapterRecordClick, true);
