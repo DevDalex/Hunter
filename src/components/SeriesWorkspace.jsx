@@ -108,11 +108,19 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
     window.location.assign(`/story/succession-contest/chapter-records?entity=${entity}`);
   };
 
+  const captureSuccessionChapterRecord = (event) => {
+    if (!event.target.closest('.succession-reader__chapter-info-actions .is-primary')) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const activeChapter = Number(event.currentTarget.querySelector('.succession-reader')?.dataset.readerChapter || routeParams.chapter);
+    if (activeChapter) openSuccessionChapterRecord(activeChapter);
+  };
+
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
   if (routeTarget === 'volume-0') return <Suspense fallback={<StoryLoading label="Kurapika’s Memories" />}><VolumeZeroPage onNavigate={onNavigate} /></Suspense>;
   if (routeTarget === 'hunter-exam') return <Suspense fallback={<StoryLoading label="287th Hunter Examination" />}><HunterExamPage onNavigate={onNavigate} /></Suspense>;
   if (routeTarget === 'greed-island') return <Suspense fallback={<StoryLoading label="Greed Island" />}><GreedIslandPage onNavigate={onNavigate} routeParams={routeParams} /></Suspense>;
-  if (successionChaptersPage) return <section className="story-utility-shell story-utility-shell--succession-reader">
+  if (successionChaptersPage) return <section className="story-utility-shell story-utility-shell--succession-reader" onClickCapture={captureSuccessionChapterRecord}>
     <h1 className="sr-only">Succession Contest chapter reader</h1>
     <Suspense fallback={<StoryLoading label="Succession chapter reader" />}>
       <SuccessionChapterReader
