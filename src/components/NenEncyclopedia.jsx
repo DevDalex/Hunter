@@ -1,7 +1,8 @@
-import NenSystemReferenceMap from './NenSystemReferenceMap';
+import NenSystemExpansionMap from './NenSystemExpansionMap';
 import { nenRecords } from '../data/nenEncyclopedia';
 import { priorityPortraitByName } from '../data/priorityMedia.generated';
 import '../nen-reference-map.css';
+import '../nen-spectrum-expansion.css';
 import '../nen-map-shell.css';
 
 const portraitItemFor = (name) => {
@@ -13,6 +14,6 @@ const portraitItemFor = (name) => {
 
 export default function NenEncyclopedia({ spoilerLimit = Number.MAX_SAFE_INTEGER }) {
   return <section className="nen-map-only" id="nen">
-    <NenSystemReferenceMap records={nenRecords} spoilerLimit={spoilerLimit} portraitItemFor={portraitItemFor} />
+    <NenSystemExpansionMap records={nenRecords} spoilerLimit={spoilerLimit} portraitItemFor={portraitItemFor} />
   </section>;
 }
