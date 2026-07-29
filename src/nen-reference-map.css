@@ -1,18 +1,17 @@
 .nen-map-only {
   width: 100%;
   min-width: 0;
-  background: #f4f1e8;
+  background: #f7f5ee;
 }
 
 .nen-pipe-map {
   --paper: #f7f5ee;
-  --paper-deep: #ebe6da;
-  --ink: #151515;
-  --muted: #625e57;
-  --line: #292929;
-  --line-soft: #9b968c;
-  --red: #9f3124;
-  --red-soft: #c26a5d;
+  --paper-deep: #ece7dc;
+  --ink: #171717;
+  --muted: #68635b;
+  --line: #2c2b29;
+  --line-soft: #aaa49a;
+  --red: #9e3024;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -21,7 +20,7 @@
 }
 
 .nen-pipe-map * { box-sizing: border-box; }
-.nen-pipe-map button, .nen-pipe-map a { font: inherit; }
+.nen-pipe-map button { font: inherit; }
 
 .nen-pipe-viewport {
   position: absolute;
@@ -30,59 +29,12 @@
   touch-action: none;
   cursor: grab;
   outline: none;
-  background:
-    linear-gradient(rgba(20,20,20,.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(20,20,20,.035) 1px, transparent 1px),
-    radial-gradient(circle at 47% 48%, rgba(255,255,255,.96), rgba(247,245,238,.8) 48%, rgba(232,226,215,.84));
-  background-size: 30px 30px, 30px 30px, auto;
+  background: var(--paper);
 }
 
-.nen-pipe-viewport:focus-visible { box-shadow: inset 0 0 0 3px rgba(159,49,36,.65); }
+.nen-pipe-viewport:focus-visible { box-shadow: inset 0 0 0 3px rgba(158,48,36,.55); }
 .nen-pipe-viewport.is-dragging { cursor: grabbing; }
 .nen-pipe-canvas { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
-
-.nen-reference-panel {
-  position: absolute;
-  z-index: 0;
-  border: 1px solid rgba(21,21,21,.42);
-  background: rgba(250,248,242,.78);
-  box-shadow: 6px 7px 0 rgba(21,21,21,.055);
-  pointer-events: none;
-}
-
-.nen-reference-panel::before {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: 0;
-  height: 4px;
-  background: var(--red);
-  content: "";
-}
-
-.nen-reference-panel > span {
-  display: block;
-  color: var(--red);
-  font-size: 11px;
-  font-weight: 900;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-}
-
-.nen-reference-panel h2 {
-  margin: 3px 0 5px;
-  color: var(--ink);
-  font-family: var(--serif, Georgia, serif);
-  font-size: 22px;
-  line-height: .94;
-  text-transform: uppercase;
-}
-
-.nen-reference-panel p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.35; }
-.nen-reference-panel.is-practice { left: 20px; top: 96px; width: 264px; height: 840px; padding: 22px 20px; }
-.nen-reference-panel.is-rules { left: 1466px; top: 500px; width: 312px; height: 480px; padding: 12px 18px; }
-.nen-reference-panel.is-rules h2 { margin-top: 2px; font-size: 18px; line-height: .9; }
-.nen-reference-panel.is-rules p { display: none; }
 
 .nen-pipe-connectors {
   position: absolute;
@@ -90,148 +42,254 @@
   z-index: 1;
   width: 100%;
   height: 100%;
-  pointer-events: none;
   overflow: visible;
+  pointer-events: none;
 }
 
 .nen-pipe-connectors path,
-.nen-pipe-connectors circle {
-  vector-effect: non-scaling-stroke;
-  transition: stroke .16s, fill .16s, opacity .16s, stroke-width .16s;
+.nen-pipe-connectors circle,
+.nen-pipe-node {
+  transition: opacity .15s, stroke .15s, fill .15s, border-color .15s, box-shadow .15s, transform .15s;
 }
 
+.nen-pipe-connectors path,
+.nen-pipe-connectors circle { vector-effect: non-scaling-stroke; }
+
 .nen-pipe-connectors .is-ring-under {
-  stroke: rgba(21,21,21,.16);
-  stroke-width: 15;
+  stroke: rgba(28,28,28,.16);
+  stroke-width: 16;
   stroke-linecap: round;
 }
 
 .nen-pipe-connectors .is-ring {
-  stroke: rgba(21,21,21,.6);
+  stroke: rgba(25,25,25,.72);
   stroke-width: 3;
   stroke-linecap: round;
 }
 
 .nen-pipe-connectors g circle {
-  fill: #fbfaf6;
-  stroke: rgba(21,21,21,.68);
+  fill: #fffefa;
+  stroke: rgba(25,25,25,.78);
   stroke-width: 2;
 }
 
 .nen-pipe-connectors g circle.is-halfway {
   fill: var(--red);
-  stroke: #fff;
+  stroke: #fffefa;
   stroke-width: 2;
 }
 
-.nen-pipe-connectors g.is-active-ring .is-ring-under { stroke: rgba(159,49,36,.17); }
+.nen-pipe-connectors g.is-active-ring .is-ring-under { stroke: rgba(158,48,36,.18); }
 .nen-pipe-connectors g.is-active-ring .is-ring { stroke: var(--red); stroke-width: 5; }
 .nen-pipe-connectors g.is-active-ring circle { stroke: var(--red); }
 
-.nen-pipe-connectors .is-user-branch {
-  stroke: rgba(21,21,21,.46);
-  stroke-width: 2.5;
-  stroke-linecap: square;
-  stroke-linejoin: miter;
+.nen-pipe-connectors .is-graph-edge {
+  stroke: rgba(36,35,33,.48);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.nen-pipe-connectors .is-user-branch.is-active { stroke: var(--red); stroke-width: 4; }
+.nen-pipe-connectors .is-backbone { stroke-width: 6; }
+.nen-pipe-connectors .is-principle { stroke-width: 4; }
+.nen-pipe-connectors .is-composition { stroke: rgba(58,56,52,.52); stroke-width: 3; }
+.nen-pipe-connectors .is-spoke { stroke: rgba(55,53,49,.28); stroke-width: 2; }
+.nen-pipe-connectors .is-user { stroke: rgba(48,46,43,.42); stroke-width: 2; }
+.nen-pipe-connectors .is-classifier { stroke: rgba(57,54,50,.48); stroke-dasharray: 8 7; }
+.nen-pipe-connectors .is-ability { stroke: rgba(47,45,42,.5); }
+.nen-pipe-connectors .is-rule { stroke: rgba(75,68,63,.5); stroke-dasharray: 9 7; }
+.nen-pipe-connectors .is-special { stroke: rgba(75,68,63,.46); stroke-dasharray: 5 7; }
+
+.nen-pipe-connectors .is-graph-edge.is-active,
+.nen-pipe-connectors .is-inspector-link.is-active {
+  stroke: var(--red);
+  stroke-width: 6;
+  stroke-dasharray: none;
+  opacity: 1;
+}
+
+.nen-pipe-connectors .is-inspector-link {
+  stroke: var(--red);
+  stroke-width: 3;
+  stroke-dasharray: 8 7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nen-pipe-connectors .is-inspector-junction {
+  fill: var(--red);
+  stroke: #fffefa;
+  stroke-width: 2;
+}
+
+.nen-pipe-map.has-active .nen-pipe-connectors .is-graph-edge:not(.is-active) { opacity: .18; }
+.nen-pipe-map.has-active .nen-pipe-connectors > g:not(.is-active-ring) { opacity: .32; }
+.nen-pipe-map.has-active .nen-pipe-node:not(.is-active):not(.is-pinned) { opacity: .42; }
 
 .nen-pipe-node {
   position: absolute;
-  z-index: 3;
+  z-index: 4;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 8px;
   min-width: 0;
   min-height: 44px;
-  padding: 8px;
-  border: 1px solid rgba(21,21,21,.62);
+  padding: 8px 10px;
+  border: 1px solid rgba(23,23,23,.58);
   border-radius: 0;
-  background: rgba(250,248,242,.96);
+  background: rgba(255,254,250,.98);
   color: var(--ink);
   text-align: left;
   cursor: pointer;
-  box-shadow: 4px 5px 0 rgba(21,21,21,.07);
-  transition: transform .14s, border-color .14s, background .14s, box-shadow .14s;
+  box-shadow: 3px 4px 0 rgba(23,23,23,.07);
 }
 
 .nen-pipe-node:hover,
 .nen-pipe-node:focus-visible,
 .nen-pipe-node.is-active {
-  z-index: 10;
+  z-index: 14;
+  opacity: 1 !important;
   border-color: var(--red);
   outline: none;
   background: #fff;
-  box-shadow: 5px 6px 0 rgba(159,49,36,.12);
+  box-shadow: 4px 5px 0 rgba(158,48,36,.13);
   transform: translateY(-2px);
 }
 
-.nen-pipe-node.is-pinned { box-shadow: 0 0 0 3px var(--red), 5px 6px 0 rgba(21,21,21,.1); }
+.nen-pipe-node.is-pinned { opacity: 1 !important; box-shadow: 0 0 0 3px var(--red), 4px 5px 0 rgba(23,23,23,.1); }
 .nen-pipe-node__copy { display: grid; gap: 2px; min-width: 0; }
 .nen-pipe-node__copy i { font-family: var(--serif,Georgia,serif); font-size: 20px; font-style: normal; font-weight: 900; line-height: 1; }
 .nen-pipe-node__copy small { color: var(--red); font-size: 11px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
 .nen-pipe-node__copy strong { font-family: var(--serif,Georgia,serif); font-size: 16px; line-height: 1.02; overflow-wrap: anywhere; }
-.nen-pipe-node__copy em { color: var(--muted); font-size: 10px; font-style: normal; line-height: 1.22; }
+.nen-pipe-node__copy em { color: var(--muted); font-size: 11px; font-style: normal; line-height: 1.22; }
 
-.nen-pipe-node.is-root {
+.nen-pipe-node.is-core {
   border: 2px solid var(--line);
-  border-radius: 50%;
-  background: rgba(255,254,250,.98);
-  box-shadow: 0 0 0 13px rgba(255,255,255,.68), 8px 9px 0 rgba(21,21,21,.075);
+  border-radius: 999px;
+  background: #fffefa;
   text-align: center;
 }
+.nen-pipe-node.is-core .nen-pipe-node__copy { justify-items: center; }
+.nen-pipe-node.is-core strong { font-size: 34px; font-style: italic; font-weight: 550; }
 
-.nen-pipe-node.is-root .nen-pipe-node__copy { justify-items: center; }
-.nen-pipe-node.is-root strong { font-size: 58px; font-style: italic; font-weight: 500; letter-spacing: -.035em; }
-.nen-pipe-node.is-root small { color: var(--ink); font-size: 11px; }
+.nen-pipe-node.is-center {
+  border: 2px solid var(--line);
+  border-radius: 50%;
+  background: #fffefa;
+  box-shadow: 0 0 0 12px rgba(255,255,255,.72), 7px 8px 0 rgba(23,23,23,.08);
+  text-align: center;
+}
+.nen-pipe-node.is-center .nen-pipe-node__copy { justify-items: center; }
+.nen-pipe-node.is-center strong { font-size: 58px; font-style: italic; font-weight: 500; letter-spacing: -.035em; }
 
 .nen-pipe-node.is-category {
   border: 2px solid var(--line);
   border-radius: 50%;
-  background: rgba(255,254,250,.985);
+  background: #fffefa;
+  box-shadow: 0 0 0 7px rgba(255,255,255,.62), 5px 6px 0 rgba(23,23,23,.08);
   text-align: center;
-  box-shadow: 0 0 0 7px rgba(255,255,255,.58), 5px 6px 0 rgba(21,21,21,.08);
 }
-
 .nen-pipe-node.is-category .nen-pipe-node__copy { justify-items: center; }
 .nen-pipe-node.is-category i { font-size: 30px; }
-.nen-pipe-node.is-category strong { font-size: 20px; }
-.nen-pipe-node.is-category em { max-width: 130px; text-align: center; }
+.nen-pipe-node.is-category strong { font-size: 21px; }
+.nen-pipe-node.is-category em { max-width: 136px; text-align: center; }
 
 .nen-pipe-node.is-user {
   display: grid;
-  grid-template-columns: 54px minmax(0,1fr);
+  grid-template-columns: 56px minmax(0,1fr);
   padding: 5px;
-  border-color: rgba(21,21,21,.48);
-  background: rgba(252,250,245,.98);
+  border-color: rgba(23,23,23,.48);
+  background: #fffefa;
 }
-
 .nen-pipe-node.is-user .source-portrait {
-  width: 54px;
-  height: 68px;
+  width: 56px;
+  height: 70px;
   overflow: hidden;
-  border: 1px solid rgba(21,21,21,.6);
+  border: 1px solid rgba(23,23,23,.58);
   border-radius: 0;
-  background: #e4e0d7;
+  background: #e7e2d8;
   filter: grayscale(1);
 }
-
 .nen-pipe-node.is-user .source-portrait img { width: 100%; height: 100%; object-fit: contain; object-position: center top; }
-.nen-pipe-node.is-user strong { font-size: 13px; }
+.nen-pipe-node.is-user strong { font-size: 14px; }
 
-.nen-pipe-node.is-topic,
-.nen-pipe-node.is-mini {
-  z-index: 4;
-  box-shadow: none;
-  background: rgba(252,250,245,.93);
+.nen-pipe-node.is-concept,
+.nen-pipe-node.is-principle,
+.nen-pipe-node.is-technique,
+.nen-pipe-node.is-classifier,
+.nen-pipe-node.is-hub,
+.nen-pipe-node.is-ability,
+.nen-pipe-node.is-rule,
+.nen-pipe-node.is-special {
+  background: #fffefa;
 }
 
-.nen-pipe-node.is-topic { justify-content: flex-start; padding: 8px 10px; }
-.nen-pipe-node.is-topic i { display: grid; place-items: center; flex: 0 0 auto; width: 34px; height: 34px; border: 1px solid rgba(21,21,21,.5); border-radius: 50%; font-size: 17px; }
-.nen-pipe-node.is-mini { justify-content: center; padding: 6px; text-align: center; }
-.nen-pipe-node.is-mini strong { font-size: 13px; }
+.nen-pipe-node.is-concept,
+.nen-pipe-node.is-principle,
+.nen-pipe-node.is-classifier,
+.nen-pipe-node.is-rule,
+.nen-pipe-node.is-special { justify-content: flex-start; }
+
+.nen-pipe-node.is-concept i,
+.nen-pipe-node.is-principle i,
+.nen-pipe-node.is-classifier i,
+.nen-pipe-node.is-rule i,
+.nen-pipe-node.is-special i {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(23,23,23,.5);
+  border-radius: 50%;
+  font-size: 17px;
+}
+
+.nen-pipe-node.is-principle { border-width: 2px; }
+.nen-pipe-node.is-principle strong { font-size: 19px; }
+.nen-pipe-node.is-technique,
+.nen-pipe-node.is-ability { justify-content: center; text-align: center; }
+.nen-pipe-node.is-technique strong,
+.nen-pipe-node.is-ability strong { font-size: 16px; }
+.nen-pipe-node.is-hub { border-width: 2px; text-align: center; }
+.nen-pipe-node.is-hub .nen-pipe-node__copy { justify-items: center; }
+.nen-pipe-node.is-hub strong { font-size: 22px; text-transform: uppercase; }
+.nen-pipe-node.is-rule { border-style: dashed; }
+.nen-pipe-node.is-special { border-style: double; }
+
+.nen-pipe-inspector {
+  position: absolute;
+  z-index: 24;
+  display: grid;
+  gap: 11px;
+  width: 400px;
+  max-height: 250px;
+  padding: 18px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  background: #fffefa;
+  box-shadow: 8px 9px 0 rgba(23,23,23,.12);
+}
+.nen-pipe-inspector::before { position: absolute; top: 0; right: 0; left: 0; height: 4px; background: var(--red); content: ""; }
+.nen-pipe-inspector.is-pinned { box-shadow: 0 0 0 3px var(--red), 8px 9px 0 rgba(23,23,23,.12); }
+.nen-pipe-inspector header { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; padding: 5px 0 10px; border-bottom: 1px solid var(--line-soft); }
+.nen-pipe-inspector header span { grid-column: 1; color: var(--red); font-size: 11px; font-weight: 900; letter-spacing: .11em; text-transform: uppercase; }
+.nen-pipe-inspector header h2 { grid-column: 1; margin: 0; font-family: var(--serif,Georgia,serif); font-size: 30px; line-height: .94; }
+.nen-pipe-inspector header button { grid-column: 2; grid-row: 1 / span 2; align-self: center; min-height: 44px; padding: 8px 10px; border: 1px solid var(--line); background: transparent; cursor: pointer; }
+.nen-pipe-inspector > p,
+.nen-pipe-inspector li { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.nen-pipe-inspector dl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0; }
+.nen-pipe-inspector dl div { padding: 8px; border: 1px solid var(--line-soft); }
+.nen-pipe-inspector dt { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+.nen-pipe-inspector dd { margin: 3px 0 0; font-size: 12px; font-weight: 800; line-height: 1.3; }
+.nen-pipe-inspector section { display: grid; gap: 6px; }
+.nen-pipe-inspector h3 { margin: 0; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.nen-pipe-inspector ul { display: grid; gap: 4px; margin: 0; padding-left: 18px; }
+.nen-pipe-inspector section > div { display: flex; flex-wrap: wrap; gap: 5px; }
+.nen-pipe-inspector section button { min-height: 36px; padding: 6px 8px; border: 1px solid var(--line-soft); background: transparent; font-size: 11px; cursor: pointer; }
+.nen-pipe-inspector section button:hover,
+.nen-pipe-inspector section button:focus-visible { border-color: var(--red); outline: none; }
 
 .nen-pipe-controls {
   position: absolute;
@@ -241,61 +299,22 @@
   display: flex;
   align-items: center;
   border: 1px solid var(--line);
-  background: rgba(250,248,242,.97);
-  box-shadow: 5px 6px 0 rgba(21,21,21,.11);
+  background: #fffefa;
+  box-shadow: 5px 6px 0 rgba(23,23,23,.11);
 }
-
 .nen-pipe-controls button { display: grid; place-items: center; width: 46px; height: 46px; border: 0; border-right: 1px solid var(--line); background: transparent; color: var(--ink); cursor: pointer; }
-.nen-pipe-controls button:hover, .nen-pipe-controls button:focus-visible { outline: none; background: var(--ink); color: #fff; }
+.nen-pipe-controls button:hover,
+.nen-pipe-controls button:focus-visible { outline: none; background: var(--ink); color: #fff; }
 .nen-pipe-controls output { min-width: 62px; padding: 0 10px; font-size: 11px; font-weight: 900; text-align: center; }
 
-.nen-pipe-inspector {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  z-index: 30;
-  display: grid;
-  gap: 11px;
-  width: min(330px, calc(100% - 36px));
-  max-height: calc(100% - 36px);
-  padding: 18px;
-  overflow: auto;
-  border: 1px solid var(--line);
-  background: rgba(252,250,245,.98);
-  box-shadow: 8px 9px 0 rgba(21,21,21,.12);
-}
-
-.nen-pipe-inspector::before { position: absolute; top: 0; right: 0; left: 0; height: 4px; background: var(--red); content: ""; }
-.nen-pipe-inspector.is-pinned { box-shadow: 0 0 0 3px var(--red), 8px 9px 0 rgba(21,21,21,.12); }
-.nen-pipe-inspector header { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; padding: 5px 0 10px; border-bottom: 1px solid var(--line-soft); }
-.nen-pipe-inspector header span { grid-column: 1; color: var(--red); font-size: 11px; font-weight: 900; letter-spacing: .11em; text-transform: uppercase; }
-.nen-pipe-inspector header h2 { grid-column: 1; margin: 0; font-family: var(--serif,Georgia,serif); font-size: 30px; line-height: .94; }
-.nen-pipe-inspector header button { grid-column: 2; grid-row: 1 / span 2; align-self: center; min-height: 44px; padding: 8px 10px; border: 1px solid var(--line); background: transparent; cursor: pointer; }
-.nen-pipe-inspector > p, .nen-pipe-inspector li { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.5; }
-.nen-pipe-inspector dl { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0; }
-.nen-pipe-inspector dl div { padding: 8px; border: 1px solid var(--line-soft); }
-.nen-pipe-inspector dt { color: var(--muted); font-size: 10px; text-transform: uppercase; }
-.nen-pipe-inspector dd { margin: 3px 0 0; font-size: 12px; font-weight: 800; line-height: 1.3; }
-.nen-pipe-inspector section { display: grid; gap: 6px; }
-.nen-pipe-inspector h3 { margin: 0; font-size: 10px; letter-spacing: .09em; text-transform: uppercase; }
-.nen-pipe-inspector ul { display: grid; gap: 4px; margin: 0; padding-left: 17px; }
-.nen-pipe-inspector section > div { display: flex; flex-wrap: wrap; gap: 5px; }
-.nen-pipe-inspector section button { min-height: 36px; padding: 6px 8px; border: 1px solid var(--line-soft); background: transparent; font-size: 11px; cursor: pointer; }
-.nen-pipe-inspector section button:hover, .nen-pipe-inspector section button:focus-visible { border-color: var(--red); outline: none; }
-.nen-pipe-inspector > a { display: inline-flex; align-items: center; justify-content: center; gap: 7px; min-height: 44px; padding: 9px 12px; border: 1px solid var(--line); background: var(--ink); color: #fff; font-size: 12px; font-weight: 850; text-decoration: none; }
-.nen-pipe-inspector > a:hover, .nen-pipe-inspector > a:focus-visible { outline: none; background: var(--red); }
-.nen-pipe-inspector > small { color: var(--muted); font-size: 11px; }
-
-@media (max-width: 760px) {
-  .nen-pipe-inspector { top: 10px; right: 10px; width: min(310px, calc(100% - 20px)); max-height: 38%; padding: 14px; }
-  .nen-pipe-inspector header h2 { font-size: 24px; }
+@media (max-width: 720px) {
   .nen-pipe-controls { left: 10px; bottom: 10px; }
   .nen-pipe-controls button { width: 44px; height: 44px; }
   .nen-pipe-controls output { min-width: 54px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .nen-pipe-node,
   .nen-pipe-connectors path,
-  .nen-pipe-connectors circle { transition: none; }
+  .nen-pipe-connectors circle,
+  .nen-pipe-node { transition: none; }
 }
