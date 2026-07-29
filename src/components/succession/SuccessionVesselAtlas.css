@@ -1,0 +1,337 @@
+/* Black Whale and location routes: ship blueprint, access control, occupancy and movement. */
+
+.black-whale-intelligence {
+  --ship-intel-canvas: #0e171c;
+  --ship-intel-surface: #16232a;
+  --ship-intel-raised: #22323a;
+  --ship-intel-paper: #eceeea;
+  --ship-intel-paper-muted: #dfe3df;
+  --ship-intel-ink: #edf1ef;
+  --ship-intel-muted: #aab6ba;
+  --ship-intel-paper-ink: #18272f;
+  --ship-intel-paper-muted-ink: #5d6c73;
+  --ship-intel-gold: #849ead;
+  --ship-intel-crimson: #9f3440;
+  --ship-intel-line: rgba(211, 222, 224, .18);
+  --ship-intel-line-strong: rgba(211, 222, 224, .3);
+}
+
+.black-whale-intelligence__hero {
+  border-radius: 5px;
+  background:
+    linear-gradient(rgba(143, 170, 184, .045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 170, 184, .045) 1px, transparent 1px),
+    linear-gradient(145deg, #16232a, #0d151a);
+  background-size: 28px 28px, 28px 28px, auto;
+  box-shadow: none;
+}
+
+.black-whale-intelligence__hero::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 5px;
+  background: #31586f;
+  content: "";
+}
+
+.black-whale-intelligence__hero::after {
+  color: rgba(237, 241, 239, .025);
+  font-family: var(--mono);
+  letter-spacing: -.035em;
+}
+
+.black-whale-intelligence__hero .section-kicker {
+  color: #93aebd;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.black-whale-intelligence__hero h2 {
+  color: #fff;
+  font-family: var(--sans);
+  font-weight: 760;
+}
+
+.black-whale-intelligence__hero > div:first-child > p {
+  color: #b1bcbf;
+  font-size: 14px;
+}
+
+.black-whale-intelligence__hero dl {
+  gap: 1px;
+  border: 1px solid rgba(211, 222, 224, .18);
+  background: rgba(211, 222, 224, .12);
+}
+
+.black-whale-intelligence__hero dl > div {
+  border: 0;
+  border-radius: 0;
+  background: rgba(255, 255, 255, .035);
+}
+
+.black-whale-intelligence__hero dt {
+  color: #87979f;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.black-whale-intelligence__hero dd {
+  color: #fff;
+  font-family: var(--mono);
+}
+
+.ship-source-banner {
+  border-radius: 4px;
+  border-color: rgba(29, 48, 58, .28);
+  background: #e7eae6;
+  box-shadow: none;
+}
+
+.ship-source-banner > svg {
+  color: #31586f;
+}
+
+.ship-source-banner strong,
+.ship-source-banner h3 {
+  color: #1a2a32;
+  font-family: var(--sans);
+}
+
+.ship-source-banner p {
+  color: #5a6970;
+}
+
+.ship-source-banner__actions button,
+.ship-source-banner__actions a {
+  border-radius: 3px;
+  color: #294f64;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.ship-temporal-command {
+  border-radius: 4px;
+  background: #e4e7e3;
+  box-shadow: none;
+}
+
+.ship-temporal-command > header > svg,
+.ship-temporal-command > header small,
+.ship-location-inspector__occupants > span,
+.ship-location-inspector__movements > span,
+.ship-temporal-ledger > header small {
+  color: #31586f;
+}
+
+.ship-temporal-command > header h3,
+.ship-temporal-ledger > header h3 {
+  color: #1a2a32;
+  font-family: var(--sans);
+  font-weight: 720;
+}
+
+.ship-temporal-command > header > b {
+  border-radius: 3px;
+  background: rgba(159, 52, 64, .1);
+  color: #8d303a;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.ship-temporal-command > nav {
+  gap: 1px;
+  border: 1px solid rgba(26, 42, 50, .22);
+  background: rgba(26, 42, 50, .18);
+}
+
+.ship-temporal-command > nav button {
+  border: 0;
+  border-radius: 0;
+  background: #eef0ec;
+  color: #53636b;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.ship-temporal-command > nav button:hover,
+.ship-temporal-command > nav button:focus-visible,
+.ship-temporal-command > nav button.is-active {
+  border-color: #31586f;
+  background: #31586f;
+  color: #fff;
+}
+
+.ship-temporal-command > label {
+  border-radius: 3px;
+  background: #edf0ec;
+  font-size: 9px;
+}
+
+.ship-temporal-command > label input {
+  accent-color: #31586f;
+}
+
+.ship-temporal-command > footer {
+  gap: 1px;
+  border: 1px solid rgba(26, 42, 50, .2);
+  background: rgba(26, 42, 50, .16);
+}
+
+.ship-temporal-command > footer > div {
+  border-radius: 0;
+  background: #eceeea;
+}
+
+.ship-temporal-command footer span {
+  font-size: 8px;
+}
+
+.ship-temporal-command footer strong {
+  font-family: var(--mono);
+}
+
+.black-whale-intelligence .interactive-ship-map {
+  border-radius: 4px;
+  background:
+    linear-gradient(rgba(143, 170, 184, .055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 170, 184, .055) 1px, transparent 1px),
+    #0e171c;
+  background-size: 24px 24px;
+  box-shadow: none;
+}
+
+.black-whale-intelligence .interactive-ship-map__toolbar {
+  border-bottom: 1px solid rgba(211, 222, 224, .17);
+  background: #152128;
+  color: #edf1ef;
+}
+
+.black-whale-intelligence .interactive-ship-map__toolbar span,
+.black-whale-intelligence .interactive-ship-map__toolbar small {
+  font-family: var(--mono);
+}
+
+.black-whale-intelligence .interactive-ship-map__toolbar button {
+  border-radius: 3px;
+  background: #22323a;
+  color: #dce3e2;
+}
+
+.ship-movement-overlay line {
+  stroke: #a23b46;
+  filter: none;
+}
+
+.ship-movement-overlay marker path {
+  fill: #a9c0cc;
+}
+
+.black-whale-intelligence .ship-hotspot.has-events > i {
+  border-color: #c1762b;
+}
+
+.black-whale-intelligence .ship-hotspot.has-arrivals > i {
+  background: #9f3440;
+}
+
+.ship-hotspot__count {
+  border-radius: 3px;
+  border-color: #dfe4e2;
+  background: #9f3440;
+  box-shadow: none;
+}
+
+.black-whale-intelligence.is-occupancy .ship-hotspot__count {
+  background: #4f746d;
+}
+
+.black-whale-intelligence .ship-location-inspector {
+  border-radius: 4px;
+  background: #e7eae6;
+  box-shadow: none;
+}
+
+.black-whale-intelligence .ship-location-inspector > header > span {
+  color: #31586f;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.black-whale-intelligence .ship-location-inspector > header h3 {
+  color: #17272f;
+  font-family: var(--sans);
+  font-weight: 730;
+}
+
+.black-whale-intelligence .ship-location-inspector > header p,
+.black-whale-intelligence .ship-location-inspector > p {
+  color: #5a6970;
+}
+
+.ship-location-inspector__snapshot,
+.ship-location-inspector__occupants,
+.ship-location-inspector__movements,
+.ship-temporal-ledger,
+.ship-room-index,
+.ship-tier-index {
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.ship-location-inspector__snapshot {
+  gap: 1px;
+  border: 1px solid rgba(25, 40, 48, .22);
+  background: rgba(25, 40, 48, .18);
+}
+
+.ship-location-inspector__snapshot > div {
+  border-radius: 0;
+  background: #eceeea;
+}
+
+.ship-temporal-ledger,
+.ship-room-index,
+.ship-tier-index {
+  border-color: rgba(24, 39, 47, .24);
+  background: #e7eae6;
+}
+
+.ship-temporal-ledger > header small,
+.ship-room-index .section-kicker,
+.ship-tier-index .section-kicker {
+  color: #31586f;
+  font-family: var(--mono);
+}
+
+.ship-temporal-ledger article,
+.ship-room-index article,
+.ship-tier-index article,
+.ship-room-index button,
+.ship-tier-index button {
+  border-radius: 3px;
+  box-shadow: none;
+}
+
+.ship-room-index button:hover,
+.ship-tier-index button:hover,
+.ship-room-index button.is-active,
+.ship-tier-index button.is-active {
+  border-color: #52768a;
+  background: #dce4e6;
+}
+
+@media (max-width: 760px) {
+  .black-whale-intelligence__hero {
+    grid-template-columns: 1fr;
+  }
+
+  .ship-temporal-command > footer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
