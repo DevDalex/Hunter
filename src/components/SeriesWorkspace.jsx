@@ -105,19 +105,10 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   };
 
   const openSuccessionChapterRecord = (chapter) => {
-    const form = document.createElement('form');
-    form.method = 'get';
-    form.action = '/story/succession-contest/chapter-records';
-    form.hidden = true;
-    for (const [name, value] of Object.entries({ entity: `chapter:${chapter}`, chapter })) {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = name;
-      input.value = String(value);
-      form.append(input);
-    }
-    document.body.append(form);
-    form.submit();
+    onNavigate('succession', 'chapters', {
+      entity: `chapter:${chapter}`,
+      chapter,
+    });
   };
 
   if (!routeTarget) return <Suspense fallback={<StoryLoading label="Story directory" />}><StoryHub onNavigate={onNavigate} onPrefetch={onPrefetch} /></Suspense>;
