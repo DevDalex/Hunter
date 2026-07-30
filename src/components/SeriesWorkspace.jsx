@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { flushSync } from 'react-dom';
 import { ExternalLink, Grid2X2, List, Search } from 'lucide-react';
 import PageIntro from './PageIntro';
 import WorkspaceNav from './WorkspaceNav';
@@ -105,9 +106,11 @@ export default function SeriesWorkspace({ routeTarget, routeParams, spoilerLimit
   };
 
   const openSuccessionChapterRecord = (chapter) => {
-    onNavigate('succession', 'chapters', {
-      entity: `chapter:${chapter}`,
-      chapter,
+    flushSync(() => {
+      onNavigate('succession', 'chapters', {
+        entity: `chapter:${chapter}`,
+        chapter,
+      });
     });
   };
 
