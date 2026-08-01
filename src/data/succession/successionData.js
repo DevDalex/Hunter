@@ -13,7 +13,7 @@ import { createOrganizationStateSelectors } from './organizationStateSelectors.j
 import { createPeopleInstitutionClosure } from './peopleInstitutionClosure.js';
 import { createNenSystemSelectors } from './nenSystemSelectors.js';
 import { createStoryIntelligenceSelectors } from './storyIntelligenceSelectors.js';
-import { createProductClosureSelectors } from './productClosureSelectorsFinal.js';
+import { createProductClosureSelectors } from './productClosureSelectorsPhase4.js';
 import { createFinalReleaseClosure } from './finalReleaseClosure.js';
 import { assertValidSuccessionArchiveData } from './schemasFinal.js';
 
