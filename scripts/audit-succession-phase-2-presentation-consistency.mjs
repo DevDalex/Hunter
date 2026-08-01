@@ -7,12 +7,14 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Phase 2 presentation audit failed: ${message}`);
 };
 
-const [indexHtml, css] = await Promise.all([
-  read('index.html'),
+const [entry, loader, css] = await Promise.all([
+  read('src/components/succession/SuccessionArchiveEntry.jsx'),
+  read('src/components/succession/SuccessionPhase2PresentationConsistency.css'),
   read('public/succession-phase-2-presentation-consistency.css'),
 ]);
 
-assert(indexHtml.includes('/succession-phase-2-presentation-consistency.css'), 'index.html must load the Phase 2 presentation layer');
+assert(entry.includes("import './SuccessionPhase2PresentationConsistency.css'"), 'the Succession entry must own the Phase 2 presentation layer');
+assert(loader.includes("@import url('/succession-phase-2-presentation-consistency.css')"), 'the route-owned loader must resolve the cacheable Phase 2 sheet');
 assert(css.includes('@media (min-width: 1024px)'), 'Phase 2 must remain desktop and laptop only');
 assert(!css.includes('@media (max-width:'), 'Phase 2 must not introduce tablet or mobile presentation rules');
 
