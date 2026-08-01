@@ -86,11 +86,11 @@ const base = `http://127.0.0.1:${server.address().port}`;
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 
-  await record('Succession root opens the Phase 1 architecture board', desktop, async () => {
+  await record('Succession root opens the Phase 2 full-canvas architecture board', desktop, async () => {
     await desktop.goto(`${base}/story/succession-contest`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
     await desktop.waitForSelector('.succession-archive[data-archive-route="story"][data-archive-hub="story"]', { timeout: 15_000 });
     const board = desktop.locator('.succession-architecture-board');
-    if (await board.count() !== 1) throw new Error('Phase 1 architecture board is missing or duplicated');
+    if (await board.count() !== 1) throw new Error('Phase 2 architecture board is missing or duplicated');
     if (await board.locator('.succession-architecture__left-column #succession-desktop-navigation').count() !== 1) throw new Error('Persistent architecture navigation rail is missing or duplicated');
     const title = await board.locator('.succession-architecture__title h1').innerText();
     if (title.trim() !== 'Succession Contest') throw new Error(`Unexpected architecture title: ${title}`);
@@ -103,9 +103,21 @@ try {
     const primaryLabels = await board.locator('#succession-desktop-navigation a').allInnerTexts();
     const expected = ['Story Intelligence', 'People & Power', 'Black Whale', 'Nen Systems', 'Search', 'Research', 'Glossary'];
     if (primaryLabels.map(normalizeText).join('|') !== expected.map(normalizeText).join('|')) throw new Error(`Unexpected top-level navigation: ${primaryLabels.join(' | ')}`);
-    const storyTabs = await board.locator('.succession-hub-tabs a').allInnerTexts();
+    const storyTabs = await board.locator('.succession-hub-tabs a').evaluateAll((links) => links.map((link) => link.getAttribute('aria-label') || link.querySelector('strong')?.textContent || ''));
     const expectedStoryTabs = ['Story', 'Chapters', 'Timeline', 'Events'];
     if (storyTabs.map(normalizeText).join('|') !== expectedStoryTabs.map(normalizeText).join('|')) throw new Error(`Story architecture views are incomplete: ${storyTabs.join(' | ')}`);
+    const viewport = await desktop.evaluate(() => ({
+      horizontalOverflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+      verticalOverflow: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - innerHeight,
+      bodyOverflow: getComputedStyle(document.body).overflow,
+      boardPosition: getComputedStyle(document.querySelector('.succession-architecture-board')).position,
+      bodyBackground: getComputedStyle(document.body).backgroundColor,
+    }));
+    if (viewport.horizontalOverflow > 1) throw new Error(`Architecture canvas overflows horizontally by ${viewport.horizontalOverflow}px`);
+    if (viewport.verticalOverflow > 1) throw new Error(`Architecture canvas still creates ${viewport.verticalOverflow}px of desktop page scroll`);
+    if (viewport.bodyOverflow !== 'hidden') throw new Error(`Desktop architecture body overflow is ${viewport.bodyOverflow}, expected hidden`);
+    if (viewport.boardPosition !== 'fixed') throw new Error(`Architecture canvas position is ${viewport.boardPosition}, expected fixed`);
+    if (viewport.bodyBackground === 'rgb(9, 11, 15)' || viewport.bodyBackground === 'rgb(13, 17, 23)') throw new Error('Dark side gutters remain behind the architecture canvas');
     if (await desktop.getByRole('link', { name: 'Archive Home', exact: true }).count()) throw new Error('Archive Home returned to navigation');
     if (await desktop.getByRole('link', { name: 'Reader', exact: true }).count()) throw new Error('Duplicate Reader returned to navigation');
     if (await desktop.locator('.arc-page--succession-contest').count()) throw new Error('Legacy grouped arc page is still mounted at the archive root');
