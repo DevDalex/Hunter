@@ -18,6 +18,7 @@ import './SuccessionBrowserQaClosure.css';
 import './SuccessionBrowserQaClosureFinal.css';
 import './SuccessionFinalReleasePatch.css';
 import './SuccessionExactContrastClosure.css';
+import './SuccessionPhase2DesignSystem.css';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));

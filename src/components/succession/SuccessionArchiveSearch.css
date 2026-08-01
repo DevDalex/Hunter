@@ -10,6 +10,7 @@
 @import './SuccessionArchiveLocationCommand.css';
 @import './SuccessionArchiveBlackWhaleCommand.css';
 @import './SuccessionArchiveFinalPolish.css';
+@import './SuccessionPhase2DesignSystem.css';
 
 .succession-search-complete {
   display: grid;
