@@ -19,6 +19,11 @@ export const validateSuccessionArchiveData = (data) => {
   const base = validateBaseSuccessionArchiveData(canonicalDataOnly(data));
   const information = validateInformationConsistencyData(data);
   const intelligence = validateHighValueIntelligenceData(data);
+  const intelligenceEntityCount = intelligence.stats.knowledgeRecords
+    + intelligence.stats.protocols
+    + intelligence.stats.objects
+    + intelligence.stats.documents
+    + intelligence.stats.evidenceItems;
   const errors = Object.freeze([...base.errors, ...information.errors, ...intelligence.errors]);
   const warnings = Object.freeze([...base.warnings, ...information.warnings, ...intelligence.warnings]);
   return Object.freeze({
@@ -27,6 +32,7 @@ export const validateSuccessionArchiveData = (data) => {
     warnings,
     stats: Object.freeze({
       ...base.stats,
+      entities: base.stats.entities + intelligenceEntityCount,
       informationConsistencyVersion: data.informationConsistencyVersion || 'unversioned',
       highValueIntelligenceVersion: data.highValueIntelligenceVersion || 'unversioned',
       structuredStateCharacters: information.stats.explicitStateCharacters,
