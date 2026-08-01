@@ -1,6 +1,10 @@
 import { successionArchiveData as productFoundationData } from './entitiesProductClosureFoundation.js';
 import { applySuccession414415ArchiveCorrections } from '../succession414415Research.js';
 
+const PENDING_PHASE_ID = 'story-phase:pending-current-release';
+const PENDING_STORY_STATUS = 'Reader media indexed; detailed research pending verified chapter documentation';
+const unique = (values) => [...new Set(values.filter(Boolean))];
+
 const systemIdCorrections = Object.freeze({
   'nen-system:post-mortem-nen-continuation': 'nen-system:post-mortem-nen',
   'nen-system:royal-curse-networks': 'nen-system:curse-networks',
@@ -13,11 +17,29 @@ const glossaryEntries = Object.freeze((productFoundationData.glossaryEntries || 
   relatedEntityIds: Object.freeze((entry.relatedEntityIds || []).map((id) => systemIdCorrections[id] || id)),
 })));
 
+const pendingPhaseTemplate = productFoundationData.storyPhaseProfiles?.[PENDING_PHASE_ID] || null;
 const chapterCurrencyData = applySuccession414415ArchiveCorrections(Object.freeze({
   ...productFoundationData,
   glossaryEntries,
 }));
 const latestImportedChapter = chapterCurrencyData.chapters.at(-1)?.number || 415;
+const detailedResearchBoundary = chapterCurrencyData.currentResearchBoundary?.detailedThrough || 415;
+const pendingChapters = chapterCurrencyData.chapters.filter((chapter) => chapter.number > detailedResearchBoundary);
+const pendingPhase = pendingChapters.length && pendingPhaseTemplate
+  ? Object.freeze({
+    ...pendingPhaseTemplate,
+    name: pendingChapters.length === 1 ? 'Current imported release pending annotation' : 'Imported releases pending annotation',
+    summary: pendingChapters.length === 1
+      ? 'The reader contains the current imported chapter, but detailed story claims remain pending maintained research review.'
+      : `The reader contains Chapters ${pendingChapters[0].number}–${pendingChapters.at(-1).number}, but detailed story claims remain pending maintained research review.`,
+    chapterRange: Object.freeze({ start: pendingChapters[0].number, end: pendingChapters.at(-1).number }),
+    laneIds: Object.freeze([]),
+    threadIds: Object.freeze([]),
+    eventIds: Object.freeze([]),
+    sourceIds: Object.freeze(unique(pendingChapters.flatMap((chapter) => chapter.sourceIds || []))),
+    status: 'pending-maintained-research',
+  })
+  : null;
 
 const closeSupersededStateRanges = (profiles = {}) => Object.freeze(Object.fromEntries(
   Object.entries(profiles).map(([characterId, records]) => {
@@ -50,8 +72,30 @@ const normalizeCharacterBoundary = (character) => {
   });
 };
 
+const normalizePendingChapter = (chapter) => {
+  if (chapter.number <= detailedResearchBoundary || !pendingPhase) return chapter;
+  return Object.freeze({
+    ...chapter,
+    storyPhaseIds: Object.freeze([PENDING_PHASE_ID]),
+    storyLaneIds: Object.freeze([]),
+    storyThreadIds: Object.freeze([]),
+    storyIntelligenceStatus: PENDING_STORY_STATUS,
+    storyCoverage: Object.freeze({
+      ...(chapter.storyCoverage || {}),
+      phase: true,
+      lanes: true,
+      threads: true,
+    }),
+  });
+};
+
 export const successionArchiveData = Object.freeze({
   ...chapterCurrencyData,
   characters: Object.freeze(chapterCurrencyData.characters.map(normalizeCharacterBoundary)),
+  chapters: Object.freeze(chapterCurrencyData.chapters.map(normalizePendingChapter)),
+  storyPhaseProfiles: Object.freeze({
+    ...(chapterCurrencyData.storyPhaseProfiles || {}),
+    ...(pendingPhase ? { [PENDING_PHASE_ID]: pendingPhase } : {}),
+  }),
   characterStateProfiles: closeSupersededStateRanges(chapterCurrencyData.characterStateProfiles),
 });
