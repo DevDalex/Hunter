@@ -10,6 +10,11 @@ export const ENTITY_TYPES = Object.freeze({
   CHAPTER: 'chapter',
   RELATIONSHIP: 'relationship',
   SOURCE: 'source',
+  KNOWLEDGE_RECORD: 'knowledge-record',
+  PROTOCOL: 'protocol',
+  OBJECT: 'object',
+  DOCUMENT: 'document',
+  EVIDENCE_ITEM: 'evidence-item',
 });
 
 export const ENTITY_TYPE_VALUES = Object.freeze(Object.values(ENTITY_TYPES));
@@ -103,6 +108,48 @@ export const OFFICIAL_ROLE_KINDS = Object.freeze({
   UNCLASSIFIED: 'unclassified',
 });
 export const OFFICIAL_ROLE_KIND_VALUES = Object.freeze(Object.values(OFFICIAL_ROLE_KINDS));
+
+/* Phase 4 makes information itself queryable. These values describe how far a
+   claim has travelled, not whether the claim is objectively true. */
+export const KNOWLEDGE_STATES = Object.freeze({
+  SECRET: 'secret',
+  LIMITED: 'limited',
+  SHARED: 'shared',
+  PUBLIC: 'public',
+  DISPUTED: 'disputed',
+  FALSE_BELIEF: 'false-belief',
+  INFERRED: 'inferred',
+  UNKNOWN: 'unknown',
+});
+export const KNOWLEDGE_STATE_VALUES = Object.freeze(Object.values(KNOWLEDGE_STATES));
+
+export const PROTOCOL_DOMAINS = Object.freeze({
+  RITUAL: 'ritual',
+  NEN_CONDITION: 'nen-condition',
+  LAW: 'law',
+  MILITARY_ORDER: 'military-order',
+  JUDICIAL_PROCEDURE: 'judicial-procedure',
+  ROYAL_PROTOCOL: 'royal-protocol',
+  OPERATIONAL_RULE: 'operational-rule',
+});
+export const PROTOCOL_DOMAIN_VALUES = Object.freeze(Object.values(PROTOCOL_DOMAINS));
+
+export const PROTOCOL_STATUSES = Object.freeze([
+  'confirmed',
+  'partially-confirmed',
+  'disputed',
+  'unknown',
+]);
+
+export const ARTIFACT_STATES = Object.freeze([
+  'active',
+  'held',
+  'stored',
+  'deployed',
+  'consumed',
+  'destroyed',
+  'unknown',
+]);
 
 export const ORGANIZATION_STATUSES = Object.freeze([
   'active',
