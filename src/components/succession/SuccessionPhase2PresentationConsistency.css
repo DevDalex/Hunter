@@ -1,0 +1,6 @@
+/*
+ * Route-owned loader for the desktop-only Phase 2 presentation contract.
+ * The public sheet remains independently cacheable and is loaded only when the
+ * Succession application is entered.
+ */
+@import url('/succession-phase-2-presentation-consistency.css');
