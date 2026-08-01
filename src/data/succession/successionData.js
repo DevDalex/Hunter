@@ -1,4 +1,6 @@
 import { successionArchiveData } from './entitiesInformationConsistency.js';
+import { successionArchiveData as productClosureLineage } from './entitiesProductClosureCorrections.js';
+import { successionArchiveData as storyFoundationLineage } from './entitiesStoryIntelligenceFoundation.js';
 // Active predecessor chain: entitiesInformationConsistency.js -> entitiesProductClosureCorrections.js -> entitiesProductClosureFoundation.js -> entitiesStoryIntelligenceFoundation.js -> entitiesNenSystemFoundation.js -> entitiesOrganizationFoundation.js.
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { createEventKnowledgeSelectors } from './eventKnowledgeSelectors.js';
@@ -13,6 +15,15 @@ import { createStoryIntelligenceSelectors } from './storyIntelligenceSelectors.j
 import { createProductClosureSelectors } from './productClosureSelectorsFinal.js';
 import { createFinalReleaseClosure } from './finalReleaseClosure.js';
 import { assertValidSuccessionArchiveData } from './schemasFinal.js';
+
+const informationConsistencyLineage = Object.freeze({
+  correctedProductChapterCount: productClosureLineage.chapters.length,
+  storyPhaseCount: Object.keys(storyFoundationLineage.storyPhaseProfiles || {}).length,
+});
+if (informationConsistencyLineage.correctedProductChapterCount !== successionArchiveData.chapters.length
+  || informationConsistencyLineage.storyPhaseCount === 0) {
+  throw new Error('Succession information consistency predecessor chain is incomplete.');
+}
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
 export const successionArchiveIndexes = buildSuccessionIndexes(successionArchiveData);
