@@ -2,8 +2,9 @@ import { createServer } from 'node:http';
 import { access, mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
-import { SUCCESSION_READER_END } from '../src/data/successionChapterReader.js';
+import { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } from '../src/data/successionChapterAvailability.generated.js';
 
+const SUCCESSION_READER_END = Math.max(414, LATEST_AUTHORIZED_SUCCESSION_CHAPTER);
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
 const output = path.resolve(root, process.env.SUCCESSION_READER_ENHANCEMENTS_QA_OUTPUT || '.succession-reader-enhancements-qa');
