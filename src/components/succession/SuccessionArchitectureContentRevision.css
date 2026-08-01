@@ -1,0 +1,267 @@
+
+/* Succession content-first portal revision. Loaded after the approved Phase 2 layers. */
+body.succession-architecture-mode{background:#ecece7!important;overflow:hidden!important}
+body.succession-architecture-mode .site-footer{display:none!important}
+.succession-archive.succession-architecture-board{
+  --arch-ink:#151513;--arch-soft:#41413d;--arch-muted:#666660;--arch-line:#8c8c85;
+  --arch-line-soft:#c8c8c0;--arch-paper:#fbfbf7;--arch-alt:#efefe9;
+  position:fixed!important;inset:0!important;display:block!important;place-items:unset!important;
+  width:100vw!important;height:100vh!important;min-height:100vh!important;margin:0!important;padding:0!important;
+  overflow:hidden!important;scale:1!important;transform:none!important;background:#ecece7!important
+}
+.succession-architecture-board .succession-archive__content{
+  width:100%!important;height:100%!important;min-height:0!important;padding:0!important;overflow:hidden!important
+}
+.succession-architecture-board .succession-architecture__sheet{
+  box-sizing:border-box!important;width:100vw!important;min-width:0!important;max-width:none!important;
+  height:100vh!important;min-height:100vh!important;max-height:none!important;margin:0!important;padding:18px 18px 12px!important;
+  overflow-x:hidden!important;overflow-y:auto!important;scale:1!important;transform:none!important;transform-origin:center!important;
+  border:0!important;background:var(--arch-paper)!important;box-shadow:none!important
+}
+.succession-architecture-board .succession-architecture__masthead{
+  display:grid!important;grid-template-columns:230px minmax(0,1fr) 250px!important;align-items:center!important;
+  gap:22px!important;min-height:118px!important;padding:12px 4px 18px!important;border-bottom:1px solid var(--arch-line)!important
+}
+.succession-architecture-board .succession-architecture__identity{display:flex!important;align-items:center!important;gap:12px!important}
+.succession-architecture-board .succession-architecture__identity>span{display:grid!important;width:46px!important;height:46px!important;flex:0 0 46px!important;place-items:center!important;border:1px solid var(--arch-line)!important;border-radius:50%!important}
+.succession-architecture-board .succession-architecture__identity strong{font-family:Georgia,"Times New Roman",serif!important;font-size:15px!important;letter-spacing:.045em!important}
+.succession-architecture-board .succession-architecture__identity small{display:block!important;margin-top:7px!important;color:var(--arch-muted)!important;line-height:1.45!important;letter-spacing:.045em!important}
+.succession-architecture-board .succession-architecture__title{text-align:center!important}
+.succession-architecture-board .succession-architecture__title h1{margin:0!important;font-size:clamp(50px,4.6vw,70px)!important;letter-spacing:-.045em!important;line-height:.95!important}
+.succession-architecture-board .succession-architecture__title p{display:block!important;margin:10px 0 0!important;color:var(--arch-soft)!important;font-style:normal!important;font-weight:800!important;letter-spacing:.13em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__title p:before,.succession-architecture-board .succession-architecture__title p:after{display:none!important}
+.succession-architecture-board .succession-architecture__title-description{display:block!important;max-width:720px!important;margin:7px auto 0!important;color:var(--arch-muted)!important;font-family:Georgia,"Times New Roman",serif!important;line-height:1.45!important}
+.succession-architecture-board .succession-architecture__document-meta{position:relative!important;min-height:96px!important;padding-left:16px!important;border-left:1px solid var(--arch-line-soft)!important}
+.succession-architecture-board .succession-architecture__document-meta dl{display:grid!important;gap:5px!important;margin:0!important}
+.succession-architecture-board .succession-architecture__document-meta dl>div{display:flex!important;justify-content:space-between!important;gap:10px!important}
+.succession-architecture-board .succession-architecture__document-meta dt,.succession-architecture-board .succession-architecture__document-meta dd{margin:0!important;font-weight:750!important;letter-spacing:.055em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__document-meta>span{display:inline-block!important;margin-top:7px!important;padding:3px 6px!important;border:1px solid var(--arch-line)!important;font-weight:800!important;letter-spacing:.08em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__stamp{right:0!important;bottom:-5px!important;width:76px!important;height:76px!important;opacity:.78!important;transform:rotate(-8deg)!important}
+
+.succession-architecture-board .succession-architecture__primary-grid{
+  display:grid!important;grid-template-columns:220px minmax(0,1fr) 250px!important;align-items:stretch!important;
+  gap:14px!important;height:auto!important;padding:14px 0!important;overflow:visible!important;border-bottom:1px solid var(--arch-line)!important
+}
+.succession-architecture-board .succession-architecture__left-column,.succession-architecture-board .succession-architecture__library{
+  display:grid!important;align-content:start!important;gap:12px!important;min-width:0!important;height:auto!important;overflow:visible!important
+}
+.succession-architecture-board .succession-architecture__navigation,.succession-architecture-board .succession-architecture__library{
+  border:1px solid var(--arch-line)!important;background:var(--arch-alt)!important
+}
+.succession-architecture-board .succession-architecture__navigation h2,.succession-architecture-board .succession-architecture__library>h2{
+  margin:0!important;padding:9px 11px!important;border-bottom:1px solid var(--arch-line)!important;
+  background:#e8e8e2!important;font-family:Georgia,"Times New Roman",serif!important;font-size:13px!important;
+  font-weight:600!important;letter-spacing:.05em!important;text-align:left!important;text-transform:uppercase!important
+}
+.succession-architecture-board .succession-architecture__navigation>a{
+  display:grid!important;grid-template-columns:36px minmax(0,1fr) 15px!important;grid-template-rows:auto auto!important;
+  align-items:center!important;gap:3px 8px!important;min-height:68px!important;padding:9px 10px!important;
+  border:0!important;border-bottom:1px solid var(--arch-line-soft)!important;background:var(--arch-paper)!important;text-decoration:none!important
+}
+.succession-architecture-board .succession-architecture__navigation>a.is-current{color:#fff!important;background:#1b1b19!important}
+.succession-architecture-board .succession-architecture__navigation-icon{grid-column:1!important;grid-row:1/span 2!important;display:grid!important;width:34px!important;height:34px!important;place-items:center!important;border:1px solid currentColor!important;border-radius:50%!important}
+.succession-architecture-board .succession-architecture__navigation>a>span{grid-column:2!important;grid-row:1!important;font-family:Georgia,"Times New Roman",serif!important;font-size:13px!important;font-weight:600!important}
+.succession-architecture-board .succession-architecture__navigation>a>small{grid-column:2!important;grid-row:2!important;color:inherit!important;letter-spacing:.05em!important;opacity:.76!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__navigation>a>svg{grid-column:3!important;grid-row:1/span 2!important}
+.succession-architecture-board .succession-architecture__legacy-library-shortcuts{position:absolute!important;width:1px!important;height:1px!important;margin:-1px!important;padding:0!important;overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important}
+
+.succession-architecture-board .succession-architecture__whale-portrait{
+  position:relative!important;display:block!important;min-height:0!important;overflow:hidden!important;
+  border:1px solid var(--arch-line)!important;background:#f1f1eb!important;color:var(--arch-ink)!important;text-decoration:none!important
+}
+.succession-architecture-board .succession-architecture__whale-portrait>img,.succession-architecture-board .succession-architecture__whale-portrait>.safe-image-placeholder{
+  display:block!important;width:100%!important;height:150px!important;object-fit:contain!important;filter:grayscale(1) contrast(1.08)!important;background:#f8f8f4!important
+}
+.succession-architecture-board .succession-architecture__whale-portrait>span{display:grid!important;gap:3px!important;padding:9px 10px!important;border-top:1px solid var(--arch-line-soft)!important;background:var(--arch-paper)!important}
+.succession-architecture-board .succession-architecture__whale-portrait>span small{color:var(--arch-muted)!important;font-weight:800!important;letter-spacing:.08em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__whale-portrait>span strong{font-family:Georgia,"Times New Roman",serif!important;font-size:16px!important;font-weight:600!important}
+.succession-architecture-board .succession-architecture__whale-portrait>span em{color:var(--arch-muted)!important;font-style:normal!important;line-height:1.35!important}
+.succession-architecture-board .succession-architecture__whale-portrait.is-compact>img,.succession-architecture-board .succession-architecture__whale-portrait.is-compact>.safe-image-placeholder{height:105px!important}
+
+.succession-architecture-board .succession-architecture__modules{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:repeat(2,auto)!important;
+  align-items:stretch!important;gap:14px!important;min-width:0!important;height:auto!important;overflow:visible!important
+}
+.succession-architecture-board .succession-architecture__module{
+  display:grid!important;grid-template-columns:1fr!important;align-content:start!important;gap:10px!important;
+  min-width:0!important;min-height:850px!important;height:auto!important;overflow:hidden!important;
+  border:1px solid var(--arch-line)!important;background:var(--arch-paper)!important
+}
+.succession-architecture-board .succession-architecture__module>header{
+  display:grid!important;grid-template-columns:42px minmax(0,1fr) 20px!important;align-items:center!important;
+  min-height:58px!important;margin:0!important;padding:0 10px 0 0!important;border:0!important;border-bottom:1px solid var(--arch-line)!important;background:#e8e8e2!important
+}
+.succession-architecture-board .succession-architecture__module>header>span{
+  display:grid!important;width:42px!important;height:100%!important;place-items:center!important;color:#fff!important;background:#1a1a18!important;
+  font-family:Georgia,"Times New Roman",serif!important;font-size:20px!important
+}
+.succession-architecture-board .succession-architecture__module>header h2{margin:0!important;font-family:Georgia,"Times New Roman",serif!important;font-size:22px!important;font-weight:500!important;letter-spacing:-.015em!important;line-height:1!important;text-transform:none!important}
+.succession-architecture-board .succession-architecture__module>header p{margin:4px 0 0!important;color:var(--arch-muted)!important;font-weight:800!important;letter-spacing:.08em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__module-summary{margin:0!important;padding:0 12px 10px!important;border-bottom:1px solid var(--arch-line-soft)!important;color:var(--arch-soft)!important;font-family:Georgia,"Times New Roman",serif!important;line-height:1.5!important}
+.succession-architecture-board .succession-architecture__skeleton-tabs{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:0!important;
+  margin:0 12px!important;border:1px solid var(--arch-line-soft)!important;background:#f7f7f3!important
+}
+.succession-architecture-board .succession-architecture__skeleton-tabs a{display:grid!important;min-height:44px!important;place-items:center!important;padding:7px!important;border-right:1px solid var(--arch-line-soft)!important;color:var(--arch-ink)!important;text-decoration:none!important}
+.succession-architecture-board .succession-architecture__skeleton-tabs a:last-child{border-right:0!important}
+.succession-architecture-board .succession-architecture__skeleton-tabs strong{font-family:Georgia,"Times New Roman",serif!important;font-size:11px!important;font-weight:600!important}
+
+.succession-architecture-board .succession-architecture__story-visual,.succession-architecture-board .succession-architecture__people-visual,.succession-architecture-board .succession-architecture__black-whale-visual,.succession-architecture-board .succession-architecture__nen-visual{
+  display:grid!important;align-content:start!important;gap:10px!important;min-width:0!important;margin:0 12px!important;padding:10px!important;
+  border:1px solid var(--arch-line-soft)!important;background:var(--arch-alt)!important
+}
+.succession-architecture-board .succession-architecture__section-links{
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;align-content:start!important;
+  gap:7px!important;min-width:0!important;margin:0 12px 12px!important;padding:0!important;border:0!important
+}
+.succession-architecture-board .succession-architecture__section-link{
+  display:grid!important;grid-template-columns:31px minmax(0,1fr) 15px!important;align-items:center!important;gap:7px!important;
+  min-width:0!important;min-height:82px!important;padding:8px!important;border:1px solid var(--arch-line-soft)!important;
+  background:#fafaf6!important;color:var(--arch-ink)!important;text-decoration:none!important
+}
+.succession-architecture-board .succession-architecture__section-link:hover{border-color:var(--arch-ink)!important;background:#e8e8e2!important}
+.succession-architecture-board .succession-architecture__section-link-icon{display:grid!important;width:29px!important;height:29px!important;place-items:center!important;border:1px solid var(--arch-line)!important;border-radius:50%!important}
+.succession-architecture-board .succession-architecture__section-link-copy{min-width:0!important}
+.succession-architecture-board .succession-architecture__section-link-copy strong{display:block!important;font-family:Georgia,"Times New Roman",serif!important;font-size:13px!important;font-weight:600!important}
+.succession-architecture-board .succession-architecture__section-link-copy small{display:block!important;margin-top:4px!important;color:var(--arch-muted)!important;line-height:1.35!important}
+.succession-architecture-board .succession-architecture__section-link-stat{grid-column:2!important;display:inline-block!important;width:max-content!important;max-width:100%!important;margin-top:4px!important;padding:2px 4px!important;border:1px solid var(--arch-line-soft)!important;color:var(--arch-muted)!important;font-weight:750!important;letter-spacing:.04em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__section-link>svg{grid-column:3!important;grid-row:1/span 2!important}
+
+.succession-architecture-board .succession-architecture__story-visual-header{display:flex!important;justify-content:space-between!important;gap:10px!important;padding-bottom:8px!important;border-bottom:1px solid var(--arch-line-soft)!important;font-weight:750!important;letter-spacing:.05em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__story-lanes{display:grid!important;gap:7px!important}
+.succession-architecture-board .succession-architecture__story-lanes>div{display:grid!important;gap:4px!important}
+.succession-architecture-board .succession-architecture__story-lanes small{color:var(--arch-muted)!important}
+.succession-architecture-board .succession-architecture__story-lanes span{position:relative!important;display:block!important;height:9px!important;border:1px solid var(--arch-line-soft)!important;background:#fff!important}
+.succession-architecture-board .succession-architecture__story-lanes span i{display:block!important;height:100%!important;background:#292927!important}
+.succession-architecture-board .succession-architecture__story-lanes span b{position:absolute!important;top:50%!important;width:10px!important;height:10px!important;border:2px solid #fff!important;border-radius:50%!important;background:#111!important;transform:translate(-50%,-50%)!important}
+.succession-architecture-board :is(.succession-architecture__story-visual,.succession-architecture__people-visual,.succession-architecture__black-whale-visual,.succession-architecture__nen-visual) dl{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;margin:0!important;border:1px solid var(--arch-line-soft)!important;background:#fff!important
+}
+.succession-architecture-board :is(.succession-architecture__story-visual,.succession-architecture__people-visual,.succession-architecture__black-whale-visual,.succession-architecture__nen-visual) dl>div{padding:7px!important;border-right:1px solid var(--arch-line-soft)!important}
+.succession-architecture-board :is(.succession-architecture__story-visual,.succession-architecture__people-visual,.succession-architecture__black-whale-visual,.succession-architecture__nen-visual) dt{color:var(--arch-muted)!important;letter-spacing:.04em!important;text-transform:uppercase!important}
+.succession-architecture-board :is(.succession-architecture__story-visual,.succession-architecture__people-visual,.succession-architecture__black-whale-visual,.succession-architecture__nen-visual) dd{margin:4px 0 0!important;font-family:Georgia,"Times New Roman",serif!important;font-size:13px!important;font-weight:600!important}
+
+.succession-architecture-board .succession-architecture__royal-preview{position:relative!important;display:grid!important;min-height:235px!important;place-items:start center!important;overflow:hidden!important;border:1px solid var(--arch-line-soft)!important;background:#f8f8f4!important}
+.succession-architecture-board .succession-architecture__royal-preview-crown{display:grid!important;width:58px!important;height:58px!important;margin-top:20px!important;place-items:center!important;border:1px solid var(--arch-ink)!important;border-radius:50%!important;background:#fff!important}
+.succession-architecture-board .succession-architecture__royal-lines{position:absolute!important;top:78px!important;left:18%!important;right:18%!important;height:58px!important;border-top:1px solid var(--arch-line)!important}
+.succession-architecture-board .succession-architecture__royal-lines:before{position:absolute!important;top:-1px!important;left:50%!important;width:1px!important;height:34px!important;content:""!important;background:var(--arch-line)!important}
+.succession-architecture-board .succession-architecture__royal-lines i{position:absolute!important;top:0!important;width:1px!important;height:58px!important;background:var(--arch-line)!important}
+.succession-architecture-board .succession-architecture__royal-lines i:nth-child(1){left:0!important}.succession-architecture-board .succession-architecture__royal-lines i:nth-child(2){left:50%!important}.succession-architecture-board .succession-architecture__royal-lines i:nth-child(3){right:0!important}
+.succession-architecture-board .succession-architecture__royal-portraits{position:absolute!important;right:8px!important;bottom:16px!important;left:8px!important;display:flex!important;justify-content:center!important;gap:5px!important}
+.succession-architecture-board .succession-architecture__royal-portraits button,.succession-architecture-board .succession-architecture__beast-preview button{display:block!important;width:46px!important;height:58px!important;padding:0!important;overflow:hidden!important;border:1px solid var(--arch-line)!important;background:#fff!important;cursor:pointer!important}
+.succession-architecture-board .succession-architecture__royal-portraits .succession-entity-visual,.succession-architecture-board .succession-architecture__beast-preview .succession-entity-visual,.succession-architecture-board .succession-architecture__royal-portraits img,.succession-architecture-board .succession-architecture__beast-preview img{width:100%!important;height:100%!important;object-fit:cover!important}
+.succession-architecture-board .succession-architecture__people-visual dl{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+
+.succession-architecture-board .succession-architecture__black-whale-visual>.succession-architecture__whale-portrait>img{height:185px!important}
+.succession-architecture-board .succession-architecture__black-whale-secondary{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+.succession-architecture-board .succession-architecture__black-whale-secondary>a{display:grid!important;grid-template-rows:92px auto!important;overflow:hidden!important;border:1px solid var(--arch-line-soft)!important;background:#fff!important;color:var(--arch-ink)!important;text-decoration:none!important}
+.succession-architecture-board .succession-architecture__black-whale-secondary img{width:100%!important;height:92px!important;object-fit:cover!important;filter:grayscale(1)!important}
+.succession-architecture-board .succession-architecture__black-whale-secondary span{display:grid!important;gap:2px!important;padding:7px!important;border-top:1px solid var(--arch-line-soft)!important}
+.succession-architecture-board .succession-architecture__black-whale-secondary strong{font-family:Georgia,"Times New Roman",serif!important;font-size:12px!important}
+.succession-architecture-board .succession-architecture__black-whale-secondary small{color:var(--arch-muted)!important;text-transform:uppercase!important}
+
+.succession-architecture-board .succession-architecture__nen-wheel{width:100%!important;min-height:220px!important;overflow:visible!important;border:1px solid var(--arch-line-soft)!important;background:#f9f9f5!important}
+.succession-architecture-board .succession-architecture__nen-wheel path,.succession-architecture-board .succession-architecture__nen-wheel circle{fill:none!important;stroke:var(--arch-ink)!important;stroke-width:1.4!important}
+.succession-architecture-board .succession-architecture__nen-wheel text{fill:var(--arch-muted)!important;font-family:Inter,sans-serif!important;font-size:9px!important;font-weight:650!important;text-anchor:middle!important}
+.succession-architecture-board .succession-architecture__beast-preview{padding:8px!important;border:1px solid var(--arch-line-soft)!important;background:#fff!important}
+.succession-architecture-board .succession-architecture__beast-preview>span{display:block!important;margin-bottom:7px!important;color:var(--arch-muted)!important;font-weight:750!important;letter-spacing:.05em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__beast-preview>div{display:flex!important;flex-wrap:wrap!important;gap:5px!important}
+.succession-architecture-board .succession-architecture__beast-preview button{width:44px!important;height:44px!important;border-radius:50%!important}
+
+.succession-architecture-board .succession-architecture__library>a{
+  display:grid!important;grid-template-columns:38px minmax(0,1fr) 15px!important;align-items:center!important;gap:8px!important;
+  min-height:88px!important;padding:10px!important;border:0!important;border-bottom:1px solid var(--arch-line-soft)!important;
+  background:var(--arch-paper)!important;color:var(--arch-ink)!important;text-decoration:none!important
+}
+.succession-architecture-board .succession-architecture__library>a>span{display:grid!important;width:38px!important;height:38px!important;place-items:center!important;border:1px solid var(--arch-line)!important;border-radius:50%!important}
+.succession-architecture-board .succession-architecture__library>a strong{display:block!important;font-family:Georgia,"Times New Roman",serif!important;font-size:14px!important;font-weight:600!important}
+.succession-architecture-board .succession-architecture__library>a small{display:block!important;margin-top:5px!important;color:var(--arch-muted)!important;line-height:1.4!important}
+.succession-architecture-board .succession-architecture__library-status{padding:12px!important;border-bottom:1px solid var(--arch-line)!important;background:#e7e7e1!important}
+.succession-architecture-board .succession-architecture__library-status>span,.succession-architecture-board .succession-architecture__lower-kicker{display:block!important;color:var(--arch-muted)!important;font-weight:800!important;letter-spacing:.07em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__library-status h3{margin:5px 0 10px!important;font-family:Georgia,"Times New Roman",serif!important;font-size:17px!important;font-weight:500!important}
+.succession-architecture-board .succession-architecture__library-status dl{display:grid!important;gap:6px!important;margin:0!important}
+.succession-architecture-board .succession-architecture__library-status dl div{display:flex!important;justify-content:space-between!important;gap:8px!important;padding-bottom:5px!important;border-bottom:1px dotted var(--arch-line)!important}
+.succession-architecture-board .succession-architecture__library-status dt,.succession-architecture-board .succession-architecture__library-status dd{margin:0!important}
+.succession-architecture-board .succession-architecture__library>.succession-architecture__whale-portrait{margin:10px!important}
+
+.succession-architecture-board .succession-architecture__lower-grid{
+  display:grid!important;grid-template-columns:minmax(0,1.2fr) minmax(400px,.8fr)!important;align-items:stretch!important;
+  gap:14px!important;height:auto!important;padding:14px 0 9px!important;overflow:visible!important
+}
+.succession-architecture-board .succession-architecture__lower-grid>div{display:grid!important;align-content:start!important;gap:11px!important;min-width:0!important;height:auto!important}
+.succession-architecture-board .succession-architecture__contracts{
+  display:grid!important;grid-template-columns:52px minmax(0,1fr) 150px!important;align-items:center!important;
+  min-height:176px!important;height:auto!important;padding:0!important;overflow:hidden!important;border:1px solid var(--arch-line)!important;background:var(--arch-paper)!important
+}
+.succession-architecture-board .succession-architecture__contract-sigil{display:grid!important;align-self:stretch!important;place-items:center!important;border-right:1px solid var(--arch-line-soft)!important;background:var(--arch-alt)!important}
+.succession-architecture-board .succession-architecture__contracts>div:nth-child(2){padding:13px 15px!important}
+.succession-architecture-board .succession-architecture__contracts h2{margin:5px 0 11px!important;font-family:Georgia,"Times New Roman",serif!important;font-size:20px!important;font-weight:500!important;text-transform:none!important}
+.succession-architecture-board .succession-architecture__snapshot-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;margin:0!important;border:1px solid var(--arch-line-soft)!important}
+.succession-architecture-board .succession-architecture__snapshot-grid>div{padding:8px!important;border-right:1px solid var(--arch-line-soft)!important;border-bottom:1px solid var(--arch-line-soft)!important}
+.succession-architecture-board .succession-architecture__snapshot-grid dt{color:var(--arch-muted)!important;letter-spacing:.04em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__snapshot-grid dd{margin:4px 0 0!important;font-family:Georgia,"Times New Roman",serif!important;font-size:12px!important;font-weight:600!important}
+.succession-architecture-board .succession-architecture__integrity-seal{display:grid!important;align-content:center!important;justify-items:center!important;align-self:stretch!important;padding:13px 9px!important;border-left:1px solid var(--arch-line-soft)!important;background:#e7e7e1!important;text-align:center!important;transform:none!important}
+.succession-architecture-board .succession-architecture__integrity-seal b{margin-top:7px!important;font-family:Georgia,"Times New Roman",serif!important;font-size:12px!important}
+.succession-architecture-board .succession-architecture__integrity-seal small{margin-top:4px!important;color:var(--arch-muted)!important;text-transform:uppercase!important}
+
+.succession-architecture-board .succession-architecture__footer-specs{
+  display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;min-height:250px!important;height:auto!important;
+  border:1px solid var(--arch-line)!important;background:var(--arch-paper)!important
+}
+.succession-architecture-board .succession-architecture__footer-specs>section{padding:12px 13px!important;border-right:1px solid var(--arch-line-soft)!important}
+.succession-architecture-board .succession-architecture__footer-specs h2{margin:5px 0 9px!important;padding-bottom:8px!important;border-bottom:1px solid var(--arch-line-soft)!important;font-family:Georgia,"Times New Roman",serif!important;font-size:16px!important;font-weight:500!important;text-transform:none!important}
+.succession-architecture-board .succession-architecture__footer-specs ul{display:grid!important;gap:3px!important;margin:0!important;padding:0!important;list-style:none!important}
+.succession-architecture-board .succession-architecture__footer-specs li button{display:flex!important;align-items:flex-start!important;gap:7px!important;width:100%!important;min-height:44px!important;padding:7px 0!important;border:0!important;border-bottom:1px dotted var(--arch-line-soft)!important;background:transparent!important;color:var(--arch-soft)!important;font-family:Georgia,"Times New Roman",serif!important;text-align:left!important}
+.succession-architecture-board .succession-architecture__revision-list li{display:grid!important;grid-template-columns:28px minmax(0,1fr)!important;gap:7px!important;min-height:44px!important;padding:6px 0!important;border-bottom:1px dotted var(--arch-line-soft)!important;color:var(--arch-soft)!important}
+.succession-architecture-board .succession-architecture__revision-list li span{display:grid!important;width:28px!important;height:28px!important;place-items:center!important;color:#fff!important;background:#1a1a18!important;font-weight:800!important}
+
+.succession-architecture-board .succession-architecture__skeleton-block,.succession-architecture-board .succession-architecture__page-skeleton{height:auto!important;min-height:100%!important}
+.succession-architecture-board .succession-architecture__skeleton-block{display:block!important;padding:0!important;overflow:visible!important;border:0!important}
+.succession-architecture-board .succession-architecture__page-skeleton{display:grid!important;grid-template-rows:auto 1fr!important;width:100%!important;overflow:hidden!important;border:1px solid var(--arch-line)!important;background:var(--arch-paper)!important;box-shadow:none!important}
+.succession-architecture-board .succession-architecture__page-skeleton>header{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;min-height:62px!important;padding:10px 12px!important;border-bottom:1px solid var(--arch-line)!important;background:#e8e8e2!important}
+.succession-architecture-board .succession-architecture__page-skeleton>header>div{display:grid!important;gap:3px!important}
+.succession-architecture-board .succession-architecture__page-skeleton>header span{color:var(--arch-muted)!important;font-weight:800!important;letter-spacing:.07em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__page-skeleton>header strong{font-family:Georgia,"Times New Roman",serif!important;font-size:21px!important;font-weight:500!important}
+.succession-architecture-board .succession-architecture__page-skeleton .succession-button{display:inline-flex!important;align-items:center!important;gap:7px!important;min-height:44px!important;padding:8px 10px!important;border:1px solid var(--arch-ink)!important;background:#fff!important;font-weight:750!important}
+.succession-architecture-board .succession-architecture__workspace-preview-body{display:grid!important;grid-template-columns:minmax(0,1fr) 160px!important;align-content:start!important;gap:11px!important;padding:13px!important}
+.succession-architecture-board .succession-architecture__workspace-preview-main{grid-column:1/-1!important;padding:16px!important;border:1px solid var(--arch-line-soft)!important;background:#f7f7f3!important}
+.succession-architecture-board .succession-architecture__workspace-preview-main>span,.succession-architecture-board .succession-architecture__workspace-preview-stats>span{color:var(--arch-muted)!important;font-weight:800!important;letter-spacing:.07em!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__workspace-preview-main h3{margin:6px 0 8px!important;font-family:Georgia,"Times New Roman",serif!important;font-size:25px!important;font-weight:500!important}
+.succession-architecture-board .succession-architecture__workspace-preview-main p{margin:0!important;color:var(--arch-soft)!important;font-family:Georgia,"Times New Roman",serif!important;line-height:1.55!important}
+.succession-architecture-board .succession-architecture__workspace-preview-main>div{display:flex!important;flex-wrap:wrap!important;gap:8px!important;margin-top:14px!important}
+.succession-architecture-board .succession-architecture__workspace-preview-main a{display:inline-flex!important;align-items:center!important;gap:7px!important;min-height:44px!important;padding:8px 10px!important;border:1px solid var(--arch-ink)!important;background:#1a1a18!important;color:#fff!important;font-weight:750!important;text-decoration:none!important;text-transform:uppercase!important}
+.succession-architecture-board .succession-architecture__workspace-preview-stats{padding:11px!important;border:1px solid var(--arch-line-soft)!important;background:var(--arch-alt)!important}
+.succession-architecture-board .succession-architecture__workspace-preview-stats dl{display:grid!important;gap:7px!important;margin:10px 0 0!important}
+.succession-architecture-board .succession-architecture__workspace-preview-stats dl div{display:flex!important;justify-content:space-between!important;gap:8px!important;padding-bottom:6px!important;border-bottom:1px dotted var(--arch-line)!important}
+.succession-architecture-board .succession-architecture__workspace-preview-stats dt,.succession-architecture-board .succession-architecture__workspace-preview-stats dd{margin:0!important}
+.succession-architecture-board .succession-architecture__document-footer{display:flex!important;justify-content:space-between!important;gap:14px!important;min-height:32px!important;padding:8px 2px 0!important;border-top:1px solid var(--arch-line-soft)!important;color:var(--arch-muted)!important;font-weight:750!important;letter-spacing:.06em!important;text-transform:uppercase!important}
+
+/* Readability and target floor for the portal's information-dense desktop canvas. */
+.succession-archive.succession-architecture-board .succession-architecture__sheet :is(p,li,dd,dt,small,span,figcaption,th,td){font-size:11px!important}
+.succession-archive.succession-architecture-board button{min-width:44px!important;min-height:44px!important}
+.succession-architecture-board .succession-architecture__module>header>span{font-size:20px!important}
+.succession-architecture-board .succession-architecture__title-description{font-size:12px!important}
+.succession-architecture-board .safe-image-placeholder{display:grid!important;place-items:center!important;background:var(--arch-alt)!important;color:var(--arch-muted)!important;text-align:center!important}
+
+@media (max-width:1100px){
+  body.succession-architecture-mode{overflow-x:hidden!important;overflow-y:auto!important}
+  .succession-archive.succession-architecture-board{position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:100vh!important;overflow:visible!important}
+  .succession-architecture-board .succession-archive__content{height:auto!important;overflow:visible!important}
+  .succession-architecture-board .succession-architecture__sheet{width:100%!important;height:auto!important;min-height:100vh!important;padding:12px!important;overflow:visible!important}
+  .succession-architecture-board .succession-architecture__masthead{grid-template-columns:1fr!important;gap:12px!important}
+  .succession-architecture-board .succession-architecture__title{text-align:left!important}
+  .succession-architecture-board .succession-architecture__title-description{margin-left:0!important}
+  .succession-architecture-board .succession-architecture__document-meta{padding:12px 0 0!important;border-left:0!important;border-top:1px solid var(--arch-line-soft)!important}
+  .succession-architecture-board .succession-architecture__stamp{display:none!important}
+  .succession-architecture-board .succession-architecture__primary-grid{grid-template-columns:1fr!important}
+  .succession-architecture-board .succession-architecture__left-column{grid-template-columns:1fr!important}
+  .succession-architecture-board .succession-architecture__modules{grid-template-columns:1fr!important}
+  .succession-architecture-board .succession-architecture__module{min-height:0!important}
+  .succession-architecture-board .succession-architecture__section-links{grid-template-columns:1fr!important}
+  .succession-architecture-board .succession-architecture__lower-grid{grid-template-columns:1fr!important}
+  .succession-architecture-board .succession-architecture__footer-specs{grid-template-columns:1fr!important}
+  .succession-architecture-board .succession-architecture__contracts{grid-template-columns:52px minmax(0,1fr)!important}
+  .succession-architecture-board .succession-architecture__integrity-seal{grid-column:1/-1!important;border-top:1px solid var(--arch-line-soft)!important;border-left:0!important}
+  .succession-architecture-board .succession-architecture__workspace-preview-body{grid-template-columns:1fr!important}
+  .succession-architecture-board .succession-architecture__document-footer{flex-wrap:wrap!important}
+}
