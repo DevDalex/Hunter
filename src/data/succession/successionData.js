@@ -1,10 +1,11 @@
-import { successionArchiveData } from './entitiesProductClosureCorrections.js';
-// Active predecessor chain: from './entitiesProductClosureCorrections.js' to from './entitiesProductClosureFoundation.js' to from './entitiesStoryIntelligenceFoundation.js' to from './entitiesNenSystemFoundation.js' to from './entitiesOrganizationFoundation.js', preserving Batches 2–4 beneath Batch 5.
+import { successionArchiveData } from './entitiesInformationConsistency.js';
+// Active predecessor chain: entitiesInformationConsistency.js -> entitiesProductClosureCorrections.js -> entitiesProductClosureFoundation.js -> entitiesStoryIntelligenceFoundation.js -> entitiesNenSystemFoundation.js -> entitiesOrganizationFoundation.js.
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { createEventKnowledgeSelectors } from './eventKnowledgeSelectors.js';
 import { buildSuccessionIndexes } from './indexesFinal.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { createCharacterStateSelectors } from './characterStateSelectors.js';
+import { createInformationConsistencySelectors } from './informationConsistency.js';
 import { createOrganizationStateSelectors } from './organizationStateSelectors.js';
 import { createPeopleInstitutionClosure } from './peopleInstitutionClosure.js';
 import { createNenSystemSelectors } from './nenSystemSelectors.js';
@@ -17,6 +18,7 @@ export const successionArchiveValidation = assertValidSuccessionArchiveData(succ
 export const successionArchiveIndexes = buildSuccessionIndexes(successionArchiveData);
 export const successionArchive = createSuccessionSelectors(successionArchiveData, successionArchiveIndexes);
 export const successionCharacterStates = createCharacterStateSelectors({ data: successionArchiveData, archive: successionArchive });
+export const successionInformationConsistency = createInformationConsistencySelectors({ data: successionArchiveData, archive: successionArchive, characterStates: successionCharacterStates });
 export const successionOrganizationStates = createOrganizationStateSelectors({ data: successionArchiveData, archive: successionArchive });
 export const successionPeopleInstitutionClosure = createPeopleInstitutionClosure({ data: successionArchiveData, archive: successionArchive, characterStates: successionCharacterStates, organizationStates: successionOrganizationStates });
 export const successionNenSystems = createNenSystemSelectors({ data: successionArchiveData, archive: successionArchive });
@@ -95,6 +97,15 @@ export const {
   getCharacterStateCoverageReport,
   searchCharactersByState,
 } = successionCharacterStates;
+
+export const {
+  getCanonicalCharacterState,
+  getCharacterAuthorityProfile,
+  getCharacterLoyaltyProfile,
+  getRoyalDossierConsistencyProfile,
+  getAliasResolution,
+  getInformationConsistencyReport,
+} = successionInformationConsistency;
 
 export const {
   getOrganizationStateTimeline,
