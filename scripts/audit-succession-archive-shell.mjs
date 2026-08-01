@@ -2,7 +2,10 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } from '../src/data/successionChapterAvailability.generated.js';
 import {
+  getSuccessionArchiveHub,
   successionArchiveGroups,
+  successionArchiveHubGroups,
+  successionArchiveHubs,
   successionArchiveLegacyTargets,
   successionArchivePathToTarget,
   successionArchiveRetiredTargets,
@@ -34,8 +37,23 @@ assert(unique(successionArchiveRoutes.map((route) => route.path)), 'route paths 
 assert(successionArchiveRouteIds.size === successionArchiveRoutes.length, 'route ID set must cover every archive route');
 assert(requiredRouteIds.every((id) => successionArchiveRouteIds.has(id)), 'the route hierarchy must expose every maintained archive area');
 assert(successionArchiveRoutes.every((route) => requiredRouteIds.includes(route.id)), 'the route hierarchy contains an unreviewed primary route');
-assert(successionArchiveGroups.join('|') === 'Overview|People|Power|World|Systems|Records|Library', 'navigation groups must remain deliberate and ordered');
+assert(successionArchiveGroups.join('|') === 'Overview|People|Power|World|Systems|Records|Library', 'record groups must remain deliberate and ordered');
 assert(successionArchiveRoutes.every((route) => route.status === 'active'), 'every maintained route must be active');
+
+assert(successionArchiveHubs.length === 7, 'top-level navigation must expose four consolidated hubs plus Search, Research, and Glossary');
+assert(successionArchiveHubGroups.join('|') === 'Operations|Library', 'hub groups must remain deliberate and ordered');
+assert(unique(successionArchiveHubs.map((currentHub) => currentHub.id)), 'hub IDs must be unique');
+assert(unique(successionArchiveHubs.map((currentHub) => currentHub.target)), 'hub targets must be unique');
+assert(successionArchiveHubs.map((currentHub) => currentHub.label).join('|') === 'Story Intelligence|People & Power|Black Whale|Nen Systems|Search|Research|Glossary', 'top-level hub labels changed unexpectedly');
+assert(getSuccessionArchiveHub('archive').id === 'story', 'removed Archive Home must resolve into Story Intelligence');
+assert(getSuccessionArchiveHub('chapters').id === 'story' && getSuccessionArchiveHub('timeline').id === 'story' && getSuccessionArchiveHub('events').id === 'story', 'narrative routes must share Story Intelligence');
+assert(getSuccessionArchiveHub('characters').id === 'people' && getSuccessionArchiveHub('princes').id === 'people' && getSuccessionArchiveHub('bodyguards').id === 'people' && getSuccessionArchiveHub('organizations').id === 'people' && getSuccessionArchiveHub('relationships').id === 'people', 'people and institution routes must share People & Power');
+assert(getSuccessionArchiveHub('locations').id === 'black-whale', 'Locations must share the Black Whale hub');
+assert(getSuccessionArchiveHub('guardian-spirit-beasts').id === 'nen', 'Guardian Spirit Beasts must share Nen Systems');
+assert(successionArchiveHubs.find((currentHub) => currentHub.id === 'story')?.tabs.map((tab) => tab.target).join('|') === 'story|chapters|timeline|events', 'Story Intelligence tab order is incomplete');
+assert(successionArchiveHubs.find((currentHub) => currentHub.id === 'people')?.tabs.map((tab) => tab.target).join('|') === 'characters|princes|bodyguards|organizations|relationships', 'People & Power tab order is incomplete');
+assert(successionArchiveHubs.find((currentHub) => currentHub.id === 'black-whale')?.tabs.map((tab) => tab.target).join('|') === 'black-whale|locations', 'Black Whale tab order is incomplete');
+assert(successionArchiveHubs.find((currentHub) => currentHub.id === 'nen')?.tabs.map((tab) => tab.target).join('|') === 'nen|guardian-spirit-beasts', 'Nen Systems tab order is incomplete');
 
 for (const [retired, destination] of Object.entries(successionArchiveRetiredTargets)) {
   assert(!successionArchiveRouteIds.has(retired), `${retired} must not remain a primary route`);
@@ -61,6 +79,7 @@ const [
   contrast,
   catalogue,
   searchCss,
+  releasePatch,
   main,
   packageJson,
 ] = await Promise.all([
@@ -76,6 +95,7 @@ const [
   read('src/components/succession/SuccessionArchiveContrast.css'),
   read('src/components/succession/SuccessionArchiveCatalog.css'),
   read('src/components/succession/SuccessionArchiveSearch.css'),
+  read('src/components/succession/SuccessionFinalReleasePatch.css'),
   read('src/main.jsx'),
   read('package.json'),
 ]);
@@ -84,6 +104,11 @@ assert(app.includes('SuccessionArchiveApp') && !app.includes('successionPanels')
 assert(shell.includes('succession-archive__sidebar') && shell.includes('succession-drawer'), 'desktop sidebar and mobile drawer must both exist');
 assert(shell.includes('focusableSelector') && shell.includes("event.key === 'Escape'"), 'mobile navigation must manage keyboard focus and Escape');
 assert(shell.includes('SpoilerControl') && shell.includes('ARCHIVE_BOUNDARY'), 'shell must retain a generated reading boundary and global search entry point');
+assert(shell.includes('successionArchiveHubs') && shell.includes('successionArchiveHubGroups') && shell.includes('getSuccessionArchiveHub'), 'shell must derive navigation from the consolidated hub registry');
+assert(shell.includes('function SuccessionHubTabs') && shell.includes('className="succession-hub-tabs"'), 'hub-local tab navigation is missing');
+assert(shell.includes('data-archive-hub={activeHub.id}'), 'rendered shell must expose the active consolidated hub');
+assert(shell.includes("if (route.id === 'archive') onNavigate('story', {});"), 'removed Archive Home must redirect to Story Intelligence');
+assert(!shell.includes('Open reader</button>'), 'Succession shell must not restore a duplicate Reader action');
 assert(workspace.includes("from '../../data/succession/successionData'"), 'workspaces must consume the canonical public selector module');
 assert(!workspace.includes("from '../../data/succession/entities'"), 'workspaces must not import canonical entity records directly');
 assert(workspace.includes('searchArchiveProduct') && workspace.includes('matchReason'), 'global search must use grouped and explained product results');
@@ -128,9 +153,10 @@ assert(!main.includes('./styles/succession-archive.css'), 'the scoped archive st
 assert(contrast.includes('font-size: 11px !important'), 'archive readability overrides must preserve the 11px text floor');
 assert(catalogue.includes('.succession-entity-visual') && catalogue.includes('data-has-visual'), 'catalogue design must provide portrait and fallback visual frames');
 assert(searchCss.includes('.succession-search-complete__groups') && searchCss.includes('@media(max-width:620px)'), 'global search requires grouped and mobile design');
+assert(releasePatch.includes('.succession-hub-tabs') && releasePatch.includes('min-height: 44px'), 'consolidated hub tabs require responsive styling and accessible targets');
 for (const selector of ['.succession-archive__layout', '.succession-archive__sidebar', '.succession-page-header', '.succession-entity-link', '.succession-state', '.succession-drawer']) assert(css.includes(selector), `design layer is missing ${selector}`);
 assert(css.includes('@media (max-width: 860px)') && css.includes('@media (prefers-reduced-motion: reduce)'), 'responsive and reduced-motion rules are required');
 assert(css.includes(':focus-visible'), 'accessible focus styling is required');
 assert(packageJson.includes('"audit:succession-shell"') && packageJson.includes('"qa:succession-shell"'), 'package scripts must expose archive shell checks');
 
-console.log(`Succession Archive shell audit passed through imported Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}: ${successionArchiveRoutes.length} maintained routes, ${Object.keys(successionArchiveRetiredTargets).length} registry-derived redirects, one consolidated Organizations power workspace, Characters-owned life/body states, and Research-owned media provenance verified.`);
+console.log(`Succession Archive shell audit passed through imported Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}: ${successionArchiveRoutes.length} maintained routes organized into ${successionArchiveHubs.length} top-level hubs, ${Object.keys(successionArchiveRetiredTargets).length} registry-derived redirects, and all canonical dossiers preserved.`);
