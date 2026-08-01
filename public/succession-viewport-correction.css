@@ -1,7 +1,0 @@
-body.succession-architecture-mode .succession-archive.succession-architecture-board {
-  transform: none !important;
-}
-
-body.succession-architecture-mode .succession-archive.succession-architecture-board .succession-architecture__sheet {
-  transform: translate(-50vw, -50vh) !important;
-}
