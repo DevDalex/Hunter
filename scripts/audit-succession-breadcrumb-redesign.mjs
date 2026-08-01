@@ -26,18 +26,22 @@ for (const requiredMarkup of [
   'succession-return-path',
   '<ol>',
   'aria-current="page"',
-  "const hiddenNavigationRoutes = new Set(['archive', 'reader'])",
+  'successionArchiveHubs',
+  'getSuccessionArchiveHub',
+  'function SuccessionHubTabs',
+  'data-archive-hub={activeHub.id}',
   "if (route.id === 'archive') onNavigate('story', {});",
-  "aria-current={route.id === 'story' ? 'page' : undefined}",
+  'const onHubRoot = route.id === activeHub.target;',
   'onClick={onExitArchive}',
   'aria-label="Return to Story"',
   '<span>Return to Story</span>',
 ]) assert(shell.includes(requiredMarkup), `shell markup is missing ${requiredMarkup}`);
 
-assert(!shell.includes('Back to archive index'), 'removed Archive Home must not remain as a return destination');
-assert(!shell.includes('Open reader</button>'), 'Succession shell must not expose a duplicate Reader action');
 assert(shell.includes('<ArrowLeft') && shell.includes('<ChevronRight'), 'breadcrumbs must expose return and hierarchy icons');
 assert(shell.includes('aria-label="Breadcrumb"'), 'breadcrumb navigation must retain an accessible name');
+assert(shell.includes('onClick={() => navigate(activeHub.target, {})}'), 'child views must return to their consolidated hub root');
+assert(!shell.includes('Back to archive index'), 'removed Archive Home must not remain as a return destination');
+assert(!shell.includes('Open reader</button>'), 'Succession shell must not expose a duplicate Reader action');
 
 for (const requiredSelector of [
   '.succession-archive .succession-route-context',
@@ -63,4 +67,4 @@ assert(workflow.includes('scripts/audit-succession-breadcrumb-redesign.mjs'), 'w
 assert(docs.includes('### Hour 17 — Breadcrumbs and return paths'), 'design record must document Hour 17');
 assert(docs.includes('Return-path contract'), 'design record must explain the return-path behavior');
 
-console.log('Succession breadcrumb redesign audit passed.');
+console.log('Succession breadcrumb redesign audit passed with consolidated hub hierarchy and direct Story return.');
