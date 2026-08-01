@@ -30,6 +30,7 @@ import OrganizationsWorkspace from './SuccessionArchiveOrganizationWorkspace';
 import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';
 import StoryIntelligenceWorkspace from './SuccessionArchiveStoryIntelligenceWorkspace';
 import SuccessionIntelligenceWorkbench from './SuccessionIntelligenceWorkbench';
+import SuccessionWorkspaceRefinementDeck from './SuccessionWorkspaceRefinementDeck';
 import { DomainEntityDetail } from './SuccessionArchiveExtendedWorkspaces';
 import {
   ArchiveState,
@@ -189,6 +190,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
       <RecordCurrencyStrip entity={selectedEntity} boundary={coverageBoundary} />
       <RecordCoverageSections entity={selectedEntity} boundary={coverageBoundary} />
     </section>}
+    <SuccessionWorkspaceRefinementDeck routeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />
     {route.id === 'story' && <StoryIntelligenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {route.id === 'search' && <SearchWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit} />}
     {treeView && <FamilyTreeWorkspace spoilerLimit={spoilerLimit} onNavigate={navigate} />}
