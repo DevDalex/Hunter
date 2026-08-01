@@ -21,6 +21,7 @@ import {
   successionArchiveHubs,
 } from '../../data/succession/archiveRoutes';
 import SpoilerControl from '../SpoilerControl';
+import SuccessionArchitectureBoard from './SuccessionArchitectureBoard';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveContrastFixes.css';
 import './SuccessionArchiveDeepContrastFixes.css';
@@ -157,6 +158,14 @@ export default function SuccessionArchiveShell({
       document.removeEventListener('keydown', handleKey);
     };
   }, [drawerOpen]);
+
+  const showArchitectureBoard = route.id === 'story' && Object.keys(routeParams || {}).length === 0;
+  if (showArchitectureBoard) return <SuccessionArchitectureBoard
+    spoilerLimit={spoilerLimit}
+    onNavigate={onNavigate}
+    onExitArchive={onExitArchive}
+    onOpenSearch={onOpenSearch}
+  />;
 
   const navigate = (target, params = {}) => onNavigate(target, params);
   const headerActions = <button type="button" className="succession-button succession-button--search" onClick={onOpenSearch}><Search size={16} aria-hidden="true" /> Search <kbd>Ctrl K</kbd></button>;
