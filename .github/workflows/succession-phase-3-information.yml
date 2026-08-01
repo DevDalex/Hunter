@@ -8,6 +8,7 @@ on:
       - 'src/components/succession/SuccessionInformationConsistencyPanel.jsx'
       - 'src/components/succession/SuccessionInformationConsistencyPanel.css'
       - 'scripts/audit-succession-phase-3-information-consistency.mjs'
+      - 'scripts/audit-succession-phase-3-exception-states.mjs'
       - 'scripts/succession-phase-3-dossier-qa.mjs'
       - 'scripts/run-succession-runtime-audits.mjs'
       - '.github/workflows/succession-phase-3-information.yml'
@@ -39,8 +40,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Phase 3 data audit
-        run: node scripts/audit-succession-phase-3-information-consistency.mjs
+      - name: Run Phase 3 data audits
+        run: |
+          node scripts/audit-succession-phase-3-information-consistency.mjs
+          node scripts/audit-succession-phase-3-exception-states.mjs
 
       - name: Build presentation runtime
         run: npm run build:runtime
