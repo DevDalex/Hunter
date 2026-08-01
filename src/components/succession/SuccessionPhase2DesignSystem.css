@@ -1,0 +1,549 @@
+/*
+ * Succession Contest — Phase 2 monochrome production system
+ *
+ * Scope: shared shell, shared tokens, shared controls, and the Phase 1
+ * architecture canvas. Workspace-specific information design remains reserved
+ * for Phases 3A–3E.
+ */
+
+body:has(.succession-archive),
+body.succession-architecture-mode {
+  background: #f4f4f1;
+}
+
+body:has(.succession-archive) .site-header,
+body.succession-architecture-mode .site-header {
+  display: none;
+}
+
+.succession-archive {
+  --succession-vf-version: 2;
+
+  /* Phase 2 paper and ink */
+  --succession-canvas: #f4f4f1;
+  --succession-canvas-raised: #fbfbf8;
+  --succession-surface-1: #fbfbf8;
+  --succession-surface-2: #f0f0ed;
+  --succession-surface-3: #e4e4e0;
+  --succession-surface-inset: #f7f7f4;
+  --succession-surface-paper: #fbfbf8;
+  --succession-surface-paper-raised: #fff;
+  --succession-surface-selected: #111;
+
+  --succession-text: #171717;
+  --succession-text-strong: #050505;
+  --succession-text-muted: #4f4f4d;
+  --succession-text-subtle: #71716e;
+  --succession-text-on-paper: #171717;
+  --succession-text-on-paper-muted: #5c5c59;
+
+  /* Legacy accent aliases collapse into monochrome ink. */
+  --succession-gold: #171717;
+  --succession-gold-strong: #050505;
+  --succession-crimson: #3b3b39;
+  --succession-crimson-strong: #111;
+  --succession-steel: #555552;
+  --succession-violet: #696966;
+  --succession-emerald: #333331;
+  --succession-amber: #777773;
+
+  --succession-border-subtle: #d0d0cb;
+  --succession-border-default: #a5a5a0;
+  --succession-border-strong: #171717;
+  --succession-border-focus: #050505;
+
+  /* Semantic states rely on value, border style, labels, and patterns. */
+  --succession-state-confirmed: #111;
+  --succession-state-inferred: #51514e;
+  --succession-state-uncertain: #747470;
+  --succession-state-pending: #969691;
+  --succession-state-active: #242422;
+  --succession-state-deceased: #5f5f5b;
+  --succession-state-missing: #858580;
+  --succession-state-hostile: #333331;
+  --succession-state-allied: #4b4b48;
+
+  --succession-font-display: Georgia, 'Times New Roman', serif;
+  --succession-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --succession-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+
+  --succession-radius-sm: 0;
+  --succession-radius-md: 0;
+  --succession-radius-lg: 0;
+  --succession-radius-xl: 0;
+  --succession-shadow-sm: none;
+  --succession-shadow-md: none;
+  --succession-shadow-focus: none;
+
+  /* Compatibility tokens used by the pre-Phase-2 workspaces. */
+  --sa-bg: #f4f4f1;
+  --sa-sidebar: #fbfbf8;
+  --sa-surface: #f4f4f1;
+  --sa-surface-raised: #fff;
+  --sa-surface-muted: #e9e9e5;
+  --sa-ink: #171717;
+  --sa-ink-muted: #5b5b58;
+  --sa-border: #c8c8c3;
+  --sa-border-strong: #171717;
+  --sa-accent: #171717;
+  --sa-accent-dark: #050505;
+  --sa-sidebar-ink: #171717;
+  --sa-sidebar-muted: #595956;
+  --sa-focus: #050505;
+  --sa-radius-sm: 0;
+  --sa-radius-md: 0;
+  --sa-radius-lg: 0;
+  --sa-shadow: none;
+
+  color: var(--succession-text);
+  background:
+    linear-gradient(rgba(0, 0, 0, .018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, .014) 1px, transparent 1px),
+    var(--succession-canvas);
+  background-size: 22px 22px;
+  color-scheme: light;
+}
+
+.succession-archive ::selection {
+  color: #fff;
+  background: #111;
+}
+
+.succession-archive :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid #111 !important;
+  outline-offset: 3px !important;
+  box-shadow: none !important;
+}
+
+/* Shared application frame */
+.succession-archive__status-strip {
+  border-bottom: 1px solid #111 !important;
+  background: #111 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+.succession-archive__status-strip :where(span, strong, b, svg) {
+  color: inherit !important;
+}
+
+.succession-archive__layout {
+  background: transparent !important;
+}
+
+.succession-archive__sidebar {
+  border-right: 1px solid #111 !important;
+  background: #f4f4f1 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive__sidebar-inner {
+  border: 1px solid #111 !important;
+  border-radius: 0 !important;
+  background: #fbfbf8 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive__brand {
+  border-bottom: 1px solid #111 !important;
+  background: #fbfbf8 !important;
+  color: #111 !important;
+}
+
+.succession-archive__brand-seal {
+  border: 1px solid #111 !important;
+  border-radius: 50% !important;
+  background: #fff !important;
+  color: #111 !important;
+  box-shadow: inset 0 0 0 4px #fbfbf8 !important;
+}
+
+.succession-archive__brand-copy :where(span, strong, p) {
+  color: #111 !important;
+}
+
+.succession-archive__brand-copy strong {
+  font-family: var(--succession-font-display) !important;
+  font-weight: 500 !important;
+  letter-spacing: .015em;
+}
+
+.succession-archive__brand-copy > span,
+.succession-archive__brand-copy p,
+.succession-archive__sidebar-context dt,
+.succession-archive-nav h2 {
+  color: #585855 !important;
+}
+
+.succession-archive__sidebar-context {
+  border-block: 1px solid #aaa9a4 !important;
+  background: #aaa9a4 !important;
+}
+
+.succession-archive__sidebar-context > div {
+  background: #f2f2ee !important;
+}
+
+.succession-archive__sidebar-context dd {
+  color: #111 !important;
+}
+
+.succession-archive-nav section + section {
+  margin-top: 16px;
+}
+
+.succession-archive-nav section > div {
+  gap: 0 !important;
+  border-top: 1px solid #c7c7c2;
+}
+
+.succession-archive-nav a {
+  min-height: 44px !important;
+  border: 0 !important;
+  border-bottom: 1px solid #c7c7c2 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #30302e !important;
+  box-shadow: none !important;
+  font-family: var(--succession-font-display);
+  font-weight: 600;
+  transform: none !important;
+}
+
+.succession-archive-nav a:hover {
+  background: #ecece8 !important;
+  color: #050505 !important;
+  transform: none !important;
+}
+
+.succession-archive-nav a.is-active,
+.succession-archive-nav a[aria-current='page'] {
+  background: #111 !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+.succession-archive-nav a.is-active :where(svg, span, small),
+.succession-archive-nav a[aria-current='page'] :where(svg, span, small) {
+  color: #fff !important;
+}
+
+.succession-archive__boundary {
+  border: 1px solid #111 !important;
+  border-radius: 0 !important;
+  background: #f0f0ed !important;
+  color: #111 !important;
+}
+
+.succession-archive__boundary :where(summary, b, label, span) {
+  color: #111 !important;
+}
+
+.succession-archive__workspace {
+  background: transparent !important;
+}
+
+.succession-archive__workspace::before {
+  border-color: #c4c4bf !important;
+  background: repeating-linear-gradient(180deg, #a6a6a1 0 1px, transparent 1px 18px) !important;
+  opacity: .45 !important;
+}
+
+.succession-archive__workspace-frame::before,
+.succession-archive__workspace-frame::after {
+  border-color: #111 !important;
+}
+
+/* Shared route context */
+.succession-route-context {
+  border-bottom: 1px solid #aaa9a4 !important;
+}
+
+.succession-breadcrumbs,
+.succession-breadcrumbs :where(button, span, li, svg),
+.succession-return-path {
+  color: #454542 !important;
+}
+
+.succession-breadcrumbs button:hover,
+.succession-return-path:hover {
+  color: #050505 !important;
+}
+
+.succession-hub-tabs {
+  gap: 0 !important;
+  border: 1px solid #111 !important;
+  border-radius: 0 !important;
+  background: #fbfbf8 !important;
+  box-shadow: none !important;
+}
+
+.succession-hub-tabs > a {
+  min-height: 44px !important;
+  border: 0 !important;
+  border-right: 1px solid #aaa9a4 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: #292927 !important;
+  box-shadow: none !important;
+  font-family: var(--succession-font-body);
+  font-weight: 750;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.succession-hub-tabs > a:last-child {
+  border-right: 0 !important;
+}
+
+.succession-hub-tabs > a:hover {
+  background: #ecece8 !important;
+  color: #050505 !important;
+}
+
+.succession-hub-tabs > a.is-active,
+.succession-hub-tabs > a[aria-current='page'] {
+  background: #111 !important;
+  color: #fff !important;
+}
+
+.succession-page-header {
+  overflow: visible !important;
+  border: 1px solid #111 !important;
+  border-radius: 0 !important;
+  background: #fbfbf8 !important;
+  box-shadow: none !important;
+}
+
+.succession-page-header::after {
+  display: none !important;
+}
+
+.succession-page-header__copy > span {
+  color: #333331 !important;
+}
+
+.succession-page-header h1 {
+  color: #050505 !important;
+  font-family: var(--succession-font-display) !important;
+  font-weight: 500 !important;
+  letter-spacing: -.035em;
+}
+
+.succession-page-header__copy > p {
+  color: #4f4f4c !important;
+}
+
+.succession-page-header__meta {
+  border: 1px solid #aaa9a4 !important;
+  border-radius: 0 !important;
+  background: #aaa9a4 !important;
+}
+
+.succession-page-header__meta > div {
+  background: #f0f0ed !important;
+}
+
+.succession-page-header__meta :where(dt, dd) {
+  color: #222220 !important;
+}
+
+.succession-button,
+.succession-page-header button,
+.succession-return-path {
+  border: 1px solid #111 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  color: #111 !important;
+  box-shadow: none !important;
+}
+
+.succession-button:hover,
+.succession-page-header button:hover,
+.succession-return-path:hover {
+  background: #111 !important;
+  color: #fff !important;
+}
+
+.succession-button--primary,
+.succession-page-header button.is-primary {
+  background: #111 !important;
+  color: #fff !important;
+}
+
+.succession-button kbd {
+  border-color: #8d8d88 !important;
+  border-radius: 0 !important;
+  background: #f0f0ed !important;
+  color: #111 !important;
+}
+
+/* Shared evidence and knowledge-state grammar. */
+.succession-archive :where(.evidence-badge, [class*='evidence-badge'], [class*='status-pill'], [class*='confidence']) {
+  border: 1px solid #111 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  color: #111 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive :where([data-state='inferred'], [data-evidence='inferred'], .is-inferred) {
+  border-style: dashed !important;
+}
+
+.succession-archive :where([data-state='uncertain'], [data-evidence='uncertain'], .is-uncertain) {
+  border-style: double !important;
+  background: repeating-linear-gradient(135deg, #fff 0 6px, #e9e9e5 6px 8px) !important;
+}
+
+.succession-archive :where([data-state='pending'], [data-evidence='pending'], .is-pending) {
+  background: repeating-linear-gradient(45deg, #f7f7f4 0 5px, #dededa 5px 7px) !important;
+}
+
+/* Mobile shell follows the same document language. */
+.succession-archive__mobile-bar {
+  border-bottom: 1px solid #111 !important;
+  background: #fbfbf8 !important;
+  color: #111 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive__mobile-bar :where(button, span, svg) {
+  color: #111 !important;
+}
+
+.succession-archive__mobile-bar button {
+  border: 1px solid #111 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+}
+
+.succession-drawer {
+  background: rgba(17, 17, 17, .58) !important;
+  backdrop-filter: none !important;
+}
+
+.succession-drawer > aside {
+  border-right: 1px solid #111 !important;
+  background: #fbfbf8 !important;
+  color: #111 !important;
+  box-shadow: none !important;
+}
+
+.succession-drawer > aside > header {
+  border-bottom: 1px solid #111 !important;
+  background: #f0f0ed !important;
+  color: #111 !important;
+}
+
+/*
+ * Phase 2 acceptance fix: the architecture page owns the complete browser
+ * canvas. Large desktop screens receive a fitted document with no page scroll;
+ * smaller screens retain normal document scrolling for legibility.
+ */
+.succession-architecture-board {
+  width: 100vw !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #fbfbf8 !important;
+}
+
+.succession-architecture__sheet {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  border-inline-width: 1px !important;
+  box-shadow: none !important;
+}
+
+@media (min-width: 1280px) and (min-height: 760px) {
+  html:has(.succession-architecture-board),
+  body.succession-architecture-mode {
+    width: 100%;
+    height: 100%;
+    overflow: hidden !important;
+    background: #fbfbf8 !important;
+  }
+
+  body.succession-architecture-mode #root {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    background: #fbfbf8;
+  }
+
+  .succession-architecture-board {
+    --phase2-board-width: 1660px;
+    --phase2-board-height: 1260px;
+    --phase2-board-fit: .82;
+    position: fixed !important;
+    inset: 0 !important;
+    display: grid !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    min-height: 0 !important;
+    place-items: center !important;
+    overflow: hidden !important;
+  }
+
+  @supports (scale: calc(100vw / 1000px)) {
+    .succession-architecture-board {
+      --phase2-board-fit: min(
+        calc((100vw - 2px) / var(--phase2-board-width)),
+        calc((100dvh - 2px) / var(--phase2-board-height))
+      );
+    }
+  }
+
+  .succession-architecture__sheet {
+    width: var(--phase2-board-width) !important;
+    min-width: var(--phase2-board-width) !important;
+    height: var(--phase2-board-height) !important;
+    min-height: var(--phase2-board-height) !important;
+    max-height: var(--phase2-board-height) !important;
+    overflow: hidden !important;
+    scale: var(--phase2-board-fit);
+    transform-origin: center;
+  }
+}
+
+@media (max-width: 1279px), (max-height: 759px) {
+  body.succession-architecture-mode {
+    overflow-x: hidden;
+    background: #fbfbf8 !important;
+  }
+
+  .succession-architecture-board {
+    min-height: 100dvh !important;
+    overflow: visible !important;
+  }
+
+  .succession-architecture__sheet {
+    min-height: 100dvh !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .succession-archive,
+  .succession-architecture-board {
+    forced-color-adjust: auto;
+  }
+
+  .succession-archive-nav a.is-active,
+  .succession-hub-tabs > a.is-active,
+  .succession-button--primary {
+    border: 2px solid CanvasText !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-archive *,
+  .succession-architecture-board * {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
