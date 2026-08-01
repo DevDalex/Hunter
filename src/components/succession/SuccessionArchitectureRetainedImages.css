@@ -1,0 +1,68 @@
+/* The approved architecture layout is unchanged. Only its Black Whale and
+   Guardian Spirit Beast illustration slots use canonical archive imagery. */
+
+.succession-architecture-board .succession-architecture__retained-ship-image {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #f7f7f4 !important;
+  filter: grayscale(1) contrast(1.06);
+}
+
+.succession-architecture-board .succession-architecture__split-grid .succession-architecture__retained-ship-image {
+  min-height: 86px !important;
+  max-height: 112px !important;
+}
+
+.succession-architecture-board .succession-architecture__ship-portrait .succession-architecture__retained-ship-image {
+  max-height: none !important;
+}
+
+.succession-architecture-board .succession-architecture__retained-beast-grid span {
+  position: relative;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  padding: 0 !important;
+  overflow: hidden;
+  background: #f7f7f4;
+}
+
+.succession-architecture-board .succession-architecture__retained-beast-grid :is(img, .safe-image-placeholder) {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 52px !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  filter: grayscale(1) contrast(1.08);
+}
+
+.succession-architecture-board .succession-architecture__retained-beast-grid b {
+  position: absolute;
+  right: 3px;
+  bottom: 3px;
+  z-index: 2;
+  padding: 1px 4px;
+  border: 1px solid #111;
+  color: #fff !important;
+  background: #111;
+  font-size: 10px;
+  line-height: 1.2;
+}
+
+@media (forced-colors: active) {
+  .succession-architecture-board .succession-architecture__retained-ship-image,
+  .succession-architecture-board .succession-architecture__retained-beast-grid :is(img, .safe-image-placeholder) {
+    filter: none;
+  }
+}
