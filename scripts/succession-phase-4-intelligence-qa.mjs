@@ -104,8 +104,9 @@ try {
     try {
       await page.goto(`${base}${record.path}`, { waitUntil: 'domcontentloaded', timeout: 30_000 });
       await page.waitForSelector('.succession-intelligence-workbench', { state: 'visible', timeout: 20_000 });
-      await page.waitForSelector(record.selector, { state: 'visible', timeout: 20_000 });
-      await page.getByText(record.text, { exact: false }).first().waitFor({ state: 'visible', timeout: 10_000 });
+      const view = page.locator(record.selector).first();
+      await view.waitFor({ state: 'visible', timeout: 20_000 });
+      await view.getByText(record.text, { exact: false }).first().waitFor({ state: 'visible', timeout: 10_000 });
       const state = await inspect(page);
       if (!state.exists || !state.visible) throw new Error('Phase 4 workbench is not visible');
       if (state.tabCount !== 7) throw new Error(`Expected seven intelligence tabs, found ${state.tabCount}`);
