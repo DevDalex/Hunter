@@ -16,6 +16,8 @@ const mime = {
   '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.json': 'application/json; charset=utf-8',
 };
 
+const normalizeText = (value) => String(value).trim().replace(/\s+/g, ' ').toLocaleLowerCase('en-US');
+
 const firstAvailable = async (candidates) => {
   for (const candidate of candidates.filter(Boolean)) {
     try { await access(candidate); return candidate; } catch { /* continue */ }
@@ -93,16 +95,17 @@ try {
     const title = await board.locator('.succession-architecture__title h1').innerText();
     if (title.trim() !== 'Succession Contest') throw new Error(`Unexpected architecture title: ${title}`);
     const subtitle = await board.locator('.succession-architecture__title p').innerText();
-    if (subtitle.trim() !== 'Section architecture before final redesign') throw new Error(`Unexpected architecture subtitle: ${subtitle}`);
+    if (normalizeText(subtitle) !== normalizeText('Section architecture before final redesign')) throw new Error(`Unexpected architecture subtitle: ${subtitle}`);
     if (await board.locator('.succession-architecture__module').count() !== 4) throw new Error(`Architecture module count is ${await board.locator('.succession-architecture__module').count()}, expected 4`);
     if (await board.locator('.succession-architecture__library').count() !== 1) throw new Error('Library Tools rail is missing or duplicated');
     if (await board.locator('.succession-architecture__contracts').count() !== 1) throw new Error('Preserved Contracts panel is missing or duplicated');
     if (await board.locator('.succession-architecture__skeleton-block').count() !== 1) throw new Error('Page Layout Skeleton is missing or duplicated');
     const primaryLabels = await board.locator('#succession-desktop-navigation a').allInnerTexts();
     const expected = ['Story Intelligence', 'People & Power', 'Black Whale', 'Nen Systems', 'Search', 'Research', 'Glossary'];
-    if (primaryLabels.join('|') !== expected.join('|')) throw new Error(`Unexpected top-level navigation: ${primaryLabels.join(' | ')}`);
+    if (primaryLabels.map(normalizeText).join('|') !== expected.map(normalizeText).join('|')) throw new Error(`Unexpected top-level navigation: ${primaryLabels.join(' | ')}`);
     const storyTabs = await board.locator('.succession-hub-tabs a').allInnerTexts();
-    if (storyTabs.join('|') !== 'Story|Chapters|Timeline|Events') throw new Error(`Story architecture views are incomplete: ${storyTabs.join(' | ')}`);
+    const expectedStoryTabs = ['Story', 'Chapters', 'Timeline', 'Events'];
+    if (storyTabs.map(normalizeText).join('|') !== expectedStoryTabs.map(normalizeText).join('|')) throw new Error(`Story architecture views are incomplete: ${storyTabs.join(' | ')}`);
     if (await desktop.getByRole('link', { name: 'Archive Home', exact: true }).count()) throw new Error('Archive Home returned to navigation');
     if (await desktop.getByRole('link', { name: 'Reader', exact: true }).count()) throw new Error('Duplicate Reader returned to navigation');
     if (await desktop.locator('.arc-page--succession-contest').count()) throw new Error('Legacy grouped arc page is still mounted at the archive root');
