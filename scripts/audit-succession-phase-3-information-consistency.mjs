@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
 import {
   getAliasResolution,
   getCanonicalCharacterState,
@@ -17,6 +19,8 @@ import {
   OFFICIAL_ROLE_KIND_VALUES,
 } from '../src/data/succession/registries.js';
 
+const root = process.cwd();
+const read = (relativePath) => readFile(path.join(root, relativePath), 'utf8');
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Phase 3 information consistency audit failed: ${message}`);
 };
@@ -35,6 +39,19 @@ const expectedRoyalSections = Object.freeze([
   'evidence',
   'openQuestions',
 ]);
+
+const [shellSource, panelSource, panelCss] = await Promise.all([
+  read('src/components/succession/SuccessionArchiveShell.jsx'),
+  read('src/components/succession/SuccessionInformationConsistencyPanel.jsx'),
+  read('src/components/succession/SuccessionInformationConsistencyPanel.css'),
+]);
+
+assert(shellSource.includes('SuccessionInformationConsistencyPanel'), 'the shared shell must mount the Phase 3 dossier panel');
+assert(panelSource.includes('getCanonicalCharacterState') && panelSource.includes('getCharacterAuthorityProfile') && panelSource.includes('getCharacterLoyaltyProfile'), 'the panel must consume structured state, authority, and loyalty selectors');
+assert(panelSource.includes('Private intent') && panelSource.includes('Not inferred'), 'the panel must state that private intent is not inferred');
+assert(panelSource.includes('getRoyalDossierConsistencyProfile'), 'royal dossiers must expose the shared section contract');
+assert(panelCss.includes('@media (min-width: 1024px)'), 'the Phase 3 panel must remain desktop and laptop only');
+assert(!panelCss.includes('@media (max-width:'), 'the Phase 3 panel must not introduce tablet or mobile rules');
 
 assert(successionArchiveData.informationConsistencyVersion === 'phase-3-v1', 'the normalized Phase 3 data layer must be the active predecessor');
 assert(successionArchiveValidation.valid, `canonical validation failed: ${successionArchiveValidation.errors.join(' · ')}`);
@@ -83,4 +100,4 @@ for (const royal of royals) {
   assert(profile.sections.officialAuthority.value !== profile.sections.operationalLoyalty.value, `${royal.id} must not conflate authority and loyalty records`);
 }
 
-console.log(`Succession Phase 3 information consistency audit passed: ${characters.length} characters, ${royals.length} royal dossiers, structured body/identity/consciousness states, separated authority and loyalty evidence, normalized aliases, and contradiction-safe cross-links verified.`);
+console.log(`Succession Phase 3 information consistency audit passed: ${characters.length} characters, ${royals.length} royal dossiers, structured body/identity/consciousness states, separated authority and loyalty evidence, normalized aliases, contradiction-safe cross-links, and desktop dossier integration verified.`);
