@@ -8,8 +8,9 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Phase 5 workspace refinement audit failed: ${message}`);
 };
 
-const [appSource, deckSource, deckCss, selectorSource, runtimeSource] = await Promise.all([
+const [appSource, lightRouteSource, deckSource, deckCss, selectorSource, runtimeSource] = await Promise.all([
   read('src/components/succession/SuccessionArchiveApp.jsx'),
+  read('src/components/succession/SuccessionArchiveLightRoute.jsx'),
   read('src/components/succession/SuccessionWorkspaceRefinementDeck.jsx'),
   read('src/components/succession/SuccessionWorkspaceRefinementDeck.css'),
   read('src/data/succession/workspaceRefinementSelectors.js'),
@@ -18,6 +19,8 @@ const [appSource, deckSource, deckCss, selectorSource, runtimeSource] = await Pr
 
 assert(appSource.includes("import SuccessionWorkspaceRefinementDeck from './SuccessionWorkspaceRefinementDeck'"), 'the archive app must import the Phase 5 refinement deck');
 assert(appSource.includes('<SuccessionWorkspaceRefinementDeck routeId={route.id}'), 'the archive app must mount the refinement deck before route workspaces');
+assert(lightRouteSource.includes("import SuccessionWorkspaceRefinementDeck from './SuccessionWorkspaceRefinementDeck'"), 'the lightweight route must import the Phase 5 refinement deck');
+assert(lightRouteSource.includes('routeId="black-whale"') && lightRouteSource.indexOf('routeId="black-whale"') < lightRouteSource.indexOf('<BlackWhaleGuide'), 'Black Whale must mount the Phase 5 deck before its preserved atlas');
 assert(deckSource.includes("new Set(['story', 'chapters', 'relationships', 'black-whale', 'nen', 'research'])"), 'the deck must remain scoped to the six approved workspaces');
 assert(deckCss.includes('@media (min-width: 1024px)'), 'Phase 5 presentation must remain desktop and laptop only');
 assert(!deckCss.includes('@media (max-width:'), 'Phase 5 must not introduce tablet or mobile presentation rules');
