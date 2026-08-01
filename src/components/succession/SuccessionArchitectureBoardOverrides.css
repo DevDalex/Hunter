@@ -26,35 +26,43 @@ body.succession-architecture-mode .site-header {
   color: #fff !important;
 }
 
-.succession-architecture-board .succession-architecture__view-grid {
+.succession-architecture-board .succession-architecture__view-grid,
+.succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   gap: 0 !important;
   width: auto !important;
   min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 9px 10px !important;
   padding: 0 !important;
   overflow: visible !important;
   border: 1px solid #8a8a86 !important;
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
+  scrollbar-width: auto !important;
 }
 
 .succession-architecture-board .succession-architecture__view-grid.is-five {
   grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
 }
 
-.succession-architecture-board .succession-architecture__view-cell {
+.succession-architecture-board .succession-architecture__view-cell,
+.succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid > a.succession-architecture__view-cell {
   position: static !important;
   display: grid !important;
   grid-template-rows: auto minmax(80px, 1fr) auto !important;
+  flex: initial !important;
+  align-items: initial !important;
+  justify-content: initial !important;
   gap: 6px !important;
   width: auto !important;
   min-width: 0 !important;
-  max-width: none !important;
+  max-width: 100% !important;
   min-height: 177px !important;
   padding: 8px 9px 10px !important;
-  overflow: visible !important;
+  overflow: hidden !important;
   border: 0 !important;
   border-right: 1px solid #c9c9c4 !important;
   border-radius: 0 !important;
@@ -66,9 +74,11 @@ body.succession-architecture-mode .site-header {
   transform: none !important;
   text-align: center !important;
   text-decoration: none !important;
+  white-space: normal !important;
 }
 
-.succession-architecture-board .succession-architecture__view-cell:last-child {
+.succession-architecture-board .succession-architecture__view-cell:last-child,
+.succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid > a.succession-architecture__view-cell:last-child {
   border-right: 0 !important;
 }
 
@@ -84,15 +94,19 @@ body.succession-architecture-mode .site-header {
 .succession-architecture-board .succession-architecture__view-visual,
 .succession-architecture-board .succession-architecture__view-visual * {
   display: revert;
+  max-width: 100% !important;
   color: #111 !important;
   opacity: 1 !important;
   visibility: visible !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
 }
 
 .succession-architecture-board .succession-architecture__view-visual {
   display: grid !important;
   min-height: 83px !important;
   place-content: center !important;
+  overflow: hidden !important;
   border: 1px solid #c9c9c4 !important;
   border-radius: 0 !important;
   background: linear-gradient(135deg, #fff, #f0f0ed) !important;
@@ -129,17 +143,21 @@ body.succession-architecture-mode .site-header {
 
 @media (max-width: 680px) {
   .succession-architecture-board .succession-architecture__view-grid,
-  .succession-architecture-board .succession-architecture__view-grid.is-five {
+  .succession-architecture-board .succession-architecture__view-grid.is-five,
+  .succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    margin-inline: 9px !important;
   }
 
-  .succession-architecture-board .succession-architecture__view-cell {
+  .succession-architecture-board .succession-architecture__view-cell,
+  .succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid > a.succession-architecture__view-cell {
     min-height: 190px !important;
     border-right: 1px solid #c9c9c4 !important;
     border-bottom: 1px solid #c9c9c4 !important;
   }
 
-  .succession-architecture-board .succession-architecture__view-cell:nth-child(2n) {
+  .succession-architecture-board .succession-architecture__view-cell:nth-child(2n),
+  .succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid > a.succession-architecture__view-cell:nth-child(2n) {
     border-right: 0 !important;
   }
 
