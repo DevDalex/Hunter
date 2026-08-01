@@ -1,13 +1,15 @@
 /*
  * Phase 4 is intentionally desktop-only. Smaller viewports retain the existing
  * Research and evidence desk without receiving a separate mobile/tablet design.
+ * The route-qualified selector outranks the lazy workbench component rule, so
+ * chunk loading order cannot expose the workbench below the desktop boundary.
  */
-.succession-intelligence-workbench {
+.succession-archive .succession-intelligence-workbench {
   display: none;
 }
 
 @media (min-width: 1024px) {
-  .succession-intelligence-workbench {
+  .succession-archive .succession-intelligence-workbench {
     display: grid;
   }
 }
