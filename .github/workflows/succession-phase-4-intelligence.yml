@@ -5,7 +5,7 @@ on:
     paths:
       - 'src/data/succession/**'
       - 'src/components/succession/SuccessionArchiveApp.jsx'
-      - 'src/components/succession/SuccessionArchiveResearchWorkspace.jsx'
+      - 'src/components/succession/SuccessionArchivePrimitives.jsx'
       - 'src/components/succession/SuccessionIntelligenceWorkbench.jsx'
       - 'src/components/succession/SuccessionIntelligenceWorkbench.css'
       - 'scripts/audit-succession-phase-4-high-value-intelligence.mjs'
