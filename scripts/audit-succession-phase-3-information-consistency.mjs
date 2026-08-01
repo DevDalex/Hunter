@@ -77,6 +77,16 @@ try {
 
   const characters = getEntitiesByType('character');
   assert(characters.length > 0, 'the character archive must remain available');
+
+  const halkenburg = characters.find((character) => character.id === 'character:halkenburg-hui-guo-rou');
+  assert(halkenburg, 'Halkenburg must remain in the canonical character archive');
+  assert(halkenburg.royalMother === 'Unma Hui Guo Rou', 'Halkenburg biological mother must resolve to Unma');
+  assert(halkenburg.royalRaisedBy === 'Duazul Hui Guo Rou', 'Halkenburg raised-by relationship must resolve to Duazul');
+  assert(halkenburg.royalMotherDisplay === 'Unma (birth) / Duazul (raised)', 'Halkenburg original composite lineage wording must remain available');
+  assert(Array.isArray(halkenburg.royalLineage) && halkenburg.royalLineage.length === 2, 'Halkenburg must retain two structured maternal lineage records');
+  assert(halkenburg.royalLineage.some((record) => record.relationship === 'biological-mother' && record.characterId === 'character:unma-hui-guo-rou'), 'Halkenburg biological-mother link is incomplete');
+  assert(halkenburg.royalLineage.some((record) => record.relationship === 'raised-by' && record.characterId === 'character:duazul-hui-guo-rou'), 'Halkenburg raised-by link is incomplete');
+
   for (const character of characters) {
     const state = getCanonicalCharacterState(character.id);
     assert(state, `${character.id} must expose a canonical chapter-bounded state`);
@@ -111,7 +121,7 @@ try {
     assert(profile.sections.officialAuthority.value !== profile.sections.operationalLoyalty.value, `${royal.id} must not conflate authority and loyalty records`);
   }
 
-  console.log(`Succession Phase 3 information consistency audit passed: ${characters.length} characters, ${royals.length} royal dossiers, structured body/identity/consciousness states, separated authority and loyalty evidence, normalized aliases, contradiction-safe cross-links, and desktop dossier integration verified.`);
+  console.log(`Succession Phase 3 information consistency audit passed: ${characters.length} characters, ${royals.length} royal dossiers, structured body/identity/consciousness states, separated authority and loyalty evidence, normalized aliases, Halkenburg maternal lineage, contradiction-safe cross-links, and desktop dossier integration verified.`);
 } finally {
   await vite.close();
 }
