@@ -17,6 +17,7 @@ const chapterCurrencyData = applySuccession414415ArchiveCorrections(Object.freez
   ...productFoundationData,
   glossaryEntries,
 }));
+const latestImportedChapter = chapterCurrencyData.chapters.at(-1)?.number || 415;
 
 const closeSupersededStateRanges = (profiles = {}) => Object.freeze(Object.fromEntries(
   Object.entries(profiles).map(([characterId, records]) => {
@@ -32,18 +33,25 @@ const closeSupersededStateRanges = (profiles = {}) => Object.freeze(Object.fromE
   }),
 ));
 
+const normalizeCharacterBoundary = (character) => {
+  const current = character.status
+    ? Object.freeze({
+      ...character,
+      status: Object.freeze({ ...character.status, asOfChapter: latestImportedChapter }),
+    })
+    : character;
+  if (current.id !== 'character:furykov') return current;
+  return Object.freeze({
+    ...current,
+    nen: Object.freeze({
+      ...(current.nen || {}),
+      naturalType: 'conjuration',
+    }),
+  });
+};
+
 export const successionArchiveData = Object.freeze({
   ...chapterCurrencyData,
-  characters: Object.freeze(chapterCurrencyData.characters.map((character) => (
-    character.id === 'character:furykov'
-      ? Object.freeze({
-        ...character,
-        nen: Object.freeze({
-          ...(character.nen || {}),
-          naturalType: 'conjuration',
-        }),
-      })
-      : character
-  ))),
+  characters: Object.freeze(chapterCurrencyData.characters.map(normalizeCharacterBoundary)),
   characterStateProfiles: closeSupersededStateRanges(chapterCurrencyData.characterStateProfiles),
 });
