@@ -1,9 +1,10 @@
-import { successionArchiveData } from './entitiesInformationConsistency.js';
+import { successionArchiveData } from './entitiesHighValueIntelligence.js';
 import { successionArchiveData as productClosureLineage } from './entitiesProductClosureCorrections.js';
 import { successionArchiveData as storyFoundationLineage } from './entitiesStoryIntelligenceFoundation.js';
-// Active predecessor chain: entitiesInformationConsistency.js -> entitiesProductClosureCorrections.js -> entitiesProductClosureFoundation.js -> entitiesStoryIntelligenceFoundation.js -> entitiesNenSystemFoundation.js -> entitiesOrganizationFoundation.js.
+// Active predecessor chain: entitiesHighValueIntelligence.js -> entitiesInformationConsistency.js -> entitiesProductClosureCorrections.js -> entitiesProductClosureFoundation.js -> entitiesStoryIntelligenceFoundation.js -> entitiesNenSystemFoundation.js -> entitiesOrganizationFoundation.js.
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { createEventKnowledgeSelectors } from './eventKnowledgeSelectors.js';
+import { createHighValueIntelligenceSelectors } from './highValueIntelligenceSelectors.js';
 import { buildSuccessionIndexes } from './indexesFinal.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { createCharacterStateSelectors } from './characterStateSelectors.js';
@@ -19,10 +20,12 @@ import { assertValidSuccessionArchiveData } from './schemasFinal.js';
 const informationConsistencyLineage = Object.freeze({
   correctedProductChapterCount: productClosureLineage.chapters.length,
   storyPhaseCount: Object.keys(storyFoundationLineage.storyPhaseProfiles || {}).length,
+  highValueIntelligenceVersion: successionArchiveData.highValueIntelligenceVersion,
 });
 if (informationConsistencyLineage.correctedProductChapterCount !== successionArchiveData.chapters.length
-  || informationConsistencyLineage.storyPhaseCount === 0) {
-  throw new Error('Succession information consistency predecessor chain is incomplete.');
+  || informationConsistencyLineage.storyPhaseCount === 0
+  || informationConsistencyLineage.highValueIntelligenceVersion !== 'phase-4-v1') {
+  throw new Error('Succession high-value intelligence predecessor chain is incomplete.');
 }
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
@@ -35,6 +38,15 @@ export const successionPeopleInstitutionClosure = createPeopleInstitutionClosure
 export const successionNenSystems = createNenSystemSelectors({ data: successionArchiveData, archive: successionArchive });
 export const successionEventKnowledge = createEventKnowledgeSelectors({ data: successionArchiveData, archive: successionArchive });
 export const successionStoryIntelligence = createStoryIntelligenceSelectors({ data: successionArchiveData, archive: successionArchive, eventKnowledge: successionEventKnowledge });
+export const successionHighValueIntelligence = createHighValueIntelligenceSelectors({
+  data: successionArchiveData,
+  archive: successionArchive,
+  characterStates: successionCharacterStates,
+  organizationStates: successionOrganizationStates,
+  nenSystems: successionNenSystems,
+  eventKnowledge: successionEventKnowledge,
+  informationConsistency: successionInformationConsistency,
+});
 export const successionProductClosure = createProductClosureSelectors({ data: successionArchiveData, archive: successionArchive, characterStates: successionCharacterStates, organizationStates: successionOrganizationStates, nenSystems: successionNenSystems, storyIntelligence: successionStoryIntelligence });
 export const successionEvidenceGraph = createSuccessionEvidenceGraph(successionArchiveData);
 export const successionFinalReleaseClosure = createFinalReleaseClosure({ data: successionArchiveData, validation: successionArchiveValidation, evidenceGraph: successionEvidenceGraph, peopleClosure: successionPeopleInstitutionClosure, nenSystems: successionNenSystems, storyIntelligence: successionStoryIntelligence, productClosure: successionProductClosure });
@@ -175,6 +187,23 @@ export const {
   searchStoryIntelligence,
   getStoryIntelligenceClosureReport,
 } = successionStoryIntelligence;
+
+export const {
+  getEntityStateAtChapter,
+  getChapterStateDiff,
+  getKnowledgeRecord,
+  getKnowledgeRecordsAtChapter,
+  getKnowledgeForEntity,
+  getKnowledgeMatrix,
+  getProtocolRecord,
+  getProtocolRecordsAtChapter,
+  getArtifactRecord,
+  getArtifactsAtChapter,
+  getEvidenceForArtifact,
+  compareSameTypeRecords,
+  getEditorialChangeLog,
+  getIntelligenceWorkbenchSummary,
+} = successionHighValueIntelligence;
 
 export const {
   getGlossaryEntry,
