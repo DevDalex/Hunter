@@ -8,8 +8,9 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Phase 4 high-value intelligence audit failed: ${message}`);
 };
 
-const [appSource, workbenchSource, workbenchCss, dataSource, foundationSource] = await Promise.all([
+const [appSource, primitivesSource, workbenchSource, workbenchCss, dataSource, foundationSource] = await Promise.all([
   read('src/components/succession/SuccessionArchiveApp.jsx'),
+  read('src/components/succession/SuccessionArchivePrimitives.jsx'),
   read('src/components/succession/SuccessionIntelligenceWorkbench.jsx'),
   read('src/components/succession/SuccessionIntelligenceWorkbench.css'),
   read('src/data/succession/successionData.js'),
@@ -21,6 +22,7 @@ assert(dataSource.includes('createHighValueIntelligenceSelectors'), 'the public 
 assert(appSource.includes("EvidenceWorkspace from './SuccessionArchiveEvidenceWorkspace'"), 'Research must preserve the canonical evidence workspace');
 assert(appSource.includes("SuccessionIntelligenceWorkbench from './SuccessionIntelligenceWorkbench'"), 'Research must import the Phase 4 workbench');
 assert(appSource.includes('<SuccessionIntelligenceWorkbench') && appSource.includes('<EvidenceWorkspace'), 'Research must render the workbench directly above the evidence desk');
+assert(primitivesSource.includes("['knowledge-record', 'protocol', 'object', 'document', 'evidence-item'].includes(entity.entityType)) return 'research'"), 'shared graph links must route every Phase 4 entity type into Research');
 for (const mode of ['overview', 'diff', 'knowledge', 'protocols', 'artifacts', 'compare', 'changes']) {
   assert(workbenchSource.includes(`'${mode}'`), `the ${mode} workbench mode is missing`);
 }
@@ -108,7 +110,7 @@ try {
   const knowledgeSearch = searchArchiveProduct('curse child network', { chapter: 410, limit: 20 });
   assert(knowledgeSearch.some((result) => result.id === 'knowledge-record:beyond-curse-child-network'), 'global search must index Knowledge & Secrecy records');
 
-  console.log('Succession Phase 4 high-value intelligence audit passed: global chapter diffs, Knowledge & Secrecy, protocol separation, first-class artifacts/evidence, same-type comparisons, editorial history, search routing, and direct Research integration verified.');
+  console.log('Succession Phase 4 high-value intelligence audit passed: global chapter diffs, Knowledge & Secrecy, protocol separation, first-class artifacts/evidence, same-type comparisons, editorial history, search routing, shared graph routing, and direct Research integration verified.');
 } finally {
   await vite.close();
 }
