@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import SuccessionArchiveShell from './SuccessionArchiveShell';
+import './SuccessionArchiveSearch.css';
 
 const PrincesWorkspace = lazy(() => import('./SuccessionArchiveWorkspaces').then((module) => ({ default: module.PrincesWorkspace })));
 const FamilyTree = lazy(() => import('../FamilyTree'));
