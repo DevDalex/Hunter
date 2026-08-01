@@ -12,6 +12,7 @@ const manifest = JSON.parse(await readFile(path.join(dist, '.vite/manifest.json'
 const dynamicFiles = new Set(Object.values(manifest).filter((record) => record.isDynamicEntry).map((record) => `/${record.file}`));
 const clsBudget = 0.15;
 const designSystemDebtClsRoutes = new Set(['series-research']);
+const approvedExternalMediaHosts = new Set(['hunterxhunter.fandom.com', 'static.wikia.nocookie.net']);
 
 const routes = [
   { id: 'home', hash: 'home/' },
@@ -28,9 +29,13 @@ const profiles = [
 ];
 
 const mime = {
-  '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8',
-  '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.js': 'text/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp',
+  '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
+  '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp',
+};
+
+const isApprovedExternalMediaFailure = (url) => {
+  try { return approvedExternalMediaHosts.has(new URL(url).hostname); }
+  catch { return false; }
 };
 
 const resolvePlaywright = async () => {
@@ -114,9 +119,14 @@ try {
     for (const route of routes) {
       const runtimeErrors = [];
       const failedRequests = [];
+      const approvedExternalFailures = [];
       const requestedPaths = [];
       const onPageError = (error) => runtimeErrors.push(error.message);
-      const onRequestFailed = (request) => failedRequests.push(`${request.url()} · ${request.failure()?.errorText || 'failed'}`);
+      const onRequestFailed = (request) => {
+        const failure = `${request.url()} · ${request.failure()?.errorText || 'failed'}`;
+        if (isApprovedExternalMediaFailure(request.url())) approvedExternalFailures.push(failure);
+        else failedRequests.push(failure);
+      };
       const onRequest = (request) => requestedPaths.push(new URL(request.url()).pathname);
       page.on('pageerror', onPageError);
       page.on('requestfailed', onRequestFailed);
@@ -162,8 +172,8 @@ try {
         ...(route.id === 'home' && metrics.highPriorityImages !== 1 ? [`home has ${metrics.highPriorityImages} high-priority images; expected 1`] : []),
         ...(metrics.serviceWorkers ? [`${metrics.serviceWorkers} service worker registration(s) found`] : []),
       ];
-      results.push({ profile: profile.id, route: route.id, readyMs, dynamicRequests, runtimeErrors, failedRequests, clsDebt, ...metrics, defects });
-      process.stdout.write(`${defects.length ? '✗' : '✓'} ${profile.id.padEnd(18)} ${route.id.padEnd(18)} ${readyMs}ms${clsDebt ? ' · CLS debt' : ''}\n`);
+      results.push({ profile: profile.id, route: route.id, readyMs, dynamicRequests, runtimeErrors, failedRequests, approvedExternalFailures, clsDebt, ...metrics, defects });
+      process.stdout.write(`${defects.length ? '✗' : '✓'} ${profile.id.padEnd(18)} ${route.id.padEnd(18)} ${readyMs}ms${clsDebt ? ' · CLS debt' : ''}${approvedExternalFailures.length ? ` · approved external media:${approvedExternalFailures.length}` : ''}\n`);
       if (defects.length) await page.screenshot({ path: path.join(output, `${profile.id}-${route.id}.png`), fullPage: true }).catch(() => {});
       page.off('pageerror', onPageError);
       page.off('requestfailed', onRequestFailed);
@@ -179,6 +189,7 @@ try {
 
 const failures = results.filter((record) => record.defects.length);
 const clsDebt = results.filter((record) => record.clsDebt);
+const approvedExternalFailures = results.reduce((total, record) => total + record.approvedExternalFailures.length, 0);
 const summary = {
   generatedAt: new Date().toISOString(),
   routes: routes.length,
@@ -187,9 +198,10 @@ const summary = {
   passed: results.length - failures.length,
   failed: failures.length,
   clsDebt: clsDebt.length,
+  approvedExternalFailures,
   slowestReadyMs: Math.max(...results.map((record) => record.readyMs)),
 };
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results }, null, 2)}\n`);
 await writeFile(path.join(output, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
-console.log(`\nPerformance QA: ${summary.passed}/${summary.checks} route/profile checks passed; ${summary.clsDebt} CLS debt item(s) tracked for Batch 12; slowest ready state ${summary.slowestReadyMs}ms.`);
+console.log(`\nPerformance QA: ${summary.passed}/${summary.checks} route/profile checks passed; ${summary.clsDebt} CLS debt item(s); ${summary.approvedExternalFailures} approved external media availability event(s); slowest ready state ${summary.slowestReadyMs}ms.`);
 if (failures.length) process.exitCode = 1;
