@@ -21,6 +21,7 @@ import './SuccessionExactContrastClosure.css';
 import './SuccessionPhase2DesignSystem.css';
 import './SuccessionArchitectureCenteringFix.css';
 import './SuccessionArchitectureViewportRuntime.js';
+import './SuccessionArchitectureVisualRevision.css';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));
