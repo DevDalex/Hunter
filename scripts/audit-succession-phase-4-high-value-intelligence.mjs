@@ -8,19 +8,19 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Phase 4 high-value intelligence audit failed: ${message}`);
 };
 
-const [appSource, workbenchSource, workbenchCss, researchSource, dataSource, foundationSource] = await Promise.all([
+const [appSource, workbenchSource, workbenchCss, dataSource, foundationSource] = await Promise.all([
   read('src/components/succession/SuccessionArchiveApp.jsx'),
   read('src/components/succession/SuccessionIntelligenceWorkbench.jsx'),
   read('src/components/succession/SuccessionIntelligenceWorkbench.css'),
-  read('src/components/succession/SuccessionArchiveResearchWorkspace.jsx'),
   read('src/data/succession/successionData.js'),
   read('src/data/succession/highValueIntelligenceFoundation.js'),
 ]);
 
 assert(dataSource.includes("from './entitiesHighValueIntelligence.js'"), 'the public data entry must activate the Phase 4 data layer');
 assert(dataSource.includes('createHighValueIntelligenceSelectors'), 'the public data entry must create Phase 4 selectors');
-assert(appSource.includes("ResearchWorkspace from './SuccessionArchiveResearchWorkspace'"), 'Research must mount the Phase 4 composition');
-assert(researchSource.includes('SuccessionIntelligenceWorkbench') && researchSource.includes('SuccessionArchiveEvidenceWorkspace'), 'the new workbench must preserve the existing evidence desk');
+assert(appSource.includes("EvidenceWorkspace from './SuccessionArchiveEvidenceWorkspace'"), 'Research must preserve the canonical evidence workspace');
+assert(appSource.includes("SuccessionIntelligenceWorkbench from './SuccessionIntelligenceWorkbench'"), 'Research must import the Phase 4 workbench');
+assert(appSource.includes('<SuccessionIntelligenceWorkbench') && appSource.includes('<EvidenceWorkspace'), 'Research must render the workbench directly above the evidence desk');
 for (const mode of ['overview', 'diff', 'knowledge', 'protocols', 'artifacts', 'compare', 'changes']) {
   assert(workbenchSource.includes(`'${mode}'`), `the ${mode} workbench mode is missing`);
 }
@@ -108,7 +108,7 @@ try {
   const knowledgeSearch = searchArchiveProduct('curse child network', { chapter: 410, limit: 20 });
   assert(knowledgeSearch.some((result) => result.id === 'knowledge-record:beyond-curse-child-network'), 'global search must index Knowledge & Secrecy records');
 
-  console.log('Succession Phase 4 high-value intelligence audit passed: global chapter diffs, Knowledge & Secrecy, protocol separation, first-class artifacts/evidence, same-type comparisons, editorial history, search routing, and Research integration verified.');
+  console.log('Succession Phase 4 high-value intelligence audit passed: global chapter diffs, Knowledge & Secrecy, protocol separation, first-class artifacts/evidence, same-type comparisons, editorial history, search routing, and direct Research integration verified.');
 } finally {
   await vite.close();
 }
