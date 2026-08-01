@@ -3,6 +3,7 @@ import {
   normalizeCharacterEntity,
   normalizeCharacterStateRecord,
 } from './informationConsistency.js';
+import { BODY_STATES, CONSCIOUSNESS_STATES, IDENTITY_STATES } from './registries.js';
 
 /* Phase 3 is a compatibility-preserving data layer. It keeps every canonical
    entity, stable ID, chapter boundary, and legacy display sentence while adding
@@ -15,7 +16,11 @@ import {
 
    Halkenburg's legacy mother field combines two different relationships. The
    normalized entity records Unma as biological mother, Duazul as the queen who
-   raised him, and retains the original composite wording for display/audit use. */
+   raised him, and retains the original composite wording for display/audit use.
+
+   Halkenburg's final published state also records a deceased original body and
+   active consciousness inside Balsamilco's body. That tuple is a transferred
+   identity, not an unresolved identity. */
 const normalizeRoyalLineage = (character) => {
   const normalized = normalizeCharacterEntity(character);
   if (normalized.id !== 'character:halkenburg-hui-guo-rou') return normalized;
@@ -28,6 +33,17 @@ const normalizeRoyalLineage = (character) => {
       Object.freeze({ relationship: 'biological-mother', characterId: 'character:unma-hui-guo-rou' }),
       Object.freeze({ relationship: 'raised-by', characterId: 'character:duazul-hui-guo-rou' }),
     ]),
+  });
+};
+
+const normalizeBoundaryState = (record, character, characterId) => {
+  const normalized = normalizeCharacterStateRecord(record, character);
+  if (characterId !== 'character:halkenburg-hui-guo-rou'
+    || normalized.bodyStateCode !== BODY_STATES.DECEASED
+    || normalized.consciousnessStateCode !== CONSCIOUSNESS_STATES.ACTIVE) return normalized;
+  return Object.freeze({
+    ...normalized,
+    identityStateCode: IDENTITY_STATES.TRANSFERRED,
   });
 };
 
@@ -46,7 +62,7 @@ const characterStateProfiles = Object.freeze(Object.fromEntries(
           }),
         })
         : character;
-      return normalizeCharacterStateRecord(record, boundaryCharacter);
+      return normalizeBoundaryState(record, boundaryCharacter, characterId);
     }))];
   }),
 ));
