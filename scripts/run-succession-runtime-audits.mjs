@@ -9,6 +9,7 @@ const audits = Object.freeze([
   ['visual-foundation', 'scripts/audit-succession-visual-foundation.mjs'],
   ['shell-redesign', 'scripts/audit-succession-shell-redesign.mjs'],
   ['phase-1-visual-repair', 'scripts/audit-succession-phase-1-visual-repair.mjs'],
+  ['phase-2-presentation-consistency', 'scripts/audit-succession-phase-2-presentation-consistency.mjs'],
   ['phase-2-design-system', 'scripts/audit-succession-phase-2-design-system.mjs'],
   ['phase-2-scope', 'scripts/audit-succession-phase-2-scope.mjs'],
   ['architecture-lock', 'scripts/audit-succession-architecture-lock.mjs'],
