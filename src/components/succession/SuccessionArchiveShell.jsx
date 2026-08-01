@@ -164,7 +164,7 @@ export default function SuccessionArchiveShell({
 
   return <article className="succession-archive" data-archive-route={route.id} data-archive-hub={activeHub.id}>
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
-    <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{activeHub.label}, {route.label} view loaded. Reading boundary Chapter {spoilerLimit}.</span>
+    <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{route.label} workspace loaded. Reading boundary Chapter {spoilerLimit}. Active hub: {activeHub.label}.</span>
 
     <div className="succession-archive__mobile-bar">
       <button ref={menuButtonRef} type="button" onClick={() => setDrawerOpen(true)} aria-expanded={drawerOpen} aria-controls="succession-mobile-navigation"><Menu size={19} aria-hidden="true" /> Archive</button>
@@ -256,7 +256,7 @@ export default function SuccessionArchiveShell({
             id="succession-workspace-content"
             className="succession-archive__content"
             role="region"
-            aria-label={`${activeHub.label}: ${route.label} workspace content`}
+            aria-label={`${route.label} workspace content`}
             tabIndex="-1"
           >{route.id === 'archive' ? null : children}</div>
         </div>
