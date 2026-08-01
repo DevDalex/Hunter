@@ -171,7 +171,8 @@
   body .succession-archive[data-archive-route="nen"]
     .succession-nen-command
     :is(.succession-nen-command-system, .succession-nen-command-ability)
-    dl dt {
+    dl dt,
+  body .succession-archive[data-archive-route="relationships"] small {
     font-size: 11px !important;
   }
 }
