@@ -12,6 +12,11 @@ body.succession-architecture-mode .site-header {
   text-shadow: none !important;
 }
 
+.succession-architecture-board .succession-architecture__title p {
+  text-transform: none !important;
+  font-variant-caps: all-small-caps;
+}
+
 .succession-architecture-board .succession-architecture__navigation a.is-current,
 .succession-architecture-board .succession-architecture__navigation a.is-current *,
 .succession-architecture-board .succession-architecture__navigation a:hover,
