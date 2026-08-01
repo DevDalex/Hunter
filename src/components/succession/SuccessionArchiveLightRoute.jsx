@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react';
 import SuccessionArchiveShell from './SuccessionArchiveShell';
+import SuccessionWorkspaceRefinementDeck from './SuccessionWorkspaceRefinementDeck';
 import './SuccessionArchiveSearch.css';
 
 const PrincesWorkspace = lazy(() => import('./SuccessionArchiveWorkspaces').then((module) => ({ default: module.PrincesWorkspace })));
@@ -33,6 +34,13 @@ export default function SuccessionArchiveLightRoute({
     onOpenSearch={onOpenSearch}
     onIntent={onIntent}
   >
+    {blackWhale && <SuccessionWorkspaceRefinementDeck
+      routeId="black-whale"
+      routeParams={routeParams}
+      spoilerLimit={spoilerLimit}
+      onNavigate={onNavigate}
+    />}
+
     {blackWhale && <Suspense fallback={<LightWorkspaceLoading label="Black Whale atlas" />}>
       <BlackWhaleGuide
         initialQuery={routeParams.room || ''}
