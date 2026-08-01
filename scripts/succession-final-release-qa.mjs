@@ -228,7 +228,7 @@ try {
   }
 
   await runInteraction('desktop Story hub tab focuses the new workspace', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
-    const timeline = page.locator('.succession-hub-tabs a').filter({ hasText: 'Timeline' });
+    const timeline = page.getByRole('link', { name: 'Timeline', exact: true });
     await timeline.focus();
     await page.keyboard.press('Enter');
     await page.waitForSelector('.succession-archive[data-archive-route="timeline"][data-archive-hub="story"]', { timeout: 10_000 });
