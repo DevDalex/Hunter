@@ -9,6 +9,7 @@ import { successionChapterResearchByNumber } from './successionResearch.js';
 
 const ARCHIVE_DATE = '2026-07-25';
 const PENDING_PHASE_ID = 'story-phase:pending-current-release';
+const PENDING_STORY_STATUS = 'Reader media indexed; detailed research pending verified chapter documentation';
 const BORKSEN_AUTONOMY_THREAD_ID = 'story-thread:borksen-autonomy';
 const includesChapter = (range, chapter) => chapter >= range.start && chapter <= (range.end ?? Number.POSITIVE_INFINITY);
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -51,6 +52,7 @@ const causalLinkValues = [...storyCausalLinks];
 
 const chapters = Object.freeze(nenFoundationData.chapters.map((chapter) => {
   const phases = phaseValues.filter((profile) => includesChapter(profile.chapterRange, chapter.number));
+  const pendingPhase = phases.some((profile) => profile.status === 'pending-maintained-research');
   const phaseLaneIds = unique(phases.flatMap((profile) => profile.laneIds));
   const lanes = laneValues.filter((profile) => phaseLaneIds.includes(profile.id) && includesChapter(profile.chapterRange, chapter.number));
   const laneIds = lanes.map((profile) => profile.id);
@@ -75,15 +77,15 @@ const chapters = Object.freeze(nenFoundationData.chapters.map((chapter) => {
     storyThreadIds: Object.freeze(threads.map((profile) => profile.id)),
     incomingCausalLinkIds: Object.freeze(incomingCausalLinkIds),
     outgoingCausalLinkIds: Object.freeze(outgoingCausalLinkIds),
-    storyIntelligenceStatus: research?.status || phases[0]?.status || 'pending-maintained-research',
+    storyIntelligenceStatus: research?.status || (pendingPhase ? PENDING_STORY_STATUS : phases[0]?.status || PENDING_STORY_STATUS),
     storyCoverage: Object.freeze({
       summary: Boolean(research?.coverage?.summary),
       chronology: Boolean(research?.coverage?.chronology),
       locations: Boolean(research?.coverage?.locations),
       source: Boolean(research?.coverage?.source),
       phase: phases.length === 1,
-      lanes: lanes.length > 0 || phases.some((profile) => profile.status === 'pending-maintained-research'),
-      threads: threads.length > 0 || phases.some((profile) => profile.status === 'pending-maintained-research'),
+      lanes: lanes.length > 0 || pendingPhase,
+      threads: threads.length > 0 || pendingPhase,
     }),
     updatedAt: ARCHIVE_DATE,
   });

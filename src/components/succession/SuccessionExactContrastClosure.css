@@ -1,0 +1,100 @@
+/* Exact mobile contrast closure. Only selectors reported by the rendered axe matrix. */
+
+@media (max-width: 860px) {
+  /* Chapter route: selected command surfaces and evidence records. */
+  .succession-archive[data-archive-route="chapters"] .succession-page-header__actions > button,
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-command__card.is-selected :where(p, span, small, strong, b, em, dt, dd),
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-command__rail nav > button,
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-command__rail > button,
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__hero > dl :where(dt, dd) {
+    color: #fff !important;
+  }
+
+  .succession-archive[data-archive-route="chapters"] .succession-button--search {
+    border-color: #6f93a7 !important;
+    background: #26485d !important;
+    color: #fff !important;
+  }
+
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__sequence-grid > section {
+    background: #eef0ec !important;
+    color: #17272f !important;
+  }
+
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__sequence-grid > section > header {
+    background: #dfe3df !important;
+  }
+
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__sequence-grid > section > header :where(span, b, small),
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__sequence-grid > section > p,
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-intel__events > p {
+    color: #17272f !important;
+  }
+
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-sequence-card.is-starts .succession-chapter-sequence-card__topline > em {
+    color: #6b531f !important;
+  }
+
+  /* Chapter route: dark evidence and entity-link surfaces keep light text. */
+  .succession-archive[data-archive-route="chapters"] .succession-entity-link,
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__evidence-board > div,
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__evidence-note {
+    color: #f2f6f4 !important;
+  }
+
+  .succession-archive[data-archive-route="chapters"] .succession-entity-link :where(span, small, strong, b),
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__evidence-board > div :where(span, small, strong, b, dt, dd),
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__evidence-note :where(p, span, small, strong, b) {
+    color: #f2f6f4 !important;
+  }
+
+  /* Timeline route: pale controls use dark ink; the dark inspector label stays light. */
+  .succession-archive[data-archive-route="timeline"] .timeline-confidence-legend span,
+  .succession-archive[data-archive-route="timeline"] .timeline-day-rail button :where(small, span),
+  .succession-archive[data-archive-route="timeline"] .timeline-day > header p,
+  .succession-archive[data-archive-route="timeline"] .timeline-inspector dl :where(dt, dd) {
+    color: #20343d !important;
+  }
+
+  .succession-archive[data-archive-route="timeline"] .timeline-inspector > span {
+    color: #e9efec !important;
+  }
+
+  /* Royal candidate cards are pale personnel files, including exceptional states. */
+  .succession-archive[data-archive-route="princes"] .succession-prince-card__body > h3 {
+    color: #17272f !important;
+  }
+
+  /* Black Whale route: these inspectors and command sheets are pale surfaces. */
+  .succession-archive[data-archive-route="black-whale"] .ship-source-banner > div:nth-child(2) :where(strong, p),
+  .succession-archive[data-archive-route="black-whale"] #ship-temporal-command-title,
+  .succession-archive[data-archive-route="black-whale"] .ship-location-inspector__pager > span,
+  .succession-archive[data-archive-route="black-whale"] .ship-location-inspector > header :where(span, h3, p),
+  .succession-archive[data-archive-route="black-whale"] .ship-location-inspector__evidence button > span,
+  .succession-archive[data-archive-route="black-whale"] .ship-location-inspector > p {
+    color: #20343d !important;
+  }
+
+  /* Guardian Spirit Beast controls and orbit index are pale containment sheets. */
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command__metrics :where(dt, dd),
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-orbit :where(span, h3, b, small),
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command__controls :where(strong, span, label),
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-boundary :where(h3, p) {
+    color: #20343d !important;
+  }
+
+  /* Research coverage report: dark header, pale action. */
+  .succession-archive[data-archive-route="research"] .succession-coverage-report > header > div > span {
+    color: #f0d794 !important;
+  }
+
+  .succession-archive[data-archive-route="research"] #succession-coverage-report-title {
+    color: #fff !important;
+  }
+
+  .succession-archive[data-archive-route="research"] .succession-coverage-report > footer > button {
+    border-color: #aeb9b7 !important;
+    background: #e9eeeb !important;
+    color: #17272f !important;
+  }
+}
