@@ -174,14 +174,15 @@ try {
       await page.keyboard.press('Enter');
       if (await nextQueen.getAttribute('aria-pressed') !== 'true') throw new Error('keyboard activation did not pin the queen node');
     });
-    await recordInteraction('Succession Archive navigation activates with keyboard', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
-      const timelineLink = page.locator('#succession-desktop-navigation a').filter({ hasText: 'Timeline' });
+    await recordInteraction('Succession Story hub navigation activates with keyboard', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
+      const timelineLink = page.locator('.succession-hub-tabs a').filter({ hasText: 'Timeline' });
       await timelineLink.focus();
-      if (!await timelineLink.evaluate((node) => node === document.activeElement)) throw new Error('archive navigation link did not receive focus');
+      if (!await timelineLink.evaluate((node) => node === document.activeElement)) throw new Error('Story hub Timeline tab did not receive focus');
       await page.keyboard.press('Enter');
-      await page.waitForSelector('.succession-archive[data-archive-route="timeline"]', { timeout: 10_000 });
-      const activeLink = page.locator('#succession-desktop-navigation a[aria-current="page"]');
-      if ((await activeLink.innerText()).trim() !== 'Timeline') throw new Error('keyboard activation did not open the Timeline workspace');
+      await page.waitForSelector('.succession-archive[data-archive-route="timeline"][data-archive-hub="story"]', { timeout: 10_000 });
+      const activeLink = page.locator('.succession-hub-tabs a[aria-current="page"]');
+      if ((await activeLink.innerText()).trim() !== 'Timeline') throw new Error('keyboard activation did not open the Timeline view inside Story Intelligence');
+      await page.waitForFunction(() => document.activeElement?.id === 'succession-workspace-content');
     });
     await recordInteraction('chapter drawer traps and restores focus', { width: 1440, height: 1000 }, 'series/chapters', async (page) => {
       const opener = page.locator('.chapter-row').first();
