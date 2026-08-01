@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import {
   BookOpen,
   Boxes,
-  ChevronRight,
   CircleDot,
   Crown,
   ExternalLink,
@@ -10,11 +9,9 @@ import {
   GitBranch,
   Library,
   LockKeyhole,
-  MapPinned,
   Menu,
   Network,
   Orbit,
-  Radar,
   Route,
   Scale,
   Search,
@@ -24,6 +21,7 @@ import {
 } from 'lucide-react';
 import { routeToHref } from '../../lib/appRouter';
 import './SuccessionArchitectureBoard.css';
+import './SuccessionArchitectureBoardOverrides.css';
 
 const primaryNavigation = [
   { id: 'story', label: 'Story Intelligence', target: 'story', params: { mode: 'workspace' }, icon: BookOpen },
@@ -106,9 +104,9 @@ function BeastGrid() {
 
 function ViewCell({ item, onNavigate }) {
   const Icon = item.icon;
-  const href = routeToHref('succession', item.target, item.params || {});
   return <a
-    href={href}
+    href={routeToHref('succession', item.target, item.params || {})}
+    aria-label={item.label}
     onClick={(event) => { event.preventDefault(); onNavigate(item.target, item.params || {}); }}
     className="succession-architecture__view-cell"
   >
@@ -118,13 +116,9 @@ function ViewCell({ item, onNavigate }) {
   </a>;
 }
 
-function ArchitecturePanel({ number, title, subtitle, className = '', children }) {
-  return <section className={`succession-architecture__module ${className}`}>
-    <header>
-      <span>{number}</span>
-      <div><h2>{title}</h2><p>{subtitle}</p></div>
-      <i aria-hidden="true" />
-    </header>
+function ArchitecturePanel({ number, title, subtitle, children }) {
+  return <section className="succession-architecture__module">
+    <header><span>{number}</span><div><h2>{title}</h2><p>{subtitle}</p></div><i aria-hidden="true" /></header>
     {children}
   </section>;
 }
@@ -134,10 +128,9 @@ function NavigationRail({ onNavigate, id }) {
     <h2>Top-level navigation</h2>
     {primaryNavigation.map((item) => {
       const Icon = item.icon;
-      const href = routeToHref('succession', item.target, item.params || {});
       return <a
         key={item.id}
-        href={href}
+        href={routeToHref('succession', item.target, item.params || {})}
         className={item.id === 'story' ? 'is-current' : ''}
         aria-current={item.id === 'story' ? 'page' : undefined}
         onClick={(event) => { event.preventDefault(); onNavigate(item.target, item.params || {}); }}
@@ -148,7 +141,7 @@ function NavigationRail({ onNavigate, id }) {
 
 function StoryModule({ onNavigate }) {
   return <ArchitecturePanel number="1" title="Story Intelligence" subtitle="Comprehensive narrative archive">
-    <nav className="succession-architecture__view-grid succession-hub-tabs" aria-label="Story Intelligence views">
+    <nav className="succession-architecture__view-grid" aria-label="Story Intelligence views">
       {storyViews.map((item) => <ViewCell item={item} onNavigate={onNavigate} key={item.label} />)}
     </nav>
   </ArchitecturePanel>;
@@ -165,12 +158,8 @@ function PeopleModule({ onNavigate }) {
 function BlackWhaleModule({ onNavigate }) {
   return <ArchitecturePanel number="3" title="Black Whale" subtitle="The voyage and environments">
     <div className="succession-architecture__split-grid">
-      <a href={routeToHref('succession', 'black-whale')} onClick={(event) => { event.preventDefault(); onNavigate('black-whale', {}); }}>
-        <strong>Ship Atlas</strong><ShipBlueprint /><small>Decks, rooms, systems, facilities, and personnel zones.</small>
-      </a>
-      <a href={routeToHref('succession', 'locations')} onClick={(event) => { event.preventDefault(); onNavigate('locations', {}); }}>
-        <strong>Locations</strong><MapSketch /><small>Destinations, sections, and notable areas.</small>
-      </a>
+      <a href={routeToHref('succession', 'black-whale')} onClick={(event) => { event.preventDefault(); onNavigate('black-whale', {}); }}><strong>Ship Atlas</strong><ShipBlueprint /><small>Decks, rooms, systems, facilities, and personnel zones.</small></a>
+      <a href={routeToHref('succession', 'locations')} onClick={(event) => { event.preventDefault(); onNavigate('locations', {}); }}><strong>Locations</strong><MapSketch /><small>Destinations, sections, and notable areas.</small></a>
     </div>
   </ArchitecturePanel>;
 }
@@ -178,12 +167,8 @@ function BlackWhaleModule({ onNavigate }) {
 function NenModule({ onNavigate }) {
   return <ArchitecturePanel number="4" title="Nen Systems" subtitle="Powers, rituals, and guardian spirits">
     <div className="succession-architecture__split-grid">
-      <a href={routeToHref('succession', 'nen')} onClick={(event) => { event.preventDefault(); onNavigate('nen', {}); }}>
-        <strong>Nen & Rituals</strong><RadarSketch /><small>Nen principles, categories, techniques, and rituals.</small>
-      </a>
-      <a href={routeToHref('succession', 'guardian-spirit-beasts')} onClick={(event) => { event.preventDefault(); onNavigate('guardian-spirit-beasts', {}); }}>
-        <strong>Guardian Spirit Beasts</strong><BeastGrid /><small>Beasts, abilities, conditions, and contracts.</small>
-      </a>
+      <a href={routeToHref('succession', 'nen')} onClick={(event) => { event.preventDefault(); onNavigate('nen', {}); }}><strong>Nen & Rituals</strong><RadarSketch /><small>Nen principles, categories, techniques, and rituals.</small></a>
+      <a href={routeToHref('succession', 'guardian-spirit-beasts')} onClick={(event) => { event.preventDefault(); onNavigate('guardian-spirit-beasts', {}); }}><strong>Guardian Spirit Beasts</strong><BeastGrid /><small>Beasts, abilities, conditions, and contracts.</small></a>
     </div>
   </ArchitecturePanel>;
 }
@@ -194,8 +179,7 @@ function LibraryRail({ onNavigate }) {
     {libraryTools.map((item) => {
       const Icon = item.icon;
       return <a href={routeToHref('succession', item.target)} onClick={(event) => { event.preventDefault(); onNavigate(item.target, {}); }} key={item.label}>
-        <span><Icon size={31} strokeWidth={1.25} aria-hidden="true" /></span>
-        <div><strong>{item.label}</strong><small>{item.note}</small></div>
+        <span><Icon size={31} strokeWidth={1.25} aria-hidden="true" /></span><div><strong>{item.label}</strong><small>{item.note}</small></div>
       </a>;
     })}
     <div className="succession-architecture__library-map"><MapSketch compact /></div>
@@ -229,14 +213,11 @@ function PageSkeleton({ onNavigate, onOpenSearch }) {
     <div className="succession-architecture__page-skeleton">
       <header><strong>Succession Contest</strong><button type="button" className="succession-button" onClick={onOpenSearch}>Search archive… <Search size={13} /></button></header>
       <div className="succession-architecture__skeleton-body">
-        <nav aria-label="Skeleton navigation">{[BookOpen, Crown, Ship, Orbit, Search, FileSearch, Library].map((Icon, index) => <button type="button" aria-label={primaryNavigation[index].label} onClick={() => onNavigate(primaryNavigation[index].target, primaryNavigation[index].params || {})} key={primaryNavigation[index].id}><Icon size={18} strokeWidth={1.35} /></button>)}</nav>
+        <nav aria-label="Skeleton navigation">{primaryNavigation.map((item) => { const Icon = item.icon; return <button type="button" aria-label={item.label} onClick={() => onNavigate(item.target, item.params || {})} key={item.id}><Icon size={18} strokeWidth={1.35} /></button>; })}</nav>
         <main>
           <ol><li>Home</li><li>Succession Contest</li><li>Story Intelligence</li><li>Timeline</li></ol>
           <div className="succession-architecture__skeleton-tabs"><span>Story</span><span>Chapters</span><b>Timeline</b><span>Events</span></div>
-          <section>
-            <div className="succession-architecture__mock-content"><h3>Timeline: Key Moments</h3><div>{[1, 2, 3, 4].map((item) => <p key={item}><i /><span /></p>)}</div></div>
-            <MapSketch compact />
-          </section>
+          <section><div className="succession-architecture__mock-content"><h3>Timeline: Key Moments</h3><div>{[1, 2, 3, 4].map((item) => <p key={item}><i /><span /></p>)}</div></div><MapSketch compact /></section>
           <footer><div>{['1010', '1015', '1020', '1025', '1030', '1035'].map((year) => <span key={year}><i />{year}</span>)}</div><MapSketch compact /></footer>
         </main>
         <aside><h3>Related entity</h3><div><Users size={27} /><span /><span /></div><h3>Key data</h3>{[1, 2, 3, 4].map((item) => <p key={item}><i /><span /></p>)}</aside>
@@ -288,27 +269,17 @@ export default function SuccessionArchitectureBoard({ spoilerLimit, onNavigate, 
     <div id="succession-workspace-content" className="succession-archive__content" role="region" aria-label="Succession Contest architecture" tabIndex="-1">
       <div className="succession-architecture__sheet">
         <i className="succession-architecture__corner is-nw" aria-hidden="true" /><i className="succession-architecture__corner is-ne" aria-hidden="true" /><i className="succession-architecture__corner is-sw" aria-hidden="true" /><i className="succession-architecture__corner is-se" aria-hidden="true" />
-
         <header className="succession-architecture__masthead">
-          <button type="button" className="succession-architecture__identity" onClick={onExitArchive}>
-            <span><Ship size={27} strokeWidth={1.25} aria-hidden="true" /></span>
-            <div><strong>Kakin Empire Archive</strong><small>Information architecture board<br />Classified — internal use only</small></div>
-          </button>
+          <button type="button" className="succession-architecture__identity" onClick={onExitArchive}><span><Ship size={27} strokeWidth={1.25} aria-hidden="true" /></span><div><strong>Kakin Empire Archive</strong><small>Information architecture board<br />Classified — internal use only</small></div></button>
           <div className="succession-architecture__title"><h1>Succession Contest</h1><p>Section architecture before final redesign</p></div>
           <div className="succession-architecture__document-meta"><dl><div><dt>Architecture doc.</dt><dd>SC–IA–01</dd></div><div><dt>Date</dt><dd>08.01.2026</dd></div><div><dt>Version</dt><dd>0.9</dd></div></dl><span>Draft</span><div className="succession-architecture__stamp"><b>Dossier</b><small>SC–IA–01</small></div></div>
         </header>
-
         <div className="succession-architecture__primary-grid">
           <aside className="succession-architecture__left-column"><NavigationRail id="succession-desktop-navigation" onNavigate={onNavigate} /><div className="succession-architecture__ship-portrait"><ShipBlueprint /><small>The Black Whale · Kakin Empire flagship</small></div></aside>
           <main className="succession-architecture__modules"><StoryModule onNavigate={onNavigate} /><PeopleModule onNavigate={onNavigate} /><BlackWhaleModule onNavigate={onNavigate} /><NenModule onNavigate={onNavigate} /></main>
           <LibraryRail onNavigate={onNavigate} />
         </div>
-
-        <div className="succession-architecture__lower-grid">
-          <div><PreservedContracts /><FooterSpecifications /></div>
-          <PageSkeleton onNavigate={onNavigate} onOpenSearch={onOpenSearch} />
-        </div>
-
+        <div className="succession-architecture__lower-grid"><div><PreservedContracts /><FooterSpecifications /></div><PageSkeleton onNavigate={onNavigate} onOpenSearch={onOpenSearch} /></div>
         <footer className="succession-architecture__document-footer"><span>SC–IA–01</span><span>Reading boundary: Chapter {spoilerLimit}</span><span>Continuity first</span></footer>
       </div>
     </div>
