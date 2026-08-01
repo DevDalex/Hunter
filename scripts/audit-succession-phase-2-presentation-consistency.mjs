@@ -15,8 +15,8 @@ const [entry, loader, css] = await Promise.all([
 
 assert(entry.includes("import './SuccessionPhase2PresentationConsistency.css'"), 'the Succession entry must own the Phase 2 presentation layer');
 assert(loader.includes("@import url('/succession-phase-2-presentation-consistency.css')"), 'the route-owned loader must resolve the cacheable Phase 2 sheet');
-assert(css.includes('@media (min-width: 1024px)'), 'Phase 2 must remain desktop and laptop only');
-assert(!css.includes('@media (max-width:'), 'Phase 2 must not introduce tablet or mobile presentation rules');
+assert(css.includes('@media (min-width: 1024px)') && loader.includes('@media (min-width: 1024px)'), 'Phase 2 must remain desktop and laptop only');
+assert(!css.includes('@media (max-width:') && !loader.includes('@media (max-width:'), 'Phase 2 must not introduce tablet or mobile presentation rules');
 
 assert(css.includes('.succession-page-header :is(h1, h2)'), 'shared archive briefs must style both valid heading levels');
 assert(css.includes('.succession-page-header__description'), 'shared archive descriptions must retain explicit readable ink');
@@ -33,8 +33,14 @@ assert(css.includes('[class*="control-deck"]') && css.includes('[class*="tempora
 assert(css.includes('data-archive-route="black-whale"') && css.includes('.ship-location-inspector'), 'Black Whale document panels must retain explicit desktop ink');
 assert(css.includes('data-archive-route="research"') && css.includes('.succession-evidence-governance'), 'Research and Records panels must retain explicit desktop ink');
 
+assert(loader.includes('.succession-queen-card > dl') && loader.includes('.succession-queen-command-metrics'), 'queen card and dossier metrics must retain document ink');
+assert(loader.includes('.timeline-command__metrics') && loader.includes('.timeline-command-voyage__metrics'), 'Timeline metric cells must retain document ink inside dark heroes');
+assert(loader.includes('.succession-coverage-report > header'), 'Research coverage headers must retain light-on-dark hierarchy');
+assert(loader.includes('.succession-evidence-primary-sources'), 'Research primary-source records must retain readable evidence sheets');
+assert(loader.includes('.ship-source-banner'), 'Black Whale source-method text must remain visible');
+
 assert(css.includes('.succession-entity-visual') && css.includes('background: var(--succession-surface-paper-raised)'), 'entity media must retain the shared archival frame');
 assert(css.includes('.succession-prince-card') && css.includes('.succession-queen-card') && css.includes('.succession-character-card'), 'people cards must share the Phase 2 interaction contract');
 assert(css.includes('transform: none !important') && css.includes('box-shadow: inset 0 0 0 1px'), 'card focus must replace motion and obstructive overlays with a stable border signal');
 
-console.log('Succession Phase 2 presentation consistency audit passed: desktop heading hierarchy, type floors, state language, surfaces, media frames, controls, redundant ornaments, repeated briefs, and card interaction are protected.');
+console.log('Succession Phase 2 presentation consistency audit passed: desktop heading hierarchy, type floors, state language, surfaces, media frames, controls, redundant ornaments, repeated briefs, screenshot contrast corrections, and card interaction are protected.');
