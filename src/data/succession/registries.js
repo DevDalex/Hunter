@@ -41,6 +41,69 @@ export const LIFE_STATUSES = Object.freeze([
   'unknown',
 ]);
 
+/* Phase 3 keeps body, identity, and consciousness separate. A character can
+   have a deceased body, a displaced identity, and an unresolved consciousness
+   state without those facts being flattened into one ambiguous sentence. */
+export const BODY_STATES = Object.freeze({
+  LIVING: 'living',
+  DECEASED: 'deceased',
+  OCCUPIED: 'occupied',
+  DISPLACED: 'displaced',
+  PRESERVED: 'preserved',
+  ABSENT: 'absent',
+  UNKNOWN: 'unknown',
+});
+export const BODY_STATE_VALUES = Object.freeze(Object.values(BODY_STATES));
+
+export const IDENTITY_STATES = Object.freeze({
+  SELF: 'self',
+  TRANSFERRED: 'transferred',
+  POSSESSING: 'possessing',
+  COMPOSITE: 'composite',
+  UNRESOLVED: 'unresolved',
+});
+export const IDENTITY_STATE_VALUES = Object.freeze(Object.values(IDENTITY_STATES));
+
+export const CONSCIOUSNESS_STATES = Object.freeze({
+  ACTIVE: 'active',
+  UNCONSCIOUS: 'unconscious',
+  SUPPRESSED: 'suppressed',
+  DISPLACED: 'displaced',
+  ABSENT: 'absent',
+  UNKNOWN: 'unknown',
+});
+export const CONSCIOUSNESS_STATE_VALUES = Object.freeze(Object.values(CONSCIOUSNESS_STATES));
+
+/* Loyalty is an evidence state, never a mind-reading claim. DECLARED records
+   stated alignment, CONTRACTUAL records an assignment or formal obligation,
+   OPERATIVE records demonstrated action, and COVERT / CONFLICTED preserve
+   uncertainty where official position and observed conduct diverge. */
+export const LOYALTY_STATES = Object.freeze({
+  DECLARED: 'declared',
+  CONTRACTUAL: 'contractual',
+  OPERATIVE: 'operative',
+  COVERT: 'covert',
+  CONFLICTED: 'conflicted',
+  INDEPENDENT: 'independent',
+  UNKNOWN: 'unknown',
+});
+export const LOYALTY_STATE_VALUES = Object.freeze(Object.values(LOYALTY_STATES));
+
+export const OFFICIAL_ROLE_KINDS = Object.freeze({
+  SOVEREIGN: 'sovereign',
+  CANDIDATE: 'candidate',
+  HOUSEHOLD: 'household',
+  INSTITUTIONAL: 'institutional',
+  MILITARY: 'military',
+  SECURITY: 'security',
+  CRIMINAL: 'criminal',
+  ASSOCIATION: 'association',
+  SUPPORT: 'support',
+  INDEPENDENT: 'independent',
+  UNCLASSIFIED: 'unclassified',
+});
+export const OFFICIAL_ROLE_KIND_VALUES = Object.freeze(Object.values(OFFICIAL_ROLE_KINDS));
+
 export const ORGANIZATION_STATUSES = Object.freeze([
   'active',
   'inactive',

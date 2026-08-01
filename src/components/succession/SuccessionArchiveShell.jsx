@@ -22,6 +22,7 @@ import {
 } from '../../data/succession/archiveRoutes';
 import SpoilerControl from '../SpoilerControl';
 import SuccessionArchitectureBoard from './SuccessionArchitectureBoard';
+import SuccessionInformationConsistencyPanel from './SuccessionInformationConsistencyPanel';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveContrastFixes.css';
 import './SuccessionArchiveDeepContrastFixes.css';
@@ -267,7 +268,10 @@ export default function SuccessionArchiveShell({
             role="region"
             aria-label={`${route.label} workspace content`}
             tabIndex="-1"
-          >{route.id === 'archive' ? null : children}</div>
+          >
+            <SuccessionInformationConsistencyPanel activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} />
+            {route.id === 'archive' ? null : children}
+          </div>
         </div>
       </div>
     </div>
