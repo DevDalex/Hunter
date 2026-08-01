@@ -1,0 +1,14 @@
+/* Phase 1 desktop typography repair. Imported after the canonical relationship
+   command stylesheet so lazy route loading preserves the 11px archive floor. */
+
+@media (min-width: 1024px) {
+  body .succession-archive[data-archive-route="relationships"]
+    .succession-canonical-relationships
+    .succession-relationship-connectivity small,
+  body .succession-archive[data-archive-route="relationships"]
+    .succession-canonical-relationships
+    .safe-image-placeholder small {
+    font-size: 11px;
+    line-height: 1.25;
+  }
+}
