@@ -181,7 +181,8 @@ try {
       await page.keyboard.press('Enter');
       await page.waitForSelector('.succession-archive[data-archive-route="timeline"][data-archive-hub="story"]', { timeout: 10_000 });
       const activeLink = page.locator('.succession-hub-tabs a[aria-current="page"]');
-      if ((await activeLink.innerText()).trim() !== 'Timeline') throw new Error('keyboard activation did not open the Timeline view inside Story Intelligence');
+      const activeLabel = (await activeLink.innerText()).trim().toLocaleLowerCase('en-US');
+      if (activeLabel !== 'timeline') throw new Error(`keyboard activation opened an unexpected Story view: ${activeLabel}`);
       await page.waitForFunction(() => document.activeElement?.id === 'succession-workspace-content');
     });
     await recordInteraction('chapter drawer traps and restores focus', { width: 1440, height: 1000 }, 'series/chapters', async (page) => {

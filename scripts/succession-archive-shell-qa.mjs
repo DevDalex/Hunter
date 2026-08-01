@@ -17,6 +17,10 @@ const mime = {
 };
 
 const normalizeText = (value) => String(value).trim().replace(/\s+/g, ' ').toLocaleLowerCase('en-US');
+const assertClose = (values, tolerance, label) => {
+  const spread = Math.max(...values) - Math.min(...values);
+  if (spread > tolerance) throw new Error(`${label} differ by ${spread.toFixed(2)}px: ${values.map((value) => value.toFixed(2)).join(' | ')}`);
+};
 
 const firstAvailable = async (candidates) => {
   for (const candidate of candidates.filter(Boolean)) {
@@ -86,41 +90,103 @@ const base = `http://127.0.0.1:${server.address().port}`;
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 
-  await record('Succession root opens the Phase 2 full-canvas architecture board', desktop, async () => {
+  await record('Succession root opens the approved locked architecture portal', desktop, async () => {
     await desktop.goto(`${base}/story/succession-contest`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await desktop.waitForSelector('.succession-archive[data-archive-route="story"][data-archive-hub="story"]', { timeout: 15_000 });
+    await desktop.waitForSelector('.succession-archive[data-architecture-status="approved"][data-architecture-version="1.0"]', { timeout: 15_000 });
+
     const board = desktop.locator('.succession-architecture-board');
-    if (await board.count() !== 1) throw new Error('Phase 2 architecture board is missing or duplicated');
+    if (await board.count() !== 1) throw new Error('Approved architecture portal is missing or duplicated');
     if (await board.locator('.succession-architecture__left-column #succession-desktop-navigation').count() !== 1) throw new Error('Persistent architecture navigation rail is missing or duplicated');
+
     const title = await board.locator('.succession-architecture__title h1').innerText();
     if (title.trim() !== 'Succession Contest') throw new Error(`Unexpected architecture title: ${title}`);
     const subtitle = await board.locator('.succession-architecture__title p').innerText();
-    if (normalizeText(subtitle) !== normalizeText('Section architecture before final redesign')) throw new Error(`Unexpected architecture subtitle: ${subtitle}`);
+    if (normalizeText(subtitle) !== normalizeText('Approved architecture for section redesign')) throw new Error(`Unexpected architecture subtitle: ${subtitle}`);
+
+    if (await board.getAttribute('data-architecture-status') !== 'approved') throw new Error('Architecture status is not approved');
+    if (await board.getAttribute('data-architecture-version') !== '1.0') throw new Error('Architecture version is not 1.0');
+    const metadata = normalizeText(await board.locator('.succession-architecture__document-meta').innerText());
+    if (!metadata.includes('approved') || !metadata.includes('1.0')) throw new Error(`Approved metadata is incomplete: ${metadata}`);
+    if (metadata.includes('draft') || metadata.includes('0.9')) throw new Error(`Draft metadata remains in the portal: ${metadata}`);
+
     if (await board.locator('.succession-architecture__module').count() !== 4) throw new Error(`Architecture module count is ${await board.locator('.succession-architecture__module').count()}, expected 4`);
     if (await board.locator('.succession-architecture__library').count() !== 1) throw new Error('Library Tools rail is missing or duplicated');
     if (await board.locator('.succession-architecture__contracts').count() !== 1) throw new Error('Preserved Contracts panel is missing or duplicated');
     if (await board.locator('.succession-architecture__skeleton-block').count() !== 1) throw new Error('Page Layout Skeleton is missing or duplicated');
-    const primaryLabels = await board.locator('#succession-desktop-navigation a').allInnerTexts();
+
+    const primaryLabels = await board.locator('#succession-desktop-navigation a span').allInnerTexts();
     const expected = ['Story Intelligence', 'People & Power', 'Black Whale', 'Nen Systems', 'Search', 'Research', 'Glossary'];
     if (primaryLabels.map(normalizeText).join('|') !== expected.map(normalizeText).join('|')) throw new Error(`Unexpected top-level navigation: ${primaryLabels.join(' | ')}`);
-    const storyTabs = await board.locator('.succession-hub-tabs a').evaluateAll((links) => links.map((link) => link.getAttribute('aria-label') || link.querySelector('strong')?.textContent || ''));
+
+    const storyTabs = await board.locator('.succession-hub-tabs a').evaluateAll((links) => links.map((link) => link.querySelector('strong')?.textContent || ''));
     const expectedStoryTabs = ['Story', 'Chapters', 'Timeline', 'Events'];
     if (storyTabs.map(normalizeText).join('|') !== expectedStoryTabs.map(normalizeText).join('|')) throw new Error(`Story architecture views are incomplete: ${storyTabs.join(' | ')}`);
-    const viewport = await desktop.evaluate(() => ({
-      horizontalOverflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-      verticalOverflow: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - innerHeight,
-      bodyOverflow: getComputedStyle(document.body).overflow,
-      boardPosition: getComputedStyle(document.querySelector('.succession-architecture-board')).position,
-      bodyBackground: getComputedStyle(document.body).backgroundColor,
-    }));
+
+    const feedbackCount = await board.locator('[data-route-action]').count();
+    if (feedbackCount < 20) throw new Error(`Only ${feedbackCount} architecture destinations expose route feedback`);
+
+    const firstStoryLink = board.locator('.succession-hub-tabs a').first();
+    await firstStoryLink.focus();
+    const routeFeedback = await firstStoryLink.evaluate((element) => getComputedStyle(element, '::after').content);
+    if (!routeFeedback || routeFeedback === 'none' || !routeFeedback.toLowerCase().includes('open story')) throw new Error(`Focused route feedback is missing: ${routeFeedback}`);
+
+    const viewport = await desktop.evaluate(() => {
+      const rect = (selector) => document.querySelector(selector)?.getBoundingClientRect();
+      const sheet = rect('.succession-architecture__sheet');
+      const primaryColumns = [
+        rect('.succession-architecture__left-column'),
+        rect('.succession-architecture__modules'),
+        rect('.succession-architecture__library'),
+      ];
+      const modules = [...document.querySelectorAll('.succession-architecture__module')].map((element) => element.getBoundingClientRect());
+      const lowerLeft = document.querySelector('.succession-architecture__lower-grid > div')?.getBoundingClientRect();
+      const lowerRight = rect('.succession-architecture__skeleton-block');
+      const headingStyles = [...document.querySelectorAll('.succession-architecture__view-cell > strong, .succession-architecture__split-grid strong')].map((element) => {
+        const style = getComputedStyle(element);
+        return { wordBreak: style.wordBreak, overflowWrap: style.overflowWrap, hyphens: style.hyphens };
+      });
+
+      return {
+        horizontalOverflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+        verticalOverflow: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - innerHeight,
+        bodyOverflow: getComputedStyle(document.body).overflow,
+        boardPosition: getComputedStyle(document.querySelector('.succession-architecture-board')).position,
+        bodyBackground: getComputedStyle(document.body).backgroundColor,
+        sheetEdges: sheet ? [sheet.left, sheet.top, innerWidth - sheet.right, innerHeight - sheet.bottom] : [],
+        primaryColumnBottoms: primaryColumns.map((box) => box?.bottom || 0),
+        primaryColumnTops: primaryColumns.map((box) => box?.top || 0),
+        moduleRowBottoms: modules.length === 4 ? [modules[0].bottom, modules[1].bottom, modules[2].bottom, modules[3].bottom] : [],
+        lowerBandBottoms: [lowerLeft?.bottom || 0, lowerRight?.bottom || 0],
+        lowerBandTops: [lowerLeft?.top || 0, lowerRight?.top || 0],
+        headingStyles,
+      };
+    });
+
     if (viewport.horizontalOverflow > 1) throw new Error(`Architecture canvas overflows horizontally by ${viewport.horizontalOverflow}px`);
-    if (viewport.verticalOverflow > 1) throw new Error(`Architecture canvas still creates ${viewport.verticalOverflow}px of desktop page scroll`);
-    if (viewport.bodyOverflow !== 'hidden') throw new Error(`Desktop architecture body overflow is ${viewport.bodyOverflow}, expected hidden`);
+    if (viewport.verticalOverflow > 1) throw new Error(`Architecture canvas creates ${viewport.verticalOverflow}px of page scroll`);
+    if (viewport.bodyOverflow !== 'hidden') throw new Error(`Architecture body overflow is ${viewport.bodyOverflow}, expected hidden`);
     if (viewport.boardPosition !== 'fixed') throw new Error(`Architecture canvas position is ${viewport.boardPosition}, expected fixed`);
     if (viewport.bodyBackground === 'rgb(9, 11, 15)' || viewport.bodyBackground === 'rgb(13, 17, 23)') throw new Error('Dark side gutters remain behind the architecture canvas');
+    if (viewport.sheetEdges.some((distance) => Math.abs(distance) > 1.5)) throw new Error(`Architecture sheet does not touch all viewport edges: ${viewport.sheetEdges.join(' | ')}`);
+
+    assertClose(viewport.primaryColumnTops, 1.5, 'Primary column tops');
+    assertClose(viewport.primaryColumnBottoms, 1.5, 'Primary column bottoms');
+    assertClose(viewport.moduleRowBottoms.slice(0, 2), 1.5, 'Top module row bottoms');
+    assertClose(viewport.moduleRowBottoms.slice(2), 1.5, 'Bottom module row bottoms');
+    assertClose(viewport.lowerBandTops, 1.5, 'Lower band tops');
+    assertClose(viewport.lowerBandBottoms, 1.5, 'Lower band bottoms');
+
+    for (const style of viewport.headingStyles) {
+      if (style.wordBreak !== 'normal') throw new Error(`Architecture heading word-break is ${style.wordBreak}`);
+      if (style.overflowWrap !== 'normal') throw new Error(`Architecture heading overflow-wrap is ${style.overflowWrap}`);
+      if (style.hyphens !== 'none' && style.hyphens !== 'manual') throw new Error(`Architecture heading hyphens are ${style.hyphens}`);
+    }
+
     if (await desktop.getByRole('link', { name: 'Archive Home', exact: true }).count()) throw new Error('Archive Home returned to navigation');
     if (await desktop.getByRole('link', { name: 'Reader', exact: true }).count()) throw new Error('Duplicate Reader returned to navigation');
     if (await desktop.locator('.arc-page--succession-contest').count()) throw new Error('Legacy grouped arc page is still mounted at the archive root');
+
+    await desktop.screenshot({ path: path.join(output, 'architecture-approved-1440x1000.png') });
   });
 
   await record('Consolidated child routes retain their hub and direct URLs', desktop, async () => {
@@ -208,6 +274,27 @@ try {
     if (await desktop.locator('.arc-page--succession-contest').count()) throw new Error('Full Succession arc page still wraps the chapter reader');
   });
 
+  const widescreen = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
+  await record('Approved architecture fills and balances a widescreen viewport', widescreen, async () => {
+    await widescreen.goto(`${base}/story/succession-contest`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+    await widescreen.waitForSelector('.succession-architecture-board[data-architecture-status="approved"]', { timeout: 15_000 });
+    const proof = await widescreen.evaluate(() => {
+      const sheet = document.querySelector('.succession-architecture__sheet')?.getBoundingClientRect();
+      const modules = [...document.querySelectorAll('.succession-architecture__module')].map((element) => element.getBoundingClientRect());
+      return {
+        edges: sheet ? [sheet.left, sheet.top, innerWidth - sheet.right, innerHeight - sheet.bottom] : [],
+        overflowX: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+        overflowY: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - innerHeight,
+        moduleRowBottoms: modules.map((box) => box.bottom),
+      };
+    });
+    if (proof.edges.some((distance) => Math.abs(distance) > 1.5)) throw new Error(`Widescreen architecture edges are uneven: ${proof.edges.join(' | ')}`);
+    if (proof.overflowX > 1 || proof.overflowY > 1) throw new Error(`Widescreen overflow is ${proof.overflowX}px × ${proof.overflowY}px`);
+    assertClose(proof.moduleRowBottoms.slice(0, 2), 1.5, 'Widescreen top module row');
+    assertClose(proof.moduleRowBottoms.slice(2), 1.5, 'Widescreen bottom module row');
+    await widescreen.screenshot({ path: path.join(output, 'architecture-approved-1920x1080.png') });
+  });
+
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
   await record('Mobile archive uses an intentional keyboard-safe drawer', mobile, async () => {
     await mobile.goto(`${base}/story/succession-contest/locations`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
@@ -216,7 +303,7 @@ try {
     await trigger.click();
     await mobile.waitForSelector('.succession-drawer [role="dialog"]', { timeout: 10_000 });
     if (await trigger.getAttribute('aria-expanded') !== 'true') throw new Error('Mobile archive button did not expose expanded state');
-    const drawerLabels = await mobile.locator('#succession-mobile-navigation a').allInnerTexts();
+    const drawerLabels = await mobile.locator('#succession-mobile-navigation a span').allInnerTexts();
     if (drawerLabels.length !== 7) throw new Error(`Mobile drawer exposes ${drawerLabels.length} top-level links instead of 7`);
     await mobile.keyboard.press('Escape');
     await mobile.waitForSelector('.succession-drawer', { state: 'detached', timeout: 10_000 });
@@ -232,6 +319,7 @@ try {
   });
 
   await desktop.close();
+  await widescreen.close();
   await mobile.close();
 } finally {
   await browser.close().catch(() => {});

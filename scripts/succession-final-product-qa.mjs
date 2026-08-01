@@ -14,6 +14,8 @@ const mime = {
   '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.json': 'application/json; charset=utf-8',
 };
 
+const normalizeText = (value) => String(value).trim().replace(/\s+/g, ' ').toLocaleLowerCase('en-US');
+
 const firstAvailable = async (candidates) => {
   for (const candidate of candidates.filter(Boolean)) {
     try { await access(candidate); return candidate; } catch { /* continue */ }
@@ -142,10 +144,10 @@ try {
     }
 
     await desktop.goto(`${base}/story/succession-contest`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await desktop.waitForSelector('.succession-archive__sidebar', { timeout: 15_000 });
+    await desktop.waitForSelector('.succession-architecture-board[data-architecture-status="approved"] #succession-desktop-navigation', { timeout: 15_000 });
+    const maintainedLabels = (await desktop.locator('#succession-desktop-navigation a span').allInnerTexts()).map(normalizeText);
     for (const label of ['Hunters', 'Deaths', 'Mafia', 'Military', 'Politics', 'Media']) {
-      const retiredControls = desktop.locator('.succession-archive__sidebar').getByRole('button', { name: label, exact: true });
-      if (await retiredControls.count()) throw new Error(`${label} returned to the primary archive navigation`);
+      if (maintainedLabels.includes(normalizeText(label))) throw new Error(`${label} returned to the approved architecture navigation`);
     }
   });
 
