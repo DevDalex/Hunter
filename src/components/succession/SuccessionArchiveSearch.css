@@ -11,6 +11,7 @@
 @import './SuccessionArchiveBlackWhaleCommand.css';
 @import './SuccessionArchiveFinalPolish.css';
 @import './SuccessionPhase2DesignSystem.css';
+@import './SuccessionArchitectureCenteringFix.css';
 
 .succession-search-complete {
   display: grid;

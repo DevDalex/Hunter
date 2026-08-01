@@ -1,0 +1,285 @@
+/*
+ * Phase 2 architecture viewport fill.
+ *
+ * The architecture board is not a poster contained inside the browser. It is
+ * the browser surface. Runtime geometry keeps the document at its full base
+ * height, widens the layout when the viewport is wider, and scales the painted
+ * result to touch all four viewport edges without page scrolling.
+ */
+
+html:has(.succession-architecture-board),
+body.succession-architecture-mode,
+body.succession-architecture-mode #root {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+  background: #fbfbf8 !important;
+}
+
+body.succession-architecture-mode .site-header {
+  display: none !important;
+}
+
+.succession-architecture-board {
+  position: fixed !important;
+  inset: 0 !important;
+  display: block !important;
+  width: 100vw !important;
+  height: 100dvh !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #fbfbf8 !important;
+}
+
+.succession-architecture-board .succession-archive__mobile-bar {
+  display: none !important;
+}
+
+.succession-architecture-board > .succession-archive__content {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.succession-architecture__sheet {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: var(--architecture-layout-width, 1660px) !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  height: var(--architecture-layout-height, 1260px) !important;
+  min-height: var(--architecture-layout-height, 1260px) !important;
+  max-height: var(--architecture-layout-height, 1260px) !important;
+  margin: 0 !important;
+  padding: 16px 18px 10px !important;
+  overflow: hidden !important;
+  border: 2px solid var(--architecture-ink) !important;
+  box-shadow: none !important;
+  scale: none !important;
+  transform: translate(-50%, -50%) scale(var(--architecture-scale-x, 1), var(--architecture-scale-y, 1)) !important;
+  transform-origin: 50% 50% !important;
+}
+
+.succession-architecture__sheet::before,
+.succession-architecture__sheet::after,
+.succession-architecture__corner {
+  display: block !important;
+}
+
+/* Restore the complete architecture composition at every viewport size. */
+.succession-architecture__masthead {
+  display: grid !important;
+  grid-template-columns: minmax(0, 18fr) minmax(0, 64fr) minmax(0, 18fr) !important;
+  align-items: start !important;
+  gap: 24px !important;
+  min-height: 116px !important;
+  padding: 18px 10px 15px !important;
+}
+
+.succession-architecture__identity {
+  grid-column: auto !important;
+  grid-row: auto !important;
+  order: initial !important;
+}
+
+.succession-architecture__title {
+  grid-column: auto !important;
+  grid-row: auto !important;
+  order: initial !important;
+  margin: 0 !important;
+  padding-top: 0 !important;
+  border-top: 0 !important;
+}
+
+.succession-architecture__title h1 {
+  font-size: clamp(48px, 5.3vw, 88px) !important;
+  line-height: .98 !important;
+}
+
+.succession-architecture__document-meta {
+  display: block !important;
+  grid-column: auto !important;
+  grid-row: auto !important;
+  min-height: 100px !important;
+  padding-left: 20px !important;
+}
+
+.succession-architecture__document-meta .succession-architecture__stamp {
+  display: grid !important;
+}
+
+.succession-architecture__primary-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 18fr) minmax(0, 64fr) minmax(0, 18fr) !important;
+  gap: 18px !important;
+  padding: 14px 0 16px !important;
+}
+
+.succession-architecture__left-column {
+  display: block !important;
+}
+
+.succession-architecture__modules {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) !important;
+  align-content: start !important;
+  gap: 14px 16px !important;
+}
+
+.succession-architecture__library {
+  display: block !important;
+  padding-top: 94px !important;
+}
+
+.succession-architecture__library > h2 {
+  grid-column: auto !important;
+}
+
+.succession-architecture__library > a {
+  margin-top: -1px !important;
+}
+
+.succession-architecture__library-map {
+  display: block !important;
+}
+
+.succession-architecture__view-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
+
+.succession-architecture__view-grid.is-five {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
+
+.succession-architecture__view-cell {
+  min-height: 177px !important;
+  border-bottom: 0 !important;
+}
+
+.succession-architecture__view-cell:nth-child(2n) {
+  border-right: 1px solid var(--architecture-line-soft) !important;
+}
+
+.succession-architecture__view-cell:last-child {
+  grid-column: auto !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.succession-architecture__split-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+.succession-architecture__split-grid > a {
+  border-right: 1px solid var(--architecture-line-soft) !important;
+  border-bottom: 0 !important;
+}
+
+.succession-architecture__split-grid > a:last-child {
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.succession-architecture__lower-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr) !important;
+  gap: 18px !important;
+}
+
+.succession-architecture__contracts {
+  grid-template-columns: 66px minmax(0, 1fr) 105px !important;
+  padding: 13px 16px !important;
+}
+
+.succession-architecture__contracts ul {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 13px 22px !important;
+}
+
+.succession-architecture__integrity-seal {
+  display: grid !important;
+}
+
+.succession-architecture__footer-specs {
+  grid-template-columns: .86fr 1.25fr .88fr !important;
+}
+
+.succession-architecture__footer-specs > section {
+  border-right: 1px solid var(--architecture-line-soft) !important;
+  border-bottom: 0 !important;
+}
+
+.succession-architecture__footer-specs > section:last-child {
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.succession-architecture__skeleton-block {
+  display: grid !important;
+  grid-template-columns: 108px minmax(0, 1fr) 100px !important;
+  gap: 10px !important;
+  min-height: 324px !important;
+  padding: 10px !important;
+  overflow: visible !important;
+}
+
+.succession-architecture__callouts {
+  display: flex !important;
+}
+
+.succession-architecture__skeleton-body {
+  grid-template-columns: 43px minmax(0, 1fr) 118px !important;
+}
+
+.succession-architecture__skeleton-body > aside {
+  display: block !important;
+}
+
+.succession-architecture__skeleton-body > main > section {
+  grid-template-columns: 1.15fr .85fr !important;
+}
+
+.succession-architecture__skeleton-body > main > section > .succession-architecture__map-sketch,
+.succession-architecture__skeleton-body > main > footer > .succession-architecture__map-sketch {
+  display: block !important;
+}
+
+.succession-architecture__skeleton-body > main > footer {
+  grid-template-columns: 1.2fr .8fr !important;
+}
+
+.succession-architecture__page-skeleton > header button {
+  width: auto !important;
+  min-width: 135px !important;
+  gap: 22px !important;
+  overflow: visible !important;
+  font-size: 10px !important;
+}
+
+.succession-architecture__skeleton-tabs {
+  justify-content: flex-start !important;
+  gap: 18px !important;
+}
+
+.succession-architecture__document-footer {
+  flex-wrap: nowrap !important;
+  justify-content: space-between !important;
+  padding: 10px 7px 7px !important;
+  font-size: 10px !important;
+  text-align: left !important;
+}
