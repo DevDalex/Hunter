@@ -8,6 +8,7 @@ on:
       - 'src/components/succession/SuccessionWorkspaceRefinementDeck.jsx'
       - 'src/components/succession/SuccessionWorkspaceRefinementDeck.css'
       - 'src/components/succession/SuccessionArchiveApp.jsx'
+      - 'src/components/succession/SuccessionArchiveLightRoute.jsx'
       - 'scripts/audit-succession-phase-5-workspace-refinements.mjs'
       - 'scripts/succession-phase-5-workspace-qa.mjs'
       - 'scripts/run-succession-runtime-audits.mjs'
