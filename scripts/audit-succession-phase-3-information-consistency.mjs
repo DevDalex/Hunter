@@ -30,11 +30,12 @@ const expectedRoyalSections = Object.freeze([
   'openQuestions',
 ]);
 
-const [shellSource, panelSource, panelCss, dataEntry, consistencyLayer] = await Promise.all([
+const [shellSource, panelSource, panelCss, dataEntry, phase4Layer, consistencyLayer] = await Promise.all([
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionInformationConsistencyPanel.jsx'),
   read('src/components/succession/SuccessionInformationConsistencyPanel.css'),
   read('src/data/succession/successionData.js'),
+  read('src/data/succession/entitiesHighValueIntelligence.js'),
   read('src/data/succession/entitiesInformationConsistency.js'),
 ]);
 
@@ -44,10 +45,11 @@ assert(panelSource.includes('Private intent') && panelSource.includes('Not infer
 assert(panelSource.includes('getRoyalDossierConsistencyProfile'), 'royal dossiers must expose the shared section contract');
 assert(panelCss.includes('@media (min-width: 1024px)'), 'the Phase 3 panel must remain desktop and laptop only');
 assert(!panelCss.includes('@media (max-width:'), 'the Phase 3 panel must not introduce tablet or mobile rules');
-assert(dataEntry.includes("from './entitiesInformationConsistency.js'"), 'the public entry must activate the Phase 3 normalized data layer');
+assert(dataEntry.includes("from './entitiesHighValueIntelligence.js'"), 'the public entry must activate the current intelligence layer');
+assert(phase4Layer.includes("from './highValueIntelligenceFoundation.js'"), 'the Phase 4 layer must use the published intelligence foundation');
+assert(consistencyLayer.includes("from './entitiesProductClosureCorrections.js'"), 'the Phase 3 layer must preserve the corrected product predecessor');
 assert(dataEntry.includes("from './entitiesProductClosureCorrections.js'"), 'the public entry must preserve corrected product lineage');
 assert(dataEntry.includes("from './entitiesStoryIntelligenceFoundation.js'"), 'the public entry must preserve Story foundation lineage');
-assert(consistencyLayer.includes("from './entitiesProductClosureCorrections.js'"), 'the Phase 3 layer must preserve the corrected product predecessor');
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {
@@ -64,11 +66,11 @@ try {
     successionArchiveValidation,
   } = archive;
 
-  assert(successionArchiveData.informationConsistencyVersion === 'phase-3-v1', 'the normalized Phase 3 data layer must be the active predecessor');
+  assert(successionArchiveData.informationConsistencyVersion === 'phase-3-v1', 'the normalized Phase 3 data layer must remain the active predecessor');
   assert(successionArchiveValidation.valid, `canonical validation failed: ${successionArchiveValidation.errors.join(' · ')}`);
 
   const report = getInformationConsistencyReport();
-  assert(report.version === 'phase-3-v1', 'the information consistency report must identify the active Phase 3 model');
+  assert(report.version === 'phase-3-v1', 'the information consistency report must identify the preserved Phase 3 model');
   assert(report.hardErrorCount === 0, `the consistency report contains ${report.hardErrorCount} hard error(s)`);
   assert(report.aliasCollisions.length === 0, `ambiguous aliases remain: ${report.aliasCollisions.map((record) => record.key).join(', ')}`);
   assert(report.impossibleStates.length === 0, `impossible character state tuples remain: ${report.impossibleStates.map((record) => record.characterId).join(', ')}`);
@@ -121,7 +123,7 @@ try {
     assert(profile.sections.officialAuthority.value !== profile.sections.operationalLoyalty.value, `${royal.id} must not conflate authority and loyalty records`);
   }
 
-  console.log(`Succession Phase 3 information consistency audit passed: ${characters.length} characters, ${royals.length} royal dossiers, structured body/identity/consciousness states, separated authority and loyalty evidence, normalized aliases, Halkenburg maternal lineage, contradiction-safe cross-links, and desktop dossier integration verified.`);
+  console.log(`Succession Phase 3 information consistency audit passed through the Phase 4 lineage: ${characters.length} characters, ${royals.length} royal dossiers, structured body/identity/consciousness states, separated authority and loyalty evidence, normalized aliases, Halkenburg maternal lineage, contradiction-safe cross-links, and desktop dossier integration verified.`);
 } finally {
   await vite.close();
 }

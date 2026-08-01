@@ -23,6 +23,7 @@ import './SuccessionArchitectureCenteringFix.css';
 import './SuccessionArchitectureViewportRuntime.js';
 import './SuccessionArchitectureVisualRevision.css';
 import './SuccessionPhase2PresentationConsistency.css';
+import './SuccessionPhase4DesktopOnly.css';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));

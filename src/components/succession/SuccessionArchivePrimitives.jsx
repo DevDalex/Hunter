@@ -35,6 +35,7 @@ export const entityWorkspaceTarget = (entity) => {
   if (entity.entityType === 'chapter') return 'chapters';
   if (entity.entityType === 'relationship') return 'relationships';
   if (entity.entityType === 'source') return 'research';
+  if (['knowledge-record', 'protocol', 'object', 'document', 'evidence-item'].includes(entity.entityType)) return 'research';
   return 'archive';
 };
 
