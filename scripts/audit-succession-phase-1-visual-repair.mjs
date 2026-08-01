@@ -31,7 +31,7 @@ assert(repairCss.includes('.succession-nen-command-system') && repairCss.include
 assert(repairCss.includes('.succession-gsb-command-card__visual') && repairCss.includes('height: 142px'), 'Guardian Spirit Beast cards must retain a stable media frame');
 assert(repairCss.includes('.succession-institution-grid > article') && repairCss.includes('.succession-evidence-hero'), 'Power Bloc and Research/Records surfaces must retain Phase 1 contrast repairs');
 
-assert(architectureBoard.includes("target: 'black-whale'") && architectureBoard.includes("target: 'locations'"), 'Black Whale and Locations routes must remain available after portal image removal');
+assert(architectureBoard.includes("target: 'black-whale'") && architectureBoard.includes("routeToHref('succession', 'locations')"), 'Black Whale and Locations routes must remain available after portal image removal');
 assert(architectureBoard.includes('guardian-spirit-beasts'), 'Guardian Spirit Beast navigation must remain available');
 
 console.log('Succession Phase 1 visual repair audit passed: desktop-only scope, portal media cleanup, typography, relationship graph, Nen, Beasts, Power Blocs, and Records repairs are present.');
