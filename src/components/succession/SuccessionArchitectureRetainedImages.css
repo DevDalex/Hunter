@@ -1,5 +1,6 @@
-/* The approved architecture layout is unchanged. Only its Black Whale and
-   Guardian Spirit Beast illustration slots use canonical archive imagery. */
+/* Phase 1 keeps one canonical Black Whale exterior on the architecture portal.
+   Tier cutaways and room maps remain available only inside their destination
+   workspaces, while Guardian Spirit Beast portraits retain complete silhouettes. */
 
 .succession-architecture-board .succession-architecture__retained-ship-image {
   display: block !important;
@@ -31,19 +32,20 @@
   filter: grayscale(1) brightness(1.34) contrast(.86);
 }
 
+/* The portal no longer previews the tier cutaway or Tier 1 room plan. Their
+   links and descriptions remain fully interactive, but the only ship artwork
+   presented here is the exterior portrait in the left archive rail. */
 .succession-architecture-board .succession-architecture__split-grid .succession-architecture__retained-ship-image {
-  align-self: center;
-  height: 118px !important;
-  max-height: 118px !important;
+  display: none !important;
 }
 
 .succession-architecture-board .succession-architecture__retained-beast-grid span {
   position: relative;
   display: grid;
   min-width: 0;
-  min-height: 54px;
+  min-height: 58px;
   place-items: center;
-  padding: 2px !important;
+  padding: 3px 3px 13px !important;
   overflow: hidden;
   background: #fff;
 }
@@ -65,14 +67,16 @@
 .succession-architecture-board .succession-architecture__retained-beast-grid b {
   position: absolute;
   right: 3px;
-  bottom: 3px;
+  bottom: 2px;
   z-index: 2;
+  min-width: 17px;
   padding: 1px 4px;
   border: 1px solid #111;
   color: #fff !important;
   background: #111;
   font-size: 9px;
   line-height: 1.2;
+  text-align: center;
 }
 
 @media (forced-colors: active) {
