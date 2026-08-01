@@ -1,7 +1,7 @@
 import {
   createProductClosureSelectors as createPhase3ProductClosureSelectors,
-  normalizeArchiveSearchText,
 } from './productClosureSelectorsFinal.js';
+import { normalizeArchiveSearchText } from './productClosureSelectors.js';
 
 const freeze = (values = []) => Object.freeze([...values]);
 const INTELLIGENCE_TYPES = Object.freeze(['knowledge-record', 'protocol', 'object', 'document', 'evidence-item']);
