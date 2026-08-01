@@ -13,6 +13,7 @@ import { createOrganizationStateSelectors } from './organizationStateSelectors.j
 import { createPeopleInstitutionClosure } from './peopleInstitutionClosure.js';
 import { createNenSystemSelectors } from './nenSystemSelectors.js';
 import { createStoryIntelligenceSelectors } from './storyIntelligenceSelectors.js';
+import { createProductClosureSelectors as createFinalProductClosureSelectors } from './productClosureSelectorsFinal.js';
 import { createProductClosureSelectors } from './productClosureSelectorsPhase4.js';
 import { createFinalReleaseClosure } from './finalReleaseClosure.js';
 import { assertValidSuccessionArchiveData } from './schemasFinal.js';
@@ -21,10 +22,12 @@ const informationConsistencyLineage = Object.freeze({
   correctedProductChapterCount: productClosureLineage.chapters.length,
   storyPhaseCount: Object.keys(storyFoundationLineage.storyPhaseProfiles || {}).length,
   highValueIntelligenceVersion: successionArchiveData.highValueIntelligenceVersion,
+  finalStorySearchAdapterAvailable: typeof createFinalProductClosureSelectors === 'function',
 });
 if (informationConsistencyLineage.correctedProductChapterCount !== successionArchiveData.chapters.length
   || informationConsistencyLineage.storyPhaseCount === 0
-  || informationConsistencyLineage.highValueIntelligenceVersion !== 'phase-4-v1') {
+  || informationConsistencyLineage.highValueIntelligenceVersion !== 'phase-4-v1'
+  || !informationConsistencyLineage.finalStorySearchAdapterAvailable) {
   throw new Error('Succession high-value intelligence predecessor chain is incomplete.');
 }
 
