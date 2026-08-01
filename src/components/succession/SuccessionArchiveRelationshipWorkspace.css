@@ -6,6 +6,9 @@
 @media (min-width: 1024px) {
   body .succession-archive[data-archive-route="relationships"]
     .succession-canonical-relationships
+    .succession-relationship-network__node small,
+  body .succession-archive[data-archive-route="relationships"]
+    .succession-canonical-relationships
     .succession-relationship-connectivity small,
   body .succession-archive[data-archive-route="relationships"]
     .succession-canonical-relationships
