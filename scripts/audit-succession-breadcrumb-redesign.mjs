@@ -26,10 +26,16 @@ for (const requiredMarkup of [
   'succession-return-path',
   '<ol>',
   'aria-current="page"',
-  "route.id === 'archive' ? onExitArchive",
-  "route.id === 'archive' ? 'Return to Story' : 'Back to archive index'",
+  "const hiddenNavigationRoutes = new Set(['archive', 'reader'])",
+  "if (route.id === 'archive') onNavigate('story', {});",
+  "aria-current={route.id === 'story' ? 'page' : undefined}",
+  'onClick={onExitArchive}',
+  'aria-label="Return to Story"',
+  '<span>Return to Story</span>',
 ]) assert(shell.includes(requiredMarkup), `shell markup is missing ${requiredMarkup}`);
 
+assert(!shell.includes('Back to archive index'), 'removed Archive Home must not remain as a return destination');
+assert(!shell.includes('Open reader</button>'), 'Succession shell must not expose a duplicate Reader action');
 assert(shell.includes('<ArrowLeft') && shell.includes('<ChevronRight'), 'breadcrumbs must expose return and hierarchy icons');
 assert(shell.includes('aria-label="Breadcrumb"'), 'breadcrumb navigation must retain an accessible name');
 
