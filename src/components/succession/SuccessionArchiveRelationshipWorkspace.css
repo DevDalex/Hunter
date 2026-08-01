@@ -1,2 +1,16 @@
 @import './SuccessionArchiveRelationshipCommand.css';
-@import './SuccessionArchiveRelationshipPhase1Repair.css';
+
+/* Phase 1 desktop typography repair. These rules sit directly after the
+   canonical relationship command stylesheet so lazy route loading cannot
+   restore the 10px compact-label default. */
+@media (min-width: 1024px) {
+  body .succession-archive[data-archive-route="relationships"]
+    .succession-canonical-relationships
+    .succession-relationship-connectivity small,
+  body .succession-archive[data-archive-route="relationships"]
+    .succession-canonical-relationships
+    .safe-image-placeholder small {
+    font-size: 11px !important;
+    line-height: 1.25;
+  }
+}
