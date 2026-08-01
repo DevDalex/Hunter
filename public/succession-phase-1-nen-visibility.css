@@ -1,0 +1,122 @@
+/* Phase 1 compatibility lock for the desktop Nen command surface.
+   This file loads after route-owned styles so legacy closure layers cannot
+   suppress the visible mechanic records. It does not alter tablet or mobile. */
+
+@media (min-width: 1024px) {
+  .succession-archive[data-archive-route="nen"] .succession-nen-command :is(
+    .succession-nen-command-system,
+    .succession-nen-command-ability
+  ) {
+    position: relative !important;
+    isolation: isolate !important;
+    min-height: 340px !important;
+    overflow: hidden !important;
+    border: 1px solid var(--succession-border-default) !important;
+    background: linear-gradient(150deg, var(--succession-surface-paper-raised), var(--succession-surface-paper)) !important;
+    color: var(--succession-text-on-paper) !important;
+    box-shadow: var(--succession-shadow-sm) !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command :is(
+    .succession-nen-command-system,
+    .succession-nen-command-ability
+  )::after {
+    display: none !important;
+    visibility: hidden !important;
+    content: none !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command :is(
+    .succession-nen-command-system,
+    .succession-nen-command-ability
+  )::before {
+    z-index: 1 !important;
+    background: var(--succession-text-on-paper) !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command :is(
+    .succession-nen-command-system,
+    .succession-nen-command-ability
+  ) > * {
+    position: relative !important;
+    z-index: 3 !important;
+    display: revert !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    filter: none !important;
+    mix-blend-mode: normal !important;
+    transform: none !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command :is(
+    .succession-nen-command-system,
+    .succession-nen-command-ability
+  ) :is(h3, h4, b, strong, dd) {
+    visibility: visible !important;
+    color: var(--succession-text-on-paper) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--succession-text-on-paper) !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command :is(
+    .succession-nen-command-system,
+    .succession-nen-command-ability
+  ) :is(p, small, dt) {
+    visibility: visible !important;
+    color: var(--succession-text-on-paper-muted) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--succession-text-on-paper-muted) !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command .succession-nen-command-system > span,
+  .succession-archive[data-archive-route="nen"] .succession-nen-command .succession-nen-command-ability > div:nth-child(2) > span {
+    visibility: visible !important;
+    color: var(--succession-crimson-strong) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--succession-crimson-strong) !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command :is(
+    .succession-nen-command-system,
+    .succession-nen-command-ability
+  ) dl > div,
+  .succession-archive[data-archive-route="nen"] .succession-nen-command .succession-nen-command-system__nodes {
+    border-color: var(--succession-border-default) !important;
+    background: var(--succession-surface-paper) !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command :is(
+    .succession-nen-command-system,
+    .succession-nen-command-ability
+  ) footer {
+    visibility: visible !important;
+    border-top-color: var(--succession-border-default) !important;
+    color: var(--succession-crimson-strong) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--succession-crimson-strong) !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command .succession-nen-command-ability {
+    grid-template-columns: 92px minmax(0, 1fr) !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command .succession-nen-command-ability__visual .succession-entity-visual {
+    width: 92px !important;
+    height: 106px !important;
+    min-height: 106px !important;
+    overflow: hidden !important;
+    background: var(--succession-surface-paper-raised) !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command .succession-nen-command-ability__visual :is(img, .safe-image-placeholder) {
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    background: var(--succession-surface-paper-raised) !important;
+    opacity: 1 !important;
+  }
+}
