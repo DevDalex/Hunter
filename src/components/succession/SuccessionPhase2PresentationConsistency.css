@@ -4,3 +4,95 @@
  * Succession application is entered.
  */
 @import url('/succession-phase-2-presentation-consistency.css');
+
+@media (min-width: 1024px) {
+  /* Queen metric cells sit inside dark household cards. Keep their paper
+     surfaces and labels readable instead of inheriting the card's white ink. */
+  body .succession-archive[data-archive-route="queens"]
+    .succession-queen-card > dl,
+  body .succession-archive[data-archive-route="queens"]
+    .succession-queen-command-metrics {
+    background: var(--succession-border-default) !important;
+  }
+
+  body .succession-archive[data-archive-route="queens"]
+    .succession-queen-card > dl > div,
+  body .succession-archive[data-archive-route="queens"]
+    .succession-queen-command-metrics > div {
+    background: var(--succession-surface-paper-raised) !important;
+    color: var(--succession-text-on-paper) !important;
+  }
+
+  body .succession-archive[data-archive-route="queens"]
+    :is(.succession-queen-card > dl, .succession-queen-command-metrics)
+    :is(dt, dd, span, strong, b) {
+    visibility: visible !important;
+    color: var(--succession-text-on-paper) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--succession-text-on-paper) !important;
+  }
+
+  /* Timeline metrics are light document cells nested inside dark chronology
+     heroes. Their local document ink must win over the contextual hero ink. */
+  body .succession-archive[data-archive-route="timeline"] :is(
+    .timeline-command__metrics,
+    .timeline-command-voyage__metrics
+  ) > div {
+    background: var(--succession-surface-2) !important;
+    color: var(--succession-text-on-paper) !important;
+  }
+
+  body .succession-archive[data-archive-route="timeline"] :is(
+    .timeline-command__metrics,
+    .timeline-command-voyage__metrics
+  ) :is(dt, dd, span, strong, b) {
+    visibility: visible !important;
+    color: var(--succession-text-on-paper) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--succession-text-on-paper) !important;
+  }
+
+  /* Coverage reports intentionally retain a dark evidence header. Restore its
+     light-on-dark hierarchy after the Research document normalization. */
+  body .succession-archive[data-archive-route="research"]
+    .succession-coverage-report > header {
+    background: var(--succession-text-strong) !important;
+    color: var(--succession-surface-paper-raised) !important;
+  }
+
+  body .succession-archive[data-archive-route="research"]
+    .succession-coverage-report > header :is(h2, h3, p, span, small, dt, dd, strong, b, svg) {
+    visibility: visible !important;
+    color: var(--succession-surface-paper-raised) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--succession-surface-paper-raised) !important;
+  }
+
+  /* Primary source records use a light evidence sheet. This avoids the inherited
+     black slab that hid source titles and actions. */
+  body .succession-archive[data-archive-route="research"]
+    .succession-evidence-primary-sources,
+  body .succession-archive[data-archive-route="research"]
+    .succession-evidence-primary-sources .succession-source-reference {
+    border-color: var(--succession-border-default) !important;
+    background: var(--succession-surface-paper-raised) !important;
+    color: var(--succession-text-on-paper) !important;
+  }
+
+  body .succession-archive[data-archive-route="research"]
+    .succession-evidence-primary-sources :is(h3, h4, p, span, small, strong, b, a, button, svg) {
+    visibility: visible !important;
+    color: var(--succession-text-on-paper) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--succession-text-on-paper) !important;
+  }
+
+  /* The source-method banner is a pale document strip, not a dark ship panel. */
+  body .succession-archive[data-archive-route="black-whale"]
+    .ship-source-banner :is(p, span, small, strong, b, a, button, svg) {
+    visibility: visible !important;
+    color: var(--succession-text-on-paper) !important;
+    opacity: 1 !important;
+    -webkit-text-fill-color: var(--succession-text-on-paper) !important;
+  }
+}
