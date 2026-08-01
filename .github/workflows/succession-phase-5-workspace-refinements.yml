@@ -1,0 +1,66 @@
+name: Succession Phase 5 Workspace Refinements
+
+on:
+  pull_request:
+    paths:
+      - 'src/data/succession/workspaceRefinementSelectors.js'
+      - 'src/data/succession/workspaceRefinementRuntime.js'
+      - 'src/components/succession/SuccessionWorkspaceRefinementDeck.jsx'
+      - 'src/components/succession/SuccessionWorkspaceRefinementDeck.css'
+      - 'src/components/succession/SuccessionArchiveApp.jsx'
+      - 'scripts/audit-succession-phase-5-workspace-refinements.mjs'
+      - 'scripts/succession-phase-5-workspace-qa.mjs'
+      - 'scripts/run-succession-runtime-audits.mjs'
+      - '.github/workflows/succession-phase-5-workspace-refinements.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: succession-phase-5-workspaces-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  phase-5-workspace-refinements:
+    name: Phase 5 data and desktop workspace gate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Phase 5 refinement audit
+        run: node scripts/audit-succession-phase-5-workspace-refinements.mjs
+
+      - name: Run complete Succession runtime audit sweep
+        run: node scripts/run-succession-runtime-audits.mjs
+
+      - name: Build presentation runtime
+        run: npm run build:runtime
+
+      - name: Install Chromium
+        run: npm exec playwright -- install --with-deps chromium
+
+      - name: Inspect refined desktop workspaces
+        run: node scripts/succession-phase-5-workspace-qa.mjs
+
+      - name: Publish Phase 5 diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-phase-5-workspace-diagnostics
+          path: .visual-qa/succession-phase-5-workspaces
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14
