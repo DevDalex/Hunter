@@ -1,16 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import {
-  getAliasResolution,
-  getCanonicalCharacterState,
-  getCharacterAuthorityProfile,
-  getCharacterLoyaltyProfile,
-  getEntitiesByType,
-  getInformationConsistencyReport,
-  getRoyalDossierConsistencyProfile,
-  successionArchiveData,
-  successionArchiveValidation,
-} from '../src/data/succession/successionData.js';
+import { successionArchiveData } from '../src/data/succession/entitiesInformationConsistency.js';
+import { buildSuccessionIndexes } from '../src/data/succession/indexesFinal.js';
+import { createSuccessionSelectors } from '../src/data/succession/selectors.js';
+import { createCharacterStateSelectors } from '../src/data/succession/characterStateSelectors.js';
+import { createInformationConsistencySelectors } from '../src/data/succession/informationConsistency.js';
+import { validateSuccessionArchiveData } from '../src/data/succession/schemasFinal.js';
 import {
   BODY_STATE_VALUES,
   CONSCIOUSNESS_STATE_VALUES,
@@ -40,10 +35,12 @@ const expectedRoyalSections = Object.freeze([
   'openQuestions',
 ]);
 
-const [shellSource, panelSource, panelCss] = await Promise.all([
+const [shellSource, panelSource, panelCss, dataEntry, consistencyLayer] = await Promise.all([
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionInformationConsistencyPanel.jsx'),
   read('src/components/succession/SuccessionInformationConsistencyPanel.css'),
+  read('src/data/succession/successionData.js'),
+  read('src/data/succession/entitiesInformationConsistency.js'),
 ]);
 
 assert(shellSource.includes('SuccessionInformationConsistencyPanel'), 'the shared shell must mount the Phase 3 dossier panel');
@@ -52,9 +49,26 @@ assert(panelSource.includes('Private intent') && panelSource.includes('Not infer
 assert(panelSource.includes('getRoyalDossierConsistencyProfile'), 'royal dossiers must expose the shared section contract');
 assert(panelCss.includes('@media (min-width: 1024px)'), 'the Phase 3 panel must remain desktop and laptop only');
 assert(!panelCss.includes('@media (max-width:'), 'the Phase 3 panel must not introduce tablet or mobile rules');
+assert(dataEntry.includes("from './entitiesInformationConsistency.js'"), 'the public entry must activate the Phase 3 normalized data layer');
+assert(consistencyLayer.includes("from './entitiesProductClosureCorrections.js'"), 'the Phase 3 layer must preserve the corrected product predecessor');
+
+const validation = validateSuccessionArchiveData(successionArchiveData);
+const indexes = buildSuccessionIndexes(successionArchiveData);
+const archive = createSuccessionSelectors(successionArchiveData, indexes);
+const characterStates = createCharacterStateSelectors({ data: successionArchiveData, archive });
+const consistency = createInformationConsistencySelectors({ data: successionArchiveData, archive, characterStates });
+const {
+  getAliasResolution,
+  getCanonicalCharacterState,
+  getCharacterAuthorityProfile,
+  getCharacterLoyaltyProfile,
+  getInformationConsistencyReport,
+  getRoyalDossierConsistencyProfile,
+} = consistency;
+const { getEntitiesByType } = archive;
 
 assert(successionArchiveData.informationConsistencyVersion === 'phase-3-v1', 'the normalized Phase 3 data layer must be the active predecessor');
-assert(successionArchiveValidation.valid, `canonical validation failed: ${successionArchiveValidation.errors.join(' · ')}`);
+assert(validation.valid, `canonical validation failed: ${validation.errors.join(' · ')}`);
 
 const report = getInformationConsistencyReport();
 assert(report.version === 'phase-3-v1', 'the information consistency report must identify the active Phase 3 model');
