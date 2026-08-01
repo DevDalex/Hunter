@@ -61,6 +61,7 @@ export default function SuccessionInformationConsistencyPanel({ activeId, routeP
     .map((record) => record.alignedWith?.name)
     .filter(Boolean);
   const missing = royal?.completeness.missing || [];
+  const summaryColumns = royal ? 3 : 2;
 
   return <aside className="succession-information-consistency" aria-labelledby="succession-information-consistency-title">
     <header className="succession-information-consistency__header">
@@ -69,7 +70,7 @@ export default function SuccessionInformationConsistencyPanel({ activeId, routeP
         <h2 id="succession-information-consistency-title">Identity, authority, and alignment are separate records.</h2>
         <p>The archive preserves chapter-local facts without converting official position, declared affiliation, or observed operations into a claim about private intent.</p>
       </div>
-      <dl>
+      <dl style={{ gridTemplateColumns: `repeat(${summaryColumns}, minmax(0, 1fr))` }}>
         <div><dt>Boundary</dt><dd>Chapter {spoilerLimit}</dd></div>
         <div><dt>State tuple</dt><dd>{state.impossibleStateReasons.length ? 'Review required' : 'Valid'}</dd></div>
         {royal && <div><dt>Royal sections</dt><dd>{royal.completeness.present}/{royal.completeness.total}</dd></div>}
