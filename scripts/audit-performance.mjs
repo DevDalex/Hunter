@@ -45,6 +45,12 @@ const directBoundaryKeys = [
   'src/components/OrganizationWorkspace.jsx',
   'src/components/ConflictArchive.jsx',
 ];
+const successionControllerBoundaryKeys = [
+  'src/components/succession/SuccessionArchiveApp.jsx',
+  'src/components/succession/SuccessionArchiveReaderRoute.jsx',
+  'src/components/succession/SuccessionArchiveLightRoute.jsx',
+  'src/components/succession/SuccessionArchiveWorkspaces.jsx',
+];
 const storyDetailBoundaryKeys = [
   'src/components/StoryHub.jsx',
   'src/components/ArcPage.jsx',
@@ -76,9 +82,10 @@ assert(startupJs <= budgets.startupJs, `startup JavaScript closure is ${startupJ
 assert(startupCss <= budgets.startupCss, `startup stylesheet is ${startupCss} bytes; budget is ${formatPerformanceBudget(budgets.startupCss)}`);
 assert(largestJavascript.bytes <= budgets.javascriptChunk, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is ${formatPerformanceBudget(budgets.javascriptChunk)}`);
 assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 17 route/search UI boundaries must remain dynamic entries');
+assert(successionControllerBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the full Succession controller, Reader controller, lightweight visual controller, and Royal Family workspace must remain separate on-demand chunks');
 assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Story directory, standard arc renderer, Volume 0, Hunter Exam, and complete Greed Island shell must remain separate on-demand chunks');
 assert(greedIslandModuleBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all eight Greed Island modules must remain separate on-demand chunks');
-assert(dynamicEntries.length === 33, `expected 17 direct boundaries, five Story experience boundaries, eight Greed Island module boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
+assert(dynamicEntries.length === 37, `expected 17 direct boundaries, four Succession controller boundaries, five Story experience boundaries, eight Greed Island module boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
 assert(searchShardKeys.every((key) => manifest[key]?.isDynamicEntry), 'the story, Succession, and reference search indexes must remain separate dynamic entries');
 
 const homeHighlights = await readFile(path.join(root, 'src/data/homeHighlights.js'), 'utf8');
@@ -120,4 +127,4 @@ const largestPortrait = portraitSizes.sort((a, b) => b.bytes - a.bytes)[0];
 assert(largestPortrait.bytes <= budgets.portrait, `${largestPortrait.file} is ${largestPortrait.bytes}; local portrait ceiling is ${formatPerformanceBudget(budgets.portrait)}`);
 assert(portraitBytes <= budgets.portraitLibrary, `local portrait library is ${portraitBytes} bytes; budget is ${formatPerformanceBudget(budgets.portraitLibrary)}`);
 
-console.log(`Performance audit passed: entry JS ${entryJs}/${formatPerformanceBudget(budgets.entryJs)} bytes; startup JS ${startupJs}/${formatPerformanceBudget(budgets.startupJs)} bytes; startup CSS ${startupCss}/${formatPerformanceBudget(budgets.startupCss)} bytes; ${directBoundaryKeys.length} route/search UI chunks, ${storyDetailBoundaryKeys.length} Story experience chunks, ${greedIslandModuleBoundaryKeys.length} Greed Island module chunks, ${searchShardKeys.length} search shards; largest JS chunk ${largestJavascript.file} at ${largestJavascript.bytes}/${formatPerformanceBudget(budgets.javascriptChunk)} bytes; local portraits ${portraitBytes} bytes.`);
+console.log(`Performance audit passed: entry JS ${entryJs}/${formatPerformanceBudget(budgets.entryJs)} bytes; startup JS ${startupJs}/${formatPerformanceBudget(budgets.startupJs)} bytes; startup CSS ${startupCss}/${formatPerformanceBudget(budgets.startupCss)} bytes; ${directBoundaryKeys.length} route/search UI chunks, ${successionControllerBoundaryKeys.length} Succession controller chunks, ${storyDetailBoundaryKeys.length} Story experience chunks, ${greedIslandModuleBoundaryKeys.length} Greed Island module chunks, ${searchShardKeys.length} search shards; largest JS chunk ${largestJavascript.file} at ${largestJavascript.bytes}/${formatPerformanceBudget(budgets.javascriptChunk)} bytes; local portraits ${portraitBytes} bytes.`);
