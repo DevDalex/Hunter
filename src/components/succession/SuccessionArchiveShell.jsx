@@ -62,12 +62,13 @@ const iconByRoute = {
   media: Boxes,
 };
 
+const hiddenNavigationRoutes = new Set(['archive', 'reader']);
 const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 function ArchiveNavigation({ activeId, onNavigate, onIntent, id }) {
   return <nav id={id} className="succession-archive-nav" aria-label="Succession Contest Archive">
     {successionArchiveGroups.map((group) => {
-      const routes = successionArchiveRoutes.filter((item) => item.group === group);
+      const routes = successionArchiveRoutes.filter((item) => item.group === group && !hiddenNavigationRoutes.has(item.id));
       return <section key={group} aria-labelledby={`${id}-${group.toLowerCase()}-label`}>
         <h2 id={`${id}-${group.toLowerCase()}-label`}>{group}</h2>
         <div>{routes.map((route) => {
@@ -116,6 +117,10 @@ export default function SuccessionArchiveShell({
   useEffect(() => setDrawerOpen(false), [activeId, routeParams]);
 
   useEffect(() => {
+    if (route.id === 'archive') onNavigate('story', {});
+  }, [onNavigate, route.id]);
+
+  useEffect(() => {
     if (previousRouteRef.current === activeId) return;
     previousRouteRef.current = activeId;
     const frame = window.requestAnimationFrame(() => contentRef.current?.focus({ preventScroll: true }));
@@ -152,10 +157,7 @@ export default function SuccessionArchiveShell({
   }, [drawerOpen]);
 
   const navigate = (target, params = {}) => onNavigate(target, params);
-  const headerActions = <>
-    <button type="button" className="succession-button succession-button--search" onClick={onOpenSearch}><Search size={16} aria-hidden="true" /> Search <kbd>Ctrl K</kbd></button>
-    <button type="button" className="succession-button succession-button--primary" onClick={() => navigate('reader', routeParams?.chapter ? { chapter: routeParams.chapter } : {})}><BookOpen size={16} aria-hidden="true" /> Open reader</button>
-  </>;
+  const headerActions = <button type="button" className="succession-button succession-button--search" onClick={onOpenSearch}><Search size={16} aria-hidden="true" /> Search <kbd>Ctrl K</kbd></button>;
 
   return <article className="succession-archive" data-archive-route={route.id}>
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
@@ -209,8 +211,8 @@ export default function SuccessionArchiveShell({
               <ol>
                 <li><button type="button" onClick={onExitArchive}>Story</button></li>
                 <li className="succession-breadcrumbs__separator" aria-hidden="true"><ChevronRight size={13} /></li>
-                <li><button type="button" onClick={() => onNavigate('archive')}>Succession Archive</button></li>
-                {route.id !== 'archive' && <>
+                <li><span aria-current={route.id === 'story' ? 'page' : undefined}>Succession Contest</span></li>
+                {route.id !== 'story' && route.id !== 'archive' && <>
                   <li className="succession-breadcrumbs__separator" aria-hidden="true"><ChevronRight size={13} /></li>
                   <li><span aria-current="page">{route.label}</span></li>
                 </>}
@@ -219,11 +221,11 @@ export default function SuccessionArchiveShell({
             <button
               type="button"
               className="succession-return-path"
-              onClick={route.id === 'archive' ? onExitArchive : () => onNavigate('archive')}
-              aria-label={route.id === 'archive' ? 'Return to Story' : 'Back to Succession Archive index'}
+              onClick={onExitArchive}
+              aria-label="Return to Story"
             >
               <ArrowLeft size={15} aria-hidden="true" />
-              <span>{route.id === 'archive' ? 'Return to Story' : 'Back to archive index'}</span>
+              <span>Return to Story</span>
             </button>
           </div>
           {!hidePageHeader && <ArchivePageHeader
@@ -245,7 +247,7 @@ export default function SuccessionArchiveShell({
             role="region"
             aria-label={`${route.label} workspace content`}
             tabIndex="-1"
-          >{children}</div>
+          >{route.id === 'archive' ? null : children}</div>
         </div>
       </div>
     </div>
