@@ -20,7 +20,6 @@ import { QueensWorkspace } from './SuccessionArchiveDeepWorkspaces';
 import AssignmentsWorkspace from './SuccessionArchiveAssignmentWorkspace';
 import ChapterStoryWorkspace from './SuccessionArchiveChapterStoryWorkspace';
 import CharactersWorkspace from './SuccessionArchiveCharacterWorkspace';
-import EvidenceWorkspace from './SuccessionArchiveEvidenceWorkspace';
 import EventsWorkspace from './SuccessionArchiveEventWorkspace';
 import GlossaryWorkspace from './SuccessionArchiveGlossaryWorkspace';
 import GuardianBeastsWorkspace from './SuccessionArchiveGuardianBeastWorkspace';
@@ -28,6 +27,7 @@ import LocationsWorkspace from './SuccessionArchiveLocationWorkspace';
 import NenWorkspace from './SuccessionArchiveNenWorkspace';
 import OrganizationsWorkspace from './SuccessionArchiveOrganizationWorkspace';
 import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';
+import ResearchWorkspace from './SuccessionArchiveResearchWorkspace';
 import StoryIntelligenceWorkspace from './SuccessionArchiveStoryIntelligenceWorkspace';
 import { DomainEntityDetail } from './SuccessionArchiveExtendedWorkspaces';
 import {
@@ -150,7 +150,9 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
             ? 'nen'
             : linkedEntity?.entityType === 'guardian-beast'
               ? 'guardian-spirit-beasts'
-              : requestedTarget;
+              : ['knowledge-record', 'protocol', 'object', 'document', 'evidence-item'].includes(linkedEntity?.entityType)
+                ? 'research'
+                : requestedTarget;
     onNavigate(canonicalTarget, params);
   };
   const treeView = route.id === 'princes' && routeParams.view === 'tree';
@@ -165,7 +167,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
       : route.id === 'chapters' && Number.isFinite(requestedChapterNumber)
         ? getEntitiesByType('chapter').find((entity) => entity.number === requestedChapterNumber) || null
         : null;
-  const specializedRecordRoute = ['characters', 'princes', 'queens', 'chapters', 'events', 'locations', 'bodyguards', 'relationships', 'organizations', 'nen', 'guardian-spirit-beasts'].includes(route.id);
+  const specializedRecordRoute = ['characters', 'princes', 'queens', 'chapters', 'events', 'locations', 'bodyguards', 'relationships', 'organizations', 'nen', 'guardian-spirit-beasts', 'research'].includes(route.id);
   const royalCharacterRoute = ['princes', 'queens'].includes(route.id);
   const showCharacterDossier = Boolean(selectedEntity?.entityType === 'character' && !treeView && !royalCharacterRoute);
   const showOrganizationDossier = Boolean(selectedEntity?.entityType === 'organization' && !treeView);
@@ -178,7 +180,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const coverageBoundary = Number.isFinite(requestedCoverageChapter)
     ? Math.min(spoilerLimit, Math.max(340, requestedCoverageChapter))
     : spoilerLimit;
-  const showSelectedCoverage = Boolean(selectedEntity && !treeView && !showDomainDetail);
+  const showSelectedCoverage = Boolean(selectedEntity && !treeView && !showDomainDetail && !['knowledge-record', 'protocol', 'object', 'document', 'evidence-item'].includes(selectedEntity.entityType));
 
   return <CoverageBoundaryProvider boundary={coverageBoundary}><SuccessionArchiveShell activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} onExitArchive={onExitArchive} onOpenSearch={onOpenSearch} onIntent={onIntent}>
     {route.id === 'archive' && <ArchiveHome onNavigate={navigate} spoilerLimit={spoilerLimit} />}
@@ -205,10 +207,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {showRouteWorkspace && route.id === 'events' && <EventsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'relationships' && <RelationshipsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'chapters' && <ChapterStoryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'research' && <>
-      <ArchiveCoverageReport boundary={spoilerLimit} onNavigate={navigate} compact />
-      <EvidenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />
-    </>}
+    {showRouteWorkspace && route.id === 'research' && <ResearchWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'glossary' && <GlossaryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {preserved && <PreservedWorkspace routeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {!['archive', 'story', 'search'].includes(route.id) && !treeView && !preserved && !dedicated.has(route.id) && <DirectoryWorkspace routeId={route.id} routeParams={routeParams} onNavigate={navigate} />}
