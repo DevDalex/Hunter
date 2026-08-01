@@ -79,6 +79,131 @@
   text-align: center;
 }
 
+/* Exact desktop rendering lock. The opaque underlay sits between any inherited
+   blueprint decoration and the canonical exterior image. The two destination
+   cards use neutral archive symbols instead of hidden-image remnants. */
+@media (min-width: 1024px) {
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__ship-portrait {
+    position: relative !important;
+    isolation: isolate !important;
+    min-height: 186px !important;
+    padding: 8px 8px 0 !important;
+    overflow: hidden !important;
+    background: #fff !important;
+    background-image: none !important;
+  }
+
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__ship-portrait::before {
+    position: absolute !important;
+    inset: 8px 8px 34px !important;
+    z-index: 20 !important;
+    display: block !important;
+    visibility: visible !important;
+    width: auto !important;
+    height: auto !important;
+    content: "" !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    background-image: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: none !important;
+  }
+
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__ship-portrait::after {
+    display: none !important;
+    visibility: hidden !important;
+    content: none !important;
+  }
+
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__ship-portrait > .succession-architecture__retained-ship-image {
+    position: relative !important;
+    inset: auto !important;
+    z-index: 30 !important;
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    height: 150px !important;
+    max-height: 150px !important;
+    margin: 0 !important;
+    padding: 4px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border: 0 !important;
+    background: #fff !important;
+    opacity: 1 !important;
+    filter: grayscale(1) contrast(1.04) !important;
+    transform: none !important;
+  }
+
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__ship-portrait > small {
+    position: relative !important;
+    z-index: 40 !important;
+    display: block !important;
+    padding: 6px 5px 8px !important;
+    background: #fff !important;
+  }
+
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__split-grid > a {
+    grid-template-rows: auto minmax(118px, 1fr) auto !important;
+    background: rgba(255, 255, 255, .34) !important;
+  }
+
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__split-grid > a > .succession-architecture__retained-ship-image {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__split-grid > a::before {
+    position: static !important;
+    inset: auto !important;
+    z-index: auto !important;
+    grid-row: 2 !important;
+    align-self: stretch !important;
+    display: block !important;
+    visibility: visible !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 112px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    content: "" !important;
+    border: 1px solid #c9c9c4 !important;
+    border-radius: 0 !important;
+    color: transparent !important;
+    background-color: #f7f7f4 !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: 74px 74px !important;
+    box-shadow: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: none !important;
+  }
+
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__split-grid > a:first-child::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80' fill='none' stroke='%23111' stroke-width='2'%3E%3Cpath d='M13 50c14-21 31-31 51-31 18 0 33 7 43 20-7 19-23 28-48 28-20 0-36-6-46-17Z'/%3E%3Cpath d='M35 31h48M31 41h60M28 51h59M48 19v48M69 19v48' stroke-width='1' opacity='.65'/%3E%3Ccircle cx='91' cy='35' r='2' fill='%23111'/%3E%3C/svg%3E") !important;
+  }
+
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__split-grid > a:last-child::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80' fill='none' stroke='%23111' stroke-width='2'%3E%3Cpath d='M18 17h84v46H18z'/%3E%3Cpath d='M18 33h84M43 17v46M77 17v46' stroke-width='1' opacity='.55'/%3E%3Cpath d='M60 25c-8 0-14 6-14 14 0 11 14 23 14 23s14-12 14-23c0-8-6-14-14-14Z' fill='%23f7f7f4'/%3E%3Ccircle cx='60' cy='39' r='4'/%3E%3C/svg%3E") !important;
+  }
+
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__split-grid > a > strong {
+    grid-row: 1 !important;
+  }
+
+  body.succession-architecture-mode .succession-architecture-board.is-architecture-locked .succession-architecture__split-grid > a > small {
+    grid-row: 3 !important;
+  }
+}
+
 @media (forced-colors: active) {
   .succession-architecture-board .succession-architecture__retained-ship-image,
   .succession-architecture-board .succession-architecture__retained-beast-grid :is(img, .safe-image-placeholder) {
