@@ -1,0 +1,509 @@
+/*
+ * Succession Phase 1 — immediate visual repair.
+ * Desktop and laptop presentation only. The existing tablet and mobile
+ * composition is deliberately untouched.
+ */
+
+@media (min-width: 1024px) {
+  /* -----------------------------------------------------------------------
+     Architecture portal: one exterior Black Whale, no tier or room imagery.
+     ----------------------------------------------------------------------- */
+  .succession-architecture-board .succession-architecture__ship-portrait {
+    position: relative !important;
+    display: grid !important;
+    grid-template-rows: minmax(0, 1fr) auto !important;
+    min-height: 186px !important;
+    padding: 8px 8px 0 !important;
+    overflow: hidden !important;
+    background: #f7f7f4 !important;
+    background-image: none !important;
+    isolation: isolate;
+  }
+
+  .succession-architecture-board .succession-architecture__ship-portrait::before,
+  .succession-architecture-board .succession-architecture__ship-portrait::after {
+    display: none !important;
+    content: none !important;
+    background: none !important;
+  }
+
+  .succession-architecture-board .succession-architecture__ship-portrait > .succession-architecture__ship-blueprint,
+  .succession-architecture-board .succession-architecture__ship-portrait > .succession-architecture__retained-ship-image {
+    position: relative !important;
+    inset: auto !important;
+    z-index: 1 !important;
+    display: block !important;
+    width: 100% !important;
+    height: 150px !important;
+    max-height: 150px !important;
+    margin: 0 !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    background: #f7f7f4 !important;
+    border: 0 !important;
+    filter: grayscale(1) contrast(1.06) !important;
+  }
+
+  .succession-architecture-board .succession-architecture__ship-portrait > small {
+    position: relative;
+    z-index: 2;
+    padding: 6px 6px 8px !important;
+    background: #f7f7f4;
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid > a {
+    grid-template-rows: auto minmax(118px, 1fr) auto !important;
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid > a > strong {
+    grid-row: 1;
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid > a > .succession-architecture__ship-blueprint,
+  .succession-architecture-board .succession-architecture__split-grid > a > .succession-architecture__retained-ship-image {
+    display: none !important;
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid > a::before {
+    grid-row: 2;
+    align-self: stretch;
+    display: block;
+    width: 100%;
+    min-height: 112px;
+    border: 1px solid var(--architecture-line-soft);
+    background-color: #f7f7f4;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 74px 74px;
+    content: "";
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid > a:first-child::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80' fill='none' stroke='%23111' stroke-width='2'%3E%3Cpath d='M13 50c14-21 31-31 51-31 18 0 33 7 43 20-7 19-23 28-48 28-20 0-36-6-46-17Z'/%3E%3Cpath d='M35 31h48M31 41h60M28 51h59M48 19v48M69 19v48' stroke-width='1' opacity='.65'/%3E%3Ccircle cx='91' cy='35' r='2' fill='%23111'/%3E%3C/svg%3E");
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid > a:last-child::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80' fill='none' stroke='%23111' stroke-width='2'%3E%3Cpath d='M18 17h84v46H18z'/%3E%3Cpath d='M18 33h84M43 17v46M77 17v46' stroke-width='1' opacity='.55'/%3E%3Cpath d='M60 25c-8 0-14 6-14 14 0 11 14 23 14 23s14-12 14-23c0-8-6-14-14-14Z' fill='%23f7f7f4'/%3E%3Ccircle cx='60' cy='39' r='4'/%3E%3C/svg%3E");
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid > a > small {
+    grid-row: 3;
+  }
+
+  /* Guardian Spirit Beast previews preserve the whole creature instead of
+     cropping anatomy into narrow postage stamps. */
+  .succession-architecture-board .succession-architecture__retained-beast-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+    align-self: stretch !important;
+    padding: 8px 5px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__retained-beast-grid > span {
+    aspect-ratio: 4 / 3 !important;
+    min-height: 68px !important;
+    padding: 3px 3px 18px !important;
+    background: #fff !important;
+  }
+
+  .succession-architecture-board .succession-architecture__retained-beast-grid :is(img, .safe-image-placeholder) {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    background: #fff !important;
+    filter: grayscale(1) contrast(1.06) !important;
+  }
+
+  .succession-architecture-board .succession-architecture__retained-beast-grid b {
+    right: 3px !important;
+    bottom: 3px !important;
+    min-width: 20px;
+    padding: 1px 4px !important;
+    text-align: center;
+  }
+
+  /* -----------------------------------------------------------------------
+     Royal and character typography.
+     ----------------------------------------------------------------------- */
+  .succession-archive[data-archive-route="princes"] .succession-prince-card__body > span,
+  .succession-archive[data-archive-route="queens"] .succession-queen-card__copy > span,
+  .succession-archive[data-archive-route="characters"] .succession-character-card__classification,
+  .succession-archive[data-archive-route="characters"] .succession-character-layer-label {
+    font-size: 11px !important;
+    line-height: 1.28 !important;
+    letter-spacing: .075em !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+  }
+
+  .succession-archive[data-archive-route="princes"] :is(.succession-prince-card h3, .succession-prince-intelligence-hero__copy h2),
+  .succession-archive[data-archive-route="queens"] :is(.succession-queen-card h3, .succession-queen-intelligence-hero__copy h2),
+  .succession-archive[data-archive-route="characters"] :is(.succession-character-card h3, .succession-character-dossier h2) {
+    max-width: 100% !important;
+    color: var(--succession-text-strong, #141414) !important;
+    font-size: clamp(22px, 1.75vw, 31px) !important;
+    line-height: 1.04 !important;
+    letter-spacing: -.025em !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    hyphens: none !important;
+    text-wrap: balance;
+  }
+
+  .succession-archive[data-archive-route="princes"] .succession-prince-card__body,
+  .succession-archive[data-archive-route="queens"] .succession-queen-card__copy,
+  .succession-archive[data-archive-route="characters"] .succession-character-card {
+    min-width: 0;
+  }
+
+  /* -----------------------------------------------------------------------
+     Relationship map: readable labels, calmer edges, larger plotting field.
+     ----------------------------------------------------------------------- */
+  .succession-archive[data-archive-route="relationships"] .succession-relationship-network {
+    overflow: visible !important;
+  }
+
+  .succession-archive[data-archive-route="relationships"] .succession-relationship-network__canvas {
+    min-height: 760px !important;
+    overflow: hidden !important;
+    background:
+      linear-gradient(rgba(255,255,255,.02), rgba(255,255,255,.02)),
+      radial-gradient(circle at center, color-mix(in srgb, var(--relationship-gold) 5%, transparent), transparent 58%) !important;
+  }
+
+  .succession-archive[data-archive-route="relationships"] .succession-relationship-network__canvas svg {
+    pointer-events: none;
+  }
+
+  .succession-archive[data-archive-route="relationships"] .succession-relationship-network__canvas line {
+    stroke-width: 1.45 !important;
+    opacity: .76;
+  }
+
+  .succession-archive[data-archive-route="relationships"] .succession-relationship-network__node {
+    grid-template-columns: 46px minmax(0, 1fr) !important;
+    gap: 8px !important;
+    width: 158px !important;
+    min-height: 68px !important;
+    padding: 8px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 14px rgba(0,0,0,.18) !important;
+  }
+
+  .succession-archive[data-archive-route="relationships"] .succession-relationship-network__node .succession-entity-visual {
+    width: 46px !important;
+    height: 50px !important;
+    min-height: 50px !important;
+    border-radius: 7px !important;
+  }
+
+  .succession-archive[data-archive-route="relationships"] .succession-relationship-network__node :is(img, .safe-image-placeholder) {
+    object-fit: contain !important;
+    object-position: center !important;
+  }
+
+  .succession-archive[data-archive-route="relationships"] .succession-relationship-network__node b,
+  .succession-archive[data-archive-route="relationships"] .succession-relationship-connectivity button b {
+    overflow: visible !important;
+    color: var(--relationship-ink, #f5f4ef) !important;
+    font-size: 12.5px !important;
+    line-height: 1.15 !important;
+    text-overflow: clip !important;
+    white-space: normal !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    text-wrap: balance;
+  }
+
+  .succession-archive[data-archive-route="relationships"] .succession-relationship-network__node small {
+    font-size: 10px !important;
+    line-height: 1.15 !important;
+  }
+
+  .succession-archive[data-archive-route="relationships"] .succession-relationship-accessible li {
+    align-items: center !important;
+  }
+
+  /* -----------------------------------------------------------------------
+     Nen Systems: eliminate blank black slabs and constrain all imagery.
+     ----------------------------------------------------------------------- */
+  .succession-archive[data-archive-route="nen"] :is(.succession-nen-command-system, .succession-nen-command-ability) {
+    min-height: 0 !important;
+    overflow: hidden !important;
+    border-color: #777772 !important;
+    background: linear-gradient(150deg, #fbfbf8, #ecece7) !important;
+    color: #151515 !important;
+    box-shadow: 0 5px 18px rgba(0,0,0,.09) !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] :is(.succession-nen-command-system, .succession-nen-command-ability)::before {
+    background: #222 !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] :is(.succession-nen-command-system, .succession-nen-command-ability) :is(h3, h4, b, strong, dd) {
+    color: #151515 !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] :is(.succession-nen-command-system, .succession-nen-command-ability) :is(p, small, dt) {
+    color: #4d4d49 !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] :is(.succession-nen-command-system, .succession-nen-command-ability) > span,
+  .succession-archive[data-archive-route="nen"] .succession-nen-command-ability > div:nth-child(2) > span {
+    color: #6e1427 !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] :is(.succession-nen-command-system, .succession-nen-command-ability) dl > div {
+    border-color: #c2c2bc !important;
+    background: #f3f3ef !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] :is(.succession-nen-command-system, .succession-nen-command-ability) footer {
+    border-top-color: #b8b8b2 !important;
+    color: #5e1021 !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command-ability {
+    grid-template-columns: 92px minmax(0, 1fr) !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command-ability__visual,
+  .succession-archive[data-archive-route="nen"] .succession-nen-command-dossier__visual {
+    min-width: 0;
+    overflow: visible;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command-ability__visual .succession-entity-visual {
+    width: 92px !important;
+    height: 106px !important;
+    min-height: 106px !important;
+    background: #fff !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] :is(.succession-nen-command-ability__visual, .succession-nen-command-dossier__visual) :is(img, .safe-image-placeholder) {
+    object-fit: contain !important;
+    object-position: center !important;
+    background: #fff !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command-system__nodes {
+    opacity: .24 !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] .succession-nen-command__ability-grid,
+  .succession-archive[data-archive-route="nen"] .succession-nen-command__system-grid {
+    align-items: stretch !important;
+  }
+
+  /* -----------------------------------------------------------------------
+     Guardian Spirit Beasts: whole-form media and readable card surfaces.
+     ----------------------------------------------------------------------- */
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card {
+    min-height: 0 !important;
+    border-color: #777772 !important;
+    background: linear-gradient(150deg, #fbfbf8, #ecece7) !important;
+    color: #151515 !important;
+    box-shadow: 0 5px 18px rgba(0,0,0,.09) !important;
+  }
+
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card :is(h3, h4, b, strong, dd) {
+    color: #151515 !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card :is(p, small, dt) {
+    color: #4d4d49 !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card__visual {
+    width: 112px !important;
+    min-width: 112px !important;
+    height: 142px !important;
+    overflow: hidden !important;
+    border: 1px solid #c2c2bc;
+    background: #fff !important;
+  }
+
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card__visual .succession-entity-visual {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+  }
+
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] :is(.succession-gsb-command-card__visual, .succession-gsb-command-dossier__visual) :is(img, .safe-image-placeholder) {
+    object-fit: contain !important;
+    object-position: center !important;
+    background: #fff !important;
+  }
+
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card__visual > span {
+    right: 5px !important;
+    bottom: 5px !important;
+    z-index: 3 !important;
+    min-width: 28px;
+    padding: 3px 6px !important;
+    border: 1px solid #111 !important;
+    background: #fff !important;
+    color: #111 !important;
+    font-weight: 900 !important;
+    text-align: center;
+  }
+
+  /* -----------------------------------------------------------------------
+     Organizations / Power Blocs: stable paper cards and contained emblems.
+     ----------------------------------------------------------------------- */
+  .succession-archive[data-archive-route="organizations"] .succession-institution-grid > article {
+    min-width: 0 !important;
+    overflow: hidden !important;
+    border-color: #858580 !important;
+    background: #fbfbf8 !important;
+    color: #151515 !important;
+  }
+
+  .succession-archive[data-archive-route="organizations"] .succession-institution-grid > article :is(h3, b, strong, dd) {
+    color: #151515 !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="organizations"] .succession-institution-grid > article :is(p, small, dt, span) {
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="organizations"] .succession-institution-grid > article h3 {
+    font-size: clamp(21px, 1.7vw, 29px) !important;
+    line-height: 1.05 !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+    text-wrap: balance;
+  }
+
+  .succession-archive[data-archive-route="organizations"] .succession-institution-grid > article header > .succession-entity-visual {
+    width: 76px !important;
+    height: 88px !important;
+    min-height: 88px !important;
+    flex: 0 0 76px;
+    background: #fff !important;
+  }
+
+  .succession-archive[data-archive-route="organizations"] .succession-institution-grid > article header > .succession-entity-visual :is(img, .safe-image-placeholder) {
+    object-fit: contain !important;
+    object-position: center !important;
+    background: #fff !important;
+  }
+
+  /* -----------------------------------------------------------------------
+     Research / Records: restore contrast and coherent record surfaces.
+     ----------------------------------------------------------------------- */
+  .succession-archive[data-archive-route="research"] .succession-page-header__copy :is(h1, h2) {
+    color: #171717 !important;
+    text-shadow: none !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="research"] .succession-page-header__copy p {
+    color: #555550 !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="research"] .succession-evidence-hero {
+    border-color: #111 !important;
+    background: linear-gradient(145deg, #20211f, #10110f) !important;
+    color: #f7f6f1 !important;
+  }
+
+  .succession-archive[data-archive-route="research"] .succession-evidence-hero :is(h2, h3, b, strong, dd) {
+    color: #fff !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="research"] .succession-evidence-hero :is(p, span, dt) {
+    color: #deddd6 !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="research"] :is(
+    .succession-release-candidate,
+    .succession-foundation-closure,
+    .succession-evidence-chapter,
+    .succession-evidence-gap-controls,
+    .succession-evidence-gap-list,
+    .succession-evidence-source-catalogue,
+    .succession-product-dossier
+  ) {
+    border-color: #8a8a84 !important;
+    background: #fbfbf8 !important;
+    color: #171717 !important;
+  }
+
+  .succession-archive[data-archive-route="research"] :is(
+    .succession-release-candidate,
+    .succession-foundation-closure,
+    .succession-evidence-chapter,
+    .succession-evidence-gap-controls,
+    .succession-evidence-gap-list,
+    .succession-evidence-source-catalogue,
+    .succession-product-dossier
+  ) :is(h2, h3, h4, b, strong, dd) {
+    color: #171717 !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="research"] :is(
+    .succession-release-candidate,
+    .succession-foundation-closure,
+    .succession-evidence-chapter,
+    .succession-evidence-gap-controls,
+    .succession-evidence-gap-list,
+    .succession-evidence-source-catalogue,
+    .succession-product-dossier
+  ) :is(p, small, dt) {
+    color: #555550 !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="research"] .succession-release-candidate__inventory article,
+  .succession-archive[data-archive-route="research"] .succession-release-candidate__batches article,
+  .succession-archive[data-archive-route="research"] .succession-release-candidate__external article,
+  .succession-archive[data-archive-route="research"] .succession-foundation-closure__domains article,
+  .succession-archive[data-archive-route="research"] .succession-evidence-linked-groups > section,
+  .succession-archive[data-archive-route="research"] .succession-evidence-source-catalogue > div > article {
+    border-color: #c1c1bb !important;
+    background: #f1f1ec !important;
+    color: #171717 !important;
+  }
+
+  .succession-archive[data-archive-route="research"] .succession-media-dossier__visual :is(img, .safe-image-placeholder) {
+    max-height: 560px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    background: #fff !important;
+  }
+
+  /* -----------------------------------------------------------------------
+     Shared media safety for the Phase 1 workspaces.
+     ----------------------------------------------------------------------- */
+  .succession-archive[data-archive-route="nen"] .succession-entity-visual::after,
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-entity-visual::after,
+  .succession-archive[data-archive-route="relationships"] .succession-entity-visual::after,
+  .succession-archive[data-archive-route="organizations"] .succession-entity-visual::after {
+    display: none !important;
+    content: none !important;
+  }
+
+  .succession-archive[data-archive-route="nen"] :is(img, .safe-image-placeholder),
+  .succession-archive[data-archive-route="guardian-spirit-beasts"] :is(img, .safe-image-placeholder),
+  .succession-archive[data-archive-route="relationships"] :is(img, .safe-image-placeholder),
+  .succession-archive[data-archive-route="organizations"] :is(img, .safe-image-placeholder) {
+    max-width: 100%;
+  }
+}

@@ -1,83 +1,167 @@
-/* The approved architecture layout is unchanged. Only its Black Whale and
-   Guardian Spirit Beast illustration slots use canonical archive imagery. */
+/* Phase 1 visual repair.
+   The architecture portal presents one canonical Black Whale exterior only.
+   Tier cutaways and room plans remain available inside the Black Whale and
+   Locations workspaces, never as portal artwork. */
 
-.succession-architecture-board .succession-architecture__retained-ship-image {
+.succession-architecture-board .succession-architecture__ship-portrait {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+  background: #fff !important;
+  background-image: none !important;
+}
+
+.succession-architecture-board .succession-architecture__ship-portrait::before,
+.succession-architecture-board .succession-architecture__ship-portrait::after {
+  display: none !important;
+  visibility: hidden !important;
+  content: none !important;
+  background: none !important;
+}
+
+.succession-architecture-board .succession-architecture__ship-portrait > .succession-architecture__retained-ship-image {
+  position: relative !important;
+  inset: auto !important;
+  z-index: 1 !important;
   display: block !important;
+  visibility: visible !important;
   width: 100% !important;
-  height: 118px !important;
+  height: 150px !important;
   min-width: 0 !important;
   min-height: 0 !important;
   max-width: 100% !important;
-  max-height: 118px !important;
-  margin: auto !important;
-  padding: 4px !important;
+  max-height: 150px !important;
+  margin: 0 !important;
+  padding: 5px !important;
   object-fit: contain !important;
   object-position: center !important;
   border: 0 !important;
   border-radius: 0 !important;
-  background: #f7f7f4 !important;
-  filter: grayscale(1) brightness(1.16) contrast(.94);
+  background: #fff !important;
+  opacity: 1 !important;
+  filter: grayscale(1) contrast(1.04) !important;
+  transform: none !important;
 }
 
-.succession-architecture-board .succession-architecture__ship-portrait {
-  overflow: hidden;
+.succession-architecture-board .succession-architecture__ship-portrait > small {
+  position: relative !important;
+  z-index: 2 !important;
+  display: block !important;
+  padding: 6px 5px 8px !important;
+  background: #fff !important;
 }
 
-.succession-architecture-board .succession-architecture__ship-portrait .succession-architecture__retained-ship-image {
-  height: 148px !important;
-  max-height: 148px !important;
-  padding: 6px !important;
-  object-position: center 44% !important;
-  filter: grayscale(1) brightness(1.34) contrast(.86);
+/* Remove the tier cutaway and Tier 1 room plan from the portal itself. */
+.succession-architecture-board .succession-architecture__split-grid > a > .succession-architecture__retained-ship-image {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
-.succession-architecture-board .succession-architecture__split-grid .succession-architecture__retained-ship-image {
-  align-self: center;
-  height: 118px !important;
-  max-height: 118px !important;
+.succession-architecture-board .succession-architecture__split-grid > a {
+  grid-template-rows: auto minmax(112px, 1fr) auto !important;
+  background: rgba(255, 255, 255, .34) !important;
 }
 
+/* Neutral destination symbols replace the removed manga maps. */
+.succession-architecture-board .succession-architecture__split-grid > a::before {
+  position: static !important;
+  inset: auto !important;
+  z-index: auto !important;
+  grid-row: 2 !important;
+  align-self: stretch !important;
+  display: block !important;
+  visibility: visible !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 108px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  content: "" !important;
+  border: 1px solid #c9c9c4 !important;
+  border-radius: 0 !important;
+  background-color: #f7f7f4 !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 72px 72px !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: none !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid > a:first-child::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80' fill='none' stroke='%23111' stroke-width='2'%3E%3Cpath d='M13 50c14-21 31-31 51-31 18 0 33 7 43 20-7 19-23 28-48 28-20 0-36-6-46-17Z'/%3E%3Cpath d='M35 31h48M31 41h60M28 51h59M48 19v48M69 19v48' stroke-width='1' opacity='.65'/%3E%3Ccircle cx='91' cy='35' r='2' fill='%23111'/%3E%3C/svg%3E") !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid > a:last-child::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80' fill='none' stroke='%23111' stroke-width='2'%3E%3Cpath d='M18 17h84v46H18z'/%3E%3Cpath d='M18 33h84M43 17v46M77 17v46' stroke-width='1' opacity='.55'/%3E%3Cpath d='M60 25c-8 0-14 6-14 14 0 11 14 23 14 23s14-12 14-23c0-8-6-14-14-14Z' fill='%23f7f7f4'/%3E%3Ccircle cx='60' cy='39' r='4'/%3E%3C/svg%3E") !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid > a > strong {
+  grid-row: 1 !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid > a > small {
+  grid-row: 3 !important;
+}
+
+/* Preserve complete Guardian Spirit Beast silhouettes and reserve a separate
+   label strip so numerals never cover the artwork. */
 .succession-architecture-board .succession-architecture__retained-beast-grid span {
   position: relative;
   display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
   min-width: 0;
-  min-height: 54px;
-  place-items: center;
-  padding: 2px !important;
+  min-height: 62px;
+  padding: 3px !important;
   overflow: hidden;
   background: #fff;
 }
 
 .succession-architecture-board .succession-architecture__retained-beast-grid :is(img, .safe-image-placeholder) {
   display: block !important;
+  align-self: center !important;
   width: 100% !important;
-  height: 50px !important;
-  min-height: 50px !important;
-  max-height: 50px !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
   object-fit: contain !important;
   object-position: center !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: #fff !important;
-  filter: grayscale(1) brightness(1.1) contrast(1.04);
+  filter: grayscale(1) brightness(1.08) contrast(1.04);
 }
 
 .succession-architecture-board .succession-architecture__retained-beast-grid b {
-  position: absolute;
-  right: 3px;
-  bottom: 3px;
-  z-index: 2;
+  position: static !important;
+  z-index: auto !important;
+  justify-self: end;
+  min-width: 18px;
+  margin-top: 1px;
   padding: 1px 4px;
   border: 1px solid #111;
   color: #fff !important;
   background: #111;
   font-size: 9px;
   line-height: 1.2;
+  text-align: center;
 }
 
 @media (forced-colors: active) {
   .succession-architecture-board .succession-architecture__retained-ship-image,
   .succession-architecture-board .succession-architecture__retained-beast-grid :is(img, .safe-image-placeholder) {
-    filter: none;
+    filter: none !important;
   }
 }
