@@ -8,6 +8,23 @@ const route = (id, path, label, group, title, description, status = 'active') =>
   status,
 });
 
+const hubTab = (target, label, routes = [target], params = {}) => Object.freeze({
+  target,
+  label,
+  routes: Object.freeze([...routes]),
+  params: Object.freeze({ ...params }),
+});
+
+const hub = (id, target, label, group, title, description, tabs = []) => Object.freeze({
+  id,
+  target,
+  label,
+  group,
+  title,
+  description,
+  tabs: Object.freeze([...tabs]),
+});
+
 export const successionArchiveRoutes = Object.freeze([
   route('archive', '', 'Archive Home', 'Overview', 'Succession Contest Archive', 'The completed chapter-bounded research application connecting people, institutions, Nen systems, story intelligence, search, vocabulary, chronology, evidence, assignments, relationships, and location state.', 'active'),
   route('story', 'story', 'Story', 'Overview', 'Chapter and story intelligence', 'The authoritative narrative route: contiguous phases, seven parallel story lanes, causal event links, unresolved threads, current pressure, and pending research gaps at the selected chapter.', 'active'),
@@ -35,6 +52,76 @@ export const successionArchiveRoutes = Object.freeze([
   route('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, provenance, evidence types, confidence, coverage, unresolved claims, media provenance, and explicit research gaps.', 'active'),
   route('glossary', 'glossary', 'Glossary', 'Library', 'Canonical Succession glossary', 'Chapter-bounded definitions, synonyms, certainty, canonical graph connections, and evidence for ritual, Nen, legal, political, location, status, and archive vocabulary.', 'active'),
 ]);
+
+export const successionArchiveHubs = Object.freeze([
+  hub(
+    'story',
+    'story',
+    'Story Intelligence',
+    'Operations',
+    'Story Intelligence',
+    'A unified narrative command center for story phases, canonical chapter dossiers, voyage chronology, and causal event records.',
+    [
+      hubTab('story', 'Story'),
+      hubTab('chapters', 'Chapters'),
+      hubTab('timeline', 'Timeline'),
+      hubTab('events', 'Events'),
+    ],
+  ),
+  hub(
+    'people',
+    'characters',
+    'People & Power',
+    'Operations',
+    'People & Power',
+    'Characters, the Kakin Royal Family, operational assignments, organizations, and relationship intelligence in one connected workspace.',
+    [
+      hubTab('characters', 'Characters'),
+      hubTab('princes', 'Royal Family', ['princes', 'queens'], { view: 'tree' }),
+      hubTab('bodyguards', 'Assignments'),
+      hubTab('organizations', 'Organizations'),
+      hubTab('relationships', 'Relationships'),
+    ],
+  ),
+  hub(
+    'black-whale',
+    'black-whale',
+    'Black Whale',
+    'Operations',
+    'Black Whale',
+    'The vessel atlas and canonical location registry combined into one spatial intelligence workspace.',
+    [
+      hubTab('black-whale', 'Ship Atlas'),
+      hubTab('locations', 'Locations'),
+    ],
+  ),
+  hub(
+    'nen',
+    'nen',
+    'Nen Systems',
+    'Operations',
+    'Nen Systems',
+    'Succession abilities, ritual rules, contracts, curses, possession, and Guardian Spirit Beast dossiers in one systems workspace.',
+    [
+      hubTab('nen', 'Nen & Rituals'),
+      hubTab('guardian-spirit-beasts', 'Guardian Spirit Beasts'),
+    ],
+  ),
+  hub('search', 'search', 'Search', 'Library', 'Search the complete archive', 'Grouped, explained, chapter-safe search across every maintained Succession record.'),
+  hub('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, provenance, confidence, coverage, media records, and explicit research gaps.'),
+  hub('glossary', 'glossary', 'Glossary', 'Library', 'Canonical Succession glossary', 'Chapter-bounded definitions, synonyms, certainty, graph connections, and evidence.'),
+]);
+
+export const successionArchiveHubGroups = Object.freeze(['Operations', 'Library']);
+export const successionArchiveHubByRoute = new Map();
+for (const currentHub of successionArchiveHubs) {
+  successionArchiveHubByRoute.set(currentHub.target, currentHub);
+  for (const tab of currentHub.tabs) for (const routeId of tab.routes) successionArchiveHubByRoute.set(routeId, currentHub);
+}
+successionArchiveHubByRoute.set('archive', successionArchiveHubs[0]);
+successionArchiveHubByRoute.set('reader', successionArchiveHubs[0]);
+
+export const getSuccessionArchiveHub = (routeId = 'story') => successionArchiveHubByRoute.get(routeId) || successionArchiveHubs[0];
 
 export const successionArchiveRetiredTargets = Object.freeze({
   hunters: 'characters',
