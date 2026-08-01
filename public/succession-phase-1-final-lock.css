@@ -75,6 +75,49 @@
     background: #fff !important;
   }
 
+  /* Remove every remaining Tier 1 or room-plan thumbnail from the architecture
+     portal. The destination links stay intact and use a neutral spatial symbol. */
+  body.succession-architecture-mode
+    .succession-architecture-board.is-architecture-locked
+    :is(.succession-architecture__library-map, .succession-architecture__map-shortcut) {
+    position: relative !important;
+    isolation: isolate !important;
+    min-height: 112px !important;
+    overflow: hidden !important;
+    background: #f7f7f4 !important;
+    background-image: none !important;
+  }
+
+  body.succession-architecture-mode
+    .succession-architecture-board.is-architecture-locked
+    :is(.succession-architecture__library-map, .succession-architecture__map-shortcut)
+    > * {
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+
+  body.succession-architecture-mode
+    .succession-architecture-board.is-architecture-locked
+    :is(.succession-architecture__library-map, .succession-architecture__map-shortcut)::before {
+    position: absolute !important;
+    inset: 8px !important;
+    z-index: 2 !important;
+    display: block !important;
+    visibility: visible !important;
+    width: auto !important;
+    height: auto !important;
+    content: "" !important;
+    border: 1px solid #c9c9c4 !important;
+    background-color: #fff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80' fill='none' stroke='%23111' stroke-width='2'%3E%3Cpath d='M18 17h84v46H18z'/%3E%3Cpath d='M18 33h84M43 17v46M77 17v46' stroke-width='1' opacity='.55'/%3E%3Cpath d='M60 25c-8 0-14 6-14 14 0 11 14 23 14 23s14-12 14-23c0-8-6-14-14-14Z' fill='%23fff'/%3E%3Ccircle cx='60' cy='39' r='4'/%3E%3C/svg%3E") !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: 74px 74px !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: none !important;
+  }
+
   /* Preserve the complete beast image while keeping Roman labels readable. */
   body.succession-architecture-mode
     .succession-architecture-board.is-architecture-locked
