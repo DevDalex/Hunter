@@ -70,7 +70,8 @@ export default function Header({ activeView, routeTarget, onNavigate, onOpenSear
         {primaryNav.map((item, index) => {
           const active = itemIsActive(item);
           const href = routeToHref(item.view, item.target, item.params);
-          return <a ref={index === 0 ? firstLinkRef : undefined} href={href} className={active ? 'is-active' : ''} aria-current={active ? 'page' : undefined} onPointerEnter={() => onPrefetch?.(item.view, item.target)} onFocus={() => onPrefetch?.(item.view, item.target)} onClick={(event) => { event.preventDefault(); navigate(item.view, item.target, item.params); }} key={item.id}>{item.label}</a>;
+          const contextualLabel = item.id === 'timeline' && activeView === 'succession' ? 'Global Timeline' : undefined;
+          return <a ref={index === 0 ? firstLinkRef : undefined} href={href} className={active ? 'is-active' : ''} aria-label={contextualLabel} aria-current={active ? 'page' : undefined} onPointerEnter={() => onPrefetch?.(item.view, item.target)} onFocus={() => onPrefetch?.(item.view, item.target)} onClick={(event) => { event.preventDefault(); navigate(item.view, item.target, item.params); }} key={item.id}>{item.label}</a>;
         })}
       </nav>
       <div className="header-actions">

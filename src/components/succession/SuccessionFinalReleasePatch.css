@@ -144,3 +144,69 @@
     color: #243840 !important;
   }
 }
+
+/* Consolidated hub navigation keeps detailed records while reducing top-level choices. */
+.succession-archive .succession-hub-tabs {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 16px;
+  padding: 8px;
+  overflow-x: auto;
+  border: 1px solid var(--succession-line-dark);
+  border-radius: 5px;
+  background: var(--succession-hull);
+  scrollbar-width: thin;
+}
+
+.succession-archive .succession-hub-tabs a {
+  min-height: 44px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  border: 1px solid rgba(217, 224, 225, .2);
+  border-radius: 4px;
+  background: var(--succession-gunmetal);
+  color: #dce3e2;
+  font-family: var(--mono);
+  font-size: 11px !important;
+  font-weight: 750;
+  letter-spacing: .04em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.succession-archive .succession-hub-tabs a:hover,
+.succession-archive .succession-hub-tabs a:focus-visible {
+  border-color: #9fc3d4;
+  background: var(--succession-naval);
+  color: #f3f6f4;
+}
+
+.succession-archive .succession-hub-tabs a.is-active,
+.succession-archive .succession-hub-tabs a[aria-current="page"] {
+  border-color: #9fc3d4;
+  background: var(--succession-naval-bright);
+  color: #fff;
+  box-shadow: inset 0 -3px 0 #9fc3d4;
+}
+
+@media (max-width: 620px) {
+  .succession-archive .succession-hub-tabs {
+    margin-inline: -2px;
+    padding: 6px;
+  }
+
+  .succession-archive .succession-hub-tabs a {
+    padding-inline: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-archive .succession-hub-tabs,
+  .succession-archive .succession-hub-tabs a {
+    scroll-behavior: auto;
+    transition: none;
+  }
+}

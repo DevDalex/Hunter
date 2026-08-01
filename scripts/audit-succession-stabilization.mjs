@@ -31,9 +31,10 @@ const collectRules = (css) => {
 
 const fontSizesFor = (body) => [...body.matchAll(/font-size:\s*([0-9.]+)px\b/g)].map((match) => Number(match[1]));
 
-const [app, entry, contrast, chapterCss, storyCss, cssAudit] = await Promise.all([
+const [app, entry, lightRoute, contrast, chapterCss, storyCss, cssAudit] = await Promise.all([
   read('src/components/succession/SuccessionArchiveApp.jsx'),
   read('src/components/succession/SuccessionArchiveEntry.jsx'),
+  read('src/components/succession/SuccessionArchiveLightRoute.jsx'),
   read('src/components/succession/SuccessionArchiveContrast.css'),
   read('src/components/succession/SuccessionArchiveChapterStoryWorkspace.css'),
   read('src/components/succession/SuccessionArchiveStoryIntelligenceWorkspace.css'),
@@ -46,7 +47,15 @@ assert(!temporaryWrapperExists, 'temporary SuccessionArchiveApp.js wrapper must 
 const canonicalReexport = entry.includes("export { default } from './SuccessionArchiveApp'");
 const canonicalExplicitResolver = entry.includes("import SuccessionArchiveApp from './SuccessionArchiveApp';")
   && entry.includes('return <SuccessionArchiveApp {...props} />;');
-assert(canonicalReexport || canonicalExplicitResolver, 'archive entry must resolve and render the canonical app module');
+const canonicalLazyResolver = entry.includes("const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));")
+  && entry.includes('<SuccessionArchiveApp {...props} />');
+assert(canonicalReexport || canonicalExplicitResolver || canonicalLazyResolver, 'archive entry must resolve and render the canonical app module');
+assert(entry.includes("const SuccessionArchiveLightRoute = lazy(() => import('./SuccessionArchiveLightRoute'));"), 'preserved heavy visual routes must use the lightweight route controller');
+assert(entry.includes("props.routeTarget === 'black-whale' || props.routeTarget === 'princes'"), 'Black Whale and Royal Family must bypass the full archive controller');
+assert(lightRoute.includes("lazy(() => import('./SuccessionArchiveWorkspaces').then"), 'Royal Family workspace must remain route-split');
+assert(lightRoute.includes("lazy(() => import('../BlackWhaleGuide'))"), 'Black Whale atlas must remain route-split');
+assert(lightRoute.includes("lazy(() => import('../FamilyTree'))"), 'Family Tree must remain route-split');
+assert(lightRoute.includes("onOpenPrince={(order) => onNavigate('princes', { prince: order })}"), 'lightweight Family Tree must preserve canonical prince navigation');
 assert(app.includes('princes.find((record) => record.princeOrder === Number(order))'), 'family-tree navigation must compare the candidate record');
 assert(!app.includes('princes.find((record) => entity.princeOrder'), 'family-tree callback must not reference its result variable during initialization');
 
@@ -77,4 +86,4 @@ const batch4TinyRules = [
 const missingOverrides = batch4TinyRules.filter((rule) => !readabilityOverrides.has(rule.selector));
 assert(!missingOverrides.length, `Batch 4 sub-11px selectors lack equivalent route-owned overrides: ${missingOverrides.map((rule) => `${rule.source} · ${rule.selector}`).join('; ')}`);
 
-console.log(`Succession stabilization audit passed: canonical app module is unambiguous, family-tree navigation is self-reference-free, CSS selector matching is whitespace-insensitive, and ${batch4TinyRules.length} Batch 4 readability exceptions have equivalent route-owned overrides.`);
+console.log(`Succession stabilization audit passed: canonical app resolution, lightweight Royal Family and Black Whale routing, family-tree navigation, CSS selector matching, and ${batch4TinyRules.length} Batch 4 readability exceptions are verified.`);

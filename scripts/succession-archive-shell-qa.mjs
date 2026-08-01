@@ -84,13 +84,36 @@ const base = `http://127.0.0.1:${server.address().port}`;
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 
-  await record('Succession root opens the dedicated archive shell', desktop, async () => {
+  await record('Succession root opens the consolidated Story Intelligence hub', desktop, async () => {
     await desktop.goto(`${base}/story/succession-contest`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await desktop.waitForSelector('.succession-archive[data-archive-route="archive"]', { timeout: 15_000 });
+    await desktop.waitForSelector('.succession-archive[data-archive-route="story"][data-archive-hub="story"]', { timeout: 15_000 });
     if (await desktop.locator('.succession-archive__sidebar').count() !== 1) throw new Error('Persistent archive sidebar is missing or duplicated');
     const title = await desktop.locator('.succession-page-header h1').innerText();
-    if (title.trim() !== 'Succession Contest Archive') throw new Error(`Unexpected archive title: ${title}`);
+    if (title.trim() !== 'Story Intelligence') throw new Error(`Unexpected hub title: ${title}`);
+    const primaryLabels = await desktop.locator('#succession-desktop-navigation a').allInnerTexts();
+    const expected = ['Story Intelligence', 'People & Power', 'Black Whale', 'Nen Systems', 'Search', 'Research', 'Glossary'];
+    if (primaryLabels.join('|') !== expected.join('|')) throw new Error(`Unexpected top-level navigation: ${primaryLabels.join(' | ')}`);
+    const storyTabs = await desktop.locator('.succession-hub-tabs a').allInnerTexts();
+    if (storyTabs.join('|') !== 'Story|Chapters|Timeline|Events') throw new Error(`Story hub tabs are incomplete: ${storyTabs.join(' | ')}`);
+    if (await desktop.getByRole('link', { name: 'Archive Home', exact: true }).count()) throw new Error('Archive Home returned to navigation');
+    if (await desktop.getByRole('link', { name: 'Reader', exact: true }).count()) throw new Error('Duplicate Reader returned to navigation');
     if (await desktop.locator('.arc-page--succession-contest').count()) throw new Error('Legacy grouped arc page is still mounted at the archive root');
+  });
+
+  await record('Consolidated child routes retain their hub and direct URLs', desktop, async () => {
+    const cases = [
+      ['chapter-records', 'story', ['Story', 'Chapters', 'Timeline', 'Events']],
+      ['organizations', 'people', ['Characters', 'Royal Family', 'Assignments', 'Organizations', 'Relationships']],
+      ['locations', 'black-whale', ['Ship Atlas', 'Locations']],
+      ['guardian-spirit-beasts', 'nen', ['Nen & Rituals', 'Guardian Spirit Beasts']],
+    ];
+    for (const [route, hub, expectedTabs] of cases) {
+      await desktop.goto(`${base}/story/succession-contest/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+      await desktop.waitForSelector(`.succession-archive[data-archive-hub="${hub}"] .succession-hub-tabs`, { timeout: 15_000 });
+      const labels = await desktop.locator('.succession-hub-tabs a').allInnerTexts();
+      if (labels.join('|') !== expectedTabs.join('|')) throw new Error(`${route} tabs are incomplete: ${labels.join(' | ')}`);
+      if (!desktop.url().includes(`/story/succession-contest/${route}`)) throw new Error(`${route} deep link was replaced instead of preserved`);
+    }
   });
 
   await record('Character workspace is visual and dossier-linked', desktop, async () => {
@@ -170,6 +193,8 @@ try {
     await trigger.click();
     await mobile.waitForSelector('.succession-drawer [role="dialog"]', { timeout: 10_000 });
     if (await trigger.getAttribute('aria-expanded') !== 'true') throw new Error('Mobile archive button did not expose expanded state');
+    const drawerLabels = await mobile.locator('#succession-mobile-navigation a').allInnerTexts();
+    if (drawerLabels.length !== 7) throw new Error(`Mobile drawer exposes ${drawerLabels.length} top-level links instead of 7`);
     await mobile.keyboard.press('Escape');
     await mobile.waitForSelector('.succession-drawer', { state: 'detached', timeout: 10_000 });
   });

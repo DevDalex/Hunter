@@ -35,6 +35,11 @@
     color: #6b531f !important;
   }
 
+  /* Pending chapter cards remain dark command surfaces on mobile. */
+  .succession-archive[data-archive-route="chapters"] .succession-chapter-command__card.is-pending > div > h3 {
+    color: #f2f6f4 !important;
+  }
+
   /* Chapter route: dark evidence and entity-link surfaces keep light text. */
   .succession-archive[data-archive-route="chapters"] .succession-entity-link,
   .succession-archive[data-archive-route="chapters"] .succession-chapter-dossier__evidence-board > div,
@@ -83,13 +88,19 @@
     color: #20343d !important;
   }
 
-  /* Research coverage report: dark header, pale action. */
+  /* Research coverage report: dark header and explicit high-contrast actions. */
   .succession-archive[data-archive-route="research"] .succession-coverage-report > header > div > span {
     color: #f0d794 !important;
   }
 
   .succession-archive[data-archive-route="research"] #succession-coverage-report-title {
     color: #fff !important;
+  }
+
+  .succession-archive[data-archive-route="research"] .succession-coverage-report__warning > button[type="button"] {
+    border-color: #6f311b !important;
+    background: #6f311b !important;
+    color: #fffaf0 !important;
   }
 
   .succession-archive[data-archive-route="research"] .succession-coverage-report > footer > button {

@@ -1,32 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  Archive,
   ArrowLeft,
   BookOpen,
-  Boxes,
-  Building2,
   ChevronRight,
-  Clock3,
-  Crown,
   FileSearch,
   Library,
-  Map,
   Menu,
-  Network,
   Orbit,
   Search,
-  Shield,
   Ship,
-  Swords,
   Users,
   X,
 } from 'lucide-react';
 import { ARCHIVE_BOUNDARY } from '../../data/archiveMeta';
 import { routeToHref } from '../../lib/appRouter';
 import {
+  getSuccessionArchiveHub,
   getSuccessionArchiveRoute,
-  successionArchiveGroups,
-  successionArchiveRoutes,
+  successionArchiveHubGroups,
+  successionArchiveHubs,
 } from '../../data/succession/archiveRoutes';
 import SpoilerControl from '../SpoilerControl';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
@@ -34,63 +26,72 @@ import './SuccessionArchiveContrastFixes.css';
 import './SuccessionArchiveDeepContrastFixes.css';
 import './SuccessionArchiveNenFixes.css';
 
-const iconByRoute = {
-  archive: Archive,
+const iconByHub = {
   story: BookOpen,
-  timeline: Clock3,
-  reader: BookOpen,
-  search: Search,
-  characters: Users,
-  princes: Crown,
-  queens: Crown,
-  bodyguards: Shield,
-  hunters: Shield,
-  mafia: Swords,
-  military: Shield,
-  organizations: Building2,
-  politics: Network,
+  people: Users,
   'black-whale': Ship,
-  locations: Map,
   nen: Orbit,
-  'guardian-spirit-beasts': Orbit,
-  events: Clock3,
-  deaths: FileSearch,
-  relationships: Network,
-  chapters: Library,
+  search: Search,
   research: FileSearch,
   glossary: Library,
-  media: Boxes,
 };
 
-const hiddenNavigationRoutes = new Set(['archive', 'reader']);
 const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-function ArchiveNavigation({ activeId, onNavigate, onIntent, id }) {
+const tabRouteParams = (hub, tab, routeParams = {}) => {
+  const shared = {};
+  if (routeParams.chapter) shared.chapter = routeParams.chapter;
+  if (hub.id === 'black-whale') {
+    if (routeParams.entity) shared.entity = routeParams.entity;
+    if (routeParams.room) shared.room = routeParams.room;
+  }
+  return { ...shared, ...(tab.params || {}) };
+};
+
+function ArchiveNavigation({ activeHubId, onNavigate, onIntent, id }) {
   return <nav id={id} className="succession-archive-nav" aria-label="Succession Contest Archive">
-    {successionArchiveGroups.map((group) => {
-      const routes = successionArchiveRoutes.filter((item) => item.group === group && !hiddenNavigationRoutes.has(item.id));
+    {successionArchiveHubGroups.map((group) => {
+      const hubs = successionArchiveHubs.filter((item) => item.group === group);
       return <section key={group} aria-labelledby={`${id}-${group.toLowerCase()}-label`}>
         <h2 id={`${id}-${group.toLowerCase()}-label`}>{group}</h2>
-        <div>{routes.map((route) => {
-          const Icon = iconByRoute[route.id] || Archive;
-          const active = route.id === activeId;
-          const routeParams = route.id === 'princes' ? { view: 'tree' } : {};
-          const href = routeToHref('succession', route.id, routeParams);
+        <div>{hubs.map((hub) => {
+          const Icon = iconByHub[hub.id] || BookOpen;
+          const active = hub.id === activeHubId;
+          const href = routeToHref('succession', hub.target);
           return <a
             href={href}
-            key={route.id}
+            key={hub.id}
             className={active ? 'is-active' : ''}
             aria-current={active ? 'page' : undefined}
-            onPointerEnter={() => onIntent?.(route.id)}
-            onFocus={() => onIntent?.(route.id)}
-            onClick={(event) => { event.preventDefault(); onNavigate(route.id, routeParams); }}
+            onPointerEnter={() => onIntent?.(hub.target)}
+            onFocus={() => onIntent?.(hub.target)}
+            onClick={(event) => { event.preventDefault(); onNavigate(hub.target, {}); }}
           >
             <Icon size={16} aria-hidden="true" />
-            <span>{route.label}</span>
-            {route.status === 'foundation' && <small>Next</small>}
+            <span>{hub.label}</span>
           </a>;
         })}</div>
       </section>;
+    })}
+  </nav>;
+}
+
+function SuccessionHubTabs({ hub, activeRouteId, routeParams, onNavigate, onIntent }) {
+  if (!hub?.tabs?.length) return null;
+  return <nav className="succession-hub-tabs" aria-label={`${hub.label} views`}>
+    {hub.tabs.map((tab) => {
+      const selected = tab.routes.includes(activeRouteId);
+      const params = tabRouteParams(hub, tab, routeParams);
+      const href = routeToHref('succession', tab.target, params);
+      return <a
+        href={href}
+        key={tab.target}
+        className={selected ? 'is-active' : ''}
+        aria-current={selected ? 'page' : undefined}
+        onPointerEnter={() => onIntent?.(tab.target)}
+        onFocus={() => onIntent?.(tab.target)}
+        onClick={(event) => { event.preventDefault(); onNavigate(tab.target, params); }}
+      >{tab.label}</a>;
     })}
   </nav>;
 }
@@ -112,6 +113,7 @@ export default function SuccessionArchiveShell({
   const contentRef = useRef(null);
   const previousRouteRef = useRef(activeId);
   const route = getSuccessionArchiveRoute(activeId);
+  const activeHub = getSuccessionArchiveHub(route.id);
   const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
 
   useEffect(() => setDrawerOpen(false), [activeId, routeParams]);
@@ -158,20 +160,21 @@ export default function SuccessionArchiveShell({
 
   const navigate = (target, params = {}) => onNavigate(target, params);
   const headerActions = <button type="button" className="succession-button succession-button--search" onClick={onOpenSearch}><Search size={16} aria-hidden="true" /> Search <kbd>Ctrl K</kbd></button>;
+  const onHubRoot = route.id === activeHub.target;
 
-  return <article className="succession-archive" data-archive-route={route.id}>
+  return <article className="succession-archive" data-archive-route={route.id} data-archive-hub={activeHub.id}>
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
-    <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{route.label} workspace loaded. Reading boundary Chapter {spoilerLimit}.</span>
+    <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{route.label} workspace loaded. Reading boundary Chapter {spoilerLimit}. Active hub: {activeHub.label}.</span>
 
     <div className="succession-archive__mobile-bar">
       <button ref={menuButtonRef} type="button" onClick={() => setDrawerOpen(true)} aria-expanded={drawerOpen} aria-controls="succession-mobile-navigation"><Menu size={19} aria-hidden="true" /> Archive</button>
-      <span>{route.label}</span>
+      <span>{activeHub.label}</span>
       <button type="button" onClick={onOpenSearch} aria-label="Search Succession Contest Archive"><Search size={18} aria-hidden="true" /></button>
     </div>
 
     <div className="succession-archive__status-strip" aria-label="Black Whale archive context">
       <span><Ship size={14} aria-hidden="true" /><strong>Black Whale 1</strong></span>
-      <span><b>Desk</b> {route.group}</span>
+      <span><b>Desk</b> {activeHub.label}</span>
       <span><b>Boundary</b> Chapter {spoilerLimit}</span>
       <span><b>Evidence</b> Canon separated</span>
     </div>
@@ -189,12 +192,12 @@ export default function SuccessionArchiveShell({
           </div>
 
           <dl className="succession-archive__sidebar-context">
-            <div><dt>Desk</dt><dd>{route.group}</dd></div>
+            <div><dt>Desk</dt><dd>{activeHub.label}</dd></div>
             <div><dt>Boundary</dt><dd>Chapter {spoilerLimit}</dd></div>
           </dl>
 
           <div className="succession-archive__sidebar-scroll">
-            <ArchiveNavigation id="succession-desktop-navigation" activeId={route.id} onNavigate={navigate} onIntent={onIntent} />
+            <ArchiveNavigation id="succession-desktop-navigation" activeHubId={activeHub.id} onNavigate={navigate} onIntent={onIntent} />
           </div>
 
           <details className="succession-archive__boundary">
@@ -211,8 +214,13 @@ export default function SuccessionArchiveShell({
               <ol>
                 <li><button type="button" onClick={onExitArchive}>Story</button></li>
                 <li className="succession-breadcrumbs__separator" aria-hidden="true"><ChevronRight size={13} /></li>
-                <li><span aria-current={route.id === 'story' ? 'page' : undefined}>Succession Contest</span></li>
-                {route.id !== 'story' && route.id !== 'archive' && <>
+                <li><span>Succession Contest</span></li>
+                <li className="succession-breadcrumbs__separator" aria-hidden="true"><ChevronRight size={13} /></li>
+                <li>{onHubRoot
+                  ? <span aria-current="page">{activeHub.label}</span>
+                  : <button type="button" onClick={() => navigate(activeHub.target, {})}>{activeHub.label}</button>}
+                </li>
+                {!onHubRoot && route.id !== 'archive' && <>
                   <li className="succession-breadcrumbs__separator" aria-hidden="true"><ChevronRight size={13} /></li>
                   <li><span aria-current="page">{route.label}</span></li>
                 </>}
@@ -228,14 +236,17 @@ export default function SuccessionArchiveShell({
               <span>Return to Story</span>
             </button>
           </div>
+
+          <SuccessionHubTabs hub={activeHub} activeRouteId={route.id} routeParams={routeParams} onNavigate={navigate} onIntent={onIntent} />
+
           {!hidePageHeader && <ArchivePageHeader
             headingLevel="h1"
-            kicker={`${route.group} workspace`}
-            title={route.title}
-            description={route.description}
+            kicker={`${activeHub.group} hub`}
+            title={activeHub.title}
+            description={activeHub.description}
             actions={headerActions}
             meta={[
-              { label: 'Vessel', value: 'Black Whale 1' },
+              { label: 'View', value: route.label },
               { label: 'Reading boundary', value: `Chapter ${spoilerLimit}` },
               { label: 'Evidence mode', value: 'Canon separated' },
             ]}
@@ -255,7 +266,7 @@ export default function SuccessionArchiveShell({
     {drawerOpen && <div className="succession-drawer" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDrawerOpen(false); }}>
       <aside ref={drawerRef} role="dialog" aria-modal="true" aria-label="Succession Archive navigation">
         <header><div><span>Black Whale 1</span><strong>Succession Intelligence</strong></div><button type="button" onClick={() => { setDrawerOpen(false); window.setTimeout(() => menuButtonRef.current?.focus(), 0); }} aria-label="Close archive navigation"><X size={20} aria-hidden="true" /></button></header>
-        <ArchiveNavigation id="succession-mobile-navigation" activeId={route.id} onNavigate={navigate} onIntent={onIntent} />
+        <ArchiveNavigation id="succession-mobile-navigation" activeHubId={activeHub.id} onNavigate={navigate} onIntent={onIntent} />
       </aside>
     </div>}
   </article>;
