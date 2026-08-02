@@ -44,21 +44,25 @@ const filenames = (await readdir(reviewDirectory)).filter((name) => /^chapter-\d
 const sourceRecords = [];
 for (const filename of filenames) {
   const record = await readJson(`public/phase7/full-page-review/${filename}`);
-  for (const quarantine of record.contradictionsAndQuarantines ?? []) sourceRecords.push({ ...quarantine, chapter: record.chapter });
+  for (const quarantine of record.contradictionsAndQuarantines ?? []) {
+    sourceRecords.push({ ...quarantine, chapter: record.chapter, migrationKey: `${record.chapter}:${quarantine.id}` });
+  }
 }
 const openRecords = sourceRecords.filter((record) => record.status === 'open');
 const sourceIds = sourceRecords.map((record) => record.id);
+const migrationKeys = sourceRecords.map((record) => record.migrationKey);
+const uniqueSourceIds = new Set(sourceIds);
 
-assert(openRecords.length === migration.openSourceRecords, `Migration expects ${migration.openSourceRecords} open source records, found ${openRecords.length}.`);
-assert(sourceRecords.length === openRecords.length, 'Every currently discovered contradiction/quarantine record should remain open at this milestone.');
-assert(new Set(sourceIds).size === sourceIds.length, 'Source contradiction/quarantine IDs must be unique.');
-assert(migration.legacyTrackerReportedOpenRecords === tracker.totals.openChapterQuarantines, 'Legacy tracker discrepancy must preserve the frozen tracker value.');
-assert(migration.trackerDiscrepancy.difference === openRecords.length - tracker.totals.openChapterQuarantines, 'Documented tracker discrepancy does not match source enumeration.');
-assert(migration.trackerDiscrepancy.status === 'documented-correction', 'Tracker discrepancy must remain explicitly documented.');
-assert(migration.migrationMode === 'deterministic-one-to-one-carry-forward', 'Quarantine migration mode changed unexpectedly.');
-assert(migration.completionGuarantees.everySourceRecordMapsExactlyOnce === true, 'One-to-one migration guarantee is missing.');
+assert(sourceRecords.length === migration.sourceRecordInstances, `Migration expects ${migration.sourceRecordInstances} source instances, found ${sourceRecords.length}.`);
+assert(openRecords.length === sourceRecords.length, 'Every discovered contradiction/quarantine instance should remain open at this milestone.');
+assert(uniqueSourceIds.size === migration.uniqueSourceIds, `Migration expects ${migration.uniqueSourceIds} unique source IDs, found ${uniqueSourceIds.size}.`);
+assert(uniqueSourceIds.size === tracker.totals.openChapterQuarantines, 'Tracker unique-ID total does not match source enumeration.');
+assert(sourceRecords.length - uniqueSourceIds.size === migration.duplicateSourceIdInstances, 'Duplicate source-ID instance count is incorrect.');
+assert(new Set(migrationKeys).size === migrationKeys.length, 'Composite chapter/source migration keys must be unique.');
+assert(migration.migrationMode === 'deterministic-one-to-one-instance-carry-forward', 'Quarantine migration mode changed unexpectedly.');
+assert(migration.completionGuarantees.everySourceInstanceMapsExactlyOnce === true, 'One-to-one instance migration guarantee is missing.');
 assert(migration.defaultGraphState.edgeAvailability === 'prohibited', 'Open quarantines must prohibit graph edges.');
 assert(migration.defaultGraphState.navigationAvailability === 'prohibited', 'Open quarantines must prohibit navigation.');
 assert(migration.defaultGraphState.geometryAvailability === 'prohibited', 'Open quarantines must prohibit geometry.');
 
-console.log(`Black Whale Phase 7.2 route/quarantine audit passed: ${routeReview.routes.length} routes reviewed, 3 physical connections authorized without geometry, 2 nonphysical overlays, 5 quarantined route scopes, ${openRecords.length} unique open source records carried forward; legacy tracker discrepancy ${tracker.totals.openChapterQuarantines} documented.`);
+console.log(`Black Whale Phase 7.2 route/quarantine audit passed: ${routeReview.routes.length} routes reviewed, 3 physical connections authorized without geometry, 2 nonphysical overlays, 5 quarantined route scopes, ${sourceRecords.length} open instances carried forward under ${uniqueSourceIds.size} unique source IDs with ${migration.duplicateSourceIdInstances} repeated-ID instances preserved by composite keys.`);
