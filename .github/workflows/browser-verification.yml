@@ -42,7 +42,13 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p .browser-qa
+          set +e
           npm run qa:browser:ci 2>&1 | tee .browser-qa/console.log
+          qa_status=${PIPESTATUS[0]}
+          set -e
+          if (( qa_status != 0 )); then
+            node scripts/validate-browser-qa-result.mjs
+          fi
 
       - name: Upload browser QA reports
         if: always()
