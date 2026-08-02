@@ -22,7 +22,7 @@ const scriptBytes = (await stat(path.join(root, scriptPath))).size + (await stat
 const styleBytes = (await stat(path.join(root, stylePath))).size + (await stat(path.join(root, scaleStylePath))).size;
 
 assert(contract.phase === '7.3', 'Exterior contract must remain Phase 7.3.');
-assert(contract.status === 'in-progress' || contract.status === 'complete', 'Unexpected Phase 7.3 status.');
+assert(['in-progress','release-candidate','complete'].includes(contract.status), 'Unexpected Phase 7.3 status.');
 assert(contract.coordinateConvention.canonicalMetricStatus === 'not-established', 'Working units must not become canonical metric claims.');
 assert(contract.coordinateConvention.shipBowMapping === 'unresolved', 'Bow mapping must remain unresolved.');
 assert(contract.roadmapBoundary.includes('Phase 7.4'), 'Phase 7.4 boundary is missing.');
@@ -62,7 +62,7 @@ assert(scriptBytes <= performance.budgets.javascriptSourceBytesWarning, `Exterio
 assert(styleBytes <= performance.budgets.cssSourceBytesWarning, `Exterior CSS ${styleBytes} bytes exceeds warning budget.`);
 
 const gates = contract.completionGates;
-for (const gate of ['coordinateAndWorkingScaleDefined','hullBlockoutImplemented','tier1MassImplemented','fiveTierEnvelopeImplemented','cutawayAndCameraSystemImplemented','objectRegistryAndEvidenceUiImplemented']) {
+for (const gate of ['coordinateAndWorkingScaleDefined','hullBlockoutImplemented','tier1MassImplemented','fiveTierEnvelopeImplemented','cutawayAndCameraSystemImplemented','objectRegistryAndEvidenceUiImplemented','performanceAndAccessibilityValidated','desktopBrowserBuildChecksPassed']) {
   assert(gates[gate] === true, `Completion gate ${gate} is not true.`);
 }
 assert(gates.mergedDeployedAndLiveVerified === false, 'Branch contract must not claim merged/live verification before release.');
