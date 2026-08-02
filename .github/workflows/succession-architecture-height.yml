@@ -1,0 +1,57 @@
+name: Succession Architecture Height Fit
+
+on:
+  pull_request:
+    paths:
+      - 'src/components/succession/SuccessionArchitectureViewportRuntime.js'
+      - 'src/components/succession/SuccessionArchitectureCenteringFix.css'
+      - 'src/components/succession/SuccessionArchitectureBoard.css'
+      - 'src/components/succession/SuccessionArchitecturePolishLock.css'
+      - 'scripts/succession-architecture-height-qa.mjs'
+      - '.github/workflows/succession-architecture-height.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: succession-architecture-height-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  architecture-height-fit:
+    name: Measure complete architecture sheet at target heights
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build production runtime
+        run: npm run build:runtime
+
+      - name: Install Chromium
+        run: npm exec playwright -- install --with-deps chromium
+
+      - name: Verify architecture height fitting
+        run: node scripts/succession-architecture-height-qa.mjs
+
+      - name: Publish height-fit screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-architecture-height-diagnostics
+          path: .visual-qa/succession-architecture-height
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14
