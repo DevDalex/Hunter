@@ -13,6 +13,7 @@ on:
       - 'scripts/audit-black-whale-3d-corpus.mjs'
       - 'scripts/audit-black-whale-3d-spatial-graph.mjs'
       - 'scripts/build-black-whale-3d-spatial-nodes.mjs'
+      - 'scripts/build-black-whale-3d-spatial-edges.mjs'
       - 'docs/BLACK-WHALE-3D-PHASE-7-1B-RESEARCH.md'
       - 'server/index.js'
       - 'index.html'
@@ -30,6 +31,7 @@ on:
       - 'scripts/audit-black-whale-3d-corpus.mjs'
       - 'scripts/audit-black-whale-3d-spatial-graph.mjs'
       - 'scripts/build-black-whale-3d-spatial-nodes.mjs'
+      - 'scripts/build-black-whale-3d-spatial-edges.mjs'
       - 'docs/BLACK-WHALE-3D-PHASE-7-1B-RESEARCH.md'
       - 'server/index.js'
       - 'index.html'
@@ -57,3 +59,5 @@ jobs:
         run: node scripts/audit-black-whale-3d-spatial-graph.mjs
       - name: Materialize Phase 7.2 graph nodes in memory
         run: node scripts/build-black-whale-3d-spatial-nodes.mjs --check
+      - name: Materialize Phase 7.2 containment and route-scope edges in memory
+        run: node scripts/build-black-whale-3d-spatial-edges.mjs --check
