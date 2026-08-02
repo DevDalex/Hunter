@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "7.2.0",
+  "phase": "7.2",
+  "status": "active",
+  "purpose": "Deterministically map every Phase 7 location-registry record to one or more graph containers without converting composite scope, uncertain placement, Nen routes, or route labels into geometry.",
+  "directTierMap": {
+    "exterior": ["bw3d.container.exterior"],
+    "hull": ["bw3d.container.hull"],
+    "tier-1": ["bw3d.container.tier-1"],
+    "tier-2": ["bw3d.container.tier-2"],
+    "tier-3": ["bw3d.container.tier-3"],
+    "tier-4": ["bw3d.container.tier-4"],
+    "tier-5": ["bw3d.container.tier-5"],
+    "between-tier-2-3": ["bw3d.container.between-tier-2-3"],
+    "between-tier-4-5": ["bw3d.container.between-tier-4-5"],
+    "unresolved-tier": ["bw3d.container.unresolved-tier"],
+    "ship-wide": ["bw3d.container.ship-wide"]
+  },
+  "compositeRules": [
+    {
+      "pattern": "^hull/exterior$",
+      "containers": ["bw3d.container.hull", "bw3d.container.exterior"],
+      "certainty": "confirmed-with-open-questions",
+      "traversal": "blocked-until-endpoints-are-independently-authored"
+    },
+    {
+      "pattern": "^tiers-([1-5])-([1-5])$",
+      "mode": "inclusive-tier-range",
+      "certainty": "confirmed-with-open-questions",
+      "traversal": "blocked-range-does-not-prove-route"
+    },
+    {
+      "pattern": "^tier-([1-5])-to-tier-([1-5])$",
+      "mode": "endpoint-scope-only",
+      "certainty": "confirmed-with-open-questions",
+      "traversal": "blocked-until-route-endpoints-and-direction-are-verified"
+    },
+    {
+      "pattern": "^hull/tier-([1-5])$",
+      "mode": "hull-and-tier-scope",
+      "certainty": "confirmed-with-open-questions",
+      "traversal": "blocked-until-physical-connection-is-verified"
+    },
+    {
+      "pattern": "^tier-([1-5])/.+$",
+      "mode": "tier-plus-nonspatial-qualifier",
+      "certainty": "confirmed-with-open-questions",
+      "traversal": "blocked-qualifier-is-not-a-destination-node"
+    }
+  ],
+  "uncertaintyRules": [
+    {
+      "pattern": "^likely-tier-([1-5])$",
+      "containers": ["bw3d.container.unresolved-tier"],
+      "candidateContainerTemplate": "bw3d.container.tier-$1",
+      "certainty": "unresolved",
+      "traversal": "prohibited"
+    },
+    {
+      "pattern": "^nen-space$",
+      "containers": ["bw3d.container.ship-wide"],
+      "certainty": "confirmed-with-open-questions",
+      "spatialMeaning": "non-coordinate-overlay",
+      "traversal": "prohibited-as-physical-route"
+    }
+  ],
+  "fallbackRule": {
+    "containers": ["bw3d.container.unresolved-tier"],
+    "certainty": "unknown",
+    "traversal": "prohibited",
+    "reason": "Any unrecognized tier or route scope remains explicitly unresolved rather than silently mapped."
+  },
+  "recordTypePolicy": {
+    "node": "May receive containment only. No adjacency or traversability follows from shared container membership.",
+    "route": "Container assignment describes documented scope only. A route record does not become a traversable graph edge until endpoints, direction, evidence, certainty and contradiction state are authored separately."
+  },
+  "identityExceptions": [
+    {
+      "recordId": "bw3d.node.burial-chamber",
+      "containers": ["bw3d.container.unresolved-tier"],
+      "reason": "Tier placement contradiction remains quarantined."
+    },
+    {
+      "recordId": "bw3d.node.lifeboat-outlet",
+      "containers": ["bw3d.container.hull", "bw3d.container.exterior"],
+      "reason": "The outlet belongs to the hull/exterior boundary; this does not by itself establish a traversable launch path."
+    },
+    {
+      "recordId": "bw3d.route.magical-worm",
+      "containers": ["bw3d.container.ship-wide"],
+      "reason": "Nen-space route remains a non-coordinate overlay and cannot define permanent architecture."
+    },
+    {
+      "recordId": "bw3d.route.luini-teleport",
+      "containers": ["bw3d.container.tier-5"],
+      "reason": "The marked destination scope is retained, but teleportation does not become a physical corridor edge."
+    }
+  ],
+  "completionPolicy": {
+    "allRegistryRecordsMustNormalize": true,
+    "unrecognizedScopesMustUseFallback": true,
+    "compositeScopeDoesNotAuthorizeCoordinates": true,
+    "routeScopeDoesNotAuthorizeTraversal": true,
+    "unknownSpaceMayNotBeFilled": true
+  }
+}
