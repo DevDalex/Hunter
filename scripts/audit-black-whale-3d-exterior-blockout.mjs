@@ -65,6 +65,13 @@ const gates = contract.completionGates;
 for (const gate of ['coordinateAndWorkingScaleDefined','hullBlockoutImplemented','tier1MassImplemented','fiveTierEnvelopeImplemented','cutawayAndCameraSystemImplemented','objectRegistryAndEvidenceUiImplemented','performanceAndAccessibilityValidated','desktopBrowserBuildChecksPassed']) {
   assert(gates[gate] === true, `Completion gate ${gate} is not true.`);
 }
-assert(gates.mergedDeployedAndLiveVerified === false, 'Branch contract must not claim merged/live verification before release.');
+if (contract.status === 'complete') {
+  assert(gates.mergedDeployedAndLiveVerified === true, 'Completed Phase 7.3 must record merged deployment and live verification.');
+  assert(contract.release?.mergeCommit, 'Completed Phase 7.3 lacks merge commit metadata.');
+  assert(contract.release?.deploymentStatus === 'success', 'Completed Phase 7.3 lacks successful deployment metadata.');
+  assert(contract.release?.liveRoute === '/succession/black-whale-3d', 'Completed Phase 7.3 live route is missing or changed.');
+} else {
+  assert(gates.mergedDeployedAndLiveVerified === false, 'Pre-release contract must not claim merged/live verification.');
+}
 
 console.log(`Black Whale Phase 7.3 exterior audit passed: ${contract.plannedObjects.length} evidence-labeled objects, ${contract.requiredViews.length} required views including human scale, runtime JavaScript ${scriptBytes} bytes, CSS ${styleBytes} bytes, zero external runtime dependencies, zero network model assets, working metrics noncanonical, Phase 7.4 blocked.`);
