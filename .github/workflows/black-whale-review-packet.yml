@@ -50,16 +50,27 @@ jobs:
               echo "Missing chapter media: $source_dir" >&2
               exit 1
             fi
-            page_count="$(find "$source_dir" -maxdepth 1 -type f -iname '*.jpg' | wc -l | tr -d ' ')"
+
+            mapfile -d '' pages < <(
+              find "$source_dir" -maxdepth 1 -type f \
+                \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.avif' \) \
+                -print0 | sort -z
+            )
+            page_count="${#pages[@]}"
             if [[ "$page_count" -eq 0 ]]; then
-              echo "No JPG pages found for Chapter $chapter" >&2
+              echo "No supported image pages found for Chapter $chapter" >&2
               exit 1
             fi
+
             target_dir="review-packet/$chapter"
             mkdir -p "$target_dir"
-            cp "$source_dir"/*.jpg "$target_dir/"
+            for page in "${pages[@]}"; do
+              cp "$page" "$target_dir/"
+            done
             printf '%s\n' "$page_count" > "$target_dir/page-count.txt"
-            sha256sum "$target_dir"/*.jpg > "$target_dir/sha256.txt"
+            find "$target_dir" -maxdepth 1 -type f ! -name '*.txt' -print0 \
+              | sort -z \
+              | xargs -0 sha256sum > "$target_dir/sha256.txt"
             printf '%s\t%s\n' "$chapter" "$page_count" >> review-packet/manifest.tsv
             total_pages=$((total_pages + page_count))
           done
