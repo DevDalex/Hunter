@@ -12,9 +12,11 @@ function readViewport() {
   return { width, height };
 }
 
-function readBaseScaleY(height) {
+function readBaseGeometry(width, height) {
   const scaleY = height / ARCHITECTURE_BASE_HEIGHT;
-  return scaleY;
+  const layoutWidth = Math.max(ARCHITECTURE_BASE_WIDTH, width / scaleY);
+  const scaleX = width / layoutWidth;
+  return { layoutWidth, scaleX, scaleY };
 }
 
 function readNaturalContentHeight(sheet) {
@@ -33,11 +35,16 @@ function readNaturalContentHeight(sheet) {
 }
 
 function applyGeometryVariables(board, viewport, layoutHeight) {
+  const baseGeometry = readBaseGeometry(viewport.width, viewport.height);
   const scaleY = layoutHeight === ARCHITECTURE_BASE_HEIGHT
-    ? readBaseScaleY(viewport.height)
+    ? baseGeometry.scaleY
     : viewport.height / layoutHeight;
-  const layoutWidth = Math.max(ARCHITECTURE_BASE_WIDTH, viewport.width / scaleY);
-  const scaleX = viewport.width / layoutWidth;
+  const layoutWidth = layoutHeight === ARCHITECTURE_BASE_HEIGHT
+    ? baseGeometry.layoutWidth
+    : Math.max(ARCHITECTURE_BASE_WIDTH, viewport.width / scaleY);
+  const scaleX = layoutHeight === ARCHITECTURE_BASE_HEIGHT
+    ? baseGeometry.scaleX
+    : viewport.width / layoutWidth;
 
   board.style.setProperty('--architecture-layout-width', `${layoutWidth.toFixed(3)}px`);
   board.style.setProperty('--architecture-layout-height', `${layoutHeight.toFixed(3)}px`);
