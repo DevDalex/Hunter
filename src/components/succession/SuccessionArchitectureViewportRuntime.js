@@ -1,5 +1,6 @@
 const ARCHITECTURE_BASE_WIDTH = 1660;
-const ARCHITECTURE_MIN_HEIGHT = 1260;
+const ARCHITECTURE_BASE_HEIGHT = 1260;
+const ARCHITECTURE_MIN_HEIGHT = ARCHITECTURE_BASE_HEIGHT;
 const ARCHITECTURE_FIT_PADDING = 12;
 const ARCHITECTURE_FIT_PASSES = 6;
 const RUNTIME_KEY = '__successionArchitectureViewportRuntime';
@@ -7,7 +8,7 @@ const RUNTIME_KEY = '__successionArchitectureViewportRuntime';
 function readViewport() {
   const viewport = window.visualViewport;
   const width = Math.max(1, viewport?.width || window.innerWidth || document.documentElement.clientWidth || ARCHITECTURE_BASE_WIDTH);
-  const height = Math.max(1, viewport?.height || window.innerHeight || document.documentElement.clientHeight || ARCHITECTURE_MIN_HEIGHT);
+  const height = Math.max(1, viewport?.height || window.innerHeight || document.documentElement.clientHeight || ARCHITECTURE_BASE_HEIGHT);
   return { width, height };
 }
 
