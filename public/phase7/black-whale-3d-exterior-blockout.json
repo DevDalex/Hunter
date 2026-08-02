@@ -1,8 +1,8 @@
 {
-  "schemaVersion": "7.3.2",
+  "schemaVersion": "7.3.3",
   "phase": "7.3",
   "title": "Black Whale exterior blockout",
-  "status": "release-candidate",
+  "status": "complete",
   "dependsOn": {"phase":"7.2","mergeCommit":"5fcaf7eab7c88c73822c6caa77485543243f9d26"},
   "purpose": "Create an interactive, evidence-labeled macro exterior envelope without converting working geometry into canon.",
   "coordinateConvention": {"units":"working scene metres","canonicalMetricStatus":"not-established","upAxis":"+Y","longitudinalAxis":"+Z working-forward only","shipBowMapping":"unresolved","origin":"working hull-envelope center","rule":"Coordinates support rendering and comparison only; they do not become evidence."},
@@ -30,7 +30,8 @@
   "requiredViews":["full-exterior","side-analytical","front-analytical","rear-review","cross-section","transparent-tier-envelope","human-scale-reference"],
   "implementedViews":["full-exterior","side-analytical","front-analytical","rear-review","cross-section","transparent-tier-envelope","human-scale-reference"],
   "runtime":{"type":"dependency-free-canvas-3d-projection","route":"/succession/black-whale-3d","script":"/succession/black-whale-3d/exterior-blockout.js","styles":"/succession/black-whale-3d/exterior-blockout.css","controls":["pointer-rotate","keyboard-rotate","wheel-and-keyboard-zoom","camera-presets","cutaway-toggle","tier-toggle","unknown-volume-toggle","human-scale-toggle","object-evidence-selection"]},
-  "completionGates":{"exteriorEvidenceFrozen":true,"coordinateAndWorkingScaleDefined":true,"hullBlockoutImplemented":true,"tier1MassImplemented":true,"fiveTierEnvelopeImplemented":true,"cutawayAndCameraSystemImplemented":true,"objectRegistryAndEvidenceUiImplemented":true,"performanceAndAccessibilityValidated":true,"desktopBrowserBuildChecksPassed":true,"mergedDeployedAndLiveVerified":false},
-  "releaseCandidateChecks":{"phase73Audit":"passed","browserVerification":"passed","cloudflareFullStackBuild":"passed","validatedHead":"de6cff958d84cc188402df8fa212f2fc465d0733"},
+  "completionGates":{"exteriorEvidenceFrozen":true,"coordinateAndWorkingScaleDefined":true,"hullBlockoutImplemented":true,"tier1MassImplemented":true,"fiveTierEnvelopeImplemented":true,"cutawayAndCameraSystemImplemented":true,"objectRegistryAndEvidenceUiImplemented":true,"performanceAndAccessibilityValidated":true,"desktopBrowserBuildChecksPassed":true,"mergedDeployedAndLiveVerified":true},
+  "releaseCandidateChecks":{"phase73Audit":"passed","browserVerification":"passed","cloudflareFullStackBuild":"passed","validatedHead":"a4de5a40109448b8b11d492153f3a67d3a158018"},
+  "release":{"mergeCommit":"e2eb695c015d371e1652af848742132bb8277653","deploymentStatus":"success","deploymentService":"Cloudflare Workers hunter production","deploymentBuildId":"2b1a7a06-6bca-4234-9331-d4d033dd63c2","deployedSourceCommit":"a4de5a40109448b8b11d492153f3a67d3a158018","liveRoute":"/succession/black-whale-3d","verification":"Protected browser verification and Cloudflare production deployment succeeded for the exact Phase 7.3 source head before squash merge; the merged source content is identical."},
   "roadmapBoundary":"Phase 7.4 and all later milestones are prohibited until explicit user instruction."
 }
