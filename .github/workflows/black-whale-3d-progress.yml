@@ -1,0 +1,39 @@
+name: Black Whale 3D progress
+
+on:
+  pull_request:
+    paths:
+      - 'public/succession/black-whale-3d/**'
+      - 'public/phase7/black-whale-3d-*.json'
+      - 'public/assets/bw3d-route-bridge.js'
+      - 'scripts/audit-black-whale-3d-progress.mjs'
+      - 'server/index.js'
+      - 'index.html'
+      - '.github/workflows/black-whale-3d-progress.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'public/succession/black-whale-3d/**'
+      - 'public/phase7/black-whale-3d-*.json'
+      - 'public/assets/bw3d-route-bridge.js'
+      - 'scripts/audit-black-whale-3d-progress.mjs'
+      - 'server/index.js'
+      - 'index.html'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: black-whale-3d-progress-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  evidence-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Phase 7 progress route
+        run: node scripts/audit-black-whale-3d-progress.mjs
