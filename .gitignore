@@ -14,5 +14,9 @@ dist/
 .DS_Store
 Thumbs.db
 
+# Lawfully supplied manga source pages and derived private review crops.
+# Never commit copyrighted chapter scans to the public repository.
+private-evidence-vault/
+
 # Generated release downloads (created during npm run build)
 public/hxh-archive-phase-*.zip
