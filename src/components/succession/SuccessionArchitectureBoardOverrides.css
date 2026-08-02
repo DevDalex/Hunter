@@ -152,6 +152,28 @@ body.succession-architecture-mode .site-header {
     padding: 6px 9px !important;
   }
 
+  .succession-architecture-board .succession-architecture__module > header {
+    height: 68px !important;
+    min-height: 68px !important;
+    max-height: 68px !important;
+    padding-block: 6px !important;
+    overflow: hidden !important;
+  }
+
+  .succession-architecture-board .succession-architecture__module header h2 {
+    font-size: clamp(18px, 1.35vw, 22px) !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+  }
+
+  .succession-architecture-board .succession-architecture__module header p {
+    max-height: 2.4em !important;
+    margin-top: 3px !important;
+    overflow: hidden !important;
+    line-height: 1.15 !important;
+  }
+
   .succession-architecture-board .succession-architecture__view-cell,
   .succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid > a.succession-architecture__view-cell {
     grid-template-rows: auto 54px auto !important;
