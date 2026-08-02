@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "7.1C.1",
+  "projectId": "bw3d",
+  "chapter": 348,
+  "reviewScope": "Black Whale vessel, spatial, access, operational, structural and scale evidence only",
+  "source": {
+    "type": "repository-local ordered chapter media",
+    "language": "Arabic translation",
+    "directory": "/media/succession-contest/chapters/348/",
+    "pagePattern": "/media/succession-contest/chapters/348/{page:000}.jpg",
+    "pageCount": 20,
+    "artifactDigestSha256": "5be96ce00b72c6dd5bae5927959b7437d30ecd4852097081e402e641d9108a7e",
+    "pageHashManifestSha256": "e2c354cbcb8a5c29f9607d55c0278ea759f410f27e2bc504a7197cb0a5a8f6f0"
+  },
+  "review": {
+    "status": "complete-two-pass-reviewed-zero",
+    "pass1": {"status": "complete", "pagesInspected": 20, "candidatePages": []},
+    "pass2": {"status": "complete", "pagesInspected": 20},
+    "retainedPages": [],
+    "blackWhalePanels": 0,
+    "evidenceAtoms": 0
+  },
+  "retainedPanels": [],
+  "evidence": [],
+  "excludedMaterial": {
+    "pages": 20,
+    "categories": ["expedition staffing", "Kurapika investigation", "Kakin political and royal exposition", "non-ship offices and meeting settings"],
+    "reason": "No Black Whale-specific visual, spatial, access, operational, structural or scale evidence."
+  },
+  "storage": {
+    "publicRecord": "/phase7/full-page-review/chapter-348.json",
+    "sourceMedia": "/media/succession-contest/chapters/348/",
+    "researchBranch": "phase-7-1c-full-page-ship-only-review",
+    "pullRequest": 92
+  }
+}
