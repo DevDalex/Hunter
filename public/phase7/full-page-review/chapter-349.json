@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "7.1C.1",
+  "projectId": "bw3d",
+  "chapter": 349,
+  "reviewScope": "Black Whale vessel, spatial, access, operational, structural and scale evidence only",
+  "source": {
+    "type": "repository-local ordered chapter media",
+    "language": "Arabic translation",
+    "directory": "/media/succession-contest/chapters/349/",
+    "pagePattern": "/media/succession-contest/chapters/349/{page:000}.jpg",
+    "pageCount": 19,
+    "artifactDigestSha256": "5be96ce00b72c6dd5bae5927959b7437d30ecd4852097081e402e641d9108a7e",
+    "pageHashManifestSha256": "c393ad2f71e4898095fd90eab17d81a24b296993d6bb5087a8943d9d117f556d"
+  },
+  "review": {
+    "status": "complete-two-pass-reviewed-zero",
+    "pass1": {"status": "complete", "pagesInspected": 19, "candidatePages": []},
+    "pass2": {"status": "complete", "pagesInspected": 19},
+    "retainedPages": [],
+    "blackWhalePanels": 0,
+    "evidenceAtoms": 0
+  },
+  "retainedPanels": [],
+  "evidence": [],
+  "excludedMaterial": {
+    "pages": 19,
+    "categories": ["Kakin royal family exposition", "Succession Contest setup", "Seed Urn preparation", "palace and ceremony spaces unrelated to the Black Whale"],
+    "reason": "No Black Whale-specific visual, spatial, access, operational, structural or scale evidence."
+  },
+  "storage": {
+    "publicRecord": "/phase7/full-page-review/chapter-349.json",
+    "sourceMedia": "/media/succession-contest/chapters/349/",
+    "researchBranch": "phase-7-1c-full-page-ship-only-review",
+    "pullRequest": 92
+  }
+}
