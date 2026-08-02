@@ -6,12 +6,18 @@
   "sourceRecordPattern": "/phase7/full-page-review/chapter-{chapter}.json",
   "sourceField": "contradictionsAndQuarantines",
   "sourceRecordInstances": 147,
-  "uniqueSourceIds": 145,
-  "duplicateSourceIdInstances": 2,
+  "uniqueSourceIds": 134,
+  "duplicateSourceIdInstances": 13,
+  "legacyTrackerReportedOpenRecords": 145,
+  "trackerDiscrepancy": {
+    "status": "documented-source-count-mismatch",
+    "explanation": "The tracker reports 145 open chapter quarantines, while direct enumeration yields 147 open chapter-level instances under 134 distinct source IDs. Phase 7.2 preserves every chapter-level instance and does not alter the frozen Phase 7.1C tracker.",
+    "migrationAuthority": "direct chapter-record enumeration"
+  },
   "migrationMode": "deterministic-one-to-one-instance-carry-forward",
   "migrationKeyRule": "Use {chapter}:{sourceId} as the unique Phase 7.2 migration key while retaining sourceId as provenance.",
   "identityRule": "Every chapter-level contradiction or quarantine instance is retained. Repeated source IDs are not collapsed, and no source instance is deleted or promoted into geometry.",
-  "countingRule": "The Phase 7.1C tracker total of 145 is the count of unique source IDs. Direct chapter enumeration yields 147 instances because two IDs repeat across chapter records.",
+  "countingRule": "Direct enumeration controls the migration: 147 chapter-level instances, 134 distinct source IDs and 13 repeated-ID instances. The tracker value remains preserved as legacy metadata only.",
   "defaultGraphState": {
     "status": "open",
     "edgeAvailability": "prohibited",
