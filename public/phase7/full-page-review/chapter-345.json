@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "7.1C.1",
+  "projectId": "bw3d",
+  "chapter": 345,
+  "reviewScope": "Black Whale vessel, spatial, access, operational, structural and scale evidence only",
+  "source": {
+    "type": "repository-local ordered chapter media",
+    "language": "Arabic translation",
+    "directory": "/media/succession-contest/chapters/345/",
+    "pagePattern": "/media/succession-contest/chapters/345/{page:000}.jpg",
+    "pageCount": 20,
+    "artifactDigestSha256": "d08ae6d4c5d851936084f4beb6dfcd3b4d06f117482235a7e8aa0eeb58c6ae89",
+    "pageHashManifestSha256": "ddf9310cf96d0f8f559d2e2486c76b97514075344a43fde88f1efa6c2e02c98d"
+  },
+  "review": {
+    "status": "complete-two-pass-reviewed-zero",
+    "pass1": {
+      "status": "complete",
+      "method": "Full-page visual sweep of all 20 ordered pages",
+      "pagesInspected": 20,
+      "candidatePages": []
+    },
+    "pass2": {
+      "status": "complete",
+      "method": "Second chapter-wide verification sweep for small background, dialogue and setting clues",
+      "pagesInspected": 20
+    },
+    "retainedPages": [],
+    "excludedPages": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+    "blackWhalePanels": 0,
+    "evidenceAtoms": 0
+  },
+  "retainedPanels": [],
+  "evidence": [],
+  "contradictionsAndQuarantines": [],
+  "unresolvedQuestions": [],
+  "excludedMaterial": {
+    "pages": 20,
+    "categories": [
+      "Gon and Ging conversation",
+      "expedition personnel and team discussion",
+      "Kurapika preparation and recruitment material",
+      "Dark Continent strategy without vessel facts",
+      "non-ship domestic, office, street and meeting settings"
+    ],
+    "reason": "No panel or statement establishes Black Whale geometry, location hierarchy, route, access, operational system, scale cue or chapter-dependent vessel state."
+  },
+  "storage": {
+    "publicRecord": "/phase7/full-page-review/chapter-345.json",
+    "sourceMedia": "/media/succession-contest/chapters/345/",
+    "researchBranch": "phase-7-1c-full-page-ship-only-review",
+    "pullRequest": 92
+  }
+}

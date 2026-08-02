@@ -32,15 +32,22 @@
   "status": {
     "phase70": "complete",
     "phase71A": "complete-frozen-starter-ledger",
-    "phase71B": "first-exhaustive-pass-stored-awaiting-discussion",
+    "phase71B": "preliminary-hunterpedia-corpus-preserved-for-cross-check",
+    "phase71C": "active-full-page-ship-only-review",
     "phase72": "blocked",
     "productionGeometryPercent": 0,
     "programmePercent": null,
-    "programmeLabel": "research reopened"
+    "programmeLabel": "full-page research active"
+  },
+  "fullPageReview": {
+    "tracker": "/phase7/black-whale-3d-full-page-review-342-415.json",
+    "protocol": "/docs/BLACK-WHALE-FULL-PAGE-REVIEW-PROTOCOL.md",
+    "primarySource": "repository-local ordered chapter media",
+    "rule": "The 190 Hunterpedia atoms are preliminary cross-check material. Phase 7.1C reviews every non-skipped chapter page and retains only Black Whale vessel, spatial, access, operational, structural, scale, route, or temporal-state evidence."
   },
   "completionPolicy": {
     "researchComplete": false,
-    "reason": "The 342–415 chapter census and first atomic extraction are stored, but a second independent pass and exact file-level resolution for all catalogued visuals remain required before Phase 7.1B can close.",
+    "reason": "The Hunterpedia corpus remains preserved as a cross-check while Phase 7.1C performs the replacement page-by-page ship-only review. Phase 7.2 remains blocked until the full-page review and contradiction pass are complete.",
     "phase72MayStart": false
   },
   "files": {
