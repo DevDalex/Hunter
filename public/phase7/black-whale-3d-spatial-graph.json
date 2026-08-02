@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "7.2.0",
+  "projectId": "bw3d",
+  "phase": "7.2",
+  "status": "release-candidate",
+  "title": "Black Whale evidence-bounded spatial graph",
+  "purpose": "Normalize confirmed scene identities, containment, access and route evidence without converting editorial sequence or visual similarity into geometry.",
+  "sourceRegistry": "/phase7/black-whale-3d-location-registry-342-415.json",
+  "fullPageReview": "/phase7/black-whale-3d-full-page-review-342-415.json",
+  "charter": "/phase7/black-whale-3d-charter.json",
+  "normalizationContract": "/phase7/black-whale-3d-spatial-normalization.json",
+  "routeReview": "/phase7/black-whale-3d-route-review.json",
+  "quarantineMigration": "/phase7/black-whale-3d-quarantine-migration.json",
+  "materializers": {
+    "nodes": "/scripts/build-black-whale-3d-spatial-nodes.mjs",
+    "containmentAndRouteScopeEdges": "/scripts/build-black-whale-3d-spatial-edges.mjs"
+  },
+  "principles": [
+    "Nodes represent evidence-backed identities or explicit unknown containers, not meshes.",
+    "Edges require independent support and never arise from page order alone.",
+    "Containment does not imply coordinates, dimensions or adjacency.",
+    "Access state and physical connection are separate edge classes.",
+    "Unknown endpoints and unresolved tiers remain explicit graph objects.",
+    "Temporary security, occupancy and Nen states are overlays, not permanent edges.",
+    "A traversable route requires stronger evidence than shared tier membership.",
+    "Contradictory relations remain quarantined and unavailable to navigation."
+  ],
+  "certaintyClasses": ["confirmed","confirmed-with-open-questions","strong-reconstruction","functional-reconstruction","unresolved","unknown"],
+  "edgeClasses": [
+    {"id":"contains","traversable":false,"meaning":"A larger evidenced container includes a scene identity at an unspecified position."},
+    {"id":"part-of","traversable":false,"meaning":"Inverse containment relation."},
+    {"id":"opens-to","traversable":true,"meaning":"A threshold is explicitly shown or stated to open to another identified space."},
+    {"id":"connected-to","traversable":true,"meaning":"A physical connection is independently supported but its exact shape may remain unknown."},
+    {"id":"access-controlled-by","traversable":false,"meaning":"Operational access is controlled by a gate, checkpoint, authority or credential."},
+    {"id":"vertical-order","traversable":false,"meaning":"Macro stacking order only; no lift, stair or route is implied."},
+    {"id":"exits-to","traversable":true,"meaning":"A supported one-way or directional exit relation."},
+    {"id":"associated-with","traversable":false,"meaning":"Narrative or operational association without spatial linkage."},
+    {"id":"possible-link","traversable":false,"meaning":"Evidence suggests a relation but it remains quarantined."},
+    {"id":"contradicts","traversable":false,"meaning":"Records an incompatible placement or identity claim."}
+  ],
+  "containers": [
+    {"id":"bw3d.container.exterior","label":"Exterior","kind":"macro","certainty":"confirmed"},
+    {"id":"bw3d.container.hull","label":"Hull and structural envelope","kind":"macro","certainty":"confirmed-with-open-questions"},
+    {"id":"bw3d.container.tier-1","label":"Tier 1","kind":"tier","certainty":"confirmed"},
+    {"id":"bw3d.container.tier-2","label":"Tier 2","kind":"tier","certainty":"confirmed"},
+    {"id":"bw3d.container.between-tier-2-3","label":"Between Tiers 2 and 3","kind":"interstitial-band","certainty":"confirmed-with-open-questions"},
+    {"id":"bw3d.container.tier-3","label":"Tier 3","kind":"tier","certainty":"confirmed"},
+    {"id":"bw3d.container.tier-4","label":"Tier 4","kind":"tier","certainty":"confirmed"},
+    {"id":"bw3d.container.between-tier-4-5","label":"Between Tiers 4 and 5","kind":"interstitial-band","certainty":"confirmed-with-open-questions"},
+    {"id":"bw3d.container.tier-5","label":"Tier 5","kind":"tier","certainty":"confirmed"},
+    {"id":"bw3d.container.unresolved-tier","label":"Unresolved tier","kind":"quarantine","certainty":"unknown"},
+    {"id":"bw3d.container.ship-wide","label":"Ship-wide systems","kind":"non-coordinate-container","certainty":"confirmed-with-open-questions"}
+  ],
+  "macroRelations": [
+    {"id":"bw3d.edge.macro.001","from":"bw3d.container.tier-1","to":"bw3d.container.tier-2","type":"vertical-order","certainty":"confirmed","traversal":"prohibited-no-route-evidence"},
+    {"id":"bw3d.edge.macro.002","from":"bw3d.container.tier-2","to":"bw3d.container.tier-3","type":"vertical-order","certainty":"confirmed","traversal":"prohibited-no-route-evidence"},
+    {"id":"bw3d.edge.macro.003","from":"bw3d.container.tier-3","to":"bw3d.container.tier-4","type":"vertical-order","certainty":"confirmed","traversal":"prohibited-no-route-evidence"},
+    {"id":"bw3d.edge.macro.004","from":"bw3d.container.tier-4","to":"bw3d.container.tier-5","type":"vertical-order","certainty":"confirmed","traversal":"prohibited-no-route-evidence"},
+    {"id":"bw3d.edge.macro.005","from":"bw3d.container.between-tier-2-3","to":"bw3d.container.tier-2","type":"associated-with","certainty":"confirmed-with-open-questions","traversal":"prohibited"},
+    {"id":"bw3d.edge.macro.006","from":"bw3d.container.between-tier-2-3","to":"bw3d.container.tier-3","type":"associated-with","certainty":"confirmed-with-open-questions","traversal":"prohibited"},
+    {"id":"bw3d.edge.macro.007","from":"bw3d.container.between-tier-4-5","to":"bw3d.container.tier-4","type":"associated-with","certainty":"confirmed-with-open-questions","traversal":"prohibited"},
+    {"id":"bw3d.edge.macro.008","from":"bw3d.container.between-tier-4-5","to":"bw3d.container.tier-5","type":"associated-with","certainty":"confirmed-with-open-questions","traversal":"prohibited"}
+  ],
+  "authoringPolicy": {
+    "minimumEvidenceForContainment": "explicit tier/location statement or stable registry assignment",
+    "minimumEvidenceForTraversableEdge": "explicit doorway, route, passage, lift, stair, gate or movement relation with independently identified endpoints",
+    "forbiddenEdgeSources": ["editorial sequence","shared visual motif","room-number sequence","character assumption","Nen effect shape","temporary crowd placement"],
+    "unknownSpacePolicy": "Do not create filler nodes or edges. Preserve unresolved endpoints as unknown.",
+    "geometryPolicy": "No coordinates, lengths, widths, heights or angles are authorized in Phase 7.2 unless explicitly sourced."
+  },
+  "completionGates": [
+    "Every registry node receives one normalized container or an explicit unresolved assignment.",
+    "Every authored edge has evidence references, certainty, traversal policy and contradiction status.",
+    "No page-order-only or visual-similarity edge exists.",
+    "All 145 Phase 7.1C quarantines are mapped, superseded or explicitly carried forward.",
+    "Graph audit, browser QA and build checks pass.",
+    "Spatial graph dashboard is deployed and live-verified."
+  ],
+  "progress": {
+    "contractComplete": true,
+    "containerNormalizationComplete": true,
+    "edgeNormalizationComplete": true,
+    "quarantineMigrationComplete": true,
+    "dashboardComplete": true,
+    "phaseComplete": false
+  }
+}

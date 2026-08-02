@@ -1,0 +1,46 @@
+{
+  "schemaVersion": "7.2.0",
+  "phase": "7.2",
+  "status": "complete",
+  "sourceTracker": "/phase7/black-whale-3d-full-page-review-342-415.json",
+  "sourceRecordPattern": "/phase7/full-page-review/chapter-{chapter}.json",
+  "sourceField": "contradictionsAndQuarantines",
+  "sourceRecordInstances": 147,
+  "uniqueSourceIds": 134,
+  "duplicateSourceIdInstances": 13,
+  "legacyTrackerReportedOpenRecords": 145,
+  "trackerDiscrepancy": {
+    "status": "documented-source-count-mismatch",
+    "explanation": "The tracker reports 145 open chapter quarantines, while direct enumeration yields 147 open chapter-level instances under 134 distinct source IDs. Phase 7.2 preserves every chapter-level instance and does not alter the frozen Phase 7.1C tracker.",
+    "migrationAuthority": "direct chapter-record enumeration"
+  },
+  "migrationMode": "deterministic-one-to-one-instance-carry-forward",
+  "migrationKeyRule": "Use {chapter}:{sourceArrayIndex}:{sourceId} as the unique Phase 7.2 migration key while retaining sourceId as provenance.",
+  "identityRule": "Every chapter-level contradiction or quarantine array entry is retained. Repeated source IDs, including repeats within one chapter, are not collapsed, and no source instance is deleted or promoted into geometry.",
+  "countingRule": "Direct enumeration controls the migration: 147 chapter-level instances, 134 distinct source IDs and 13 repeated-ID instances. The tracker value remains preserved as legacy metadata only.",
+  "defaultGraphState": {
+    "status": "open",
+    "edgeAvailability": "prohibited",
+    "navigationAvailability": "prohibited",
+    "geometryAvailability": "prohibited",
+    "resolutionPolicy": "A quarantine may be superseded only by an explicit later record that cites its composite migration key and independent evidence."
+  },
+  "classificationRules": [
+    {"match":"editorial sequence|adjacency|room-number sequence","class":"topology-inference-block","graphEffect":"Do not create adjacency or route edges."},
+    {"match":"temporary|occupancy|guard|crowd|furniture|security posture","class":"temporal-overlay-only","graphEffect":"Keep as time-state metadata; do not create permanent architecture."},
+    {"match":"tier|route|connection|corridor identity|placement","class":"placement-or-route-unresolved","graphEffect":"Assign unresolved container or possible-link only; traversal remains prohibited."},
+    {"match":"dimension|scale|width|height|length|perspective","class":"metric-inference-block","graphEffect":"Do not authorize coordinates or dimensions."},
+    {"match":"Nen|teleport|conjured|anomalous","class":"nonphysical-or-temporal-overlay","graphEffect":"Keep separate from conventional permanent geometry."}
+  ],
+  "fallbackClass": {
+    "class": "unresolved-evidence-claim",
+    "graphEffect": "Carry forward unchanged with navigation and geometry prohibited."
+  },
+  "completionGuarantees": {
+    "allSourceInstancesMustBeReadable": true,
+    "compositeMigrationKeysMustBeUnique": true,
+    "everySourceInstanceMapsExactlyOnce": true,
+    "noOpenQuarantineCanAuthorizeTraversal": true,
+    "noOpenQuarantineCanAuthorizeGeometry": true
+  }
+}
