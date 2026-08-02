@@ -1,129 +1,35 @@
 {
-  "schemaVersion": "7.3.0",
+  "schemaVersion": "7.3.1",
   "phase": "7.3",
   "title": "Black Whale exterior blockout",
   "status": "in-progress",
-  "dependsOn": {
-    "phase": "7.2",
-    "mergeCommit": "5fcaf7eab7c88c73822c6caa77485543243f9d26"
-  },
+  "dependsOn": {"phase":"7.2","mergeCommit":"5fcaf7eab7c88c73822c6caa77485543243f9d26"},
   "purpose": "Create an interactive, evidence-labeled macro exterior envelope without converting working geometry into canon.",
-  "coordinateConvention": {
-    "units": "working scene metres",
-    "canonicalMetricStatus": "not-established",
-    "upAxis": "+Y",
-    "longitudinalAxis": "+Z working-forward only",
-    "shipBowMapping": "unresolved",
-    "origin": "working hull-envelope center",
-    "rule": "Coordinates support rendering and comparison only; they do not become evidence."
-  },
+  "coordinateConvention": {"units":"working scene metres","canonicalMetricStatus":"not-established","upAxis":"+Y","longitudinalAxis":"+Z working-forward only","shipBowMapping":"unresolved","origin":"working hull-envelope center","rule":"Coordinates support rendering and comparison only; they do not become evidence."},
   "evidenceFreeze": {
-    "approvedExternalDomains": ["hunterxhunter.fandom.com"],
-    "repositorySources": [
-      "/phase7/black-whale-3d-analysis.json",
-      "/phase7/black-whale-3d-spatial-graph.json",
-      "/phase7/black-whale-3d-route-review.json",
-      "/phase7/black-whale-3d-reference-ledger.json"
-    ],
-    "confirmedMacroClaims": [
-      "The vessel has a whale-shaped main exterior hull.",
-      "A distinct Tier 1 cruise-vessel mass sits above the lower inhabited structure.",
-      "The inhabited structure is organized into five vertically ordered tiers.",
-      "The exterior encloses large rectilinear inhabited volumes.",
-      "A canonical cutaway supports broad tier order and envelope relationships but not exact dimensions."
-    ],
-    "quarantinedClaims": [
-      "Exact overall length, beam, draft, hull curvature and underside profile.",
-      "Exact correspondence between Tier 1 plan north and ship bow.",
-      "Exact deck heights or metric boundaries between tiers.",
-      "Exact count, diameter, placement and engineering of spring/support structures.",
-      "Exact positions and dimensions of hull openings, launch outlets, windows and stairways."
-    ]
+    "status":"frozen-for-blockout-v1",
+    "approvedExternalDomains":["hunterxhunter.fandom.com"],
+    "repositorySources":["/phase7/black-whale-3d-analysis.json","/phase7/black-whale-3d-spatial-graph.json","/phase7/black-whale-3d-route-review.json","/phase7/black-whale-3d-reference-ledger.json"],
+    "confirmedMacroClaims":["The vessel has a whale-shaped main exterior hull.","A distinct Tier 1 cruise-vessel mass sits above the lower inhabited structure.","The inhabited structure is organized into five vertically ordered tiers.","The exterior encloses large rectilinear inhabited volumes.","A canonical cutaway supports broad tier order and envelope relationships but not exact dimensions."],
+    "quarantinedClaims":["Exact overall length, beam, draft, hull curvature and underside profile.","Exact correspondence between Tier 1 plan north and ship bow.","Exact deck heights or metric boundaries between tiers.","Exact count, diameter, placement and engineering of spring/support structures.","Exact positions and dimensions of hull openings, launch outlets, windows and stairways."]
   },
-  "objectClasses": [
-    {
-      "id": "confirmed-macro-mass",
-      "meaning": "Broad existence or placement is directly supported.",
-      "geometryAuthority": "blockout-envelope-only"
-    },
-    {
-      "id": "reconstructed-closure",
-      "meaning": "Geometry closes unseen surfaces for rendering and must remain visibly labeled as reconstruction.",
-      "geometryAuthority": "technical-closure-only"
-    },
-    {
-      "id": "diagrammatic-volume",
-      "meaning": "Explanatory tier or scale volume that is not literal architecture.",
-      "geometryAuthority": "visualization-only"
-    },
-    {
-      "id": "unknown-volume",
-      "meaning": "Unsourced interior or exterior volume that must remain unfilled and non-navigable.",
-      "geometryAuthority": "none"
-    },
-    {
-      "id": "quarantined-marker",
-      "meaning": "A known concept or region whose position or dimensions remain unresolved.",
-      "geometryAuthority": "marker-only"
-    }
+  "objectClasses":[
+    {"id":"confirmed-macro-mass","meaning":"Broad existence or placement is directly supported.","geometryAuthority":"blockout-envelope-only"},
+    {"id":"reconstructed-closure","meaning":"Geometry closes unseen surfaces for rendering and must remain visibly labeled as reconstruction.","geometryAuthority":"technical-closure-only"},
+    {"id":"diagrammatic-volume","meaning":"Explanatory tier or scale volume that is not literal architecture.","geometryAuthority":"visualization-only"},
+    {"id":"unknown-volume","meaning":"Unsourced interior or exterior volume that must remain unfilled and non-navigable.","geometryAuthority":"none"},
+    {"id":"quarantined-marker","meaning":"A known concept or region whose position or dimensions remain unresolved.","geometryAuthority":"marker-only"}
   ],
-  "plannedObjects": [
-    {
-      "id": "bw3d.exterior.main-hull",
-      "class": "confirmed-macro-mass",
-      "status": "planned",
-      "modelingPermission": "Create a low-resolution whale-shaped working envelope.",
-      "prohibitions": ["No canonical dimensions", "No inferred rooms", "No route inference"]
-    },
-    {
-      "id": "bw3d.exterior.tier-1-vessel",
-      "class": "confirmed-macro-mass",
-      "status": "planned",
-      "modelingPermission": "Create a simplified upper-vessel mass with unresolved global orientation.",
-      "prohibitions": ["Do not align Tier 1 room plan to bow", "No detailed decks or windows"]
-    },
-    {
-      "id": "bw3d.exterior.tier-envelope-1-5",
-      "class": "diagrammatic-volume",
-      "status": "planned",
-      "modelingPermission": "Create five broad stacked analytical bands.",
-      "prohibitions": ["No exact deck heights", "No room placement", "No corridor geometry"]
-    },
-    {
-      "id": "bw3d.exterior.unknown-interior",
-      "class": "unknown-volume",
-      "status": "planned",
-      "modelingPermission": "Render as void, muted volume or uncertainty field.",
-      "prohibitions": ["Do not fill with generic architecture or machinery"]
-    },
-    {
-      "id": "bw3d.exterior.spring-support-region",
-      "class": "quarantined-marker",
-      "status": "planned",
-      "modelingPermission": "Show only an abstract region marker until evidence stabilizes.",
-      "prohibitions": ["No exact spring count", "No engineered support layout"]
-    }
+  "plannedObjects":[
+    {"id":"bw3d.exterior.main-hull","class":"confirmed-macro-mass","status":"implemented-working-envelope","modelingPermission":"Create a low-resolution whale-shaped working envelope.","prohibitions":["No canonical dimensions","No inferred rooms","No route inference"]},
+    {"id":"bw3d.exterior.tier-1-vessel","class":"confirmed-macro-mass","status":"implemented-simplified-mass","modelingPermission":"Create a simplified upper-vessel mass with unresolved global orientation.","prohibitions":["Do not align Tier 1 room plan to bow","No detailed decks or windows"]},
+    {"id":"bw3d.exterior.tier-envelope-1-5","class":"diagrammatic-volume","status":"implemented-five-bands","modelingPermission":"Create five broad stacked analytical bands.","prohibitions":["No exact deck heights","No room placement","No corridor geometry"]},
+    {"id":"bw3d.exterior.unknown-interior","class":"unknown-volume","status":"implemented-uncertainty-field","modelingPermission":"Render as void, muted volume or uncertainty field.","prohibitions":["Do not fill with generic architecture or machinery"]},
+    {"id":"bw3d.exterior.spring-support-region","class":"quarantined-marker","status":"implemented-abstract-marker","modelingPermission":"Show only an abstract region marker until evidence stabilizes.","prohibitions":["No exact spring count","No engineered support layout"]}
   ],
-  "requiredViews": [
-    "full-exterior",
-    "side-analytical",
-    "front-analytical",
-    "rear-review",
-    "cross-section",
-    "transparent-tier-envelope",
-    "human-scale-reference"
-  ],
-  "completionGates": {
-    "exteriorEvidenceFrozen": false,
-    "coordinateAndWorkingScaleDefined": true,
-    "hullBlockoutImplemented": false,
-    "tier1MassImplemented": false,
-    "fiveTierEnvelopeImplemented": false,
-    "cutawayAndCameraSystemImplemented": false,
-    "objectRegistryAndEvidenceUiImplemented": false,
-    "performanceAndAccessibilityValidated": false,
-    "desktopBrowserBuildChecksPassed": false,
-    "mergedDeployedAndLiveVerified": false
-  },
-  "roadmapBoundary": "Phase 7.4 and all later milestones are prohibited until explicit user instruction."
+  "requiredViews":["full-exterior","side-analytical","front-analytical","rear-review","cross-section","transparent-tier-envelope","human-scale-reference"],
+  "implementedViews":["full-exterior","side-analytical","front-analytical","rear-review","cross-section","transparent-tier-envelope"],
+  "runtime":{"type":"dependency-free-canvas-3d-projection","route":"/succession/black-whale-3d","script":"/succession/black-whale-3d/exterior-blockout.js","styles":"/succession/black-whale-3d/exterior-blockout.css","controls":["pointer-rotate","keyboard-rotate","wheel-and-keyboard-zoom","camera-presets","cutaway-toggle","tier-toggle","unknown-volume-toggle","object-evidence-selection"]},
+  "completionGates":{"exteriorEvidenceFrozen":true,"coordinateAndWorkingScaleDefined":true,"hullBlockoutImplemented":true,"tier1MassImplemented":true,"fiveTierEnvelopeImplemented":true,"cutawayAndCameraSystemImplemented":true,"objectRegistryAndEvidenceUiImplemented":true,"performanceAndAccessibilityValidated":false,"desktopBrowserBuildChecksPassed":false,"mergedDeployedAndLiveVerified":false},
+  "roadmapBoundary":"Phase 7.4 and all later milestones are prohibited until explicit user instruction."
 }
