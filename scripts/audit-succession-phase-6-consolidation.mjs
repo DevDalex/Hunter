@@ -10,6 +10,7 @@ const assert = (condition, message) => {
 
 const [
   entrySource,
+  lightRouteSource,
   releaseCss,
   phase3Css,
   phase4Css,
@@ -21,6 +22,7 @@ const [
   manifestSource,
 ] = await Promise.all([
   read('src/components/succession/SuccessionArchiveEntry.jsx'),
+  read('src/components/succession/SuccessionArchiveLightRoute.jsx'),
   read('src/components/succession/SuccessionReleaseDesktop.css'),
   read('src/components/succession/SuccessionInformationConsistencyPanel.css'),
   read('src/components/succession/SuccessionPhase4DesktopOnly.css'),
@@ -32,8 +34,11 @@ const [
   read('src/data/succession/releaseManifest.js'),
 ]);
 
-assert(entrySource.includes("import './SuccessionReleaseDesktop.css'"), 'the archive entry must load the final desktop release sheet');
+assert(!entrySource.includes("import './SuccessionReleaseDesktop.css'"), 'the route entry must not force desktop release styles onto lightweight routes');
 assert(!entrySource.includes("import './SuccessionPhase4DesktopOnly.css'"), 'the archive entry must not load the retired Phase 4 stylesheet');
+assert(lightRouteSource.includes("lazy(() => import('./SuccessionWorkspaceRefinementDeck'))"), 'the lightweight route must split the desktop refinement surface');
+assert(lightRouteSource.includes("window.matchMedia('(min-width: 1024px)')"), 'the lightweight route must load desktop refinements only at their presentation boundary');
+assert(phase5Css.includes("@import './SuccessionReleaseDesktop.css'"), 'the refinement surface must load the consolidated release sheet with its route chunk');
 assert(releaseCss.includes('.succession-information-consistency')
   && releaseCss.includes('.succession-intelligence-workbench')
   && releaseCss.includes('.succession-workspace-refinement'), 'the release sheet must own Phase 3, Phase 4, and Phase 5 surfaces');
@@ -41,7 +46,7 @@ assert(releaseCss.includes('@media (min-width: 1024px)'), 'the final desktop bou
 assert(!releaseCss.includes('@media (max-width:'), 'Phase 6 must not add tablet or mobile presentation rules');
 assert(!releaseCss.includes('!important'), 'the consolidated release sheet must not introduce important overrides');
 for (const [name, source] of [['Phase 3', phase3Css], ['Phase 4', phase4Css], ['Phase 5', phase5Css]]) {
-  assert(source.includes('Compatibility stylesheet'), `${name} stylesheet must be an explicit compatibility stub`);
+  assert(source.includes('Compatibility stylesheet'), `${name} stylesheet must remain an explicit compatibility entrypoint`);
   assert(!source.includes('{\n  display:'), `${name} stylesheet still contains active implementation rules`);
 }
 
@@ -84,7 +89,7 @@ try {
   assert(refinement.chapter === latest, 'workspace refinement summary does not respect the latest boundary');
   assert(search.some((result) => result.id === 'object:seed-urn' && result.route === 'research'), 'release product search lost high-value intelligence routing');
 
-  console.log(`Succession Phase 6 consolidation audit passed: ${manifest.architecture.routes} routes, ${manifest.architecture.hubs} registered hub/tool entries, ${manifest.runtime.selectorFamilies.length} selector families, one active desktop release sheet, and ${manifest.runtime.compatibilityEntrypoints.length} zero-logic compatibility entrypoints verified.`);
+  console.log(`Succession Phase 6 consolidation audit passed: ${manifest.architecture.routes} routes, ${manifest.architecture.hubs} registered hub/tool entries, ${manifest.runtime.selectorFamilies.length} selector families, one deferred desktop release sheet, and ${manifest.runtime.compatibilityEntrypoints.length} zero-logic compatibility entrypoints verified.`);
 } finally {
   await vite.close();
 }
