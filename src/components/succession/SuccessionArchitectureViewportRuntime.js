@@ -12,6 +12,11 @@ function readViewport() {
   return { width, height };
 }
 
+function readBaseScaleY(height) {
+  const scaleY = height / ARCHITECTURE_BASE_HEIGHT;
+  return scaleY;
+}
+
 function readNaturalContentHeight(sheet) {
   const footer = sheet.querySelector('.succession-architecture__document-footer');
   const styles = window.getComputedStyle(sheet);
@@ -28,7 +33,9 @@ function readNaturalContentHeight(sheet) {
 }
 
 function applyGeometryVariables(board, viewport, layoutHeight) {
-  const scaleY = viewport.height / layoutHeight;
+  const scaleY = layoutHeight === ARCHITECTURE_BASE_HEIGHT
+    ? readBaseScaleY(viewport.height)
+    : viewport.height / layoutHeight;
   const layoutWidth = Math.max(ARCHITECTURE_BASE_WIDTH, viewport.width / scaleY);
   const scaleX = viewport.width / layoutWidth;
 
