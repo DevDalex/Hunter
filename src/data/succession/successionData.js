@@ -1,7 +1,6 @@
 import { successionArchiveData } from './entitiesHighValueIntelligence.js';
 import { successionArchiveData as productClosureLineage } from './entitiesProductClosureCorrections.js';
 import { successionArchiveData as storyFoundationLineage } from './entitiesStoryIntelligenceFoundation.js';
-// Active predecessor chain: entitiesHighValueIntelligence.js -> entitiesInformationConsistency.js -> entitiesProductClosureCorrections.js -> entitiesProductClosureFoundation.js -> entitiesStoryIntelligenceFoundation.js -> entitiesNenSystemFoundation.js -> entitiesOrganizationFoundation.js.
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { createEventKnowledgeSelectors } from './eventKnowledgeSelectors.js';
 import { createHighValueIntelligenceSelectors } from './highValueIntelligenceSelectors.js';
@@ -13,22 +12,28 @@ import { createOrganizationStateSelectors } from './organizationStateSelectors.j
 import { createPeopleInstitutionClosure } from './peopleInstitutionClosure.js';
 import { createNenSystemSelectors } from './nenSystemSelectors.js';
 import { createStoryIntelligenceSelectors } from './storyIntelligenceSelectors.js';
-import { createProductClosureSelectors as createFinalProductClosureSelectors } from './productClosureSelectorsFinal.js';
-import { createProductClosureSelectors } from './productClosureSelectorsPhase4.js';
+import { createProductClosureSelectors as createCanonicalProductClosureSelectors } from './productClosureSelectorsFinal.js';
+import { createProductClosureSelectors } from './productClosureSelectorsRelease.js';
+import { createWorkspaceRefinementSelectors } from './workspaceRefinementSelectors.js';
+import { createSuccessionReleaseManifest } from './releaseManifest.js';
 import { createFinalReleaseClosure } from './finalReleaseClosure.js';
 import { assertValidSuccessionArchiveData } from './schemasFinal.js';
 
-const informationConsistencyLineage = Object.freeze({
+const releaseLineage = Object.freeze({
   correctedProductChapterCount: productClosureLineage.chapters.length,
   storyPhaseCount: Object.keys(storyFoundationLineage.storyPhaseProfiles || {}).length,
   highValueIntelligenceVersion: successionArchiveData.highValueIntelligenceVersion,
-  finalStorySearchAdapterAvailable: typeof createFinalProductClosureSelectors === 'function',
+  canonicalProductSelectorsAvailable: typeof createCanonicalProductClosureSelectors === 'function',
+  releaseProductSelectorsAvailable: typeof createProductClosureSelectors === 'function',
+  workspaceRefinementsAvailable: typeof createWorkspaceRefinementSelectors === 'function',
 });
-if (informationConsistencyLineage.correctedProductChapterCount !== successionArchiveData.chapters.length
-  || informationConsistencyLineage.storyPhaseCount === 0
-  || informationConsistencyLineage.highValueIntelligenceVersion !== 'phase-4-v1'
-  || !informationConsistencyLineage.finalStorySearchAdapterAvailable) {
-  throw new Error('Succession high-value intelligence predecessor chain is incomplete.');
+if (releaseLineage.correctedProductChapterCount !== successionArchiveData.chapters.length
+  || releaseLineage.storyPhaseCount === 0
+  || releaseLineage.highValueIntelligenceVersion !== 'phase-4-v1'
+  || !releaseLineage.canonicalProductSelectorsAvailable
+  || !releaseLineage.releaseProductSelectorsAvailable
+  || !releaseLineage.workspaceRefinementsAvailable) {
+  throw new Error('Succession release selector lineage is incomplete.');
 }
 
 export const successionArchiveValidation = assertValidSuccessionArchiveData(successionArchiveData);
@@ -50,9 +55,37 @@ export const successionHighValueIntelligence = createHighValueIntelligenceSelect
   eventKnowledge: successionEventKnowledge,
   informationConsistency: successionInformationConsistency,
 });
-export const successionProductClosure = createProductClosureSelectors({ data: successionArchiveData, archive: successionArchive, characterStates: successionCharacterStates, organizationStates: successionOrganizationStates, nenSystems: successionNenSystems, storyIntelligence: successionStoryIntelligence });
+export const successionProductClosure = createProductClosureSelectors({
+  data: successionArchiveData,
+  archive: successionArchive,
+  characterStates: successionCharacterStates,
+  organizationStates: successionOrganizationStates,
+  nenSystems: successionNenSystems,
+  storyIntelligence: successionStoryIntelligence,
+});
+export const successionWorkspaceRefinements = createWorkspaceRefinementSelectors({
+  data: successionArchiveData,
+  archive: successionArchive,
+  storyIntelligence: successionStoryIntelligence,
+  highValueIntelligence: successionHighValueIntelligence,
+  nenSystems: successionNenSystems,
+});
 export const successionEvidenceGraph = createSuccessionEvidenceGraph(successionArchiveData);
-export const successionFinalReleaseClosure = createFinalReleaseClosure({ data: successionArchiveData, validation: successionArchiveValidation, evidenceGraph: successionEvidenceGraph, peopleClosure: successionPeopleInstitutionClosure, nenSystems: successionNenSystems, storyIntelligence: successionStoryIntelligence, productClosure: successionProductClosure });
+export const successionFinalReleaseClosure = createFinalReleaseClosure({
+  data: successionArchiveData,
+  validation: successionArchiveValidation,
+  evidenceGraph: successionEvidenceGraph,
+  peopleClosure: successionPeopleInstitutionClosure,
+  nenSystems: successionNenSystems,
+  storyIntelligence: successionStoryIntelligence,
+  productClosure: successionProductClosure,
+});
+export const successionReleaseManifest = createSuccessionReleaseManifest({
+  data: successionArchiveData,
+  validation: successionArchiveValidation,
+  productClosure: successionProductClosure,
+  workspaceRefinements: successionWorkspaceRefinements,
+});
 
 export { successionArchiveData };
 
@@ -209,6 +242,18 @@ export const {
 } = successionHighValueIntelligence;
 
 export const {
+  getChapterDeltaBrief,
+  getFocusedRelationshipView,
+  getBlackWhaleSnapshotComparison,
+  getShipInfrastructureIndex,
+  getAbilityInteractionMatrix,
+  getClaimProvenanceProfile,
+  getProvenanceCoverageReport,
+  getGlossaryEnforcementReport,
+  getWorkspaceRefinementSummary,
+} = successionWorkspaceRefinements;
+
+export const {
   getGlossaryEntry,
   getGlossaryEntryAtChapter,
   getGlossaryEntriesAtChapter,
@@ -219,6 +264,7 @@ export const {
 } = successionProductClosure;
 
 export const { getFinalReleaseClosureReport } = successionFinalReleaseClosure;
+export const getSuccessionReleaseManifest = () => successionReleaseManifest;
 
 const earliestChapter = (values) => {
   const chapters = values.filter(Number.isFinite);
