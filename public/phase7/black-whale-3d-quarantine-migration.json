@@ -5,23 +5,19 @@
   "sourceTracker": "/phase7/black-whale-3d-full-page-review-342-415.json",
   "sourceRecordPattern": "/phase7/full-page-review/chapter-{chapter}.json",
   "sourceField": "contradictionsAndQuarantines",
-  "sourceOfTruth": "chapter-record-source-ids",
-  "openSourceRecords": 147,
-  "legacyTrackerReportedOpenRecords": 145,
-  "trackerDiscrepancy": {
-    "difference": 2,
-    "status": "documented-correction",
-    "resolution": "Carry forward all 147 unique open source IDs. Do not delete two records to preserve the earlier arithmetic total."
-  },
-  "migrationMode": "deterministic-one-to-one-carry-forward",
-  "identityRule": "Each Phase 7.1C contradiction or quarantine retains its original source ID as the Phase 7.2 key; no source record is silently merged, deleted or promoted into geometry.",
-  "countingRule": "Direct enumeration of unique chapter-record source IDs controls migration totals. The tracker value is retained only as a documented legacy discrepancy.",
+  "sourceRecordInstances": 147,
+  "uniqueSourceIds": 145,
+  "duplicateSourceIdInstances": 2,
+  "migrationMode": "deterministic-one-to-one-instance-carry-forward",
+  "migrationKeyRule": "Use {chapter}:{sourceId} as the unique Phase 7.2 migration key while retaining sourceId as provenance.",
+  "identityRule": "Every chapter-level contradiction or quarantine instance is retained. Repeated source IDs are not collapsed, and no source instance is deleted or promoted into geometry.",
+  "countingRule": "The Phase 7.1C tracker total of 145 is the count of unique source IDs. Direct chapter enumeration yields 147 instances because two IDs repeat across chapter records.",
   "defaultGraphState": {
     "status": "open",
     "edgeAvailability": "prohibited",
     "navigationAvailability": "prohibited",
     "geometryAvailability": "prohibited",
-    "resolutionPolicy": "A quarantine may be superseded only by an explicit later record that cites the original ID and independent evidence."
+    "resolutionPolicy": "A quarantine may be superseded only by an explicit later record that cites its composite migration key and independent evidence."
   },
   "classificationRules": [
     {"match":"editorial sequence|adjacency|room-number sequence","class":"topology-inference-block","graphEffect":"Do not create adjacency or route edges."},
@@ -35,9 +31,9 @@
     "graphEffect": "Carry forward unchanged with navigation and geometry prohibited."
   },
   "completionGuarantees": {
-    "allOpenSourceIdsMustBeReadable": true,
-    "sourceIdsMustBeUnique": true,
-    "everySourceRecordMapsExactlyOnce": true,
+    "allSourceInstancesMustBeReadable": true,
+    "compositeMigrationKeysMustBeUnique": true,
+    "everySourceInstanceMapsExactlyOnce": true,
     "noOpenQuarantineCanAuthorizeTraversal": true,
     "noOpenQuarantineCanAuthorizeGeometry": true
   }
