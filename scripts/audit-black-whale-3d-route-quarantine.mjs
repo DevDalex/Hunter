@@ -7,10 +7,10 @@ const assert = (condition, message) => { if (!condition) throw new Error(message
 
 const registry = await readJson('public/phase7/black-whale-3d-location-registry-342-415.json');
 const graph = await readJson('public/phase7/black-whale-3d-spatial-graph.json');
+const tracker = await readJson('public/phase7/black-whale-3d-full-page-review-342-415.json');
 const routeReview = await readJson('public/phase7/black-whale-3d-route-review.json');
 const migration = await readJson('public/phase7/black-whale-3d-quarantine-migration.json');
 
-const registryIds = new Set(registry.map((record) => record.id));
 const routeRecords = registry.filter((record) => record.recordType === 'route');
 const routeIds = new Set(routeRecords.map((record) => record.id));
 const graphEndpointIds = new Set([
@@ -41,20 +41,23 @@ assert(routeReview.routes.filter((route) => route.outcome === 'quarantined-scope
 
 const reviewDirectory = path.join(root, 'public/phase7/full-page-review');
 const filenames = (await readdir(reviewDirectory)).filter((name) => /^chapter-\d+\.json$/.test(name));
-const sourceQuarantines = [];
+const sourceRecords = [];
 for (const filename of filenames) {
   const record = await readJson(`public/phase7/full-page-review/${filename}`);
-  for (const quarantine of record.contradictionsAndQuarantines ?? []) {
-    sourceQuarantines.push({ ...quarantine, chapter: record.chapter });
-  }
+  for (const quarantine of record.contradictionsAndQuarantines ?? []) sourceRecords.push({ ...quarantine, chapter: record.chapter });
 }
-const quarantineIds = sourceQuarantines.map((record) => record.id);
-assert(sourceQuarantines.length === migration.expectedSourceRecords, `Expected ${migration.expectedSourceRecords} source quarantines, found ${sourceQuarantines.length}.`);
-assert(new Set(quarantineIds).size === quarantineIds.length, 'Source quarantine IDs must be unique.');
+const openRecords = sourceRecords.filter((record) => record.status === 'open');
+const nonOpenRecords = sourceRecords.filter((record) => record.status !== 'open');
+const sourceIds = sourceRecords.map((record) => record.id);
+
+assert(openRecords.length === tracker.totals.openChapterQuarantines, `Tracker expects ${tracker.totals.openChapterQuarantines} open quarantines, found ${openRecords.length}.`);
+assert(openRecords.length === migration.expectedOpenSourceRecords, `Migration expects ${migration.expectedOpenSourceRecords} open quarantines, found ${openRecords.length}.`);
+assert(new Set(sourceIds).size === sourceIds.length, 'Source contradiction/quarantine IDs must be unique.');
 assert(migration.migrationMode === 'deterministic-one-to-one-carry-forward', 'Quarantine migration mode changed unexpectedly.');
-assert(migration.completionGuarantees.everySourceRecordMapsExactlyOnce === true, 'One-to-one quarantine migration guarantee is missing.');
+assert(migration.completionGuarantees.everySourceRecordMapsExactlyOnce === true, 'One-to-one migration guarantee is missing.');
+assert(migration.completionGuarantees.allNonOpenContradictionIdsMustAlsoBeRetained === true, 'Non-open contradiction retention guarantee is missing.');
 assert(migration.defaultGraphState.edgeAvailability === 'prohibited', 'Open quarantines must prohibit graph edges.');
 assert(migration.defaultGraphState.navigationAvailability === 'prohibited', 'Open quarantines must prohibit navigation.');
 assert(migration.defaultGraphState.geometryAvailability === 'prohibited', 'Open quarantines must prohibit geometry.');
 
-console.log(`Black Whale Phase 7.2 route/quarantine audit passed: ${routeReview.routes.length} routes reviewed, 3 physical connections authorized without geometry, 2 nonphysical overlays, 5 quarantined route scopes, ${sourceQuarantines.length} quarantines carried forward one-to-one.`);
+console.log(`Black Whale Phase 7.2 route/quarantine audit passed: ${routeReview.routes.length} routes reviewed, 3 physical connections authorized without geometry, 2 nonphysical overlays, 5 quarantined route scopes, ${openRecords.length} open quarantines and ${nonOpenRecords.length} non-open contradiction records carried forward one-to-one.`);
