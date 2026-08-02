@@ -10,12 +10,16 @@ const contract = await readJson('public/phase7/black-whale-3d-exterior-blockout.
 const performance = await readJson('public/phase7/black-whale-3d-exterior-performance.json');
 const scriptPath = 'public/succession/black-whale-3d/exterior-blockout.js';
 const stylePath = 'public/succession/black-whale-3d/exterior-blockout.css';
+const scaleScriptPath = 'public/succession/black-whale-3d/exterior-scale-reference.js';
+const scaleStylePath = 'public/succession/black-whale-3d/exterior-scale-reference.css';
 const indexPath = 'public/succession/black-whale-3d/index.html';
 const script = await readText(scriptPath);
 const styles = await readText(stylePath);
+const scaleScript = await readText(scaleScriptPath);
+const scaleStyles = await readText(scaleStylePath);
 const index = await readText(indexPath);
-const scriptBytes = (await stat(path.join(root, scriptPath))).size;
-const styleBytes = (await stat(path.join(root, stylePath))).size;
+const scriptBytes = (await stat(path.join(root, scriptPath))).size + (await stat(path.join(root, scaleScriptPath))).size;
+const styleBytes = (await stat(path.join(root, stylePath))).size + (await stat(path.join(root, scaleStylePath))).size;
 
 assert(contract.phase === '7.3', 'Exterior contract must remain Phase 7.3.');
 assert(contract.status === 'in-progress' || contract.status === 'complete', 'Unexpected Phase 7.3 status.');
@@ -40,9 +44,15 @@ for (const marker of ['cutaway-toggle','tiers-toggle','unknown-toggle','exterior
 assert(script.includes('getContext(\'2d\')') || script.includes('getContext("2d")'), 'Exterior runtime must initialize Canvas 2D.');
 assert(script.includes('requestAnimationFrame') === false, 'Phase 7.3 runtime must remain render-on-demand without a continuous animation loop.');
 assert(script.includes('ArrowLeft') && script.includes("e.key.toLowerCase()==='c'"), 'Keyboard controls are incomplete.');
+assert(scaleScript.includes('data-view = \'scale\'') || scaleScript.includes("dataset.view = 'scale'"), 'Human-scale reference button is missing.');
+assert(scaleScript.includes('1.7 m working human proxy'), 'Human-scale proxy disclaimer is missing.');
+assert(scaleScript.includes('not a canonical exterior access point'), 'Human-scale placement prohibition is missing.');
 assert(index.includes('/succession/black-whale-3d/exterior-blockout.js'), 'Exterior runtime is not mounted by the dashboard.');
 assert(index.includes('/succession/black-whale-3d/exterior-blockout.css'), 'Exterior styles are not mounted by the dashboard.');
+assert(index.includes('/succession/black-whale-3d/exterior-scale-reference.js'), 'Human-scale runtime is not mounted by the dashboard.');
+assert(index.includes('/succession/black-whale-3d/exterior-scale-reference.css'), 'Human-scale styles are not mounted by the dashboard.');
 assert(styles.includes('.exterior-stage') && styles.includes('.exterior-controls'), 'Exterior layout styles are incomplete.');
+assert(scaleStyles.includes('.exterior-scale-reference') && scaleStyles.includes('.scale-person'), 'Human-scale view styles are incomplete.');
 
 assert(performance.phase === '7.3', 'Performance budget must target Phase 7.3.');
 assert(performance.budgets.externalRuntimeDependencies === 0, 'External runtime dependency budget changed.');
@@ -57,4 +67,4 @@ for (const gate of ['coordinateAndWorkingScaleDefined','hullBlockoutImplemented'
 }
 assert(gates.mergedDeployedAndLiveVerified === false, 'Branch contract must not claim merged/live verification before release.');
 
-console.log(`Black Whale Phase 7.3 exterior audit passed: ${contract.plannedObjects.length} evidence-labeled objects, ${contract.requiredViews.length} required views, Canvas runtime ${scriptBytes} bytes, CSS ${styleBytes} bytes, zero external runtime dependencies, zero network model assets, working metrics noncanonical, Phase 7.4 blocked.`);
+console.log(`Black Whale Phase 7.3 exterior audit passed: ${contract.plannedObjects.length} evidence-labeled objects, ${contract.requiredViews.length} required views including human scale, runtime JavaScript ${scriptBytes} bytes, CSS ${styleBytes} bytes, zero external runtime dependencies, zero network model assets, working metrics noncanonical, Phase 7.4 blocked.`);
