@@ -8,6 +8,10 @@
   "sourceRegistry": "/phase7/black-whale-3d-location-registry-342-415.json",
   "fullPageReview": "/phase7/black-whale-3d-full-page-review-342-415.json",
   "charter": "/phase7/black-whale-3d-charter.json",
+  "materializers": {
+    "nodes": "/scripts/build-black-whale-3d-spatial-nodes.mjs",
+    "containmentAndRouteScopeEdges": "/scripts/build-black-whale-3d-spatial-edges.mjs"
+  },
   "principles": [
     "Nodes represent evidence-backed identities or explicit unknown containers, not meshes.",
     "Edges require independent support and never arise from page order alone.",
@@ -78,7 +82,7 @@
   ],
   "progress": {
     "contractComplete": true,
-    "containerNormalizationComplete": false,
+    "containerNormalizationComplete": true,
     "edgeNormalizationComplete": false,
     "quarantineMigrationComplete": false,
     "dashboardComplete": false,
