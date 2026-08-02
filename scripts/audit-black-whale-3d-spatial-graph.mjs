@@ -11,11 +11,11 @@ const registry = await readJson('public/phase7/black-whale-3d-location-registry-
 const tracker = await readJson('public/phase7/black-whale-3d-full-page-review-342-415.json');
 
 assert(graph.schemaVersion === '7.2.0', 'Unexpected spatial graph schema version.');
-assert(graph.phase === '7.2' && graph.status === 'active', 'Phase 7.2 must be active.');
+assert(graph.phase === '7.2' && ['active', 'release-candidate', 'complete'].includes(graph.status), 'Phase 7.2 has an invalid lifecycle state.');
 assert(normalization.schemaVersion === '7.2.0' && normalization.phase === '7.2', 'Unexpected normalization contract.');
 assert(tracker.status.phase71C === 'complete', 'Phase 7.1C must be complete before Phase 7.2 starts.');
 assert(Array.isArray(registry) && registry.length > 0, 'Location registry is empty.');
-assert(graph.progress.phaseComplete === false, 'Phase 7.2 cannot claim completion at contract start.');
+if (graph.status !== 'complete') assert(graph.progress.phaseComplete === false, 'Phase 7.2 cannot claim final completion before deployment verification.');
 
 const containerIds = new Set(graph.containers.map((container) => container.id));
 assert(containerIds.size === graph.containers.length, 'Container IDs are not unique.');
@@ -69,27 +69,20 @@ const inclusiveRange = (start, end) => {
 const normalizeRecord = (record) => {
   const exception = exceptionMap.get(record.id);
   if (exception) return { containers: exception.containers, mode: 'identity-exception', certainty: record.evidenceState };
-
   if (directMap[record.tier]) return { containers: directMap[record.tier], mode: 'direct', certainty: record.evidenceState };
 
   let match = record.tier.match(/^tiers-([1-5])-([1-5])$/);
   if (match) return { containers: inclusiveRange(Number(match[1]), Number(match[2])), mode: 'inclusive-tier-range', certainty: 'confirmed-with-open-questions' };
-
   match = record.tier.match(/^tier-([1-5])-to-tier-([1-5])$/);
   if (match) return { containers: [tierContainer(match[1]), tierContainer(match[2])], mode: 'endpoint-scope-only', certainty: 'confirmed-with-open-questions' };
-
   match = record.tier.match(/^hull\/tier-([1-5])$/);
   if (match) return { containers: ['bw3d.container.hull', tierContainer(match[1])], mode: 'hull-and-tier-scope', certainty: 'confirmed-with-open-questions' };
-
   match = record.tier.match(/^tier-([1-5])\/.+$/);
   if (match) return { containers: [tierContainer(match[1])], mode: 'tier-plus-nonspatial-qualifier', certainty: 'confirmed-with-open-questions' };
-
   match = record.tier.match(/^likely-tier-([1-5])$/);
   if (match) return { containers: ['bw3d.container.unresolved-tier'], candidateContainers: [tierContainer(match[1])], mode: 'uncertain-candidate', certainty: 'unresolved' };
-
   if (record.tier === 'hull/exterior') return { containers: ['bw3d.container.hull', 'bw3d.container.exterior'], mode: 'boundary-scope', certainty: 'confirmed-with-open-questions' };
   if (record.tier === 'nen-space') return { containers: ['bw3d.container.ship-wide'], mode: 'non-coordinate-overlay', certainty: 'confirmed-with-open-questions' };
-
   return { containers: normalization.fallbackRule.containers, mode: 'fallback-unresolved', certainty: 'unknown' };
 };
 
@@ -97,9 +90,7 @@ const normalized = registry.map((record) => ({ record, assignment: normalizeReco
 for (const { record, assignment } of normalized) {
   assert(assignment.containers.length > 0, `${record.id} has no normalized container.`);
   for (const container of assignment.containers) assert(containerIds.has(container), `${record.id} normalized to unknown container ${container}.`);
-  if (record.recordType === 'route') {
-    assert(record.traversalPolicy !== 'traversable', `${record.id} cannot become traversable from registry scope alone.`);
-  }
+  if (record.recordType === 'route') assert(record.traversalPolicy !== 'traversable', `${record.id} cannot become traversable from registry scope alone.`);
 }
 
 const normalizedIds = new Set(normalized.map(({ record }) => record.id));
@@ -112,5 +103,12 @@ const quarantinedRecords = normalized.filter(({ assignment }) => assignment.cont
 assert(normalization.completionPolicy.allRegistryRecordsMustNormalize === true, 'Normalization completeness policy is missing.');
 assert(normalization.completionPolicy.routeScopeDoesNotAuthorizeTraversal === true, 'Route traversal safeguard is missing.');
 assert(normalization.completionPolicy.unknownSpaceMayNotBeFilled === true, 'Unknown-space safeguard is missing.');
+assert(graph.progress.contractComplete === true, 'Graph contract is incomplete.');
+assert(graph.progress.containerNormalizationComplete === true, 'Container normalization is incomplete.');
+if (graph.status === 'release-candidate' || graph.status === 'complete') {
+  assert(graph.progress.edgeNormalizationComplete === true, 'Edge normalization is incomplete.');
+  assert(graph.progress.quarantineMigrationComplete === true, 'Quarantine migration is incomplete.');
+  assert(graph.progress.dashboardComplete === true, 'Spatial graph dashboard is incomplete.');
+}
 
 console.log(`Black Whale Phase 7.2 audit passed: ${graph.containers.length} containers, ${graph.edgeClasses.length} edge classes, ${graph.macroRelations.length} non-traversable macro relations, ${registry.length} registry records normalized, ${routeRecords.length} route scopes retained as non-authorizing, ${compositeRecords.length} composite scopes preserved, ${quarantinedRecords.length} unresolved-container assignments, ${fallbackRecords.length} fallback assignments.`);
