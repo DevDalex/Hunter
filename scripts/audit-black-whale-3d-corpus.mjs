@@ -1,5 +1,6 @@
 import { readFile, access } from 'node:fs/promises';
 import path from 'node:path';
+import { gunzipSync } from 'node:zlib';
 
 const root = process.cwd();
 const readJson = async (relativePath) => JSON.parse(await readFile(path.join(root, relativePath), 'utf8'));
@@ -8,11 +9,8 @@ const expect = (condition, message) => { if (!condition) fail(message); };
 
 const paths = {
   summary: 'public/phase7/black-whale-3d-corpus-summary-342-415.json',
-  census: 'public/phase7/black-whale-3d-source-census-342-415.json',
-  atomsA: 'public/phase7/black-whale-3d-evidence-atoms-342-415-a.json',
-  atomsB: 'public/phase7/black-whale-3d-evidence-atoms-342-415-b.json',
+  corpusManifest: 'public/phase7/black-whale-3d-corpus-manifest-342-415.json',
   locations: 'public/phase7/black-whale-3d-location-registry-342-415.json',
-  visuals: 'public/phase7/black-whale-3d-visual-index-342-415.json',
   contradictions: 'public/phase7/black-whale-3d-contradictions-342-415.json',
   loader: 'public/succession/black-whale-3d/data-loader.js',
   app: 'public/succession/black-whale-3d/app.js',
@@ -21,18 +19,24 @@ const paths = {
 
 await Promise.all(Object.values(paths).map((file) => access(path.join(root, file))));
 
-const [summary, census, atomsA, atomsB, locations, visuals, contradictions] = await Promise.all([
+const [summary, corpusManifest, locations, contradictions] = await Promise.all([
   readJson(paths.summary),
-  readJson(paths.census),
-  readJson(paths.atomsA),
-  readJson(paths.atomsB),
+  readJson(paths.corpusManifest),
   readJson(paths.locations),
-  readJson(paths.visuals),
   readJson(paths.contradictions),
 ]);
-const atoms = [...atomsA, ...atomsB];
+const readPublicJson = (url) => readJson(`public${url}`);
+const readGzipBase64Json = async (url) => JSON.parse(gunzipSync(Buffer.from((await readFile(path.join(root, `public${url}`), 'utf8')).trim(), 'base64')).toString('utf8'));
+const [censusParts, atomParts, atomRest, visuals] = await Promise.all([
+  Promise.all(corpusManifest.sourceCensus.map(readPublicJson)),
+  Promise.all(corpusManifest.evidenceAtomJson.map(readPublicJson)),
+  readGzipBase64Json(corpusManifest.evidenceAtomGzipBase64),
+  readGzipBase64Json(corpusManifest.visualIndexGzipBase64),
+]);
+const census = censusParts.flat();
+const atoms = [...atomParts.flat(), ...atomRest];
 
-expect(summary.schemaVersion === '7.1B.0', 'Unexpected Phase 7.1B schema version.');
+expect(summary.schemaVersion === '7.1B.2', 'Unexpected Phase 7.1B schema version.');
 expect(summary.scope.requestedStartChapter === 342, 'Corpus must start at Chapter 342.');
 expect(summary.scope.requestedEndChapter === 415, 'Corpus must end at Chapter 415.');
 expect(census.length === 74, `Expected 74 chapter slots, found ${census.length}.`);
