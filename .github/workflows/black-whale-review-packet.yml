@@ -14,8 +14,19 @@ jobs:
   packet:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
+      - name: Initialize sparse repository
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config core.sparseCheckout true
+          git config core.sparseCheckoutCone true
+          git sparse-checkout init --cone
+          git sparse-checkout set research/black-whale
+          git -c protocol.version=2 fetch --depth=1 --filter=blob:none origin "$GITHUB_SHA"
+          git checkout --detach FETCH_HEAD
 
       - name: Resolve review selection
         id: selection
@@ -40,6 +51,12 @@ jobs:
             echo "Review packets are limited to ten chapters" >&2
             exit 1
           fi
+
+          chapter_paths=(research/black-whale)
+          for chapter in $(seq "$start" "$end"); do
+            chapter_paths+=("public/media/succession-contest/chapters/$chapter")
+          done
+          git sparse-checkout set "${chapter_paths[@]}"
 
           mkdir -p review-packet
           : > review-packet/manifest.tsv
