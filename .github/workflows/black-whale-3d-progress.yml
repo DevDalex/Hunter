@@ -12,6 +12,7 @@ on:
       - 'scripts/audit-black-whale-3d-progress.mjs'
       - 'scripts/audit-black-whale-3d-corpus.mjs'
       - 'scripts/audit-black-whale-3d-spatial-graph.mjs'
+      - 'scripts/build-black-whale-3d-spatial-nodes.mjs'
       - 'docs/BLACK-WHALE-3D-PHASE-7-1B-RESEARCH.md'
       - 'server/index.js'
       - 'index.html'
@@ -28,6 +29,7 @@ on:
       - 'scripts/audit-black-whale-3d-progress.mjs'
       - 'scripts/audit-black-whale-3d-corpus.mjs'
       - 'scripts/audit-black-whale-3d-spatial-graph.mjs'
+      - 'scripts/build-black-whale-3d-spatial-nodes.mjs'
       - 'docs/BLACK-WHALE-3D-PHASE-7-1B-RESEARCH.md'
       - 'server/index.js'
       - 'index.html'
@@ -53,3 +55,5 @@ jobs:
         run: node scripts/audit-black-whale-3d-corpus.mjs
       - name: Validate Phase 7.2 spatial graph contract
         run: node scripts/audit-black-whale-3d-spatial-graph.mjs
+      - name: Materialize Phase 7.2 graph nodes in memory
+        run: node scripts/build-black-whale-3d-spatial-nodes.mjs --check
