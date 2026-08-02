@@ -15,8 +15,8 @@
     "migrationAuthority": "direct chapter-record enumeration"
   },
   "migrationMode": "deterministic-one-to-one-instance-carry-forward",
-  "migrationKeyRule": "Use {chapter}:{sourceId} as the unique Phase 7.2 migration key while retaining sourceId as provenance.",
-  "identityRule": "Every chapter-level contradiction or quarantine instance is retained. Repeated source IDs are not collapsed, and no source instance is deleted or promoted into geometry.",
+  "migrationKeyRule": "Use {chapter}:{sourceArrayIndex}:{sourceId} as the unique Phase 7.2 migration key while retaining sourceId as provenance.",
+  "identityRule": "Every chapter-level contradiction or quarantine array entry is retained. Repeated source IDs, including repeats within one chapter, are not collapsed, and no source instance is deleted or promoted into geometry.",
   "countingRule": "Direct enumeration controls the migration: 147 chapter-level instances, 134 distinct source IDs and 13 repeated-ID instances. The tracker value remains preserved as legacy metadata only.",
   "defaultGraphState": {
     "status": "open",
