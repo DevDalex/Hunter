@@ -13,6 +13,7 @@ const audits = Object.freeze([
   ['phase-3-information-consistency', 'scripts/audit-succession-phase-3-information-consistency.mjs'],
   ['phase-4-high-value-intelligence', 'scripts/audit-succession-phase-4-high-value-intelligence.mjs'],
   ['phase-5-workspace-refinements', 'scripts/audit-succession-phase-5-workspace-refinements.mjs'],
+  ['phase-6-consolidation', 'scripts/audit-succession-phase-6-consolidation.mjs'],
   ['phase-2-design-system', 'scripts/audit-succession-phase-2-design-system.mjs'],
   ['phase-2-scope', 'scripts/audit-succession-phase-2-scope.mjs'],
   ['architecture-lock', 'scripts/audit-succession-architecture-lock.mjs'],
