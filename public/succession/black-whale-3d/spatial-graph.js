@@ -32,7 +32,7 @@ const renderSpatialGraph = async () => {
       <div class="stat"><strong>${graph.containers.length}</strong><span>Graph containers</span></div>
       <div class="stat"><strong>${routeReview.summary.registeredRoutes}</strong><span>Routes reviewed</span></div>
       <div class="stat"><strong>${routeReview.summary.authorizedPhysicalRoutes}</strong><span>Physical links authorized</span></div>
-      <div class="stat"><strong>${migration.expectedSourceRecords}</strong><span>Quarantines carried forward</span></div>
+      <div class="stat"><strong>${migration.openSourceRecords}</strong><span>Open records carried forward</span></div>
     </div>
     <aside class="next-callout"><div><p class="kicker">Topology rule</p><h2>Containment is not adjacency</h2><p>Shared tier membership never proves neighboring rooms, coordinates, route shape, distance, width, height, or a navigable path.</p></div><strong>7.2</strong></aside>
     <details class="panel" open>
