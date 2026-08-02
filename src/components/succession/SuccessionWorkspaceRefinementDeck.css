@@ -1,5 +1,6 @@
 /*
- * Compatibility stylesheet only.
- * Historical desktop boundary: @media (min-width: 1024px)
- * Phase 6 moved all implementation rules to SuccessionReleaseDesktop.css.
+ * Compatibility stylesheet entrypoint.
+ * The implementation lives in SuccessionReleaseDesktop.css and is loaded only
+ * when a refinement surface is part of the active route chunk.
  */
+@import './SuccessionReleaseDesktop.css';
