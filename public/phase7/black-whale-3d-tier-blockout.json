@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "7.4.0",
+  "schemaVersion": "7.4.1",
   "phase": "7.4",
   "title": "Black Whale tier blockout",
   "status": "in-progress",
@@ -17,18 +17,18 @@
     "Contradictions and unresolved tier assignments remain quarantined."
   ],
   "tierVolumes": [
-    {"id":"bw3d.tier.1","graphContainer":"bw3d.container.tier-1","status":"planned-macro-volume","evidenceAuthority":"vertical-order-and-upper-vessel-envelope-only","prohibitions":["No prince-room placement","No plan-north to ship-bow alignment","No exact deck count"]},
-    {"id":"bw3d.tier.2","graphContainer":"bw3d.container.tier-2","status":"planned-macro-volume","evidenceAuthority":"vertical-order-and-broad-envelope-only","prohibitions":["No exact height","No inferred adjacency","No route geometry"]},
-    {"id":"bw3d.tier.3","graphContainer":"bw3d.container.tier-3","status":"planned-macro-volume","evidenceAuthority":"vertical-order-and-broad-envelope-only","prohibitions":["No exact height","No inferred adjacency","No route geometry"]},
-    {"id":"bw3d.tier.4","graphContainer":"bw3d.container.tier-4","status":"planned-macro-volume","evidenceAuthority":"vertical-order-and-broad-envelope-only","prohibitions":["No exact height","No inferred adjacency","No route geometry"]},
-    {"id":"bw3d.tier.5","graphContainer":"bw3d.container.tier-5","status":"planned-macro-volume","evidenceAuthority":"vertical-order-and-broad-envelope-only","prohibitions":["No exact height","No inferred adjacency","No route geometry"]}
+    {"id":"bw3d.tier.1","graphContainer":"bw3d.container.tier-1","status":"implemented-working-macro-volume","evidenceAuthority":"vertical-order-and-upper-vessel-envelope-only","prohibitions":["No prince-room placement","No plan-north to ship-bow alignment","No exact deck count"]},
+    {"id":"bw3d.tier.2","graphContainer":"bw3d.container.tier-2","status":"implemented-working-macro-volume","evidenceAuthority":"vertical-order-and-broad-envelope-only","prohibitions":["No exact height","No inferred adjacency","No route geometry"]},
+    {"id":"bw3d.tier.3","graphContainer":"bw3d.container.tier-3","status":"implemented-working-macro-volume","evidenceAuthority":"vertical-order-and-broad-envelope-only","prohibitions":["No exact height","No inferred adjacency","No route geometry"]},
+    {"id":"bw3d.tier.4","graphContainer":"bw3d.container.tier-4","status":"implemented-working-macro-volume","evidenceAuthority":"vertical-order-and-broad-envelope-only","prohibitions":["No exact height","No inferred adjacency","No route geometry"]},
+    {"id":"bw3d.tier.5","graphContainer":"bw3d.container.tier-5","status":"implemented-working-macro-volume","evidenceAuthority":"vertical-order-and-broad-envelope-only","prohibitions":["No exact height","No inferred adjacency","No route geometry"]}
   ],
   "interstitialPolicy": {
-    "status": "required",
+    "status": "implemented-as-separate-diagrammatic-bands",
     "rule": "Maintain explicit unknown or interstitial bands between major tier masses where the spatial graph distinguishes them; do not merge these bands into a tier for visual convenience."
   },
   "unknownVolumePolicy": {
-    "status": "required",
+    "status": "implemented-as-optional-uncertainty-envelope",
     "rendering": ["void", "muted translucent field", "outlined unresolved envelope"],
     "prohibited": ["generic rooms", "invented machinery", "decorative corridors", "unsupported shafts"]
   },
@@ -39,6 +39,20 @@
     "tier-envelope-within-hull",
     "interstitial-unknown-view"
   ],
+  "implementedViews": [
+    "five-tier-section",
+    "single-tier-isolation",
+    "tier-exploded-diagram",
+    "tier-envelope-within-hull",
+    "interstitial-unknown-view"
+  ],
+  "runtime": {
+    "type": "dependency-free-canvas-3d-projection",
+    "route": "/succession/black-whale-3d",
+    "script": "/succession/black-whale-3d/tier-blockout.js",
+    "styles": "/succession/black-whale-3d/tier-blockout.css",
+    "controls": ["pointer-rotate", "keyboard-rotate", "wheel-and-keyboard-zoom", "tier-isolation", "section-view", "exploded-view", "hull-context-view", "unknown-space-view", "interstitial-toggle", "evidence-selection"]
+  },
   "futureRoomModuleDirection": {
     "status": "recorded-not-implemented",
     "description": "Future hero rooms should present as removable open-wall cutaway diorama modules nested within their supported tier context.",
@@ -52,11 +66,11 @@
   },
   "completionGates": {
     "tierEvidenceContractFrozen": true,
-    "fiveMacroVolumesImplemented": false,
-    "interstitialBandsImplemented": false,
-    "unknownVolumeTreatmentImplemented": false,
-    "tierSelectionAndAnalyticalViewsImplemented": false,
-    "objectRegistryAndEvidenceUiImplemented": false,
+    "fiveMacroVolumesImplemented": true,
+    "interstitialBandsImplemented": true,
+    "unknownVolumeTreatmentImplemented": true,
+    "tierSelectionAndAnalyticalViewsImplemented": true,
+    "objectRegistryAndEvidenceUiImplemented": true,
     "performanceAndAccessibilityValidated": false,
     "desktopBrowserBuildChecksPassed": false,
     "mergedDeployedAndLiveVerified": false
