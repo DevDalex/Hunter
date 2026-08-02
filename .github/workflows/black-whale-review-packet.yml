@@ -47,8 +47,8 @@ jobs:
             echo "Invalid descending range: $selection" >&2
             exit 1
           fi
-          if (( end - start > 9 )); then
-            echo "Review packets are limited to ten chapters" >&2
+          if (( end - start > 19 )); then
+            echo "Review packets are limited to twenty chapters" >&2
             exit 1
           fi
 
