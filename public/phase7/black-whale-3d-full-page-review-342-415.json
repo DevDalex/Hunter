@@ -1,8 +1,8 @@
 {
-  "schemaVersion": "7.1C.5",
+  "schemaVersion": "7.1C.6",
   "projectId": "bw3d",
   "corpusId": "bw3d.corpus.full-page.ship-only.342-415",
-  "updatedAt": "2026-08-02T09:07:00+03:00",
+  "updatedAt": "2026-08-02T09:28:00+03:00",
   "purpose": "Page-by-page identification of Black Whale-specific clues in Chapters 342–415, independent of Hunterpedia image selection.",
   "scopeRule": "Inspect every non-skipped chapter page; retain only vessel, spatial, route, access, operational, structural, scale, or chapter-state evidence.",
   "reviewPolicy": {
@@ -26,22 +26,22 @@
     "wholeChaptersSkipped": 7,
     "chaptersScheduledForReview": 67,
     "chaptersWithPrimaryPages": 74,
-    "chaptersReviewedPass1": 9,
-    "chaptersReviewedPass2": 9,
-    "chaptersComplete": [342, 343, 344, 345, 346, 347, 348, 349, 350],
-    "chaptersSkipped": [351, 352, 353, 354, 355, 356, 357],
-    "currentSelection": "358-362",
+    "chaptersReviewedPass1": 14,
+    "chaptersReviewedPass2": 14,
+    "chaptersComplete": [342,343,344,345,346,347,348,349,350,358,359,360,361,362],
+    "chaptersSkipped": [351,352,353,354,355,356,357],
+    "currentSelection": "363-372",
     "phase71C": "active",
     "phase72": "blocked",
     "productionGeometryPercent": 0,
     "preliminaryHunterpediaCorpus": "reference-only-not-exhaustive"
   },
   "totals": {
-    "pagesInspected": 175,
-    "blackWhalePanelsRetained": 1,
-    "evidenceAtomsStored": 10,
+    "pagesInspected": 267,
+    "blackWhalePanelsRetained": 53,
+    "evidenceAtomsStored": 73,
     "reviewedZeroChapters": 8,
-    "openChapterQuarantines": 1
+    "openChapterQuarantines": 8
   },
   "defaults": {
     "sourceStatus": "repository-local-media",
@@ -63,6 +63,11 @@
     {"chapter":347,"record":"/phase7/full-page-review/chapter-347.json","pageCount":20,"retainedPages":[],"blackWhalePanels":0,"evidenceAtoms":0,"status":"complete-two-pass-reviewed-zero"},
     {"chapter":348,"record":"/phase7/full-page-review/chapter-348.json","pageCount":20,"retainedPages":[],"blackWhalePanels":0,"evidenceAtoms":0,"status":"complete-two-pass-reviewed-zero"},
     {"chapter":349,"record":"/phase7/full-page-review/chapter-349.json","pageCount":19,"retainedPages":[],"blackWhalePanels":0,"evidenceAtoms":0,"status":"complete-two-pass-reviewed-zero"},
-    {"chapter":350,"record":"/phase7/full-page-review/chapter-350.json","pageCount":20,"retainedPages":[],"blackWhalePanels":0,"evidenceAtoms":0,"status":"complete-two-pass-reviewed-zero"}
+    {"chapter":350,"record":"/phase7/full-page-review/chapter-350.json","pageCount":20,"retainedPages":[],"blackWhalePanels":0,"evidenceAtoms":0,"status":"complete-two-pass-reviewed-zero"},
+    {"chapter":358,"record":"/phase7/full-page-review/chapter-358.json","pageCount":17,"retainedPages":[2,7,8,9,10,11,12,13,14,15,16],"blackWhalePanels":14,"evidenceAtoms":23,"status":"complete-two-pass"},
+    {"chapter":359,"record":"/phase7/full-page-review/chapter-359.json","pageCount":18,"retainedPages":[1,2,3,4,5,7,8,12,15,17],"blackWhalePanels":12,"evidenceAtoms":15,"status":"complete-two-pass"},
+    {"chapter":360,"record":"/phase7/full-page-review/chapter-360.json","pageCount":18,"retainedPages":[1,4,6,13,14,16,17],"blackWhalePanels":7,"evidenceAtoms":7,"status":"complete-two-pass"},
+    {"chapter":361,"record":"/phase7/full-page-review/chapter-361.json","pageCount":20,"retainedPages":[3,4,13,14,16,17,18,19],"blackWhalePanels":9,"evidenceAtoms":9,"status":"complete-two-pass"},
+    {"chapter":362,"record":"/phase7/full-page-review/chapter-362.json","pageCount":19,"retainedPages":[1,2,8,9,10,11,13,14,15],"blackWhalePanels":10,"evidenceAtoms":9,"status":"complete-two-pass"}
   ]
 }
