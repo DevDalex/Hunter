@@ -29,8 +29,10 @@ for (const [index, tier] of contract.tierVolumes.entries()) {
   assert(tier.evidenceAuthority, `${tier.id} lacks evidence authority.`);
   assert(Array.isArray(tier.prohibitions) && tier.prohibitions.length >= 3, `${tier.id} lacks modeling prohibitions.`);
 }
-assert(contract.interstitialPolicy.status === 'required', 'Interstitial-space policy must remain required.');
-assert(contract.unknownVolumePolicy.status === 'required', 'Unknown-volume policy must remain required.');
+assert(['required','implemented-as-separate-diagrammatic-bands'].includes(contract.interstitialPolicy.status), 'Interstitial-space policy is missing or weakened.');
+assert(contract.interstitialPolicy.rule.includes('do not merge'), 'Interstitial-space non-merging rule is missing.');
+assert(['required','implemented-as-optional-uncertainty-envelope'].includes(contract.unknownVolumePolicy.status), 'Unknown-volume policy is missing or weakened.');
+assert(contract.unknownVolumePolicy.prohibited.includes('generic rooms'), 'Unknown-volume room prohibition is missing.');
 assert(contract.futureRoomModuleDirection.status === 'recorded-not-implemented', 'Future diorama direction must remain recorded but unimplemented.');
 assert(contract.futureRoomModuleDirection.description.includes('cutaway diorama'), 'Future cutaway-diorama direction is missing.');
 
