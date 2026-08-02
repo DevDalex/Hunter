@@ -1,5 +1,6 @@
 (() => {
   const target = '/succession/black-whale-3d';
+  const retryDelays = [0, 250, 750, 1500, 3000];
   const isSuccessionPage = () => window.location.pathname.includes('/succession-contest')
     || window.location.pathname.startsWith('/succession/');
 
@@ -45,17 +46,7 @@
     }
   };
 
-  let queued = false;
-  const observer = new MutationObserver(() => {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(() => {
-      queued = false;
-      install();
-    });
-  });
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', install, { once: true });
-  else install();
-  observer.observe(document.documentElement, { childList: true, subtree: true });
+  const schedule = () => retryDelays.forEach((delay) => window.setTimeout(install, delay));
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', schedule, { once: true });
+  else schedule();
 })();
