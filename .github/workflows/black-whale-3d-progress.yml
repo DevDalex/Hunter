@@ -4,9 +4,14 @@ on:
   pull_request:
     paths:
       - 'public/succession/black-whale-3d/**'
-      - 'public/phase7/black-whale-3d-*.json'
+      - 'public/phase7/black-whale-3d-*'
+      - 'public/phase7/source-census-*.json'
+      - 'public/phase7/evidence-atoms-*'
+      - 'public/phase7/visual-index-*'
       - 'public/assets/bw3d-route-bridge.js'
       - 'scripts/audit-black-whale-3d-progress.mjs'
+      - 'scripts/audit-black-whale-3d-corpus.mjs'
+      - 'docs/BLACK-WHALE-3D-PHASE-7-1B-RESEARCH.md'
       - 'server/index.js'
       - 'index.html'
       - '.github/workflows/black-whale-3d-progress.yml'
@@ -14,9 +19,14 @@ on:
     branches: [main]
     paths:
       - 'public/succession/black-whale-3d/**'
-      - 'public/phase7/black-whale-3d-*.json'
+      - 'public/phase7/black-whale-3d-*'
+      - 'public/phase7/source-census-*.json'
+      - 'public/phase7/evidence-atoms-*'
+      - 'public/phase7/visual-index-*'
       - 'public/assets/bw3d-route-bridge.js'
       - 'scripts/audit-black-whale-3d-progress.mjs'
+      - 'scripts/audit-black-whale-3d-corpus.mjs'
+      - 'docs/BLACK-WHALE-3D-PHASE-7-1B-RESEARCH.md'
       - 'server/index.js'
       - 'index.html'
 
@@ -37,3 +47,5 @@ jobs:
           node-version: '22'
       - name: Validate Phase 7 progress route
         run: node scripts/audit-black-whale-3d-progress.mjs
+      - name: Validate exhaustive Chapter 342-415 corpus
+        run: node scripts/audit-black-whale-3d-corpus.mjs

@@ -15,6 +15,7 @@ const paths = {
   app: 'public/succession/black-whale-3d/app.js',
   charter: 'public/phase7/black-whale-3d-charter.json',
   analysis: 'public/phase7/black-whale-3d-analysis.json',
+  corpusSummary: 'public/phase7/black-whale-3d-corpus-summary-342-415.json',
   referencesA: 'public/phase7/black-whale-3d-references-a.json',
   referencesB: 'public/phase7/black-whale-3d-references-b.json',
   bridge: 'public/assets/bw3d-route-bridge.js',
@@ -24,7 +25,10 @@ const paths = {
 
 await Promise.all(Object.values(paths).map((relativePath) => access(path.join(root, relativePath))));
 
-const [page, loader, app, bridge, index, worker, charter, analysis, referencesA, referencesB] = await Promise.all([
+const [
+  page, loader, app, bridge, index, worker,
+  charter, analysis, corpusSummary, referencesA, referencesB,
+] = await Promise.all([
   readText(paths.page),
   readText(paths.loader),
   readText(paths.app),
@@ -33,14 +37,18 @@ const [page, loader, app, bridge, index, worker, charter, analysis, referencesA,
   readText(paths.worker),
   readJson(paths.charter),
   readJson(paths.analysis),
+  readJson(paths.corpusSummary),
   readJson(paths.referencesA),
   readJson(paths.referencesB),
 ]);
 
 assert(page.includes('<title>Black Whale 3D progress'), 'Phase 7 progress page title is missing.');
 assert(page.indexOf('data-loader.js') < page.indexOf('app.js'), 'The split-data loader must run before the dashboard app.');
-assert(loader.includes('blackWhale3dReferenceShots'), 'The data loader does not combine the reference ledger.');
-assert(app.includes('Phase 7.2 · Spatial graph'), 'The dashboard does not expose the next production gate.');
+assert(page.includes('href="#corpus"'), 'The Phase 7.1B corpus is absent from dashboard navigation.');
+assert(loader.includes('blackWhale3dReferenceShots'), 'The data loader does not combine the starter reference ledger.');
+assert(loader.includes('blackWhale3dEvidenceAtoms'), 'The data loader does not combine the exhaustive corpus.');
+assert(app.includes('Phase 7.1B'), 'The dashboard does not expose the exhaustive corpus phase.');
+assert(app.includes('Phase 7.2 remains blocked'), 'The dashboard does not preserve the Phase 7.2 block.');
 assert(index.includes('/assets/bw3d-route-bridge.js'), 'The archive shell does not load the Phase 7 navigation bridge.');
 assert(bridge.includes('/succession/black-whale-3d'), 'The navigation bridge targets the wrong URL.');
 assert(worker.includes("'/succession/black-whale-3d'"), 'The Worker does not own the clean Phase 7 route.');
@@ -49,20 +57,21 @@ assert(worker.includes("'/succession/black-whale-3d/index.html'"), 'The Worker d
 assert(charter.blackWhale3dPrinciples?.length === 8, 'The charter must contain eight governing principles.');
 assert(charter.blackWhale3dCertaintyLevels?.length === 5, 'The charter must contain five certainty levels.');
 assert(charter.blackWhale3dAcceptanceGates?.length === 12, 'The charter must contain twelve acceptance gates.');
-assert(analysis.blackWhale3dReferenceIssues?.length === 5, 'The reference programme must expose five issue records.');
-assert(analysis.blackWhale3dReferenceGaps?.length === 12, 'The reference programme must expose twelve evidence gaps.');
-assert(analysis.blackWhale3dArchitecturalMotifs?.length === 10, 'The reference programme must expose ten architectural motifs.');
-assert(analysis.blackWhale3dRoadmap?.length === 13, 'The Phase 7 roadmap must contain thirteen stages.');
-assert(analysis.blackWhale3dProgressStats?.completedStages === 2, 'The programme must report exactly two completed stages.');
-assert(analysis.blackWhale3dProgressStats?.productionGeometryPercent === 0, 'Production geometry must remain at zero before Phase 7.2.');
+assert(analysis.blackWhale3dReferenceIssues?.length === 5, 'The starter programme must expose five issue records.');
+assert(analysis.blackWhale3dReferenceGaps?.length === 12, 'The starter programme must expose twelve evidence gaps.');
+assert(analysis.blackWhale3dArchitecturalMotifs?.length === 10, 'The starter programme must expose ten architectural motifs.');
+assert(analysis.blackWhale3dProgressStats?.productionGeometryPercent === 0, 'Production geometry must remain at zero.');
+assert(corpusSummary.status?.phase72 === 'blocked', 'The exhaustive corpus must block Phase 7.2.');
+assert(corpusSummary.status?.programmePercent === null, 'The misleading precise programme percentage must be withdrawn.');
+assert(corpusSummary.completionPolicy?.researchComplete === false, 'The first exhaustive pass cannot claim final research completion.');
 
 const references = [...referencesA, ...referencesB];
-assert(references.length === 38, `Expected 38 source-shot records, found ${references.length}.`);
+assert(references.length === 38, `Expected 38 starter source-shot records, found ${references.length}.`);
 const ids = new Set(references.map((record) => record.id));
 assert(ids.size === references.length, 'Reference-shot IDs are not unique.');
-assert(references.filter((record) => record.sourceGranularity === 'exact-file').length === 37, 'Expected 37 exact file-level references.');
-assert(references.filter((record) => record.provenanceStatus === 'verified-subject-pending-exact-file-url').length === 1, 'Expected one pending exact file-level source.');
-assert(references.filter((record) => record.modelingDecision === 'quarantined-from-tier-placement').length === 1, 'Expected one tier-placement quarantine.');
+assert(references.filter((record) => record.sourceGranularity === 'exact-file').length === 37, 'Expected 37 exact file-level starter references.');
+assert(references.filter((record) => record.provenanceStatus === 'verified-subject-pending-exact-file-url').length === 1, 'Expected one pending exact starter source.');
+assert(references.filter((record) => record.modelingDecision === 'quarantined-from-tier-placement').length === 1, 'Expected one starter tier-placement quarantine.');
 
 for (const record of references) {
   assert(/^bw3d\.ref\.\d{3}$/.test(record.id), `Invalid reference ID: ${record.id}`);
@@ -79,4 +88,7 @@ for (const record of references) {
   await access(localPath);
 }
 
-console.log('Black Whale 3D progress audit passed: clean route, charter, 38-shot ledger, issues, gaps, motifs, roadmap, bridge, and local media verified.');
+console.log(
+  'Black Whale 3D progress audit passed: clean route, charter, frozen 38-shot starter ledger, '
+  + 'exhaustive-corpus bridge, blocked spatial graph, navigation bridge, and local media verified.',
+);
