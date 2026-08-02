@@ -1,14 +1,30 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import SuccessionArchiveShell from './SuccessionArchiveShell';
-import SuccessionWorkspaceRefinementDeck from './SuccessionWorkspaceRefinementDeck';
 import './SuccessionArchiveSearch.css';
 
 const PrincesWorkspace = lazy(() => import('./SuccessionArchiveWorkspaces').then((module) => ({ default: module.PrincesWorkspace })));
 const FamilyTree = lazy(() => import('../FamilyTree'));
 const BlackWhaleGuide = lazy(() => import('../BlackWhaleGuide'));
+const SuccessionWorkspaceRefinementDeck = lazy(() => import('./SuccessionWorkspaceRefinementDeck'));
 
 function LightWorkspaceLoading({ label }) {
   return <div className="route-loading succession-route-loading" role="status" aria-live="polite">Opening {label}…</div>;
+}
+
+function useDesktopRefinementSurface() {
+  const [matches, setMatches] = useState(() => typeof window !== 'undefined'
+    && window.matchMedia('(min-width: 1024px)').matches);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+    const query = window.matchMedia('(min-width: 1024px)');
+    const update = (event) => setMatches(event.matches);
+    setMatches(query.matches);
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
+
+  return matches;
 }
 
 export default function SuccessionArchiveLightRoute({
@@ -23,6 +39,7 @@ export default function SuccessionArchiveLightRoute({
 }) {
   const treeView = routeTarget === 'princes' && routeParams.view === 'tree';
   const blackWhale = routeTarget === 'black-whale';
+  const desktopRefinementSurface = useDesktopRefinementSurface();
 
   return <SuccessionArchiveShell
     activeId={routeTarget}
@@ -34,12 +51,14 @@ export default function SuccessionArchiveLightRoute({
     onOpenSearch={onOpenSearch}
     onIntent={onIntent}
   >
-    {blackWhale && <SuccessionWorkspaceRefinementDeck
-      routeId="black-whale"
-      routeParams={routeParams}
-      spoilerLimit={spoilerLimit}
-      onNavigate={onNavigate}
-    />}
+    {blackWhale && desktopRefinementSurface && <Suspense fallback={null}>
+      <SuccessionWorkspaceRefinementDeck
+        routeId="black-whale"
+        routeParams={routeParams}
+        spoilerLimit={spoilerLimit}
+        onNavigate={onNavigate}
+      />
+    </Suspense>}
 
     {blackWhale && <Suspense fallback={<LightWorkspaceLoading label="Black Whale atlas" />}>
       <BlackWhaleGuide

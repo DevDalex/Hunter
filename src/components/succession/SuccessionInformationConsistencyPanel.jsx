@@ -15,7 +15,6 @@ import {
   getEntityById,
   getRoyalDossierConsistencyProfile,
 } from '../../data/succession/successionData';
-import './SuccessionInformationConsistencyPanel.css';
 
 const labelize = (value) => String(value || 'unknown')
   .replaceAll('-', ' ')

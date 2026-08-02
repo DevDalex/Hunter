@@ -50,6 +50,7 @@ const successionControllerBoundaryKeys = [
   'src/components/succession/SuccessionArchiveReaderRoute.jsx',
   'src/components/succession/SuccessionArchiveLightRoute.jsx',
   'src/components/succession/SuccessionArchiveWorkspaces.jsx',
+  'src/components/succession/SuccessionWorkspaceRefinementDeck.jsx',
 ];
 const storyDetailBoundaryKeys = [
   'src/components/StoryHub.jsx',
@@ -82,10 +83,10 @@ assert(startupJs <= budgets.startupJs, `startup JavaScript closure is ${startupJ
 assert(startupCss <= budgets.startupCss, `startup stylesheet is ${startupCss} bytes; budget is ${formatPerformanceBudget(budgets.startupCss)}`);
 assert(largestJavascript.bytes <= budgets.javascriptChunk, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is ${formatPerformanceBudget(budgets.javascriptChunk)}`);
 assert(directBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all 17 route/search UI boundaries must remain dynamic entries');
-assert(successionControllerBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the full Succession controller, Reader controller, lightweight visual controller, and Royal Family workspace must remain separate on-demand chunks');
+assert(successionControllerBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the full Succession controller, Reader controller, lightweight visual controller, Royal Family workspace, and desktop refinement surface must remain separate on-demand chunks');
 assert(storyDetailBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Story directory, standard arc renderer, Volume 0, Hunter Exam, and complete Greed Island shell must remain separate on-demand chunks');
 assert(greedIslandModuleBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'all eight Greed Island modules must remain separate on-demand chunks');
-assert(dynamicEntries.length === 37, `expected 17 direct boundaries, four Succession controller boundaries, five Story experience boundaries, eight Greed Island module boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
+assert(dynamicEntries.length === 38, `expected 17 direct boundaries, five Succession controller boundaries, five Story experience boundaries, eight Greed Island module boundaries, and three search-data shards, found ${dynamicEntries.length} dynamic entries`);
 assert(searchShardKeys.every((key) => manifest[key]?.isDynamicEntry), 'the story, Succession, and reference search indexes must remain separate dynamic entries');
 
 const homeHighlights = await readFile(path.join(root, 'src/data/homeHighlights.js'), 'utf8');
