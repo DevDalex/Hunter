@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "7.4.1",
+  "schemaVersion": "7.4.2",
   "phase": "7.4",
   "title": "Black Whale tier blockout",
   "status": "in-progress",
@@ -32,20 +32,8 @@
     "rendering": ["void", "muted translucent field", "outlined unresolved envelope"],
     "prohibited": ["generic rooms", "invented machinery", "decorative corridors", "unsupported shafts"]
   },
-  "requiredViews": [
-    "five-tier-section",
-    "single-tier-isolation",
-    "tier-exploded-diagram",
-    "tier-envelope-within-hull",
-    "interstitial-unknown-view"
-  ],
-  "implementedViews": [
-    "five-tier-section",
-    "single-tier-isolation",
-    "tier-exploded-diagram",
-    "tier-envelope-within-hull",
-    "interstitial-unknown-view"
-  ],
+  "requiredViews": ["five-tier-section", "single-tier-isolation", "tier-exploded-diagram", "tier-envelope-within-hull", "interstitial-unknown-view"],
+  "implementedViews": ["five-tier-section", "single-tier-isolation", "tier-exploded-diagram", "tier-envelope-within-hull", "interstitial-unknown-view"],
   "runtime": {
     "type": "dependency-free-canvas-3d-projection",
     "route": "/succession/black-whale-3d",
@@ -71,7 +59,7 @@
     "unknownVolumeTreatmentImplemented": true,
     "tierSelectionAndAnalyticalViewsImplemented": true,
     "objectRegistryAndEvidenceUiImplemented": true,
-    "performanceAndAccessibilityValidated": false,
+    "performanceAndAccessibilityValidated": true,
     "desktopBrowserBuildChecksPassed": false,
     "mergedDeployedAndLiveVerified": false
   },
