@@ -47,17 +47,18 @@ for (const filename of filenames) {
   for (const quarantine of record.contradictionsAndQuarantines ?? []) sourceRecords.push({ ...quarantine, chapter: record.chapter });
 }
 const openRecords = sourceRecords.filter((record) => record.status === 'open');
-const nonOpenRecords = sourceRecords.filter((record) => record.status !== 'open');
 const sourceIds = sourceRecords.map((record) => record.id);
 
-assert(openRecords.length === tracker.totals.openChapterQuarantines, `Tracker expects ${tracker.totals.openChapterQuarantines} open quarantines, found ${openRecords.length}.`);
-assert(openRecords.length === migration.expectedOpenSourceRecords, `Migration expects ${migration.expectedOpenSourceRecords} open quarantines, found ${openRecords.length}.`);
+assert(openRecords.length === migration.openSourceRecords, `Migration expects ${migration.openSourceRecords} open source records, found ${openRecords.length}.`);
+assert(sourceRecords.length === openRecords.length, 'Every currently discovered contradiction/quarantine record should remain open at this milestone.');
 assert(new Set(sourceIds).size === sourceIds.length, 'Source contradiction/quarantine IDs must be unique.');
+assert(migration.legacyTrackerReportedOpenRecords === tracker.totals.openChapterQuarantines, 'Legacy tracker discrepancy must preserve the frozen tracker value.');
+assert(migration.trackerDiscrepancy.difference === openRecords.length - tracker.totals.openChapterQuarantines, 'Documented tracker discrepancy does not match source enumeration.');
+assert(migration.trackerDiscrepancy.status === 'documented-correction', 'Tracker discrepancy must remain explicitly documented.');
 assert(migration.migrationMode === 'deterministic-one-to-one-carry-forward', 'Quarantine migration mode changed unexpectedly.');
 assert(migration.completionGuarantees.everySourceRecordMapsExactlyOnce === true, 'One-to-one migration guarantee is missing.');
-assert(migration.completionGuarantees.allNonOpenContradictionIdsMustAlsoBeRetained === true, 'Non-open contradiction retention guarantee is missing.');
 assert(migration.defaultGraphState.edgeAvailability === 'prohibited', 'Open quarantines must prohibit graph edges.');
 assert(migration.defaultGraphState.navigationAvailability === 'prohibited', 'Open quarantines must prohibit navigation.');
 assert(migration.defaultGraphState.geometryAvailability === 'prohibited', 'Open quarantines must prohibit geometry.');
 
-console.log(`Black Whale Phase 7.2 route/quarantine audit passed: ${routeReview.routes.length} routes reviewed, 3 physical connections authorized without geometry, 2 nonphysical overlays, 5 quarantined route scopes, ${openRecords.length} open quarantines and ${nonOpenRecords.length} non-open contradiction records carried forward one-to-one.`);
+console.log(`Black Whale Phase 7.2 route/quarantine audit passed: ${routeReview.routes.length} routes reviewed, 3 physical connections authorized without geometry, 2 nonphysical overlays, 5 quarantined route scopes, ${openRecords.length} unique open source records carried forward; legacy tracker discrepancy ${tracker.totals.openChapterQuarantines} documented.`);
