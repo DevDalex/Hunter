@@ -1,0 +1,54 @@
+name: Black Whale chapter review packet
+
+on:
+  pull_request:
+    paths:
+      - 'research/black-whale/current-review-chapter.txt'
+      - '.github/workflows/black-whale-review-packet.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  packet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Resolve current chapter
+        id: chapter
+        shell: bash
+        run: |
+          chapter="$(tr -d '[:space:]' < research/black-whale/current-review-chapter.txt)"
+          if ! [[ "$chapter" =~ ^[0-9]+$ ]]; then
+            echo "Invalid chapter: $chapter" >&2
+            exit 1
+          fi
+          source_dir="public/media/succession-contest/chapters/$chapter"
+          if [[ ! -d "$source_dir" ]]; then
+            echo "Missing chapter media: $source_dir" >&2
+            exit 1
+          fi
+          page_count="$(find "$source_dir" -maxdepth 1 -type f -iname '*.jpg' | wc -l | tr -d ' ')"
+          if [[ "$page_count" -eq 0 ]]; then
+            echo "No JPG pages found for Chapter $chapter" >&2
+            exit 1
+          fi
+          mkdir -p review-packet
+          cp "$source_dir"/*.jpg review-packet/
+          printf '%s\n' "$chapter" > review-packet/chapter.txt
+          printf '%s\n' "$page_count" > review-packet/page-count.txt
+          sha256sum review-packet/*.jpg > review-packet/sha256.txt
+          echo "number=$chapter" >> "$GITHUB_OUTPUT"
+          echo "page_count=$page_count" >> "$GITHUB_OUTPUT"
+
+      - name: Upload chapter pages
+        uses: actions/upload-artifact@v4
+        with:
+          name: bw3d-review-chapter-${{ steps.chapter.outputs.number }}
+          path: review-packet/
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
