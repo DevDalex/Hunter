@@ -1,1 +1,5 @@
-/* Compatibility stylesheet. Phase 6 moved these rules to SuccessionReleaseDesktop.css. */
+/*
+ * Compatibility stylesheet only.
+ * Historical desktop boundary: @media (min-width: 1024px)
+ * Phase 6 moved all implementation rules to SuccessionReleaseDesktop.css.
+ */
