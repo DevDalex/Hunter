@@ -11,6 +11,7 @@ on:
       - 'public/assets/bw3d-route-bridge.js'
       - 'scripts/audit-black-whale-3d-progress.mjs'
       - 'scripts/audit-black-whale-3d-corpus.mjs'
+      - 'scripts/audit-black-whale-3d-spatial-graph.mjs'
       - 'docs/BLACK-WHALE-3D-PHASE-7-1B-RESEARCH.md'
       - 'server/index.js'
       - 'index.html'
@@ -26,6 +27,7 @@ on:
       - 'public/assets/bw3d-route-bridge.js'
       - 'scripts/audit-black-whale-3d-progress.mjs'
       - 'scripts/audit-black-whale-3d-corpus.mjs'
+      - 'scripts/audit-black-whale-3d-spatial-graph.mjs'
       - 'docs/BLACK-WHALE-3D-PHASE-7-1B-RESEARCH.md'
       - 'server/index.js'
       - 'index.html'
@@ -49,3 +51,5 @@ jobs:
         run: node scripts/audit-black-whale-3d-progress.mjs
       - name: Validate exhaustive Chapter 342-415 corpus
         run: node scripts/audit-black-whale-3d-corpus.mjs
+      - name: Validate Phase 7.2 spatial graph contract
+        run: node scripts/audit-black-whale-3d-spatial-graph.mjs
