@@ -1,8 +1,8 @@
 {
-  "schemaVersion": "7.1C.2",
+  "schemaVersion": "7.1C.3",
   "projectId": "bw3d",
   "corpusId": "bw3d.corpus.full-page.ship-only.342-415",
-  "updatedAt": "2026-08-02T08:49:00+03:00",
+  "updatedAt": "2026-08-02T08:57:00+03:00",
   "purpose": "Page-by-page identification of Black Whale-specific clues in Chapters 342–415, independent of Hunterpedia image selection.",
   "scopeRule": "Inspect every non-skipped chapter page; retain only vessel, spatial, route, access, operational, structural, scale, or chapter-state evidence.",
   "reviewPolicy": {
@@ -26,19 +26,20 @@
     "wholeChaptersSkipped": 7,
     "chaptersScheduledForReview": 67,
     "chaptersWithPrimaryPages": 74,
-    "chaptersReviewedPass1": 1,
-    "chaptersReviewedPass2": 1,
-    "chaptersComplete": [342],
-    "currentChapter": 343,
+    "chaptersReviewedPass1": 2,
+    "chaptersReviewedPass2": 2,
+    "chaptersComplete": [342, 343],
+    "currentChapter": 344,
     "phase71C": "active",
     "phase72": "blocked",
     "productionGeometryPercent": 0,
     "preliminaryHunterpediaCorpus": "reference-only-not-exhaustive"
   },
   "totals": {
-    "pagesInspected": 19,
+    "pagesInspected": 39,
     "blackWhalePanelsRetained": 1,
     "evidenceAtomsStored": 10,
+    "reviewedZeroChapters": 1,
     "openChapterQuarantines": 1
   },
   "defaults": {
@@ -61,6 +62,15 @@
       "blackWhalePanels": 1,
       "evidenceAtoms": 10,
       "status": "complete-two-pass"
+    },
+    {
+      "chapter": 343,
+      "record": "/phase7/full-page-review/chapter-343.json",
+      "pageCount": 20,
+      "retainedPages": [],
+      "blackWhalePanels": 0,
+      "evidenceAtoms": 0,
+      "status": "complete-two-pass-reviewed-zero"
     }
   ]
 }
