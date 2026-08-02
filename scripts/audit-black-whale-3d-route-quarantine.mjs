@@ -44,9 +44,14 @@ const filenames = (await readdir(reviewDirectory)).filter((name) => /^chapter-\d
 const sourceRecords = [];
 for (const filename of filenames) {
   const record = await readJson(`public/phase7/full-page-review/${filename}`);
-  for (const quarantine of record.contradictionsAndQuarantines ?? []) {
-    sourceRecords.push({ ...quarantine, chapter: record.chapter, migrationKey: `${record.chapter}:${quarantine.id}` });
-  }
+  (record.contradictionsAndQuarantines ?? []).forEach((quarantine, sourceArrayIndex) => {
+    sourceRecords.push({
+      ...quarantine,
+      chapter: record.chapter,
+      sourceArrayIndex,
+      migrationKey: `${record.chapter}:${sourceArrayIndex}:${quarantine.id}`,
+    });
+  });
 }
 const openRecords = sourceRecords.filter((record) => record.status === 'open');
 const sourceIds = sourceRecords.map((record) => record.id);
@@ -60,11 +65,12 @@ assert(uniqueSourceIds.size === migration.uniqueSourceIds, `Migration expects ${
 assert(repeatedIdInstances === migration.duplicateSourceIdInstances, `Migration expects ${migration.duplicateSourceIdInstances} repeated-ID instances, found ${repeatedIdInstances}.`);
 assert(migration.legacyTrackerReportedOpenRecords === tracker.totals.openChapterQuarantines, 'Legacy tracker total must remain documented exactly.');
 assert(migration.trackerDiscrepancy.migrationAuthority === 'direct chapter-record enumeration', 'Direct chapter enumeration must remain the migration authority.');
-assert(new Set(migrationKeys).size === migrationKeys.length, 'Composite chapter/source migration keys must be unique.');
+assert(new Set(migrationKeys).size === migrationKeys.length, 'Indexed chapter/source migration keys must be unique.');
+assert(migration.migrationKeyRule.includes('{sourceArrayIndex}'), 'Migration contract must include source-array index in the key.');
 assert(migration.migrationMode === 'deterministic-one-to-one-instance-carry-forward', 'Quarantine migration mode changed unexpectedly.');
 assert(migration.completionGuarantees.everySourceInstanceMapsExactlyOnce === true, 'One-to-one instance migration guarantee is missing.');
 assert(migration.defaultGraphState.edgeAvailability === 'prohibited', 'Open quarantines must prohibit graph edges.');
 assert(migration.defaultGraphState.navigationAvailability === 'prohibited', 'Open quarantines must prohibit navigation.');
 assert(migration.defaultGraphState.geometryAvailability === 'prohibited', 'Open quarantines must prohibit geometry.');
 
-console.log(`Black Whale Phase 7.2 route/quarantine audit passed: ${routeReview.routes.length} routes reviewed, 3 physical connections authorized without geometry, 2 nonphysical overlays, 5 quarantined route scopes, ${sourceRecords.length} open instances carried forward under ${uniqueSourceIds.size} distinct source IDs with ${repeatedIdInstances} repeated-ID instances preserved by composite keys; legacy tracker total ${tracker.totals.openChapterQuarantines} retained as documented metadata.`);
+console.log(`Black Whale Phase 7.2 route/quarantine audit passed: ${routeReview.routes.length} routes reviewed, 3 physical connections authorized without geometry, 2 nonphysical overlays, 5 quarantined route scopes, ${sourceRecords.length} open instances carried forward under ${uniqueSourceIds.size} distinct source IDs with ${repeatedIdInstances} repeated-ID instances preserved by indexed composite keys; legacy tracker total ${tracker.totals.openChapterQuarantines} retained as documented metadata.`);
