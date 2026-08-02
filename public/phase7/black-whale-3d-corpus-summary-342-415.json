@@ -1,51 +1,45 @@
 {
-  "schemaVersion": "7.1B.2",
+  "schemaVersion": "7.1C.0",
   "projectId": "bw3d",
-  "corpusId": "bw3d.corpus.hunterpedia.342-415",
-  "frozenAt": "2026-08-02T07:38:00+03:00",
-  "sourceBoundary": {
-    "allowedLoreHosts": ["hunterxhunter.fandom.com", "static.wikia.nocookie.net"],
-    "allowedLoreSurfaces": ["Hunterpedia chapter articles", "Hunterpedia chapter image categories", "Hunterpedia Black Whale article", "Hunterpedia Black Whale image gallery"],
-    "excluded": ["other wikis", "forums", "Reddit", "YouTube", "fan maps", "AI images", "real-ship analogues as lore evidence", "community production posts for unreleased chapters"]
+  "corpusId": "bw3d.corpus.black-whale-research.342-415",
+  "correctedAt": "2026-08-02T08:28:00+03:00",
+  "scopeCorrection": {
+    "previousCorpusStatus": "hunterpedia-based-preliminary-corpus",
+    "previousClaimCount": 190,
+    "warning": "The Hunterpedia-derived corpus is not exhaustive visual coverage and may contain voyage-era context that is not evidence about the Black Whale itself.",
+    "requiredReplacement": "A page-by-page, panel-by-panel, ship-only review of lawful primary chapter pages.",
+    "shipOnlyRule": "Retain only evidence about the Black Whale as a vessel, spatial system, operating environment, route network, access system, structural object, scale reference, or chapter-dependent operational state."
   },
-  "scope": {
-    "requestedStartChapter": 342,
-    "requestedEndChapter": 415,
-    "requestedChapterSlots": 74,
-    "releasedHunterpediaChapterArticlesReviewed": 70,
-    "unreleasedOrUnavailableSlots": [412, 413, 414, 415],
-    "releasedCoverageThrough": 411
-  },
-  "stats": {
-    "chaptersWithBlackWhaleEvidence": 59,
-    "contextOnlyChapters": 3,
-    "reviewedNoRelevantEvidence": 8,
-    "unavailableChapterSlots": 4,
-    "evidenceAtoms": 190,
-    "locationAndRouteRecords": 79,
-    "visualDiscoveryRecords": 67,
-    "exactVisualFileNamesCatalogued": 14,
-    "visualSubjectsPendingExactFileResolution": 53,
-    "openOrQuarantinedClaims": 8,
-    "certaintyCounts": {"c1-confirmed": 173, "c2-strong-reconstruction": 5, "c5-unknown": 8, "c3-functional-reconstruction": 4}
+  "primarySourceRequirement": {
+    "status": "blocked-no-primary-pages-found",
+    "searchedLocations": [
+      "current ChatGPT conversation attachments",
+      "ChatGPT file library",
+      "connected Google Drive"
+    ],
+    "acceptedInputs": [
+      "lawfully obtained chapter PDFs",
+      "CBZ archives",
+      "ordered page-image folders"
+    ],
+    "publicStorageRule": "Do not commit manga pages or scans. Store only hashes, page/panel locators, derived observations, certainty, contradictions, and modeling permissions.",
+    "privateStoragePath": "private-evidence-vault/chapters/"
   },
   "status": {
     "phase70": "complete",
-    "phase71A": "complete-frozen-starter-ledger",
-    "phase71B": "first-exhaustive-pass-stored-awaiting-discussion",
+    "phase71A": "frozen-starter-ledger",
+    "phase71B": "preliminary-hunterpedia-corpus-needs-ship-only-filter",
+    "phase71C": "blocked-awaiting-primary-pages",
     "phase72": "blocked",
     "productionGeometryPercent": 0,
     "programmePercent": null,
-    "programmeLabel": "research reopened"
+    "programmeLabel": "full-page research awaiting primary source"
   },
+  "tracker": "/phase7/black-whale-3d-full-page-review-342-415.json",
+  "protocol": "/docs/BLACK-WHALE-FULL-PAGE-REVIEW-PROTOCOL.md",
   "completionPolicy": {
     "researchComplete": false,
-    "reason": "The 342–415 chapter census and first atomic extraction are stored, but a second independent pass and exact file-level resolution for all catalogued visuals remain required before Phase 7.1B can close.",
-    "phase72MayStart": false
-  },
-  "files": {
-    "corpusManifest": "/phase7/black-whale-3d-corpus-manifest-342-415.json",
-    "locations": "/phase7/black-whale-3d-location-registry-342-415.json",
-    "contradictions": "/phase7/black-whale-3d-contradictions-342-415.json"
+    "phase72MayStart": false,
+    "reason": "No chapter may be marked visually reviewed until its lawful primary pages have been inspected twice. Hunterpedia remains a cross-check, not the complete visual source."
   }
 }
