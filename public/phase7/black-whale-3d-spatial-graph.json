@@ -2,12 +2,15 @@
   "schemaVersion": "7.2.0",
   "projectId": "bw3d",
   "phase": "7.2",
-  "status": "active",
+  "status": "release-candidate",
   "title": "Black Whale evidence-bounded spatial graph",
   "purpose": "Normalize confirmed scene identities, containment, access and route evidence without converting editorial sequence or visual similarity into geometry.",
   "sourceRegistry": "/phase7/black-whale-3d-location-registry-342-415.json",
   "fullPageReview": "/phase7/black-whale-3d-full-page-review-342-415.json",
   "charter": "/phase7/black-whale-3d-charter.json",
+  "normalizationContract": "/phase7/black-whale-3d-spatial-normalization.json",
+  "routeReview": "/phase7/black-whale-3d-route-review.json",
+  "quarantineMigration": "/phase7/black-whale-3d-quarantine-migration.json",
   "materializers": {
     "nodes": "/scripts/build-black-whale-3d-spatial-nodes.mjs",
     "containmentAndRouteScopeEdges": "/scripts/build-black-whale-3d-spatial-edges.mjs"
@@ -22,14 +25,7 @@
     "A traversable route requires stronger evidence than shared tier membership.",
     "Contradictory relations remain quarantined and unavailable to navigation."
   ],
-  "certaintyClasses": [
-    "confirmed",
-    "confirmed-with-open-questions",
-    "strong-reconstruction",
-    "functional-reconstruction",
-    "unresolved",
-    "unknown"
-  ],
+  "certaintyClasses": ["confirmed","confirmed-with-open-questions","strong-reconstruction","functional-reconstruction","unresolved","unknown"],
   "edgeClasses": [
     {"id":"contains","traversable":false,"meaning":"A larger evidenced container includes a scene identity at an unspecified position."},
     {"id":"part-of","traversable":false,"meaning":"Inverse containment relation."},
@@ -68,7 +64,7 @@
   "authoringPolicy": {
     "minimumEvidenceForContainment": "explicit tier/location statement or stable registry assignment",
     "minimumEvidenceForTraversableEdge": "explicit doorway, route, passage, lift, stair, gate or movement relation with independently identified endpoints",
-    "forbiddenEdgeSources": ["editorial sequence", "shared visual motif", "room-number sequence", "character assumption", "Nen effect shape", "temporary crowd placement"],
+    "forbiddenEdgeSources": ["editorial sequence","shared visual motif","room-number sequence","character assumption","Nen effect shape","temporary crowd placement"],
     "unknownSpacePolicy": "Do not create filler nodes or edges. Preserve unresolved endpoints as unknown.",
     "geometryPolicy": "No coordinates, lengths, widths, heights or angles are authorized in Phase 7.2 unless explicitly sourced."
   },
@@ -83,9 +79,9 @@
   "progress": {
     "contractComplete": true,
     "containerNormalizationComplete": true,
-    "edgeNormalizationComplete": false,
-    "quarantineMigrationComplete": false,
-    "dashboardComplete": false,
+    "edgeNormalizationComplete": true,
+    "quarantineMigrationComplete": true,
+    "dashboardComplete": true,
     "phaseComplete": false
   }
 }
