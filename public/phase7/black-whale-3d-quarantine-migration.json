@@ -5,9 +5,10 @@
   "sourceTracker": "/phase7/black-whale-3d-full-page-review-342-415.json",
   "sourceRecordPattern": "/phase7/full-page-review/chapter-{chapter}.json",
   "sourceField": "contradictionsAndQuarantines",
-  "expectedSourceRecords": 145,
+  "expectedOpenSourceRecords": 145,
   "migrationMode": "deterministic-one-to-one-carry-forward",
-  "identityRule": "Each Phase 7.1C quarantine retains its original source ID as the Phase 7.2 quarantine key; no source record is silently merged, deleted or promoted into geometry.",
+  "identityRule": "Each Phase 7.1C contradiction or quarantine retains its original source ID as the Phase 7.2 key; no source record is silently merged, deleted or promoted into geometry.",
+  "countingRule": "The frozen tracker total counts records whose status is open. Non-open contradiction records are also retained one-to-one but are not included in the 145 open-quarantine total.",
   "defaultGraphState": {
     "status": "open",
     "edgeAvailability": "prohibited",
@@ -16,38 +17,19 @@
     "resolutionPolicy": "A quarantine may be superseded only by an explicit later record that cites the original ID and independent evidence."
   },
   "classificationRules": [
-    {
-      "match": "editorial sequence|adjacency|room-number sequence",
-      "class": "topology-inference-block",
-      "graphEffect": "Do not create adjacency or route edges."
-    },
-    {
-      "match": "temporary|occupancy|guard|crowd|furniture|security posture",
-      "class": "temporal-overlay-only",
-      "graphEffect": "Keep as time-state metadata; do not create permanent architecture."
-    },
-    {
-      "match": "tier|route|connection|corridor identity|placement",
-      "class": "placement-or-route-unresolved",
-      "graphEffect": "Assign unresolved container or possible-link only; traversal remains prohibited."
-    },
-    {
-      "match": "dimension|scale|width|height|length|perspective",
-      "class": "metric-inference-block",
-      "graphEffect": "Do not authorize coordinates or dimensions."
-    },
-    {
-      "match": "Nen|teleport|conjured|anomalous",
-      "class": "nonphysical-or-temporal-overlay",
-      "graphEffect": "Keep separate from conventional permanent geometry."
-    }
+    {"match":"editorial sequence|adjacency|room-number sequence","class":"topology-inference-block","graphEffect":"Do not create adjacency or route edges."},
+    {"match":"temporary|occupancy|guard|crowd|furniture|security posture","class":"temporal-overlay-only","graphEffect":"Keep as time-state metadata; do not create permanent architecture."},
+    {"match":"tier|route|connection|corridor identity|placement","class":"placement-or-route-unresolved","graphEffect":"Assign unresolved container or possible-link only; traversal remains prohibited."},
+    {"match":"dimension|scale|width|height|length|perspective","class":"metric-inference-block","graphEffect":"Do not authorize coordinates or dimensions."},
+    {"match":"Nen|teleport|conjured|anomalous","class":"nonphysical-or-temporal-overlay","graphEffect":"Keep separate from conventional permanent geometry."}
   ],
   "fallbackClass": {
     "class": "unresolved-evidence-claim",
     "graphEffect": "Carry forward unchanged with navigation and geometry prohibited."
   },
   "completionGuarantees": {
-    "all145SourceIdsMustBeReadable": true,
+    "allOpenSourceIdsMustBeReadable": true,
+    "allNonOpenContradictionIdsMustAlsoBeRetained": true,
     "sourceIdsMustBeUnique": true,
     "everySourceRecordMapsExactlyOnce": true,
     "noOpenQuarantineCanAuthorizeTraversal": true,
