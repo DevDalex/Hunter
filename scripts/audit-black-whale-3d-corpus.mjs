@@ -53,11 +53,14 @@ expect(released[0]?.chapter === 342 && released.at(-1)?.chapter === 411, 'Releas
 
 const unavailable = census.filter((record) => record.reviewStatus === 'requested-slot-checked-no-canon-source').map((record) => record.chapter);
 expect(JSON.stringify(unavailable) === JSON.stringify([412, 413, 414, 415]), `Unexpected unavailable chapter slots: ${unavailable.join(', ')}.`);
-expect(summary.status.phase72 === 'blocked', 'Phase 7.2 must remain blocked.');
-expect(summary.status.productionGeometryPercent === 0, 'Production geometry must remain at zero.');
-expect(summary.status.programmePercent === null, 'A precise programme percentage must remain withdrawn while 7.1B is open.');
-expect(summary.completionPolicy.researchComplete === false, 'The first exhaustive pass must not claim research completion.');
-expect(summary.completionPolicy.phase72MayStart === false, 'Phase 7.2 must not be authorized.');
+
+// These values intentionally preserve the historical Phase 7.1B first-pass state.
+// They are not the authority for the current live programme after 7.1C and 7.2.
+expect(summary.status.phase72 === 'blocked', 'Frozen Phase 7.1B summary must preserve its original Phase 7.2 block.');
+expect(summary.status.productionGeometryPercent === 0, 'Frozen Phase 7.1B summary must preserve its original geometry baseline.');
+expect(summary.status.programmePercent === null, 'A precise programme percentage must remain withdrawn in the frozen 7.1B summary.');
+expect(summary.completionPolicy.researchComplete === false, 'The frozen first exhaustive pass must not claim later research completion.');
+expect(summary.completionPolicy.phase72MayStart === false, 'The frozen first-pass summary must preserve its original Phase 7.2 gate.');
 
 const approvedHosts = new Set(['hunterxhunter.fandom.com', 'static.wikia.nocookie.net']);
 const assertApprovedUrl = (url, label) => {
@@ -71,7 +74,7 @@ for (const record of released) {
   assertApprovedUrl(record.imageCategoryUrl, `Chapter ${record.chapter} image category`);
 }
 for (const record of census.filter((entry) => entry.chapter >= 412)) {
-  expect(record.chapterUrl === null && record.imageCategoryUrl === null, `Unreleased Chapter ${record.chapter} must not invent source URLs.`);
+  expect(record.chapterUrl === null && record.imageCategoryUrl === null, `Legacy Chapter ${record.chapter} slot must not invent article-level source URLs.`);
 }
 
 const atomIds = new Set();
@@ -115,12 +118,14 @@ const [loader, app, page] = await Promise.all([
 for (const requiredPath of Object.values(summary.files)) {
   expect(loader.includes(requiredPath), `Dashboard loader does not register ${requiredPath}.`);
 }
-expect(app.includes('Phase 7.1B'), 'Dashboard does not visibly identify Phase 7.1B.');
-expect(app.includes('Phase 7.2 remains blocked'), 'Dashboard does not state the Phase 7.2 block.');
+expect(app.includes('Phase 7.1B / 7.1C · Complete'), 'Dashboard does not visibly preserve and contextualize Phase 7.1B.');
+expect(app.includes('The spatial graph is no longer blocked'), 'Dashboard does not state the current post-7.1C spatial-graph status.');
+expect(loader.includes("id: '7.2'") && loader.includes("title: 'Spatial graph'"), 'Live roadmap does not retain Phase 7.2.');
+expect(loader.includes("activeStage: '7.3R'"), 'Live programme stage is not current.');
 expect(page.includes('href="#corpus"'), 'Dashboard navigation does not link to the corpus section.');
 
 console.log(
-  `Black Whale Phase 7.1B corpus audit passed: ${census.length} chapter slots, `
-  + `${released.length} released chapters reviewed, ${atoms.length} evidence atoms, `
-  + `${locations.length} nodes/routes, ${visuals.length} visual records, and Phase 7.2 blocked.`,
+  `Black Whale Phase 7.1B corpus audit passed: ${census.length} frozen chapter slots, `
+  + `${released.length} article-level released chapters reviewed, ${atoms.length} evidence atoms, `
+  + `${locations.length} nodes/routes and ${visuals.length} visual records; historical first-pass state preserved while the live dashboard correctly reflects the completed 7.1C/7.2 handoff.`,
 );
