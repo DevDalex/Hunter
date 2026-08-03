@@ -1,4 +1,4 @@
-import { readFile, stat } from 'node:fs/promises';
+import { access, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 
 const root = process.cwd();
@@ -33,9 +33,13 @@ assert(contract.roadmapBoundary.includes('Phase 7.6'), 'Phase 7.6 room productio
 assert(contract.evidenceBoundary.approvedExternalDomains.length === 1 && contract.evidenceBoundary.approvedExternalDomains[0] === 'hunterxhunter.fandom.com', 'External lore boundary changed.');
 assert(contract.evidenceBoundary.quarantinedClaims.some((claim) => claim.includes('Exact length')), 'Canonical dimensions must remain quarantined.');
 assert(contract.evidenceBoundary.quarantinedClaims.some((claim) => claim.includes('mouth, eye, fin')), 'Detailed whale anatomy must remain quarantined.');
+for (const source of contract.evidenceBoundary.repositorySources) {
+  assert(source.startsWith('/'), `Repository source must be root-relative: ${source}.`);
+  await access(path.join(root, 'public', source.replace(/^\//, '')));
+}
 
 const targets = new Map(contract.refinementTargets.map((target) => [target.id, target]));
-for (const id of ['whale-head-mass', 'back-and-belly-contours', 'rear-taper', 'tier-1-integration', 'analytical-surface-language']) {
+for (const id of ['whale-head-mass', 'head-identity-cues', 'back-and-belly-contours', 'rear-taper', 'tier-1-integration', 'analytical-surface-language']) {
   assert(targets.has(id), `Missing refinement target ${id}.`);
   assert(targets.get(id).permission, `${id} lacks modeling permission.`);
   assert(Array.isArray(targets.get(id).prohibitions) && targets.get(id).prohibitions.length > 0, `${id} lacks prohibitions.`);
@@ -59,14 +63,23 @@ for (let index = 0; index < stationCount; index += 1) {
   assert(station.authority === 'working-silhouette' || station.authority === 'reconstructed-closure', `${station.id} has an invalid authority.`);
   if (index > 0) assert(profile.hullStations[index - 1].z < station.z, 'Hull stations must be strictly ordered along working +Z.');
 }
+const headStations = profile.hullStations.slice(-4);
+assert(headStations.every((station) => station.radiusX >= 2.9), 'Final head stations must retain a broad blunt transverse profile.');
+assert(headStations.at(-1).id === 'head-face', 'Final hull station must be the explicit reconstructed head face.');
 assert(profile.ringSegments === performance.budgets.maximumRingSegments, 'Stored ring segment count does not match the performance budget.');
 assert(profile.headSeamGuide.canonicalAnatomy === false, 'Head-side seam guide must remain noncanonical.');
 assert(profile.headSeamGuide.pointsPerSide.length >= 4, 'Head-side seam guide is incomplete.');
+assert(profile.eyeMarkers.authority === 'diagrammatic-silhouette-aid', 'Eye markers must remain diagrammatic.');
+assert(profile.eyeMarkers.canonicalPosition === false && profile.eyeMarkers.canonicalSize === false, 'Eye markers must not claim canonical placement or size.');
+assert(profile.eyeMarkers.points.length === 2, 'Exactly two paired eye markers are required.');
 assert(profile.tierOneWorkingMasses.length === 4, 'Tier 1 working mass registry changed unexpectedly.');
 assert(profile.analyticalWaterPlane.canonicalWaterline === false, 'Analytical water plane must not claim canonical draft.');
 assert(profile.prohibitions.some((rule) => rule.includes('Do not cite any number')), 'Stored profile lacks its metric prohibition.');
+assert(profile.prohibitions.some((rule) => rule.includes('eye markers')), 'Stored profile lacks its eye-marker prohibition.');
 assert(contract.implementation.hullStations === stationCount, 'Contract hull-station count does not match the stored profile.');
 assert(contract.implementation.ringSegments === profile.ringSegments, 'Contract ring-segment count does not match the stored profile.');
+assert(contract.implementation.closedEndCaps === true, 'Contract does not require closed hull end caps.');
+assert(contract.implementation.diagrammaticEyeMarkers === profile.eyeMarkers.points.length, 'Contract eye-marker count does not match the stored profile.');
 
 assert(runtime.includes('/phase7/black-whale-3d-exterior-refinement.json'), 'Runtime does not load the Phase 7.3R contract.');
 assert(runtime.includes('/phase7/black-whale-3d-exterior-refinement-profile.json'), 'Runtime does not load the stored refinement profile.');
@@ -75,10 +88,15 @@ assert(runtime.includes('Recognizable whale silhouette, still noncanonical'), 'R
 assert(runtime.includes('profile.hullStations.map'), 'Runtime does not materialize hull stations from stored profile data.');
 assert(runtime.includes('profile.ringSegments'), 'Runtime does not use the stored segment budget.');
 assert(runtime.includes('station.top') && runtime.includes('station.bottom'), 'Asymmetric back and belly contours are missing.');
+assert(runtime.includes('ringPoints.at(-1)'), 'Runtime does not close the blunt head face.');
+assert(runtime.includes("[...ringPoints[0]].reverse()"), 'Runtime does not close the rear hull end.');
 assert(runtime.includes('profile.headSeamGuide.pointsPerSide'), 'Runtime does not use the audited head-side seam guide.');
+assert(runtime.includes('profile.eyeMarkers.points'), 'Runtime does not use the audited paired eye markers.');
+assert(runtime.includes('bw3d.refinement.head-identity-cues'), 'Runtime does not expose the head identity evidence target.');
 assert(runtime.includes('profile.tierOneWorkingMasses'), 'Runtime does not use the audited Tier 1 working masses.');
 assert(runtime.includes('profile.analyticalWaterPlane.y'), 'Runtime does not use the audited analytical water plane.');
 assert(runtime.includes('drawWater'), 'Analytical water context is missing.');
+assert(runtime.includes('drawEyeMarkers'), 'Whale head identity markers are missing.');
 assert(runtime.includes('drawTierOne'), 'Refined Tier 1 integration is missing.');
 assert(runtime.includes('drawTierEnvelope'), 'Five-tier analytical context was removed.');
 assert(runtime.includes('cutaway-toggle') && runtime.includes('tiers-toggle') && runtime.includes('unknown-toggle'), 'Required analytical toggles are missing.');
@@ -88,6 +106,7 @@ assert(runtime.toLowerCase().includes('three.js') === false && runtime.toLowerCa
 assert(styles.includes('.exterior-refinement-note'), 'Refinement status styling is missing.');
 assert(styles.includes('.exterior-stage') && styles.includes('.exterior-controls'), 'Exterior layout styling regressed.');
 assert(bootstrap.includes("import('/succession/black-whale-3d/exterior-blockout.js')"), 'Visual bootstrap no longer loads the refined exterior runtime.');
+assert(bootstrap.includes("waitForSelector('#exterior-blockout'"), 'Visual bootstrap does not wait for the refined exterior to finish mounting.');
 
 assert(performance.phase === '7.3R', 'Refinement performance budget targets the wrong phase.');
 assert(performance.budgets.externalRuntimeDependencies === 0, 'External runtime dependency budget changed.');
@@ -111,4 +130,4 @@ if (contract.status === 'complete') {
   assert(gates.mergedDeployedAndLiveVerified === false, 'Pre-release Phase 7.3R must not claim live completion.');
 }
 
-console.log(`Black Whale Phase 7.3R audit passed: ${stationCount} stored hull stations, ${profile.ringSegments} ring segments, audited head/back/belly/rear macro form, Tier 1 masses, analytical water context, ${runtimeBytes} JS bytes, ${styleBytes} CSS bytes, zero external runtime dependencies and zero network model assets.`);
+console.log(`Black Whale Phase 7.3R audit passed: ${stationCount} stored hull stations, ${profile.ringSegments} ring segments, broad blunt head closure, paired diagrammatic eye markers, audited mouth seam/back/belly/rear macro form, Tier 1 masses, analytical water context, ${runtimeBytes} JS bytes, ${styleBytes} CSS bytes, zero external runtime dependencies and zero network model assets.`);
