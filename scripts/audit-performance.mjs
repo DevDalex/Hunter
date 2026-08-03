@@ -73,7 +73,6 @@ const retiredBoundaryKeys = [
   'src/components/VolumeZeroPage.jsx',
   'src/components/HunterExamPage.jsx',
   'src/components/GreedIslandPage.jsx',
-  'src/components/TimelineWorkspace.jsx',
   'src/components/EntityEncyclopedia.jsx',
   'src/components/OrganizationWorkspace.jsx',
   'src/components/ConflictArchive.jsx',
