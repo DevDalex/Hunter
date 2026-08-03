@@ -65,22 +65,27 @@ for (let index = 0; index < stationCount; index += 1) {
   if (index > 0) assert(profile.hullStations[index - 1].z < station.z, 'Hull stations must be strictly ordered along +Z.');
 }
 assert(profile.hullStations.at(-1).id === 'head-face', 'Final station must be the explicit head face.');
-assert(profile.hullStations.at(-1).radiusX >= 3.2, 'Head face must remain broad rather than cylindrical or pointed.');
+assert(profile.hullStations.at(-1).radiusX >= 3.8, 'Head face must remain broad rather than circular or pointed.');
+assert(profile.hullStations.at(-1).radiusX / profile.hullStations.at(-1).radiusY >= 1.4, 'Front dome must remain horizontally broad.');
 assert(profile.ringSegments === performance.budgets.maximumRingSegments, 'Ring segment count must match the performance budget.');
 
 const identity = profile.faceIdentity;
 assert(identity.authority === 'reference-matched-front-identity', 'Face identity authority is missing.');
 assert(Number.isFinite(identity.facePlaneZ), 'Face plane is invalid.');
-assert(identity.upperFaceColor === '#111416', 'Upper face must retain the near-black canonical read.');
+assert(identity.upperFaceColor === '#0f1214', 'Upper face must retain the near-black canonical read.');
+assert(identity.leftBrowPatch?.points?.length >= 8, 'Asymmetric left brow patch is incomplete.');
 assert(identity.mouthPanel.length >= 18, 'Filled pale mouth panel is incomplete.');
 assert(identity.mouthTopCurve.length >= 8, 'Curved mouth boundary is incomplete.');
 assert(identity.mouthRibs.length === contract.implementation.mouthRibs, 'Mouth-rib count changed.');
 assert(identity.eyes.length === contract.implementation.pairedRingEyes, 'Paired ring-eye count changed.');
+assert(identity.eyes[0].outerColor !== identity.eyes[1].outerColor, 'Reference eye-ring asymmetry was lost.');
 for (const eye of identity.eyes) {
   assert(eye.outerRadiusX > eye.innerRadiusX && eye.outerRadiusY > eye.innerRadiusY, 'Eye ring must surround a smaller dark center.');
+  assert(typeof eye.outerColor === 'string', 'Eye ring color is missing.');
 }
 assert(profile.sideFins.length === contract.implementation.sideFins, 'Side-fin silhouette count changed.');
 assert(profile.tierOneWorkingMasses.length === 5, 'Compact upper-vessel mass registry changed.');
+assert(profile.tierOneWorkingMasses[0].size[0] <= 2.7, 'Upper vessel base has become too large relative to the dome.');
 assert(profile.analyticalWaterPlane.canonicalWaterline === false, 'Water plane must remain analytical.');
 assert(profile.prohibitions.some((rule) => rule.includes('supplied canonical exterior view')), 'Profile lacks its front-reference statement.');
 assert(profile.prohibitions.some((rule) => rule.includes('mouth ribs')), 'Mouth-rib interpretation boundary is missing.');
@@ -95,11 +100,14 @@ for (const marker of [
   'Phase 7.3R · Canonical face correction',
   'Reference-matched Black Whale exterior',
   'profile.faceIdentity',
+  'identity.leftBrowPatch',
   'identity.mouthPanel',
   'identity.mouthRibs',
+  'eye.outerColor',
   'ellipseOnFace',
   'drawFaceIdentity',
   'drawFins',
+  "hero: [0, -0.02, 1.05]",
   "front: [0, -0.02, 1.08]",
   "side: [-Math.PI / 2, 0, 0.92]",
 ]) {
@@ -108,6 +116,7 @@ for (const marker of [
 assert(runtime.includes('profile.hullStations.map'), 'Runtime does not materialize stored hull stations.');
 assert(runtime.includes('profile.ringSegments'), 'Runtime does not use the stored segment count.');
 assert(runtime.includes('faces.sort'), 'Hull faces are not depth sorted.');
+assert(runtime.includes('projectedWaterY'), 'Foreground waterline is not derived from the projected model.');
 assert(runtime.includes('requestAnimationFrame') === false, 'Runtime must remain render-on-demand.');
 assert(runtime.toLowerCase().includes('three.js') === false && runtime.toLowerCase().includes('babylon') === false, 'Unapproved external 3D runtime detected.');
 assert(runtime.includes('cutaway-toggle') && runtime.includes('tiers-toggle') && runtime.includes('unknown-toggle'), 'Analytical controls are missing.');
@@ -137,4 +146,4 @@ if (contract.status === 'complete') {
   assert(gates.mergedDeployedAndLiveVerified === false, 'Pre-release phase must not claim live completion.');
 }
 
-console.log(`Black Whale Phase 7.3R face audit passed: ${stationCount} hull stations, broad dome, near-black face, filled pale segmented mouth, ${identity.eyes.length} ring eyes, ${profile.sideFins.length} side fins, compact upper vessel, corrected cameras, ${runtimeBytes} JS bytes and zero external model assets.`);
+console.log(`Black Whale Phase 7.3R face audit passed: ${stationCount} hull stations, wide dome, asymmetric brow patch, low pale segmented mouth, two distinct ring eyes, ${profile.sideFins.length} fins, compact crown vessel, projected waterline, ${runtimeBytes} JS bytes and zero external model assets.`);
