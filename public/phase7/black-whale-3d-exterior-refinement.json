@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "7.3R.2",
+  "schemaVersion": "7.3R.3",
   "phase": "7.3R",
   "title": "Black Whale exterior refinement",
   "status": "in-progress",
@@ -11,13 +11,16 @@
   "evidenceBoundary": {
     "approvedExternalDomains": ["hunterxhunter.fandom.com"],
     "repositorySources": [
+      "/black-whale-cutaway.png",
+      "/phase7/black-whale-3d-references-a.json",
+      "/phase7/black-whale-3d-references-b.json",
       "/phase7/black-whale-3d-exterior-blockout.json",
       "/phase7/black-whale-3d-analysis.json",
-      "/phase7/black-whale-3d-reference-ledger.json",
       "/phase7/black-whale-3d-spatial-graph.json"
     ],
     "authorizedClaims": [
       "The main exterior is deliberately whale-shaped.",
+      "The head-side is visually broad and carries whale-identity cues in the canonical cutaway.",
       "The upper Tier 1 vessel is visually distinct from the lower whale hull.",
       "The five-tier inhabited structure fits within the broad exterior envelope.",
       "Exterior views authorize silhouette study but not engineering dimensions."
@@ -31,6 +34,7 @@
   },
   "refinementTargets": [
     {"id":"whale-head-mass","permission":"Refine a broad blunt head-side silhouette and brow transition.","prohibitions":["No anatomical precision claim","No canonical mouth dimensions"]},
+    {"id":"head-identity-cues","permission":"Show a broad mouth seam and paired eye markers as diagrammatic silhouette aids.","prohibitions":["No exact eye position or size","Do not classify the markers as windows, organs or machinery"]},
     {"id":"back-and-belly-contours","permission":"Refine continuous upper-back and lower-belly curves across the working hull.","prohibitions":["No metric curvature claim"]},
     {"id":"rear-taper","permission":"Create a smoother narrowing rear continuation needed for a coherent whale silhouette.","prohibitions":["No exact tail or propulsion design"]},
     {"id":"tier-1-integration","permission":"Blend the upper vessel footprint into the back region while retaining it as a distinct mass.","prohibitions":["No room-plan alignment","No invented deck or window grid"]},
@@ -39,9 +43,12 @@
   "implementation": {
     "runtime":"/succession/black-whale-3d/exterior-blockout.js",
     "styles":"/succession/black-whale-3d/exterior-blockout.css",
+    "profile":"/phase7/black-whale-3d-exterior-refinement-profile.json",
     "rendering":"dependency-free Canvas projection",
     "hullStations":13,
     "ringSegments":24,
+    "closedEndCaps":true,
+    "diagrammaticEyeMarkers":2,
     "requiredViews":["hero","side","front","rear","human-scale","cutaway"],
     "requiredControls":["pointer-rotate","keyboard-rotate","wheel-and-keyboard-zoom","cutaway","tier-bands","unknown-volume","evidence-object-selection"]
   },
