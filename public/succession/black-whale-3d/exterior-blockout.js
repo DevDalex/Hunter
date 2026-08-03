@@ -35,7 +35,7 @@ const makeSection = (data, objects) => {
     </header>
     <div class="exterior-refinement-note" role="note">
       <strong>Refined macro form</strong>
-      <span>${data.profile.hullStations.length} longitudinal hull stations, asymmetric back and belly contours, a broad head-side mass, smoother rear taper, improved Tier 1 integration and analytical water context.</span>
+      <span>${data.profile.hullStations.length} longitudinal hull stations, a broad blunt head face, asymmetric back and belly contours, a smoother rear taper, diagrammatic whale-identity cues, improved Tier 1 integration and analytical water context.</span>
     </div>
     <div class="exterior-layout">
       <div class="exterior-stage">
@@ -184,8 +184,20 @@ const startRenderer = (canvas, profile) => {
       }
     }
 
+    if (!state.cutaway) {
+      polygon([...ringPoints[0]].reverse(), '#40545b', .98, '#26363a');
+      polygon(ringPoints.at(-1), state.selected === 'bw3d.refinement.whale-head-mass' ? '#8fa5a5' : '#647d81', .98, '#26363a');
+    }
+
     [-1, 1].forEach((side) => {
-      line(profile.headSeamGuide.pointsPerSide.map((point) => [side * point.xScale, point.y, point.z]), '#26363a', 2, .72);
+      line(profile.headSeamGuide.pointsPerSide.map((point) => [side * point.xScale, point.y, point.z]), '#26363a', 2.4, .82);
+    });
+  };
+
+  const drawEyeMarkers = () => {
+    const selected = state.selected === 'bw3d.refinement.head-identity-cues';
+    profile.eyeMarkers.points.forEach((marker) => {
+      box(...marker.center, ...marker.size, selected ? '#d89a32' : '#18262a', 1, '#101719');
     });
   };
 
@@ -227,6 +239,7 @@ const startRenderer = (canvas, profile) => {
     if (state.unknown) box(0, -.2, -.1, 6.2, 4.55, 8.4, '#263033', .1, '#5f7377');
     if (state.tiers) drawTierEnvelope();
     drawHull();
+    drawEyeMarkers();
     drawTierOne();
     drawSupportRegion();
 
