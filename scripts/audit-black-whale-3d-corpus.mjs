@@ -55,7 +55,7 @@ const unavailable = census.filter((record) => record.reviewStatus === 'requested
 expect(JSON.stringify(unavailable) === JSON.stringify([412, 413, 414, 415]), `Unexpected unavailable chapter slots: ${unavailable.join(', ')}.`);
 
 // These values intentionally preserve the historical Phase 7.1B first-pass state.
-// They are not the authority for the current live programme after 7.1C and 7.2.
+// They are not the authority for the current live programme after later production phases.
 expect(summary.status.phase72 === 'blocked', 'Frozen Phase 7.1B summary must preserve its original Phase 7.2 block.');
 expect(summary.status.productionGeometryPercent === 0, 'Frozen Phase 7.1B summary must preserve its original geometry baseline.');
 expect(summary.status.programmePercent === null, 'A precise programme percentage must remain withdrawn in the frozen 7.1B summary.');
@@ -121,11 +121,12 @@ for (const requiredPath of Object.values(summary.files)) {
 expect(app.includes('Phase 7.1B / 7.1C · Complete'), 'Dashboard does not visibly preserve and contextualize Phase 7.1B.');
 expect(app.includes('The spatial graph is no longer blocked'), 'Dashboard does not state the current post-7.1C spatial-graph status.');
 expect(loader.includes("id: '7.2'") && loader.includes("title: 'Spatial graph'"), 'Live roadmap does not retain Phase 7.2.');
-expect(loader.includes("activeStage: '7.3R'"), 'Live programme stage is not current.');
+expect(loader.includes("activeStage: '7.5–7.7'"), 'Live programme stage is not current.');
+expect(loader.includes("id: '7.5'") && loader.includes("id: '7.6'") && loader.includes("id: '7.7'"), 'Live roadmap does not include the combined operational release.');
 expect(page.includes('href="#corpus"'), 'Dashboard navigation does not link to the corpus section.');
 
 console.log(
   `Black Whale Phase 7.1B corpus audit passed: ${census.length} frozen chapter slots, `
   + `${released.length} article-level released chapters reviewed, ${atoms.length} evidence atoms, `
-  + `${locations.length} nodes/routes and ${visuals.length} visual records; historical first-pass state preserved while the live dashboard correctly reflects the completed 7.1C/7.2 handoff.`,
+  + `${locations.length} nodes/routes and ${visuals.length} visual records; historical first-pass state preserved while the live dashboard reflects the completed Phase 7.5–7.7 operational release.`,
 );
