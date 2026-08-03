@@ -1,78 +1,80 @@
 {
-  "schemaVersion": "7.3R-profile.3",
+  "schemaVersion": "7.3R-profile.4",
   "phase": "7.3R",
-  "status": "working-reconstruction",
+  "status": "reference-matched-reconstruction",
   "units": "working scene metres",
   "canonicalMetricStatus": "not-established",
   "axisConvention": {
     "up": "+Y",
-    "longitudinal": "+Z working head-side",
-    "globalBowMapping": "unresolved",
-    "rule": "Values control browser rendering only and cannot be cited as canon."
+    "longitudinal": "+Z head-side",
+    "globalBowMapping": "head-side treated as display front",
+    "rule": "Values control browser rendering only and cannot be cited as canonical measurements."
   },
   "ringSegments": 24,
   "hullStations": [
-    {"id":"rear-tip","z":-6.55,"radiusX":0.30,"radiusY":0.40,"centerY":0.18,"topScale":0.80,"bottomScale":1.05,"authority":"reconstructed-closure"},
-    {"id":"rear-01","z":-6.00,"radiusX":0.80,"radiusY":0.92,"centerY":0.12,"topScale":0.82,"bottomScale":1.08,"authority":"reconstructed-closure"},
-    {"id":"rear-02","z":-5.15,"radiusX":1.55,"radiusY":1.62,"centerY":0.08,"topScale":0.84,"bottomScale":1.10,"authority":"reconstructed-closure"},
-    {"id":"rear-03","z":-4.00,"radiusX":2.35,"radiusY":2.25,"centerY":0.05,"topScale":0.86,"bottomScale":1.12,"authority":"reconstructed-closure"},
-    {"id":"body-01","z":-2.65,"radiusX":3.05,"radiusY":2.78,"centerY":0.02,"topScale":0.87,"bottomScale":1.14,"authority":"working-silhouette"},
-    {"id":"body-02","z":-1.15,"radiusX":3.55,"radiusY":3.08,"centerY":0.00,"topScale":0.88,"bottomScale":1.15,"authority":"working-silhouette"},
-    {"id":"body-03","z":0.45,"radiusX":3.78,"radiusY":3.20,"centerY":0.02,"topScale":0.90,"bottomScale":1.16,"authority":"working-silhouette"},
-    {"id":"body-04","z":2.00,"radiusX":3.76,"radiusY":3.16,"centerY":0.08,"topScale":0.91,"bottomScale":1.15,"authority":"working-silhouette"},
-    {"id":"head-transition-01","z":3.35,"radiusX":3.66,"radiusY":3.04,"centerY":0.14,"topScale":0.90,"bottomScale":1.14,"authority":"working-silhouette"},
-    {"id":"head-transition-02","z":4.45,"radiusX":3.62,"radiusY":2.92,"centerY":0.18,"topScale":0.88,"bottomScale":1.14,"authority":"working-silhouette"},
-    {"id":"head-01","z":5.35,"radiusX":3.52,"radiusY":2.74,"centerY":0.18,"topScale":0.86,"bottomScale":1.15,"authority":"working-silhouette"},
-    {"id":"head-02","z":6.12,"radiusX":3.30,"radiusY":2.52,"centerY":0.14,"topScale":0.84,"bottomScale":1.16,"authority":"working-silhouette"},
-    {"id":"head-face","z":6.68,"radiusX":2.92,"radiusY":2.18,"centerY":0.08,"topScale":0.82,"bottomScale":1.18,"authority":"reconstructed-closure"}
+    {"id":"rear-tip","z":-5.70,"radiusX":0.38,"radiusY":0.55,"centerY":0.18,"topScale":0.92,"bottomScale":1.04,"authority":"reconstructed-closure"},
+    {"id":"rear-01","z":-5.15,"radiusX":1.05,"radiusY":1.25,"centerY":0.15,"topScale":0.94,"bottomScale":1.05,"authority":"reconstructed-closure"},
+    {"id":"rear-02","z":-4.35,"radiusX":1.85,"radiusY":1.95,"centerY":0.10,"topScale":0.96,"bottomScale":1.06,"authority":"reconstructed-closure"},
+    {"id":"rear-03","z":-3.40,"radiusX":2.65,"radiusY":2.58,"centerY":0.08,"topScale":0.98,"bottomScale":1.07,"authority":"working-silhouette"},
+    {"id":"body-01","z":-2.35,"radiusX":3.25,"radiusY":3.02,"centerY":0.08,"topScale":1.00,"bottomScale":1.07,"authority":"working-silhouette"},
+    {"id":"body-02","z":-1.15,"radiusX":3.70,"radiusY":3.32,"centerY":0.10,"topScale":1.02,"bottomScale":1.06,"authority":"working-silhouette"},
+    {"id":"body-03","z":0.10,"radiusX":3.98,"radiusY":3.50,"centerY":0.13,"topScale":1.04,"bottomScale":1.04,"authority":"working-silhouette"},
+    {"id":"body-04","z":1.25,"radiusX":4.08,"radiusY":3.58,"centerY":0.18,"topScale":1.06,"bottomScale":1.02,"authority":"working-silhouette"},
+    {"id":"brow-01","z":2.20,"radiusX":4.03,"radiusY":3.56,"centerY":0.24,"topScale":1.08,"bottomScale":1.00,"authority":"reference-matched-silhouette"},
+    {"id":"brow-02","z":3.00,"radiusX":3.90,"radiusY":3.44,"centerY":0.27,"topScale":1.09,"bottomScale":0.99,"authority":"reference-matched-silhouette"},
+    {"id":"head-01","z":3.65,"radiusX":3.72,"radiusY":3.25,"centerY":0.28,"topScale":1.08,"bottomScale":0.99,"authority":"reference-matched-silhouette"},
+    {"id":"head-02","z":4.18,"radiusX":3.52,"radiusY":3.02,"centerY":0.26,"topScale":1.06,"bottomScale":1.00,"authority":"reference-matched-silhouette"},
+    {"id":"head-face","z":4.62,"radiusX":3.30,"radiusY":2.78,"centerY":0.20,"topScale":1.03,"bottomScale":1.02,"authority":"reference-matched-closure"}
   ],
-  "headSeamGuide": {
-    "authority": "diagrammatic-silhouette-aid",
-    "canonicalAnatomy": false,
-    "pointsPerSide": [
-      {"xScale":3.18,"y":-0.40,"z":4.20},
-      {"xScale":3.10,"y":-0.45,"z":5.05},
-      {"xScale":2.92,"y":-0.42,"z":5.82},
-      {"xScale":2.55,"y":-0.32,"z":6.55}
+  "faceIdentity": {
+    "authority": "reference-matched-front-identity",
+    "facePlaneZ": 4.68,
+    "upperFaceColor": "#111416",
+    "lowerMouthColor": "#d8d9d4",
+    "mouthOutlineColor": "#0d1113",
+    "mouthPanel": [
+      [-2.84,0.08,4.70],[-2.48,0.48,4.70],[-1.92,0.78,4.70],[-1.20,0.99,4.70],[-0.40,1.10,4.70],[0.40,1.10,4.70],[1.20,0.99,4.70],[1.92,0.78,4.70],[2.48,0.48,4.70],[2.84,0.08,4.70],
+      [2.76,-0.65,4.70],[2.45,-1.28,4.70],[1.88,-1.82,4.70],[1.05,-2.18,4.70],[0,-2.31,4.70],[-1.05,-2.18,4.70],[-1.88,-1.82,4.70],[-2.45,-1.28,4.70],[-2.76,-0.65,4.70]
+    ],
+    "mouthTopCurve": [
+      [-2.84,0.08,4.72],[-2.48,0.48,4.72],[-1.92,0.78,4.72],[-1.20,0.99,4.72],[-0.40,1.10,4.72],[0.40,1.10,4.72],[1.20,0.99,4.72],[1.92,0.78,4.72],[2.48,0.48,4.72],[2.84,0.08,4.72]
+    ],
+    "mouthRibs": [
+      [[-2.35,0.55,4.73],[-2.25,-1.45,4.73]],
+      [[-1.75,0.84,4.73],[-1.63,-1.95,4.73]],
+      [[-1.10,1.01,4.73],[-1.02,-2.18,4.73]],
+      [[-0.38,1.10,4.73],[-0.35,-2.29,4.73]],
+      [[0.38,1.10,4.73],[0.35,-2.29,4.73]],
+      [[1.10,1.01,4.73],[1.02,-2.18,4.73]],
+      [[1.75,0.84,4.73],[1.63,-1.95,4.73]],
+      [[2.35,0.55,4.73],[2.25,-1.45,4.73]]
+    ],
+    "eyes": [
+      {"center":[-1.72,1.72,4.74],"outerRadiusX":0.38,"outerRadiusY":0.48,"innerRadiusX":0.20,"innerRadiusY":0.28},
+      {"center":[1.72,1.72,4.74],"outerRadiusX":0.38,"outerRadiusY":0.48,"innerRadiusX":0.20,"innerRadiusY":0.28}
     ]
   },
-  "frontMouthGuide": {
-    "authority": "diagrammatic-silhouette-aid",
-    "canonicalAnatomy": false,
-    "points": [
-      [-2.48,-0.48,6.71],
-      [-1.35,-0.64,6.72],
-      [0,-0.73,6.73],
-      [1.35,-0.64,6.72],
-      [2.48,-0.48,6.71]
-    ]
-  },
-  "eyeMarkers": {
-    "authority": "diagrammatic-silhouette-aid",
-    "canonicalPosition": false,
-    "canonicalSize": false,
-    "screenRadius": 7,
-    "points": [
-      {"center":[-3.03,0.72,5.72]},
-      {"center":[3.03,0.72,5.72]}
-    ]
-  },
+  "sideFins": [
+    {"id":"left-fin","points":[[-3.42,0.12,1.55],[-5.05,-0.15,0.65],[-4.70,-1.02,-1.05],[-3.20,-0.72,-0.35]]},
+    {"id":"right-fin","points":[[3.42,0.12,1.55],[5.05,-0.15,0.65],[4.70,-1.02,-1.05],[3.20,-0.72,-0.35]]}
+  ],
   "tierOneWorkingMasses": [
-    {"id":"base-deck","center":[0,2.90,-0.35],"size":[3.90,0.55,5.50]},
-    {"id":"lower-superstructure","center":[0,3.35,-0.28],"size":[3.15,0.48,4.45]},
-    {"id":"upper-superstructure","center":[0,3.76,-0.10],"size":[2.25,0.42,3.15]},
-    {"id":"bridge-marker","center":[0,4.08,0.52],"size":[1.45,0.28,1.45]}
+    {"id":"base-deck","center":[0,3.78,0.10],"size":[3.20,0.30,3.55]},
+    {"id":"lower-superstructure","center":[0,4.12,-0.02],"size":[2.55,0.38,2.70]},
+    {"id":"upper-superstructure","center":[0,4.47,-0.12],"size":[1.82,0.34,1.90]},
+    {"id":"bridge-marker","center":[0,4.78,-0.08],"size":[1.18,0.28,1.08]},
+    {"id":"stack-marker","center":[0,5.06,-0.20],"size":[0.32,0.44,0.32]}
   ],
   "analyticalWaterPlane": {
-    "y": -1.35,
+    "y": -1.42,
     "canonicalWaterline": false,
     "purpose": "Horizon, scale and silhouette readability only."
   },
   "prohibitions": [
     "Do not cite any number in this file as a canonical ship dimension.",
     "Do not infer rooms, routes, deck counts, openings, machinery or support engineering.",
-    "Do not treat +Z head-side as proven ship bow.",
-    "Do not convert either mouth guide into exact mouth or anatomical geometry.",
-    "Do not treat the eye markers as exact windows, organs, positions or measurements."
+    "The front face is matched to the supplied canonical exterior view; unseen side and rear topology remain reconstructed.",
+    "Do not treat the mouth ribs as literal teeth, windows, doors or deck divisions.",
+    "Do not treat the eye rings as exact windows, organs, positions or measurements."
   ]
 }
