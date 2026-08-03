@@ -23,6 +23,7 @@ const moveVisualSections = () => {
 
 const mountVisualProgramme = async () => {
   await waitForSelector('#status', 'Phase 7 evidence dashboard');
+  await import('/succession/black-whale-3d/programme-status.js');
 
   await import('/succession/black-whale-3d/spatial-graph.js');
   await waitForSelector('#spatial-graph', 'Phase 7.2 spatial graph');
