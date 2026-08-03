@@ -9,10 +9,12 @@ const waitForSelector = (selector, label, timeout = 30000) => new Promise((resol
   check();
 });
 
+const visualSelectors = ['#spatial-graph', '#exterior-blockout', '#tier-blockout', '#operations-deck'];
+
 const moveVisualSections = () => {
   const visualRoot = document.querySelector('#visual-app');
   if (!visualRoot) throw new Error('Persistent Phase 7 visual mount is missing.');
-  for (const selector of ['#spatial-graph', '#exterior-blockout', '#tier-blockout']) {
+  for (const selector of visualSelectors) {
     const section = document.querySelector(selector);
     if (!section) throw new Error(`Cannot move missing viewer ${selector}.`);
     if (section.parentElement !== visualRoot) visualRoot.append(section);
@@ -34,9 +36,12 @@ const mountVisualProgramme = async () => {
   await import('/succession/black-whale-3d/tier-blockout.js');
   await waitForSelector('#tier-blockout', 'Phase 7.4 tier blockout');
 
+  await import('/succession/black-whale-3d/operations-deck.js');
+  await waitForSelector('#operations-deck', 'Combined Phase 7.5–7.7 operational deck');
+
   moveVisualSections();
   const visualRoot = document.querySelector('#visual-app');
-  for (const selector of ['#spatial-graph', '#exterior-blockout', '#tier-blockout']) {
+  for (const selector of visualSelectors) {
     const section = document.querySelector(selector);
     if (section?.parentElement !== visualRoot) throw new Error(`${selector} is not retained by the persistent visual mount.`);
   }
