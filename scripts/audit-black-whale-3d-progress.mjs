@@ -12,6 +12,9 @@ const paths = {
   loader: 'public/succession/black-whale-3d/data-loader.js',
   app: 'public/succession/black-whale-3d/app.js',
   visualBootstrap: 'public/succession/black-whale-3d/visual-bootstrap.js',
+  programmeStatus: 'public/succession/black-whale-3d/programme-status.js',
+  operations: 'public/succession/black-whale-3d/operations-deck.js',
+  operationsContract: 'public/phase7/black-whale-3d-operational-deck.json',
   charter: 'public/phase7/black-whale-3d-charter.json',
   analysis: 'public/phase7/black-whale-3d-analysis.json',
   corpusSummary: 'public/phase7/black-whale-3d-corpus-summary-342-415.json',
@@ -26,13 +29,15 @@ const paths = {
 await Promise.all(Object.values(paths).map((relativePath) => access(path.join(root, relativePath))));
 
 const [
-  page, loader, app, visualBootstrap, bridge, index, worker,
-  charter, analysis, corpusSummary, referencesA, referencesB, refinement,
+  page, loader, app, visualBootstrap, programmeStatus, operations, bridge, index, worker,
+  charter, analysis, corpusSummary, referencesA, referencesB, refinement, operationsContract,
 ] = await Promise.all([
   readText(paths.page),
   readText(paths.loader),
   readText(paths.app),
   readText(paths.visualBootstrap),
+  readText(paths.programmeStatus),
+  readText(paths.operations),
   readText(paths.bridge),
   readText(paths.index),
   readText(paths.worker),
@@ -42,6 +47,7 @@ const [
   readJson(paths.referencesA),
   readJson(paths.referencesB),
   readJson(paths.refinement),
+  readJson(paths.operationsContract),
 ]);
 
 assert(page.includes('<title>Black Whale 3D progress'), 'Phase 7 progress page title is missing.');
@@ -49,17 +55,27 @@ assert(page.indexOf('data-loader.js') < page.indexOf('app.js'), 'The split-data 
 assert(page.includes('id="visual-app"'), 'The persistent visual viewer mount is missing.');
 assert(page.includes('visual-bootstrap.js'), 'The visual bootstrap is not mounted.');
 assert(page.includes('href="#corpus"'), 'The chapter evidence corpus is absent from dashboard navigation.');
+assert(page.includes('href="#operations-deck"'), 'The combined operational deck is absent from dashboard navigation.');
+assert(page.includes('/succession/black-whale-3d/operations-deck.css'), 'The combined operational stylesheet is not mounted.');
 assert(loader.includes('blackWhale3dReferenceShots'), 'The data loader does not combine the starter reference ledger.');
 assert(loader.includes('blackWhale3dEvidenceAtoms'), 'The data loader does not combine the exhaustive corpus.');
-assert(loader.includes("id: '7.3R'"), 'The roadmap does not expose Phase 7.3R.');
-assert(loader.includes("activeStage: '7.3R'"), 'Phase 7.3R is not the active programme stage.');
-assert(loader.includes("programmeLabel: 'EXTERIOR REFINEMENT ACTIVE'"), 'The programme label is stale.');
+assert(loader.includes("id: '7.3R'") && loader.includes("status: 'complete'"), 'Phase 7.3R is not recorded in the completed roadmap.');
+for (const phase of ['7.5', '7.6', '7.7']) assert(loader.includes(`id: '${phase}'`), `The roadmap does not expose Phase ${phase}.`);
+assert(loader.includes("activeStage: '7.5–7.7'"), 'Combined Phase 7.5–7.7 is not the active release.');
+assert(loader.includes("programmeLabel: 'OPERATIONS DECK RELEASE'"), 'The programme label is stale.');
+assert(loader.includes("nextStage: 'Combined 7.10–7.12 final pass'"), 'The next combined pass is not recorded.');
+assert(loader.includes("status: ['7.8', '7.9'].includes(phase.id) ? 'deferred'"), 'Phase 7.8 and 7.9 deferral is missing.');
 assert(app.includes('Phase 7.1B / 7.1C · Complete'), 'The dashboard does not expose the completed chapter evidence foundation.');
 assert(app.includes('The spatial graph is no longer blocked'), 'The dashboard still hides the completed spatial graph state.');
-assert(app.includes('Evidence foundation complete. Exterior refinement active.'), 'The current programme heading is stale.');
 assert(!app.includes('Geometry remains at zero'), 'The dashboard still claims geometry is zero.');
 assert(!app.includes('Phase 7.2 remains blocked'), 'The dashboard still claims Phase 7.2 is blocked.');
+assert(programmeStatus.includes('Combined Phase 7.5–7.7 is the current release'), 'Current programme status is not refreshed.');
+assert(programmeStatus.includes("['7.2', '7.3', '7.3R', '7.4', '7.5', '7.6', '7.7']"), 'Current phase-card range is incomplete.');
 assert(visualBootstrap.includes("import('/succession/black-whale-3d/exterior-blockout.js')"), 'The refined exterior runtime is not loaded after corpus rendering.');
+assert(visualBootstrap.includes("import('/succession/black-whale-3d/operations-deck.js')"), 'The combined operational runtime is not loaded after structural viewers.');
+assert(visualBootstrap.includes("'#operations-deck'"), 'The persistent visual mount omits the operational deck.');
+assert(operations.includes('startRouteBoard') && operations.includes('startRoomDiorama'), 'The operational runtime is incomplete.');
+assert(operationsContract.status === 'implemented-release-candidate' || operationsContract.status === 'complete', 'The combined operational contract is not implemented.');
 assert(index.includes('/assets/bw3d-route-bridge.js'), 'The archive shell does not load the Phase 7 navigation bridge.');
 assert(bridge.includes('/succession/black-whale-3d'), 'The navigation bridge targets the wrong URL.');
 assert(worker.includes("'/succession/black-whale-3d'"), 'The Worker does not own the clean Phase 7 route.');
@@ -96,4 +112,4 @@ for (const record of references) {
   await access(path.join(root, 'public', record.localPath.replace(/^\//, '')));
 }
 
-console.log('Black Whale 3D progress audit passed: current route, persistent visual mount, completed evidence foundation, spatial graph, exterior/tier blockouts, active Phase 7.3R roadmap, charter, frozen starter ledger, navigation bridge and local media verified.');
+console.log('Black Whale 3D progress audit passed: evidence foundation, spatial graph, exterior refinement, tier blockout, combined Phase 7.5–7.7 routes/hero rooms/archive bridge, deferred 7.8–7.9, navigation bridge and local media verified.');
