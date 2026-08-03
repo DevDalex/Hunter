@@ -17,7 +17,7 @@ jobs:
   browser-qa:
     name: Browser-rendered QA
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 35
 
     steps:
       - name: Check out repository
@@ -35,26 +35,14 @@ jobs:
       - name: Install Chromium and system dependencies
         run: npm exec playwright -- install --with-deps chromium
 
-      - name: Build runtime
-        run: npm run generate:build-info && npm run build:runtime
-
-      - name: Verify Black Whale 3D route after full render
-        run: node scripts/black-whale-3d-browser-qa.mjs
-
-      - name: Run full browser verification
+      - name: Build runtime and run browser verification
         shell: bash
         env:
           VISUAL_QA_SCREENSHOTS: failures
         run: |
           set -o pipefail
           mkdir -p .browser-qa
-          set +e
-          npm run qa:browser:verify 2>&1 | tee .browser-qa/console.log
-          qa_status=${PIPESTATUS[0]}
-          set -e
-          if (( qa_status != 0 )); then
-            node scripts/validate-browser-qa-result.mjs
-          fi
+          npm run qa:browser:ci 2>&1 | tee .browser-qa/console.log
 
       - name: Upload browser QA reports
         if: always()
@@ -71,4 +59,3 @@ jobs:
             .accessibility-qa/
             .interaction-qa/
             .performance-qa/
-            .black-whale-3d-qa/

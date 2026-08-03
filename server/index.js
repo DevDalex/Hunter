@@ -3,7 +3,6 @@ import { handleDirectChapterImport, isDirectChapterImportRequest } from './direc
 const INSPECT_PATH = '/api/admin/chapter/inspect';
 const ADMIN_PATHS = new Set(['/admin/chapters', '/admin/chapters/']);
 const INSPECTION_CONTRACT_PATH = '/admin/chapters/inspect-contract.js';
-const BLACK_WHALE_3D_PATHS = new Set(['/succession/black-whale-3d', '/succession/black-whale-3d/']);
 
 const jsonError = (status, message) => new Response(JSON.stringify({ error: message }), {
   status,
@@ -146,12 +145,6 @@ const injectInspectionContract = async (response) => {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-
-    if ((request.method === 'GET' || request.method === 'HEAD') && BLACK_WHALE_3D_PATHS.has(url.pathname)) {
-      const progressPage = new URL(request.url);
-      progressPage.pathname = '/succession/black-whale-3d/index.html';
-      return env.ASSETS.fetch(new Request(progressPage, request));
-    }
 
     if (url.pathname === '/admin/chapters/index.html' || url.pathname === '/admin/chapters/direct.html') {
       url.pathname = '/admin/chapters';
