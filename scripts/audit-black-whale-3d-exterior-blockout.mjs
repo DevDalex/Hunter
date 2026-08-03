@@ -43,7 +43,7 @@ for (const marker of ['cutaway-toggle','tiers-toggle','unknown-toggle','exterior
 }
 assert(script.includes('getContext(\'2d\')') || script.includes('getContext("2d")'), 'Exterior runtime must initialize Canvas 2D.');
 assert(script.includes('requestAnimationFrame') === false, 'Phase 7.3 runtime must remain render-on-demand without a continuous animation loop.');
-assert(script.includes('ArrowLeft') && script.includes("e.key.toLowerCase()==='c'"), 'Keyboard controls are incomplete.');
+assert(script.includes('ArrowLeft') && (script.includes("e.key.toLowerCase()==='c'") || script.includes("event.key.toLowerCase() === 'c'")), 'Keyboard controls are incomplete.');
 assert(scaleScript.includes('data-view = \'scale\'') || scaleScript.includes("dataset.view = 'scale'"), 'Human-scale reference button is missing.');
 assert(scaleScript.includes('1.7 m working human proxy'), 'Human-scale proxy disclaimer is missing.');
 assert(scaleScript.includes('not a canonical exterior access point'), 'Human-scale placement prohibition is missing.');

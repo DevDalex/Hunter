@@ -13,9 +13,9 @@
   const nativeFetch = window.fetch.bind(window);
   let combinedPromise;
 
-  const readJson = async (path) => {
-    const response = await nativeFetch(path, { headers: { accept: 'application/json' } });
-    if (!response.ok) throw new Error(`${path} returned HTTP ${response.status}`);
+  const readJson = async (sourcePath) => {
+    const response = await nativeFetch(sourcePath, { headers: { accept: 'application/json' } });
+    if (!response.ok) throw new Error(`${sourcePath} returned HTTP ${response.status}`);
     return response.json();
   };
 
@@ -31,13 +31,13 @@
       corpusContradictions,
     ] = await Promise.all(Object.values(paths).map(readJson));
 
-    const readText = async (path) => {
-      const response = await nativeFetch(path, { headers: { accept: 'text/plain' } });
-      if (!response.ok) throw new Error(`${path} returned HTTP ${response.status}`);
+    const readText = async (sourcePath) => {
+      const response = await nativeFetch(sourcePath, { headers: { accept: 'text/plain' } });
+      if (!response.ok) throw new Error(`${sourcePath} returned HTTP ${response.status}`);
       return response.text();
     };
-    const readGzipBase64Json = async (path) => {
-      const encoded = (await readText(path)).trim();
+    const readGzipBase64Json = async (sourcePath) => {
+      const encoded = (await readText(sourcePath)).trim();
       const compressed = Uint8Array.from(atob(encoded), (character) => character.charCodeAt(0));
       const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream('gzip'));
       return JSON.parse(await new Response(stream).text());
@@ -92,10 +92,16 @@
         summary: 'The evidence-labeled hull envelope, Tier 1 mass, cutaway views, camera presets and human-scale analytical view are released.',
       },
       {
+        id: '7.3R',
+        title: 'Exterior refinement',
+        status: 'in-progress',
+        summary: 'The placeholder hull is being replaced by a thirteen-station whale silhouette with a broad blunt head, paired diagrammatic identity markers, refined back, belly and rear contours, improved Tier 1 integration and analytical water context.',
+      },
+      {
         id: '7.4',
         title: 'Tier blockout',
-        status: 'in-progress',
-        summary: 'The five tier macro-volumes, interstitial bands and unknown-space views are merged; live dashboard regression verification is the remaining release task.',
+        status: 'complete',
+        summary: 'The five tier macro-volumes, interstitial bands, unknown-space views and analytical controls are merged, deployed and confirmed live.',
       },
       ...laterRoadmap,
     ];
@@ -139,13 +145,13 @@
       blackWhale3dCorpusContradictions: corpusContradictions,
       blackWhale3dRoadmap: roadmap,
       blackWhale3dProgressStats: {
-        completedStages: 6,
+        completedStages: 7,
         totalStages: roadmap.length,
         programmePercent: null,
-        programmeLabel: 'TIER BLOCKOUT MERGED',
+        programmeLabel: 'EXTERIOR REFINEMENT ACTIVE',
         productionGeometryPercent: null,
-        activeStage: '7.4',
-        nextStage: '7.4 live dashboard verification',
+        activeStage: '7.3R',
+        nextStage: '7.3R silhouette validation and release',
         blockedStage: '7.5',
       },
     };

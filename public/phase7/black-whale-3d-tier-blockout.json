@@ -1,8 +1,8 @@
 {
-  "schemaVersion": "7.4.4",
+  "schemaVersion": "7.4.5",
   "phase": "7.4",
   "title": "Black Whale tier blockout",
-  "status": "release-candidate",
+  "status": "complete",
   "dependsOn": {
     "phase72MergeCommit": "5fcaf7eab7c88c73822c6caa77485543243f9d26",
     "phase73CompletionCommit": "04fa56214a53565bd04e46b137abd4845e643f55"
@@ -61,7 +61,7 @@
     "objectRegistryAndEvidenceUiImplemented": true,
     "performanceAndAccessibilityValidated": true,
     "desktopBrowserBuildChecksPassed": true,
-    "mergedDeployedAndLiveVerified": false
+    "mergedDeployedAndLiveVerified": true
   },
   "releaseCandidateChecks": {
     "phase74Audit": "passed",
@@ -71,9 +71,16 @@
   },
   "release": {
     "mergeCommit": "c37af539a1de21a7b5e9a11682e7c2981d4dc79a",
+    "liveDashboardFixMergeCommit": "71521203c6e0b4b2e9ee5a7444c212dfb29c05e8",
     "mergeStatus": "success",
-    "deploymentStatus": "awaiting-terminal-verification",
-    "liveRoute": "/succession/black-whale-3d"
+    "deploymentStatus": "success",
+    "liveRoute": "/succession/black-whale-3d",
+    "liveVerification": {
+      "status": "confirmed",
+      "method": "production screenshots supplied by the user after PR 98 deployment",
+      "verifiedOn": "2026-08-03",
+      "confirmedFeatures": ["tier canvas visible", "section and exploded controls visible", "tier selector visible", "interstitial and hull-context controls visible", "viewer persists after corpus loading"]
+    }
   },
-  "roadmapBoundary": "Phase 7.5 and all later milestones are prohibited until explicit user instruction after Phase 7.4 completion."
+  "roadmapBoundary": "Phase 7.5 and all later milestones remain prohibited until explicit user instruction."
 }

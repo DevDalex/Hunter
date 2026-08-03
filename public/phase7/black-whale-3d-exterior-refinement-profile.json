@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "7.3R-profile.3",
+  "phase": "7.3R",
+  "status": "working-reconstruction",
+  "units": "working scene metres",
+  "canonicalMetricStatus": "not-established",
+  "axisConvention": {
+    "up": "+Y",
+    "longitudinal": "+Z working head-side",
+    "globalBowMapping": "unresolved",
+    "rule": "Values control browser rendering only and cannot be cited as canon."
+  },
+  "ringSegments": 24,
+  "hullStations": [
+    {"id":"rear-tip","z":-6.55,"radiusX":0.30,"radiusY":0.40,"centerY":0.18,"topScale":0.80,"bottomScale":1.05,"authority":"reconstructed-closure"},
+    {"id":"rear-01","z":-6.00,"radiusX":0.80,"radiusY":0.92,"centerY":0.12,"topScale":0.82,"bottomScale":1.08,"authority":"reconstructed-closure"},
+    {"id":"rear-02","z":-5.15,"radiusX":1.55,"radiusY":1.62,"centerY":0.08,"topScale":0.84,"bottomScale":1.10,"authority":"reconstructed-closure"},
+    {"id":"rear-03","z":-4.00,"radiusX":2.35,"radiusY":2.25,"centerY":0.05,"topScale":0.86,"bottomScale":1.12,"authority":"reconstructed-closure"},
+    {"id":"body-01","z":-2.65,"radiusX":3.05,"radiusY":2.78,"centerY":0.02,"topScale":0.87,"bottomScale":1.14,"authority":"working-silhouette"},
+    {"id":"body-02","z":-1.15,"radiusX":3.55,"radiusY":3.08,"centerY":0.00,"topScale":0.88,"bottomScale":1.15,"authority":"working-silhouette"},
+    {"id":"body-03","z":0.45,"radiusX":3.78,"radiusY":3.20,"centerY":0.02,"topScale":0.90,"bottomScale":1.16,"authority":"working-silhouette"},
+    {"id":"body-04","z":2.00,"radiusX":3.76,"radiusY":3.16,"centerY":0.08,"topScale":0.91,"bottomScale":1.15,"authority":"working-silhouette"},
+    {"id":"head-transition-01","z":3.35,"radiusX":3.66,"radiusY":3.04,"centerY":0.14,"topScale":0.90,"bottomScale":1.14,"authority":"working-silhouette"},
+    {"id":"head-transition-02","z":4.45,"radiusX":3.62,"radiusY":2.92,"centerY":0.18,"topScale":0.88,"bottomScale":1.14,"authority":"working-silhouette"},
+    {"id":"head-01","z":5.35,"radiusX":3.52,"radiusY":2.74,"centerY":0.18,"topScale":0.86,"bottomScale":1.15,"authority":"working-silhouette"},
+    {"id":"head-02","z":6.12,"radiusX":3.30,"radiusY":2.52,"centerY":0.14,"topScale":0.84,"bottomScale":1.16,"authority":"working-silhouette"},
+    {"id":"head-face","z":6.68,"radiusX":2.92,"radiusY":2.18,"centerY":0.08,"topScale":0.82,"bottomScale":1.18,"authority":"reconstructed-closure"}
+  ],
+  "headSeamGuide": {
+    "authority": "diagrammatic-silhouette-aid",
+    "canonicalAnatomy": false,
+    "pointsPerSide": [
+      {"xScale":3.18,"y":-0.40,"z":4.20},
+      {"xScale":3.10,"y":-0.45,"z":5.05},
+      {"xScale":2.92,"y":-0.42,"z":5.82},
+      {"xScale":2.55,"y":-0.32,"z":6.55}
+    ]
+  },
+  "frontMouthGuide": {
+    "authority": "diagrammatic-silhouette-aid",
+    "canonicalAnatomy": false,
+    "points": [
+      [-2.48,-0.48,6.71],
+      [-1.35,-0.64,6.72],
+      [0,-0.73,6.73],
+      [1.35,-0.64,6.72],
+      [2.48,-0.48,6.71]
+    ]
+  },
+  "eyeMarkers": {
+    "authority": "diagrammatic-silhouette-aid",
+    "canonicalPosition": false,
+    "canonicalSize": false,
+    "screenRadius": 7,
+    "points": [
+      {"center":[-3.03,0.72,5.72]},
+      {"center":[3.03,0.72,5.72]}
+    ]
+  },
+  "tierOneWorkingMasses": [
+    {"id":"base-deck","center":[0,2.90,-0.35],"size":[3.90,0.55,5.50]},
+    {"id":"lower-superstructure","center":[0,3.35,-0.28],"size":[3.15,0.48,4.45]},
+    {"id":"upper-superstructure","center":[0,3.76,-0.10],"size":[2.25,0.42,3.15]},
+    {"id":"bridge-marker","center":[0,4.08,0.52],"size":[1.45,0.28,1.45]}
+  ],
+  "analyticalWaterPlane": {
+    "y": -1.35,
+    "canonicalWaterline": false,
+    "purpose": "Horizon, scale and silhouette readability only."
+  },
+  "prohibitions": [
+    "Do not cite any number in this file as a canonical ship dimension.",
+    "Do not infer rooms, routes, deck counts, openings, machinery or support engineering.",
+    "Do not treat +Z head-side as proven ship bow.",
+    "Do not convert either mouth guide into exact mouth or anatomical geometry.",
+    "Do not treat the eye markers as exact windows, organs, positions or measurements."
+  ]
+}
