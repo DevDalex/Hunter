@@ -93,11 +93,16 @@ for (const phrase of ['Batch 12', 'ArchiveSection', 'ArchiveCard', 'EvidenceBadg
 const preflightScripts = [...preflight.matchAll(/^\s*'audit:[^']+',?$/gm)].map((match) => match[0]);
 assert(preflightScripts.length === 15, `aggregate preflight must list 15 audits, found ${preflightScripts.length}`);
 assert(preflight.includes("'audit:design-system'"), 'aggregate preflight must include audit:design-system');
-assert(packageJson.scripts?.check === 'npm run generate:build-info && npm run preflight:build', 'check must generate build identity and run aggregate preflight');
+assert(packageJson.scripts?.['verify:static'] === 'npm run generate:build-info && npm run preflight:build', 'verify:static must generate build identity and run aggregate preflight');
+assert(packageJson.scripts?.check === 'npm run verify:static', 'check must remain a compatibility alias for verify:static');
 assert(packageJson.scripts?.['build:runtime']?.includes('vite build') && packageJson.scripts['build:runtime'].includes('audit:release'), 'build:runtime must build and audit the Cloudflare artifact');
-assert(packageJson.scripts?.build === 'npm run check && npm run build:runtime', 'build must compose check and build:runtime');
-assert(packageJson.scripts?.['qa:browser:ci'] === 'npm run generate:build-info && npm run build:runtime && npm run qa:browser:verify', 'browser CI must build the runtime without duplicating aggregate preflight');
-assert(packageJson.scripts?.['qa:browser'] === 'npm run build && npm run qa:browser:verify', 'local browser QA must retain the full build gate');
+assert(packageJson.scripts?.['build:artifact'] === 'npm run build:runtime', 'build:artifact must expose production artifact construction');
+assert(packageJson.scripts?.build === 'npm run verify:static && npm run build:artifact', 'build must compose static verification and artifact construction');
+assert(packageJson.scripts?.['verify:browser'] === 'npm run qa:browser:verify', 'verify:browser must expose browser QA against an existing artifact');
+assert(packageJson.scripts?.['verify:worker'] === 'node scripts/verify-cloudflare-worker.mjs', 'verify:worker must expose Worker-routing verification');
+assert(packageJson.scripts?.['verify:release'] === 'npm run verify:static && npm run build:artifact && npm run verify:browser', 'verify:release must compose the explicit release verification boundary');
+assert(packageJson.scripts?.['qa:browser:ci'] === 'npm run verify:static && npm run build:artifact && npm run verify:browser', 'browser CI must use the explicit foundation command boundaries');
+assert(packageJson.scripts?.['qa:browser'] === 'npm run build && npm run verify:browser', 'local browser QA must retain the full build gate');
 assert(packageJson.scripts?.deploy === 'npm run build && wrangler deploy', 'deploy must use the repository-pinned Wrangler command');
 assert(packageJson.scripts?.['audit:design-system'] === 'node scripts/audit-design-system.mjs', 'package.json must expose audit:design-system');
 
