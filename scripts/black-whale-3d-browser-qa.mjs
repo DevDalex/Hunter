@@ -84,12 +84,7 @@ const record = async (name, page, test) => {
   } catch (error) {
     const screenshot = path.join(output, `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.png`);
     await page.screenshot({ path: screenshot, fullPage: true }).catch(() => {});
-    const failure = {
-      name,
-      status: 'failed',
-      error: error.message,
-      screenshot: path.relative(root, screenshot),
-    };
+    const failure = { name, status: 'failed', error: error.message, screenshot: path.relative(root, screenshot) };
     failures.push(failure);
     results.push(failure);
     process.stdout.write(`✗ ${name} · ${error.message}\n`);
@@ -130,21 +125,18 @@ try {
     await page.waitForSelector('#exterior-blockout', { timeout: 30_000 });
     await page.waitForSelector('#tier-blockout', { timeout: 30_000 });
     await page.waitForTimeout(2_000);
-
     for (const selector of ['#status', '#spatial-graph', '#exterior-blockout', '#tier-blockout']) {
       if (await page.locator(selector).count() !== 1) throw new Error(`${selector} was removed or duplicated after full load.`);
     }
     if (runtimeErrors.length) throw new Error(`Runtime errors: ${runtimeErrors.join(' | ')}`);
     if (consoleErrors.length) throw new Error(`Console errors: ${consoleErrors.join(' | ')}`);
-
     const bodyText = await page.locator('body').innerText();
     if (!bodyText.includes('Evidence foundation complete. Exterior refinement active.')) throw new Error('Current Phase 7 status copy is missing.');
-    const refinementKicker = (await page.locator('#exterior-blockout .kicker').innerText()).toLowerCase();
-    const refinementHeading = (await page.locator('#exterior-blockout h2').innerText()).toLowerCase();
-    if (!refinementKicker.includes('phase 7.3r') || !refinementKicker.includes('canonical face correction')) throw new Error(`Phase 7.3R kicker is incorrect: ${refinementKicker}`);
-    if (!refinementHeading.includes('reference-matched black whale exterior')) throw new Error(`Phase 7.3R heading is incorrect: ${refinementHeading}`);
-    if (bodyText.includes('Geometry remains at zero')) throw new Error('Stale zero-geometry copy is still visible.');
-    if (bodyText.includes('Phase 7.2 remains blocked')) throw new Error('Stale Phase 7.2 block is still visible.');
+    const kicker = (await page.locator('#exterior-blockout .kicker').innerText()).toLowerCase();
+    const heading = (await page.locator('#exterior-blockout h2').innerText()).toLowerCase();
+    if (!kicker.includes('phase 7.3r') || !kicker.includes('canonical face correction')) throw new Error(`Incorrect exterior kicker: ${kicker}`);
+    if (!heading.includes('reference-matched black whale exterior')) throw new Error(`Incorrect exterior heading: ${heading}`);
+    if (bodyText.includes('Geometry remains at zero') || bodyText.includes('Phase 7.2 remains blocked')) throw new Error('Stale Phase 7 programme copy is visible.');
   });
 
   await record('Reference-matched face renders with canonical contrast', page, async () => {
@@ -155,17 +147,14 @@ try {
       const context = element.getContext('2d');
       const sample = (x, y) => {
         const pixel = context.getImageData(x, y, 1, 1).data;
-        return {
-          rgba: [...pixel],
-          luminance: 0.2126 * pixel[0] + 0.7152 * pixel[1] + 0.0722 * pixel[2],
-        };
+        return { rgba: [...pixel], luminance: 0.2126 * pixel[0] + 0.7152 * pixel[1] + 0.0722 * pixel[2] };
       };
       return {
         image: element.toDataURL(),
         upperFace: sample(600, 190),
         mouth: sample(600, 420),
-        leftPupil: sample(447, 198),
-        leftEyeRing: sample(474, 198),
+        leftPupil: sample(417, 211),
+        leftEyeRing: sample(447, 211),
       };
     });
     if (signature.mouth.luminance < signature.upperFace.luminance + 90) {
@@ -176,17 +165,15 @@ try {
     }
   });
 
-  await record('Exterior canvas cameras, cutaway and evidence remain interactive', page, async () => {
+  await record('Exterior cameras, cutaway and evidence remain interactive', page, async () => {
     const canvas = page.locator('#exterior-canvas');
     const frontImage = await canvas.evaluate((element) => element.toDataURL());
     await page.locator('#exterior-blockout [data-view="side"]').click();
     const sideImage = await canvas.evaluate((element) => element.toDataURL());
     if (sideImage === frontImage) throw new Error('Side-view control did not redraw the hull.');
-
     await page.locator('#cutaway-toggle').check();
     const cutawayImage = await canvas.evaluate((element) => element.toDataURL());
     if (cutawayImage === sideImage) throw new Error('Cutaway control did not redraw the hull.');
-
     await page.locator('#exterior-object-select').selectOption('bw3d.refinement.head-identity-cues');
     const evidenceText = await page.locator('#exterior-evidence').innerText();
     if (!evidenceText.includes('bw3d.refinement.head-identity-cues')) throw new Error('Face-identity evidence record did not open.');
