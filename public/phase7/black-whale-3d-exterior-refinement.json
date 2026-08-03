@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "7.3R.1",
+  "schemaVersion": "7.3R.2",
   "phase": "7.3R",
   "title": "Black Whale exterior refinement",
   "status": "in-progress",
@@ -40,16 +40,18 @@
     "runtime":"/succession/black-whale-3d/exterior-blockout.js",
     "styles":"/succession/black-whale-3d/exterior-blockout.css",
     "rendering":"dependency-free Canvas projection",
+    "hullStations":13,
+    "ringSegments":24,
     "requiredViews":["hero","side","front","rear","human-scale","cutaway"],
     "requiredControls":["pointer-rotate","keyboard-rotate","wheel-and-keyboard-zoom","cutaway","tier-bands","unknown-volume","evidence-object-selection"]
   },
   "completionGates": {
     "exteriorEvidenceRefrozen": true,
-    "refinedWhaleEnvelopeImplemented": false,
-    "tier1IntegrationRefined": false,
-    "analyticalShadingAndWaterContextRefined": false,
-    "uncertaintyAndProhibitionsVisible": false,
-    "dedicatedAuditImplemented": false,
+    "refinedWhaleEnvelopeImplemented": true,
+    "tier1IntegrationRefined": true,
+    "analyticalShadingAndWaterContextRefined": true,
+    "uncertaintyAndProhibitionsVisible": true,
+    "dedicatedAuditImplemented": true,
     "desktopBrowserBuildChecksPassed": false,
     "mergedDeployedAndLiveVerified": false
   },
