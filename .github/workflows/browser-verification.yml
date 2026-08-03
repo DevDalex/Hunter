@@ -50,6 +50,9 @@ jobs:
             node scripts/validate-browser-qa-result.mjs
           fi
 
+      - name: Verify Black Whale 3D route after full render
+        run: node scripts/black-whale-3d-browser-qa.mjs
+
       - name: Upload browser QA reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -65,3 +68,4 @@ jobs:
             .accessibility-qa/
             .interaction-qa/
             .performance-qa/
+            .black-whale-3d-qa/
