@@ -92,10 +92,16 @@
         summary: 'The evidence-labeled hull envelope, Tier 1 mass, cutaway views, camera presets and human-scale analytical view are released.',
       },
       {
+        id: '7.3R',
+        title: 'Exterior refinement',
+        status: 'in-progress',
+        summary: 'The placeholder hull is being replaced by a thirteen-station whale silhouette with refined back, belly, head-side and rear contours, improved Tier 1 integration and analytical water context.',
+      },
+      {
         id: '7.4',
         title: 'Tier blockout',
         status: 'in-progress',
-        summary: 'The five tier macro-volumes, interstitial bands and unknown-space views are merged; live dashboard regression verification is the remaining release task.',
+        summary: 'The five tier macro-volumes, interstitial bands and unknown-space views are merged and live; formal completion metadata remains pending.',
       },
       ...laterRoadmap,
     ];
@@ -142,10 +148,10 @@
         completedStages: 6,
         totalStages: roadmap.length,
         programmePercent: null,
-        programmeLabel: 'TIER BLOCKOUT MERGED',
+        programmeLabel: 'EXTERIOR REFINEMENT ACTIVE',
         productionGeometryPercent: null,
-        activeStage: '7.4',
-        nextStage: '7.4 live dashboard verification',
+        activeStage: '7.3R',
+        nextStage: '7.3R silhouette validation and release',
         blockedStage: '7.5',
       },
     };
