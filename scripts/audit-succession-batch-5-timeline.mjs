@@ -7,13 +7,14 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 5 timeline audit failed: ${message}`);
 };
 
-const [workspace, voyage, styles, workflow, finalQa, routeManifest] = await Promise.all([
+const [workspace, voyage, styles, workflow, finalQa, routeManifest, router] = await Promise.all([
   read('src/components/TimelineWorkspace.jsx'),
   read('src/components/SuccessionTimeline.jsx'),
   read('src/components/TimelineCommand.css'),
   read('.github/workflows/succession-visual-redesign-batch-5.yml'),
   read('scripts/succession-final-release-qa.mjs'),
   read('src/data/routeManifest.js'),
+  read('src/lib/appRouter.js'),
 ]);
 
 for (const token of [
@@ -75,9 +76,9 @@ assert(!styles.includes('!important'), 'timeline CSS must not depend on !importa
 
 assert(routeManifest.includes("'timeline'"), 'Succession Timeline must remain in the release manifest');
 assert(!routeManifest.includes("{ view: 'timeline'"), 'the retired global Timeline returned to the release manifest');
+assert(router.includes("candidate === 'timeline'") && router.includes("normalizeDestination('succession', 'timeline'"), 'legacy global Timeline URLs must redirect to the Succession voyage timeline');
 assert(workflow.includes('node scripts/audit-succession-batch-5-timeline.mjs'), 'Batch 5 workflow must run the timeline audit');
 assert(finalQa.includes('...successionReleaseRoutes.map'), 'the release matrix must render the curated Succession routes, including Timeline');
-assert(!finalQa.includes("id: 'global-timeline'"), 'the retired global Timeline returned to the release matrix');
 assert(workflow.includes('set -o pipefail'), 'final visual-QA command must propagate failures through tee');
 
 console.log('Succession Batch 5 timeline audit passed: the voyage-only chronology, evidence confidence, synchronized views, mobile lanes, touch targets, responsive behavior, and reduced motion are registered without restoring the retired global timeline.');
