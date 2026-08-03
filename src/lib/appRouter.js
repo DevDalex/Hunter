@@ -153,6 +153,7 @@ export function parseLegacyHashRoute(hash = '') {
 
   if (candidate === 'succession') return normalizeDestination('succession', target || 'archive', params);
   if (candidate === 'reference') return normalizeDestination('reference', target, params);
+  if (candidate === 'timeline') return normalizeDestination('succession', 'timeline', params);
 
   if (candidate === 'series' && target === 'succession-contest') {
     return normalizeDestination('succession', 'archive', params);
@@ -168,6 +169,10 @@ export function parseCleanRoute(pathname = '/', search = '') {
 
   if (!parts.length || pathnameClean === '/index.html') {
     return { view: 'succession', target: 'archive', params };
+  }
+
+  if (parts[0] === 'timeline' && parts.length === 1) {
+    return normalizeDestination('succession', 'timeline', params);
   }
 
   if (cleanReferencePaths.has(parts[0]) && parts.length === 1) {
