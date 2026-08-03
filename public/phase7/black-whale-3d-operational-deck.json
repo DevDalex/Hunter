@@ -1,0 +1,268 @@
+{
+  "schemaVersion": "7.5-7.7.0",
+  "programmeId": "bw3d.phase-7-5-7-7",
+  "title": "Routes, hero rooms and archive bridge",
+  "status": "implemented-release-candidate",
+  "phases": ["7.5", "7.6", "7.7"],
+  "purpose": "Turn the evidence foundation into a usable spatial research surface by presenting supported route existence, producing selected open-wall room dioramas, and linking every displayed claim back into the maintained archive.",
+  "deferred": {
+    "phase7.8": "Temporal simulation remains deferred. No chapter playback, occupancy animation or movement trail is implemented here.",
+    "phase7.9": "Nen and analytical overlays remain deferred. Nen routes are recorded as nonphysical evidence but are not rendered as architecture."
+  },
+  "rules": [
+    "A route line communicates connection existence or documented scope, never exact corridor geometry.",
+    "Authorized physical routes may be selected but unknown intermediate space remains visibly interrupted.",
+    "Quarantined routes remain dashed, non-traversable and explicitly unresolved.",
+    "Hero rooms are removable open-wall dioramas, not claims of complete floor plans.",
+    "Temporary people, furniture arrangements, damage, guards and Nen effects are not permanent geometry.",
+    "Every room and route exposes a maintained archive, reader or research destination."
+  ],
+  "routeProgramme": {
+    "authorizedPhysicalCount": 3,
+    "quarantinedScopeCount": 5,
+    "deferredNonphysicalCount": 2,
+    "routes": [
+      {
+        "id": "bw3d.route.banquet-to-lifeboat",
+        "label": "Banquet passage to lifeboat launch",
+        "status": "authorized-physical-existence",
+        "from": "Banquet passage",
+        "to": "Lifeboat launch",
+        "tierScope": "tier-1",
+        "chapters": [383],
+        "evidenceAtomIds": ["bw3d.atom.0077"],
+        "diagram": {"from": [25, 25], "to": [72, 22]},
+        "limitations": ["Intermediate turns and doorway placement are unknown.", "The reported travel time does not authorize metric length."],
+        "archiveLinks": [
+          {"label": "Open Black Whale atlas", "href": "/story/succession-contest/black-whale?search=lifeboat"},
+          {"label": "Read Chapter 383", "href": "/story/succession-contest/chapters?chapter=383"}
+        ]
+      },
+      {
+        "id": "bw3d.route.onior-cross-bridge",
+        "label": "Tier 1–Tier 2 cross bridge",
+        "status": "authorized-physical-existence",
+        "from": "Tier 1",
+        "to": "Tier 2",
+        "tierScope": "tiers-1-2",
+        "chapters": [390, 408],
+        "evidenceAtomIds": ["bw3d.atom.0057", "bw3d.atom.0174"],
+        "diagram": {"from": [48, 15], "to": [48, 34]},
+        "limitations": ["Approach rooms, width and exact coordinates remain unknown.", "The edge proves connection existence only."],
+        "archiveLinks": [
+          {"label": "Open location archive", "href": "/story/succession-contest/locations?search=cross%20bridge"},
+          {"label": "Open Chapter 408 record", "href": "/story/succession-contest/chapter-records?chapter=408"}
+        ]
+      },
+      {
+        "id": "bw3d.route.tier1-air-vents",
+        "label": "Room 1014–1013 ventilation network",
+        "status": "authorized-service-network",
+        "from": "Room 1014",
+        "to": "Room 1013",
+        "tierScope": "tier-1",
+        "chapters": [367],
+        "evidenceAtomIds": ["bw3d.atom.0182"],
+        "diagram": {"from": [30, 18], "to": [66, 18]},
+        "limitations": ["This is not a human-accessible corridor.", "Vent branches, dimensions and openings remain unknown."],
+        "archiveLinks": [
+          {"label": "Open Room 1014", "href": "/story/succession-contest/black-whale?room=room-1014"},
+          {"label": "Read Chapter 367", "href": "/story/succession-contest/chapters?chapter=367"}
+        ]
+      },
+      {
+        "id": "bw3d.route.central-passages",
+        "label": "Central Passages, Tiers 3–5",
+        "status": "quarantined-scope-only",
+        "tierScope": "tiers-3-5",
+        "chapters": [358, 380, 410],
+        "evidenceAtomIds": ["bw3d.atom.0020", "bw3d.atom.0021", "bw3d.atom.0189"],
+        "diagram": {"from": [45, 48], "to": [45, 84]},
+        "limitations": ["Broad scope lacks independently identified endpoints.", "This cannot become a universal vertical route."],
+        "archiveLinks": [{"label": "Search Central Passages", "href": "/story/succession-contest/locations?search=Central%20Passage"}]
+      },
+      {
+        "id": "bw3d.route.funeral-procession",
+        "label": "Funeral procession route",
+        "status": "quarantined-scope-only",
+        "tierScope": "tier-2-to-tier-1",
+        "chapters": [404, 405],
+        "evidenceAtomIds": ["bw3d.atom.0176"],
+        "diagram": {"from": [70, 35], "to": [70, 16]},
+        "limitations": ["Cross-tier movement is confirmed, but the complete origin, destination and path are unresolved."],
+        "archiveLinks": [{"label": "Open funeral-route research", "href": "/story/succession-contest/research?search=funeral%20route"}]
+      },
+      {
+        "id": "bw3d.route.funeral-stair",
+        "label": "Large funeral stair",
+        "status": "quarantined-scope-only",
+        "tierScope": "unresolved-tier",
+        "chapters": [404],
+        "evidenceAtomIds": ["bw3d.atom.0166"],
+        "diagram": {"from": [20, 60], "to": [33, 45]},
+        "limitations": ["A large stair exists, but its endpoints and relation to the hull stairway are unresolved."],
+        "archiveLinks": [{"label": "Read Chapter 404", "href": "/story/succession-contest/chapters?chapter=404"}]
+      },
+      {
+        "id": "bw3d.route.hull-service-route",
+        "label": "Hull structural service passages",
+        "status": "quarantined-scope-only",
+        "tierScope": "hull",
+        "chapters": [406],
+        "evidenceAtomIds": ["bw3d.atom.0165"],
+        "diagram": {"from": [14, 70], "to": [30, 85]},
+        "limitations": ["Cramped passages through structural gaps are confirmed without a complete endpoint pair."],
+        "archiveLinks": [{"label": "Read Chapter 406", "href": "/story/succession-contest/chapters?chapter=406"}]
+      },
+      {
+        "id": "bw3d.route.tier1-lower-passage",
+        "label": "Tier 1 lower passage",
+        "status": "quarantined-scope-only",
+        "tierScope": "tier-1",
+        "chapters": [383],
+        "evidenceAtomIds": ["bw3d.atom.0060"],
+        "diagram": {"from": [34, 27], "to": [55, 27]},
+        "limitations": ["The passage class is confirmed without independently identified terminal spaces."],
+        "archiveLinks": [{"label": "Open Tier 1 locations", "href": "/story/succession-contest/locations?search=Tier%201%20passage"}]
+      }
+    ],
+    "deferredNonphysicalRoutes": [
+      {"id": "bw3d.route.luini-teleport", "reason": "Deferred to Phase 7.9; teleportation cannot define permanent architecture."},
+      {"id": "bw3d.route.magical-worm", "reason": "Deferred to Phase 7.9; conjured travel space remains separate from conventional geometry."}
+    ]
+  },
+  "heroRooms": [
+    {
+      "id": "bw3d.hero.room-1014",
+      "label": "Room 1014 reception suite",
+      "tier": "Tier 1",
+      "roomClass": "royal-suite",
+      "certainty": "confirmed-visible-core-with-reconstructed-closure",
+      "primaryChapter": 358,
+      "supportingChapters": [360, 363, 367, 369, 370],
+      "summary": "An ornate royal reception axis with paneled walls, chandeliers, seating groups and a doorway continuing deeper into Woble's suite.",
+      "confirmedFeatures": ["Long reception axis", "Ornate wall panels", "Seating groups and tables", "Chandeliers", "Deeper internal doorway"],
+      "unknowns": ["Exact dimensions", "Unseen side rooms", "Complete wall closure", "Precise orientation inside the upper vessel"],
+      "palette": "royal",
+      "geometry": {"columns": 0, "roundTables": 0, "seatGroups": 3, "rows": 0, "counters": 0, "stalls": 0, "raisedBench": false, "screen": false, "deepDoor": true},
+      "archiveLinks": [
+        {"label": "Open Room 1014 in atlas", "href": "/story/succession-contest/black-whale?room=room-1014"},
+        {"label": "Read Chapter 358", "href": "/story/succession-contest/chapters?chapter=358"},
+        {"label": "Open chapter dossier", "href": "/story/succession-contest/chapter-records?chapter=358"},
+        {"label": "Inspect evidence", "href": "/story/succession-contest/research?search=Room%201014"}
+      ]
+    },
+    {
+      "id": "bw3d.hero.royal-banquet",
+      "label": "Royal banquet and party hall",
+      "tier": "Tier 1",
+      "roomClass": "ceremonial-hall",
+      "certainty": "confirmed-room-class",
+      "primaryChapter": 359,
+      "supportingChapters": [358, 383],
+      "summary": "A monumental ceremonial hall with high ceiling zones, tall columns or windows and many round tables for royal guests.",
+      "confirmedFeatures": ["Large formal volume", "Round tables", "Tall vertical elements", "Dense ceremonial occupancy"],
+      "unknowns": ["Exact relationship between banquet and party depictions", "Metric capacity", "Full perimeter and service doors"],
+      "palette": "ceremonial",
+      "geometry": {"columns": 6, "roundTables": 6, "seatGroups": 0, "rows": 0, "counters": 0, "stalls": 0, "raisedBench": false, "screen": false, "deepDoor": false},
+      "archiveLinks": [
+        {"label": "Open banquet locations", "href": "/story/succession-contest/locations?search=banquet%20hall"},
+        {"label": "Read Chapter 359", "href": "/story/succession-contest/chapters?chapter=359"},
+        {"label": "Inspect evidence", "href": "/story/succession-contest/research?search=party%20hall"}
+      ]
+    },
+    {
+      "id": "bw3d.hero.tier2-theater",
+      "label": "Tier 2 theater",
+      "tier": "Tier 2",
+      "roomClass": "auditorium",
+      "certainty": "confirmed-room-class",
+      "primaryChapter": 359,
+      "supportingChapters": [],
+      "summary": "A large passenger briefing auditorium with a stage, screen, balconies and mass seating.",
+      "confirmedFeatures": ["Stage", "Large screen", "Mass seating", "Balcony zones"],
+      "unknowns": ["Exact row count", "Backstage plan", "Entrances and vertical circulation"],
+      "palette": "institutional",
+      "geometry": {"columns": 0, "roundTables": 0, "seatGroups": 0, "rows": 7, "counters": 0, "stalls": 0, "raisedBench": true, "screen": true, "deepDoor": false},
+      "archiveLinks": [
+        {"label": "Open Tier 2 theater", "href": "/story/succession-contest/locations?search=Tier%202%20theater"},
+        {"label": "Read Chapter 359", "href": "/story/succession-contest/chapters?chapter=359"}
+      ]
+    },
+    {
+      "id": "bw3d.hero.tier3-medical",
+      "label": "Tier 3 central medical center",
+      "tier": "Tier 3",
+      "roomClass": "medical-operations",
+      "certainty": "confirmed-room-class",
+      "primaryChapter": 359,
+      "supportingChapters": [406],
+      "summary": "A major treatment and medicine hub with counters, dense storage, communications equipment and multiple staff positions.",
+      "confirmedFeatures": ["Medicine storage", "Counters", "Operational work surfaces", "Communications equipment"],
+      "unknowns": ["Complete clinic plan", "Bed count", "Emergency access topology"],
+      "palette": "medical",
+      "geometry": {"columns": 0, "roundTables": 0, "seatGroups": 0, "rows": 0, "counters": 4, "stalls": 0, "raisedBench": false, "screen": false, "deepDoor": true},
+      "archiveLinks": [
+        {"label": "Open medical locations", "href": "/story/succession-contest/locations?search=medical%20center"},
+        {"label": "Read Chapter 359", "href": "/story/succession-contest/chapters?chapter=359"},
+        {"label": "Inspect evidence", "href": "/story/succession-contest/research?search=medical%20center"}
+      ]
+    },
+    {
+      "id": "bw3d.hero.tier3-court",
+      "label": "Tier 3 central court",
+      "tier": "Tier 3",
+      "roomClass": "civic-court",
+      "certainty": "confirmed-room-class",
+      "primaryChapter": 359,
+      "supportingChapters": [371],
+      "summary": "A civic courtroom with a raised judge's bench, controlled audience positions and armed security.",
+      "confirmedFeatures": ["Raised judge bench", "Audience zone", "Security positions", "Formal axial arrangement"],
+      "unknowns": ["Exact seating count", "Side rooms", "Relationship to the Supreme Court complex"],
+      "palette": "justice",
+      "geometry": {"columns": 2, "roundTables": 0, "seatGroups": 0, "rows": 4, "counters": 0, "stalls": 0, "raisedBench": true, "screen": false, "deepDoor": false},
+      "archiveLinks": [
+        {"label": "Open court locations", "href": "/story/succession-contest/locations?search=central%20court"},
+        {"label": "Read Chapter 359", "href": "/story/succession-contest/chapters?chapter=359"}
+      ]
+    },
+    {
+      "id": "bw3d.hero.lower-concourse",
+      "label": "Lower-tier public concourse",
+      "tier": "Tiers 4–5 class",
+      "roomClass": "urban-concourse",
+      "certainty": "confirmed-scale-class-with-unknown-plan",
+      "primaryChapter": 380,
+      "supportingChapters": [377, 406, 410],
+      "summary": "A vast urbanized interior class containing broad circulation, public halls, stalls, service frontage and dense crowds.",
+      "confirmedFeatures": ["Very large interior volume", "Broad public routes", "Stalls and service frontage", "Dense mass occupancy", "Overhead infrastructure"],
+      "unknowns": ["Measurable street plan", "Exact tier placement of every view", "Continuous route topology"],
+      "palette": "industrial",
+      "geometry": {"columns": 4, "roundTables": 0, "seatGroups": 0, "rows": 0, "counters": 0, "stalls": 8, "raisedBench": false, "screen": false, "deepDoor": true},
+      "archiveLinks": [
+        {"label": "Open lower-tier atlas", "href": "/story/succession-contest/black-whale?tier=5"},
+        {"label": "Read Chapter 380", "href": "/story/succession-contest/chapters?chapter=380"},
+        {"label": "Inspect lower-tier evidence", "href": "/story/succession-contest/research?search=lower-tier%20concourse"}
+      ]
+    }
+  ],
+  "archiveBridge": {
+    "status": "implemented",
+    "supportedDestinations": ["Black Whale atlas", "Location archive", "Chapter reader", "Chapter dossiers", "Research desk"],
+    "minimumLinksPerHeroRoom": 2,
+    "minimumLinksPerRoute": 1,
+    "linkPolicy": "All links use maintained clean routes and preserve the evidence item label in query parameters where supported."
+  },
+  "acceptance": {
+    "routeReviewImported": true,
+    "authorizedAndQuarantinedRoutesSeparated": true,
+    "unknownIntermediateSpaceVisible": true,
+    "heroRoomDioramasImplemented": 6,
+    "openWallTreatment": true,
+    "roomEvidencePanels": true,
+    "archiveLinksImplemented": true,
+    "keyboardRoomSelection": true,
+    "temporalSimulationExcluded": true,
+    "nenOverlaysExcluded": true
+  }
+}
