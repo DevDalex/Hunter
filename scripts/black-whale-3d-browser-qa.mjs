@@ -124,14 +124,16 @@ try {
     await page.waitForSelector('#spatial-graph', { timeout: 30_000 });
     await page.waitForSelector('#exterior-blockout', { timeout: 30_000 });
     await page.waitForSelector('#tier-blockout', { timeout: 30_000 });
+    await page.waitForSelector('#operations-deck', { timeout: 30_000 });
     await page.waitForTimeout(2_000);
-    for (const selector of ['#status', '#spatial-graph', '#exterior-blockout', '#tier-blockout']) {
+    for (const selector of ['#status', '#spatial-graph', '#exterior-blockout', '#tier-blockout', '#operations-deck']) {
       if (await page.locator(selector).count() !== 1) throw new Error(`${selector} was removed or duplicated after full load.`);
     }
     if (runtimeErrors.length) throw new Error(`Runtime errors: ${runtimeErrors.join(' | ')}`);
     if (consoleErrors.length) throw new Error(`Console errors: ${consoleErrors.join(' | ')}`);
     const bodyText = await page.locator('body').innerText();
-    if (!bodyText.includes('Evidence foundation complete. Exterior refinement active.')) throw new Error('Current Phase 7 status copy is missing.');
+    if (!bodyText.includes('Research, structure and operational production complete')) throw new Error('Current Phase 7.5–7.7 status copy is missing.');
+    if (!bodyText.includes('Routes, hero rooms and archive bridge')) throw new Error('Combined Phase 7.5–7.7 heading is missing.');
     const kicker = (await page.locator('#exterior-blockout .kicker').innerText()).toLowerCase();
     const heading = (await page.locator('#exterior-blockout h2').innerText()).toLowerCase();
     if (!kicker.includes('phase 7.3r') || !kicker.includes('canonical face correction')) throw new Error(`Incorrect exterior kicker: ${kicker}`);
@@ -180,7 +182,7 @@ try {
     if (!evidenceText.includes('Do not classify eyes as windows or organs')) throw new Error('Face-identity interpretation boundary is missing.');
   });
 
-  await record('Tier and graph viewers remain interactive beside refinement', page, async () => {
+  await record('Tier, graph and operational viewers remain interactive', page, async () => {
     if (await page.locator('#tier-canvas').count() !== 1) throw new Error('Tier canvas is missing.');
     if (await page.locator('#spatial-graph details').count() < 3) throw new Error('Spatial graph analytical panels are missing.');
     const tierCanvas = page.locator('#tier-canvas');
@@ -188,6 +190,23 @@ try {
     await page.locator('#tier-blockout [data-tier-view="exploded"]').click();
     const after = await tierCanvas.evaluate((element) => element.toDataURL());
     if (before === after) throw new Error('Exploded-tier control did not redraw the tier viewer.');
+
+    const routeCanvas = page.locator('#ops-route-canvas');
+    const firstRoute = await routeCanvas.evaluate((element) => element.toDataURL());
+    await page.locator('#ops-route-select').selectOption('bw3d.route.onior-cross-bridge');
+    const secondRoute = await routeCanvas.evaluate((element) => element.toDataURL());
+    if (firstRoute === secondRoute) throw new Error('Route selection did not redraw the operational board.');
+    const routeText = await page.locator('#ops-route-card').innerText();
+    if (!routeText.includes('Tier 1–Tier 2 cross bridge')) throw new Error('Selected route evidence card did not update.');
+
+    const roomCanvas = page.locator('#ops-room-canvas');
+    const firstRoom = await roomCanvas.evaluate((element) => element.toDataURL());
+    await page.locator('#ops-room-tabs [role="tab"]').nth(2).click();
+    const secondRoom = await roomCanvas.evaluate((element) => element.toDataURL());
+    if (firstRoom === secondRoom) throw new Error('Hero-room selection did not redraw the diorama.');
+    const roomText = await page.locator('#ops-room-evidence').innerText();
+    if (!roomText.includes('Tier 2 theater')) throw new Error('Selected hero-room evidence did not update.');
+    if (await page.locator('#ops-room-evidence .ops-links a').count() < 2) throw new Error('Hero-room archive bridge links are missing.');
   });
 
   await page.locator('#cutaway-toggle').uncheck();
@@ -196,6 +215,7 @@ try {
   await page.locator('#exterior-blockout [data-view="hero"]').click();
   await page.locator('#exterior-object-select').selectOption('bw3d.refinement.head-identity-cues');
   await page.locator('#exterior-blockout').screenshot({ path: path.join(output, 'reference-matched-black-whale-hero.png') });
+  await page.locator('#operations-deck').screenshot({ path: path.join(output, 'phase-7-5-7-7-operational-deck.png') });
   await page.screenshot({ path: path.join(output, 'reference-matched-black-whale-full-page.png'), fullPage: true });
   await page.close();
 } finally {

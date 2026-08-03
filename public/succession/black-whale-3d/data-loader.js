@@ -53,7 +53,17 @@
     const evidenceAtomsB = evidenceAtomsRest;
 
     const rawStats = analysis.blackWhale3dReferenceStats;
-    const laterRoadmap = analysis.blackWhale3dRoadmap.filter((phase) => Number(phase.id) >= 7.5);
+    const deferredRoadmap = analysis.blackWhale3dRoadmap
+      .filter((phase) => ['7.8', '7.9', '7.10', '7.11', '7.12'].includes(phase.id))
+      .map((phase) => ({
+        ...phase,
+        status: ['7.8', '7.9'].includes(phase.id) ? 'deferred' : phase.status,
+        summary: phase.id === '7.8'
+          ? 'Deferred by user direction. Chapter snapshots, occupancy changes and movement playback are not part of the current release.'
+          : phase.id === '7.9'
+            ? 'Deferred by user direction. Nen, faction, security and operational overlays remain data-only for now.'
+            : phase.summary,
+      }));
     const roadmap = [
       {
         id: '7.0',
@@ -94,8 +104,8 @@
       {
         id: '7.3R',
         title: 'Exterior refinement',
-        status: 'in-progress',
-        summary: 'The placeholder hull is being replaced by a thirteen-station whale silhouette with a broad blunt head, paired diagrammatic identity markers, refined back, belly and rear contours, improved Tier 1 integration and analytical water context.',
+        status: 'complete',
+        summary: 'The exterior now carries the defining dark dome, paired ring eyes, pale segmented mouth, side-fin masses and compact upper vessel while unseen engineering remains unresolved.',
       },
       {
         id: '7.4',
@@ -103,7 +113,25 @@
         status: 'complete',
         summary: 'The five tier macro-volumes, interstitial bands, unknown-space views and analytical controls are merged, deployed and confirmed live.',
       },
-      ...laterRoadmap,
+      {
+        id: '7.5',
+        title: 'Routes and access',
+        status: 'complete',
+        summary: 'Three supported physical connections are separated from five quarantined route scopes, with unknown intermediate geometry preserved.',
+      },
+      {
+        id: '7.6',
+        title: 'Hero-room production',
+        status: 'complete',
+        summary: 'Six selected rooms and public-space classes are produced as removable open-wall evidence dioramas.',
+      },
+      {
+        id: '7.7',
+        title: 'Archive bridge',
+        status: 'complete',
+        summary: 'Every displayed room and route links to maintained atlas, location, reader, chapter-dossier or research destinations.',
+      },
+      ...deferredRoadmap,
     ];
 
     return {
@@ -145,14 +173,14 @@
       blackWhale3dCorpusContradictions: corpusContradictions,
       blackWhale3dRoadmap: roadmap,
       blackWhale3dProgressStats: {
-        completedStages: 7,
+        completedStages: 11,
         totalStages: roadmap.length,
         programmePercent: null,
-        programmeLabel: 'EXTERIOR REFINEMENT ACTIVE',
+        programmeLabel: 'OPERATIONS DECK RELEASE',
         productionGeometryPercent: null,
-        activeStage: '7.3R',
-        nextStage: '7.3R silhouette validation and release',
-        blockedStage: '7.5',
+        activeStage: '7.5–7.7',
+        nextStage: 'Combined 7.10–7.12 final pass',
+        blockedStage: null,
       },
     };
   };
