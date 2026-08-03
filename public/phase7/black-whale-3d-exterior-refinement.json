@@ -1,8 +1,8 @@
 {
-  "schemaVersion": "7.3R.4",
+  "schemaVersion": "7.3R.5",
   "phase": "7.3R",
   "title": "Black Whale reference-matched exterior",
-  "status": "in-progress",
+  "status": "complete",
   "dependsOn": [
     {"phase":"7.3","mergeCommit":"e2eb695c015d371e1652af848742132bb8277653"},
     {"phase":"7.4","mergeCommit":"c37af539a1de21a7b5e9a11682e7c2981d4dc79a"}
@@ -63,8 +63,17 @@
     "analyticalShadingAndWaterContextRefined": true,
     "uncertaintyAndProhibitionsVisible": true,
     "dedicatedAuditImplemented": true,
-    "desktopBrowserBuildChecksPassed": false,
-    "mergedDeployedAndLiveVerified": false
+    "desktopBrowserBuildChecksPassed": true,
+    "mergedDeployedAndLiveVerified": true
+  },
+  "release": {
+    "pullRequest": 100,
+    "validatedHead": "00642ef13002b11f7a50874b70c1b57024f1d46a",
+    "mergeCommit": "30097541cf919fa760e2a15eed5b989051b7cd08",
+    "mergedAt": "2026-08-03T08:28:21Z",
+    "deploymentStatus": "success",
+    "deploymentVerifiedAt": "2026-08-03T08:39:09Z",
+    "liveRoute": "/succession/black-whale-3d"
   },
   "roadmapBoundary": "Phase 7.3R may correct and refine exterior visual identity only. It may not start Phase 7.5 routes or Phase 7.6 room production."
 }
