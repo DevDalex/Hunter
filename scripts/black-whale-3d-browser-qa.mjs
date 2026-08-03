@@ -136,40 +136,56 @@ try {
     if (!bodyText.includes('Evidence foundation complete. Exterior refinement active.')) throw new Error('Current Phase 7 status copy is missing.');
     const refinementKicker = (await page.locator('#exterior-blockout .kicker').innerText()).toLowerCase();
     const refinementHeading = (await page.locator('#exterior-blockout h2').innerText()).toLowerCase();
-    if (!refinementKicker.includes('phase 7.3r') || !refinementKicker.includes('exterior refinement')) throw new Error(`Phase 7.3R kicker is incorrect: ${refinementKicker}`);
-    if (!refinementHeading.includes('recognizable whale silhouette')) throw new Error(`Phase 7.3R heading is incorrect: ${refinementHeading}`);
+    if (!refinementKicker.includes('phase 7.3r') || !refinementKicker.includes('canonical face correction')) throw new Error(`Phase 7.3R kicker is incorrect: ${refinementKicker}`);
+    if (!refinementHeading.includes('reference-matched black whale exterior')) throw new Error(`Phase 7.3R heading is incorrect: ${refinementHeading}`);
     if (bodyText.includes('Geometry remains at zero')) throw new Error('Stale zero-geometry copy is still visible.');
     if (bodyText.includes('Phase 7.2 remains blocked')) throw new Error('Stale Phase 7.2 block is still visible.');
   });
 
-  await record('Refined exterior canvas renders and responds', page, async () => {
+  await record('Reference-matched face renders with canonical contrast', page, async () => {
     const canvas = page.locator('#exterior-canvas');
     await canvas.waitFor({ state: 'visible', timeout: 15_000 });
-    const initialSignature = await canvas.evaluate((element) => {
+    await page.locator('#exterior-blockout [data-view="front"]').click();
+    const signature = await canvas.evaluate((element) => {
       const context = element.getContext('2d');
-      const colors = new Set();
-      for (let y = 20; y < element.height; y += 60) {
-        for (let x = 20; x < element.width; x += 60) {
-          const pixel = context.getImageData(x, y, 1, 1).data;
-          colors.add(`${pixel[0]},${pixel[1]},${pixel[2]},${pixel[3]}`);
-        }
-      }
-      return { colors: colors.size, image: element.toDataURL() };
+      const sample = (x, y) => {
+        const pixel = context.getImageData(x, y, 1, 1).data;
+        return {
+          rgba: [...pixel],
+          luminance: 0.2126 * pixel[0] + 0.7152 * pixel[1] + 0.0722 * pixel[2],
+        };
+      };
+      return {
+        image: element.toDataURL(),
+        upperFace: sample(600, 290),
+        mouth: sample(600, 420),
+        leftPupil: sample(447, 198),
+        leftEyeRing: sample(474, 198),
+      };
     });
-    if (initialSignature.colors < 8) throw new Error(`Refined canvas has insufficient visual variation: ${initialSignature.colors} sampled colors.`);
+    if (signature.mouth.luminance < signature.upperFace.luminance + 90) {
+      throw new Error(`Pale mouth does not contrast with dark dome: upper ${signature.upperFace.luminance.toFixed(1)}, mouth ${signature.mouth.luminance.toFixed(1)}.`);
+    }
+    if (signature.leftEyeRing.luminance < signature.leftPupil.luminance + 70) {
+      throw new Error(`Ring eye is not visible: pupil ${signature.leftPupil.luminance.toFixed(1)}, ring ${signature.leftEyeRing.luminance.toFixed(1)}.`);
+    }
+  });
 
+  await record('Exterior canvas cameras, cutaway and evidence remain interactive', page, async () => {
+    const canvas = page.locator('#exterior-canvas');
+    const frontImage = await canvas.evaluate((element) => element.toDataURL());
     await page.locator('#exterior-blockout [data-view="side"]').click();
     const sideImage = await canvas.evaluate((element) => element.toDataURL());
-    if (sideImage === initialSignature.image) throw new Error('Side-view control did not redraw the refined hull.');
+    if (sideImage === frontImage) throw new Error('Side-view control did not redraw the hull.');
 
     await page.locator('#cutaway-toggle').check();
     const cutawayImage = await canvas.evaluate((element) => element.toDataURL());
-    if (cutawayImage === sideImage) throw new Error('Cutaway control did not redraw the refined hull.');
+    if (cutawayImage === sideImage) throw new Error('Cutaway control did not redraw the hull.');
 
-    await page.locator('#exterior-object-select').selectOption('bw3d.refinement.whale-head-mass');
+    await page.locator('#exterior-object-select').selectOption('bw3d.refinement.head-identity-cues');
     const evidenceText = await page.locator('#exterior-evidence').innerText();
-    if (!evidenceText.includes('bw3d.refinement.whale-head-mass')) throw new Error('Whale-head refinement evidence record did not open.');
-    if (!evidenceText.includes('No canonical mouth dimensions')) throw new Error('Whale-head uncertainty prohibition is missing.');
+    if (!evidenceText.includes('bw3d.refinement.head-identity-cues')) throw new Error('Face-identity evidence record did not open.');
+    if (!evidenceText.includes('Do not classify eyes as windows or organs')) throw new Error('Face-identity interpretation boundary is missing.');
   });
 
   await record('Tier and graph viewers remain interactive beside refinement', page, async () => {
@@ -187,8 +203,8 @@ try {
   await page.locator('#unknown-toggle').uncheck();
   await page.locator('#exterior-blockout [data-view="hero"]').click();
   await page.locator('#exterior-object-select').selectOption('bw3d.refinement.head-identity-cues');
-  await page.locator('#exterior-blockout').screenshot({ path: path.join(output, 'refined-exterior-hero.png') });
-  await page.screenshot({ path: path.join(output, 'refined-exterior-full-page.png'), fullPage: true });
+  await page.locator('#exterior-blockout').screenshot({ path: path.join(output, 'reference-matched-black-whale-hero.png') });
+  await page.screenshot({ path: path.join(output, 'reference-matched-black-whale-full-page.png'), fullPage: true });
   await page.close();
 } finally {
   await browser.close().catch(() => {});
