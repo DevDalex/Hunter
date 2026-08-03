@@ -58,6 +58,11 @@ const serve = async () => {
   const server = createServer(async (request, response) => {
     try {
       const pathname = decodeURIComponent(new URL(request.url, 'http://127.0.0.1').pathname);
+      if (pathname === '/favicon.ico') {
+        response.statusCode = 204;
+        response.end();
+        return;
+      }
       const filename = await resolveFile(pathname);
       response.setHeader('content-type', mime[path.extname(filename).toLowerCase()] || 'application/octet-stream');
       response.setHeader('cache-control', 'no-store');
@@ -157,7 +162,7 @@ try {
       };
       return {
         image: element.toDataURL(),
-        upperFace: sample(600, 290),
+        upperFace: sample(600, 190),
         mouth: sample(600, 420),
         leftPupil: sample(447, 198),
         leftEyeRing: sample(474, 198),
