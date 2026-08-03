@@ -53,7 +53,7 @@
     const evidenceAtomsB = evidenceAtomsRest;
 
     const rawStats = analysis.blackWhale3dReferenceStats;
-    const legacyFuture = analysis.blackWhale3dRoadmap.filter((phase) => Number(phase.id) >= 7.2);
+    const laterRoadmap = analysis.blackWhale3dRoadmap.filter((phase) => Number(phase.id) >= 7.5);
     const roadmap = [
       {
         id: '7.0',
@@ -70,12 +70,34 @@
       {
         id: '7.1B',
         title: 'Exhaustive Hunterpedia corpus',
-        status: 'in-progress',
-        summary: 'Every chapter slot from 342 through 415 is registered; 342–411 are reviewed, 412–415 are explicitly unavailable, and the atomic corpus awaits discussion and a second pass.',
+        status: 'complete',
+        summary: 'The Chapter 342–415 source census, evidence atoms, location registry, visual index and contradiction ledger are stored and audited.',
       },
-      ...legacyFuture.map((phase) => phase.id === '7.2'
-        ? { ...phase, status: 'blocked', summary: 'Blocked until the exhaustive corpus is discussed, corrected, independently rechecked and frozen.' }
-        : phase),
+      {
+        id: '7.1C',
+        title: 'Repository-local full-page review',
+        status: 'complete',
+        summary: 'Sixty-seven Black Whale chapters received two-pass page review with hashes, panel locators, exclusions, evidence atoms and modeling permissions.',
+      },
+      {
+        id: '7.2',
+        title: 'Spatial graph',
+        status: 'complete',
+        summary: 'All registered identities are normalized into evidence-bounded containers and reviewed route relations without invented geometry.',
+      },
+      {
+        id: '7.3',
+        title: 'Exterior blockout',
+        status: 'complete',
+        summary: 'The evidence-labeled hull envelope, Tier 1 mass, cutaway views, camera presets and human-scale analytical view are released.',
+      },
+      {
+        id: '7.4',
+        title: 'Tier blockout',
+        status: 'in-progress',
+        summary: 'The five tier macro-volumes, interstitial bands and unknown-space views are merged; live dashboard regression verification is the remaining release task.',
+      },
+      ...laterRoadmap,
     ];
 
     return {
@@ -117,14 +139,14 @@
       blackWhale3dCorpusContradictions: corpusContradictions,
       blackWhale3dRoadmap: roadmap,
       blackWhale3dProgressStats: {
-        completedStages: 1,
+        completedStages: 6,
         totalStages: roadmap.length,
         programmePercent: null,
-        programmeLabel: 'RESEARCH OPEN',
-        productionGeometryPercent: 0,
-        activeStage: '7.1B',
-        nextStage: '7.1B discussion and second pass',
-        blockedStage: '7.2',
+        programmeLabel: 'TIER BLOCKOUT MERGED',
+        productionGeometryPercent: null,
+        activeStage: '7.4',
+        nextStage: '7.4 live dashboard verification',
+        blockedStage: '7.5',
       },
     };
   };
