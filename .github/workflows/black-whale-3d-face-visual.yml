@@ -68,4 +68,5 @@ jobs:
           name: black-whale-canonical-face-${{ github.sha }}
           path: .black-whale-3d-qa/
           if-no-files-found: warn
+          include-hidden-files: true
           retention-days: 14
