@@ -1,13 +1,16 @@
 const loadExterior = async () => {
-  const [blockoutResponse, refinementResponse] = await Promise.all([
+  const [blockoutResponse, refinementResponse, profileResponse] = await Promise.all([
     fetch('/phase7/black-whale-3d-exterior-blockout.json'),
     fetch('/phase7/black-whale-3d-exterior-refinement.json'),
+    fetch('/phase7/black-whale-3d-exterior-refinement-profile.json'),
   ]);
   if (!blockoutResponse.ok) throw new Error(`Exterior contract HTTP ${blockoutResponse.status}`);
   if (!refinementResponse.ok) throw new Error(`Exterior refinement contract HTTP ${refinementResponse.status}`);
+  if (!profileResponse.ok) throw new Error(`Exterior refinement profile HTTP ${profileResponse.status}`);
   return {
     blockout: await blockoutResponse.json(),
     refinement: await refinementResponse.json(),
+    profile: await profileResponse.json(),
   };
 };
 
@@ -32,7 +35,7 @@ const makeSection = (data, objects) => {
     </header>
     <div class="exterior-refinement-note" role="note">
       <strong>Refined macro form</strong>
-      <span>Thirteen longitudinal hull stations, asymmetric back and belly contours, a broad head-side mass, smoother rear taper, improved Tier 1 integration and analytical water context.</span>
+      <span>${data.profile.hullStations.length} longitudinal hull stations, asymmetric back and belly contours, a broad head-side mass, smoother rear taper, improved Tier 1 integration and analytical water context.</span>
     </div>
     <div class="exterior-layout">
       <div class="exterior-stage">
@@ -52,7 +55,7 @@ const makeSection = (data, objects) => {
   return section;
 };
 
-const startRenderer = (canvas) => {
+const startRenderer = (canvas, profile) => {
   const ctx = canvas.getContext('2d');
   const state = {
     yaw: -.48,
@@ -67,22 +70,15 @@ const startRenderer = (canvas) => {
     selected: '',
   };
 
-  const hullStations = [
-    { z: -6.55, rx: .3, ry: .4, cy: .18, top: .8, bottom: 1.05 },
-    { z: -6.0, rx: .8, ry: .92, cy: .12, top: .82, bottom: 1.08 },
-    { z: -5.15, rx: 1.55, ry: 1.62, cy: .08, top: .84, bottom: 1.1 },
-    { z: -4.0, rx: 2.35, ry: 2.25, cy: .05, top: .86, bottom: 1.12 },
-    { z: -2.65, rx: 3.05, ry: 2.78, cy: .02, top: .87, bottom: 1.14 },
-    { z: -1.15, rx: 3.55, ry: 3.08, cy: 0, top: .88, bottom: 1.15 },
-    { z: .45, rx: 3.78, ry: 3.2, cy: .02, top: .9, bottom: 1.16 },
-    { z: 2.0, rx: 3.72, ry: 3.12, cy: .08, top: .9, bottom: 1.14 },
-    { z: 3.35, rx: 3.48, ry: 2.88, cy: .14, top: .88, bottom: 1.12 },
-    { z: 4.45, rx: 3.18, ry: 2.55, cy: .2, top: .84, bottom: 1.08 },
-    { z: 5.35, rx: 2.78, ry: 2.2, cy: .28, top: .8, bottom: 1.02 },
-    { z: 6.12, rx: 2.12, ry: 1.65, cy: .34, top: .74, bottom: .96 },
-    { z: 6.72, rx: 1.1, ry: .88, cy: .38, top: .7, bottom: .9 },
-  ];
-  const segments = 24;
+  const hullStations = profile.hullStations.map((station) => ({
+    z: station.z,
+    rx: station.radiusX,
+    ry: station.radiusY,
+    cy: station.centerY,
+    top: station.topScale,
+    bottom: station.bottomScale,
+  }));
+  const segments = profile.ringSegments;
 
   const rotate = ([x, y, z]) => {
     const cy = Math.cos(state.yaw);
@@ -152,8 +148,15 @@ const startRenderer = (canvas) => {
     ];
   }));
 
+  const hullRefinementSelections = new Set([
+    'bw3d.refinement.whale-head-mass',
+    'bw3d.refinement.back-and-belly-contours',
+    'bw3d.refinement.rear-taper',
+    'bw3d.refinement.analytical-surface-language',
+  ]);
+
   const hullShade = (face, ringIndex) => {
-    if (state.selected === 'bw3d.exterior.main-hull' || state.selected.startsWith('bw3d.refinement.')) return '#8fa5a5';
+    if (state.selected === 'bw3d.exterior.main-hull' || hullRefinementSelections.has(state.selected)) return '#8fa5a5';
     const averageY = face.reduce((sum, point) => sum + point[1], 0) / face.length;
     if (averageY > 1.25) return ringIndex > 8 ? '#71888b' : '#687f82';
     if (averageY < -1.5) return '#40545b';
@@ -161,8 +164,9 @@ const startRenderer = (canvas) => {
   };
 
   const drawWater = () => {
-    polygon([[-11, -1.35, -10], [11, -1.35, -10], [11, -1.35, 12], [-11, -1.35, 12]], '#789aa4', .32, '#789aa4');
-    for (let z = -8; z <= 10; z += 2) line([[-10, -1.34, z], [10, -1.34, z]], '#d7e8e9', .7, .28);
+    const waterY = profile.analyticalWaterPlane.y;
+    polygon([[-11, waterY, -10], [11, waterY, -10], [11, waterY, 12], [-11, waterY, 12]], '#789aa4', .32, '#789aa4');
+    for (let z = -8; z <= 10; z += 2) line([[-10, waterY + .01, z], [10, waterY + .01, z]], '#d7e8e9', .7, .28);
   };
 
   const drawHull = () => {
@@ -180,14 +184,8 @@ const startRenderer = (canvas) => {
       }
     }
 
-    const seamY = -.38;
     [-1, 1].forEach((side) => {
-      line([
-        [side * 2.55, seamY, 4.25],
-        [side * 2.35, seamY - .05, 5.15],
-        [side * 1.82, seamY + .02, 6.0],
-        [side * .88, seamY + .18, 6.65],
-      ], '#26363a', 2, .72);
+      line(profile.headSeamGuide.pointsPerSide.map((point) => [side * point.xScale, point.y, point.z]), '#26363a', 2, .72);
     });
   };
 
@@ -202,11 +200,10 @@ const startRenderer = (canvas) => {
 
   const drawTierOne = () => {
     const selected = state.selected === 'bw3d.exterior.tier-1-vessel' || state.selected === 'bw3d.refinement.tier-1-integration';
-    const base = selected ? '#efd08b' : '#c9bea0';
-    box(0, 2.9, -.35, 3.9, .55, 5.5, base, .98);
-    box(0, 3.35, -.28, 3.15, .48, 4.45, selected ? '#f3dca6' : '#ddd5bf', .98);
-    box(0, 3.76, -.1, 2.25, .42, 3.15, '#ebe6d7', .98);
-    box(0, 4.08, .52, 1.45, .28, 1.45, '#f2efe5', .98);
+    const colors = selected ? ['#efd08b', '#f3dca6', '#f0e1bd', '#f6f1e4'] : ['#c9bea0', '#ddd5bf', '#ebe6d7', '#f2efe5'];
+    profile.tierOneWorkingMasses.forEach((mass, index) => {
+      box(...mass.center, ...mass.size, colors[index], .98);
+    });
   };
 
   const drawSupportRegion = () => {
@@ -297,7 +294,7 @@ const mountExterior = async () => {
   const objects = makeEvidenceObjects(data);
   const section = makeSection(data, objects);
   status.insertAdjacentElement('afterend', section);
-  const renderer = startRenderer(section.querySelector('canvas'));
+  const renderer = startRenderer(section.querySelector('canvas'), data.profile);
   const select = section.querySelector('select');
   const evidence = section.querySelector('#exterior-evidence');
   const updateEvidence = () => {
