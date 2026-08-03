@@ -1,13 +1,43 @@
-# Hunter × Hunter #
+# Hunter × Hunter Archive
+
+## Current public scope
+
+The website is intentionally limited to three maintained areas:
+
+- the **Succession Contest Archive**, opened at `/`;
+- the **general Nen Encyclopedia**, opened at `/nen`;
+- the **general World Atlas**, opened at `/world`.
+
+Earlier-arc Story pages, the global timeline, the general character encyclopedia, the general organizations workspace, the general fights archive, and the old site homepage are retired.
+
 ## Runtime architecture
 
-- React and Vite build the reader application into `dist/client/`.
+- React and Vite build the client application into `dist/client/`.
 - The Cloudflare Worker entry is `dist/server/index.js`.
 - `dist/client/` is bound as `ASSETS` with Worker-first routing.
 - `server/index.js` handles `/api/admin/chapter/*` and `/admin/chapters` before static files or the SPA fallback.
-- GitHub is the canonical content store; the protected chapter administrator can publish authorized chapter media back to the repository.
-- `src/data/routeManifest.js` owns 26 reader-facing screens.
-- Large HxH datasets remain behind 21 dynamic entries: route/search UI boundaries, Story detail boundaries, and search shards.
+- GitHub is the canonical content store for authorized Succession chapter media.
+
+## Maintained routes
+
+### Succession Contest
+
+The dedicated archive owns:
+
+- Story Intelligence
+- voyage timeline
+- manga reader
+- Succession search
+- characters and royal family
+- assignments and organizations
+- Black Whale and location records
+- Nen, ritual systems, and Guardian Spirit Beasts
+- events, relationships, chapter dossiers, research, and glossary
+
+### Retained general references
+
+- `/nen` keeps the complete Nen system map and ability encyclopedia.
+- `/world` keeps the Known World, route, hierarchy, gallery, and voyage atlas.
 
 ## Run locally
 
@@ -18,22 +48,11 @@ npm run dev
 
 ## Validate and build
 
-Run the complete repository gate:
-
 ```bash
 npm run build
 ```
 
-The build is composed from two explicit stages:
-
-```bash
-npm run check
-npm run build:runtime
-```
-
-`npm run check` writes `public/build-info.json` and runs all 15 independent pre-build audits. `npm run build:runtime` clears stale hosting output, builds Vite into `dist/client/`, validates performance budgets, prepares the Worker in `dist/server/`, and runs the Cloudflare release audit.
-
-This split lets browser CI rebuild and test the exact runtime without running the same 15 static audits twice. The Cloudflare full-stack job remains the authoritative complete gate for every revision.
+The build runs the Succession runtime audit sweep, verifies the hosted chapter administrator, builds Vite, checks performance budgets, prepares the Worker artifact, and validates the Cloudflare release shape.
 
 ## Deploy to Cloudflare
 
@@ -41,7 +60,7 @@ This split lets browser CI rebuild and test the exact runtime without running th
 npm run deploy
 ```
 
-The deploy command runs the complete build before invoking the repository-pinned Wrangler version. `wrangler.jsonc` must retain:
+`wrangler.jsonc` must retain:
 
 - Worker name `hunter`;
 - entry `dist/server/index.js`;
@@ -50,74 +69,21 @@ The deploy command runs the complete build before invoking the repository-pinned
 - `run_worker_first: true`;
 - disabled automatic HTML and not-found rewriting.
 
-A successful build or GitHub commit is not proof of a hosted release. Record deployment success only after Cloudflare reaches terminal success and the live API returns JSON.
+A successful commit is not proof of a hosted release. Record deployment success only after Cloudflare reaches terminal success.
 
-## Locked toolchain
+## Core content owners
 
-The direct application and build dependencies use exact versions in `package.json` and `package-lock.json`. React, React DOM, Lucide, Vite, the Vite React plugin, Playwright, Axe, and Wrangler must be updated deliberately in one reviewed lockfile change rather than through `latest` or transient CI installs.
-
-## Core HxH content owners
-
-- Chapter titles and boundary: `src/data/chapterTitles.js`, `src/data/chapters.js`, `src/data/archiveMeta.js`.
-- Story architecture: `architecture/storyArchitecture.mjs`, `src/data/routeManifest.js`, `src/lib/appRouter.js`.
-- Completed-arc research: `src/data/seriesResearch.js`, `src/data/seriesArcDossiers.js`.
-- Succession research: `src/data/successionTimeline.js`, `src/data/successionDossier.js`, `src/data/successionArchive.js`.
-- Character identity and portraits: `src/data/entityRegistry.js`, `src/data/entityIds.js`, `src/data/characters.js`.
-- World, Nen, organizations, and conflicts: `src/data/worldAtlas.js`, `src/data/nenEncyclopedia.js`, `src/data/systemsDesk.js`, `src/data/encyclopedia.js`.
-- Source policy and evidence: `src/data/sourcePolicy.js`, `src/data/bibliography.js`, `src/data/evidenceStates.js`, `src/data/reviewQueue.js`.
-- Route inventory: `src/data/routeManifest.js`.
-- Cloudflare Worker: `server/index.js`, `server/chapter-admin.js`, `wrangler.jsonc`.
-
-## Batch 12 design system
-
-Batch 12 is the current reusable archive UI foundation. `src/data/archiveDesignSystem.js` owns the primitive and semantic-tone contracts, `src/components/ArchiveUI.jsx` implements the shared components, and `src/styles/archive-system.css` owns their styling.
-
-Use `ArchiveSection`, `ArchiveCard`, `EvidenceBadge`, `StatusPill`, `SourceStack`, and `ArchiveLedger` before creating one-off equivalents. The design-system audit remains part of the 15 independent pre-build audits, while the old reader-facing demonstration remains removed.
-
-## Media ownership
-
-`src/data/characters.js` owns portrait provenance and `src/data/priorityMedia.generated.js` is its generated projection. `src/data/blackWhale.js` owns room-image provenance and `src/data/blackWhaleMedia.generated.js` is its generated projection.
-
-The maintained library includes 106 character portraits and 29 Black Whale derivatives. Generated media files should be regenerated through their scripts rather than edited manually.
-
-## Source policy
-
-Only approved Hunterpedia/Fandom article and image hosts may be used for factual records and displayed source media. Keep confirmed facts, inference, unresolved questions, manga-only material, anime-only material, and adaptation notes visibly distinct.
-
-## Performance contract
-
-`src/data/performanceBudgets.js` owns the current limits:
-
-- application entry: 500,000 bytes;
-- startup JavaScript closure: 1,000,000 bytes;
-- startup CSS: 1,000,000 bytes;
-- largest JavaScript chunk: 750,000 bytes;
-- individual portrait: 160,000 bytes;
-- portrait library: 2,200,000 bytes.
+- Succession routes: `src/data/succession/archiveRoutes.js`
+- Public route boundary: `src/data/routeManifest.js`
+- Browser routing: `src/lib/appRouter.js`
+- Succession application: `src/components/succession/`
+- General Nen data and interface: `src/data/nenEncyclopedia.js`, `src/components/NenEncyclopedia.jsx`
+- General World data and interface: `src/data/worldAtlas.js`, `src/components/WorldAtlas.jsx`
+- Succession chapter media: `src/data/successionChapterMedia.generated.js`
+- Cloudflare Worker: `server/index.js`, `server/chapter-admin.js`, `wrangler.jsonc`
 
 ## Chapter administrator
 
-The protected administrator lives at `/admin/chapters`. Its API family is `/api/admin/chapter/*` and must always return JSON rather than `index.html`.
+The protected administrator remains at `/admin/chapters`. Its API family is `/api/admin/chapter/*` and must always return JSON rather than `index.html`.
 
-Required Worker secrets and variables are documented in `docs/HOSTED-CHAPTER-ADMIN.md`. Keep GitHub credentials out of the repository.
-
-## Browser verification
-
-Install Chromium once for local browser work, then run the full local gate:
-
-```bash
-npm run browser:install
-npm run qa:browser
-```
-
-`npm run qa:browser` retains the complete build and all browser checks. GitHub browser CI uses `npm run qa:browser:ci`: it performs the runtime build, release/performance validation, search, visual, accessibility, interaction, reader, architecture, and browser performance checks without duplicating aggregate preflight already enforced by the Cloudflare job.
-
-Both CI workflows cancel superseded runs for the same branch so obsolete commits do not continue consuming runner time.
-
-## Maintainer documentation
-
-- `public/implementation-notes.md` — current maintenance contract.
-- `docs/BUILD-PREFLIGHT.md` — build-gate order.
-- `docs/STORY-ARCHITECTURE.md` — story and route model.
-- `docs/HOSTED-CHAPTER-ADMIN.md` — administrator setup and operation.
-- `docs/DESIGN-SYSTEM.md` — reusable archive UI primitives.
+Required Worker secrets and variables are documented in `docs/HOSTED-CHAPTER-ADMIN.md`.

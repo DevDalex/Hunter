@@ -17,26 +17,12 @@ export {
   successionArchiveTargetToPath,
 } from './succession/archiveRoutes.js';
 
-export const viewIds = ['home', 'series', 'succession', 'reference', 'timeline'];
+export const viewIds = ['succession', 'reference'];
 export const views = new Set(viewIds);
 
-export const seriesRoutes = [
-  { id: 'arcs', target: '', label: 'Story hub' },
-  { id: 'volume-0', target: 'volume-0', label: 'Volume 0 · Kurapika’s Memories' },
-  { id: 'hunter-exam', target: 'hunter-exam', label: 'Hunter Exam' },
-  { id: 'zoldyck-family', target: 'zoldyck-family', label: 'Zoldyck Family' },
-  { id: 'heavens-arena', target: 'heavens-arena', label: 'Heavens Arena' },
-  { id: 'yorknew-city', target: 'yorknew-city', label: 'Yorknew City' },
-  { id: 'greed-island', target: 'greed-island', label: 'Greed Island' },
-  { id: 'chimera-ant', target: 'chimera-ant', label: 'Chimera Ant' },
-  { id: 'chairman-election', target: 'chairman-election', label: 'Chairman Election' },
-  { id: 'succession-contest', target: 'succession-contest', label: 'Succession Contest' },
-  { id: 'chronology', target: 'chronology', label: 'Complete chronology' },
-  { id: 'chapters', target: 'chapters', label: 'Chapter directory' },
-  { id: 'adaptation', target: 'adaptation', label: '2011 anime guide' },
-];
+// Kept as an empty compatibility export while retired full-series modules are removed.
+export const seriesRoutes = [];
 
-// Retained during incremental migration so legacy components and deep links remain valid.
 export const successionPages = [
   {
     id: 'overview', label: 'Arc overview', kicker: 'The current story', title: 'Succession Contest',
@@ -76,13 +62,19 @@ const retiredSuccessionAliases = Object.fromEntries(
 );
 
 export const successionAliases = {
-  'deep-dossier': { target: 'family-tree', panel: 'princes' },
-  princes: { target: 'family-tree', panel: 'princes' },
-  'connection-board': { target: 'succession-roster', panel: 'relationships' },
-  'nen-classes': { target: 'beasts', panel: 'classes' },
+  'deep-dossier': { target: 'princes' },
+  princes: { target: 'princes' },
+  'family-tree': { target: 'princes' },
+  'royal-family': { target: 'princes' },
+  'connection-board': { target: 'relationships' },
+  'succession-roster': { target: 'characters' },
+  'succession-timeline': { target: 'timeline' },
+  'nen-classes': { target: 'nen' },
+  beasts: { target: 'guardian-spirit-beasts' },
   ...retiredSuccessionAliases,
-  mysteries: { target: 'chapters', panel: 'mysteries' },
-  'succession-sources': { target: 'overview' },
+  mysteries: { target: 'chapters' },
+  'succession-sources': { target: 'research' },
+  overview: { target: 'archive' },
 };
 
 export const successionPageIds = new Set([
@@ -99,76 +91,53 @@ export const successionDossierTabs = {
 };
 
 export const dossierTabRoutes = {
-  overview: 'overview', royal: 'family-tree', assignments: 'succession-roster', threads: 'succession-roster',
-  beasts: 'beasts', abilities: 'beasts', rules: 'beasts', mafia: 'organizations', justice: 'organizations',
-  relationships: 'relationships', operations: 'organizations', status: 'chapters', objects: 'chapters',
-  chapters: 'chapters', mysteries: 'chapters', links: 'chapters', sources: 'overview',
+  overview: 'archive', royal: 'princes', assignments: 'bodyguards', threads: 'relationships',
+  beasts: 'guardian-spirit-beasts', abilities: 'nen', rules: 'nen', mafia: 'organizations',
+  justice: 'organizations', relationships: 'relationships', operations: 'organizations',
+  status: 'chapters', objects: 'chapters', chapters: 'chapters', mysteries: 'chapters',
+  links: 'chapters', sources: 'research',
 };
 
 export const referencePages = [
-  {
-    id: 'encyclopedia', label: 'Characters', kicker: 'People and connected records', title: 'Character encyclopedia',
-    description: 'Browse the complete character index, then follow status, affiliations, relationships, abilities, locations, conflicts, and related records.',
-  },
   {
     id: 'nen', label: 'Nen & abilities', kicker: 'Power system', title: 'Nen and ability encyclopedia',
     description: 'Learn the system from aura fundamentals through advanced techniques, six categories, vows, curses, Nen beasts, and named abilities.',
   },
   {
     id: 'atlas', label: 'World & places', kicker: 'Story geography', title: 'World and location atlas',
-    description: 'Explore the Known World on an interactive geographic map, trace curated story and Succession routes, then connect places to their people, factions, events, and nested records.',
-  },
-  {
-    id: 'systems', label: 'Organizations', kicker: 'Authority, membership and operations', title: 'Organizations and institutions',
-    description: 'Explore institutions, factions, members, sponsorship, typed relationships, territory, and operations in one stable workspace.',
-  },
-  {
-    id: 'conflicts', label: 'Fights', kicker: 'Battles, games and operations', title: 'Fights and conflicts',
-    description: 'Browse battles, assassinations, pursuits, operations, games, negotiations, objectives, participants, abilities, turning points, results, and consequences.',
+    description: 'Explore the Known World, major story routes, the Black Whale voyage, and nested locations through the visual atlas.',
   },
 ];
 
 export const referencePrimary = referencePages.map((page) => page.id);
 
 export const referenceAliases = {
-  '': { target: 'encyclopedia' },
-  characters: { target: 'encyclopedia', category: 'characters' },
-  people: { target: 'encyclopedia', category: 'characters' },
+  nen: { target: 'nen' },
   world: { target: 'atlas' },
+  atlas: { target: 'atlas' },
   locations: { target: 'atlas' },
-  factions: { target: 'systems', view: 'factions' },
-  mafia: { target: 'systems', view: 'factions' },
-  institutions: { target: 'systems', view: 'institutions' },
-  relationships: { target: 'systems', view: 'relations' },
-  operations: { target: 'systems', view: 'operations' },
-  objects: { target: 'encyclopedia', category: 'objects' },
-  'hisoka-chrollo': { target: 'conflicts', case: 'hisoka-chrollo' },
   'research-library': { target: 'atlas' },
   'study-layers': { target: 'atlas' },
-  directory: { target: 'encyclopedia' },
-  hunterpedia: { target: 'encyclopedia' },
-  sources: { target: 'encyclopedia' },
 };
 
-// The release matrix is a deliberately curated set of public entry screens.
-// Batch 3 promotes the redesigned Royal Family, queen-household, and institution workspaces into the rendered release gate.
-// Batch 4 promotes Chapter, Event, Nen, Guardian Spirit Beast, Location, and Black Whale commands into the rendered release gate.
-// Batch 5 promotes relationship, timeline, spatial, assignment, and advanced result commands into the rendered release gate.
-// The complete Succession hierarchy remains validated separately by the archive shell audit.
-export const successionReleaseRouteIds = Object.freeze(['story', 'chapters', 'events', 'timeline', 'characters', 'princes', 'queens', 'bodyguards', 'organizations', 'relationships', 'locations', 'black-whale', 'nen', 'guardian-spirit-beasts', 'research']);
-export const successionReleaseRoutes = successionReleaseRouteIds.map((id) => successionArchiveRoutes.find((route) => route.id === id));
+export const successionReleaseRouteIds = Object.freeze([
+  'story', 'chapters', 'events', 'timeline', 'characters', 'princes', 'queens',
+  'bodyguards', 'organizations', 'relationships', 'locations', 'black-whale',
+  'nen', 'guardian-spirit-beasts', 'research',
+]);
+
+export const successionReleaseRoutes = successionReleaseRouteIds
+  .map((id) => successionArchiveRoutes.find((route) => route.id === id))
+  .filter(Boolean);
 
 export const routeManifest = [
-  { view: 'home', target: '', label: 'Hunter Archive home' },
-  { view: 'timeline', target: '', label: 'Global timeline' },
-  ...seriesRoutes.map((route) => ({ view: 'series', target: route.target, label: route.label })),
+  { view: 'succession', target: 'archive', label: 'Succession Contest Archive' },
   ...successionReleaseRoutes.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
   ...referencePages.map((route) => ({ view: 'reference', target: route.id, label: route.title })),
 ];
 
 export const routeManifestStats = {
   screens: routeManifest.length,
-  timeline: 1,
   succession: successionArchiveRoutes.length,
   successionReleaseScreens: successionReleaseRoutes.length + 1,
   reference: referencePages.length,
