@@ -134,7 +134,10 @@ try {
 
     const bodyText = await page.locator('body').innerText();
     if (!bodyText.includes('Evidence foundation complete. Exterior refinement active.')) throw new Error('Current Phase 7 status copy is missing.');
-    if (!bodyText.includes('Phase 7.3R · Exterior refinement')) throw new Error('Phase 7.3R viewer heading is missing.');
+    const refinementKicker = (await page.locator('#exterior-blockout .kicker').innerText()).toLowerCase();
+    const refinementHeading = (await page.locator('#exterior-blockout h2').innerText()).toLowerCase();
+    if (!refinementKicker.includes('phase 7.3r') || !refinementKicker.includes('exterior refinement')) throw new Error(`Phase 7.3R kicker is incorrect: ${refinementKicker}`);
+    if (!refinementHeading.includes('recognizable whale silhouette')) throw new Error(`Phase 7.3R heading is incorrect: ${refinementHeading}`);
     if (bodyText.includes('Geometry remains at zero')) throw new Error('Stale zero-geometry copy is still visible.');
     if (bodyText.includes('Phase 7.2 remains blocked')) throw new Error('Stale Phase 7.2 block is still visible.');
   });
@@ -179,6 +182,12 @@ try {
     if (before === after) throw new Error('Exploded-tier control did not redraw the tier viewer.');
   });
 
+  await page.locator('#cutaway-toggle').uncheck();
+  await page.locator('#tiers-toggle').uncheck();
+  await page.locator('#unknown-toggle').uncheck();
+  await page.locator('#exterior-blockout [data-view="hero"]').click();
+  await page.locator('#exterior-object-select').selectOption('bw3d.refinement.head-identity-cues');
+  await page.locator('#exterior-blockout').screenshot({ path: path.join(output, 'refined-exterior-hero.png') });
   await page.screenshot({ path: path.join(output, 'refined-exterior-full-page.png'), fullPage: true });
   await page.close();
 } finally {
