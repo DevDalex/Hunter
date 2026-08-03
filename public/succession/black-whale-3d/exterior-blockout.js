@@ -18,7 +18,7 @@ const makeEvidenceObjects = ({ blockout, refinement }) => [
   ...blockout.plannedObjects,
   ...refinement.refinementTargets.map((target) => ({
     id: `bw3d.refinement.${target.id}`,
-    class: 'reconstructed-closure',
+    class: 'reference-matched-reconstruction',
     modelingPermission: target.permission,
     prohibitions: target.prohibitions,
   })),
@@ -30,17 +30,17 @@ const makeSection = (data, objects) => {
   section.className = 'section exterior-blockout exterior-refinement';
   section.innerHTML = `
     <header class="section__head">
-      <div><p class="kicker">Phase 7.3R · Exterior refinement</p><h2>Recognizable whale silhouette, still noncanonical</h2></div>
-      <p>The original blockout is being refined into a more coherent whale-shaped vessel while dimensions, detailed anatomy, openings, machinery and Tier 1 plan orientation remain unresolved.</p>
+      <div><p class="kicker">Phase 7.3R · Canonical face correction</p><h2>Reference-matched Black Whale exterior</h2></div>
+      <p>The exterior now follows the defining canonical view: a broad black whale dome, large ringed eyes, a pale segmented mouth, side fins and a compact upper vessel.</p>
     </header>
     <div class="exterior-refinement-note" role="note">
-      <strong>Refined macro form</strong>
-      <span>${data.profile.hullStations.length} longitudinal hull stations, a broad blunt head face, asymmetric back and belly contours, a smoother rear taper, diagrammatic whale-identity cues, improved Tier 1 integration and analytical water context.</span>
+      <strong>Front identity locked</strong>
+      <span>The visible face and silhouette are matched to the supplied exterior reference. Exact scale and unseen side/rear engineering remain unresolved.</span>
     </div>
     <div class="exterior-layout">
       <div class="exterior-stage">
-        <canvas id="exterior-canvas" width="1200" height="720" tabindex="0" aria-label="Interactive refined Black Whale exterior envelope"></canvas>
-        <span>Working scene units · head-side and bow mapping remain analytical, not canonical</span>
+        <canvas id="exterior-canvas" width="1200" height="720" tabindex="0" aria-label="Interactive reference-matched Black Whale exterior"></canvas>
+        <span>Reference-matched front identity · analytical side and rear continuation</span>
       </div>
       <aside class="exterior-controls">
         <div class="button-row"><button data-view="hero">Hero</button><button data-view="side">Side</button><button data-view="front">Front</button><button data-view="rear">Rear</button></div>
@@ -58,9 +58,9 @@ const makeSection = (data, objects) => {
 const startRenderer = (canvas, profile) => {
   const ctx = canvas.getContext('2d');
   const state = {
-    yaw: -.48,
-    pitch: -.14,
-    zoom: .92,
+    yaw: 0,
+    pitch: -0.02,
+    zoom: 1.05,
     cutaway: false,
     tiers: false,
     unknown: false,
@@ -92,15 +92,18 @@ const startRenderer = (canvas, profile) => {
 
   const project = (point) => {
     const [x, y, z] = rotate(point);
-    const perspective = 14 / (14 + z);
+    const perspective = 16 / Math.max(5, 16 - z);
     return [
-      canvas.width / 2 + x * 76 * perspective * state.zoom,
-      canvas.height / 2 - y * 76 * perspective * state.zoom,
+      canvas.width / 2 + x * 58 * perspective * state.zoom,
+      canvas.height / 2 - y * 58 * perspective * state.zoom,
     ];
   };
 
-  const polygon = (points, fill, alpha = 1, stroke = '#1e292c') => {
+  const depth = (points) => points.reduce((sum, point) => sum + rotate(point)[2], 0) / points.length;
+
+  const polygon = (points, fill, alpha = 1, stroke = '#1e292c', lineWidth = 1) => {
     const projected = points.map(project);
+    ctx.save();
     ctx.globalAlpha = alpha;
     ctx.beginPath();
     ctx.moveTo(...projected[0]);
@@ -108,10 +111,12 @@ const startRenderer = (canvas, profile) => {
     ctx.closePath();
     ctx.fillStyle = fill;
     ctx.fill();
-    ctx.strokeStyle = stroke;
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    ctx.globalAlpha = 1;
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = lineWidth;
+      ctx.stroke();
+    }
+    ctx.restore();
   };
 
   const line = (points, stroke, width = 1, alpha = 1, dash = []) => {
@@ -121,6 +126,8 @@ const startRenderer = (canvas, profile) => {
     ctx.strokeStyle = stroke;
     ctx.lineWidth = width;
     ctx.setLineDash(dash);
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
     ctx.beginPath();
     ctx.moveTo(...projected[0]);
     projected.slice(1).forEach((point) => ctx.lineTo(...point));
@@ -128,13 +135,27 @@ const startRenderer = (canvas, profile) => {
     ctx.restore();
   };
 
-  const box = (cx, cy, cz, sx, sy, sz, fill, alpha = 1, stroke) => {
+  const ellipseOnFace = (center, radiusX, radiusY, fill, stroke, lineWidth = 1) => {
+    const points = Array.from({ length: 32 }, (_, index) => {
+      const angle = index / 32 * Math.PI * 2;
+      return [
+        center[0] + Math.cos(angle) * radiusX,
+        center[1] + Math.sin(angle) * radiusY,
+        center[2],
+      ];
+    });
+    polygon(points, fill, 1, stroke, lineWidth);
+  };
+
+  const box = (cx, cy, cz, sx, sy, sz, fill, alpha = 1, stroke = '#273034') => {
     const points = [
       [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
       [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1],
     ].map(([x, y, z]) => [cx + x * sx / 2, cy + y * sy / 2, cz + z * sz / 2]);
     [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [2, 3, 7, 6], [1, 2, 6, 5], [3, 0, 4, 7]]
-      .forEach((face) => polygon(face.map((index) => points[index]), fill, alpha, stroke));
+      .map((face) => face.map((index) => points[index]))
+      .sort((a, b) => depth(a) - depth(b))
+      .forEach((face) => polygon(face, fill, alpha, stroke, 0.8));
   };
 
   const ringPoints = hullStations.map((station) => Array.from({ length: segments }, (_, index) => {
@@ -148,29 +169,34 @@ const startRenderer = (canvas, profile) => {
     ];
   }));
 
-  const hullRefinementSelections = new Set([
-    'bw3d.refinement.whale-head-mass',
-    'bw3d.refinement.head-identity-cues',
-    'bw3d.refinement.back-and-belly-contours',
-    'bw3d.refinement.rear-taper',
-    'bw3d.refinement.analytical-surface-language',
-  ]);
+  const faceVisible = () => Math.cos(state.yaw) * Math.cos(state.pitch) > 0.12;
+  const rearVisible = () => Math.cos(state.yaw) * Math.cos(state.pitch) < -0.12;
 
   const hullShade = (face, ringIndex) => {
-    if (state.selected === 'bw3d.exterior.main-hull' || hullRefinementSelections.has(state.selected)) return '#8fa5a5';
     const averageY = face.reduce((sum, point) => sum + point[1], 0) / face.length;
-    if (averageY > 1.25) return ringIndex > 8 ? '#71888b' : '#687f82';
-    if (averageY < -1.5) return '#40545b';
-    return ringIndex > 8 ? '#5d7478' : '#536a70';
+    if (ringIndex >= 8) return averageY > 0.35 ? '#101416' : '#192023';
+    if (averageY > 1.0) return '#1e272a';
+    if (averageY < -1.2) return '#303d42';
+    return ringIndex < 3 ? '#293438' : '#242f33';
   };
 
   const drawWater = () => {
     const waterY = profile.analyticalWaterPlane.y;
-    polygon([[-11, waterY, -10], [11, waterY, -10], [11, waterY, 12], [-11, waterY, 12]], '#789aa4', .25, '#789aa4');
-    for (let z = -8; z <= 10; z += 2) line([[-10, waterY + .01, z], [10, waterY + .01, z]], '#d7e8e9', .7, .24);
+    polygon([[-11, waterY, -9], [11, waterY, -9], [11, waterY, 11], [-11, waterY, 11]], '#789aa4', 0.34, '#789aa4', 0.5);
+    for (let z = -8; z <= 10; z += 1.5) {
+      line([[-10, waterY + 0.01, z], [-3, waterY + 0.06, z + 0.18], [3, waterY - 0.01, z], [10, waterY + 0.05, z - 0.12]], '#dce9e9', 0.8, 0.26);
+    }
+  };
+
+  const drawFins = () => {
+    profile.sideFins
+      .map((fin) => fin.points)
+      .sort((a, b) => depth(a) - depth(b))
+      .forEach((points) => polygon(points, '#141a1d', 1, '#090d0f', 1.2));
   };
 
   const drawHull = () => {
+    const faces = [];
     for (let ringIndex = 0; ringIndex < ringPoints.length - 1; ringIndex += 1) {
       for (let index = 0; index < segments; index += 1) {
         const next = (index + 1) % segments;
@@ -180,94 +206,118 @@ const startRenderer = (canvas, profile) => {
           ringPoints[ringIndex + 1][next],
           ringPoints[ringIndex + 1][index],
         ];
-        if (state.cutaway && face.some(([x]) => x > .12)) continue;
-        polygon(face, hullShade(face, ringIndex), .97, '#26363a');
+        if (state.cutaway && face.some(([x]) => x > 0.12)) continue;
+        faces.push({ points: face, ringIndex, depth: depth(face) });
       }
     }
+    faces.sort((a, b) => a.depth - b.depth).forEach(({ points, ringIndex }) => {
+      const headSurface = ringIndex >= 8;
+      polygon(points, hullShade(points, ringIndex), 1, headSurface ? '#1c2427' : '#354247', headSurface ? 0.3 : 0.5);
+    });
 
-    if (!state.cutaway) {
-      polygon([...ringPoints[0]].reverse(), '#40545b', .98, '#26363a');
-      const headColor = hullRefinementSelections.has(state.selected) ? '#8fa5a5' : '#71888b';
-      polygon(ringPoints.at(-1), headColor, .98, '#26363a');
-      line(profile.frontMouthGuide.points, state.selected === 'bw3d.refinement.head-identity-cues' ? '#d89a32' : '#17272b', 4, .96);
+    if (!state.cutaway && rearVisible()) {
+      polygon([...ringPoints[0]].reverse(), '#232d31', 1, '#0d1315', 1);
     }
+  };
 
-    [-1, 1].forEach((side) => {
-      line(profile.headSeamGuide.pointsPerSide.map((point) => [side * point.xScale, point.y, point.z]), '#26363a', 2.4, .82);
+  const drawFaceIdentity = () => {
+    if (!faceVisible() || state.cutaway) return;
+    const identity = profile.faceIdentity;
+    polygon(ringPoints.at(-1), identity.upperFaceColor, 1, '#06090b', 1.2);
+    if (identity.leftBrowPatch) {
+      polygon(identity.leftBrowPatch.points, identity.leftBrowPatch.color, 1, null, 0);
+    }
+    polygon(identity.mouthPanel, identity.lowerMouthColor, 1, identity.mouthOutlineColor, 1.3);
+    line(identity.mouthTopCurve, identity.mouthOutlineColor, 5.4, 1);
+    identity.mouthRibs.forEach((rib) => line(rib, '#747876', 1.2, 0.7));
+    identity.eyes.forEach((eye) => {
+      ellipseOnFace(eye.center, eye.outerRadiusX, eye.outerRadiusY, eye.outerColor || '#e9ece8', '#080c0e', 1.4);
+      ellipseOnFace(eye.center, eye.innerRadiusX, eye.innerRadiusY, '#0e1214', '#0e1214', 0.5);
     });
   };
 
-  const drawEyeMarkers = () => {
-    const selected = state.selected === 'bw3d.refinement.head-identity-cues';
-    for (const marker of profile.eyeMarkers.points) {
-      const [x, y] = project(marker.center);
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(x, y, profile.eyeMarkers.screenRadius, 0, Math.PI * 2);
-      ctx.fillStyle = selected ? '#d89a32' : '#17272b';
-      ctx.fill();
-      ctx.strokeStyle = '#0d1719';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-      ctx.restore();
-    }
-  };
-
   const drawTierEnvelope = () => {
-    const levels = [2.0, 1.12, .22, -.68, -1.58];
+    const levels = [2.0, 1.12, 0.22, -0.68, -1.58];
     levels.forEach((y, index) => {
-      const width = index === 0 ? 3.55 : 5.7 - index * .08;
-      const depth = index === 0 ? 4.65 : 7.6 - index * .14;
-      box(0, y, -.05, width, .52, depth, ['#d0b86f', '#a6b1a6', '#91a4aa', '#7d9298', '#687d84'][index], .7);
+      const width = index === 0 ? 3.55 : 5.7 - index * 0.08;
+      const depthValue = index === 0 ? 4.65 : 7.6 - index * 0.14;
+      box(0, y, -0.05, width, 0.52, depthValue, ['#d0b86f', '#a6b1a6', '#91a4aa', '#7d9298', '#687d84'][index], 0.58);
     });
   };
 
   const drawTierOne = () => {
     const selected = state.selected === 'bw3d.exterior.tier-1-vessel' || state.selected === 'bw3d.refinement.tier-1-integration';
-    const colors = selected ? ['#efd08b', '#f3dca6', '#f0e1bd', '#f6f1e4'] : ['#c9bea0', '#ddd5bf', '#ebe6d7', '#f2efe5'];
+    const colors = selected
+      ? ['#f0eee7', '#ffffff', '#f4f3ee', '#ffffff', '#30393d']
+      : ['#d9d8d1', '#ecebe5', '#f3f2ed', '#faf9f4', '#30393d'];
     profile.tierOneWorkingMasses.forEach((mass, index) => {
-      box(...mass.center, ...mass.size, colors[index], .98);
+      box(...mass.center, ...mass.size, colors[index], 1, index === 4 ? '#151b1e' : '#5e6465');
     });
   };
 
   const drawSupportRegion = () => {
-    const selected = state.selected === 'bw3d.exterior.spring-support-region';
     [-1.38, 1.38].forEach((x) => {
-      box(x, 2.48, -.2, .34, .58, 2.45, selected ? '#d79b49' : '#9b754a', .5);
+      box(x, 2.48, -0.2, 0.34, 0.58, 2.45, '#8b704e', 0.45);
     });
+  };
+
+  const drawForegroundWater = () => {
+    const [, projectedWaterY] = project([0, profile.analyticalWaterPlane.y, profile.faceIdentity.facePlaneZ]);
+    const horizon = Math.max(canvas.height * 0.59, Math.min(canvas.height * 0.71, projectedWaterY + 28));
+    const gradient = ctx.createLinearGradient(0, horizon, 0, canvas.height);
+    gradient.addColorStop(0, 'rgba(89,126,138,0.42)');
+    gradient.addColorStop(0.36, 'rgba(69,108,121,0.66)');
+    gradient.addColorStop(1, 'rgba(42,78,91,0.92)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, horizon, canvas.width, canvas.height - horizon);
+    ctx.save();
+    ctx.strokeStyle = 'rgba(234,244,243,0.48)';
+    ctx.lineWidth = 1.4;
+    for (let y = horizon + 10; y < canvas.height; y += 28) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      for (let x = 0; x <= canvas.width; x += 80) {
+        ctx.quadraticCurveTo(x + 20, y - 8, x + 40, y);
+        ctx.quadraticCurveTo(x + 60, y + 8, x + 80, y);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
   };
 
   const render = () => {
     const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    sky.addColorStop(0, '#e9efed');
-    sky.addColorStop(.58, '#c8d6d7');
-    sky.addColorStop(1, '#91aeb5');
+    sky.addColorStop(0, '#d8e1e1');
+    sky.addColorStop(0.54, '#b4c6c8');
+    sky.addColorStop(1, '#71949d');
     ctx.fillStyle = sky;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgba(255,255,255,.42)';
-    ctx.fillRect(0, canvas.height * .54, canvas.width, 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.34)';
+    ctx.fillRect(0, canvas.height * 0.55, canvas.width, 2);
 
     drawWater();
-    if (state.unknown) box(0, -.2, -.1, 6.2, 4.55, 8.4, '#263033', .1, '#5f7377');
+    if (state.unknown) box(0, -0.2, -0.1, 7.6, 5.4, 8.7, '#263033', 0.09, '#5f7377');
     if (state.tiers) drawTierEnvelope();
+    drawFins();
     drawHull();
-    drawEyeMarkers();
+    drawFaceIdentity();
     drawTierOne();
     if (state.cutaway || state.selected === 'bw3d.exterior.spring-support-region') drawSupportRegion();
+    drawForegroundWater();
 
-    ctx.fillStyle = '#132024';
+    ctx.fillStyle = '#11191c';
     ctx.font = '700 18px system-ui';
-    ctx.fillText(state.cutaway ? 'REFINED CUTAWAY / DIAGRAMMATIC' : 'REFINED WHALE ENVELOPE / WORKING FORM', 26, 38);
+    ctx.fillText(state.cutaway ? 'BLACK WHALE CUTAWAY / ANALYTICAL' : 'BLACK WHALE / REFERENCE-MATCHED EXTERIOR', 26, 38);
     ctx.font = '500 13px system-ui';
-    ctx.fillText('Macro silhouette refinement · detailed anatomy and dimensions remain quarantined', 26, 60);
+    ctx.fillText('Canonical front identity · reconstructed unseen side and rear continuation', 26, 60);
   };
 
   const view = (name) => {
     const preset = {
-      hero: [-.48, -.14, .92],
-      side: [0, 0, .92],
-      front: [-Math.PI / 2, 0, 1.02],
-      rear: [Math.PI / 2, 0, 1.02],
+      hero: [0, -0.02, 1.05],
+      front: [0, -0.02, 1.08],
+      side: [-Math.PI / 2, 0, 0.92],
+      rear: [Math.PI, 0, 0.92],
     }[name];
     [state.yaw, state.pitch, state.zoom] = preset;
     render();
@@ -281,8 +331,8 @@ const startRenderer = (canvas, profile) => {
   });
   canvas.addEventListener('pointermove', (event) => {
     if (!state.drag) return;
-    state.yaw += (event.clientX - state.x) * .008;
-    state.pitch = Math.max(-1.1, Math.min(1.1, state.pitch + (event.clientY - state.y) * .006));
+    state.yaw += (event.clientX - state.x) * 0.008;
+    state.pitch = Math.max(-1.1, Math.min(1.1, state.pitch + (event.clientY - state.y) * 0.006));
     state.x = event.clientX;
     state.y = event.clientY;
     render();
@@ -290,12 +340,12 @@ const startRenderer = (canvas, profile) => {
   canvas.addEventListener('pointerup', () => { state.drag = false; });
   canvas.addEventListener('wheel', (event) => {
     event.preventDefault();
-    state.zoom = Math.max(.5, Math.min(1.65, state.zoom - event.deltaY * .001));
+    state.zoom = Math.max(0.5, Math.min(1.65, state.zoom - event.deltaY * 0.001));
     render();
   }, { passive: false });
   canvas.addEventListener('keydown', (event) => {
     const rotation = {
-      ArrowLeft: [-.08, 0], ArrowRight: [.08, 0], ArrowUp: [0, -.06], ArrowDown: [0, .06],
+      ArrowLeft: [-0.08, 0], ArrowRight: [0.08, 0], ArrowUp: [0, -0.06], ArrowDown: [0, 0.06],
     }[event.key];
     if (rotation) {
       event.preventDefault();
@@ -303,8 +353,8 @@ const startRenderer = (canvas, profile) => {
       state.pitch += rotation[1];
       render();
     }
-    if (event.key === '+' || event.key === '=') { state.zoom = Math.min(1.65, state.zoom + .08); render(); }
-    if (event.key === '-') { state.zoom = Math.max(.5, state.zoom - .08); render(); }
+    if (event.key === '+' || event.key === '=') { state.zoom = Math.min(1.65, state.zoom + 0.08); render(); }
+    if (event.key === '-') { state.zoom = Math.max(0.5, state.zoom - 0.08); render(); }
     if (event.key.toLowerCase() === 'c') { state.cutaway = !state.cutaway; render(); }
   });
 
@@ -322,6 +372,8 @@ const mountExterior = async () => {
   const renderer = startRenderer(section.querySelector('canvas'), data.profile);
   const select = section.querySelector('select');
   const evidence = section.querySelector('#exterior-evidence');
+  const identityOption = 'bw3d.refinement.head-identity-cues';
+  if (objects.some((item) => item.id === identityOption)) select.value = identityOption;
   const updateEvidence = () => {
     const object = objects.find((item) => item.id === select.value) || objects[0];
     renderer.state.selected = object.id;
@@ -336,7 +388,7 @@ const mountExterior = async () => {
   section.querySelector('#tiers-toggle').addEventListener('change', (event) => { renderer.state.tiers = event.target.checked; renderer.render(); });
   section.querySelector('#unknown-toggle').addEventListener('change', (event) => { renderer.state.unknown = event.target.checked; renderer.render(); });
   const nav = document.querySelector('.section-nav');
-  if (nav) {
+  if (nav && !nav.querySelector('a[href="#exterior-blockout"]')) {
     const link = document.createElement('a');
     link.href = '#exterior-blockout';
     link.textContent = '7.3R Exterior';
