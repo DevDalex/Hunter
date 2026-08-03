@@ -15,6 +15,7 @@ on:
       - 'scripts/audit-black-whale-3d-spatial-graph.mjs'
       - 'scripts/audit-black-whale-3d-route-quarantine.mjs'
       - 'scripts/audit-black-whale-3d-exterior-blockout.mjs'
+      - 'scripts/audit-black-whale-3d-exterior-refinement.mjs'
       - 'scripts/audit-black-whale-3d-tier-blockout.mjs'
       - 'scripts/build-black-whale-3d-spatial-nodes.mjs'
       - 'scripts/build-black-whale-3d-spatial-edges.mjs'
@@ -37,6 +38,7 @@ on:
       - 'scripts/audit-black-whale-3d-spatial-graph.mjs'
       - 'scripts/audit-black-whale-3d-route-quarantine.mjs'
       - 'scripts/audit-black-whale-3d-exterior-blockout.mjs'
+      - 'scripts/audit-black-whale-3d-exterior-refinement.mjs'
       - 'scripts/audit-black-whale-3d-tier-blockout.mjs'
       - 'scripts/build-black-whale-3d-spatial-nodes.mjs'
       - 'scripts/build-black-whale-3d-spatial-edges.mjs'
@@ -73,5 +75,7 @@ jobs:
         run: node scripts/audit-black-whale-3d-route-quarantine.mjs
       - name: Validate Phase 7.3 exterior blockout and performance contract
         run: node scripts/audit-black-whale-3d-exterior-blockout.mjs
+      - name: Validate Phase 7.3R exterior refinement and performance contract
+        run: node scripts/audit-black-whale-3d-exterior-refinement.mjs
       - name: Validate Phase 7.4 tier blockout and performance contract
         run: node scripts/audit-black-whale-3d-tier-blockout.mjs
