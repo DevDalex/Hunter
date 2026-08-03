@@ -45,8 +45,8 @@ const makeSection = (data, objects) => {
       <aside class="exterior-controls">
         <div class="button-row"><button data-view="hero">Hero</button><button data-view="side">Side</button><button data-view="front">Front</button><button data-view="rear">Rear</button></div>
         <label><input id="cutaway-toggle" type="checkbox"> Cutaway hull</label>
-        <label><input id="tiers-toggle" type="checkbox" checked> Five tier bands</label>
-        <label><input id="unknown-toggle" type="checkbox" checked> Unknown volume</label>
+        <label><input id="tiers-toggle" type="checkbox"> Five tier bands</label>
+        <label><input id="unknown-toggle" type="checkbox"> Unknown volume</label>
         <select id="exterior-object-select">${objects.map((object) => `<option value="${object.id}">${object.id.replace(/^bw3d\.(exterior|refinement)\./, '').replaceAll('-', ' ')}</option>`).join('')}</select>
         <article id="exterior-evidence" class="exterior-evidence" aria-live="polite"></article>
         <p>Drag or use arrow keys to rotate. Use +/− to zoom. Press C for cutaway.</p>
@@ -62,8 +62,8 @@ const startRenderer = (canvas, profile) => {
     pitch: -.14,
     zoom: .92,
     cutaway: false,
-    tiers: true,
-    unknown: true,
+    tiers: false,
+    unknown: false,
     drag: false,
     x: 0,
     y: 0,
@@ -150,6 +150,7 @@ const startRenderer = (canvas, profile) => {
 
   const hullRefinementSelections = new Set([
     'bw3d.refinement.whale-head-mass',
+    'bw3d.refinement.head-identity-cues',
     'bw3d.refinement.back-and-belly-contours',
     'bw3d.refinement.rear-taper',
     'bw3d.refinement.analytical-surface-language',
@@ -165,8 +166,8 @@ const startRenderer = (canvas, profile) => {
 
   const drawWater = () => {
     const waterY = profile.analyticalWaterPlane.y;
-    polygon([[-11, waterY, -10], [11, waterY, -10], [11, waterY, 12], [-11, waterY, 12]], '#789aa4', .32, '#789aa4');
-    for (let z = -8; z <= 10; z += 2) line([[-10, waterY + .01, z], [10, waterY + .01, z]], '#d7e8e9', .7, .28);
+    polygon([[-11, waterY, -10], [11, waterY, -10], [11, waterY, 12], [-11, waterY, 12]], '#789aa4', .25, '#789aa4');
+    for (let z = -8; z <= 10; z += 2) line([[-10, waterY + .01, z], [10, waterY + .01, z]], '#d7e8e9', .7, .24);
   };
 
   const drawHull = () => {
@@ -186,7 +187,9 @@ const startRenderer = (canvas, profile) => {
 
     if (!state.cutaway) {
       polygon([...ringPoints[0]].reverse(), '#40545b', .98, '#26363a');
-      polygon(ringPoints.at(-1), state.selected === 'bw3d.refinement.whale-head-mass' ? '#8fa5a5' : '#647d81', .98, '#26363a');
+      const headColor = hullRefinementSelections.has(state.selected) ? '#8fa5a5' : '#71888b';
+      polygon(ringPoints.at(-1), headColor, .98, '#26363a');
+      line(profile.frontMouthGuide.points, state.selected === 'bw3d.refinement.head-identity-cues' ? '#d89a32' : '#17272b', 4, .96);
     }
 
     [-1, 1].forEach((side) => {
@@ -196,9 +199,18 @@ const startRenderer = (canvas, profile) => {
 
   const drawEyeMarkers = () => {
     const selected = state.selected === 'bw3d.refinement.head-identity-cues';
-    profile.eyeMarkers.points.forEach((marker) => {
-      box(...marker.center, ...marker.size, selected ? '#d89a32' : '#18262a', 1, '#101719');
-    });
+    for (const marker of profile.eyeMarkers.points) {
+      const [x, y] = project(marker.center);
+      ctx.save();
+      ctx.beginPath();
+      ctx.arc(x, y, profile.eyeMarkers.screenRadius, 0, Math.PI * 2);
+      ctx.fillStyle = selected ? '#d89a32' : '#17272b';
+      ctx.fill();
+      ctx.strokeStyle = '#0d1719';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.restore();
+    }
   };
 
   const drawTierEnvelope = () => {
@@ -241,7 +253,7 @@ const startRenderer = (canvas, profile) => {
     drawHull();
     drawEyeMarkers();
     drawTierOne();
-    drawSupportRegion();
+    if (state.cutaway || state.selected === 'bw3d.exterior.spring-support-region') drawSupportRegion();
 
     ctx.fillStyle = '#132024';
     ctx.font = '700 18px system-ui';
