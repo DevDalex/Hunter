@@ -58,8 +58,8 @@ const makeSection = (data, objects) => {
 const startRenderer = (canvas, profile) => {
   const ctx = canvas.getContext('2d');
   const state = {
-    yaw: -0.18,
-    pitch: -0.06,
+    yaw: 0,
+    pitch: -0.02,
     zoom: 1.05,
     cutaway: false,
     tiers: false,
@@ -174,17 +174,17 @@ const startRenderer = (canvas, profile) => {
 
   const hullShade = (face, ringIndex) => {
     const averageY = face.reduce((sum, point) => sum + point[1], 0) / face.length;
-    if (ringIndex >= 8) return averageY > 0.4 ? '#111517' : '#1b2225';
-    if (averageY > 1.0) return '#20292c';
-    if (averageY < -1.2) return '#354247';
-    return ringIndex < 3 ? '#2c373b' : '#283337';
+    if (ringIndex >= 8) return averageY > 0.35 ? '#101416' : '#192023';
+    if (averageY > 1.0) return '#1e272a';
+    if (averageY < -1.2) return '#303d42';
+    return ringIndex < 3 ? '#293438' : '#242f33';
   };
 
   const drawWater = () => {
     const waterY = profile.analyticalWaterPlane.y;
-    polygon([[-11, waterY, -9], [11, waterY, -9], [11, waterY, 11], [-11, waterY, 11]], '#789aa4', 0.36, '#789aa4', 0.5);
+    polygon([[-11, waterY, -9], [11, waterY, -9], [11, waterY, 11], [-11, waterY, 11]], '#789aa4', 0.34, '#789aa4', 0.5);
     for (let z = -8; z <= 10; z += 1.5) {
-      line([[-10, waterY + 0.01, z], [-3, waterY + 0.06, z + 0.18], [3, waterY - 0.01, z], [10, waterY + 0.05, z - 0.12]], '#dce9e9', 0.8, 0.28);
+      line([[-10, waterY + 0.01, z], [-3, waterY + 0.06, z + 0.18], [3, waterY - 0.01, z], [10, waterY + 0.05, z - 0.12]], '#dce9e9', 0.8, 0.26);
     }
   };
 
@@ -192,7 +192,7 @@ const startRenderer = (canvas, profile) => {
     profile.sideFins
       .map((fin) => fin.points)
       .sort((a, b) => depth(a) - depth(b))
-      .forEach((points) => polygon(points, '#171d20', 0.98, '#0c1113', 1.2));
+      .forEach((points) => polygon(points, '#141a1d', 1, '#090d0f', 1.2));
   };
 
   const drawHull = () => {
@@ -212,24 +212,27 @@ const startRenderer = (canvas, profile) => {
     }
     faces.sort((a, b) => a.depth - b.depth).forEach(({ points, ringIndex }) => {
       const headSurface = ringIndex >= 8;
-      polygon(points, hullShade(points, ringIndex), 1, headSurface ? '#20282b' : '#3a474b', headSurface ? 0.35 : 0.55);
+      polygon(points, hullShade(points, ringIndex), 1, headSurface ? '#1c2427' : '#354247', headSurface ? 0.3 : 0.5);
     });
 
     if (!state.cutaway && rearVisible()) {
-      polygon([...ringPoints[0]].reverse(), '#252f33', 1, '#111719', 1);
+      polygon([...ringPoints[0]].reverse(), '#232d31', 1, '#0d1315', 1);
     }
   };
 
   const drawFaceIdentity = () => {
     if (!faceVisible() || state.cutaway) return;
     const identity = profile.faceIdentity;
-    polygon(ringPoints.at(-1), identity.upperFaceColor, 1, '#080b0d', 1.2);
+    polygon(ringPoints.at(-1), identity.upperFaceColor, 1, '#06090b', 1.2);
+    if (identity.leftBrowPatch) {
+      polygon(identity.leftBrowPatch.points, identity.leftBrowPatch.color, 1, null, 0);
+    }
     polygon(identity.mouthPanel, identity.lowerMouthColor, 1, identity.mouthOutlineColor, 1.3);
-    line(identity.mouthTopCurve, identity.mouthOutlineColor, 5.2, 1);
-    identity.mouthRibs.forEach((rib) => line(rib, '#767a78', 1.25, 0.72));
+    line(identity.mouthTopCurve, identity.mouthOutlineColor, 5.4, 1);
+    identity.mouthRibs.forEach((rib) => line(rib, '#747876', 1.2, 0.7));
     identity.eyes.forEach((eye) => {
-      ellipseOnFace(eye.center, eye.outerRadiusX, eye.outerRadiusY, '#e9ece8', '#0b0f11', 1.4);
-      ellipseOnFace(eye.center, eye.innerRadiusX, eye.innerRadiusY, '#101416', '#101416', 0.5);
+      ellipseOnFace(eye.center, eye.outerRadiusX, eye.outerRadiusY, eye.outerColor || '#e9ece8', '#080c0e', 1.4);
+      ellipseOnFace(eye.center, eye.innerRadiusX, eye.innerRadiusY, '#0e1214', '#0e1214', 0.5);
     });
   };
 
@@ -259,21 +262,23 @@ const startRenderer = (canvas, profile) => {
   };
 
   const drawForegroundWater = () => {
-    const horizon = canvas.height * 0.64;
+    const [, projectedWaterY] = project([0, profile.analyticalWaterPlane.y, profile.faceIdentity.facePlaneZ]);
+    const horizon = Math.max(canvas.height * 0.59, Math.min(canvas.height * 0.71, projectedWaterY + 28));
     const gradient = ctx.createLinearGradient(0, horizon, 0, canvas.height);
-    gradient.addColorStop(0, 'rgba(91,128,140,0.05)');
-    gradient.addColorStop(1, 'rgba(52,91,104,0.24)');
+    gradient.addColorStop(0, 'rgba(89,126,138,0.42)');
+    gradient.addColorStop(0.36, 'rgba(69,108,121,0.66)');
+    gradient.addColorStop(1, 'rgba(42,78,91,0.92)');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, horizon, canvas.width, canvas.height - horizon);
     ctx.save();
-    ctx.strokeStyle = 'rgba(231,242,241,0.28)';
-    ctx.lineWidth = 1.2;
-    for (let y = horizon + 20; y < canvas.height; y += 34) {
+    ctx.strokeStyle = 'rgba(234,244,243,0.48)';
+    ctx.lineWidth = 1.4;
+    for (let y = horizon + 10; y < canvas.height; y += 28) {
       ctx.beginPath();
       ctx.moveTo(0, y);
       for (let x = 0; x <= canvas.width; x += 80) {
-        ctx.quadraticCurveTo(x + 20, y - 7, x + 40, y);
-        ctx.quadraticCurveTo(x + 60, y + 7, x + 80, y);
+        ctx.quadraticCurveTo(x + 20, y - 8, x + 40, y);
+        ctx.quadraticCurveTo(x + 60, y + 8, x + 80, y);
       }
       ctx.stroke();
     }
@@ -282,16 +287,16 @@ const startRenderer = (canvas, profile) => {
 
   const render = () => {
     const sky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    sky.addColorStop(0, '#dce5e5');
-    sky.addColorStop(0.54, '#b8cacc');
-    sky.addColorStop(1, '#789ba4');
+    sky.addColorStop(0, '#d8e1e1');
+    sky.addColorStop(0.54, '#b4c6c8');
+    sky.addColorStop(1, '#71949d');
     ctx.fillStyle = sky;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = 'rgba(255,255,255,0.36)';
+    ctx.fillStyle = 'rgba(255,255,255,0.34)';
     ctx.fillRect(0, canvas.height * 0.55, canvas.width, 2);
 
     drawWater();
-    if (state.unknown) box(0, -0.2, -0.1, 7.0, 5.4, 8.7, '#263033', 0.09, '#5f7377');
+    if (state.unknown) box(0, -0.2, -0.1, 7.6, 5.4, 8.7, '#263033', 0.09, '#5f7377');
     if (state.tiers) drawTierEnvelope();
     drawFins();
     drawHull();
@@ -309,7 +314,7 @@ const startRenderer = (canvas, profile) => {
 
   const view = (name) => {
     const preset = {
-      hero: [-0.18, -0.06, 1.05],
+      hero: [0, -0.02, 1.05],
       front: [0, -0.02, 1.08],
       side: [-Math.PI / 2, 0, 0.92],
       rear: [Math.PI, 0, 0.92],
