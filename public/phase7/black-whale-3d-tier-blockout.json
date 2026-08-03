@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "7.4.3",
+  "schemaVersion": "7.4.4",
   "phase": "7.4",
   "title": "Black Whale tier blockout",
   "status": "release-candidate",
@@ -67,7 +67,13 @@
     "phase74Audit": "passed",
     "browserVerification": "passed",
     "cloudflareFullStackBuild": "passed",
-    "validatedHead": "b2806b2b4bb50578b0d84cced1618c055593e3b1"
+    "validatedHead": "565eb91f4e13130eced7b849954194c98ae165ad"
+  },
+  "release": {
+    "mergeCommit": "c37af539a1de21a7b5e9a11682e7c2981d4dc79a",
+    "mergeStatus": "success",
+    "deploymentStatus": "awaiting-terminal-verification",
+    "liveRoute": "/succession/black-whale-3d"
   },
   "roadmapBoundary": "Phase 7.5 and all later milestones are prohibited until explicit user instruction after Phase 7.4 completion."
 }
