@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "7.3R-profile.2",
+  "schemaVersion": "7.3R-profile.3",
   "phase": "7.3R",
   "status": "working-reconstruction",
   "units": "working scene metres",
@@ -36,13 +36,25 @@
       {"xScale":2.55,"y":-0.32,"z":6.55}
     ]
   },
+  "frontMouthGuide": {
+    "authority": "diagrammatic-silhouette-aid",
+    "canonicalAnatomy": false,
+    "points": [
+      [-2.48,-0.48,6.71],
+      [-1.35,-0.64,6.72],
+      [0,-0.73,6.73],
+      [1.35,-0.64,6.72],
+      [2.48,-0.48,6.71]
+    ]
+  },
   "eyeMarkers": {
     "authority": "diagrammatic-silhouette-aid",
     "canonicalPosition": false,
     "canonicalSize": false,
+    "screenRadius": 7,
     "points": [
-      {"center":[-3.03,0.72,5.72],"size":[0.18,0.18,0.18]},
-      {"center":[3.03,0.72,5.72],"size":[0.18,0.18,0.18]}
+      {"center":[-3.03,0.72,5.72]},
+      {"center":[3.03,0.72,5.72]}
     ]
   },
   "tierOneWorkingMasses": [
@@ -60,7 +72,7 @@
     "Do not cite any number in this file as a canonical ship dimension.",
     "Do not infer rooms, routes, deck counts, openings, machinery or support engineering.",
     "Do not treat +Z head-side as proven ship bow.",
-    "Do not convert the seam guide into exact mouth or anatomical geometry.",
+    "Do not convert either mouth guide into exact mouth or anatomical geometry.",
     "Do not treat the eye markers as exact windows, organs, positions or measurements."
   ]
 }
