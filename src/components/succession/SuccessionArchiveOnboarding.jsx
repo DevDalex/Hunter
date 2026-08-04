@@ -2,21 +2,29 @@ import { BookOpen, Compass, Search, Sparkles } from 'lucide-react';
 import { archiveEntryMissions } from '../../data/succession/readingExperience';
 
 const iconByMission = {
-  continue: BookOpen,
-  refresh: Sparkles,
-  research: Search,
-  complete: Compass,
+  'continue-reading': BookOpen,
+  'refresh-story': Sparkles,
+  'research-topic': Search,
+  'open-complete-archive': Compass,
+};
+
+const actionByMission = {
+  'continue-reading': 'Continue in reader',
+  'refresh-story': 'Open recap',
+  'research-topic': 'Search archive',
+  'open-complete-archive': 'Open full archive',
 };
 
 export default function SuccessionArchiveOnboarding({ spoilerLimit, onNavigate, onOpenSearch }) {
   const chooseMission = (mission) => {
-    if (mission.id === 'research') {
+    if (mission.id === 'research-topic') {
       onOpenSearch?.();
       return;
     }
+    const complete = mission.id === 'open-complete-archive';
     onNavigate(mission.target, {
       ...(mission.params || {}),
-      chapter: mission.id === 'complete' ? undefined : spoilerLimit,
+      ...(!complete ? { chapter: spoilerLimit } : {}),
       mission: mission.id,
     });
   };
@@ -34,7 +42,7 @@ export default function SuccessionArchiveOnboarding({ spoilerLimit, onNavigate, 
           <Icon size={22} aria-hidden="true" />
           <strong>{mission.label}</strong>
           <span>{mission.description}</span>
-          <small>{mission.actionLabel}</small>
+          <small>{actionByMission[mission.id]}</small>
         </button>;
       })}
     </div>
