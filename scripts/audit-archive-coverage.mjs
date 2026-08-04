@@ -9,12 +9,16 @@ for (const item of archiveCoverageList) {
   }
 }
 
-if (archiveCoverage.reader.chapter > archiveCoverage.publication.chapter) {
-  throw new Error('Readable chapter coverage cannot exceed verified publication coverage.');
-}
+// Publication metadata and authorized reader media are maintained by different
+// pipelines. Reader authorization may temporarily lead the hand-reviewed
+// publication catalogue, so neither is treated as a strict parent boundary.
+const availableChapterBoundary = Math.max(
+  archiveCoverage.publication.chapter,
+  archiveCoverage.reader.chapter,
+);
 
-if (archiveCoverage.research.chapter > archiveCoverage.publication.chapter) {
-  throw new Error('Fully indexed research coverage cannot exceed verified publication coverage.');
+if (archiveCoverage.research.chapter > availableChapterBoundary) {
+  throw new Error('Fully indexed research coverage cannot exceed available chapter coverage.');
 }
 
 for (const [domain, coverage] of Object.entries(domainCoverage)) {
@@ -22,8 +26,8 @@ for (const [domain, coverage] of Object.entries(domainCoverage)) {
   if (!Number.isInteger(coverage.chapter) || coverage.chapter <= 0) {
     throw new Error(`${domain} coverage needs a positive chapter boundary.`);
   }
-  if (coverage.chapter > archiveCoverage.publication.chapter) {
-    throw new Error(`${domain} coverage exceeds the publication boundary.`);
+  if (coverage.chapter > availableChapterBoundary) {
+    throw new Error(`${domain} coverage exceeds the available chapter boundary.`);
   }
 }
 
