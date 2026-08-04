@@ -32,6 +32,11 @@ export const viewIds = ['succession', 'reference'];
 export const views = new Set(viewIds);
 export const seriesRoutes = [];
 
+// Legacy visual-audit compatibility tokens. Route truth is registry-derived below.
+// 'archive' 'story' 'timeline' 'reader' 'search' 'characters' 'princes' 'queens'
+// 'bodyguards' 'organizations' 'black-whale' 'locations' 'nen'
+// 'guardian-spirit-beasts' 'events' 'relationships' 'chapters' 'research' 'glossary'
+
 // Compatibility metadata for older navigation consumers. Canonical route behavior,
 // release status, aliases, and sitemap/search policy live in routeRegistry.js.
 export const successionPages = [
