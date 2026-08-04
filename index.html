@@ -6,6 +6,48 @@
     <meta name="theme-color" content="#171915" />
     <meta name="description" content="A focused Hunter × Hunter archive for the Succession Contest, with the general Nen Encyclopedia and World Atlas retained." />
     <title>Hunter × Hunter — Succession Archive</title>
+    <style id="succession-reference-viewport-fix">
+      html:has(.succession-architecture-board),
+      body.succession-architecture-mode,
+      body.succession-architecture-mode #root {
+        height: auto !important;
+        min-height: 100% !important;
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        background: #0f1212 !important;
+      }
+
+      body.succession-architecture-mode .succession-architecture-board {
+        position: relative !important;
+        inset: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 100vh !important;
+        overflow: visible !important;
+        background: #0f1212 !important;
+      }
+
+      body.succession-architecture-mode .succession-architecture-board > .succession-archive__content {
+        position: relative !important;
+        inset: auto !important;
+        width: 100% !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+
+      body.succession-architecture-mode .succession-architecture-board .succession-architecture__sheet {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        width: min(100%, 1680px) !important;
+        height: auto !important;
+        min-height: 930px !important;
+        max-height: none !important;
+        margin: 0 auto !important;
+        transform: none !important;
+        transform-origin: initial !important;
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
@@ -13,6 +55,6 @@
     <link rel="stylesheet" href="/succession-phase-1-visual-repair.css" />
     <link rel="stylesheet" href="/succession-phase-1-nen-visibility.css" />
     <link rel="stylesheet" href="/succession-phase-1-final-lock.css" />
-    <link rel="stylesheet" href="/succession-reference-match.css?v=20260804-5" />
+    <link rel="stylesheet" href="/succession-reference-match.css?v=20260804-6" />
   </body>
 </html>
