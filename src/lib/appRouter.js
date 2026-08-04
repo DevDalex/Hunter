@@ -107,7 +107,18 @@ export function normalizeDestination(view, target = '', params = {}) {
       ...(alias?.view ? { view: alias.view } : {}),
     };
     if (!referencePrimary.includes(nextTarget)) return attempted(`/reference/${nextTarget || ''}`);
-    return { view: 'reference', target: nextTarget, params: nextParams };
+
+    if (nextTarget === 'nen') {
+      return normalizeDestination('succession', 'nen', {
+        ...nextParams,
+        scope: 'encyclopedia',
+      });
+    }
+
+    return normalizeDestination('succession', 'locations', {
+      ...nextParams,
+      scope: 'world',
+    });
   }
 
   if (view === 'home' && !target) return { view: 'succession', target: 'archive', params: {} };
@@ -222,5 +233,10 @@ export function readBrowserRoute() {
   }
 
   const cleanRoute = parseCleanRoute(window.location.pathname, window.location.search);
-  return normalizeDestination(cleanRoute.view, cleanRoute.target, cleanRoute.params);
+  const normalized = normalizeDestination(cleanRoute.view, cleanRoute.target, cleanRoute.params);
+  const canonical = routeToCleanPath(normalized.view, normalized.target, normalized.params);
+  if (normalized.view !== 'not-found' && canonical !== `${window.location.pathname}${window.location.search}`) {
+    window.history.replaceState({ hxhRoute: canonical }, '', canonical);
+  }
+  return normalized;
 }
