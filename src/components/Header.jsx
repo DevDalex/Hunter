@@ -3,14 +3,15 @@ import { useEffect, useRef, useState } from 'react';
 import { routeToHref } from '../lib/appRouter';
 
 const primaryNav = [
-  { id: 'succession', view: 'succession', target: 'archive', label: 'Succession' },
-  { id: 'nen', view: 'reference', target: 'nen', label: 'Nen' },
-  { id: 'world', view: 'reference', target: 'atlas', label: 'World' },
+  { id: 'archive', view: 'succession', target: 'archive', label: 'Succession Archive' },
+  { id: 'nen-library', view: 'succession', target: 'nen', params: { scope: 'encyclopedia' }, label: 'Nen Library' },
+  { id: 'world-atlas', view: 'succession', target: 'locations', params: { scope: 'world' }, label: 'World Atlas' },
 ];
 
 export default function Header({
   activeView,
   routeTarget,
+  routeParams = {},
   onNavigate,
   onOpenSearch,
   onPrefetch,
@@ -20,7 +21,7 @@ export default function Header({
   const menuButtonRef = useRef(null);
   const firstLinkRef = useRef(null);
 
-  useEffect(() => { setMenuOpen(false); }, [activeView, routeTarget]);
+  useEffect(() => { setMenuOpen(false); }, [activeView, routeTarget, routeParams.scope]);
 
   useEffect(() => {
     if (!menuOpen) return undefined;
@@ -69,8 +70,12 @@ export default function Header({
   };
 
   const itemIsActive = (item) => {
-    if (item.id === 'succession') return activeView === 'succession';
-    return activeView === item.view && routeTarget === item.target;
+    if (activeView !== 'succession') return false;
+    if (item.id === 'nen-library') return routeTarget === 'nen' && routeParams.scope === 'encyclopedia';
+    if (item.id === 'world-atlas') return routeTarget === 'locations' && routeParams.scope === 'world';
+    return !routeParams.scope && routeTarget !== 'nen' && routeTarget !== 'locations'
+      ? true
+      : item.id === 'archive' && !['encyclopedia', 'world'].includes(routeParams.scope);
   };
 
   return (
@@ -78,7 +83,7 @@ export default function Header({
       <nav
         id="primary-navigation"
         className={`header-links${menuOpen ? ' is-open' : ''}`}
-        aria-label="Primary navigation"
+        aria-label="Succession Contest archive navigation"
       >
         {primaryNav.map((item, index) => {
           const active = itemIsActive(item);
@@ -126,7 +131,7 @@ export default function Header({
           onClick={() => setMenuOpen((current) => !current)}
           aria-expanded={menuOpen}
           aria-controls="primary-navigation"
-          aria-label={`${menuOpen ? 'Close' : 'Open'} primary navigation`}
+          aria-label={`${menuOpen ? 'Close' : 'Open'} archive navigation`}
         >
           {menuOpen ? <X size={20} /> : <Menu size={20} />}
           <span>Browse</span>
