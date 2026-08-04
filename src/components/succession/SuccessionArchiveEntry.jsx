@@ -23,6 +23,9 @@ import './SuccessionArchitectureCenteringFix.css';
 import './SuccessionArchitectureViewportRuntime.js';
 import './SuccessionArchitectureVisualRevision.css';
 import './SuccessionPhase2PresentationConsistency.css';
+import './SuccessionProductExperience.css';
+import SuccessionArchiveContextBar from './SuccessionArchiveContextBar';
+import SuccessionArchiveOnboarding from './SuccessionArchiveOnboarding';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));
@@ -35,12 +38,33 @@ function ArchiveRouteLoading() {
 export default function SuccessionArchiveEntry(props) {
   const isReader = props.routeTarget === 'reader';
   const isLightRoute = props.routeTarget === 'black-whale' || props.routeTarget === 'princes';
+  const isArchiveEntry = props.routeTarget === 'archive';
 
-  return <Suspense fallback={<ArchiveRouteLoading />}>
-    {isReader
-      ? <SuccessionArchiveReaderRoute {...props} />
-      : isLightRoute
-        ? <SuccessionArchiveLightRoute {...props} />
-        : <SuccessionArchiveApp {...props} />}
-  </Suspense>;
+  if (isArchiveEntry) return <>
+    <SuccessionArchiveContextBar
+      spoilerLimit={props.spoilerLimit}
+      activeDomain="story"
+      onSpoilerChange={props.onSpoilerChange}
+    />
+    <SuccessionArchiveOnboarding
+      spoilerLimit={props.spoilerLimit}
+      onNavigate={props.onNavigate}
+      onOpenSearch={props.onOpenSearch}
+    />
+  </>;
+
+  return <>
+    <SuccessionArchiveContextBar
+      spoilerLimit={props.spoilerLimit}
+      activeDomain={props.routeTarget}
+      onSpoilerChange={props.onSpoilerChange}
+    />
+    <Suspense fallback={<ArchiveRouteLoading />}>
+      {isReader
+        ? <SuccessionArchiveReaderRoute {...props} />
+        : isLightRoute
+          ? <SuccessionArchiveLightRoute {...props} />
+          : <SuccessionArchiveApp {...props} />}
+    </Suspense>
+  </>;
 }
