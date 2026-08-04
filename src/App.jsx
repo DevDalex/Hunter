@@ -2,11 +2,8 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import Header from './components/Header';
 import PageIntro from './components/PageIntro';
-import ReferenceBackbonePanel from './components/ReferenceBackbonePanel';
-import SpoilerControl from './components/SpoilerControl';
-import WorkspaceNav from './components/WorkspaceNav';
+import SuccessionIntegratedReferences from './components/succession/SuccessionIntegratedReferences';
 import { ARCHIVE_BOUNDARY } from './data/archiveMeta';
-import { referencePages, referencePrimary } from './data/routeManifest';
 import { getSuccessionArchiveRoute } from './data/succession/archiveRoutes';
 import { readStoredNumber, writeStoredString } from './lib/browserStorage';
 import {
@@ -18,8 +15,6 @@ import {
 import { preloadRoute, routeModuleLoaders } from './lib/routePreload';
 
 const SuccessionArchiveApp = lazy(routeModuleLoaders.successionArchive);
-const NenEncyclopedia = lazy(routeModuleLoaders.nen);
-const WorldAtlas = lazy(routeModuleLoaders.worldAtlas);
 
 function readSpoilerLimit() {
   const stored = readStoredNumber('hxh-spoiler-limit', ARCHIVE_BOUNDARY);
@@ -36,15 +31,6 @@ const RouteLoading = ({ label = 'section' }) => (
   </section>
 );
 
-function SpoilerSettings({ value, onChange }) {
-  return (
-    <details className="spoiler-settings">
-      <summary>Reading boundary <b>Chapter {value}</b></summary>
-      <SpoilerControl value={value} latestChapter={ARCHIVE_BOUNDARY} onChange={onChange} />
-    </details>
-  );
-}
-
 export default function App() {
   const initialRoute = readBrowserRoute();
   const [activeView, setActiveView] = useState(initialRoute.view);
@@ -53,13 +39,23 @@ export default function App() {
   const [spoilerLimit, setSpoilerLimit] = useState(readSpoilerLimit);
 
   const successionPage = getSuccessionArchiveRoute(routeTarget);
-  const referencePage = referencePages.find((page) => page.id === routeTarget) || referencePages[0];
+  const integratedReferenceMode = activeView === 'succession'
+    && routeTarget === 'nen'
+    && routeParams.scope === 'encyclopedia'
+    ? 'nen'
+    : activeView === 'succession'
+      && routeTarget === 'locations'
+      && routeParams.scope === 'world'
+      ? 'world'
+      : '';
 
   const routeTitle = activeView === 'succession'
-    ? successionPage.title
-    : activeView === 'reference'
-      ? referencePage.title
-      : 'Page not found';
+    ? integratedReferenceMode === 'nen'
+      ? 'Nen and ability encyclopedia'
+      : integratedReferenceMode === 'world'
+        ? 'World and location atlas'
+        : successionPage.title
+    : 'Page not found';
 
   const applyRoute = (next) => {
     setActiveView(next.view);
@@ -155,72 +151,28 @@ export default function App() {
         <p className="sr-only" role="status" aria-live="polite">Opened {routeTitle}</p>
 
         {activeView === 'succession' && (
-          <Suspense fallback={<RouteLoading label="Succession Contest Archive" />}>
-            <SuccessionArchiveApp
-              routeTarget={routeTarget}
+          integratedReferenceMode ? (
+            <SuccessionIntegratedReferences
+              mode={integratedReferenceMode}
               routeParams={routeParams}
               spoilerLimit={spoilerLimit}
               onSpoilerChange={changeSpoilerLimit}
               onNavigate={(target, params) => navigate('succession', target, params)}
-              onExitArchive={() => navigate('succession', 'archive')}
-              onOpenSearch={() => navigate('succession', 'search')}
-              onIntent={(target) => preloadRoute('succession', target)}
             />
-          </Suspense>
-        )}
-
-        {activeView === 'reference' && (
-          <>
-            <PageIntro
-              kicker={referencePage.kicker}
-              title={referencePage.title}
-              description={referencePage.description}
-            >
-              <dl className="page-intro__facts">
-                <div><dt>Scope</dt><dd>{referencePage.id === 'nen' ? 'General Nen' : 'Known World'}</dd></div>
-                <div><dt>Connected archive</dt><dd>Succession Contest</dd></div>
-                <div><dt>Reading boundary</dt><dd>Ch. {spoilerLimit}</dd></div>
-              </dl>
-            </PageIntro>
-
-            <WorkspaceNav
-              items={referencePages}
-              activeId={referencePage.id}
-              onSelect={(id) => navigate('reference', id)}
-              onIntent={(id) => preloadRoute('reference', id)}
-              primaryIds={referencePrimary}
-              label="Retained reference sections"
-            />
-
-            <SpoilerSettings value={spoilerLimit} onChange={changeSpoilerLimit} />
-
-            {referencePage.id === 'nen' && (
-              <ReferenceBackbonePanel
-                domain="nen"
-                onSearch={(search) => navigate('reference', 'nen', { search })}
+          ) : (
+            <Suspense fallback={<RouteLoading label="Succession Contest Archive" />}>
+              <SuccessionArchiveApp
+                routeTarget={routeTarget}
+                routeParams={routeParams}
+                spoilerLimit={spoilerLimit}
+                onSpoilerChange={changeSpoilerLimit}
+                onNavigate={(target, params) => navigate('succession', target, params)}
+                onExitArchive={() => navigate('succession', 'archive')}
+                onOpenSearch={() => navigate('succession', 'search')}
+                onIntent={(target) => preloadRoute('succession', target)}
               />
-            )}
-
-            <Suspense fallback={<RouteLoading label={referencePage.label.toLowerCase()} />}>
-              {referencePage.id === 'nen' && (
-                <NenEncyclopedia
-                  initialQuery={routeParams.search || ''}
-                  spoilerLimit={spoilerLimit}
-                />
-              )}
-
-              {referencePage.id === 'atlas' && (
-                <WorldAtlas
-                  initialLocation={routeParams.location || routeParams.search || ''}
-                  initialMode={routeParams.mode || 'explore'}
-                  initialRoute={routeParams.route || ''}
-                  onOpenBlackWhale={() => navigate('succession', 'black-whale')}
-                  onOpenEncyclopedia={(search) => navigate('succession', 'search', { search })}
-                  onOpenTimeline={(search) => navigate('succession', 'timeline', { search })}
-                />
-              )}
             </Suspense>
-          </>
+          )
         )}
 
         {activeView === 'not-found' && (
@@ -228,14 +180,14 @@ export default function App() {
             <PageIntro
               kicker="404"
               title="Route removed"
-              description={`${routeParams.attemptedPath || 'This destination'} is no longer part of the focused archive.`}
+              description={`${routeParams.attemptedPath || 'This destination'} is no longer part of the unified Succession Contest archive.`}
             />
             <section className="index-section">
               <div className="index-heading">
                 <div>
-                  <span className="section-kicker">Available destinations</span>
-                  <h2>Choose one of the three maintained sections.</h2>
-                  <p>The site now focuses on the Succession Contest, the general Nen encyclopedia, and the World Atlas.</p>
+                  <span className="section-kicker">Unified archive</span>
+                  <h2>Everything now lives inside the Succession Contest application.</h2>
+                  <p>The general Nen encyclopedia and World Atlas are retained as internal Succession reference modules.</p>
                 </div>
               </div>
               <div className="story-grid">
@@ -243,19 +195,19 @@ export default function App() {
                   <span>Primary archive</span>
                   <h3>Succession Contest</h3>
                   <p>Open the chapter-bounded research application.</p>
-                  <button onClick={() => navigate('succession', 'archive')}>Open Succession</button>
+                  <button onClick={() => navigate('succession', 'archive')}>Open archive</button>
                 </article>
                 <article>
-                  <span>Power system</span>
-                  <h3>General Nen</h3>
-                  <p>Browse the retained Nen system encyclopedia.</p>
-                  <button onClick={() => navigate('reference', 'nen')}>Open Nen</button>
+                  <span>Internal module</span>
+                  <h3>Nen Encyclopedia</h3>
+                  <p>Browse the general power-system library from inside Succession.</p>
+                  <button onClick={() => navigate('succession', 'nen', { scope: 'encyclopedia' })}>Open Nen</button>
                 </article>
                 <article>
-                  <span>Story geography</span>
+                  <span>Internal module</span>
                   <h3>World Atlas</h3>
-                  <p>Explore the retained world and location atlas.</p>
-                  <button onClick={() => navigate('reference', 'atlas')}>Open World</button>
+                  <p>Explore world geography without leaving the Succession archive.</p>
+                  <button onClick={() => navigate('succession', 'locations', { scope: 'world' })}>Open World</button>
                 </article>
               </div>
             </section>
@@ -265,13 +217,13 @@ export default function App() {
 
       <footer className="site-footer">
         <div>
-          <b>Hunter × Hunter Archive</b>
-          <p>A focused Succession Contest archive with the general Nen encyclopedia and World Atlas retained.</p>
+          <b>Hunter × Hunter Succession Archive</b>
+          <p>One unified Succession Contest application with Nen and World reference modules built inside it.</p>
         </div>
         <nav aria-label="Footer links">
-          <button onClick={() => navigate('succession', 'archive')}>Succession</button>
-          <button onClick={() => navigate('reference', 'nen')}>Nen</button>
-          <button onClick={() => navigate('reference', 'atlas')}>World</button>
+          <button onClick={() => navigate('succession', 'archive')}>Archive</button>
+          <button onClick={() => navigate('succession', 'nen', { scope: 'encyclopedia' })}>Nen Library</button>
+          <button onClick={() => navigate('succession', 'locations', { scope: 'world' })}>World Atlas</button>
         </nav>
         <a href="https://hunterxhunter.fandom.com/" target="_blank" rel="noreferrer">
           Hunterpedia <ExternalLink size={11} />
