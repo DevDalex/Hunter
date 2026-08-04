@@ -24,8 +24,10 @@ import './SuccessionArchitectureViewportRuntime.js';
 import './SuccessionArchitectureVisualRevision.css';
 import './SuccessionPhase2PresentationConsistency.css';
 import './SuccessionProductExperience.css';
+import './SuccessionResearchTools.css';
 import SuccessionArchiveContextBar from './SuccessionArchiveContextBar';
 import SuccessionArchiveOnboarding from './SuccessionArchiveOnboarding';
+import SuccessionResearchTools from './SuccessionResearchTools';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));
@@ -66,5 +68,11 @@ export default function SuccessionArchiveEntry(props) {
           ? <SuccessionArchiveLightRoute {...props} />
           : <SuccessionArchiveApp {...props} />}
     </Suspense>
+    {!isReader && <SuccessionResearchTools
+      routeId={props.routeTarget}
+      routeParams={props.routeParams}
+      spoilerLimit={props.spoilerLimit}
+      onNavigate={props.onNavigate}
+    />}
   </>;
 }
