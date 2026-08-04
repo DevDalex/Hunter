@@ -14,8 +14,12 @@ export const loadResearchWorkspace = (storage = globalThis.localStorage) => {
 
 export const saveResearchWorkspace = (workspace, storage = globalThis.localStorage) => {
   if (!storage) return workspace;
-  storage.setItem(STORAGE_KEY, JSON.stringify({ ...workspace, version: 1 }));
-  return workspace;
+  const next = { ...workspace, version: 1 };
+  storage.setItem(STORAGE_KEY, JSON.stringify(next));
+  if (typeof globalThis.dispatchEvent === 'function' && typeof Event === 'function') {
+    globalThis.dispatchEvent(new Event('hunter:research-updated'));
+  }
+  return next;
 };
 
 export const setSavedReadingBoundary = (chapter, storage) => {

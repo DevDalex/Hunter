@@ -24,8 +24,13 @@ import './SuccessionArchitectureViewportRuntime.js';
 import './SuccessionArchitectureVisualRevision.css';
 import './SuccessionPhase2PresentationConsistency.css';
 import './SuccessionProductExperience.css';
+import './SuccessionResearchTools.css';
+import './SuccessionSavedResearch.css';
 import SuccessionArchiveContextBar from './SuccessionArchiveContextBar';
 import SuccessionArchiveOnboarding from './SuccessionArchiveOnboarding';
+import SuccessionIntelligencePanels from './SuccessionIntelligencePanels';
+import SuccessionResearchTools from './SuccessionResearchTools';
+import SuccessionSavedResearch from './SuccessionSavedResearch';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));
@@ -59,6 +64,7 @@ export default function SuccessionArchiveEntry(props) {
       activeDomain={props.routeTarget}
       onSpoilerChange={props.onSpoilerChange}
     />
+    <SuccessionSavedResearch onNavigate={props.onNavigate} />
     <Suspense fallback={<ArchiveRouteLoading />}>
       {isReader
         ? <SuccessionArchiveReaderRoute {...props} />
@@ -66,5 +72,14 @@ export default function SuccessionArchiveEntry(props) {
           ? <SuccessionArchiveLightRoute {...props} />
           : <SuccessionArchiveApp {...props} />}
     </Suspense>
+    {!isReader && <>
+      <SuccessionIntelligencePanels spoilerLimit={props.spoilerLimit} />
+      <SuccessionResearchTools
+        routeId={props.routeTarget}
+        routeParams={props.routeParams}
+        spoilerLimit={props.spoilerLimit}
+        onNavigate={props.onNavigate}
+      />
+    </>}
   </>;
 }
