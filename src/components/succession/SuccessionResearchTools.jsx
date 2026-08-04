@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react';
 import { Bookmark, Check, Clipboard, Download, FlaskConical, GitCompareArrows, Share2 } from 'lucide-react';
 import { getEntitiesByType, getEntityById } from '../../data/succession/successionData';
 import { explanationModes } from '../../data/succession/readingExperience';
-import { evidenceKinds, openQuestionStatuses } from '../../data/succession/researchSemantics';
+import { claimKinds, questionStatuses } from '../../data/succession/researchSemantics';
 import { collectChapterChanges } from '../../lib/succession/chapterDiff';
 import { loadResearchWorkspace, saveInvestigation, toggleBookmark } from '../../lib/succession/researchWorkspace';
-import { buildResearchCitation, buildShareSnapshotUrl, exportRecordsAsCsv, exportRecordsAsJson } from '../../lib/succession/shareAndExport';
+import { buildResearchSnapshotUrl, exportRecordsAsCsv, exportRecordsAsJson, researchCitation } from '../../lib/succession/shareAndExport';
 
 const downloadText = (name, content, type = 'text/plain') => {
   const blob = new Blob([content], { type });
@@ -65,8 +65,18 @@ export default function SuccessionResearchTools({ routeId, routeParams = {}, spo
     setWorkspace(next);
     setInvestigationTitle('');
   };
-  const snapshotUrl = buildShareSnapshotUrl({ route: routeId, params: routeParams, chapter: spoilerLimit });
-  const citation = buildResearchCitation({ title: selectedEntity?.name || routeId, chapter: spoilerLimit, route: routeId });
+  const snapshotUrl = buildResearchSnapshotUrl({
+    route: `/${routeId === 'archive' ? '' : routeId}`,
+    chapter: spoilerLimit,
+    filters: routeParams,
+    focus: selectedEntity?.id,
+  });
+  const citation = researchCitation({
+    title: selectedEntity?.name || routeId,
+    chapter: spoilerLimit,
+    reviewedAt: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+    route: snapshotUrl,
+  });
 
   return <section className="succession-research-tools" aria-labelledby="succession-research-tools-title">
     <header>
@@ -108,7 +118,7 @@ export default function SuccessionResearchTools({ routeId, routeParams = {}, spo
       <article>
         <Download size={19} aria-hidden="true" />
         <h3>Export current research</h3>
-        <button type="button" onClick={() => downloadText(`hunter-${routeId}-${spoilerLimit}.json`, exportRecordsAsJson(changes), 'application/json')}>Export JSON</button>
+        <button type="button" onClick={() => downloadText(`hunter-${routeId}-${spoilerLimit}.json`, exportRecordsAsJson(changes, { routeId, chapter: spoilerLimit }), 'application/json')}>Export JSON</button>
         <button type="button" onClick={() => downloadText(`hunter-${routeId}-${spoilerLimit}.csv`, exportRecordsAsCsv(changes), 'text/csv')}>Export CSV</button>
         <p>Chapter-image binaries and protected administrator data are excluded.</p>
       </article>
@@ -116,8 +126,8 @@ export default function SuccessionResearchTools({ routeId, routeParams = {}, spo
 
     <details className="succession-research-tools__semantics">
       <summary>Evidence and question vocabulary</summary>
-      <div><strong>Evidence:</strong> {evidenceKinds.join(', ')}</div>
-      <div><strong>Question states:</strong> {openQuestionStatuses.join(', ')}</div>
+      <div><strong>Evidence:</strong> {Object.values(claimKinds).map((item) => item.label).join(', ')}</div>
+      <div><strong>Question states:</strong> {questionStatuses.join(', ')}</div>
     </details>
   </section>;
 }
