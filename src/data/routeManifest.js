@@ -1,8 +1,9 @@
 import { ARCHIVE_BOUNDARY } from './archiveMeta.js';
 import {
-  successionArchiveRetiredTargets,
-  successionArchiveRoutes,
-} from './succession/archiveRoutes.js';
+  canonicalSuccessionRoutes,
+  legacyRouteRedirects,
+  releasedSuccessionRoutes,
+} from './routeRegistry.js';
 
 export {
   getSuccessionArchiveRoute,
@@ -17,12 +18,22 @@ export {
   successionArchiveTargetToPath,
 } from './succession/archiveRoutes.js';
 
+export {
+  canonicalSuccessionRouteById,
+  canonicalSuccessionRoutes,
+  legacyRouteRedirects,
+  releasedSuccessionRoutes,
+  resolveSuccessionRoute,
+  searchableSuccessionRoutes,
+  sitemapSuccessionRoutes,
+} from './routeRegistry.js';
+
 export const viewIds = ['succession', 'reference'];
 export const views = new Set(viewIds);
-
-// Kept as an empty compatibility export while retired full-series modules are removed.
 export const seriesRoutes = [];
 
+// Compatibility metadata for older navigation consumers. Canonical route behavior,
+// release status, aliases, and sitemap/search policy live in routeRegistry.js.
 export const successionPages = [
   {
     id: 'overview', label: 'Arc overview', kicker: 'The current story', title: 'Succession Contest',
@@ -57,28 +68,12 @@ export const successionPages = [
 export const successionPrimary = successionPages.map((page) => page.id);
 export const legacyDossierPage = successionPages[0];
 
-const retiredSuccessionAliases = Object.fromEntries(
-  Object.entries(successionArchiveRetiredTargets).map(([target, destination]) => [target, { target: destination }]),
+export const successionAliases = Object.freeze(
+  Object.fromEntries(Object.entries(legacyRouteRedirects).map(([alias, target]) => [alias, { target }])),
 );
 
-export const successionAliases = {
-  'deep-dossier': { target: 'princes' },
-  princes: { target: 'princes' },
-  'family-tree': { target: 'princes' },
-  'royal-family': { target: 'princes' },
-  'connection-board': { target: 'relationships' },
-  'succession-roster': { target: 'characters' },
-  'succession-timeline': { target: 'timeline' },
-  'nen-classes': { target: 'nen' },
-  beasts: { target: 'guardian-spirit-beasts' },
-  ...retiredSuccessionAliases,
-  mysteries: { target: 'chapters' },
-  'succession-sources': { target: 'research' },
-  overview: { target: 'archive' },
-};
-
 export const successionPageIds = new Set([
-  ...successionPages.map((page) => page.id),
+  ...canonicalSuccessionRoutes.map((route) => route.id),
   ...Object.keys(successionAliases),
 ]);
 
@@ -110,36 +105,27 @@ export const referencePages = [
 ];
 
 export const referencePrimary = referencePages.map((page) => page.id);
-
-export const referenceAliases = {
+export const referenceAliases = Object.freeze({
   nen: { target: 'nen' },
   world: { target: 'atlas' },
   atlas: { target: 'atlas' },
   locations: { target: 'atlas' },
   'research-library': { target: 'atlas' },
   'study-layers': { target: 'atlas' },
-};
+});
 
-export const successionReleaseRouteIds = Object.freeze([
-  'story', 'chapters', 'events', 'timeline', 'characters', 'princes', 'queens',
-  'bodyguards', 'organizations', 'relationships', 'locations', 'black-whale',
-  'nen', 'guardian-spirit-beasts', 'research',
+export const successionReleaseRouteIds = Object.freeze(releasedSuccessionRoutes.map((route) => route.id));
+export const successionReleaseRoutes = releasedSuccessionRoutes;
+
+export const routeManifest = Object.freeze([
+  ...releasedSuccessionRoutes.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
+  ...referencePages.map((route) => ({ view: 'reference', target: route.id, label: route.title })),
 ]);
 
-export const successionReleaseRoutes = successionReleaseRouteIds
-  .map((id) => successionArchiveRoutes.find((route) => route.id === id))
-  .filter(Boolean);
-
-export const routeManifest = [
-  { view: 'succession', target: 'archive', label: 'Succession Contest Archive' },
-  ...successionReleaseRoutes.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
-  ...referencePages.map((route) => ({ view: 'reference', target: route.id, label: route.title })),
-];
-
-export const routeManifestStats = {
+export const routeManifestStats = Object.freeze({
   screens: routeManifest.length,
-  succession: successionArchiveRoutes.length,
-  successionReleaseScreens: successionReleaseRoutes.length + 1,
+  succession: canonicalSuccessionRoutes.length,
+  successionReleaseScreens: releasedSuccessionRoutes.length,
   reference: referencePages.length,
-  aliases: Object.keys(referenceAliases).length + Object.keys(successionAliases).length,
-};
+  aliases: Object.keys(referenceAliases).length + Object.keys(legacyRouteRedirects).length,
+});
