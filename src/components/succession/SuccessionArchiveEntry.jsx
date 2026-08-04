@@ -25,6 +25,7 @@ import './SuccessionArchitectureVisualRevision.css';
 import './SuccessionPhase2PresentationConsistency.css';
 import './SuccessionProductExperience.css';
 import './SuccessionResearchTools.css';
+import './SuccessionSavedResearch.css';
 import SuccessionArchiveContextBar from './SuccessionArchiveContextBar';
 import SuccessionArchiveOnboarding from './SuccessionArchiveOnboarding';
 import SuccessionIntelligencePanels from './SuccessionIntelligencePanels';
