@@ -27,6 +27,7 @@ import './SuccessionProductExperience.css';
 import './SuccessionResearchTools.css';
 import SuccessionArchiveContextBar from './SuccessionArchiveContextBar';
 import SuccessionArchiveOnboarding from './SuccessionArchiveOnboarding';
+import SuccessionIntelligencePanels from './SuccessionIntelligencePanels';
 import SuccessionResearchTools from './SuccessionResearchTools';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
@@ -68,11 +69,14 @@ export default function SuccessionArchiveEntry(props) {
           ? <SuccessionArchiveLightRoute {...props} />
           : <SuccessionArchiveApp {...props} />}
     </Suspense>
-    {!isReader && <SuccessionResearchTools
-      routeId={props.routeTarget}
-      routeParams={props.routeParams}
-      spoilerLimit={props.spoilerLimit}
-      onNavigate={props.onNavigate}
-    />}
+    {!isReader && <>
+      <SuccessionIntelligencePanels spoilerLimit={props.spoilerLimit} />
+      <SuccessionResearchTools
+        routeId={props.routeTarget}
+        routeParams={props.routeParams}
+        spoilerLimit={props.spoilerLimit}
+        onNavigate={props.onNavigate}
+      />
+    </>}
   </>;
 }
