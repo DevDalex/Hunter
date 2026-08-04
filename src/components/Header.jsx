@@ -73,9 +73,7 @@ export default function Header({
     if (activeView !== 'succession') return false;
     if (item.id === 'nen-library') return routeTarget === 'nen' && routeParams.scope === 'encyclopedia';
     if (item.id === 'world-atlas') return routeTarget === 'locations' && routeParams.scope === 'world';
-    return !routeParams.scope && routeTarget !== 'nen' && routeTarget !== 'locations'
-      ? true
-      : item.id === 'archive' && !['encyclopedia', 'world'].includes(routeParams.scope);
+    return item.id === 'archive' && !['encyclopedia', 'world'].includes(routeParams.scope);
   };
 
   return (
