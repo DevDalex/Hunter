@@ -142,6 +142,7 @@ export default function App() {
       <Header
         activeView={activeView}
         routeTarget={routeTarget}
+        routeParams={routeParams}
         onNavigate={navigate}
         onOpenSearch={() => navigate('succession', 'search')}
         onPrefetch={preloadRoute}
