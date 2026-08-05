@@ -29,6 +29,7 @@ import './SuccessionSavedResearch.css';
 import SuccessionArchiveContextBar from './SuccessionArchiveContextBar';
 import SuccessionArchiveOnboarding from './SuccessionArchiveOnboarding';
 import SuccessionConsolidationNotice from './SuccessionConsolidationNotice';
+import SuccessionCoverageDashboard from './SuccessionCoverageDashboard';
 import SuccessionIntelligencePanels from './SuccessionIntelligencePanels';
 import SuccessionResearchTools from './SuccessionResearchTools';
 import SuccessionSavedResearch from './SuccessionSavedResearch';
@@ -55,6 +56,7 @@ export default function SuccessionArchiveEntry(props) {
     <SuccessionArchiveContextBar spoilerLimit={props.spoilerLimit} activeDomain={props.routeTarget} onSpoilerChange={props.onSpoilerChange} />
     <SuccessionConsolidationNotice routeId={props.routeTarget} />
     <SuccessionSavedResearch onNavigate={props.onNavigate} />
+    <SuccessionCoverageDashboard />
     <Suspense fallback={<ArchiveRouteLoading />}>
       {isReader
         ? <SuccessionArchiveReaderRoute {...props} />
