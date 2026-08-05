@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { assertReleasedSuccessionRoutes } from './lib/release-route-contracts.mjs';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
@@ -7,14 +8,13 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 4 Guardian Beast audit failed: ${message}`);
 };
 
-const [workspace, command, layout, dossier, workflow, docs, routeManifest] = await Promise.all([
+const [workspace, command, layout, dossier, workflow, docs] = await Promise.all([
   read('src/components/succession/SuccessionArchiveGuardianBeastWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveGuardianBeastCommand.css'),
   read('src/components/succession/SuccessionArchiveGuardianBeastCommandLayout.css'),
   read('src/components/succession/SuccessionArchiveGuardianBeastCommandDossier.css'),
   read('.github/workflows/succession-visual-redesign-batch-4-guardian-beasts.yml'),
   read('docs/SUCCESSION-VISUAL-REDESIGN-BATCH-4-GUARDIAN-BEASTS.md'),
-  read('src/data/routeManifest.js'),
 ]);
 const styles = `${command}\n${layout}\n${dossier}`;
 
@@ -59,7 +59,7 @@ assert(styles.includes('@media (prefers-reduced-motion: reduce)'), 'reduced-moti
 assert(styles.includes('min-height: 44px'), 'controls must retain 44px touch targets');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(styles), 'route-owned CSS must not introduce raw hex colors');
 assert(!styles.includes('!important'), 'route-owned CSS must not depend on !important');
-assert(routeManifest.includes("'guardian-spirit-beasts'"), 'release visual manifest must include Guardian Spirit Beasts');
+assertReleasedSuccessionRoutes(['guardian-spirit-beasts'], assert, 'release visual manifest');
 assert(workflow.includes('node scripts/audit-succession-batch-4-guardian-beasts.mjs'), 'workflow must run the Guardian Beast audit');
 assert(workflow.includes('succession/guardian-spirit-beasts'), 'workflow must render the Guardian Beast workspace');
 assert(docs.includes('Hour 49'), 'design record must document Hour 49');
