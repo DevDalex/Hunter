@@ -185,16 +185,16 @@ try {
       await page.waitForFunction(() => document.activeElement?.id === 'succession-workspace-content');
     });
     await recordInteraction('chapter workspace cards activate with keyboard', { width: 1440, height: 1000 }, 'succession/chapters', async (page) => {
-      const opener = page.locator('.succession-chapter-command__card').first();
+      const opener = page.locator('.succession-chapter-command__card.is-documented:not([aria-current="page"])').first();
       await opener.waitFor({ state: 'visible', timeout: 10_000 });
       const chapter = (await opener.locator('.succession-chapter-command__number').innerText()).trim();
       await opener.focus();
       if (!await opener.evaluate((node) => node === document.activeElement)) throw new Error('chapter card did not receive focus');
       await page.keyboard.press('Enter');
-      await page.waitForFunction((expected) => {
-        const selected = document.querySelector('.succession-chapter-command__card[aria-current="page"] .succession-chapter-command__number');
-        return selected?.textContent?.trim() === expected;
-      }, chapter, { timeout: 10_000 });
+      await page.waitForFunction((expected) => new URL(window.location.href).searchParams.get('chapter') === expected, chapter, { timeout: 10_000 });
+      const selectedRecord = page.locator('.succession-chapter-command__rail-header b');
+      await selectedRecord.waitFor({ state: 'visible', timeout: 10_000 });
+      if ((await selectedRecord.innerText()).trim() !== `Chapter ${chapter}`) throw new Error('selected chapter rail did not update after keyboard activation');
     });
     await recordInteraction('Black Whale manifest accepts keyboard focus', { width: 390, height: 844 }, 'succession/black-whale', async (page) => {
       const manifest = page.locator('.ship-manifest__table-wrap');
