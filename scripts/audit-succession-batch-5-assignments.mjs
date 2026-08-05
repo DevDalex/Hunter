@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { assertReleasedSuccessionRoutes } from './lib/release-route-contracts.mjs';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
@@ -7,12 +8,11 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 5 assignment audit failed: ${message}`);
 };
 
-const [workspace, styles, compatibilityStyles, searchStyles, routeManifest, workflow, finalQa, docs] = await Promise.all([
+const [workspace, styles, compatibilityStyles, searchStyles, workflow, finalQa, docs] = await Promise.all([
   read('src/components/succession/SuccessionArchiveAssignmentWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveAssignmentCommand.css'),
   read('src/components/succession/SuccessionArchiveAssignmentWorkspace.css'),
   read('src/components/succession/SuccessionArchiveSearch.css'),
-  read('src/data/routeManifest.js'),
   read('.github/workflows/succession-visual-redesign-batch-5.yml'),
   read('scripts/succession-final-release-qa.mjs'),
   read('docs/SUCCESSION-VISUAL-REDESIGN-BATCH-5.md'),
@@ -64,7 +64,7 @@ assert(compatibilityStyles.trim().endsWith("@import './SuccessionArchiveAssignme
 assert(!compatibilityStyles.includes('.succession-canonical-assignments {'), 'legacy Assignment declarations must be removed');
 assert(!searchStyles.includes("@import './SuccessionArchiveAssignmentCommand.css';"), 'Assignment command must not be loaded twice through the shared search stylesheet');
 assert(searchStyles.includes("@import './SuccessionArchiveFinalPolish.css';"), 'the final shared interaction layer must load last');
-assert(routeManifest.includes("'bodyguards'"), 'release visual manifest must include the Assignments route');
+assertReleasedSuccessionRoutes(['bodyguards'], assert, 'release visual manifest');
 assert(workflow.includes('node scripts/audit-succession-batch-5-assignments.mjs'), 'Batch 5 workflow must run the assignment audit');
 assert(workflow.includes('npm run qa:succession-final-release'), 'Batch 5 workflow must run the complete release matrix');
 assert(finalQa.includes('...successionReleaseRoutes.map'), 'complete release matrix must render the curated Succession routes, including Assignments');
