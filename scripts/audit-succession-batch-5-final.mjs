@@ -1,5 +1,9 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import {
+  assertReleasedSuccessionRoutes,
+  canonicalTargetForSuccessionRoute,
+} from './lib/release-route-contracts.mjs';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
@@ -15,7 +19,6 @@ const [
   searchStyles,
   assignmentCompatibility,
   assignmentStyles,
-  routeManifest,
   workflow,
   packageJson,
   finalDocs,
@@ -28,7 +31,6 @@ const [
   read('src/components/succession/SuccessionArchiveSearch.css'),
   read('src/components/succession/SuccessionArchiveAssignmentWorkspace.css'),
   read('src/components/succession/SuccessionArchiveAssignmentCommand.css'),
-  read('src/data/routeManifest.js'),
   read('.github/workflows/succession-visual-redesign-batch-5.yml'),
   read('package.json'),
   read('docs/SUCCESSION-VISUAL-REDESIGN-FINAL-AUDIT.md'),
@@ -86,10 +88,23 @@ assert(assignmentCompatibility.trim().endsWith("@import './SuccessionArchiveAssi
 assert(!assignmentCompatibility.includes('.succession-canonical-assignments {'), 'obsolete Assignment declarations must be removed');
 assert(assignmentStyles.includes('.succession-assignment-table') && assignmentStyles.includes('.succession-assignment-ledger'), 'advanced Assignment result modes must remain registered');
 
-for (const route of ['story', 'chapters', 'events', 'timeline', 'characters', 'princes', 'queens', 'bodyguards', 'organizations', 'relationships', 'locations', 'black-whale', 'nen', 'guardian-spirit-beasts', 'research']) {
-  assert(routeManifest.includes(`'${route}'`), `release matrix is missing ${route}`);
-}
-assert(routeManifest.includes('successionReleaseRoutes'), 'release matrix must export the curated Succession routes');
+assertReleasedSuccessionRoutes([
+  'story',
+  'chapters',
+  'events',
+  'timeline',
+  'characters',
+  'princes',
+  'bodyguards',
+  'organizations',
+  'relationships',
+  'locations',
+  'black-whale',
+  'nen',
+  'guardian-spirit-beasts',
+  'research',
+], assert, 'release matrix');
+assert(canonicalTargetForSuccessionRoute('queens') === 'princes', 'Queens compatibility route must canonically resolve to Princes');
 
 for (const token of [
   'node scripts/audit-succession-batch-5-final.mjs',
@@ -113,4 +128,4 @@ for (const heading of ['Data and evidence boundaries', 'Media constraints', 'Com
   assert(debtDocs.includes(heading), `non-critical debt record is missing ${heading}`);
 }
 
-console.log('Succession Batch 5 final audit passed: interaction states, keyboard tabs, route focus, live announcements, reduced motion, forced colors, containment, image stability, legacy cleanup, full release routes, performance, cross-browser QA, final audit, and debt documentation are registered.');
+console.log('Succession Batch 5 final audit passed: interaction states, keyboard tabs, route focus, live announcements, reduced motion, forced colors, containment, image stability, legacy cleanup, canonical release routes, performance, cross-browser QA, final audit, and debt documentation are registered.');
