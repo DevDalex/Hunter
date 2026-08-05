@@ -49,7 +49,7 @@ assertFeatures(researchSource, ['Bookmark view', 'Chapter changes', 'Investigati
 const intelligenceSource = readFileSync('src/components/succession/SuccessionIntelligencePanels.jsx', 'utf8');
 assertFeatures(intelligenceSource, ['Compare canonical records', 'compareDomain', 'Copy comparison link', 'is-different', 'Candidates', 'Evidence for', 'Evidence against', 'Resolution history', 'Open related dossier'], 'Phase 3 intelligence interface');
 const evidenceSource = readFileSync('src/components/succession/SuccessionEvidenceInspector.jsx', 'utf8');
-assertFeatures(evidenceSource, ['claim-kind', 'Contradictions', 'Translation variants', 'Page / panel', 'Reviewed'], 'Phase 3 evidence interface');
+assertFeatures(evidenceSource, ['claim-kind', 'contradiction:', 'contradictoryEvidence', 'Translation variants', 'record.page', 'reviewedAt'], 'Phase 3 evidence interface');
 for (const [name, phase] of Object.entries(productCapabilities)) {
   if (!Number.isInteger(phase.phase) || phase.phase < 2 || phase.phase > 5) throw new Error(`${name} has an invalid phase.`);
   if (!phase.capabilities?.length) throw new Error(`${name} has no capability contract.`);
