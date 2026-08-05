@@ -25,7 +25,9 @@ export default defineConfig({
             { name: 'vendor-react', test: /node_modules\/(react|react-dom)/ },
             { name: 'vendor-icons', test: /node_modules\/lucide-react/ },
             ...successionDataGroups,
-            { name: 'succession-reader', test: /src\/components\/succession\/.*Reader/ },
+            // Reader routes already use dynamic imports. Do not force all reader
+            // modules into one shared slab, which can make route-only code part of
+            // the startup graph. Let Rolldown preserve the natural lazy boundaries.
             { name: 'succession-research-ui', test: /src\/components\/succession\/(SuccessionResearch|SuccessionEvidence|SuccessionIntelligence|SuccessionSaved)/ },
             { name: 'vendor', test: /node_modules/ },
           ],
