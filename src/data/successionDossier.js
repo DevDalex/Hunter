@@ -6,6 +6,12 @@ import {
   succession400SourcePolicy,
 } from './succession400Research.js';
 import {
+  succession406ChapterFocus,
+  succession406ChapterResearch,
+  succession406Mysteries,
+  succession406SourcePolicy,
+} from './succession406Research.js';
+import {
   succession408ChapterFocus,
   succession408ChapterResearch,
   succession408Mysteries,
@@ -41,6 +47,7 @@ export * from './successionDossierLegacy.js';
 export const chapterFocus = Object.freeze({
   ...legacy.chapterFocus,
   ...succession400ChapterFocus,
+  ...succession406ChapterFocus,
   ...succession408ChapterFocus,
   ...succession409ChapterFocus,
   ...succession414415ChapterFocus,
@@ -48,8 +55,9 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![400, 408, 409].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![400, 406, 408, 409].includes(record.number)),
   ...succession400ChapterResearch,
+  ...succession406ChapterResearch,
   ...succession408ChapterResearch,
   ...succession409ChapterResearch,
   ...succession414415ChapterResearch,
@@ -88,6 +96,7 @@ export const successionMysteries = Object.freeze([
     source: 'https://hunterxhunter.fandom.com/wiki/Chapter_416',
   },
   ...succession400Mysteries,
+  ...succession406Mysteries,
   ...succession408Mysteries,
   ...succession409Mysteries,
   ...succession414415Mysteries,
@@ -132,6 +141,7 @@ export const guardAssignmentGroups = Object.freeze(legacy.guardAssignmentGroups.
 export const dossierSources = Object.freeze({
   ...legacy.dossierSources,
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
+  chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
   chapter409: 'https://hunterxhunter.fandom.com/wiki/Chapter_409',
   chapter414: 'https://hunterxhunter.fandom.com/wiki/Chapter_414',
@@ -140,6 +150,7 @@ export const dossierSources = Object.freeze({
   viz414: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-414/chapter/50800',
   viz415: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-415/chapter/50829',
   sourcePolicy400: succession400SourcePolicy,
+  sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
   sourcePolicy409: succession409SourcePolicy,
   crossChecks414415: succession414415CrossChecks,
