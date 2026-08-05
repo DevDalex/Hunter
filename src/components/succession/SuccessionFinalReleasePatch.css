@@ -194,7 +194,7 @@
 
 @media (max-width: 620px) {
   .succession-archive .succession-hub-tabs {
-    margin-inline: -2px;
+    margin-inline: 0;
     padding: 6px;
   }
 

@@ -15,6 +15,7 @@ const legacySuccessionPathToTarget = new Map([
   ['nen-and-beasts', 'guardian-spirit-beasts'],
   ['power-blocs', 'organizations'],
   ['records', 'chapters'],
+  ['chapter-records', 'chapters'],
   ['chapters', 'reader'],
 ]);
 
@@ -208,7 +209,11 @@ export function parseCleanRoute(pathname = '/', search = '') {
   }
 
   if (parts[0] === 'succession' && parts.length <= 2) {
-    return normalizeDestination('succession', parts[1] || 'archive', params);
+    const requestedTarget = parts[1] || 'archive';
+    const target = successionArchiveRouteIds.has(requestedTarget)
+      ? requestedTarget
+      : (legacySuccessionPathToTarget.get(requestedTarget) || requestedTarget);
+    return normalizeDestination('succession', target, params);
   }
 
   if (parts[0] === 'not-found') {

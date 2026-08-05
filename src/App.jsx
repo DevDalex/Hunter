@@ -2,7 +2,6 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import Header from './components/Header';
 import PageIntro from './components/PageIntro';
-import SuccessionIntegratedReferences from './components/succession/SuccessionIntegratedReferences';
 import { ARCHIVE_BOUNDARY } from './data/archiveMeta';
 import { getSuccessionArchiveRoute } from './data/succession/archiveRoutes';
 import { readStoredNumber, writeStoredString } from './lib/browserStorage';
@@ -15,6 +14,7 @@ import {
 import { preloadRoute, routeModuleLoaders } from './lib/routePreload';
 
 const SuccessionArchiveApp = lazy(routeModuleLoaders.successionArchive);
+const SuccessionIntegratedReferences = lazy(() => import('./components/succession/SuccessionIntegratedReferences'));
 
 function readSpoilerLimit() {
   const stored = readStoredNumber('hxh-spoiler-limit', ARCHIVE_BOUNDARY);
@@ -153,13 +153,15 @@ export default function App() {
 
         {activeView === 'succession' && (
           integratedReferenceMode ? (
-            <SuccessionIntegratedReferences
-              mode={integratedReferenceMode}
-              routeParams={routeParams}
-              spoilerLimit={spoilerLimit}
-              onSpoilerChange={changeSpoilerLimit}
-              onNavigate={(target, params) => navigate('succession', target, params)}
-            />
+            <Suspense fallback={<RouteLoading label="reference library" />}>
+              <SuccessionIntegratedReferences
+                mode={integratedReferenceMode}
+                routeParams={routeParams}
+                spoilerLimit={spoilerLimit}
+                onSpoilerChange={changeSpoilerLimit}
+                onNavigate={(target, params) => navigate('succession', target, params)}
+              />
+            </Suspense>
           ) : (
             <Suspense fallback={<RouteLoading label="Succession Contest Archive" />}>
               <SuccessionArchiveApp

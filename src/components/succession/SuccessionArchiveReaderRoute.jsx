@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import SuccessionArchiveShell from './SuccessionArchiveShell';
 
 const SuccessionChapterReader = lazy(() => import('../SuccessionChapterReader'));
@@ -10,6 +10,18 @@ function ReaderLoadingState() {
   </div>;
 }
 
+const applyReaderControlNames = (root) => {
+  if (!root) return;
+  const chapterTrigger = root.querySelector('.succession-reader__chapter-trigger');
+  if (chapterTrigger) chapterTrigger.setAttribute('aria-label', 'Open chapter drawer');
+
+  const previous = root.querySelector('.succession-reader__bottombar > button[type="button"]');
+  if (previous) previous.setAttribute('aria-label', previous.textContent?.trim() || 'Previous page or chapter');
+
+  const next = root.querySelector('.succession-reader__bottom-actions > button[type="button"]:last-child');
+  if (next) next.setAttribute('aria-label', next.textContent?.trim() || 'Next page or chapter');
+};
+
 export default function SuccessionArchiveReaderRoute({
   routeParams = {},
   spoilerLimit,
@@ -19,7 +31,17 @@ export default function SuccessionArchiveReaderRoute({
   onOpenSearch,
   onIntent,
 }) {
+  const readerRootRef = useRef(null);
   const navigateReader = (patch = {}) => onNavigate('reader', patch);
+
+  useEffect(() => {
+    const root = readerRootRef.current;
+    if (!root) return undefined;
+    applyReaderControlNames(root);
+    const observer = new MutationObserver(() => applyReaderControlNames(root));
+    observer.observe(root, { childList: true, subtree: true, characterData: true });
+    return () => observer.disconnect();
+  }, []);
 
   return <SuccessionArchiveShell
     activeId="reader"
@@ -31,8 +53,7 @@ export default function SuccessionArchiveReaderRoute({
     onOpenSearch={onOpenSearch}
     onIntent={onIntent}
   >
-    <section className="succession-reader-command" aria-label="Succession Contest manga reader">
-      <h1 className="sr-only">Succession Contest manga reader</h1>
+    <section ref={readerRootRef} className="succession-reader-command" aria-label="Succession Contest manga reader">
       <Suspense fallback={<ReaderLoadingState />}>
         <SuccessionChapterReader
           requestedChapter={routeParams.chapter}

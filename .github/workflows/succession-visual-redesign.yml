@@ -140,9 +140,7 @@ jobs:
           npm run audit:succession-runtime 2>&1 | tee succession-runtime.log
 
       - name: Build presentation bundle
-        run: |
-          npm run prepare:eta-assets
-          npx vite build
+        run: npx vite build
 
       - name: Install Chromium for visual QA
         shell: bash
@@ -178,10 +176,10 @@ jobs:
           VISUAL_QA_SCREENSHOTS: all
         run: npm run qa:visual
 
-      - name: Inspect Queen households at all viewports
+      - name: Inspect consolidated royal households at all viewports
         env:
-          VISUAL_QA_ROUTE: succession/queens
-          VISUAL_QA_OUTPUT: .visual-qa/succession-queens
+          VISUAL_QA_ROUTE: succession/princes
+          VISUAL_QA_OUTPUT: .visual-qa/succession-royal-households
           VISUAL_QA_SCREENSHOTS: all
         run: npm run qa:visual
 

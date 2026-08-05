@@ -42,13 +42,13 @@ const serve = async () => {
 };
 
 const cases = Object.freeze([
-  { id: 'overview', path: '/story/succession-contest/research?mode=overview', selector: '.succession-intelligence-overview', text: 'Six tools built on the same canonical graph.' },
-  { id: 'diff-403-404', path: '/story/succession-contest/research?mode=diff&from=403&to=404', selector: '.succession-intelligence-diff', text: 'What changed between two chapter boundaries?' },
-  { id: 'knowledge', path: '/story/succession-contest/research?mode=knowledge', selector: '.succession-intelligence-knowledge', text: 'Who knows what, and who does not?' },
-  { id: 'protocols', path: '/story/succession-contest/research?mode=protocols', selector: '.succession-intelligence-protocols', text: 'Do not mix legal orders with Nen conditions.' },
-  { id: 'seed-urn', path: '/story/succession-contest/research?mode=artifacts&entity=object%3Aseed-urn', selector: '.succession-intelligence-detail', text: 'Seed Urn' },
-  { id: 'compare-objects', path: '/story/succession-contest/research?mode=compare&type=object&compare=object%3Aseed-urn%2Cobject%3Azhang-lei-coins', selector: '.succession-intelligence-table', text: 'Seed Urn' },
-  { id: 'changes', path: '/story/succession-contest/research?mode=changes', selector: '.succession-intelligence-changes', text: 'Editorial change log' },
+  { id: 'overview', path: '/succession/research?mode=overview', selector: '.succession-intelligence-overview', text: 'Six tools built on the same canonical graph.' },
+  { id: 'diff-403-404', path: '/succession/research?mode=diff&from=403&to=404', selector: '.succession-intelligence-diff', text: 'What changed between two chapter boundaries?' },
+  { id: 'knowledge', path: '/succession/research?mode=knowledge', selector: '.succession-intelligence-knowledge', text: 'Who knows what, and who does not?' },
+  { id: 'protocols', path: '/succession/research?mode=protocols', selector: '.succession-intelligence-protocols', text: 'Do not mix legal orders with Nen conditions.' },
+  { id: 'seed-urn', path: '/succession/research?mode=artifacts&entity=object%3Aseed-urn', selector: '.succession-intelligence-detail', text: 'Seed Urn' },
+  { id: 'compare-objects', path: '/succession/research?mode=compare&type=object&compare=object%3Aseed-urn%2Cobject%3Azhang-lei-coins', selector: '.succession-intelligence-table', text: 'Seed Urn' },
+  { id: 'changes', path: '/succession/research?mode=changes', selector: '.succession-intelligence-changes', text: 'Editorial change log' },
 ]);
 
 const inspect = (page) => page.evaluate(() => {

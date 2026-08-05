@@ -1,5 +1,8 @@
 const STORAGE_KEY = 'hunter:analytics:v1';
 const allowedEvents = new Set(['route-opened', 'search-empty', 'reader-research-bridge', 'export-used', 'bookmark-toggled', 'investigation-created']);
+const notify = () => {
+  if (typeof globalThis.dispatchEvent === 'function' && typeof Event === 'function') globalThis.dispatchEvent(new Event('hunter:analytics-updated'));
+};
 
 export const recordProductEvent = (name, details = {}, storage = globalThis.localStorage) => {
   if (!allowedEvents.has(name) || !storage) return false;
@@ -7,6 +10,7 @@ export const recordProductEvent = (name, details = {}, storage = globalThis.loca
   const safeDetails = Object.fromEntries(Object.entries(details).filter(([key]) => !['query', 'notes', 'email', 'name', 'token'].includes(key)));
   const next = [...current.slice(-199), { name, details: safeDetails, at: new Date().toISOString() }];
   storage.setItem(STORAGE_KEY, JSON.stringify(next));
+  notify();
   return true;
 };
 
@@ -16,5 +20,8 @@ export const summarizeProductEvents = (storage = globalThis.localStorage) => {
   return events.reduce((summary, event) => ({ ...summary, [event.name]: (summary[event.name] || 0) + 1 }), {});
 };
 
-export const clearProductEvents = (storage = globalThis.localStorage) => storage?.removeItem(STORAGE_KEY);
+export const clearProductEvents = (storage = globalThis.localStorage) => {
+  storage?.removeItem(STORAGE_KEY);
+  notify();
+};
 export const analyticsPrivacyPolicy = Object.freeze({ localOnly: true, storesSearchQueries: false, storesPersonalNotes: false, maximumEvents: 200 });

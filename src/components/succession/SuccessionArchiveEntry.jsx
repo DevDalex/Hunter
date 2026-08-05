@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import '../../styles/succession-archive.css';
 import './SuccessionArchiveContrast.css';
 import './SuccessionArchiveLayoutFixes.css';
@@ -26,8 +26,11 @@ import './SuccessionPhase2PresentationConsistency.css';
 import './SuccessionProductExperience.css';
 import './SuccessionResearchTools.css';
 import './SuccessionSavedResearch.css';
+import { recordProductEvent } from '../../lib/privacyAnalytics';
 import SuccessionArchiveContextBar from './SuccessionArchiveContextBar';
 import SuccessionArchiveOnboarding from './SuccessionArchiveOnboarding';
+import SuccessionConsolidationNotice from './SuccessionConsolidationNotice';
+import SuccessionCoverageDashboard from './SuccessionCoverageDashboard';
 import SuccessionIntelligencePanels from './SuccessionIntelligencePanels';
 import SuccessionResearchTools from './SuccessionResearchTools';
 import SuccessionSavedResearch from './SuccessionSavedResearch';
@@ -44,27 +47,20 @@ export default function SuccessionArchiveEntry(props) {
   const isReader = props.routeTarget === 'reader';
   const isLightRoute = props.routeTarget === 'black-whale' || props.routeTarget === 'princes';
   const isArchiveEntry = props.routeTarget === 'archive';
+  useEffect(() => {
+    recordProductEvent('route-opened', { route: props.routeTarget, chapter: props.spoilerLimit });
+  }, [props.routeTarget, props.spoilerLimit]);
 
   if (isArchiveEntry) return <>
-    <SuccessionArchiveContextBar
-      spoilerLimit={props.spoilerLimit}
-      activeDomain="story"
-      onSpoilerChange={props.onSpoilerChange}
-    />
-    <SuccessionArchiveOnboarding
-      spoilerLimit={props.spoilerLimit}
-      onNavigate={props.onNavigate}
-      onOpenSearch={props.onOpenSearch}
-    />
+    <SuccessionArchiveContextBar spoilerLimit={props.spoilerLimit} activeDomain="story" onSpoilerChange={props.onSpoilerChange} />
+    <SuccessionArchiveOnboarding spoilerLimit={props.spoilerLimit} onNavigate={props.onNavigate} onOpenSearch={props.onOpenSearch} />
   </>;
 
   return <>
-    <SuccessionArchiveContextBar
-      spoilerLimit={props.spoilerLimit}
-      activeDomain={props.routeTarget}
-      onSpoilerChange={props.onSpoilerChange}
-    />
+    <SuccessionArchiveContextBar spoilerLimit={props.spoilerLimit} activeDomain={props.routeTarget} onSpoilerChange={props.onSpoilerChange} />
+    <SuccessionConsolidationNotice routeId={props.routeTarget} />
     <SuccessionSavedResearch onNavigate={props.onNavigate} />
+    <SuccessionCoverageDashboard />
     <Suspense fallback={<ArchiveRouteLoading />}>
       {isReader
         ? <SuccessionArchiveReaderRoute {...props} />
@@ -73,13 +69,8 @@ export default function SuccessionArchiveEntry(props) {
           : <SuccessionArchiveApp {...props} />}
     </Suspense>
     {!isReader && <>
-      <SuccessionIntelligencePanels spoilerLimit={props.spoilerLimit} />
-      <SuccessionResearchTools
-        routeId={props.routeTarget}
-        routeParams={props.routeParams}
-        spoilerLimit={props.spoilerLimit}
-        onNavigate={props.onNavigate}
-      />
+      <SuccessionIntelligencePanels routeId={props.routeTarget} routeParams={props.routeParams} spoilerLimit={props.spoilerLimit} onNavigate={props.onNavigate} />
+      <SuccessionResearchTools routeId={props.routeTarget} routeParams={props.routeParams} spoilerLimit={props.spoilerLimit} onNavigate={props.onNavigate} />
     </>}
   </>;
 }

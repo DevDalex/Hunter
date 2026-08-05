@@ -163,6 +163,10 @@
   line-height: 1.55;
 }
 
+.succession-glossary-canonical__grid p {
+  font-size: 12px;
+}
+
 .succession-glossary-canonical__grid footer button,
 .succession-media-canonical__grid footer button {
   display: inline-flex;
