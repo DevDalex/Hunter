@@ -1,20 +1,11 @@
 import { useMemo, useState } from 'react';
-import { Bookmark, Check, Clipboard, Download, FlaskConical, GitCompareArrows, Printer, Share2 } from 'lucide-react';
+import { Bookmark, Check, Clipboard, Download, FlaskConical, GitCompareArrows, Share2 } from 'lucide-react';
 import { getEntitiesByType, getEntityById } from '../../data/succession/successionData';
 import { explanationModes } from '../../data/succession/readingExperience';
 import { claimKinds, questionStatuses } from '../../data/succession/researchSemantics';
 import { collectChapterChanges } from '../../lib/succession/chapterDiff';
 import { loadResearchWorkspace, saveInvestigation, toggleBookmark } from '../../lib/succession/researchWorkspace';
-import {
-  buildResearchSnapshotUrl,
-  exportCitationBundle,
-  exportRecordsAsCsv,
-  exportRecordsAsJson,
-  exportRecordsAsMarkdown,
-  researchCitation,
-} from '../../lib/succession/shareAndExport';
-import SuccessionEvidenceInspector from './SuccessionEvidenceInspector';
-import SuccessionExplanationView from './SuccessionExplanationView';
+import { buildResearchSnapshotUrl, exportRecordsAsCsv, exportRecordsAsJson, researchCitation } from '../../lib/succession/shareAndExport';
 
 const downloadText = (name, content, type = 'text/plain') => {
   const blob = new Blob([content], { type });
@@ -80,14 +71,12 @@ export default function SuccessionResearchTools({ routeId, routeParams = {}, spo
     filters: routeParams,
     focus: selectedEntity?.id,
   });
-  const reviewedAt = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const citation = researchCitation({
     title: selectedEntity?.name || routeId,
     chapter: spoilerLimit,
-    reviewedAt,
+    reviewedAt: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
     route: snapshotUrl,
   });
-  const exportMetadata = { routeId, chapter: spoilerLimit, title: selectedEntity?.name || routeId };
 
   return <section className="succession-research-tools" aria-labelledby="succession-research-tools-title">
     <header>
@@ -97,8 +86,7 @@ export default function SuccessionResearchTools({ routeId, routeParams = {}, spo
 
     {['story', 'chapters'].includes(routeId) && <div className="succession-research-tools__modes">
       <h3>Explanation depth</h3>
-      <div>{explanationModes.map((mode) => <button type="button" key={mode.id} className={(routeParams.mode || 'standard') === mode.id ? 'is-active' : ''} onClick={() => onNavigate(routeId, { ...routeParams, mode: mode.id })}><strong>{mode.label}</strong><span>{mode.description}</span></button>)}</div>
-      <SuccessionExplanationView routeId={routeId} routeParams={routeParams} spoilerLimit={spoilerLimit} />
+      <div>{explanationModes.map((mode) => <button type="button" key={mode.id} className={routeParams.mode === mode.id ? 'is-active' : ''} onClick={() => onNavigate(routeId, { ...routeParams, mode: mode.id })}><strong>{mode.label}</strong><span>{mode.description}</span></button>)}</div>
     </div>}
 
     <div className="succession-research-tools__grid">
@@ -130,16 +118,11 @@ export default function SuccessionResearchTools({ routeId, routeParams = {}, spo
       <article>
         <Download size={19} aria-hidden="true" />
         <h3>Export current research</h3>
-        <button type="button" onClick={() => downloadText(`hunter-${routeId}-${spoilerLimit}.json`, exportRecordsAsJson(changes, exportMetadata), 'application/json')}>Export JSON</button>
+        <button type="button" onClick={() => downloadText(`hunter-${routeId}-${spoilerLimit}.json`, exportRecordsAsJson(changes, { routeId, chapter: spoilerLimit }), 'application/json')}>Export JSON</button>
         <button type="button" onClick={() => downloadText(`hunter-${routeId}-${spoilerLimit}.csv`, exportRecordsAsCsv(changes), 'text/csv')}>Export CSV</button>
-        <button type="button" onClick={() => downloadText(`hunter-${routeId}-${spoilerLimit}.md`, exportRecordsAsMarkdown(changes, exportMetadata), 'text/markdown')}>Export Markdown</button>
-        <button type="button" onClick={() => downloadText(`hunter-${routeId}-${spoilerLimit}-citations.txt`, exportCitationBundle(changes, { chapter: spoilerLimit, reviewedAt, route: snapshotUrl }))}>Export citation bundle</button>
-        <button type="button" onClick={() => window.print()}><Printer size={15} /> Print or save PDF</button>
         <p>Chapter-image binaries and protected administrator data are excluded.</p>
       </article>
     </div>
-
-    {selectedEntity && <SuccessionEvidenceInspector entity={selectedEntity} spoilerLimit={spoilerLimit} />}
 
     <details className="succession-research-tools__semantics">
       <summary>Evidence and question vocabulary</summary>

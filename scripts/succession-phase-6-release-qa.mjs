@@ -10,31 +10,31 @@ const mime = { '.css': 'text/css; charset=utf-8', '.html': 'text/html; charset=u
 const cases = Object.freeze([
   {
     id: 'story-release',
-    route: '/succession/story?chapter=404',
+    route: '/story/succession-contest/story?chapter=404',
     selector: '.succession-workspace-refinement',
     heading: 'Chapter delta with explicit causality classes',
   },
   {
     id: 'character-release',
-    route: '/succession/characters?entity=character%3Ahalkenburg-hui-guo-rou',
+    route: '/story/succession-contest/characters?entity=character%3Ahalkenburg-hui-guo-rou',
     selector: '.succession-information-consistency',
     heading: 'Identity, authority, and alignment are separate records.',
   },
   {
     id: 'research-release',
-    route: '/succession/research',
+    route: '/story/succession-contest/research',
     selector: '.succession-intelligence-workbench',
     heading: 'Six tools built on the same canonical graph.',
   },
   {
     id: 'black-whale-release',
-    route: '/succession/black-whale?from=403&to=404',
+    route: '/story/succession-contest/black-whale?from=403&to=404',
     selector: '.succession-workspace-refinement',
     heading: 'Ship-state comparison and infrastructure systems',
   },
   {
     id: 'nen-release',
-    route: '/succession/nen',
+    route: '/story/succession-contest/nen',
     selector: '.succession-workspace-refinement',
     heading: 'Ability interaction matrix without invented matchups',
   },

@@ -44,19 +44,19 @@ const serve = async () => {
 const cases = Object.freeze([
   {
     id: 'character-kurapika',
-    path: '/succession/characters?entity=character%3Akurapika',
+    path: '/story/succession-contest/characters?entity=character%3Akurapika',
     dossierSelector: '.succession-character-dossier',
     expectedName: 'Kurapika',
   },
   {
     id: 'prince-halkenburg',
-    path: '/succession/princes?entity=character%3Ahalkenburg-hui-guo-rou',
+    path: '/story/succession-contest/princes?entity=character%3Ahalkenburg-hui-guo-rou',
     dossierSelector: '.succession-prince-dossier',
     expectedName: 'Halkenburg Hui Guo Rou',
   },
   {
     id: 'queen-unma',
-    path: '/succession/queens?entity=character%3Aunma-hui-guo-rou',
+    path: '/story/succession-contest/queens?entity=character%3Aunma-hui-guo-rou',
     dossierSelector: '.succession-queen-dossier',
     expectedName: 'Unma Hui Guo Rou',
   },

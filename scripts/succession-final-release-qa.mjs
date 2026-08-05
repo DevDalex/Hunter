@@ -81,48 +81,29 @@ const inspect = () => {
     if (element.classList.length) value += `.${[...element.classList].slice(0, 4).join('.')}`;
     return value;
   };
-  const insideScaledWorld = (element) => Boolean(element.closest(
-    '[data-qa-pan-zoom-canvas="true"] [data-qa-scaled-canvas="true"], .succession-architecture__sheet',
-  ));
-  const hasHorizontalScroll = (element) => {
-    for (let candidate = element; candidate; candidate = candidate.parentElement) {
-      const style = getComputedStyle(candidate);
-      if (/(auto|scroll)/.test(style.overflowX) && candidate.scrollWidth > candidate.clientWidth + 1) return true;
+  const hasScrollAncestor = (element) => {
+    for (let parent = element.parentElement; parent; parent = parent.parentElement) {
+      const style = getComputedStyle(parent);
+      if (/(auto|scroll)/.test(style.overflowX) && parent.scrollWidth > parent.clientWidth + 1) return true;
     }
     return false;
   };
-  const visibleMainElements = [...document.querySelectorAll('main *')]
-    .filter((element) => visible(element) && !element.matches('.sr-only, .sr-only *'));
-  const spillCandidates = visibleMainElements.filter((element) => {
-    const rect = element.getBoundingClientRect();
-    return rect.left < -1 || rect.right > innerWidth + 1;
-  });
-  const scaledCanvasSpillExemptions = spillCandidates.filter(insideScaledWorld).length;
-  const spill = spillCandidates
-    .filter((element) => !insideScaledWorld(element) && !hasHorizontalScroll(element))
+  const spill = [...document.querySelectorAll('main *')]
+    .filter((element) => visible(element) && !element.matches('.sr-only, .sr-only *'))
+    .filter((element) => {
+      const rect = element.getBoundingClientRect();
+      return (rect.left < -1 || rect.right > innerWidth + 1) && !hasScrollAncestor(element);
+    })
     .slice(0, 30)
     .map((element) => ({ selector: selector(element), text: (element.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 90) }));
-  const textNodes = [...document.querySelectorAll('main :is(p, li, dd, dt, small, span, figcaption, th, td)')]
-    .filter((element) => visible(element) && !element.matches('.sr-only, .sr-only *'));
-  const scaledCanvasTinyTextExemptions = textNodes
-    .filter(insideScaledWorld)
-    .filter((element) => Number.parseFloat(getComputedStyle(element).fontSize) < 11)
-    .length;
-  const tinyText = textNodes
-    .filter((element) => !insideScaledWorld(element))
+  const tinyText = [...document.querySelectorAll('main :is(p, li, dd, dt, small, span, figcaption, th, td)')]
+    .filter((element) => visible(element) && !element.matches('.sr-only, .sr-only *'))
     .map((element) => ({ element, size: Number.parseFloat(getComputedStyle(element).fontSize) }))
     .filter(({ size }) => size < 11)
     .slice(0, 30)
     .map(({ element, size }) => ({ selector: selector(element), size, text: (element.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 80) }));
-  const targetNodes = [...document.querySelectorAll('main :is(button, input, select, textarea, [role="button"], [role="tab"])')]
-    .filter((element) => visible(element) && !element.disabled && !element.matches('.sr-only'));
-  const scaledCanvasSmallTargetExemptions = targetNodes
-    .filter(insideScaledWorld)
-    .map((element) => element.getBoundingClientRect())
-    .filter((rect) => rect.width < 43.5 || rect.height < 43.5)
-    .length;
-  const smallTargets = targetNodes
-    .filter((element) => !insideScaledWorld(element))
+  const smallTargets = [...document.querySelectorAll('main :is(button, input, select, textarea, [role="button"], [role="tab"])')]
+    .filter((element) => visible(element) && !element.disabled && !element.matches('.sr-only'))
     .map((element) => ({ element, rect: element.getBoundingClientRect() }))
     .filter(({ rect }) => rect.width < 43.5 || rect.height < 43.5)
     .slice(0, 40)
@@ -143,9 +124,6 @@ const inspect = () => {
     smallTargets,
     duplicateIds,
     brokenImages,
-    scaledCanvasSpillExemptions,
-    scaledCanvasTinyTextExemptions,
-    scaledCanvasSmallTargetExemptions,
     h1Count: document.querySelectorAll('main h1').length,
     mainVisible: Boolean(main && visible(main)),
     workspaceRegion: Boolean(workspace?.getAttribute('role') === 'region' && workspace?.getAttribute('aria-label')),
@@ -212,15 +190,12 @@ try {
         await settle(page);
         const audit = await page.evaluate(inspect);
         let axeViolations = [];
-        let contrastWarnings = [];
         if (viewport.id !== 'tablet') {
           await page.addScriptTag({ path: axePath });
           const axe = await page.evaluate(async () => globalThis.axe.run(document, {
             runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
           }));
-          const normalized = axe.violations.map((violation) => ({ id: violation.id, impact: violation.impact, nodes: violation.nodes.length }));
-          contrastWarnings = normalized.filter((violation) => violation.id === 'color-contrast');
-          axeViolations = normalized.filter((violation) => violation.id !== 'color-contrast');
+          axeViolations = axe.violations.map((violation) => ({ id: violation.id, impact: violation.impact, nodes: violation.nodes.length }));
         }
         const defects = [
           ...runtimeErrors,
@@ -232,25 +207,15 @@ try {
           ...axeViolations,
           ...(audit.bodyOverflow > 1 ? [{ bodyOverflow: audit.bodyOverflow }] : []),
           ...(!audit.mainVisible ? [{ mainVisible: false }] : []),
-          ...(route.path.startsWith('succession/') && route.id !== 'archive' && !audit.workspaceRegion ? [{ workspaceRegion: false }] : []),
+          ...(route.path.startsWith('succession/') && !audit.workspaceRegion ? [{ workspaceRegion: false }] : []),
           ...(audit.h1Count !== 1 ? [{ h1Count: audit.h1Count }] : []),
           ...(viewport.id !== 'desktop' ? audit.smallTargets : []),
           ...(audit.cls > .18 ? [{ cls: audit.cls }] : []),
         ];
-        const result = {
-          viewport: viewport.id,
-          route: route.path,
-          label: route.label,
-          runtimeErrors,
-          failedRequests,
-          axeViolations,
-          contrastWarnings,
-          ...audit,
-          defects,
-        };
+        const result = { viewport: viewport.id, route: route.path, label: route.label, runtimeErrors, failedRequests, axeViolations, ...audit, defects };
         results.push(result);
         await page.screenshot({ path: path.join(screenDir, `${route.id}.jpg`), type: 'jpeg', quality: 72, fullPage: false });
-        process.stdout.write(`${defects.length ? '✗' : '✓'} ${viewport.id.padEnd(7)} ${route.path} · CLS ${audit.cls.toFixed(3)}${contrastWarnings.length ? ` · contrast warnings ${contrastWarnings.reduce((total, warning) => total + warning.nodes, 0)}` : ''}${defects.length ? ` · ${defects.length} defect(s)` : ''}\n`);
+        process.stdout.write(`${defects.length ? '✗' : '✓'} ${viewport.id.padEnd(7)} ${route.path} · CLS ${audit.cls.toFixed(3)}${defects.length ? ` · ${defects.length} defect(s)` : ''}\n`);
       } catch (error) {
         results.push({ viewport: viewport.id, route: route.path, label: route.label, error: error.message, defects: [{ error: error.message }] });
         process.stdout.write(`✗ ${viewport.id.padEnd(7)} ${route.path} · ${error.message}\n`);
@@ -263,8 +228,7 @@ try {
   }
 
   await runInteraction('desktop Story hub tab focuses the new workspace', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
-    const timeline = page.locator('.succession-hub-tabs a[href*="/timeline"]').first();
-    await timeline.waitFor({ state: 'visible', timeout: 10_000 });
+    const timeline = page.getByRole('link', { name: 'Timeline', exact: true });
     await timeline.focus();
     await page.keyboard.press('Enter');
     await page.waitForSelector('.succession-archive[data-archive-route="timeline"][data-archive-hub="story"]', { timeout: 10_000 });
@@ -313,12 +277,6 @@ try {
 
 const failedRoutes = results.filter((result) => result.error || result.defects?.length);
 const failedInteractions = interactions.filter((result) => result.status === 'failed');
-const contrastWarningCount = results.reduce((total, result) => total + (result.contrastWarnings || []).reduce((nodes, warning) => nodes + warning.nodes, 0), 0);
-const scaledCanvasExemptions = results.reduce((totals, result) => ({
-  spill: totals.spill + (result.scaledCanvasSpillExemptions || 0),
-  text: totals.text + (result.scaledCanvasTinyTextExemptions || 0),
-  targets: totals.targets + (result.scaledCanvasSmallTargetExemptions || 0),
-}), { spill: 0, text: 0, targets: 0 });
 const summary = {
   generatedAt: new Date().toISOString(),
   routeChecks: results.length,
@@ -327,11 +285,8 @@ const summary = {
   interactionChecks: interactions.length,
   interactionPasses: interactions.length - failedInteractions.length,
   maximumCls: Math.max(0, ...results.map((result) => result.cls || 0)),
-  contrastWarningCount,
-  contrastWarningsBlockBuild: false,
-  scaledCanvasExemptions,
   failed: failedRoutes.length + failedInteractions.length,
 };
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, routes: results, interactions }, null, 2)}\n`);
-console.log(`\nSuccession final release QA: ${summary.routePasses}/${summary.routeChecks} responsive route renders and ${summary.interactionPasses}/${summary.interactionChecks} interaction flows passed; maximum CLS ${summary.maximumCls.toFixed(3)}; ${contrastWarningCount} contrast warning node(s) reported; scaled-canvas exemptions ${scaledCanvasExemptions.text} text, ${scaledCanvasExemptions.targets} targets, ${scaledCanvasExemptions.spill} spill.`);
+console.log(`\nSuccession final release QA: ${summary.routePasses}/${summary.routeChecks} responsive route renders and ${summary.interactionPasses}/${summary.interactionChecks} interaction flows passed; maximum CLS ${summary.maximumCls.toFixed(3)}.`);
 if (summary.failed) process.exitCode = 1;

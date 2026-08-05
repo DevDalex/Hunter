@@ -93,12 +93,11 @@ const base = `http://127.0.0.1:${server.address().port}`;
 const routeResults = [];
 const interactionResults = [];
 const page = await browser.newPage({ viewport: { width: viewports[0].width, height: viewports[0].height } });
-const currentRouteUrl = (route) => `${base}/${String(route).replace(/^\/+/, '')}`;
 
 const recordInteraction = async (name, viewport, route, test) => {
   try {
     await page.setViewportSize(viewport);
-    await page.goto(currentRouteUrl(route), { waitUntil: 'domcontentloaded', timeout: 15_000 });
+    await page.goto(`${base}/#/${route}`, { waitUntil: 'domcontentloaded', timeout: 15_000 });
     await settle(page);
     await test(page);
     interactionResults.push({ name, status: 'passed' });
@@ -144,14 +143,14 @@ try {
       await page.keyboard.press('Enter');
       if (!await page.locator('#main-content').evaluate((node) => node === document.activeElement)) throw new Error('main content did not receive focus');
     });
-    await recordInteraction('archive search route receives keyboard focus', { width: 1440, height: 1000 }, 'home/', async (page) => {
+    await recordInteraction('archive search traps and restores focus', { width: 1440, height: 1000 }, 'home/', async (page) => {
       const trigger = page.locator('.header-search-button');
-      await trigger.focus();
-      await page.keyboard.press('Enter');
-      await page.waitForSelector('.succession-archive[data-archive-route="search"]', { timeout: 10_000 });
-      const input = page.locator('.succession-search-workspace input').first();
-      await input.waitFor({ state: 'visible', timeout: 10_000 });
-      if (!await input.evaluate((node) => node === document.activeElement)) throw new Error('archive search input did not receive focus');
+      await trigger.click();
+      await page.waitForSelector('.archive-search-dialog[role="dialog"]');
+      if (!await page.locator('.archive-search-input input').evaluate((node) => node === document.activeElement)) throw new Error('search input did not receive focus');
+      await page.keyboard.press('Escape');
+      await page.waitForSelector('.archive-search-dialog', { state: 'detached' });
+      if (!await trigger.evaluate((node) => node === document.activeElement)) throw new Error('search trigger did not regain focus');
     });
     await recordInteraction('mobile-browser menu contains and restores focus', { width: 390, height: 844 }, 'home/', async (page) => {
       const trigger = page.locator('.mobile-menu-button');
@@ -167,7 +166,7 @@ try {
     });
     await recordInteraction('family-tree queen nodes activate with keyboard', { width: 1440, height: 1000 }, 'succession/princes?view=tree', async (page) => {
       const queens = page.locator('.royal-map__queen-node');
-      await queens.first().waitFor({ state: 'visible', timeout: 15_000 });
+      await queens.first().waitFor({ state: 'visible', timeout: 10_000 });
       if (await queens.count() < 2) throw new Error('family tree did not render multiple queen nodes');
       const nextQueen = queens.nth(1);
       await nextQueen.focus();
@@ -175,30 +174,29 @@ try {
       await page.keyboard.press('Enter');
       if (await nextQueen.getAttribute('aria-pressed') !== 'true') throw new Error('keyboard activation did not pin the queen node');
     });
-    await recordInteraction('Succession Story hub navigation activates with keyboard', { width: 1440, height: 1000 }, 'succession/timeline', async (page) => {
-      const chaptersLink = page.locator('.succession-hub-tabs a').filter({ hasText: 'Chapters' });
-      await chaptersLink.waitFor({ state: 'visible', timeout: 10_000 });
-      await chaptersLink.focus();
-      if (!await chaptersLink.evaluate((node) => node === document.activeElement)) throw new Error('Story hub Chapters tab did not receive focus');
+    await recordInteraction('Succession Story hub navigation activates with keyboard', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
+      const timelineLink = page.locator('.succession-hub-tabs a').filter({ hasText: 'Timeline' });
+      await timelineLink.focus();
+      if (!await timelineLink.evaluate((node) => node === document.activeElement)) throw new Error('Story hub Timeline tab did not receive focus');
       await page.keyboard.press('Enter');
-      await page.waitForSelector('.succession-archive[data-archive-route="chapters"][data-archive-hub="story"]', { timeout: 10_000 });
+      await page.waitForSelector('.succession-archive[data-archive-route="timeline"][data-archive-hub="story"]', { timeout: 10_000 });
       const activeLink = page.locator('.succession-hub-tabs a[aria-current="page"]');
       const activeLabel = (await activeLink.innerText()).trim().toLocaleLowerCase('en-US');
-      if (activeLabel !== 'chapters') throw new Error(`keyboard activation opened an unexpected Story view: ${activeLabel}`);
+      if (activeLabel !== 'timeline') throw new Error(`keyboard activation opened an unexpected Story view: ${activeLabel}`);
       await page.waitForFunction(() => document.activeElement?.id === 'succession-workspace-content');
     });
-    await recordInteraction('chapter dossier cards activate with keyboard', { width: 1440, height: 1000 }, 'succession/chapter-records', async (page) => {
-      const opener = page.locator('.succession-chapter-command__card').first();
-      await opener.waitFor({ state: 'visible', timeout: 10_000 });
+    await recordInteraction('chapter drawer traps and restores focus', { width: 1440, height: 1000 }, 'series/chapters', async (page) => {
+      const opener = page.locator('.chapter-row').first();
       await opener.focus();
-      if (!await opener.evaluate((node) => node === document.activeElement)) throw new Error('chapter dossier card did not receive focus');
-      await page.keyboard.press('Enter');
-      await page.waitForFunction(() => new URL(window.location.href).searchParams.has('chapter'));
-      if (await opener.getAttribute('aria-current') !== 'page') throw new Error('keyboard activation did not select the chapter dossier');
+      await opener.click();
+      await page.waitForSelector('.chapter-drawer[role="dialog"]');
+      if (!await page.locator('.chapter-drawer__top button').evaluate((node) => node === document.activeElement)) throw new Error('drawer close button did not receive focus');
+      await page.keyboard.press('Escape');
+      await page.waitForSelector('.chapter-drawer', { state: 'detached' });
+      if (!await opener.evaluate((node) => node === document.activeElement)) throw new Error('chapter opener did not regain focus');
     });
     await recordInteraction('Black Whale manifest accepts keyboard focus', { width: 390, height: 844 }, 'succession/black-whale', async (page) => {
       const manifest = page.locator('.ship-manifest__table-wrap');
-      await manifest.waitFor({ state: 'visible', timeout: 15_000 });
       await manifest.focus();
       if (!await manifest.evaluate((node) => node === document.activeElement)) throw new Error('manifest scroll region did not receive focus');
     });

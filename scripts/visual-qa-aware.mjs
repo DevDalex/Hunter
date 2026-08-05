@@ -115,12 +115,8 @@ const inspectPage = () => {
     }
     return false;
   };
-  // The Nen graph declares its scaled canvas explicitly. The architecture portal
-  // is also a fixed 1660×1260 blueprint whose viewport runtime scales the entire
-  // sheet, so its miniature geometry must be audited as a scaled canvas too.
-  const insideDeclaredScaledWorld = (element) => Boolean(element.closest(
-    '[data-qa-pan-zoom-canvas="true"] [data-qa-scaled-canvas="true"], .succession-architecture__sheet',
-  ));
+  const insideDeclaredScaledWorld = (element) => Boolean(element.closest('[data-qa-pan-zoom-canvas="true"] [data-qa-scaled-canvas="true"]'));
+  const isScaledWorldNode = (element) => insideDeclaredScaledWorld(element) && element.matches('.nen-pipe-node, .nen-placement-marker');
   const bodyOverflow = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth;
   const scaledCanvasSpillExemptions = [...document.querySelectorAll('main *')]
     .filter((element) => visible(element) && insideDeclaredScaledWorld(element))
@@ -167,15 +163,8 @@ const inspectPage = () => {
         : null;
     })
     .filter(Boolean);
-  const textNodes = [...document.querySelectorAll('main :is(p, li, dd, dt, small, span, figcaption, th, td)')]
-    .filter((element) => visible(element) && !element.matches('.sr-only, .sr-only *'));
-  const scaledCanvasTinyTextExemptions = textNodes
-    .filter((element) => insideDeclaredScaledWorld(element))
-    .map((element) => Number.parseFloat(getComputedStyle(element).fontSize))
-    .filter((size) => size < 11)
-    .length;
-  const tinyText = textNodes
-    .filter((element) => !insideDeclaredScaledWorld(element))
+  const tinyText = [...document.querySelectorAll('main :is(p, li, dd, dt, small, span, figcaption, th, td)')]
+    .filter((element) => visible(element) && !element.matches('.sr-only, .sr-only *'))
     .map((element) => ({ element, size: Number.parseFloat(getComputedStyle(element).fontSize) }))
     .filter(({ size }) => size < 11)
     .slice(0, 30)
@@ -186,13 +175,13 @@ const inspectPage = () => {
       size,
     }));
   const scaledCanvasSmallTargetExemptions = [...document.querySelectorAll('button, input, select, textarea, [role="button"]')]
-    .filter((element) => visible(element) && !element.disabled && insideDeclaredScaledWorld(element))
+    .filter((element) => visible(element) && !element.disabled && isScaledWorldNode(element))
     .map((element) => element.getBoundingClientRect())
     .filter((rect) => rect.width < 43.5 || rect.height < 43.5)
     .length;
   const smallTargets = [...document.querySelectorAll('button, input, select, textarea, [role="button"]')]
     .filter((element) => visible(element) && !element.disabled && !element.matches('.sr-only, .skip-link:not(:focus)'))
-    .filter((element) => !insideDeclaredScaledWorld(element))
+    .filter((element) => !isScaledWorldNode(element))
     .map((element) => ({ element, rect: element.getBoundingClientRect() }))
     .filter(({ rect }) => rect.width < 43.5 || rect.height < 43.5)
     .slice(0, 40)
@@ -212,7 +201,6 @@ const inspectPage = () => {
     smallTargets,
     scaledCanvasSpillExemptions,
     scaledCanvasSmallTargetExemptions,
-    scaledCanvasTinyTextExemptions,
     deathMarks,
     statusLabels,
   };
@@ -311,7 +299,6 @@ const failures = report.filter((row) => row.defects);
 const approvedExternalMediaFailureCount = report.reduce((total, row) => total + (row.approvedExternalMediaFailures?.length || 0), 0);
 const scaledCanvasSmallTargetExemptionCount = report.reduce((total, row) => total + (row.scaledCanvasSmallTargetExemptions || 0), 0);
 const scaledCanvasSpillExemptionCount = report.reduce((total, row) => total + (row.scaledCanvasSpillExemptions || 0), 0);
-const scaledCanvasTinyTextExemptionCount = report.reduce((total, row) => total + (row.scaledCanvasTinyTextExemptions || 0), 0);
 const summary = {
   generatedAt: new Date().toISOString(),
   routes: routes.length,
@@ -322,12 +309,11 @@ const summary = {
   approvedExternalMediaFailureCount,
   scaledCanvasSmallTargetExemptionCount,
   scaledCanvasSpillExemptionCount,
-  scaledCanvasTinyTextExemptionCount,
   strictTouch,
 };
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results: report }, null, 2)}\n`);
 await writeFile(path.join(output, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
-console.log(`\nVisual QA: ${summary.passed}/${summary.checks} route/viewport renders passed. Approved external media availability events: ${approvedExternalMediaFailureCount}. Scaled-canvas exemptions: ${scaledCanvasTinyTextExemptionCount} text nodes, ${scaledCanvasSmallTargetExemptionCount} touch targets, ${scaledCanvasSpillExemptionCount} clipped spill records. Report: ${path.relative(root, path.join(output, 'report.json'))}`);
+console.log(`\nVisual QA: ${summary.passed}/${summary.checks} route/viewport renders passed. Approved external media availability events: ${approvedExternalMediaFailureCount}. Scaled-canvas exemptions: ${scaledCanvasSmallTargetExemptionCount} touch targets, ${scaledCanvasSpillExemptionCount} clipped spill records. Report: ${path.relative(root, path.join(output, 'report.json'))}`);
 if (failures.length) {
   for (const failure of failures) console.error(`- ${failure.viewport} ${failure.route}: ${failure.defects} defect signal(s)`);
   process.exitCode = 1;

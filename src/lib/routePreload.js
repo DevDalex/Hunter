@@ -1,4 +1,4 @@
-export const routeModuleLoaders = Object.freeze({
+export const routeModuleLoaders = {
   successionArchive: () => import('../components/succession/SuccessionArchiveEntry'),
   familyTree: () => import('../components/FamilyTree'),
   successionRoster: () => import('../components/SuccessionRoster'),
@@ -9,7 +9,7 @@ export const routeModuleLoaders = Object.freeze({
   successionDossier: () => import('../components/SuccessionDossier'),
   nen: () => import('../components/NenEncyclopedia'),
   worldAtlas: () => import('../components/WorldAtlas'),
-});
+};
 
 const loaderForRoute = (view, target = '') => {
   if (view === 'succession') return routeModuleLoaders.successionArchive;
