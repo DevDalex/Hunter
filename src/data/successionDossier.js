@@ -24,6 +24,12 @@ import {
   succession409SourcePolicy,
 } from './succession409Research.js';
 import {
+  succession410ChapterFocus,
+  succession410ChapterResearch,
+  succession410Mysteries,
+  succession410SourcePolicy,
+} from './succession410Research.js';
+import {
   patchSuccessionPrinceDossier,
   patchSuccessionQueenDossier,
   succession414415AbilityRecords,
@@ -50,16 +56,18 @@ export const chapterFocus = Object.freeze({
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
   ...succession409ChapterFocus,
+  ...succession410ChapterFocus,
   ...succession414415ChapterFocus,
   ...succession416ChapterFocus,
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![400, 406, 408, 409].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![400, 406, 408, 409, 410].includes(record.number)),
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
   ...succession409ChapterResearch,
+  ...succession410ChapterResearch,
   ...succession414415ChapterResearch,
   ...succession416ChapterResearch,
 ].sort((left, right) => left.number - right.number));
@@ -99,6 +107,7 @@ export const successionMysteries = Object.freeze([
   ...succession406Mysteries,
   ...succession408Mysteries,
   ...succession409Mysteries,
+  ...succession410Mysteries,
   ...succession414415Mysteries,
   ...succession416Mysteries,
 ]);
@@ -144,6 +153,7 @@ export const dossierSources = Object.freeze({
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
   chapter409: 'https://hunterxhunter.fandom.com/wiki/Chapter_409',
+  chapter410: 'https://hunterxhunter.fandom.com/wiki/Chapter_410',
   chapter414: 'https://hunterxhunter.fandom.com/wiki/Chapter_414',
   chapter415: 'https://hunterxhunter.fandom.com/wiki/Chapter_415',
   chapter416: 'https://hunterxhunter.fandom.com/wiki/Chapter_416',
@@ -153,6 +163,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
   sourcePolicy409: succession409SourcePolicy,
+  sourcePolicy410: succession410SourcePolicy,
   crossChecks414415: succession414415CrossChecks,
   sourcePolicy416: succession416SourcePolicy,
 });
