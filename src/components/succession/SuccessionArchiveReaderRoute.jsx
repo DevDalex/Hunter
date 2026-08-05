@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import SuccessionArchiveShell from './SuccessionArchiveShell';
 
 const SuccessionChapterReader = lazy(() => import('../SuccessionChapterReader'));
@@ -10,6 +10,12 @@ function ReaderLoadingState() {
   </div>;
 }
 
+const readerControlLabels = Object.freeze([
+  ['.succession-reader__chapter-trigger', 'Open chapter navigator'],
+  ['.succession-reader__bottombar > button[type="button"]', 'Go to previous page or chapter'],
+  ['.succession-reader__bottom-actions > button[type="button"]:nth-child(2)', 'Go to next page or chapter'],
+]);
+
 export default function SuccessionArchiveReaderRoute({
   routeParams = {},
   spoilerLimit,
@@ -19,7 +25,24 @@ export default function SuccessionArchiveReaderRoute({
   onOpenSearch,
   onIntent,
 }) {
+  const readerSectionRef = useRef(null);
   const navigateReader = (patch = {}) => onNavigate('reader', patch);
+
+  useEffect(() => {
+    const root = readerSectionRef.current;
+    if (!root) return undefined;
+
+    const applyAccessibleNames = () => {
+      for (const [selector, label] of readerControlLabels) {
+        root.querySelector(selector)?.setAttribute('aria-label', label);
+      }
+    };
+
+    applyAccessibleNames();
+    const observer = new MutationObserver(applyAccessibleNames);
+    observer.observe(root, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
 
   return <SuccessionArchiveShell
     activeId="reader"
@@ -31,7 +54,7 @@ export default function SuccessionArchiveReaderRoute({
     onOpenSearch={onOpenSearch}
     onIntent={onIntent}
   >
-    <section className="succession-reader-command" aria-label="Succession Contest manga reader">
+    <section ref={readerSectionRef} className="succession-reader-command" aria-label="Succession Contest manga reader">
       <h1 className="sr-only">Succession Contest manga reader</h1>
       <Suspense fallback={<ReaderLoadingState />}>
         <SuccessionChapterReader
