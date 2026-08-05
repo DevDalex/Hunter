@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { assertReleasedSuccessionRoutes } from './lib/release-route-contracts.mjs';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
@@ -7,13 +8,12 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 5 Black Whale audit failed: ${message}`);
 };
 
-const [guide, styles, workflow, finalQa, docs, routeManifest] = await Promise.all([
+const [guide, styles, workflow, finalQa, docs] = await Promise.all([
   read('src/components/BlackWhaleGuide.jsx'),
   read('src/components/BlackWhaleIntelligenceCommand.css'),
   read('.github/workflows/succession-visual-redesign-batch-5.yml'),
   read('scripts/succession-final-release-qa.mjs'),
   read('docs/SUCCESSION-VISUAL-REDESIGN-BATCH-5.md'),
-  read('src/data/routeManifest.js'),
 ]);
 
 for (const token of [
@@ -51,7 +51,7 @@ assert(styles.includes('@media (prefers-reduced-motion: reduce)'), 'Black Whale 
 assert(styles.includes('min-height: 44px'), 'Black Whale controls must retain 44px targets');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(styles), 'Black Whale CSS must not introduce raw hex colors');
 assert(!styles.includes('!important'), 'Black Whale CSS must not depend on !important');
-assert(routeManifest.includes("'black-whale'"), 'release visual manifest must include the Black Whale route');
+assertReleasedSuccessionRoutes(['black-whale'], assert, 'release visual manifest');
 assert(workflow.includes('node scripts/audit-succession-batch-5-black-whale.mjs'), 'Batch 5 workflow must run the Black Whale audit');
 assert(workflow.includes('npm run qa:succession-final-release'), 'Batch 5 workflow must run the complete release matrix');
 assert(finalQa.includes('...successionReleaseRoutes.map'), 'complete release matrix must render the curated Succession routes, including Black Whale');
