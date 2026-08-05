@@ -16,7 +16,7 @@ const cases = Object.freeze([
   },
   {
     id: 'character-release',
-    route: '/succession/characters?entity=halkenburg-hui-guo-rou',
+    route: '/succession/characters?entity=character%3Ahalkenburg-hui-guo-rou',
     selector: '.succession-information-consistency',
     heading: 'Identity, authority, and alignment are separate records.',
   },
