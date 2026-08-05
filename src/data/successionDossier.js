@@ -10,20 +10,33 @@ import {
   succession414415Mysteries,
   succession414415RelationshipRecords,
 } from './succession414415Research.js';
+import {
+  patchSuccession416PrinceDossier,
+  succession416ChapterFocus,
+  succession416ChapterResearch,
+  succession416Mysteries,
+  succession416SourcePolicy,
+} from './succession416Research.js';
 
 export * from './successionDossierLegacy.js';
 
 export const chapterFocus = Object.freeze({
   ...legacy.chapterFocus,
   ...succession414415ChapterFocus,
+  ...succession416ChapterFocus,
 });
 
 export const successionChapterResearch = Object.freeze([
   ...legacy.successionChapterResearch,
   ...succession414415ChapterResearch,
+  ...succession416ChapterResearch,
 ].sort((left, right) => left.number - right.number));
 
-export const princeDossiers = Object.freeze(legacy.princeDossiers.map(patchSuccessionPrinceDossier));
+export const princeDossiers = Object.freeze(
+  legacy.princeDossiers
+    .map(patchSuccessionPrinceDossier)
+    .map(patchSuccession416PrinceDossier),
+);
 export const queenDossiers = Object.freeze(legacy.queenDossiers.map(patchSuccessionQueenDossier));
 
 export const successionAbilities = Object.freeze([
@@ -45,12 +58,13 @@ export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
   {
     question: 'Martial-law outcome',
-    evidence: 'Chapter 415 confirms forced royal relocations, room confinement, guard restrictions, disappearances, and an unresolved additional emergency objective.',
+    evidence: 'Chapter 416 shows Special Martial Law being enforced across the ship as Benjamin personally assaults Camilla’s residence and Room 1004, orders Danjin taken for questioning, and shoots Tserriednich.',
     status: 'developing',
-    lastChapter: '415',
-    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_415',
+    lastChapter: '416',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_416',
   },
   ...succession414415Mysteries,
+  ...succession416Mysteries,
 ]);
 
 export const nenLessonPhases = Object.freeze(legacy.nenLessonPhases.map((phase) => (
@@ -92,7 +106,9 @@ export const dossierSources = Object.freeze({
   ...legacy.dossierSources,
   chapter414: 'https://hunterxhunter.fandom.com/wiki/Chapter_414',
   chapter415: 'https://hunterxhunter.fandom.com/wiki/Chapter_415',
+  chapter416: 'https://hunterxhunter.fandom.com/wiki/Chapter_416',
   viz414: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-414/chapter/50800',
   viz415: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-415/chapter/50829',
   crossChecks414415: succession414415CrossChecks,
+  sourcePolicy416: succession416SourcePolicy,
 });

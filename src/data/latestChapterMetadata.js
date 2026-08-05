@@ -23,10 +23,22 @@ export const latestChapterMetadata = Object.freeze({
     sourceUrl: 'https://hunterxhunter.fandom.com/wiki/Chapter_415',
     officialReaderUrl: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-415/chapter/50829',
   }),
+  416: Object.freeze({
+    number: 416,
+    title: 'Proclamation',
+    japaneseTitle: '発令',
+    alternateTitles: Object.freeze([]),
+    releaseDate: null,
+    titleStatus: 'verified-from-user-supplied-hunterpedia',
+    detailStatus: 'maintained-research',
+    researchReviewedAt: 'August 5, 2026',
+    sourceUrl: 'https://hunterxhunter.fandom.com/wiki/Chapter_416',
+    officialReaderUrl: null,
+  }),
 });
 
 export const LATEST_PUBLISHED_CHAPTER = Math.max(...Object.keys(latestChapterMetadata).map(Number));
-export const LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER = 415;
+export const LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER = 416;
 
 export const getLatestChapterMetadata = (number) => latestChapterMetadata[Number(number)] || null;
 
