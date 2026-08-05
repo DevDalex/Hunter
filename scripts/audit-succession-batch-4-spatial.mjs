@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { assertReleasedSuccessionRoutes } from './lib/release-route-contracts.mjs';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
@@ -7,7 +8,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 4 spatial audit failed: ${message}`);
 };
 
-const [locations, locationStyles, ship, shipStyles, imports, workflow, docs, routeManifest] = await Promise.all([
+const [locations, locationStyles, ship, shipStyles, imports, workflow, docs] = await Promise.all([
   read('src/components/succession/SuccessionArchiveLocationWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveLocationCommand.css'),
   read('src/components/BlackWhaleGuide.jsx'),
@@ -15,7 +16,6 @@ const [locations, locationStyles, ship, shipStyles, imports, workflow, docs, rou
   read('src/components/succession/SuccessionArchiveSearch.css'),
   read('.github/workflows/succession-visual-redesign-batch-4-closure.yml'),
   read('docs/SUCCESSION-VISUAL-REDESIGN-BATCH-4-SPATIAL-CLOSURE.md'),
-  read('src/data/routeManifest.js'),
 ]);
 const styles = `${locationStyles}\n${shipStyles}`;
 
@@ -78,8 +78,7 @@ assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(styles), 'new spatial CSS must not introd
 assert(!styles.includes('!important'), 'new spatial CSS must not depend on !important');
 assert(imports.includes("@import './SuccessionArchiveLocationCommand.css';"), 'location command stylesheet must be loaded');
 assert(imports.includes("@import './SuccessionArchiveBlackWhaleCommand.css';"), 'Black Whale command stylesheet must be loaded');
-assert(routeManifest.includes("'locations'"), 'release visual manifest must include Locations');
-assert(routeManifest.includes("'black-whale'"), 'release visual manifest must include Black Whale');
+assertReleasedSuccessionRoutes(['locations', 'black-whale'], assert, 'release visual manifest');
 assert(workflow.includes('node scripts/audit-succession-batch-4-spatial.mjs'), 'closure workflow must run spatial audit');
 assert(workflow.includes('succession/locations'), 'closure workflow must render Locations');
 assert(workflow.includes('succession/black-whale'), 'closure workflow must render Black Whale');
