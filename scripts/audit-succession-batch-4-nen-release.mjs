@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { assertReleasedSuccessionRoutes } from './lib/release-route-contracts.mjs';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
@@ -7,13 +8,12 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 4 Nen release audit failed: ${message}`);
 };
 
-const [workspace, command, layout, dossier, workflow, routeManifest] = await Promise.all([
+const [workspace, command, layout, dossier, workflow] = await Promise.all([
   read('src/components/succession/SuccessionArchiveNenWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveNenCommand.css'),
   read('src/components/succession/SuccessionArchiveNenCommandLayout.css'),
   read('src/components/succession/SuccessionArchiveNenCommandDossier.css'),
   read('.github/workflows/succession-visual-redesign-batch-4-nen.yml'),
-  read('src/data/routeManifest.js'),
 ]);
 const styles = `${command}\n${layout}\n${dossier}`;
 
@@ -58,7 +58,7 @@ assert(styles.includes('@media (prefers-reduced-motion: reduce)'), 'Nen reduced-
 assert(styles.includes('min-height: 44px'), 'Nen controls must retain 44px touch targets');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(styles), 'Nen CSS must not introduce raw hex colors');
 assert(!styles.includes('!important'), 'Nen route-owned CSS must not depend on !important');
-assert(routeManifest.includes("'nen'"), 'release visual manifest must include the Nen route');
+assertReleasedSuccessionRoutes(['nen'], assert, 'release visual manifest');
 assert(workflow.includes('node scripts/audit-succession-batch-4-nen-release.mjs'), 'Nen workflow must run this audit');
 assert(workflow.includes('succession/nen'), 'Nen workflow must render the Nen workspace');
 
