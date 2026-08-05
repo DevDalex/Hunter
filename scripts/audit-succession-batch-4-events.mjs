@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { assertReleasedSuccessionRoutes } from './lib/release-route-contracts.mjs';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
@@ -7,12 +8,11 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 4 event audit failed: ${message}`);
 };
 
-const [workspace, styles, workflow, docs, routeManifest] = await Promise.all([
+const [workspace, styles, workflow, docs] = await Promise.all([
   read('src/components/succession/SuccessionArchiveEventWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveEventCommand.css'),
   read('.github/workflows/succession-visual-redesign-batch-4.yml'),
   read('docs/SUCCESSION-VISUAL-REDESIGN-BATCH-4.md'),
-  read('src/data/routeManifest.js'),
 ]);
 
 for (const token of [
@@ -53,7 +53,7 @@ assert(styles.includes('@media (prefers-reduced-motion: reduce)'), 'event reduce
 assert(styles.includes('min-height: 44px'), 'event controls must retain 44px touch targets');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(styles), 'event CSS must not introduce raw hex colors');
 assert(!styles.includes('!important'), 'event CSS must not depend on !important');
-assert(routeManifest.includes("'events'"), 'release visual manifest must include the Events route');
+assertReleasedSuccessionRoutes(['events'], assert, 'release visual manifest');
 assert(workflow.includes('node scripts/audit-succession-batch-4-events.mjs'), 'Batch 4 workflow must run the event audit');
 assert(workflow.includes('succession/events'), 'Batch 4 workflow must render the Events workspace');
 for (const hour of ['Hour 45', 'Hour 46']) assert(docs.includes(hour), `Batch 4 design record must document ${hour}`);
