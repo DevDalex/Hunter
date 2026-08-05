@@ -140,9 +140,7 @@ jobs:
           npm run audit:succession-runtime 2>&1 | tee succession-runtime.log
 
       - name: Build presentation bundle
-        run: |
-          npm run prepare:eta-assets
-          npx vite build
+        run: npx vite build
 
       - name: Install Chromium for visual QA
         shell: bash
