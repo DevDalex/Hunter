@@ -9,29 +9,20 @@ import { comparisonDomains } from '../src/lib/succession/comparison.js';
 import { chapterChangeKinds } from '../src/lib/succession/chapterDiff.js';
 import { publicExportPolicy } from '../src/lib/succession/shareAndExport.js';
 
-const unique = (values, label) => {
-  if (new Set(values).size !== values.length) throw new Error(`${label} contains duplicate identifiers.`);
-};
+const unique = (values, label) => { if (new Set(values).size !== values.length) throw new Error(`${label} contains duplicate identifiers.`); };
 const requiredFiles = [
-  'src/components/succession/SuccessionArchiveOnboarding.jsx',
-  'src/components/succession/SuccessionArchiveContextBar.jsx',
-  'src/components/succession/SuccessionResearchTools.jsx',
-  'src/components/succession/SuccessionExplanationView.jsx',
-  'src/components/succession/SuccessionEvidenceInspector.jsx',
-  'src/components/succession/SuccessionIntelligencePanels.jsx',
-  'src/components/succession/SuccessionResearchTools.css',
-  'src/data/schemas/archiveSchemas.js',
-  'src/lib/privacyAnalytics.js',
-  'docs/adr/0001-chapter-bounded-state.md',
+  'src/components/succession/SuccessionArchiveOnboarding.jsx', 'src/components/succession/SuccessionArchiveContextBar.jsx',
+  'src/components/succession/SuccessionConsolidationNotice.jsx', 'src/components/succession/SuccessionExplanationView.jsx',
+  'src/components/succession/SuccessionEvidenceInspector.jsx', 'src/components/succession/SuccessionResearchTools.jsx',
+  'src/components/succession/SuccessionIntelligencePanels.jsx', 'src/components/succession/SuccessionResearchTools.css',
+  'src/data/schemas/archiveSchemas.js', 'src/lib/privacyAnalytics.js', 'docs/adr/0001-chapter-bounded-state.md',
 ];
 for (const path of requiredFiles) if (!existsSync(path)) throw new Error(`Missing required product surface: ${path}`);
-
 unique(archiveEntryMissions.map((item) => item.id), 'Archive missions');
 unique(explanationModes.map((item) => item.id), 'Explanation modes');
 unique(capabilityIds, 'Product capabilities');
 unique(chapterChangeKinds, 'Chapter change kinds');
 unique(questionStatuses, 'Question statuses');
-
 if (archiveEntryMissions.length < 4) throw new Error('Phase 2 requires four archive entry missions.');
 if (explanationModes.length < 4) throw new Error('Phase 2 requires four explanation modes.');
 if (!Object.keys(comparisonDomains).length) throw new Error('Phase 3 comparison domains are missing.');
@@ -42,29 +33,19 @@ if (!archiveSchemas.route || !archiveSchemas.entity || !archiveSchemas.evidence 
 if (!analyticsPrivacyPolicy.localOnly || analyticsPrivacyPolicy.storesSearchQueries) throw new Error('Analytics must remain local and query-free.');
 
 const entrySource = readFileSync('src/components/succession/SuccessionArchiveEntry.jsx', 'utf8');
-for (const component of ['SuccessionArchiveOnboarding', 'SuccessionArchiveContextBar', 'SuccessionResearchTools', 'SuccessionIntelligencePanels']) {
-  if (!entrySource.includes(component)) throw new Error(`${component} is not wired into the archive entry.`);
-}
-const researchSource = readFileSync('src/components/succession/SuccessionResearchTools.jsx', 'utf8');
-for (const feature of ['Bookmark view', 'Chapter changes', 'Investigation board', 'Copy research snapshot', 'Export JSON', 'Export CSV', 'Export Markdown', 'Export citation bundle', 'Print or save PDF', 'SuccessionExplanationView', 'SuccessionEvidenceInspector']) {
-  if (!researchSource.includes(feature)) throw new Error(`Research interface is missing ${feature}.`);
-}
+for (const component of ['SuccessionArchiveOnboarding', 'SuccessionArchiveContextBar', 'SuccessionConsolidationNotice', 'SuccessionResearchTools', 'SuccessionIntelligencePanels']) if (!entrySource.includes(component)) throw new Error(`${component} is not wired into the archive entry.`);
+const onboardingSource = readFileSync('src/components/succession/SuccessionArchiveOnboarding.jsx', 'utf8');
+for (const feature of ['readingBoundary', 'Resume at Chapter', 'Reset saved mission', 'setSavedReadingBoundary']) if (!onboardingSource.includes(feature)) throw new Error(`Phase 2 onboarding is missing ${feature}.`);
 const explanationSource = readFileSync('src/components/succession/SuccessionExplanationView.jsx', 'utf8');
-for (const feature of ['60-second recap', 'normal explanation', 'deep analysis', 'evidence mode', 'What happened', 'Mechanics and causal links', 'Sources and claims']) {
-  if (!explanationSource.includes(feature)) throw new Error(`Explanation interface is missing ${feature}.`);
-}
-const evidenceSource = readFileSync('src/components/succession/SuccessionEvidenceInspector.jsx', 'utf8');
-for (const feature of ['Evidence record', 'Translation variants', 'Contradictions', 'Review date']) {
-  if (!evidenceSource.includes(feature)) throw new Error(`Evidence interface is missing ${feature}.`);
-}
+for (const feature of ['60-second recap', 'Scene-by-scene explanation', 'Deep analysis', 'Evidence mode', 'causal links', 'contradictions']) if (!explanationSource.includes(feature)) throw new Error(`Phase 2 explanation output is missing ${feature}.`);
+const researchSource = readFileSync('src/components/succession/SuccessionResearchTools.jsx', 'utf8');
+for (const feature of ['Bookmark view', 'Chapter changes', 'Investigation board', 'Copy research snapshot', 'Export JSON', 'Export CSV', 'Export Markdown', 'Citation bundle', 'Print / Save PDF', 'SuccessionEvidenceInspector']) if (!researchSource.includes(feature)) throw new Error(`Research interface is missing ${feature}.`);
 const intelligenceSource = readFileSync('src/components/succession/SuccessionIntelligencePanels.jsx', 'utf8');
-for (const feature of ['Compare canonical records', 'Open questions through Chapter', 'Evidence for', 'Evidence against', 'Candidates', 'Resolution history']) {
-  if (!intelligenceSource.includes(feature)) throw new Error(`Intelligence interface is missing ${feature}.`);
-}
-
+for (const feature of ['Compare canonical records', 'compareDomain', 'Copy comparison link', 'is-different', 'Candidates', 'Evidence for', 'Evidence against', 'Resolution history', 'Open related dossier']) if (!intelligenceSource.includes(feature)) throw new Error(`Phase 3 intelligence interface is missing ${feature}.`);
+const evidenceSource = readFileSync('src/components/succession/SuccessionEvidenceInspector.jsx', 'utf8');
+for (const feature of ['claim-kind', 'Contradictions', 'Translation variants', 'Page / panel', 'Reviewed']) if (!evidenceSource.includes(feature)) throw new Error(`Phase 3 evidence interface is missing ${feature}.`);
 for (const [name, phase] of Object.entries(productCapabilities)) {
   if (!Number.isInteger(phase.phase) || phase.phase < 2 || phase.phase > 5) throw new Error(`${name} has an invalid phase.`);
   if (!phase.capabilities?.length) throw new Error(`${name} has no capability contract.`);
 }
-
-console.log(`Product phase audit passed: ${capabilityIds.length} capabilities across Phases 2–5 with visible UI enforcement.`);
+console.log(`Product phase audit passed: ${capabilityIds.length} capabilities across Phases 2–5 with completed Phase 2–3 UI enforcement.`);
