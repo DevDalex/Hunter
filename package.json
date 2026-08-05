@@ -64,6 +64,7 @@
     "audit:release": "node scripts/audit-release.mjs",
     "audit:gaps": "node scripts/report-gaps.mjs",
     "generate:build-info": "node scripts/generate-build-info.mjs",
+    "prepare:eta-assets": "node scripts/prepare-eta-assets.mjs",
     "check": "npm run generate:build-info && npm run audit:foundation && npm run audit:succession-runtime && npm run audit:hosted-admin",
     "build:runtime": "npm run audit:succession-runtime && node scripts/clean-hosting.mjs && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs && npm run audit:release",
     "build": "npm run check && npm run build:runtime",
