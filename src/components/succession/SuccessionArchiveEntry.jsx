@@ -23,14 +23,6 @@ import './SuccessionArchitectureCenteringFix.css';
 import './SuccessionArchitectureViewportRuntime.js';
 import './SuccessionArchitectureVisualRevision.css';
 import './SuccessionPhase2PresentationConsistency.css';
-import './SuccessionProductExperience.css';
-import './SuccessionResearchTools.css';
-import './SuccessionSavedResearch.css';
-import SuccessionArchiveContextBar from './SuccessionArchiveContextBar';
-import SuccessionArchiveOnboarding from './SuccessionArchiveOnboarding';
-import SuccessionIntelligencePanels from './SuccessionIntelligencePanels';
-import SuccessionResearchTools from './SuccessionResearchTools';
-import SuccessionSavedResearch from './SuccessionSavedResearch';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));
@@ -43,43 +35,12 @@ function ArchiveRouteLoading() {
 export default function SuccessionArchiveEntry(props) {
   const isReader = props.routeTarget === 'reader';
   const isLightRoute = props.routeTarget === 'black-whale' || props.routeTarget === 'princes';
-  const isArchiveEntry = props.routeTarget === 'archive';
 
-  if (isArchiveEntry) return <>
-    <SuccessionArchiveContextBar
-      spoilerLimit={props.spoilerLimit}
-      activeDomain="story"
-      onSpoilerChange={props.onSpoilerChange}
-    />
-    <SuccessionArchiveOnboarding
-      spoilerLimit={props.spoilerLimit}
-      onNavigate={props.onNavigate}
-      onOpenSearch={props.onOpenSearch}
-    />
-  </>;
-
-  return <>
-    <SuccessionArchiveContextBar
-      spoilerLimit={props.spoilerLimit}
-      activeDomain={props.routeTarget}
-      onSpoilerChange={props.onSpoilerChange}
-    />
-    <SuccessionSavedResearch onNavigate={props.onNavigate} />
-    <Suspense fallback={<ArchiveRouteLoading />}>
-      {isReader
-        ? <SuccessionArchiveReaderRoute {...props} />
-        : isLightRoute
-          ? <SuccessionArchiveLightRoute {...props} />
-          : <SuccessionArchiveApp {...props} />}
-    </Suspense>
-    {!isReader && <>
-      <SuccessionIntelligencePanels spoilerLimit={props.spoilerLimit} />
-      <SuccessionResearchTools
-        routeId={props.routeTarget}
-        routeParams={props.routeParams}
-        spoilerLimit={props.spoilerLimit}
-        onNavigate={props.onNavigate}
-      />
-    </>}
-  </>;
+  return <Suspense fallback={<ArchiveRouteLoading />}>
+    {isReader
+      ? <SuccessionArchiveReaderRoute {...props} />
+      : isLightRoute
+        ? <SuccessionArchiveLightRoute {...props} />
+        : <SuccessionArchiveApp {...props} />}
+  </Suspense>;
 }
