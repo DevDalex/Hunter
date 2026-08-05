@@ -6,6 +6,7 @@ import WorkspaceNav from '../WorkspaceNav';
 import { ARCHIVE_BOUNDARY } from '../../data/archiveMeta';
 import { referencePages } from '../../data/routeManifest';
 import { routeModuleLoaders } from '../../lib/routePreload';
+import './SuccessionIntegratedReferences.css';
 
 const NenEncyclopedia = lazy(routeModuleLoaders.nen);
 const WorldAtlas = lazy(routeModuleLoaders.worldAtlas);
