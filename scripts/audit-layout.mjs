@@ -52,7 +52,7 @@ assert(routeManifest.length === routeManifestStats.screens, 'route manifest stat
 assert(new Set(routeKeys).size === routeKeys.length, 'the focused route matrix must not contain duplicate destinations');
 assert(referencePages.map((page) => page.id).join(',') === 'nen,atlas', 'only the general Nen Encyclopedia and World Atlas may remain as general reference pages');
 assert(routeManifestStats.reference === 2, 'the focused site must expose exactly two general reference screens');
-assert(routeManifestStats.successionReleaseScreens === successionReleaseRoutes.length + 1, 'Succession release-screen statistics must include archive home plus every curated route');
+assert(routeManifestStats.successionReleaseScreens === successionReleaseRoutes.length, 'Succession release-screen statistics must match the registry-derived curated route set');
 assert(successionReleaseRoutes.length >= 15 && successionReleaseRoutes.every(Boolean), 'the curated Succession release matrix is incomplete');
 assert(routeManifest.every((route) => route.view === 'succession' || route.view === 'reference'), 'a retired top-level view returned to the public route matrix');
 assert(!routeManifest.some((route) => route.view === 'timeline' || route.view === 'series' || route.view === 'home'), 'Home, Story, or global Timeline returned to the route matrix');
