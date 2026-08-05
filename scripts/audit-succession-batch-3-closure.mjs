@@ -1,5 +1,9 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import {
+  assertReleasedSuccessionRoutes,
+  canonicalTargetForSuccessionRoute,
+} from './lib/release-route-contracts.mjs';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
@@ -7,7 +11,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 3 closure audit failed: ${message}`);
 };
 
-const [app, shell, queens, organizations, royalCss, institutionCss, searchCss, routeManifest, packageJson, workflow, docs] = await Promise.all([
+const [app, shell, queens, organizations, royalCss, institutionCss, searchCss, packageJson, workflow, docs] = await Promise.all([
   read('src/components/succession/SuccessionArchiveApp.jsx'),
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionArchiveDeepWorkspaces.jsx'),
@@ -15,7 +19,6 @@ const [app, shell, queens, organizations, royalCss, institutionCss, searchCss, r
   read('src/components/succession/SuccessionArchiveRoyalFamilyRedesign.css'),
   read('src/components/succession/SuccessionArchiveInstitutionCommand.css'),
   read('src/components/succession/SuccessionArchiveSearch.css'),
-  read('src/data/routeManifest.js'),
   read('package.json'),
   read('.github/workflows/succession-visual-redesign.yml'),
   read('docs/SUCCESSION-VISUAL-REDESIGN-BATCH-3.md'),
@@ -79,7 +82,8 @@ for (const [css, name, selectors] of [
 }
 
 assert(searchCss.includes("@import './SuccessionArchiveRoyalFamilyRedesign.css';"), 'royal family CSS must load through the archive visual chain');
-for (const route of ["'princes'", "'queens'", "'organizations'"]) assert(routeManifest.includes(route), `release visual manifest must include ${route}`);
+assertReleasedSuccessionRoutes(['princes', 'organizations'], assert, 'release visual manifest');
+assert(canonicalTargetForSuccessionRoute('queens') === 'princes', 'Queens compatibility route must canonically resolve to Princes');
 assert(packageJson.includes('"audit:succession-batch-3"'), 'package.json must expose the Batch 3 closure audit');
 assert(workflow.includes('audit:succession-batch-3'), 'visual workflow must run the Batch 3 closure audit');
 for (const route of ['succession/queens', 'succession/organizations']) assert(workflow.includes(route), `visual workflow must render ${route}`);
