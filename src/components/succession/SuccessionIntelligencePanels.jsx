@@ -55,13 +55,14 @@ export default function SuccessionIntelligencePanels({ routeId = 'research', rou
   };
   const questions = useMemo(() => {
     const domains = ['character', 'organization', 'ability', 'guardian-beast', 'event', 'chapter', 'location'];
-    return domains.flatMap((type) => getEntitiesByType(type)).flatMap((entity) => {
+    return domains.flatMap((entityType) => getEntitiesByType(entityType).flatMap((entity) => {
       const values = entity.openQuestions || entity.unresolvedQuestions || entity.questions || [];
       return asArray(values).filter(Boolean).map((question, index) => {
         const record = typeof question === 'string' ? { question } : question;
         return {
           id: record.id || `${entity.id}:${index}`,
-          entity, entityType: type,
+          entity,
+          entityType: entity.entityType || entityType,
           text: record.question || record.label || record.text,
           status: record.status || 'open',
           chapter: record.openedAtChapter || record.chapter || null,
@@ -70,7 +71,7 @@ export default function SuccessionIntelligencePanels({ routeId = 'research', rou
           evidenceAgainst: asArray(record.evidenceAgainst || record.contradictions), history: asArray(record.history || record.resolutionHistory),
         };
       });
-    }).filter((item) => item.text && (!item.chapter || item.chapter <= spoilerLimit));
+    })).filter((item) => item.text && (!item.chapter || item.chapter <= spoilerLimit));
   }, [spoilerLimit]);
   const visibleQuestions = questionFilter === 'all' ? questions : questions.filter((item) => item.status === questionFilter);
   const statuses = [...new Set(questions.map((item) => item.status))];
