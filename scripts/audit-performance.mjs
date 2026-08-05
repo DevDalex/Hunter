@@ -8,30 +8,50 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Performance audit failed: ${message}`);
 };
 
-const [manifestText, app, routePreload, safeImage, packageText] = await Promise.all([
+const [manifestText, app, routePreload, safeImage] = await Promise.all([
   read('dist/client/.vite/manifest.json'),
   read('src/App.jsx'),
   read('src/lib/routePreload.js'),
   read('src/components/SafeImage.jsx'),
-  read('package.json'),
 ]);
 
 const manifest = JSON.parse(manifestText);
 const budgets = performanceBudgets;
-const assets = Object.values(manifest);
-const javascriptAssets = assets.filter((entry) => entry.file?.endsWith('.js'));
-const cssAssets = assets.flatMap((entry) => entry.css || []);
+const manifestEntries = Object.entries(manifest);
+const assets = manifestEntries.map(([, entry]) => entry);
 const fileSize = async (file) => (await stat(path.join(root, 'dist/client', file))).size;
-const javascriptSizes = await Promise.all(javascriptAssets.map(async (entry) => ({ file: entry.file, bytes: await fileSize(entry.file), entry })));
-const cssSizes = await Promise.all([...new Set(cssAssets)].map(async (file) => ({ file, bytes: await fileSize(file) })));
+const javascriptAssets = manifestEntries.filter(([, entry]) => entry.file?.endsWith('.js'));
+const javascriptSizes = await Promise.all(javascriptAssets.map(async ([key, entry]) => ({
+  key,
+  file: entry.file,
+  bytes: await fileSize(entry.file),
+  entry,
+})));
 const entryRecord = javascriptSizes.find((record) => record.entry.isEntry);
 assert(entryRecord, 'the production manifest must expose a startup entry');
+
+// Only static imports reachable from the startup entry belong to startup cost.
+// Dynamic imports and their CSS remain route-level costs and must not be summed here.
+const collectStaticReachableKeys = (startKey) => {
+  const reachable = new Set();
+  const visit = (key) => {
+    if (!key || reachable.has(key)) return;
+    const entry = manifest[key];
+    if (!entry) return;
+    reachable.add(key);
+    for (const importedKey of entry.imports || []) visit(importedKey);
+  };
+  visit(startKey);
+  return reachable;
+};
+
+const startupKeys = collectStaticReachableKeys(entryRecord.key);
+const startupRecords = javascriptSizes.filter((record) => startupKeys.has(record.key));
+const startupCssFiles = [...new Set([...startupKeys].flatMap((key) => manifest[key]?.css || []))];
+const startupCssRecords = await Promise.all(startupCssFiles.map(async (file) => ({ file, bytes: await fileSize(file) })));
 const entryJs = entryRecord.bytes;
-const startupImports = new Set(entryRecord.entry.imports || []);
-const startupJs = javascriptSizes
-  .filter((record) => record.entry.isEntry || startupImports.has(Object.keys(manifest).find((key) => manifest[key] === record.entry)))
-  .reduce((total, record) => total + record.bytes, 0);
-const startupCss = cssSizes.reduce((total, record) => total + record.bytes, 0);
+const startupJs = startupRecords.reduce((total, record) => total + record.bytes, 0);
+const startupCss = startupCssRecords.reduce((total, record) => total + record.bytes, 0);
 const largestJavascript = javascriptSizes.slice().sort((a, b) => b.bytes - a.bytes)[0];
 
 assert(entryJs <= budgets.entryJs, `entry JS is ${entryJs}; budget is ${formatPerformanceBudget(budgets.entryJs)}`);
@@ -95,4 +115,4 @@ const largestPortrait = portraitSizes.sort((a, b) => b.bytes - a.bytes)[0];
 assert(largestPortrait.bytes <= budgets.portrait, `${largestPortrait.file} is ${largestPortrait.bytes}; local portrait ceiling is ${formatPerformanceBudget(budgets.portrait)}`);
 assert(portraitBytes <= budgets.portraitLibrary, `local portrait library is ${portraitBytes} bytes; budget is ${formatPerformanceBudget(budgets.portraitLibrary)}`);
 
-console.log(`Performance audit passed: entry JS ${entryJs}/${formatPerformanceBudget(budgets.entryJs)} bytes; startup JS ${startupJs}/${formatPerformanceBudget(budgets.startupJs)} bytes; startup CSS ${startupCss}/${formatPerformanceBudget(budgets.startupCss)} bytes; ${routeLoaderKeys.length} focused route loaders; ${successionControllerBoundaryKeys.length} Succession controller boundaries; ${dynamicEntries.length} total dynamic entries; largest JS chunk ${largestJavascript.file} at ${largestJavascript.bytes}/${formatPerformanceBudget(budgets.javascriptChunk)} bytes; local portraits ${portraitBytes} bytes.`);
+console.log(`Performance audit passed: entry JS ${entryJs}/${formatPerformanceBudget(budgets.entryJs)} bytes; startup JS ${startupJs}/${formatPerformanceBudget(budgets.startupJs)} bytes across ${startupRecords.length} static chunks; startup CSS ${startupCss}/${formatPerformanceBudget(budgets.startupCss)} bytes across ${startupCssFiles.length} entry-reachable stylesheets; ${routeLoaderKeys.length} focused route loaders; ${successionControllerBoundaryKeys.length} Succession controller boundaries; ${dynamicEntries.length} total dynamic entries; largest JS chunk ${largestJavascript.file} at ${largestJavascript.bytes}/${formatPerformanceBudget(budgets.javascriptChunk)} bytes; local portraits ${portraitBytes} bytes.`);
