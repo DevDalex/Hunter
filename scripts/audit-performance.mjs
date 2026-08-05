@@ -32,9 +32,10 @@ const entryJs = await sizeOf(entry.file);
 const startupCss = (await Promise.all((entry.css || []).map(sizeOf))).reduce((total, bytes) => total + bytes, 0);
 const dynamicEntries = Object.entries(manifest).filter(([, record]) => record.isDynamicEntry);
 
-const [app, routePreload, safeImage, packageText] = await Promise.all([
+const [app, routePreload, integratedReferences, safeImage, packageText] = await Promise.all([
   readFile(path.join(root, 'src/App.jsx'), 'utf8'),
   readFile(path.join(root, 'src/lib/routePreload.js'), 'utf8'),
+  readFile(path.join(root, 'src/components/succession/SuccessionIntegratedReferences.jsx'), 'utf8'),
   readFile(path.join(root, 'src/components/SafeImage.jsx'), 'utf8'),
   readFile(path.join(root, 'package.json'), 'utf8'),
 ]);
@@ -119,8 +120,11 @@ for (const retiredComponent of [
   'HisokaChrolloDossier',
 ]) assert(!app.includes(retiredComponent), `App.jsx still mounts retired ${retiredComponent}`);
 assert(app.includes('SuccessionArchiveApp'), 'App.jsx must retain the Succession application boundary');
-assert(app.includes('NenEncyclopedia'), 'App.jsx must retain the general Nen Encyclopedia boundary');
-assert(app.includes('WorldAtlas'), 'App.jsx must retain the general World Atlas boundary');
+assert(app.includes('SuccessionIntegratedReferences'), 'App.jsx must retain the integrated reference shell');
+assert(integratedReferences.includes('lazy(routeModuleLoaders.nen)'), 'the integrated reference shell must lazily mount the general Nen Encyclopedia');
+assert(integratedReferences.includes('lazy(routeModuleLoaders.worldAtlas)'), 'the integrated reference shell must lazily mount the general World Atlas');
+assert(manifest['src/components/NenEncyclopedia.jsx']?.isDynamicEntry, 'the production manifest must retain the general Nen Encyclopedia as an on-demand entry');
+assert(manifest['src/components/WorldAtlas.jsx']?.isDynamicEntry, 'the production manifest must retain the general World Atlas as an on-demand entry');
 assert(!/from ['"].*\/(chapters|encyclopedia|successionDossier|successionRoster|seriesResearch)['"]/.test(app), 'App.jsx imports a heavy research dataset directly');
 assert(safeImage.includes("priority || (eager ? 'high' : 'auto')"), 'SafeImage must support explicit fetch priority');
 assert(!/vite-plugin-pwa|workbox|serviceWorker\.register|manifest\.webmanifest/.test(`${packageText}\n${app}\n${routePreload}`), 'PWA or service-worker behavior is outside the website scope');
