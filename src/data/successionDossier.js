@@ -1,5 +1,11 @@
 import * as legacy from './successionDossierLegacy.js';
 import {
+  succession400ChapterFocus,
+  succession400ChapterResearch,
+  succession400Mysteries,
+  succession400SourcePolicy,
+} from './succession400Research.js';
+import {
   patchSuccessionPrinceDossier,
   patchSuccessionQueenDossier,
   succession414415AbilityRecords,
@@ -22,12 +28,14 @@ export * from './successionDossierLegacy.js';
 
 export const chapterFocus = Object.freeze({
   ...legacy.chapterFocus,
+  ...succession400ChapterFocus,
   ...succession414415ChapterFocus,
   ...succession416ChapterFocus,
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch,
+  ...legacy.successionChapterResearch.filter((record) => record.number !== 400),
+  ...succession400ChapterResearch,
   ...succession414415ChapterResearch,
   ...succession416ChapterResearch,
 ].sort((left, right) => left.number - right.number));
@@ -63,6 +71,7 @@ export const successionMysteries = Object.freeze([
     lastChapter: '416',
     source: 'https://hunterxhunter.fandom.com/wiki/Chapter_416',
   },
+  ...succession400Mysteries,
   ...succession414415Mysteries,
   ...succession416Mysteries,
 ]);
@@ -104,11 +113,13 @@ export const guardAssignmentGroups = Object.freeze(legacy.guardAssignmentGroups.
 
 export const dossierSources = Object.freeze({
   ...legacy.dossierSources,
+  chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter414: 'https://hunterxhunter.fandom.com/wiki/Chapter_414',
   chapter415: 'https://hunterxhunter.fandom.com/wiki/Chapter_415',
   chapter416: 'https://hunterxhunter.fandom.com/wiki/Chapter_416',
   viz414: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-414/chapter/50800',
   viz415: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-415/chapter/50829',
+  sourcePolicy400: succession400SourcePolicy,
   crossChecks414415: succession414415CrossChecks,
   sourcePolicy416: succession416SourcePolicy,
 });
