@@ -2,14 +2,14 @@ import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
 const ROOTS = ['src/components/succession', 'src/lib/succession', 'src/data/succession'];
-const SOURCE_EXTENSIONS = new Set(['.js', '.jsx', '.mjs']);
+const SOURCE_EXTENSIONS = ['.js', '.jsx', '.mjs'];
 const files = [];
 const walk = (directory) => {
   for (const name of readdirSync(directory)) {
     const path = join(directory, name);
     const stat = statSync(path);
     if (stat.isDirectory()) walk(path);
-    else if ([...SOURCE_EXTENSIONS].some((extension) => path.endsWith(extension))) files.push(path);
+    else if (SOURCE_EXTENSIONS.some((extension) => path.endsWith(extension))) files.push(path);
   }
 };
 for (const root of ROOTS) walk(root);
@@ -17,8 +17,7 @@ for (const root of ROOTS) walk(root);
 const violations = [];
 const inspect = (path, source) => {
   const rel = relative(process.cwd(), path);
-  const lines = source.split('\n');
-  lines.forEach((line, index) => {
+  source.split('\n').forEach((line, index) => {
     const number = index + 1;
     if (/dangerouslySetInnerHTML/.test(line) && !/spoiler|sanitize|safe/i.test(line)) violations.push(`${rel}:${number} uses unsanitized HTML without a spoiler-safety marker.`);
     if (/(title|aria-label|alt)=\{?[^\n]*(latest|future|final status)/i.test(line)) violations.push(`${rel}:${number} may leak future knowledge through metadata or accessibility text.`);
@@ -30,7 +29,7 @@ const inspect = (path, source) => {
 for (const path of files) inspect(path, readFileSync(path, 'utf8'));
 
 const requiredContracts = [
-  ['src/lib/succession/chapterBoundary.js', ['filterRecordsAtChapter', 'isRecordAvailableAtChapter']],
+  ['src/lib/chapterBoundary.js', ['filterRecordsAtChapter', 'isRecordVisibleAtChapter', 'assertNoFutureRecords']],
   ['src/components/succession/SuccessionArchiveContextBar.jsx', ['laterInformationHidden', 'Chapter']],
   ['src/lib/succession/shareAndExport.js', ['chapter', 'filters']],
 ];
