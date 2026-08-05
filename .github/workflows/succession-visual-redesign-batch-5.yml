@@ -127,9 +127,7 @@ jobs:
         run: npm run audit:accessibility
 
       - name: Build production presentation bundle
-        run: |
-          npm run prepare:eta-assets
-          npx vite build
+        run: npx vite build
 
       - name: Audit production performance budgets
         run: npm run audit:performance
