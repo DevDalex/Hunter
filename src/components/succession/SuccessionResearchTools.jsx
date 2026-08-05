@@ -6,6 +6,7 @@ import { claimKinds, questionStatuses } from '../../data/succession/researchSema
 import { collectChapterChanges } from '../../lib/succession/chapterDiff';
 import { loadResearchWorkspace, saveInvestigation, toggleBookmark } from '../../lib/succession/researchWorkspace';
 import { buildResearchSnapshotUrl, exportRecordsAsCsv, exportRecordsAsJson, researchCitation } from '../../lib/succession/shareAndExport';
+import SuccessionEvidenceInspector from './SuccessionEvidenceInspector';
 
 const downloadText = (name, content, type = 'text/plain') => {
   const blob = new Blob([content], { type });
@@ -123,6 +124,8 @@ export default function SuccessionResearchTools({ routeId, routeParams = {}, spo
         <p>Chapter-image binaries and protected administrator data are excluded.</p>
       </article>
     </div>
+
+    {selectedEntity && <SuccessionEvidenceInspector entity={selectedEntity} spoilerLimit={spoilerLimit} />}
 
     <details className="succession-research-tools__semantics">
       <summary>Evidence and question vocabulary</summary>
