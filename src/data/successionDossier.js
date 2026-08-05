@@ -6,6 +6,12 @@ import {
   succession400SourcePolicy,
 } from './succession400Research.js';
 import {
+  succession408ChapterFocus,
+  succession408ChapterResearch,
+  succession408Mysteries,
+  succession408SourcePolicy,
+} from './succession408Research.js';
+import {
   patchSuccessionPrinceDossier,
   patchSuccessionQueenDossier,
   succession414415AbilityRecords,
@@ -29,13 +35,15 @@ export * from './successionDossierLegacy.js';
 export const chapterFocus = Object.freeze({
   ...legacy.chapterFocus,
   ...succession400ChapterFocus,
+  ...succession408ChapterFocus,
   ...succession414415ChapterFocus,
   ...succession416ChapterFocus,
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => record.number !== 400),
+  ...legacy.successionChapterResearch.filter((record) => ![400, 408].includes(record.number)),
   ...succession400ChapterResearch,
+  ...succession408ChapterResearch,
   ...succession414415ChapterResearch,
   ...succession416ChapterResearch,
 ].sort((left, right) => left.number - right.number));
@@ -72,6 +80,7 @@ export const successionMysteries = Object.freeze([
     source: 'https://hunterxhunter.fandom.com/wiki/Chapter_416',
   },
   ...succession400Mysteries,
+  ...succession408Mysteries,
   ...succession414415Mysteries,
   ...succession416Mysteries,
 ]);
@@ -114,12 +123,14 @@ export const guardAssignmentGroups = Object.freeze(legacy.guardAssignmentGroups.
 export const dossierSources = Object.freeze({
   ...legacy.dossierSources,
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
+  chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
   chapter414: 'https://hunterxhunter.fandom.com/wiki/Chapter_414',
   chapter415: 'https://hunterxhunter.fandom.com/wiki/Chapter_415',
   chapter416: 'https://hunterxhunter.fandom.com/wiki/Chapter_416',
   viz414: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-414/chapter/50800',
   viz415: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-415/chapter/50829',
   sourcePolicy400: succession400SourcePolicy,
+  sourcePolicy408: succession408SourcePolicy,
   crossChecks414415: succession414415CrossChecks,
   sourcePolicy416: succession416SourcePolicy,
 });
