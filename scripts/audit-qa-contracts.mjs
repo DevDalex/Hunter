@@ -35,7 +35,7 @@ const routeManifestLiteralCheck = ['routeManifest', '.includes('].join('');
 const retiredSearchDialog = ['archive-search', '-dialog'].join('');
 const retiredChapterRow = ['chapter', '-row'].join('');
 const retiredChapterDrawer = ['chapter', '-drawer'].join('');
-const obsoleteAssetCommand = ['prepare:', 'eta-assets'].join('');
+const legacyAssetCommand = ['prepare:', 'eta-assets'].join('');
 
 for (const { file, source } of scriptSources) {
   assert(!source.includes(routeManifestLiteralCheck), `${file} scrapes generated routeManifest source instead of importing the canonical registry`);
@@ -43,8 +43,13 @@ for (const { file, source } of scriptSources) {
   assert(!source.includes(retiredChapterRow), `${file} still targets the retired chapter-row interface`);
   assert(!source.includes(retiredChapterDrawer), `${file} still targets the retired chapter drawer`);
 }
-for (const { file, source } of workflowSources) {
-  assert(!source.includes(obsoleteAssetCommand), `${file} calls the removed asset-preparation command`);
+
+const packageJson = JSON.parse(await readFile(path.join(root, 'package.json'), 'utf8'));
+const legacyAssetWorkflowCount = workflowSources.filter(({ source }) => source.includes(legacyAssetCommand)).length;
+if (legacyAssetWorkflowCount) {
+  assert(packageJson.scripts?.[legacyAssetCommand] === 'node scripts/prepare-eta-assets.mjs', `${legacyAssetWorkflowCount} historical workflow(s) require a stable ${legacyAssetCommand} compatibility script`);
+  const compatibilitySource = await readFile(path.join(scriptsRoot, 'prepare-eta-assets.mjs'), 'utf8');
+  assert(compatibilitySource.includes('required assets are committed'), 'ETA compatibility command must explicitly verify the committed-asset contract');
 }
 
 const cloudflareWorkflow = await readFile(path.join(workflowsRoot, 'cloudflare-build.yml'), 'utf8');
@@ -84,4 +89,4 @@ for (const filename of canonicalRouteAuditFiles) {
   assert(source.includes("from './lib/release-route-contracts.mjs'"), `${filename} must use the canonical release-route helper`);
 }
 
-console.log(`QA contract audit passed: ${scriptFiles.length} scripts and ${workflowFiles.length} workflows are free of retired selector, generated-manifest, obsolete-command, and production-trigger drift.`);
+console.log(`QA contract audit passed: ${scriptFiles.length} scripts and ${workflowFiles.length} workflows are protected from retired selectors, generated-manifest drift, missing legacy asset compatibility, and production-trigger drift. Legacy asset workflow users: ${legacyAssetWorkflowCount}.`);
