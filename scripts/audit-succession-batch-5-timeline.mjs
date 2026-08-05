@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { assertReleasedSuccessionRoutes } from './lib/release-route-contracts.mjs';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
@@ -7,13 +8,12 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 5 timeline audit failed: ${message}`);
 };
 
-const [workspace, voyage, styles, workflow, finalQa, routeManifest, router] = await Promise.all([
+const [workspace, voyage, styles, workflow, finalQa, router] = await Promise.all([
   read('src/components/TimelineWorkspace.jsx'),
   read('src/components/SuccessionTimeline.jsx'),
   read('src/components/TimelineCommand.css'),
   read('.github/workflows/succession-visual-redesign-batch-5.yml'),
   read('scripts/succession-final-release-qa.mjs'),
-  read('src/data/routeManifest.js'),
   read('src/lib/appRouter.js'),
 ]);
 
@@ -74,8 +74,7 @@ assert(styles.includes('min-height: 44px'), 'timeline controls must retain 44px 
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(styles), 'timeline CSS must not introduce raw hex colors');
 assert(!styles.includes('!important'), 'timeline CSS must not depend on !important');
 
-assert(routeManifest.includes("'timeline'"), 'Succession Timeline must remain in the release manifest');
-assert(!routeManifest.includes("{ view: 'timeline'"), 'the retired global Timeline returned to the release manifest');
+assertReleasedSuccessionRoutes(['timeline'], assert, 'Succession release manifest');
 assert(router.includes("candidate === 'timeline'") && router.includes("normalizeDestination('succession', 'timeline'"), 'legacy global Timeline URLs must redirect to the Succession voyage timeline');
 assert(workflow.includes('node scripts/audit-succession-batch-5-timeline.mjs'), 'Batch 5 workflow must run the timeline audit');
 assert(finalQa.includes('...successionReleaseRoutes.map'), 'the release matrix must render the curated Succession routes, including Timeline');
