@@ -28,6 +28,7 @@ import './SuccessionResearchTools.css';
 import './SuccessionSavedResearch.css';
 import SuccessionArchiveContextBar from './SuccessionArchiveContextBar';
 import SuccessionArchiveOnboarding from './SuccessionArchiveOnboarding';
+import SuccessionConsolidationNotice from './SuccessionConsolidationNotice';
 import SuccessionIntelligencePanels from './SuccessionIntelligencePanels';
 import SuccessionResearchTools from './SuccessionResearchTools';
 import SuccessionSavedResearch from './SuccessionSavedResearch';
@@ -46,24 +47,13 @@ export default function SuccessionArchiveEntry(props) {
   const isArchiveEntry = props.routeTarget === 'archive';
 
   if (isArchiveEntry) return <>
-    <SuccessionArchiveContextBar
-      spoilerLimit={props.spoilerLimit}
-      activeDomain="story"
-      onSpoilerChange={props.onSpoilerChange}
-    />
-    <SuccessionArchiveOnboarding
-      spoilerLimit={props.spoilerLimit}
-      onNavigate={props.onNavigate}
-      onOpenSearch={props.onOpenSearch}
-    />
+    <SuccessionArchiveContextBar spoilerLimit={props.spoilerLimit} activeDomain="story" onSpoilerChange={props.onSpoilerChange} />
+    <SuccessionArchiveOnboarding spoilerLimit={props.spoilerLimit} onNavigate={props.onNavigate} onOpenSearch={props.onOpenSearch} />
   </>;
 
   return <>
-    <SuccessionArchiveContextBar
-      spoilerLimit={props.spoilerLimit}
-      activeDomain={props.routeTarget}
-      onSpoilerChange={props.onSpoilerChange}
-    />
+    <SuccessionArchiveContextBar spoilerLimit={props.spoilerLimit} activeDomain={props.routeTarget} onSpoilerChange={props.onSpoilerChange} />
+    <SuccessionConsolidationNotice routeId={props.routeTarget} />
     <SuccessionSavedResearch onNavigate={props.onNavigate} />
     <Suspense fallback={<ArchiveRouteLoading />}>
       {isReader
@@ -73,13 +63,13 @@ export default function SuccessionArchiveEntry(props) {
           : <SuccessionArchiveApp {...props} />}
     </Suspense>
     {!isReader && <>
-      <SuccessionIntelligencePanels spoilerLimit={props.spoilerLimit} />
-      <SuccessionResearchTools
+      <SuccessionIntelligencePanels
         routeId={props.routeTarget}
         routeParams={props.routeParams}
         spoilerLimit={props.spoilerLimit}
         onNavigate={props.onNavigate}
       />
+      <SuccessionResearchTools routeId={props.routeTarget} routeParams={props.routeParams} spoilerLimit={props.spoilerLimit} onNavigate={props.onNavigate} />
     </>}
   </>;
 }
