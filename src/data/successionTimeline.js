@@ -5,6 +5,7 @@ import {
   timelineTracks,
 } from './successionTimelineLegacy.js';
 import { succession400TimelineEvents } from './succession400Research.js';
+import { succession406TimelineEvents } from './succession406Research.js';
 import { succession408TimelineEvents } from './succession408Research.js';
 import { succession409TimelineEvents } from './succession409Research.js';
 import { succession414415TimelineEvents } from './succession414415Research.js';
@@ -25,6 +26,7 @@ const replaceChapterEvents = (events, chapter, replacements) => {
 export const timelineSources = Object.freeze({
   ...legacyTimelineSources,
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
+  chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
   chapter409: 'https://hunterxhunter.fandom.com/wiki/Chapter_409',
   chapter414: 'https://hunterxhunter.fandom.com/wiki/Chapter_414',
@@ -41,7 +43,8 @@ export const successionDays = Object.freeze(legacySuccessionDays.map((day) => {
     });
   }
   if (day.day === 12) {
-    const expanded408Events = replaceChapterEvents(day.events, 408, succession408TimelineEvents);
+    const expanded406Events = replaceChapterEvents(day.events, 406, succession406TimelineEvents);
+    const expanded408Events = replaceChapterEvents(expanded406Events, 408, succession408TimelineEvents);
     const expanded409Events = replaceChapterEvents(expanded408Events, 409, succession409TimelineEvents);
     return Object.freeze({
       ...day,
