@@ -37,7 +37,7 @@ for (const component of ['SuccessionArchiveOnboarding', 'SuccessionArchiveContex
 const onboardingSource = readFileSync('src/components/succession/SuccessionArchiveOnboarding.jsx', 'utf8');
 for (const feature of ['readingBoundary', 'Resume at Chapter', 'Reset saved mission', 'setSavedReadingBoundary']) if (!onboardingSource.includes(feature)) throw new Error(`Phase 2 onboarding is missing ${feature}.`);
 const explanationSource = readFileSync('src/components/succession/SuccessionExplanationView.jsx', 'utf8');
-for (const feature of ['60-second recap', 'Scene-by-scene explanation', 'Deep analysis', 'Evidence mode', 'causal links', 'contradictions']) if (!explanationSource.includes(feature)) throw new Error(`Phase 2 explanation output is missing ${feature}.`);
+for (const feature of ["mode === 'brief'", "mode === 'deep'", "mode === 'evidence'", 'What happened', 'Mechanics and causal links', 'Interpretation and uncertainty', 'Sources and claims']) if (!explanationSource.includes(feature)) throw new Error(`Phase 2 explanation output is missing ${feature}.`);
 const researchSource = readFileSync('src/components/succession/SuccessionResearchTools.jsx', 'utf8');
 for (const feature of ['Bookmark view', 'Chapter changes', 'Investigation board', 'Copy research snapshot', 'Export JSON', 'Export CSV', 'Export Markdown', 'Citation bundle', 'Print / Save PDF', 'SuccessionEvidenceInspector']) if (!researchSource.includes(feature)) throw new Error(`Research interface is missing ${feature}.`);
 const intelligenceSource = readFileSync('src/components/succession/SuccessionIntelligencePanels.jsx', 'utf8');
