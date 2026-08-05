@@ -14,8 +14,9 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Layout audit failed: ${message}`);
 };
 
-const [app, css, router, header, worldAtlas, familyTree, blackWhale, packageJson] = await Promise.all([
+const [app, integratedReferences, css, router, header, worldAtlas, familyTree, blackWhale, packageJson] = await Promise.all([
   read('src/App.jsx'),
+  read('src/components/succession/SuccessionIntegratedReferences.jsx'),
   read('src/styles.css'),
   read('src/lib/appRouter.js'),
   read('src/components/Header.jsx'),
@@ -68,8 +69,9 @@ for (const retired of [
 ]) assert(!app.includes(retired), `the retired ${retired} module is still mounted by the application`);
 
 assert(app.includes('SuccessionArchiveApp'), 'the Succession archive is not mounted');
-assert(app.includes('NenEncyclopedia'), 'the retained general Nen Encyclopedia is not mounted');
-assert(app.includes('WorldAtlas'), 'the retained general World Atlas is not mounted');
+assert(app.includes('SuccessionIntegratedReferences'), 'the integrated reference shell is not mounted');
+assert(integratedReferences.includes('NenEncyclopedia'), 'the retained general Nen Encyclopedia is not mounted by the integrated reference shell');
+assert(integratedReferences.includes('WorldAtlas'), 'the retained general World Atlas is not mounted by the integrated reference shell');
 assert(router.includes("if (!parts.length || pathnameClean === '/index.html')"), 'the root route guard is missing');
 assert(router.includes("view: 'succession', target: 'archive'"), 'the root route must resolve to the Succession archive');
 assert(router.includes("['nen', { target: 'nen' }]") && router.includes("['world', { target: 'atlas' }]") , 'the retained /nen and /world routes are missing');
