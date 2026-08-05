@@ -8,6 +8,7 @@ import { succession400TimelineEvents } from './succession400Research.js';
 import { succession406TimelineEvents } from './succession406Research.js';
 import { succession408TimelineEvents } from './succession408Research.js';
 import { succession409TimelineEvents } from './succession409Research.js';
+import { succession410TimelineEvents } from './succession410Research.js';
 import { succession414415TimelineEvents } from './succession414415Research.js';
 
 export { successionPrelude, timelineTracks };
@@ -29,6 +30,7 @@ export const timelineSources = Object.freeze({
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
   chapter409: 'https://hunterxhunter.fandom.com/wiki/Chapter_409',
+  chapter410: 'https://hunterxhunter.fandom.com/wiki/Chapter_410',
   chapter414: 'https://hunterxhunter.fandom.com/wiki/Chapter_414',
   chapter415: 'https://hunterxhunter.fandom.com/wiki/Chapter_415',
   viz414: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-414/chapter/50800',
@@ -46,6 +48,7 @@ export const successionDays = Object.freeze(legacySuccessionDays.map((day) => {
     const expanded406Events = replaceChapterEvents(day.events, 406, succession406TimelineEvents);
     const expanded408Events = replaceChapterEvents(expanded406Events, 408, succession408TimelineEvents);
     const expanded409Events = replaceChapterEvents(expanded408Events, 409, succession409TimelineEvents);
+    const expanded410Events = replaceChapterEvents(expanded409Events, 410, succession410TimelineEvents);
     return Object.freeze({
       ...day,
       chapterRange: '405–415',
@@ -53,7 +56,7 @@ export const successionDays = Object.freeze(legacySuccessionDays.map((day) => {
       headline: 'Martial law closes around the royal rooms',
       summary: 'The funeral and ritual deadline give way to the actual-Woble search, coded outside contact, Beyond’s curse mechanics, forced royal relocations, disappearances, and conditional confinement under special martial law.',
       events: Object.freeze([
-        ...expanded409Events,
+        ...expanded410Events,
         ...succession414415TimelineEvents,
       ]),
     });
