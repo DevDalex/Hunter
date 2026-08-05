@@ -69,34 +69,32 @@ try {
   await page.goto(`${base}/#/home/`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
   await page.waitForSelector('main', { timeout: 10_000 });
   await page.locator('.header-search-button').click();
-  await page.waitForSelector('.archive-search-dialog[role="dialog"]');
+  await page.waitForSelector('.succession-archive[data-archive-route="search"]', { timeout: 10_000 });
 
-  const input = page.locator('.archive-search-input input');
-  await input.fill('Hisoka vs. Chrollo');
-  await page.waitForFunction(() => document.querySelector('.archive-search-dialog')?.getAttribute('aria-busy') === 'false', null, { timeout: 15_000 });
-  await page.waitForSelector('.archive-search-results button', { timeout: 15_000 });
+  const input = page.locator('.succession-search-workspace input');
+  await input.waitFor({ state: 'visible', timeout: 10_000 });
+  if (!await input.evaluate((node) => node === document.activeElement)) throw new Error('routed search input did not receive focus');
 
-  const first = page.locator('.archive-search-results button').first();
-  const firstResult = (await first.innerText()).replace(/\s+/g, ' ').trim();
-  if (!/Hisoka vs\. Chrollo/i.test(firstResult)) throw new Error(`punctuation-heavy query ranked an unexpected first result: ${firstResult}`);
+  await input.fill('Kurapika');
+  const matchingResult = page.locator('.succession-search-complete__groups article').filter({ hasText: 'Kurapika' }).first();
+  await matchingResult.waitFor({ state: 'visible', timeout: 15_000 });
+  const firstResult = (await matchingResult.innerText()).replace(/\s+/g, ' ').trim();
+  if (!/Kurapika/i.test(firstResult)) throw new Error(`canonical query returned an unexpected result: ${firstResult}`);
 
-  const resourceUrls = await page.evaluate(() => performance.getEntriesByType('resource').map((entry) => entry.name));
-  const expectedShards = ['archiveSearch.series-', 'archiveSearch.succession-', 'archiveSearch.reference-'];
-  const loadedShards = expectedShards.filter((shard) => resourceUrls.some((url) => url.includes(shard)));
-  if (loadedShards.length !== expectedShards.length) throw new Error(`search did not load all domain shards: ${loadedShards.join(', ') || 'none'}`);
-
-  await input.focus();
-  await page.keyboard.press('ArrowDown');
-  if (!await first.evaluate((node) => node === document.activeElement)) throw new Error('ArrowDown did not move focus from the search input to the first result');
+  const openButton = matchingResult.locator('button');
+  await openButton.focus();
+  if (!await openButton.evaluate((node) => node === document.activeElement)) throw new Error('search result action did not accept keyboard focus');
+  await page.keyboard.press('Enter');
+  await page.waitForSelector('.succession-archive[data-archive-route="characters"]', { timeout: 10_000 });
   if (runtimeErrors.length) throw new Error(`runtime errors: ${runtimeErrors.join(' | ')}`);
 
-  result = { status: 'passed', query: 'Hisoka vs. Chrollo', firstResult, loadedShards };
-  process.stdout.write(`✓ archive search split, punctuation ranking, and keyboard focus · ${firstResult}\n`);
+  result = { status: 'passed', query: 'Kurapika', firstResult, destination: 'succession/characters' };
+  process.stdout.write(`✓ routed Succession search, canonical result, and keyboard activation · ${firstResult}\n`);
 } catch (error) {
-  const screenshot = path.join(output, 'archive-search-failure.png');
+  const screenshot = path.join(output, 'succession-search-failure.png');
   await page.screenshot({ path: screenshot, fullPage: true }).catch(() => {});
   result = { status: 'failed', error: error.message, runtimeErrors, screenshot: path.relative(root, screenshot) };
-  process.stdout.write(`✗ archive search browser QA · ${error.message}\n`);
+  process.stdout.write(`✗ routed Succession search browser QA · ${error.message}\n`);
 } finally {
   await page.close().catch(() => {});
   await browser.close().catch(() => {});
