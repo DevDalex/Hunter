@@ -16,6 +16,8 @@ const requiredFiles = [
   'src/components/succession/SuccessionArchiveOnboarding.jsx',
   'src/components/succession/SuccessionArchiveContextBar.jsx',
   'src/components/succession/SuccessionResearchTools.jsx',
+  'src/components/succession/SuccessionExplanationView.jsx',
+  'src/components/succession/SuccessionEvidenceInspector.jsx',
   'src/components/succession/SuccessionIntelligencePanels.jsx',
   'src/components/succession/SuccessionResearchTools.css',
   'src/data/schemas/archiveSchemas.js',
@@ -44,11 +46,19 @@ for (const component of ['SuccessionArchiveOnboarding', 'SuccessionArchiveContex
   if (!entrySource.includes(component)) throw new Error(`${component} is not wired into the archive entry.`);
 }
 const researchSource = readFileSync('src/components/succession/SuccessionResearchTools.jsx', 'utf8');
-for (const feature of ['Bookmark view', 'Chapter changes', 'Investigation board', 'Copy research snapshot', 'Export JSON', 'Export CSV']) {
+for (const feature of ['Bookmark view', 'Chapter changes', 'Investigation board', 'Copy research snapshot', 'Export JSON', 'Export CSV', 'Export Markdown', 'Export citation bundle', 'Print or save PDF', 'SuccessionExplanationView', 'SuccessionEvidenceInspector']) {
   if (!researchSource.includes(feature)) throw new Error(`Research interface is missing ${feature}.`);
 }
+const explanationSource = readFileSync('src/components/succession/SuccessionExplanationView.jsx', 'utf8');
+for (const feature of ['60-second recap', 'normal explanation', 'deep analysis', 'evidence mode', 'What happened', 'Mechanics and causal links', 'Sources and claims']) {
+  if (!explanationSource.includes(feature)) throw new Error(`Explanation interface is missing ${feature}.`);
+}
+const evidenceSource = readFileSync('src/components/succession/SuccessionEvidenceInspector.jsx', 'utf8');
+for (const feature of ['Evidence record', 'Translation variants', 'Contradictions', 'Review date']) {
+  if (!evidenceSource.includes(feature)) throw new Error(`Evidence interface is missing ${feature}.`);
+}
 const intelligenceSource = readFileSync('src/components/succession/SuccessionIntelligencePanels.jsx', 'utf8');
-for (const feature of ['Compare canonical records', 'Open questions through Chapter']) {
+for (const feature of ['Compare canonical records', 'Open questions through Chapter', 'Evidence for', 'Evidence against', 'Candidates', 'Resolution history']) {
   if (!intelligenceSource.includes(feature)) throw new Error(`Intelligence interface is missing ${feature}.`);
 }
 
