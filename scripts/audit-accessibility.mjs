@@ -23,6 +23,7 @@ const [
   worldMap,
   successionApp,
   reader,
+  readerPanel,
   packageJson,
 ] = await Promise.all([
   read('src/App.jsx'),
@@ -40,10 +41,12 @@ const [
   read('src/components/InteractiveWorldMap.jsx'),
   read('src/components/succession/SuccessionArchiveApp.jsx'),
   read('src/components/SuccessionChapterReader.jsx'),
+  read('src/components/succession-reader/ReaderPanel.jsx'),
   read('package.json'),
 ]);
 
 const royalTreeSource = `${royalTree}\n${royalTreeNodes}\n${royalTreeModel}`;
+const readerSource = `${reader}\n${readerPanel}`;
 
 assert(
   app.includes('className="skip-link"') && app.includes('id="main-content" tabIndex="-1"'),
@@ -106,7 +109,7 @@ assert(
     && successionApp.includes('Search canonical Succession Archive'),
   'Succession search changes need a polite live announcement and an accessible input name',
 );
-assert(reader.includes("event.key === 'Escape'") || reader.includes("case 'Escape'"), 'the retained Succession reader must support Escape dismissal');
+assert(readerSource.includes("event.key === 'Escape'") || readerSource.includes("case 'Escape'"), 'the retained Succession reader must support Escape dismissal');
 assert(packageJson.includes('"qa:accessibility"') && packageJson.includes('"audit:accessibility"'), 'repeatable accessibility commands are missing');
 
 console.log('Accessibility audit passed: the focused Succession, Nen, and World surfaces retain skip navigation, contrast, keyboard menus, semantic search status, map alternatives, reader dismissal, reduced motion, and written states.');
