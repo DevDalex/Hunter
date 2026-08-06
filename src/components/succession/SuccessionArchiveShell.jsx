@@ -21,7 +21,7 @@ import {
   successionArchiveHubs,
 } from '../../data/succession/archiveRoutes';
 import SpoilerControl from '../SpoilerControl';
-import SuccessionArchitectureBoard from './SuccessionArchitectureBoard';
+import SuccessionCommandHome from './SuccessionCommandHome';
 import SuccessionInformationConsistencyPanel from './SuccessionInformationConsistencyPanel';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveContrastFixes.css';
@@ -160,11 +160,10 @@ export default function SuccessionArchiveShell({
     };
   }, [drawerOpen]);
 
-  const showArchitectureBoard = route.id === 'story' && Object.keys(routeParams || {}).length === 0;
-  if (showArchitectureBoard) return <SuccessionArchitectureBoard
+  const showCommandHome = route.id === 'story' && Object.keys(routeParams || {}).length === 0;
+  if (showCommandHome) return <SuccessionCommandHome
     spoilerLimit={spoilerLimit}
     onNavigate={onNavigate}
-    onExitArchive={onExitArchive}
     onOpenSearch={onOpenSearch}
   />;
 
