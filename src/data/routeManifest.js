@@ -98,20 +98,11 @@ export const referencePages = [
     id: 'nen', label: 'Nen & abilities', kicker: 'Power system', title: 'Nen and ability encyclopedia',
     description: 'Learn the system from aura fundamentals through advanced techniques, six categories, vows, curses, Nen beasts, and named abilities.',
   },
-  {
-    id: 'atlas', label: 'World & places', kicker: 'Story geography', title: 'World and location atlas',
-    description: 'Explore the Known World, major story routes, the Black Whale voyage, and nested locations through the visual atlas.',
-  },
 ];
 
 export const referencePrimary = referencePages.map((page) => page.id);
 export const referenceAliases = Object.freeze({
   nen: { target: 'nen' },
-  world: { target: 'atlas' },
-  atlas: { target: 'atlas' },
-  locations: { target: 'atlas' },
-  'research-library': { target: 'atlas' },
-  'study-layers': { target: 'atlas' },
 });
 
 export const successionReleaseRouteIds = Object.freeze(releasedSuccessionRoutes.map((route) => route.id));
