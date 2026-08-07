@@ -55,7 +55,7 @@ assert(readerRoute.includes("onExitArchive={() => onNavigate('archive')}"), 'rea
 const combined = styles.join('\n');
 const requiredSelectors = [
   '.succession-archive__status-strip',
-  '.succession-command-home__workspaces',
+  '.succession-command-home__portals',
   '.succession-royal-command',
   '.black-whale-intelligence',
   '.succession-nen-command',
@@ -86,4 +86,4 @@ for (const [index, source] of styles.entries()) {
   assert(opening === closing, `${cssFiles[index]} has unbalanced CSS blocks (${opening} opening, ${closing} closing)`);
 }
 
-console.log(`Succession Black Whale redesign audit passed: ${cssFiles.length} themed layers, command-center homepage, integrated Reader route, operational shell, route coverage, accessibility closure, and canonical chapter bridge verified.`);
+console.log(`Succession Black Whale redesign audit passed: ${cssFiles.length} themed layers, reference-matched portal homepage, integrated Reader route, operational shell, route coverage, accessibility closure, and canonical chapter bridge verified.`);
