@@ -54,7 +54,6 @@ const expectedRouteLoaderKeys = [
   'src/components/BlackWhaleGuide.jsx',
   'src/components/SuccessionDossier.jsx',
   'src/components/NenEncyclopedia.jsx',
-  'src/components/WorldAtlas.jsx',
 ];
 
 const successionControllerBoundaryKeys = [
@@ -78,6 +77,7 @@ const retiredBoundaryKeys = [
   'src/components/OrganizationWorkspace.jsx',
   'src/components/ConflictArchive.jsx',
   'src/components/HisokaChrolloDossier.jsx',
+  'src/components/WorldAtlas.jsx',
   'src/components/greed-island/GreedIslandHub.jsx',
   'src/components/greed-island/EtaTutorial.jsx',
   'src/components/greed-island/GreedIslandBinder.jsx',
@@ -104,10 +104,10 @@ assert(startupCss <= budgets.startupCss, `startup stylesheet is ${startupCss} by
 assert(largestJavascript.bytes <= budgets.javascriptChunk, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; per-chunk budget is ${formatPerformanceBudget(budgets.javascriptChunk)}`);
 
 assert(routeLoaderKeys.length === expectedRouteLoaderKeys.length, `the focused route loader map must expose ${expectedRouteLoaderKeys.length} boundaries, found ${routeLoaderKeys.length}`);
-assert(expectedRouteLoaderKeys.every((key) => routeLoaderKeys.includes(key)), 'the route loader map must contain Succession plus the retained general Nen and World boundaries');
+assert(expectedRouteLoaderKeys.every((key) => routeLoaderKeys.includes(key)), 'the route loader map must contain Succession plus the retained general Nen boundary');
 assert(routeLoaderKeys.every((key) => manifest[key]?.isDynamicEntry), 'every retained route loader must remain an on-demand production entry');
 assert(successionControllerBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Succession controller, Reader, light route, workspaces, and refinement deck must remain separate on-demand chunks');
-assert(retiredBoundaryKeys.every((key) => !manifest[key]), 'a retired Home, Story, global reference, fight, Greed Island, or search boundary returned to the production manifest');
+assert(retiredBoundaryKeys.every((key) => !manifest[key]), 'a retired Home, Story, global reference, fight, Greed Island, World Atlas, or search boundary returned to the production manifest');
 assert(dynamicEntries.length >= routeLoaderKeys.length + successionControllerBoundaryKeys.length, `the production manifest exposes only ${dynamicEntries.length} dynamic entries for ${routeLoaderKeys.length + successionControllerBoundaryKeys.length} required focused boundaries`);
 
 for (const retiredComponent of [
@@ -118,13 +118,14 @@ for (const retiredComponent of [
   'OrganizationWorkspace',
   'ConflictArchive',
   'HisokaChrolloDossier',
+  'WorldAtlas',
 ]) assert(!app.includes(retiredComponent), `App.jsx still mounts retired ${retiredComponent}`);
 assert(app.includes('SuccessionArchiveApp'), 'App.jsx must retain the Succession application boundary');
 assert(app.includes('SuccessionIntegratedReferences'), 'App.jsx must retain the integrated reference shell');
 assert(integratedReferences.includes('lazy(routeModuleLoaders.nen)'), 'the integrated reference shell must lazily mount the general Nen Encyclopedia');
-assert(integratedReferences.includes('lazy(routeModuleLoaders.worldAtlas)'), 'the integrated reference shell must lazily mount the general World Atlas');
+assert(!integratedReferences.includes('WorldAtlas'), 'the retired World Atlas returned to the integrated reference shell');
 assert(manifest['src/components/NenEncyclopedia.jsx']?.isDynamicEntry, 'the production manifest must retain the general Nen Encyclopedia as an on-demand entry');
-assert(manifest['src/components/WorldAtlas.jsx']?.isDynamicEntry, 'the production manifest must retain the general World Atlas as an on-demand entry');
+assert(!manifest['src/components/WorldAtlas.jsx'], 'the retired World Atlas must not return to the production manifest');
 assert(!/from ['"].*\/(chapters|encyclopedia|successionDossier|successionRoster|seriesResearch)['"]/.test(app), 'App.jsx imports a heavy research dataset directly');
 assert(safeImage.includes("priority || (eager ? 'high' : 'auto')"), 'SafeImage must support explicit fetch priority');
 assert(!/vite-plugin-pwa|workbox|serviceWorker\.register|manifest\.webmanifest/.test(`${packageText}\n${app}\n${routePreload}`), 'PWA or service-worker behavior is outside the website scope');
