@@ -197,6 +197,7 @@ try {
           }));
           axeViolations = axe.violations.map((violation) => ({ id: violation.id, impact: violation.impact, nodes: violation.nodes.length }));
         }
+        const requiresWorkspaceRegion = route.path.startsWith('succession/') && route.id !== 'story';
         const defects = [
           ...runtimeErrors,
           ...failedRequests,
@@ -207,7 +208,7 @@ try {
           ...axeViolations,
           ...(audit.bodyOverflow > 1 ? [{ bodyOverflow: audit.bodyOverflow }] : []),
           ...(!audit.mainVisible ? [{ mainVisible: false }] : []),
-          ...(route.path.startsWith('succession/') && !audit.workspaceRegion ? [{ workspaceRegion: false }] : []),
+          ...(requiresWorkspaceRegion && !audit.workspaceRegion ? [{ workspaceRegion: false }] : []),
           ...(audit.h1Count !== 1 ? [{ h1Count: audit.h1Count }] : []),
           ...(viewport.id !== 'desktop' ? audit.smallTargets : []),
           ...(audit.cls > .18 ? [{ cls: audit.cls }] : []),
@@ -227,7 +228,7 @@ try {
     }
   }
 
-  await runInteraction('desktop Story hub tab focuses the new workspace', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
+  await runInteraction('desktop Story command home opens Timeline and focuses the workspace', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
     const timeline = page.getByRole('link', { name: 'Timeline', exact: true });
     await timeline.focus();
     await page.keyboard.press('Enter');
@@ -235,7 +236,7 @@ try {
     await page.waitForFunction(() => document.activeElement?.id === 'succession-workspace-content');
   });
 
-  await runInteraction('mobile archive drawer traps Escape and restores focus', { width: 390, height: 844 }, 'succession/story', async (page) => {
+  await runInteraction('mobile archive drawer traps Escape and restores focus', { width: 390, height: 844 }, 'succession/timeline', async (page) => {
     const trigger = page.locator('.succession-archive__mobile-bar button').first();
     await trigger.click();
     await page.waitForSelector('.succession-drawer [role="dialog"]');
@@ -255,13 +256,13 @@ try {
     await page.waitForSelector('.succession-assignment-ledger');
   });
 
-  await runInteraction('reduced motion removes meaningful transition duration', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
+  await runInteraction('reduced motion removes meaningful transition duration', { width: 1440, height: 1000 }, 'succession/timeline', async (page) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     const duration = await page.locator('.succession-button').first().evaluate((node) => Math.max(...getComputedStyle(node).transitionDuration.split(',').map((value) => Number.parseFloat(value) || 0)));
     assert(duration <= .02, `reduced-motion transition remained ${duration}s`);
   });
 
-  await runInteraction('forced colors retains visible keyboard focus', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
+  await runInteraction('forced colors retains visible keyboard focus', { width: 1440, height: 1000 }, 'succession/timeline', async (page) => {
     await page.emulateMedia({ forcedColors: 'active' });
     const button = page.locator('.succession-button').first();
     await button.focus();
