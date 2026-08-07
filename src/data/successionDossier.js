@@ -26,6 +26,15 @@ import {
   succession343SourcePolicy,
 } from './succession343Research.js';
 import {
+  succession344BodyStates,
+  succession344ChapterFocus,
+  succession344ChapterResearch,
+  succession344Mysteries,
+  succession344ObjectRecords,
+  succession344RelationshipRecords,
+  succession344SourcePolicy,
+} from './succession344Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -82,6 +91,7 @@ export const chapterFocus = Object.freeze({
   ...succession341ChapterFocus,
   ...succession342ChapterFocus,
   ...succession343ChapterFocus,
+  ...succession344ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -92,11 +102,12 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
   ...succession343ChapterResearch,
+  ...succession344ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -122,12 +133,19 @@ export const successionAbilities = Object.freeze([
 export const successionRelationships = Object.freeze([
   ...legacy.successionRelationships,
   ...succession343RelationshipRecords,
+  ...succession344RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
 export const bodyStateLedger = Object.freeze([
   ...legacy.bodyStateLedger,
+  ...succession344BodyStates,
   ...succession414415BodyStates,
+]);
+
+export const successionObjects = Object.freeze([
+  ...legacy.successionObjects,
+  ...succession344ObjectRecords,
 ]);
 
 export const successionMysteries = Object.freeze([
@@ -143,6 +161,7 @@ export const successionMysteries = Object.freeze([
   ...succession341Mysteries,
   ...succession342Mysteries,
   ...succession343Mysteries,
+  ...succession344Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -193,6 +212,7 @@ export const dossierSources = Object.freeze({
   chapter341: 'https://hunterxhunter.fandom.com/wiki/Chapter_341',
   chapter342: 'https://hunterxhunter.fandom.com/wiki/Chapter_342',
   chapter343: 'https://hunterxhunter.fandom.com/wiki/Chapter_343',
+  chapter344: 'https://hunterxhunter.fandom.com/wiki/Chapter_344',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -207,6 +227,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy341: succession341SourcePolicy,
   sourcePolicy342: succession342SourcePolicy,
   sourcePolicy343: succession343SourcePolicy,
+  sourcePolicy344: succession344SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
