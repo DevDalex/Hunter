@@ -148,6 +148,17 @@ import {
   succession362SourcePolicy,
 } from './succession362Research.js';
 import {
+  succession363BenjaminOperation,
+  succession363BodyStates,
+  succession363ChapterFocus,
+  succession363ChapterResearch,
+  succession363CommunicationConstraints,
+  succession363ContestInterpretation,
+  succession363Mysteries,
+  succession363RelationshipRecords,
+  succession363SourcePolicy,
+} from './succession363Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -217,6 +228,7 @@ export const chapterFocus = Object.freeze({
   ...succession360ChapterFocus,
   ...succession361ChapterFocus,
   ...succession362ChapterFocus,
+  ...succession363ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -227,7 +239,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -245,6 +257,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession360ChapterResearch,
   ...succession361ChapterResearch,
   ...succession362ChapterResearch,
+  ...succession363ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -288,6 +301,7 @@ export const successionRelationships = Object.freeze([
   ...succession360RelationshipRecords,
   ...succession361RelationshipRecords,
   ...succession362RelationshipRecords,
+  ...succession363RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -299,6 +313,7 @@ export const bodyStateLedger = Object.freeze([
   ...succession359BodyStates,
   ...succession360BodyStates,
   ...succession361BodyStates,
+  ...succession363BodyStates,
   ...succession414415BodyStates,
 ]);
 
@@ -344,6 +359,12 @@ export const contestRules = Object.freeze([
     status: 'confirmed / Chapter 362 Guardian Spirit Beast restriction',
     source: record.source,
   })),
+  Object.freeze({
+    name: 'Sole survivor interpretation',
+    note: `${succession363ContestInterpretation.phrase}. ${succession363ContestInterpretation.clarification}`,
+    status: 'confirmed wording / deliberately unresolved interpretation',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_363',
+  }),
 ]);
 
 export const hisokaChrolloFightResearch = succession351357FightResearch;
@@ -357,6 +378,9 @@ export const guardianSpiritBeastHostUpdates = succession361GuardianBeastUpdates;
 export const guardianSpiritBeastRuleResearch = succession362GuardianBeastRules;
 export const guardianSpiritBeastRevealResearch = succession362GuardianBeastReveals;
 export const tserriednichNenPersonnelResearch = succession362PersonnelRecords;
+export const successionVictoryConditionResearch = succession363ContestInterpretation;
+export const benjaminRoyalGuardOperationResearch = succession363BenjaminOperation;
+export const room1014CommunicationConstraints = succession363CommunicationConstraints;
 
 export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
@@ -408,6 +432,7 @@ export const successionMysteries = Object.freeze([
   },
   ...succession361Mysteries,
   ...succession362Mysteries,
+  ...succession363Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -488,7 +513,7 @@ export const guardAssignmentGroups = Object.freeze([
         subject: 'Woble / Oito household',
         people: 'Kurapika, Bill, Shimanu, Sandra',
         notes: 'Only two guards and two servants remain from eleven guards and four servants two hours after departure.',
-        status: 'critical staffing depletion · Voyage Day 1',
+        status: 'historical snapshot · Voyage Day 1 · superseded by Sandra’s death in Chapter 363',
         source: 'https://hunterxhunter.fandom.com/wiki/Chapter_361',
       }),
     ]),
@@ -503,6 +528,32 @@ export const guardAssignmentGroups = Object.freeze([
       status: 'Voyage Day 1 · Nen secrecy collapsing',
       source: record.source,
     }))),
+  }),
+  Object.freeze({
+    group: 'Benjamin distributed Royal Guard surveillance',
+    description: 'Chapter 363 converts Benjamin’s force from an immediate strike posture into a fourteen-soldier intelligence network embedded across rival prince households.',
+    records: Object.freeze([
+      Object.freeze({
+        subject: 'Rival prince households',
+        people: 'Fourteen Benjamin personal soldiers',
+        notes: 'Observe rival camps, report to Benjamin, identify Hunter and Guardian Spirit Beast abilities, and use lethal force in self-defense if attacked or threatened.',
+        status: 'active · Voyage Day 1',
+        source: 'https://hunterxhunter.fandom.com/wiki/Chapter_363',
+      }),
+    ]),
+  }),
+  Object.freeze({
+    group: 'Room 1014 after Sandra’s death',
+    description: 'Chapter 363 further reduces Woble’s surviving guard/servant core when Vincent kills Sandra while entering under Benjamin’s Royal Guard authority.',
+    records: Object.freeze([
+      Object.freeze({
+        subject: 'Woble / Oito household',
+        people: 'Kurapika, Bill, Shimanu',
+        notes: 'Sandra is killed by Vincent, leaving two active guards and one surviving servant from the Chapter 361 core.',
+        status: 'active core at Chapter 363 endpoint',
+        source: 'https://hunterxhunter.fandom.com/wiki/Chapter_363',
+      }),
+    ]),
   }),
   ...legacy.guardAssignmentGroups.map((group) => {
     if (group.group !== 'State, servants, and temporary custody') return group;
@@ -547,6 +598,7 @@ export const dossierSources = Object.freeze({
   chapter360: 'https://hunterxhunter.fandom.com/wiki/Chapter_360',
   chapter361: 'https://hunterxhunter.fandom.com/wiki/Chapter_361',
   chapter362: 'https://hunterxhunter.fandom.com/wiki/Chapter_362',
+  chapter363: 'https://hunterxhunter.fandom.com/wiki/Chapter_363',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -574,6 +626,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy360: succession360SourcePolicy,
   sourcePolicy361: succession361SourcePolicy,
   sourcePolicy362: succession362SourcePolicy,
+  sourcePolicy363: succession363SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
