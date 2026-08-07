@@ -197,7 +197,7 @@ try {
           }));
           axeViolations = axe.violations.map((violation) => ({ id: violation.id, impact: violation.impact, nodes: violation.nodes.length }));
         }
-        const requiresWorkspaceRegion = route.path.startsWith('succession/') && route.id !== 'story';
+        const requiresWorkspaceRegion = route.path.startsWith('succession/') && !['story', 'archive'].includes(route.id);
         const defects = [
           ...runtimeErrors,
           ...failedRequests,
