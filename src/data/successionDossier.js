@@ -203,6 +203,18 @@ import {
   succession367SourcePolicy,
 } from './succession367Research.js';
 import {
+  succession368BodyStates,
+  succession368ChapterFocus,
+  succession368ChapterResearch,
+  succession368CustodyRecords,
+  succession368EmperorTimeExposure,
+  succession368MomozeMurder,
+  succession368Mysteries,
+  succession368RelationshipRecords,
+  succession368SourcePolicy,
+  succession368TrainingSchedule,
+} from './succession368Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -277,6 +289,7 @@ export const chapterFocus = Object.freeze({
   ...succession365ChapterFocus,
   ...succession366ChapterFocus,
   ...succession367ChapterFocus,
+  ...succession368ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -287,7 +300,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -310,6 +323,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession365ChapterResearch,
   ...succession366ChapterResearch,
   ...succession367ChapterResearch,
+  ...succession368ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -358,6 +372,7 @@ export const successionRelationships = Object.freeze([
   ...succession365RelationshipRecords,
   ...succession366RelationshipRecords,
   ...succession367RelationshipRecords,
+  ...succession368RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -371,6 +386,7 @@ export const bodyStateLedger = Object.freeze([
   ...succession361BodyStates,
   ...succession363BodyStates,
   ...succession364BodyStates,
+  ...succession368BodyStates,
   ...succession414415BodyStates,
 ]);
 
@@ -453,6 +469,10 @@ export const littleEyeChapter367ReconnaissanceResearch = succession367LittleEyeR
 export const room1014NenInstructionPlanResearch = succession367NenInstructionPlan;
 export const room1014LittleEyeDeceptionResearch = succession367DeceptionRecord;
 export const babimynaChapter367SurveillanceResearch = succession367BabimynaSurveillance;
+export const emperorTimeChapter368ExposureResearch = succession368EmperorTimeExposure;
+export const momozeChapter368MurderResearch = succession368MomozeMurder;
+export const nenClassChapter368ScheduleResearch = succession368TrainingSchedule;
+export const momozeChapter368CustodyResearch = succession368CustodyRecords;
 
 export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
@@ -516,10 +536,10 @@ export const successionMysteries = Object.freeze([
   },
   {
     question: 'Can Theta actually slow or contain Tserriednich’s Nen development after admitting Nen exists?',
-    evidence: 'Chapter 366 shows Tserriednich manipulating his aura with remarkable ease after roughly two hours of meditation, leading Theta to recognize him as a Nen genius. Her containment strategy remains active but is becoming substantially harder to execute.',
-    status: 'developing / containment increasingly doubtful',
-    lastChapter: '366',
-    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_366',
+    evidence: 'Chapter 368 worsens Theta’s position: Tserriednich has learned of Kurapika’s public two-week Nen-training claim through Zhang Lei, confronts Theta over the discrepancy, and threatens her while his Guardian Spirit Beast closes in. Theta admits accelerated training is possible but hazardous and continues to defend her slower method.',
+    status: 'developing / containment deteriorating under direct scrutiny',
+    lastChapter: '368',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_368',
   },
   ...succession363Mysteries,
   ...succession364Mysteries.filter((record) => record.question !== 'How will Room 1014 answer Benjamin, Zhang Lei, and Tubeppa without signaling an unwanted alliance?'),
@@ -549,7 +569,15 @@ export const successionMysteries = Object.freeze([
     source: 'https://hunterxhunter.fandom.com/wiki/Chapter_367',
   },
   ...succession366Mysteries.filter((record) => record.question !== 'Why did Halkenburg see all eleven bodyguards unconscious in Chapter 362 when they are awake in Chapter 366?'),
-  ...succession367Mysteries,
+  ...succession367Mysteries.filter((record) => record.question !== 'Which princes will accept Kurapika’s offer to send guards for two weeks of basic Nen instruction?'),
+  {
+    question: 'Which princes will accept Kurapika’s offer to send guards for two weeks of basic Nen instruction?',
+    evidence: 'Chapter 368 resolves the first-round response: ten other prince camps will send guards. Tyson and Camilla decline, Momoze is deceased, and Woble is the host camp. Kurapika caps representation at two people per prince and schedules the first class for 9 a.m. the next day.',
+    status: 'resolved first-round participation',
+    lastChapter: '368',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_368',
+  },
+  ...succession368Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -716,6 +744,17 @@ export const guardAssignmentGroups = Object.freeze([
       source: record.source,
     }))),
   }),
+  Object.freeze({
+    group: 'Chapter 368 Momoze custody state',
+    description: 'After Momoze is strangled, all six royal guards attached to her room are detained for court-martial proceedings without Chapter 368 establishing collective guilt.',
+    records: Object.freeze(succession368CustodyRecords.map((record) => Object.freeze({
+      subject: record.household,
+      people: record.person,
+      notes: `Custody status: ${record.state}. Guilt status: ${record.guilt}.`,
+      status: record.state,
+      source: record.source,
+    }))),
+  }),
   ...legacy.guardAssignmentGroups.map((group) => {
     if (group.group !== 'State, servants, and temporary custody') return group;
     return Object.freeze({
@@ -764,6 +803,7 @@ export const dossierSources = Object.freeze({
   chapter365: 'https://hunterxhunter.fandom.com/wiki/Chapter_365',
   chapter366: 'https://hunterxhunter.fandom.com/wiki/Chapter_366',
   chapter367: 'https://hunterxhunter.fandom.com/wiki/Chapter_367',
+  chapter368: 'https://hunterxhunter.fandom.com/wiki/Chapter_368',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -796,6 +836,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy365: succession365SourcePolicy,
   sourcePolicy366: succession366SourcePolicy,
   sourcePolicy367: succession367SourcePolicy,
+  sourcePolicy368: succession368SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
