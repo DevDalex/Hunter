@@ -8,7 +8,7 @@ import {
   authorizedSuccessionChapterNumbers,
   LATEST_AUTHORIZED_SUCCESSION_CHAPTER,
 } from '../successionChapterAvailability.generated.js';
-import { successionChapterResearch as maintainedResearch } from '../successionDossier.js';
+import { maintainedSuccessionChapterResearch as maintainedResearch } from '../successionMaintainedChapterResearch.js';
 
 const maintainedNumbers = new Set(maintainedResearch.map((record) => record.number));
 const pendingImportedResearch = authorizedSuccessionChapterNumbers
