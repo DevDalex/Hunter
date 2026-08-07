@@ -35,7 +35,8 @@ function ArchiveRouteLoading() {
 }
 
 export default function SuccessionArchiveEntry(props) {
-  const isCommandHome = props.routeTarget === 'story' && Object.keys(props.routeParams || {}).length === 0;
+  const isCommandHome = props.routeTarget === 'archive'
+    || (props.routeTarget === 'story' && Object.keys(props.routeParams || {}).length === 0);
   const isReader = props.routeTarget === 'reader';
   const isLightRoute = props.routeTarget === 'black-whale' || props.routeTarget === 'princes';
 
