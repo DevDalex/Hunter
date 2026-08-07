@@ -55,7 +55,6 @@ export default function SuccessionArchiveReaderRoute({
     onIntent={onIntent}
   >
     <section ref={readerSectionRef} className="succession-reader-command" aria-label="Succession Contest manga reader">
-      <h1 className="sr-only">Succession Contest manga reader</h1>
       <Suspense fallback={<ReaderLoadingState />}>
         <SuccessionChapterReader
           requestedChapter={routeParams.chapter}
