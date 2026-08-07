@@ -205,7 +205,7 @@ try {
     await desktop.waitForSelector(`.succession-reader[data-reader-chapter="${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}"], .succession-reader__reader[data-reader-chapter="${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}"]`, { timeout: 15_000 });
     if (await desktop.locator('.succession-archive').count() !== 1) throw new Error('Integrated reader is missing the archive shell');
     if (await desktop.locator('.arc-page--succession-contest').count()) throw new Error('Legacy grouped arc page still wraps the chapter reader');
-    if (!desktop.url().includes('/story/succession-contest/chapters')) throw new Error(`Reader canonical path changed unexpectedly: ${desktop.url()}`);
+    if (!desktop.url().includes('/story/succession-contest/reader')) throw new Error(`Reader canonical path changed unexpectedly: ${desktop.url()}`);
   });
 
   const widescreen = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
