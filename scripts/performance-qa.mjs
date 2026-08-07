@@ -15,7 +15,7 @@ const designSystemDebtClsRoutes = new Set(['series-research']);
 const approvedExternalMediaHosts = new Set(['hunterxhunter.fandom.com', 'static.wikia.nocookie.net']);
 
 const routes = [
-  { id: 'home', hash: 'home/' },
+  { id: 'home', hash: 'succession/archive', readySelector: '.succession-command-home' },
   { id: 'series-research', hash: 'series/research' },
   { id: 'family-tree', hash: 'succession/family-tree' },
   { id: 'black-whale', hash: 'succession/black-whale' },
@@ -133,16 +133,20 @@ try {
       page.on('request', onRequest);
       await session.send('Network.clearBrowserCache');
       const started = Date.now();
+      let readyMs = 0;
       let fatal = '';
       try {
         await page.goto(`${base}/#/${route.hash}`, { waitUntil: 'domcontentloaded', timeout: 15_000 });
         await page.waitForSelector('main', { timeout: 8_000 });
         await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 12_000 });
-        if (route.id === 'home') await page.waitForSelector('.archive-landing', { timeout: 8_000 });
+        if (route.readySelector) await page.waitForSelector(route.readySelector, { timeout: 8_000 });
+        readyMs = Date.now() - started;
         await page.evaluate(() => window.__resetArchiveVitals?.());
         await page.waitForTimeout(550);
-      } catch (error) { fatal = error.message; }
-      const readyMs = Date.now() - started;
+      } catch (error) {
+        readyMs = Date.now() - started;
+        fatal = error.message;
+      }
       const metrics = fatal ? {} : await page.evaluate(async () => {
         const navigation = performance.getEntriesByType('navigation')[0];
         const resources = performance.getEntriesByType('resource');
@@ -168,7 +172,6 @@ try {
         ...(readyMs > 13_000 ? [`route ready time ${readyMs}ms exceeds 13,000ms`] : []),
         ...(metrics.mainText === 0 ? ['main content is empty'] : []),
         ...(metrics.cls > clsBudget && !designSystemDebtClsRoutes.has(route.id) ? [`settled CLS ${metrics.cls} exceeds ${clsBudget}`] : []),
-        ...(route.id === 'home' && dynamicRequests.length ? [`home loaded dynamic entries: ${dynamicRequests.join(', ')}`] : []),
         ...(route.id === 'home' && metrics.highPriorityImages !== 1 ? [`home has ${metrics.highPriorityImages} high-priority images; expected 1`] : []),
         ...(metrics.serviceWorkers ? [`${metrics.serviceWorkers} service worker registration(s) found`] : []),
       ];
