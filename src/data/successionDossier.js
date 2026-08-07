@@ -192,6 +192,17 @@ import {
   succession366TserriednichTraining,
 } from './succession366Research.js';
 import {
+  succession367BabimynaSurveillance,
+  succession367ChapterFocus,
+  succession367ChapterResearch,
+  succession367DeceptionRecord,
+  succession367LittleEyeReconnaissance,
+  succession367Mysteries,
+  succession367NenInstructionPlan,
+  succession367RelationshipRecords,
+  succession367SourcePolicy,
+} from './succession367Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -265,6 +276,7 @@ export const chapterFocus = Object.freeze({
   ...succession364ChapterFocus,
   ...succession365ChapterFocus,
   ...succession366ChapterFocus,
+  ...succession367ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -275,7 +287,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -297,6 +309,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession364ChapterResearch,
   ...succession365ChapterResearch,
   ...succession366ChapterResearch,
+  ...succession367ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -344,6 +357,7 @@ export const successionRelationships = Object.freeze([
   ...succession364RelationshipRecords,
   ...succession365RelationshipRecords,
   ...succession366RelationshipRecords,
+  ...succession367RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -435,6 +449,10 @@ export const royalProtectionChapter366Research = succession366ProtectionNetwork;
 export const tserriednichNenTrainingResearch = succession366TserriednichTraining;
 export const chrolloChapter366LocationResearch = succession366LocationState;
 export const secretWindowChapter366Research = succession366AbilityRecords;
+export const littleEyeChapter367ReconnaissanceResearch = succession367LittleEyeReconnaissance;
+export const room1014NenInstructionPlanResearch = succession367NenInstructionPlan;
+export const room1014LittleEyeDeceptionResearch = succession367DeceptionRecord;
+export const babimynaChapter367SurveillanceResearch = succession367BabimynaSurveillance;
 
 export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
@@ -512,7 +530,10 @@ export const successionMysteries = Object.freeze([
     lastChapter: '365',
     source: 'https://hunterxhunter.fandom.com/wiki/Chapter_365',
   },
-  ...succession365Mysteries.filter((record) => record.question !== 'Will Zhang Lei’s truce offer become a formal alliance with Woble’s camp?'),
+  ...succession365Mysteries.filter((record) => ![
+    'Will Zhang Lei’s truce offer become a formal alliance with Woble’s camp?',
+    'Will Tubeppa’s conditional truce become a formal agreement with Room 1014?',
+  ].includes(record.question)),
   {
     question: 'Will Zhang Lei’s truce offer become a formal alliance with Woble’s camp?',
     evidence: 'Chapter 366 advances the relationship from an offer to practical cooperation when Zhang Lei sends Sakata and Hashito to help guard Woble until the next banquet. The supplied chapter does not explicitly define every term of a fully formalized alliance.',
@@ -520,7 +541,15 @@ export const successionMysteries = Object.freeze([
     lastChapter: '366',
     source: 'https://hunterxhunter.fandom.com/wiki/Chapter_366',
   },
+  {
+    question: 'Will Tubeppa’s conditional truce become a formal agreement with Room 1014?',
+    evidence: 'Chapter 367 advances Tubeppa’s Chapter 365 offer when Maor arrives in Room 1014 and participates in Kurapika’s Nen and Guardian Spirit Beast briefing. The supplied chapter confirms active information exchange but does not explicitly define every term of a finalized formal truce.',
+    status: 'partial resolution / active information exchange; formal-truce label unresolved',
+    lastChapter: '367',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_367',
+  },
   ...succession366Mysteries.filter((record) => record.question !== 'Why did Halkenburg see all eleven bodyguards unconscious in Chapter 362 when they are awake in Chapter 366?'),
+  ...succession367Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -734,6 +763,7 @@ export const dossierSources = Object.freeze({
   chapter364: 'https://hunterxhunter.fandom.com/wiki/Chapter_364',
   chapter365: 'https://hunterxhunter.fandom.com/wiki/Chapter_365',
   chapter366: 'https://hunterxhunter.fandom.com/wiki/Chapter_366',
+  chapter367: 'https://hunterxhunter.fandom.com/wiki/Chapter_367',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -765,6 +795,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy364: succession364SourcePolicy,
   sourcePolicy365: succession365SourcePolicy,
   sourcePolicy366: succession366SourcePolicy,
+  sourcePolicy367: succession367SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
