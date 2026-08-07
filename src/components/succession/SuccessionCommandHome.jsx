@@ -20,6 +20,7 @@ import {
 import { blackWhaleImages } from '../../data/blackWhale';
 import { routeToHref } from '../../lib/appRouter';
 import './SuccessionCommandHome.css';
+import './SuccessionCommandHomeQaFixes.css';
 
 const navigation = [
   { label: 'Home', target: 'story', icon: Home, active: true },
