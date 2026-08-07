@@ -228,9 +228,9 @@ body .succession-archive[data-archive-route="glossary"] :is(
 
 body .succession-archive[data-archive-route="glossary"] .succession-product-tools input,
 body .succession-archive[data-archive-route="glossary"] .succession-product-tools input::placeholder {
-  color: #f4f7f6 !important;
+  color: #17272f !important;
   opacity: 1 !important;
-  -webkit-text-fill-color: #f4f7f6 !important;
+  -webkit-text-fill-color: #17272f !important;
 }
 
 body .succession-archive .succession-archive__skip-link {
@@ -292,5 +292,59 @@ body .succession-archive .succession-archive__skip-link {
     .succession-chapter-command__card
   ) {
     min-height: 44px !important;
+  }
+
+  /* Light Black Whale inspector sheets need document ink, while the numbered
+     room/tier figures sit on dark cards and keep light ink. */
+  body .succession-archive[data-archive-route="black-whale"] :is(
+    .ship-location-inspector__pager > span,
+    .ship-location-inspector > header > span,
+    .ship-location-inspector__snapshot dt,
+    .ship-location-inspector__snapshot dd,
+    button[title] > span
+  ) {
+    color: #20343d !important;
+    -webkit-text-fill-color: #20343d !important;
+    opacity: 1 !important;
+  }
+
+  body .succession-archive[data-archive-route="black-whale"] button > figure > i {
+    color: #f2f6f4 !important;
+    -webkit-text-fill-color: #f2f6f4 !important;
+    opacity: 1 !important;
+  }
+
+  /* Guardian Beast metrics, orbit index, controls, card fact sheets, and the
+     reading-boundary strip are paper surfaces. Restore their document ink after
+     the historical light-on-dark compatibility rules above. */
+  body .succession-archive[data-archive-route="guardian-spirit-beasts"] :is(
+    .succession-gsb-command__metrics,
+    .succession-gsb-command-orbit,
+    .succession-gsb-command__controls,
+    .succession-gsb-boundary
+  ) :is(h3, p, span, small, strong, b, dt, dd, li, label, button) {
+    color: #20343d !important;
+    -webkit-text-fill-color: #20343d !important;
+    opacity: 1 !important;
+  }
+
+  body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card > dl :is(dt, dd, span, small, strong, b) {
+    color: #20343d !important;
+    -webkit-text-fill-color: #20343d !important;
+    opacity: 1 !important;
+  }
+
+  /* Chapter page-header metadata and pending cards are dark command surfaces,
+     unlike the pale chapter dossier sheets. */
+  body .succession-archive[data-archive-route="chapters"] .succession-page-header__meta-item :is(dt, dd, p, span, small, strong, b) {
+    color: #f2f6f4 !important;
+    -webkit-text-fill-color: #f2f6f4 !important;
+    opacity: 1 !important;
+  }
+
+  body .succession-archive[data-archive-route="chapters"] .succession-chapter-command__card.is-pending :is(p, span, small, strong, b, dt, dd) {
+    color: #f2f6f4 !important;
+    -webkit-text-fill-color: #f2f6f4 !important;
+    opacity: 1 !important;
   }
 }
