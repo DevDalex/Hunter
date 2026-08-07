@@ -107,6 +107,16 @@ import {
   succession358TierRecords,
 } from './succession358Research.js';
 import {
+  succession359BodyStates,
+  succession359ChapterFocus,
+  succession359ChapterResearch,
+  succession359Mysteries,
+  succession359RelationshipRecords,
+  succession359SourcePolicy,
+  succession359VoyageRoute,
+  succession359ZodiacLocations,
+} from './succession359Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -172,6 +182,7 @@ export const chapterFocus = Object.freeze({
   ...succession350ChapterFocus,
   ...succession351357ChapterFocus,
   ...succession358ChapterFocus,
+  ...succession359ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -182,7 +193,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -196,6 +207,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession350ChapterResearch,
   ...succession351357ChapterResearch,
   ...succession358ChapterResearch,
+  ...succession359ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -234,6 +246,7 @@ export const successionRelationships = Object.freeze([
   ...succession350RelationshipRecords,
   ...succession351357RelationshipRecords,
   ...succession358RelationshipRecords,
+  ...succession359RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -242,6 +255,7 @@ export const bodyStateLedger = Object.freeze([
   ...succession344BodyStates,
   ...succession345BodyStates,
   ...succession351357BodyStates,
+  ...succession359BodyStates,
   ...succession414415BodyStates,
 ]);
 
@@ -286,6 +300,7 @@ export const contestRules = Object.freeze([
 export const hisokaChrolloFightResearch = succession351357FightResearch;
 export const hisokaChrolloSourceConflicts = succession351357SourceConflicts;
 export const blackWhaleBoardingTierResearch = succession358TierRecords;
+export const blackWhaleVoyageRouteResearch = succession359VoyageRoute;
 
 export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
@@ -316,6 +331,7 @@ export const successionMysteries = Object.freeze([
   ...succession350Mysteries,
   ...succession351357Mysteries,
   ...succession358Mysteries,
+  ...succession359Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -366,6 +382,17 @@ export const guardAssignmentGroups = Object.freeze([
       source: assignment.source,
     }))),
   }),
+  Object.freeze({
+    group: 'Voyage Day 1 Zodiac deployment',
+    description: 'Chapter 359 opening positions for Zodiacs and associated expedition personnel after the Black Whale departs.',
+    records: Object.freeze(succession359ZodiacLocations.map((assignment) => Object.freeze({
+      subject: assignment.location,
+      people: assignment.people,
+      notes: assignment.role,
+      status: `Tier ${assignment.tier} · Voyage Day 1`,
+      source: assignment.source,
+    }))),
+  }),
   ...legacy.guardAssignmentGroups.map((group) => {
     if (group.group !== 'State, servants, and temporary custody') return group;
     return Object.freeze({
@@ -405,6 +432,7 @@ export const dossierSources = Object.freeze({
   chapter356: 'https://hunterxhunter.fandom.com/wiki/Chapter_356',
   chapter357: 'https://hunterxhunter.fandom.com/wiki/Chapter_357',
   chapter358: 'https://hunterxhunter.fandom.com/wiki/Chapter_358',
+  chapter359: 'https://hunterxhunter.fandom.com/wiki/Chapter_359',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -428,6 +456,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy350: succession350SourcePolicy,
   sourcePolicy351357: succession351357SourcePolicy,
   sourcePolicy358: succession358SourcePolicy,
+  sourcePolicy359: succession359SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
