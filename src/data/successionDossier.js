@@ -18,6 +18,14 @@ import {
   succession342SourcePolicy,
 } from './succession342Research.js';
 import {
+  succession343AbilityRecords,
+  succession343ChapterFocus,
+  succession343ChapterResearch,
+  succession343Mysteries,
+  succession343RelationshipRecords,
+  succession343SourcePolicy,
+} from './succession343Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -73,6 +81,7 @@ export const chapterFocus = Object.freeze({
   ...succession340ChapterFocus,
   ...succession341ChapterFocus,
   ...succession342ChapterFocus,
+  ...succession343ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -83,10 +92,11 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
+  ...succession343ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -105,11 +115,13 @@ export const queenDossiers = Object.freeze(legacy.queenDossiers.map(patchSuccess
 
 export const successionAbilities = Object.freeze([
   ...legacy.successionAbilities,
+  ...succession343AbilityRecords,
   ...succession414415AbilityRecords,
 ]);
 
 export const successionRelationships = Object.freeze([
   ...legacy.successionRelationships,
+  ...succession343RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -130,6 +142,7 @@ export const successionMysteries = Object.freeze([
   ...succession340Mysteries,
   ...succession341Mysteries,
   ...succession342Mysteries,
+  ...succession343Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -179,6 +192,7 @@ export const dossierSources = Object.freeze({
   chapter340: 'https://hunterxhunter.fandom.com/wiki/Chapter_340',
   chapter341: 'https://hunterxhunter.fandom.com/wiki/Chapter_341',
   chapter342: 'https://hunterxhunter.fandom.com/wiki/Chapter_342',
+  chapter343: 'https://hunterxhunter.fandom.com/wiki/Chapter_343',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -192,6 +206,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy340: succession340SourcePolicy,
   sourcePolicy341: succession341SourcePolicy,
   sourcePolicy342: succession342SourcePolicy,
+  sourcePolicy343: succession343SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
