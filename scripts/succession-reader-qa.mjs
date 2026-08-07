@@ -107,7 +107,9 @@ try {
 
   await record('Reader route is standalone and reading-first', desktop, async () => {
     const reader = await openReader(desktop, base);
-    if (await desktop.locator('.arc-page, .succession-archive').count()) throw new Error('Reader is still wrapped by a story hero or archive shell');
+    if (await desktop.locator('.arc-page').count()) throw new Error('Reader is still wrapped by a legacy story hero');
+    if (await desktop.locator('.succession-archive').count() !== 1) throw new Error('Reader is not integrated into the canonical Succession archive shell');
+    if (await desktop.locator('.succession-reader-command').count() !== 1) throw new Error('Reader command workspace is missing from the archive shell');
     if (await reader.locator('.succession-reader__topbar').count() !== 1) throw new Error('Compact reader top bar is missing');
     if (await reader.locator('.succession-reader__bottombar').count() !== 1) throw new Error('Reader bottom navigation is missing');
     if (await reader.locator('.succession-reader__canvas').count() !== 1) throw new Error('Reading canvas is missing');
@@ -224,7 +226,8 @@ try {
       arcPage: Boolean(document.querySelector('.arc-page')),
       archiveShell: Boolean(document.querySelector('.succession-archive')),
     }));
-    if (state.arcPage || state.archiveShell) throw new Error('Mobile reader is wrapped by another application shell');
+    if (state.arcPage) throw new Error('Mobile reader is wrapped by the legacy story page');
+    if (!state.archiveShell) throw new Error('Mobile reader is not integrated into the canonical archive shell');
     if (state.overflow > 1) throw new Error(`Reader overflowed mobile viewport by ${state.overflow}px`);
     if (state.readerWidth > 390.5) throw new Error(`Reader exceeds mobile width: ${state.readerWidth}`);
     if (!state.reducedMotion) throw new Error('Reduced-motion emulation was not active');
