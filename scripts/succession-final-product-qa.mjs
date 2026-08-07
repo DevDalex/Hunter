@@ -9,6 +9,8 @@ const output = path.resolve(root, process.env.SUCCESSION_FINAL_PRODUCT_QA_OUTPUT
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
 const results = [];
 const failures = [];
+const approvedExternalMediaHosts = new Set(['hunterxhunter.fandom.com', 'static.wikia.nocookie.net']);
+const externalResourceConsoleError = /^Failed to load resource: net::ERR_BLOCKED_BY_RESPONSE\.NotSameOrigin$/i;
 const mime = {
   '.css': 'text/css; charset=utf-8', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.json': 'application/json; charset=utf-8',
@@ -22,6 +24,18 @@ const firstAvailable = async (candidates) => {
   }
   return '';
 };
+
+const isApprovedExternalMediaUrl = (value) => {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && approvedExternalMediaHosts.has(url.hostname);
+  } catch {
+    return false;
+  }
+};
+
+const isApprovedExternalMediaRequest = (request) => request.resourceType() === 'image'
+  && isApprovedExternalMediaUrl(request.url());
 
 const serve = async () => {
   await access(path.join(dist, 'index.html'));
@@ -46,25 +60,57 @@ const serve = async () => {
 const record = async (name, page, test) => {
   const runtimeErrors = [];
   const consoleErrors = [];
+  const approvedExternalMediaFailures = [];
   const onPageError = (error) => runtimeErrors.push(error.message);
-  const onConsole = (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); };
+  const onRequestFailed = (request) => {
+    if (!isApprovedExternalMediaRequest(request)) return;
+    approvedExternalMediaFailures.push(`${request.url()} · ${request.failure()?.errorText || 'failed'}`);
+  };
+  const onConsole = (message) => {
+    if (message.type() !== 'error') return;
+    consoleErrors.push({
+      text: message.text(),
+      url: message.location()?.url || '',
+    });
+  };
   page.on('pageerror', onPageError);
+  page.on('requestfailed', onRequestFailed);
   page.on('console', onConsole);
   try {
     await test();
+    const directlyApprovedConsoleErrors = consoleErrors.filter((entry) => externalResourceConsoleError.test(entry.text) && isApprovedExternalMediaUrl(entry.url));
+    let unmatchedExternalFailures = Math.max(0, approvedExternalMediaFailures.length - directlyApprovedConsoleErrors.length);
+    const actionableConsoleErrors = consoleErrors.filter((entry) => {
+      if (!externalResourceConsoleError.test(entry.text)) return true;
+      if (isApprovedExternalMediaUrl(entry.url)) return false;
+      if (unmatchedExternalFailures > 0) {
+        unmatchedExternalFailures -= 1;
+        return false;
+      }
+      return true;
+    });
     if (runtimeErrors.length) throw new Error(`Runtime errors: ${runtimeErrors.join(' | ')}`);
-    if (consoleErrors.length) throw new Error(`Console errors: ${consoleErrors.join(' | ')}`);
-    results.push({ name, status: 'passed' });
-    process.stdout.write(`✓ ${name}\n`);
+    if (actionableConsoleErrors.length) throw new Error(`Console errors: ${actionableConsoleErrors.map((entry) => entry.text).join(' | ')}`);
+    results.push({ name, status: 'passed', approvedExternalMediaFailures: approvedExternalMediaFailures.length });
+    process.stdout.write(`✓ ${name}${approvedExternalMediaFailures.length ? ` · approved external media:${approvedExternalMediaFailures.length}` : ''}\n`);
   } catch (error) {
     const screenshot = path.join(output, `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.png`);
     await page.screenshot({ path: screenshot, fullPage: true }).catch(() => {});
-    const failure = { name, status: 'failed', error: error.message, screenshot: path.relative(root, screenshot), runtimeErrors, consoleErrors };
+    const failure = {
+      name,
+      status: 'failed',
+      error: error.message,
+      screenshot: path.relative(root, screenshot),
+      runtimeErrors,
+      consoleErrors,
+      approvedExternalMediaFailures,
+    };
     failures.push(failure);
     results.push(failure);
     process.stdout.write(`✗ ${name} · ${error.message}\n`);
   } finally {
     page.off('pageerror', onPageError);
+    page.off('requestfailed', onRequestFailed);
     page.off('console', onConsole);
   }
 };
@@ -172,8 +218,15 @@ try {
   await new Promise((resolve) => server.close(resolve));
 }
 
-const summary = { generatedAt: new Date().toISOString(), checks: results.length, passed: results.length - failures.length, failed: failures.length };
+const approvedExternalMediaFailureCount = results.reduce((total, result) => total + (result.approvedExternalMediaFailures?.length || 0), 0);
+const summary = {
+  generatedAt: new Date().toISOString(),
+  checks: results.length,
+  passed: results.length - failures.length,
+  failed: failures.length,
+  approvedExternalMediaFailureCount,
+};
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results }, null, 2)}\n`);
 await writeFile(path.join(output, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
-console.log(`\nSuccession final product QA: ${summary.passed}/${summary.checks} checks passed.`);
+console.log(`\nSuccession final product QA: ${summary.passed}/${summary.checks} checks passed. Approved external media availability events: ${summary.approvedExternalMediaFailureCount}.`);
 if (failures.length) process.exitCode = 1;
