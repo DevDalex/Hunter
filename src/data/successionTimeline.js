@@ -4,7 +4,7 @@ import {
   timelineSources as legacyTimelineSources,
   timelineTracks as legacyTimelineTracks,
 } from './successionTimelineLegacy.js';
-import { successionChapterResearch } from './succession/successionResearch.js';
+import { maintainedSuccessionChapterResearch } from './successionMaintainedChapterResearch.js';
 
 const freeze = (value) => Object.freeze(value);
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -23,7 +23,7 @@ const researchIsMaintained = (research) => Boolean(
   && !String(research.status || '').toLowerCase().includes('pending')
   && research.coverage?.summary,
 );
-const chronologyResearch = successionChapterResearch.filter((research) => researchIsMaintained(research)
+const chronologyResearch = maintainedSuccessionChapterResearch.filter((research) => researchIsMaintained(research)
   && research.coverage?.chronology
   && research.events?.length);
 
@@ -39,7 +39,7 @@ const normalizeResearchEvent = (research, event, index) => freeze({
   confidence: event.confidence || research.confidence?.[0] || 'Maintained chapter research',
   source: event.source || research.source,
   maintainedResearch: true,
-});
+}));
 
 const maintainedEventsByChapter = new Map(chronologyResearch.map((research) => [
   research.number,
