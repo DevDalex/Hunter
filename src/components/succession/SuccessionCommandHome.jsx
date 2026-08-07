@@ -17,10 +17,11 @@ import {
   ARCHIVE_DETAILED_BOUNDARY,
   ARCHIVE_REVIEW_DATE,
 } from '../../data/archiveMeta';
-import { blackWhaleImages } from '../../data/blackWhale';
 import { routeToHref } from '../../lib/appRouter';
 import './SuccessionCommandHome.css';
 import './SuccessionCommandHomeQaFixes.css';
+
+const BLACK_WHALE_HERO = '/media/rooms/black-whale-exterior.webp';
 
 const navigation = [
   { label: 'Home', target: 'story', icon: Home, active: true },
@@ -102,7 +103,7 @@ export default function SuccessionCommandHome({ spoilerLimit, onNavigate, onOpen
       <section className="succession-command-home__hero" aria-label="Black Whale voyage overview">
         <div className="succession-command-home__ship-stage">
           <SafeImage
-            src={blackWhaleImages.exterior}
+            src={BLACK_WHALE_HERO}
             alt="Black Whale 1 sailing toward the New Continent"
             fallbackLabel="Black Whale 1"
             eager
