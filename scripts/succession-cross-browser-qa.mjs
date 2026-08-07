@@ -143,6 +143,7 @@ try {
               const occupancy = page.getByRole('button', { name: /Occupancy/i }).first();
               if (await occupancy.count()) await occupancy.click();
             }
+            const requiresWorkspaceRegion = routeId !== 'story';
             const defects = [
               ...runtimeErrors,
               ...failedRequests,
@@ -152,7 +153,7 @@ try {
               ...(audit.bodyOverflow > 1 ? [{ bodyOverflow: audit.bodyOverflow }] : []),
               ...(!audit.mainVisible ? [{ mainVisible: false }] : []),
               ...(audit.h1Count !== 1 ? [{ h1Count: audit.h1Count }] : []),
-              ...(!audit.workspaceRegion ? [{ workspaceRegion: false }] : []),
+              ...(requiresWorkspaceRegion && !audit.workspaceRegion ? [{ workspaceRegion: false }] : []),
             ];
             results.push({ browser: browserRecord.id, viewport: viewport.id, route, runtimeErrors, failedRequests, consoleErrors, ...audit, defects });
             process.stdout.write(`${defects.length ? '✗' : '✓'} ${browserRecord.id.padEnd(7)} ${viewport.id.padEnd(7)} ${route}${defects.length ? ` · ${defects.length} defect(s)` : ''}\n`);

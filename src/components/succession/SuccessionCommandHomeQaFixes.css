@@ -1,0 +1,26 @@
+.succession-command-home__identity small,
+.succession-command-home__rail nav a,
+.succession-command-home__rail footer span,
+.succession-command-home__rail footer small,
+.succession-command-home__search span,
+.succession-command-home__search kbd,
+.succession-command-home__locator,
+.succession-command-home__voyage h1,
+.succession-command-home__voyage dt,
+.succession-command-home__voyage dd,
+.succession-command-home__portal-number,
+.succession-command-home__portal small,
+.succession-command-home__portal p {
+  font-size: max(11px, .6875rem);
+}
+
+.succession-command-home__search {
+  min-height: 44px;
+}
+
+@media (max-width: 860px) {
+  .succession-command-home__rail nav a {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}

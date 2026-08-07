@@ -282,7 +282,7 @@ export default function SuccessionArchiveChapterStoryWorkspace({ routeParams = {
       <aside className="succession-chapter-intel__index succession-chapter-command__rail">
         <div className="succession-chapter-command__rail-header">
           <span>Selected record</span>
-          <b>Chapter {dossier.chapter.number}</b>
+          <b>Chapter {selectedNumber}</b>
           <small>{dossier.phasePresentation?.name || 'Pending phase'} · {dossier.chapter.voyageDay}</small>
         </div>
         <nav aria-label="Chapter dossier sections">

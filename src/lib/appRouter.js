@@ -94,8 +94,12 @@ export function normalizeDestination(view, target = '', params = {}) {
     if (!successionArchiveRouteIds.has(resolved.target)) {
       return attempted(`/story/succession-contest/${resolved.target}`);
     }
-    const { panel: _panel, ...archiveParams } = resolved.params;
-    return { view: 'succession', target: resolved.target, params: archiveParams };
+    const { panel, ...archiveParams } = resolved.params;
+    return {
+      view: 'succession',
+      target: resolved.target,
+      params: resolved.target === 'reader' && panel ? { ...archiveParams, panel } : archiveParams,
+    };
   }
 
   if (view === 'reference') {

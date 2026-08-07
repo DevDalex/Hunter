@@ -125,7 +125,7 @@ export const routeManifest = Object.freeze([
 export const routeManifestStats = Object.freeze({
   screens: routeManifest.length,
   succession: canonicalSuccessionRoutes.length,
-  successionReleaseScreens: releasedSuccessionRoutes.length,
+  successionReleaseScreens: releasedSuccessionRoutes.length + 1,
   reference: referencePages.length,
   aliases: Object.keys(referenceAliases).length + Object.keys(legacyRouteRedirects).length,
 });

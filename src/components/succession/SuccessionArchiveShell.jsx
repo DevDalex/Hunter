@@ -21,7 +21,7 @@ import {
   successionArchiveHubs,
 } from '../../data/succession/archiveRoutes';
 import SpoilerControl from '../SpoilerControl';
-import SuccessionArchitectureBoard from './SuccessionArchitectureBoard';
+import SuccessionCommandHome from './SuccessionCommandHome';
 import SuccessionInformationConsistencyPanel from './SuccessionInformationConsistencyPanel';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveContrastFixes.css';
@@ -113,7 +113,7 @@ export default function SuccessionArchiveShell({
   const drawerRef = useRef(null);
   const menuButtonRef = useRef(null);
   const contentRef = useRef(null);
-  const previousRouteRef = useRef(activeId);
+  const previousRouteRef = useRef(null);
   const route = getSuccessionArchiveRoute(activeId);
   const activeHub = getSuccessionArchiveHub(route.id);
   const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
@@ -125,11 +125,12 @@ export default function SuccessionArchiveShell({
   }, [onNavigate, route.id]);
 
   useEffect(() => {
-    if (previousRouteRef.current === activeId) return;
+    const previousRoute = previousRouteRef.current;
     previousRouteRef.current = activeId;
+    if (route.id === 'search' || previousRoute === activeId) return undefined;
     const frame = window.requestAnimationFrame(() => contentRef.current?.focus({ preventScroll: true }));
     return () => window.cancelAnimationFrame(frame);
-  }, [activeId]);
+  }, [activeId, route.id]);
 
   useEffect(() => {
     if (!drawerOpen) return undefined;
@@ -160,11 +161,10 @@ export default function SuccessionArchiveShell({
     };
   }, [drawerOpen]);
 
-  const showArchitectureBoard = route.id === 'story' && Object.keys(routeParams || {}).length === 0;
-  if (showArchitectureBoard) return <SuccessionArchitectureBoard
+  const showCommandHome = route.id === 'story' && Object.keys(routeParams || {}).length === 0;
+  if (showCommandHome) return <SuccessionCommandHome
     spoilerLimit={spoilerLimit}
     onNavigate={onNavigate}
-    onExitArchive={onExitArchive}
     onOpenSearch={onOpenSearch}
   />;
 

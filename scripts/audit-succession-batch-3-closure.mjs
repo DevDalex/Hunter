@@ -86,7 +86,8 @@ assertReleasedSuccessionRoutes(['princes', 'organizations'], assert, 'release vi
 assert(canonicalTargetForSuccessionRoute('queens') === 'princes', 'Queens compatibility route must canonically resolve to Princes');
 assert(packageJson.includes('"audit:succession-batch-3"'), 'package.json must expose the Batch 3 closure audit');
 assert(workflow.includes('audit:succession-batch-3'), 'visual workflow must run the Batch 3 closure audit');
-for (const route of ['succession/queens', 'succession/organizations']) assert(workflow.includes(route), `visual workflow must render ${route}`);
+assert(workflow.includes('VISUAL_QA_ROUTE: succession/organizations'), 'visual workflow must render succession/organizations');
+assert(!workflow.includes('VISUAL_QA_ROUTE: succession/queens'), 'retired Queens compatibility route must not remain a release-blocking visual QA target');
 for (const hour of ['Hour 32', 'Hour 33', 'Hour 34', 'Hour 35', 'Hour 36']) assert(docs.includes(hour), `design record must document ${hour}`);
 
-console.log('Succession Batch 3 closure audit passed: queen households, dedicated royal routes, direct Royal Family hierarchy, suppressed tree-view intro chrome, institution directory, comparison matrix, dossiers, responsive behavior, touch targets, and reduced motion are registered.');
+console.log('Succession Batch 3 closure audit passed: queen household implementation is retained behind the canonical Princes compatibility target, Royal Family hierarchy, institution directory, comparison matrix, dossiers, responsive behavior, touch targets, and reduced motion are registered.');

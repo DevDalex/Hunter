@@ -14,11 +14,12 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Layout audit failed: ${message}`);
 };
 
-const [app, css, router, header, worldAtlas, familyTree, blackWhale, packageJson] = await Promise.all([
+const [app, css, router, header, integratedReferences, worldAtlas, familyTree, blackWhale, packageJson] = await Promise.all([
   read('src/App.jsx'),
   read('src/styles.css'),
   read('src/lib/appRouter.js'),
   read('src/components/Header.jsx'),
+  read('src/components/succession/SuccessionIntegratedReferences.jsx'),
   read('src/components/WorldAtlas.jsx'),
   read('src/components/FamilyTree.jsx'),
   read('src/components/BlackWhaleGuide.jsx'),
@@ -68,12 +69,18 @@ for (const retired of [
 ]) assert(!app.includes(retired), `the retired ${retired} module is still mounted by the application`);
 
 assert(app.includes('SuccessionArchiveApp'), 'the Succession archive is not mounted');
-assert(app.includes('NenEncyclopedia'), 'the retained general Nen Encyclopedia is not mounted');
-assert(app.includes('WorldAtlas'), 'the retained general World Atlas is not mounted');
+assert(app.includes('SuccessionIntegratedReferences'), 'the retained integrated reference host is not mounted');
+assert(integratedReferences.includes('NenEncyclopedia'), 'the retained general Nen Encyclopedia is not mounted by the integrated reference host');
+assert(integratedReferences.includes('WorldAtlas'), 'the retained general World Atlas is not mounted by the integrated reference host');
 assert(router.includes("if (!parts.length || pathnameClean === '/index.html')"), 'the root route guard is missing');
 assert(router.includes("view: 'succession', target: 'archive'"), 'the root route must resolve to the Succession archive');
 assert(router.includes("['nen', { target: 'nen' }]") && router.includes("['world', { target: 'atlas' }]") , 'the retained /nen and /world routes are missing');
-assert(header.includes("label: 'Succession'") && header.includes("label: 'Nen'") && header.includes("label: 'World'"), 'the focused primary navigation is incomplete');
+assert(
+  header.includes("label: 'Succession Archive'")
+    && header.includes("label: 'Nen Library'")
+    && header.includes("label: 'World Atlas'"),
+  'the focused primary navigation is incomplete',
+);
 assert(!header.includes("label: 'Characters'") && !header.includes("label: 'Fights'") && !header.includes("label: 'Story'"), 'retired navigation returned');
 
 assert(css.includes('--content: 1240px') && css.includes('--wide: 1540px'), 'editorial content and visual-wide measures are missing');
@@ -83,4 +90,4 @@ assert(familyTree.includes('RoyalFamilyGuardTree'), 'the Succession royal family
 assert(blackWhale.includes('Black Whale passenger manifest'), 'the Succession Black Whale workspace lost its manifest');
 assert(packageJson.includes('"build"') && packageJson.includes('"audit:succession-runtime"'), 'the focused build contract is incomplete');
 
-console.log(`Layout audit passed: ${routeManifest.length} focused routes, ${successionReleaseRoutes.length} curated Succession screens, two retained general references, valid JSX, responsive containment, and no retired public workspaces.`);
+console.log(`Layout audit passed: ${routeManifest.length} focused routes, ${successionReleaseRoutes.length} curated Succession screens, two retained integrated references, valid JSX, responsive containment, and no retired public workspaces.`);

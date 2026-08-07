@@ -1,1 +1,127 @@
-html:has(.nen-map-only),body:has(.nen-map-only),#root:has(.nen-map-only){width:100%;height:100%;overflow:hidden}.app-shell.view-reference:has(.nen-map-only){width:100vw;height:100svh;min-height:100svh;overflow:hidden}.app-shell.view-reference:has(.nen-map-only)>.site-header{display:none!important}.app-shell.view-reference:has(.nen-map-only) main>.page-intro,.app-shell.view-reference:has(.nen-map-only) main>.workspace-nav,.app-shell.view-reference:has(.nen-map-only) main>.spoiler-settings,.app-shell.view-reference:has(.nen-map-only) main>.reference-backbone{display:none!important}.app-shell.view-reference:has(.nen-map-only) main{position:fixed;inset:0;width:100vw!important;max-width:none!important;height:100svh!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden}.app-shell.view-reference:has(.nen-map-only) .site-footer{display:none!important}.app-shell.view-reference:has(.nen-map-only) main>section.nen-map-only,.app-shell.view-reference:has(.nen-map-only) .nen-map-only{width:100vw!important;max-width:none!important;height:100svh!important;min-height:0!important;margin:0!important;padding:0!important;overflow:hidden}.nen-map-only .nen-pipe-map{display:block;width:100vw!important;max-width:none!important;height:100svh!important;min-height:0!important;margin:0!important;border:0!important;overflow:hidden}.nen-map-only .nen-pipe-toolbar,.nen-map-only .nen-pipe-footer{display:none!important}.nen-map-only .nen-pipe-viewport{position:absolute;inset:0;width:100vw!important;height:100svh!important;min-height:0!important}.nen-map-only .nen-pipe-node{background:rgba(248,245,237,.98)!important;color:#151515!important}.nen-map-only .nen-pipe-node.is-hub{background:#e9e2d6!important;color:#151515!important}.nen-map-only .nen-pipe-node.is-root,.nen-map-only .nen-pipe-node.is-category{background:#fbf9f4!important;color:#151515!important}.nen-map-only .nen-pipe-node:hover,.nen-map-only .nen-pipe-node:focus-visible,.nen-map-only .nen-pipe-node.is-active,.nen-map-only .nen-pipe-node.is-pinned{background:#fff!important;color:#151515!important}.nen-map-only .nen-pipe-node.is-pinned{box-shadow:0 0 0 3px var(--red),5px 6px 0 rgba(155,45,33,.18)!important}.nen-map-only .nen-pipe-connectors path{opacity:1}.nen-map-only .nen-pipe-connectors path.is-active{stroke:var(--red);stroke-width:8}.nen-map-only .nen-pipe-inspector{background:rgba(250,248,242,.98)!important;color:#151515!important}
+html:has(.nen-map-only),
+body:has(.nen-map-only),
+#root:has(.nen-map-only) {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* The Nen reference map is an intentional full-viewport workspace. Keep this
+   contract independent of the outer shell's current view-class naming so route
+   shell refactors cannot reintroduce centered-content offsets or toolbar spill. */
+body:has(.nen-map-only) .site-header,
+.app-shell.view-reference:has(.nen-map-only) > .site-header {
+  display: none !important;
+}
+
+body:has(.nen-map-only) main > .page-intro,
+body:has(.nen-map-only) main > .workspace-nav,
+body:has(.nen-map-only) main > .spoiler-settings,
+body:has(.nen-map-only) main > .reference-backbone,
+.app-shell.view-reference:has(.nen-map-only) main > .page-intro,
+.app-shell.view-reference:has(.nen-map-only) main > .workspace-nav,
+.app-shell.view-reference:has(.nen-map-only) main > .spoiler-settings,
+.app-shell.view-reference:has(.nen-map-only) main > .reference-backbone {
+  display: none !important;
+}
+
+body:has(.nen-map-only) main,
+.app-shell.view-reference:has(.nen-map-only) main {
+  position: fixed;
+  inset: 0;
+  width: 100vw !important;
+  max-width: none !important;
+  height: 100svh !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+body:has(.nen-map-only) .site-footer,
+.app-shell.view-reference:has(.nen-map-only) .site-footer {
+  display: none !important;
+}
+
+body:has(.nen-map-only) main > section.nen-map-only,
+body:has(.nen-map-only) .nen-map-only,
+.app-shell.view-reference:has(.nen-map-only) main > section.nen-map-only,
+.app-shell.view-reference:has(.nen-map-only) .nen-map-only {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  max-width: none !important;
+  height: 100svh !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.nen-map-only .nen-pipe-map {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block;
+  width: 100% !important;
+  max-width: none !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  overflow: hidden;
+}
+
+.nen-map-only .nen-pipe-toolbar,
+.nen-map-only .nen-pipe-footer {
+  display: none !important;
+}
+
+.nen-map-only .nen-pipe-viewport {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.nen-map-only .nen-pipe-node {
+  background: rgba(248,245,237,.98) !important;
+  color: #151515 !important;
+}
+
+.nen-map-only .nen-pipe-node.is-hub {
+  background: #e9e2d6 !important;
+  color: #151515 !important;
+}
+
+.nen-map-only .nen-pipe-node.is-root,
+.nen-map-only .nen-pipe-node.is-category {
+  background: #fbf9f4 !important;
+  color: #151515 !important;
+}
+
+.nen-map-only .nen-pipe-node:hover,
+.nen-map-only .nen-pipe-node:focus-visible,
+.nen-map-only .nen-pipe-node.is-active,
+.nen-map-only .nen-pipe-node.is-pinned {
+  background: #fff !important;
+  color: #151515 !important;
+}
+
+.nen-map-only .nen-pipe-node.is-pinned {
+  box-shadow: 0 0 0 3px var(--red), 5px 6px 0 rgba(155,45,33,.18) !important;
+}
+
+.nen-map-only .nen-pipe-connectors path {
+  opacity: 1;
+}
+
+.nen-map-only .nen-pipe-connectors path.is-active {
+  stroke: var(--red);
+  stroke-width: 8;
+}
+
+.nen-map-only .nen-pipe-inspector {
+  background: rgba(250,248,242,.98) !important;
+  color: #151515 !important;
+}
