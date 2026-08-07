@@ -3,18 +3,23 @@ import {
   abilityFoundationExpansion,
   guardianBeastAbilityExpansion,
 } from './abilityFoundationExpansion.js';
+import { abilityFoundation370Expansion } from './abilityFoundation370Expansion.js';
 
-const ARCHIVE_DATE = '2026-07-24';
+const ARCHIVE_DATE = '2026-08-07';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
+const abilityExpansions = Object.freeze([
+  ...abilityFoundationExpansion,
+  ...abilityFoundation370Expansion,
+]);
 
 const abilities = Object.freeze(uniqueById([
   ...foundationData.abilities,
-  ...abilityFoundationExpansion,
+  ...abilityExpansions,
 ]));
 
 const abilityIdsByChapter = new Map();
-for (const ability of abilityFoundationExpansion) {
+for (const ability of abilityExpansions) {
   for (const chapterNumber of ability.sourceChapterNumbers || []) {
     const current = abilityIdsByChapter.get(chapterNumber) || [];
     current.push(ability.id);
