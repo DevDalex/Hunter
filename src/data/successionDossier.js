@@ -117,6 +117,16 @@ import {
   succession359ZodiacLocations,
 } from './succession359Research.js';
 import {
+  succession360BodyStates,
+  succession360ChapterFocus,
+  succession360ChapterResearch,
+  succession360Mysteries,
+  succession360ParasiticNenRecord,
+  succession360QueenSpyNetwork,
+  succession360RelationshipRecords,
+  succession360SourcePolicy,
+} from './succession360Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -183,6 +193,7 @@ export const chapterFocus = Object.freeze({
   ...succession351357ChapterFocus,
   ...succession358ChapterFocus,
   ...succession359ChapterFocus,
+  ...succession360ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -193,7 +204,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -208,6 +219,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession351357ChapterResearch,
   ...succession358ChapterResearch,
   ...succession359ChapterResearch,
+  ...succession360ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -247,6 +259,7 @@ export const successionRelationships = Object.freeze([
   ...succession351357RelationshipRecords,
   ...succession358RelationshipRecords,
   ...succession359RelationshipRecords,
+  ...succession360RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -256,6 +269,7 @@ export const bodyStateLedger = Object.freeze([
   ...succession345BodyStates,
   ...succession351357BodyStates,
   ...succession359BodyStates,
+  ...succession360BodyStates,
   ...succession414415BodyStates,
 ]);
 
@@ -301,6 +315,8 @@ export const hisokaChrolloFightResearch = succession351357FightResearch;
 export const hisokaChrolloSourceConflicts = succession351357SourceConflicts;
 export const blackWhaleBoardingTierResearch = succession358TierRecords;
 export const blackWhaleVoyageRouteResearch = succession359VoyageRoute;
+export const guardianSpiritBeastParasiticNenResearch = succession360ParasiticNenRecord;
+export const oitoHigherQueenSpyNetwork = succession360QueenSpyNetwork;
 
 export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
@@ -332,6 +348,7 @@ export const successionMysteries = Object.freeze([
   ...succession351357Mysteries,
   ...succession358Mysteries,
   ...succession359Mysteries,
+  ...succession360Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -393,6 +410,17 @@ export const guardAssignmentGroups = Object.freeze([
       source: assignment.source,
     }))),
   }),
+  Object.freeze({
+    group: 'Oito household higher-queen surveillance network',
+    description: 'Chapter 360 reveals that each of the seven higher-ranked queens embedded one royal guard in the lowest-ranked queen Oito’s household as an informant with conditional protective duties.',
+    records: Object.freeze(succession360QueenSpyNetwork.map((assignment) => Object.freeze({
+      subject: assignment.sponsor,
+      people: assignment.identity,
+      notes: `${assignment.placement}. ${assignment.purpose}`,
+      status: 'historical placement · exposed in Chapter 360 · embedded guards deceased by chapter end',
+      source: assignment.source,
+    }))),
+  }),
   ...legacy.guardAssignmentGroups.map((group) => {
     if (group.group !== 'State, servants, and temporary custody') return group;
     return Object.freeze({
@@ -433,6 +461,7 @@ export const dossierSources = Object.freeze({
   chapter357: 'https://hunterxhunter.fandom.com/wiki/Chapter_357',
   chapter358: 'https://hunterxhunter.fandom.com/wiki/Chapter_358',
   chapter359: 'https://hunterxhunter.fandom.com/wiki/Chapter_359',
+  chapter360: 'https://hunterxhunter.fandom.com/wiki/Chapter_360',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -457,6 +486,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy351357: succession351357SourcePolicy,
   sourcePolicy358: succession358SourcePolicy,
   sourcePolicy359: succession359SourcePolicy,
+  sourcePolicy360: succession360SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
