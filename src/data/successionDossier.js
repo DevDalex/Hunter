@@ -78,6 +78,14 @@ import {
   succession349SourcePolicy,
 } from './succession349Research.js';
 import {
+  succession350BodyguardAssignments,
+  succession350ChapterFocus,
+  succession350ChapterResearch,
+  succession350Mysteries,
+  succession350RelationshipRecords,
+  succession350SourcePolicy,
+} from './succession350Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -140,6 +148,7 @@ export const chapterFocus = Object.freeze({
   ...succession347ChapterFocus,
   ...succession348ChapterFocus,
   ...succession349ChapterFocus,
+  ...succession350ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -150,7 +159,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -161,6 +170,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession347ChapterResearch,
   ...succession348ChapterResearch,
   ...succession349ChapterResearch,
+  ...succession350ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -195,6 +205,7 @@ export const successionRelationships = Object.freeze([
   ...succession347RelationshipRecords,
   ...succession348RelationshipRecords,
   ...succession349RelationshipRecords,
+  ...succession350RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -260,7 +271,15 @@ export const successionMysteries = Object.freeze([
   ...succession346Mysteries,
   ...succession347Mysteries,
   ...succession348Mysteries,
-  ...succession349Mysteries,
+  ...succession349Mysteries.filter((record) => record.question !== 'Which six princes are recruiting outside bodyguards, and who will enter through those routes?'),
+  {
+    question: 'Which six princes are recruiting outside bodyguards, and who will enter through those routes?',
+    evidence: 'Chapter 350 resolves the recruitment network as Woble/Oito, Tyson, Marayam, Luzurus, Kacho, and Momoze hiring Kurapika, Izunavi, Biscuit, Basho, Melody, and Hanzo respectively. Halkenburg did not post a listing; Oito deliberately designed her vague listing to attract applicants who believed they were applying to Halkenburg.',
+    status: 'resolved',
+    lastChapter: '350',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_350',
+  },
+  ...succession350Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -288,22 +307,35 @@ export const nenLessonPhases = Object.freeze(legacy.nenLessonPhases.map((phase) 
     : phase
 )));
 
-export const guardAssignmentGroups = Object.freeze(legacy.guardAssignmentGroups.map((group) => {
-  if (group.group !== 'State, servants, and temporary custody') return group;
-  return Object.freeze({
-    ...group,
-    records: Object.freeze([
-      ...group.records,
-      {
-        subject: 'Special-martial-law royal controls',
-        people: 'Tubeppa, Oito, Luzurus, Marayam household, Benjamin military personnel',
-        notes: 'Chapter 415 distinguishes relocation orders, private-guard restrictions, missing status, isolated-space resistance, and conditional in-room confinement.',
-        status: 'active',
-        source: 'https://hunterxhunter.fandom.com/wiki/Chapter_415',
-      },
-    ]),
-  });
-}));
+export const guardAssignmentGroups = Object.freeze([
+  Object.freeze({
+    group: 'Kurapika-linked hired bodyguards',
+    description: 'The six Chapter 350 placements created by Kurapika’s pre-voyage recruitment network across prince households.',
+    records: Object.freeze(succession350BodyguardAssignments.map((assignment) => Object.freeze({
+      subject: assignment.prince,
+      people: assignment.hunter,
+      notes: assignment.purpose,
+      status: 'hired / pre-voyage',
+      source: assignment.source,
+    }))),
+  }),
+  ...legacy.guardAssignmentGroups.map((group) => {
+    if (group.group !== 'State, servants, and temporary custody') return group;
+    return Object.freeze({
+      ...group,
+      records: Object.freeze([
+        ...group.records,
+        {
+          subject: 'Special-martial-law royal controls',
+          people: 'Tubeppa, Oito, Luzurus, Marayam household, Benjamin military personnel',
+          notes: 'Chapter 415 distinguishes relocation orders, private-guard restrictions, missing status, isolated-space resistance, and conditional in-room confinement.',
+          status: 'active',
+          source: 'https://hunterxhunter.fandom.com/wiki/Chapter_415',
+        },
+      ]),
+    });
+  }),
+]);
 
 export const dossierSources = Object.freeze({
   ...legacy.dossierSources,
@@ -317,6 +349,7 @@ export const dossierSources = Object.freeze({
   chapter347: 'https://hunterxhunter.fandom.com/wiki/Chapter_347',
   chapter348: 'https://hunterxhunter.fandom.com/wiki/Chapter_348',
   chapter349: 'https://hunterxhunter.fandom.com/wiki/Chapter_349',
+  chapter350: 'https://hunterxhunter.fandom.com/wiki/Chapter_350',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -337,6 +370,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy347: succession347SourcePolicy,
   sourcePolicy348: succession348SourcePolicy,
   sourcePolicy349: succession349SourcePolicy,
+  sourcePolicy350: succession350SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
