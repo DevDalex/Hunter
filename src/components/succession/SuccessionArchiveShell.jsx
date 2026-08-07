@@ -113,7 +113,7 @@ export default function SuccessionArchiveShell({
   const drawerRef = useRef(null);
   const menuButtonRef = useRef(null);
   const contentRef = useRef(null);
-  const previousRouteRef = useRef(activeId);
+  const previousRouteRef = useRef(null);
   const route = getSuccessionArchiveRoute(activeId);
   const activeHub = getSuccessionArchiveHub(route.id);
   const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
@@ -125,11 +125,12 @@ export default function SuccessionArchiveShell({
   }, [onNavigate, route.id]);
 
   useEffect(() => {
-    if (previousRouteRef.current === activeId) return;
+    const previousRoute = previousRouteRef.current;
     previousRouteRef.current = activeId;
+    if (route.id === 'search' || previousRoute === activeId) return undefined;
     const frame = window.requestAnimationFrame(() => contentRef.current?.focus({ preventScroll: true }));
     return () => window.cancelAnimationFrame(frame);
-  }, [activeId]);
+  }, [activeId, route.id]);
 
   useEffect(() => {
     if (!drawerOpen) return undefined;
