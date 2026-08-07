@@ -159,6 +159,17 @@ import {
   succession363SourcePolicy,
 } from './succession363Research.js';
 import {
+  succession364BodyStates,
+  succession364ChapterFocus,
+  succession364ChapterResearch,
+  succession364DiplomaticContacts,
+  succession364EmperorTimeCost,
+  succession364LittleEyeTransfer,
+  succession364Mysteries,
+  succession364RelationshipRecords,
+  succession364SourcePolicy,
+} from './succession364Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -229,6 +240,7 @@ export const chapterFocus = Object.freeze({
   ...succession361ChapterFocus,
   ...succession362ChapterFocus,
   ...succession363ChapterFocus,
+  ...succession364ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -239,7 +251,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -258,6 +270,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession361ChapterResearch,
   ...succession362ChapterResearch,
   ...succession363ChapterResearch,
+  ...succession364ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -302,6 +315,7 @@ export const successionRelationships = Object.freeze([
   ...succession361RelationshipRecords,
   ...succession362RelationshipRecords,
   ...succession363RelationshipRecords,
+  ...succession364RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -314,6 +328,7 @@ export const bodyStateLedger = Object.freeze([
   ...succession360BodyStates,
   ...succession361BodyStates,
   ...succession363BodyStates,
+  ...succession364BodyStates,
   ...succession414415BodyStates,
 ]);
 
@@ -381,6 +396,9 @@ export const tserriednichNenPersonnelResearch = succession362PersonnelRecords;
 export const successionVictoryConditionResearch = succession363ContestInterpretation;
 export const benjaminRoyalGuardOperationResearch = succession363BenjaminOperation;
 export const room1014CommunicationConstraints = succession363CommunicationConstraints;
+export const littleEyeTransferResearch = succession364LittleEyeTransfer;
+export const emperorTimeLifespanCostResearch = succession364EmperorTimeCost;
+export const room1014DiplomaticContactResearch = succession364DiplomaticContacts;
 
 export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
@@ -433,6 +451,7 @@ export const successionMysteries = Object.freeze([
   ...succession361Mysteries,
   ...succession362Mysteries,
   ...succession363Mysteries,
+  ...succession364Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -550,8 +569,21 @@ export const guardAssignmentGroups = Object.freeze([
         subject: 'Woble / Oito household',
         people: 'Kurapika, Bill, Shimanu',
         notes: 'Sandra is killed by Vincent, leaving two active guards and one surviving servant from the Chapter 361 core.',
-        status: 'active core at Chapter 363 endpoint',
+        status: 'active core at Chapter 364 endpoint',
         source: 'https://hunterxhunter.fandom.com/wiki/Chapter_363',
+      }),
+    ]),
+  }),
+  Object.freeze({
+    group: 'Benjamin Room 1014 succession assignment',
+    description: 'Chapter 364 preserves Benjamin’s observation slot after Vincent dies by immediately replacing him with Babimyna.',
+    records: Object.freeze([
+      Object.freeze({
+        subject: 'Woble / Oito household',
+        people: 'Babimyna',
+        notes: 'Sent by Benjamin as Vincent’s successor after Vincent is restrained and dies by suicide.',
+        status: 'active Benjamin-assigned Royal Guard · Voyage Day 1',
+        source: 'https://hunterxhunter.fandom.com/wiki/Chapter_364',
       }),
     ]),
   }),
@@ -599,6 +631,7 @@ export const dossierSources = Object.freeze({
   chapter361: 'https://hunterxhunter.fandom.com/wiki/Chapter_361',
   chapter362: 'https://hunterxhunter.fandom.com/wiki/Chapter_362',
   chapter363: 'https://hunterxhunter.fandom.com/wiki/Chapter_363',
+  chapter364: 'https://hunterxhunter.fandom.com/wiki/Chapter_364',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -627,6 +660,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy361: succession361SourcePolicy,
   sourcePolicy362: succession362SourcePolicy,
   sourcePolicy363: succession363SourcePolicy,
+  sourcePolicy364: succession364SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
