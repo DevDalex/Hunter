@@ -17,6 +17,10 @@ const [board, polish, corrections, shellQa, documentation] = await Promise.all([
   read('docs/succession-architecture-lock.md'),
 ]);
 
+/* The approved architecture document is retained as a historical design contract.
+   It no longer owns the public Succession root, which is now the Black Whale
+   command home. Keep validating the contract itself while the browser proof
+   validates the released command surface. */
 for (const contract of [
   "import './SuccessionArchitecturePolishLock.css';",
   "import './SuccessionArchitectureLockCorrections.css';",
@@ -30,12 +34,12 @@ for (const contract of [
   'Phase 3 destinations only',
 ]) assert(board.includes(contract), `missing approved architecture contract: ${contract}`);
 
-assert(!board.includes('<dd>0.9</dd>'), 'draft version 0.9 remains in the approved portal');
-assert(!board.includes('<span>Draft</span>'), 'Draft status remains in the approved portal');
+assert(!board.includes('<dd>0.9</dd>'), 'draft version 0.9 remains in the approved architecture contract');
+assert(!board.includes('<span>Draft</span>'), 'Draft status remains in the approved architecture contract');
 assert((board.match(/action:/g) || []).length >= 19, 'route-feedback action catalogue is incomplete');
 assert(board.includes('data-route-action={item.action}'), 'mapped architecture destinations do not bind contextual route feedback');
 assert((board.match(/data-route-action=/g) || []).length >= 8, 'direct architecture shortcuts do not expose contextual route feedback');
-assert(board.includes('aria-label="Approved Succession Contest architecture"'), 'approved portal region lacks an explicit accessible name');
+assert(board.includes('aria-label="Approved Succession Contest architecture"'), 'approved architecture region lacks an explicit accessible name');
 assert(board.includes('title={contract.detail}'), 'Preserved Contracts do not expose their technical explanations');
 assert(board.includes('succession-architecture__skeleton-tabs'), 'miniature shell shortcuts are missing');
 assert(board.includes("navigateLink(event, onNavigate, 'timeline')"), 'miniature timeline link is missing');
@@ -81,25 +85,25 @@ for (const contract of [
   '.succession-architecture__skeleton-body > aside > a',
 ]) assert(corrections.includes(contract), `missing final browser correction: ${contract}`);
 
-assert(!polish.includes('@media (max-width: 1100px)'), 'this pass must not add tablet/mobile architecture composition');
-assert(!polish.includes('@media (max-width: 680px)'), 'this pass must not add phone architecture composition');
-assert(!corrections.includes('@media (max-width'), 'browser corrections must not add tablet/mobile architecture composition');
+assert(!polish.includes('@media (max-width: 1100px)'), 'historical architecture lock must not add tablet/mobile composition');
+assert(!polish.includes('@media (max-width: 680px)'), 'historical architecture lock must not add phone composition');
+assert(!corrections.includes('@media (max-width'), 'historical architecture browser corrections must not add tablet/mobile composition');
 assert(!polish.includes('display: none !important; /* mobile'), 'mobile architecture content was hidden by the lock layer');
 
-for (const baseline of [
-  'architecture-approved-1440x1000.png',
-  'architecture-approved-1920x1080.png',
-  'data-architecture-status',
-  'data-architecture-version',
-  'primaryColumnBottoms',
-  'moduleRowBottoms',
-  'lowerBandBottoms',
-  'routeFeedback',
-]) assert(shellQa.includes(baseline), `browser lock proof is missing: ${baseline}`);
+for (const proof of [
+  'command-home-1440x1000.png',
+  'command-home-1920x1080.png',
+  'Succession root opens the Black Whale command home',
+  'Black Whale command home fills a widescreen viewport without spill',
+  '.succession-command-home',
+  '.succession-command-home__portal',
+  '.succession-command-home__search',
+  'Retired architecture board is still mounted at the archive root',
+]) assert(shellQa.includes(proof), `released command-home browser proof is missing: ${proof}`);
 
 assert(documentation.includes('Tablet/mobile architecture-page recomposition is intentionally **not part of this lock pass**'), 'tablet/mobile exclusion is not documented');
-assert(documentation.includes('browser-captured 1440×1000 and 1920×1080 visual baselines'), 'visual baseline lock is not documented');
-assert(documentation.includes('Phase 3 work changes the destination workspaces rather than the architecture portal'), 'future change boundary is not documented');
+assert(documentation.includes('browser-captured 1440×1000 and 1920×1080 visual baselines'), 'historical visual baseline lock is not documented');
+assert(documentation.includes('Phase 3 work changes the destination workspaces rather than the architecture portal'), 'historical future change boundary is not documented');
 
 for (const [name, source] of [['polish CSS', polish], ['correction CSS', corrections], ['architecture component', board]]) {
   const opening = (source.match(/\{/g) || []).length;
@@ -107,4 +111,4 @@ for (const [name, source] of [['polish CSS', polish], ['correction CSS', correct
   assert(opening === closing, `${name} has unbalanced braces (${opening} opening, ${closing} closing)`);
 }
 
-console.log('Succession architecture lock audit passed: approved metadata, balanced desktop composition, canonical route labels, no-break architecture headings, semantic miniature links, stable registration rules, lower-band polish, accessibility, visual baselines, and Phase 3 change boundaries are protected.');
+console.log('Succession architecture lock audit passed: the approved architecture document remains intact as a historical design contract, while current browser proof protects the released Black Whale command home at desktop and widescreen sizes.');
