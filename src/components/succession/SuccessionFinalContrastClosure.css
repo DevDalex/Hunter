@@ -1,0 +1,16 @@
+/* Last release-matrix contrast corrections discovered by browser QA. */
+@media (max-width: 860px) {
+  .succession-archive[data-archive-route="guardian-spirit-beasts"]
+    .succession-gsb-command__controls button.is-active {
+    color: var(--succession-surface-paper-raised) !important;
+    -webkit-text-fill-color: var(--succession-surface-paper-raised) !important;
+    opacity: 1 !important;
+  }
+
+  .succession-archive[data-archive-route="chapters"]
+    .succession-chapter-command__card.is-pending > div > dl dt {
+    color: var(--succession-text-on-paper) !important;
+    -webkit-text-fill-color: var(--succession-text-on-paper) !important;
+    opacity: 1 !important;
+  }
+}
