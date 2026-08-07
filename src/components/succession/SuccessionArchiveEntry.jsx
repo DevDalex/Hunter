@@ -16,13 +16,13 @@ import './SuccessionReaderCommand.css';
 import './SuccessionAccessibilityClosure.css';
 import './SuccessionBrowserQaClosure.css';
 import './SuccessionBrowserQaClosureFinal.css';
-import './SuccessionFinalReleasePatch.css';
 import './SuccessionExactContrastClosure.css';
 import './SuccessionPhase2DesignSystem.css';
 import './SuccessionArchitectureCenteringFix.css';
 import './SuccessionArchitectureViewportRuntime.js';
 import './SuccessionArchitectureVisualRevision.css';
 import './SuccessionPhase2PresentationConsistency.css';
+import './SuccessionFinalReleasePatch.css';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));
