@@ -96,3 +96,92 @@
     -webkit-text-fill-color: var(--succession-text-on-paper) !important;
   }
 }
+
+/* Final matrix closure. These rules intentionally load last in the Succession
+   entry bundle so route-specific release guarantees cannot be undercut by an
+   older compatibility sheet. */
+body .succession-archive[data-archive-route="glossary"] .succession-glossary-canonical__grid article > p {
+  font-size: 12px !important;
+  line-height: 1.55 !important;
+}
+
+body .succession-archive[data-archive-route="glossary"] :is(
+  .succession-product-tools button,
+  .succession-glossary-canonical__grid footer button,
+  .succession-product-tools label
+) {
+  min-height: 44px !important;
+}
+
+body .succession-archive[data-archive-route="glossary"] .succession-product-tools input,
+body .succession-archive[data-archive-route="glossary"] .succession-product-tools input::placeholder {
+  color: #f4f7f6 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #f4f7f6 !important;
+}
+
+body .succession-archive .succession-archive__skip-link {
+  background: #fff !important;
+  color: #101820 !important;
+  -webkit-text-fill-color: #101820 !important;
+}
+
+@media (max-width: 860px) {
+  body .succession-archive .succession-hub-tabs {
+    box-sizing: border-box !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin-inline: 0 !important;
+  }
+
+  /* Black Whale snapshot cards and tier numerals are dark ship panels. */
+  body .succession-archive[data-archive-route="black-whale"] :is(
+    .ship-location-inspector__snapshot,
+    .ship-location-inspector,
+    [class*="tier"] button
+  ) :is(dt, dd, span, small, strong, b, i) {
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    opacity: 1 !important;
+  }
+
+  /* Nen system command cards use a dark command surface. */
+  body .succession-archive[data-archive-route="nen"] .succession-nen-command-system :is(
+    h3, p, span, small, strong, b, footer, dt, dd
+  ) {
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    opacity: 1 !important;
+  }
+
+  /* Guardian Beast command cards are dark intelligence surfaces. */
+  body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card :is(
+    h3, p, span, small, strong, b, dt, dd, i
+  ) {
+    color: #fff !important;
+    -webkit-text-fill-color: #fff !important;
+    opacity: 1 !important;
+  }
+
+  /* Chapter command records are pale document surfaces. */
+  body .succession-archive[data-archive-route="chapters"] :is(
+    .succession-page-header__meta-item,
+    .succession-chapter-command__card,
+    .succession-chapter-command__rail,
+    .succession-chapter-command__index,
+    .succession-chapter-intel__dossier
+  ) :is(p, span, small, strong, b, dt, dd, li, button) {
+    color: #17272f !important;
+    -webkit-text-fill-color: #17272f !important;
+    opacity: 1 !important;
+  }
+
+  body .succession-archive[data-archive-route="chapters"] :is(
+    .succession-chapter-command__rail nav button,
+    .succession-chapter-command__index > button,
+    .succession-chapter-command__card
+  ) {
+    min-height: 44px !important;
+  }
+}
