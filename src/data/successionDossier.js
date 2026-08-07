@@ -180,6 +180,18 @@ import {
   succession365SourcePolicy,
 } from './succession365Research.js';
 import {
+  succession366AbilityRecords,
+  succession366ChapterFocus,
+  succession366ChapterResearch,
+  succession366GuardianBeastUpdates,
+  succession366LocationState,
+  succession366Mysteries,
+  succession366ProtectionNetwork,
+  succession366RelationshipRecords,
+  succession366SourcePolicy,
+  succession366TserriednichTraining,
+} from './succession366Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -252,6 +264,7 @@ export const chapterFocus = Object.freeze({
   ...succession363ChapterFocus,
   ...succession364ChapterFocus,
   ...succession365ChapterFocus,
+  ...succession366ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -262,7 +275,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -283,6 +296,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession363ChapterResearch,
   ...succession364ChapterResearch,
   ...succession365ChapterResearch,
+  ...succession366ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -329,6 +343,7 @@ export const successionRelationships = Object.freeze([
   ...succession363RelationshipRecords,
   ...succession364RelationshipRecords,
   ...succession365RelationshipRecords,
+  ...succession366RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -415,6 +430,11 @@ export const room1014DiplomaticContactResearch = succession364DiplomaticContacts
 export const room1014DiplomaticSequenceResearch = succession365DiplomaticSequence;
 export const shimanuSurvivalAssessmentResearch = succession365ShimanuAssessment;
 export const room1014Chapter365StateResearch = succession365Room1014State;
+export const guardianSpiritBeastChapter366Updates = succession366GuardianBeastUpdates;
+export const royalProtectionChapter366Research = succession366ProtectionNetwork;
+export const tserriednichNenTrainingResearch = succession366TserriednichTraining;
+export const chrolloChapter366LocationResearch = succession366LocationState;
+export const secretWindowChapter366Research = succession366AbilityRecords;
 
 export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
@@ -465,7 +485,24 @@ export const successionMysteries = Object.freeze([
     source: 'https://hunterxhunter.fandom.com/wiki/Chapter_361',
   },
   ...succession361Mysteries,
-  ...succession362Mysteries,
+  ...succession362Mysteries.filter((record) => ![
+    'What caused all eleven of Halkenburg’s bodyguards to lose consciousness?',
+    'Can Theta actually slow or contain Tserriednich’s Nen development after admitting Nen exists?',
+  ].includes(record.question)),
+  {
+    question: 'What caused all eleven of Halkenburg’s bodyguards to lose consciousness?',
+    evidence: 'Chapter 366 recontextualizes the Chapter 362 event: Halkenburg wakes and finds all eleven guards conscious and suspects the earlier scene may have been a dream. The supplied text still does not establish whether it was a dream, a Nen effect, a vision, or another phenomenon.',
+    status: 'recontextualized / unresolved',
+    lastChapter: '366',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_366',
+  },
+  {
+    question: 'Can Theta actually slow or contain Tserriednich’s Nen development after admitting Nen exists?',
+    evidence: 'Chapter 366 shows Tserriednich manipulating his aura with remarkable ease after roughly two hours of meditation, leading Theta to recognize him as a Nen genius. Her containment strategy remains active but is becoming substantially harder to execute.',
+    status: 'developing / containment increasingly doubtful',
+    lastChapter: '366',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_366',
+  },
   ...succession363Mysteries,
   ...succession364Mysteries.filter((record) => record.question !== 'How will Room 1014 answer Benjamin, Zhang Lei, and Tubeppa without signaling an unwanted alliance?'),
   {
@@ -475,7 +512,15 @@ export const successionMysteries = Object.freeze([
     lastChapter: '365',
     source: 'https://hunterxhunter.fandom.com/wiki/Chapter_365',
   },
-  ...succession365Mysteries,
+  ...succession365Mysteries.filter((record) => record.question !== 'Will Zhang Lei’s truce offer become a formal alliance with Woble’s camp?'),
+  {
+    question: 'Will Zhang Lei’s truce offer become a formal alliance with Woble’s camp?',
+    evidence: 'Chapter 366 advances the relationship from an offer to practical cooperation when Zhang Lei sends Sakata and Hashito to help guard Woble until the next banquet. The supplied chapter does not explicitly define every term of a fully formalized alliance.',
+    status: 'partial resolution / active practical cooperation; formal-alliance label unresolved',
+    lastChapter: '366',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_366',
+  },
+  ...succession366Mysteries.filter((record) => record.question !== 'Why did Halkenburg see all eleven bodyguards unconscious in Chapter 362 when they are awake in Chapter 366?'),
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -619,17 +664,28 @@ export const guardAssignmentGroups = Object.freeze([
         subject: 'Room 1014',
         people: 'Bill, Shimanu, Babimyna',
         notes: 'Bill and Shimanu remain in Room 1014 with Benjamin-assigned Babimyna while Kurapika escorts Oito and Woble to Zhang Lei’s quarters.',
-        status: 'active temporary room state · Chapter 365',
+        status: 'historical temporary room state · Chapter 365',
         source: 'https://hunterxhunter.fandom.com/wiki/Chapter_365',
       }),
       Object.freeze({
         subject: 'Room 1003 delegation',
         people: 'Kurapika, Oito Hui Guo Rou, Woble Hui Guo Rou',
         notes: 'The delegation meets Zhang Lei and begins a Nen / Guardian Spirit Beast information exchange following his truce offer.',
-        status: 'active diplomatic visit · Chapter 365',
+        status: 'historical diplomatic visit · Chapter 365',
         source: 'https://hunterxhunter.fandom.com/wiki/Chapter_365',
       }),
     ]),
+  }),
+  Object.freeze({
+    group: 'Chapter 366 royal protection shifts',
+    description: 'Four hours after departure, Chapter 366 reshuffles protection and surveillance across Woble, Zhang Lei, Fugetsu, and Momoze’s camps.',
+    records: Object.freeze(succession366ProtectionNetwork.map((record) => Object.freeze({
+      subject: record.household,
+      people: record.person,
+      notes: record.detail,
+      status: record.state,
+      source: record.source,
+    }))),
   }),
   ...legacy.guardAssignmentGroups.map((group) => {
     if (group.group !== 'State, servants, and temporary custody') return group;
@@ -677,6 +733,7 @@ export const dossierSources = Object.freeze({
   chapter363: 'https://hunterxhunter.fandom.com/wiki/Chapter_363',
   chapter364: 'https://hunterxhunter.fandom.com/wiki/Chapter_364',
   chapter365: 'https://hunterxhunter.fandom.com/wiki/Chapter_365',
+  chapter366: 'https://hunterxhunter.fandom.com/wiki/Chapter_366',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -707,6 +764,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy363: succession363SourcePolicy,
   sourcePolicy364: succession364SourcePolicy,
   sourcePolicy365: succession365SourcePolicy,
+  sourcePolicy366: succession366SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
