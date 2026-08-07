@@ -173,15 +173,13 @@ try {
       await page.keyboard.press('Enter');
       if (await nextQueen.getAttribute('aria-pressed') !== 'true') throw new Error('keyboard activation did not pin the queen node');
     });
-    await recordInteraction('Succession Story hub navigation activates with keyboard', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
-      const timelineLink = page.locator('.succession-hub-tabs a').filter({ hasText: 'Timeline' });
+    await recordInteraction('Succession homepage navigation activates with keyboard', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
+      const timelineLink = page.locator('.succession-command-home__rail nav a').filter({ hasText: 'Timeline' });
+      await timelineLink.waitFor({ state: 'visible', timeout: 10_000 });
       await timelineLink.focus();
-      if (!await timelineLink.evaluate((node) => node === document.activeElement)) throw new Error('Story hub Timeline tab did not receive focus');
+      if (!await timelineLink.evaluate((node) => node === document.activeElement)) throw new Error('homepage Timeline link did not receive focus');
       await page.keyboard.press('Enter');
       await page.waitForSelector('.succession-archive[data-archive-route="timeline"][data-archive-hub="story"]', { timeout: 10_000 });
-      const activeLink = page.locator('.succession-hub-tabs a[aria-current="page"]');
-      const activeLabel = (await activeLink.innerText()).trim().toLocaleLowerCase('en-US');
-      if (activeLabel !== 'timeline') throw new Error(`keyboard activation opened an unexpected Story view: ${activeLabel}`);
       await page.waitForFunction(() => document.activeElement?.id === 'succession-workspace-content');
     });
     await recordInteraction('chapter workspace cards activate with keyboard', { width: 1440, height: 1000 }, 'succession/chapters', async (page) => {
@@ -191,7 +189,8 @@ try {
       await opener.focus();
       if (!await opener.evaluate((node) => node === document.activeElement)) throw new Error('chapter card did not receive focus');
       await page.keyboard.press('Enter');
-      await page.waitForFunction((expected) => new URL(window.location.href).searchParams.get('chapter') === expected, chapter, { timeout: 10_000 });
+      const selectedCard = page.locator(`.succession-chapter-command__card[aria-current="page"] .succession-chapter-command__number`).filter({ hasText: chapter });
+      await selectedCard.waitFor({ state: 'visible', timeout: 10_000 });
       const selectedRecord = page.locator('.succession-chapter-command__rail-header b');
       await selectedRecord.waitFor({ state: 'visible', timeout: 10_000 });
       if ((await selectedRecord.innerText()).trim() !== `Chapter ${chapter}`) throw new Error('selected chapter rail did not update after keyboard activation');
