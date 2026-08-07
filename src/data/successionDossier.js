@@ -170,6 +170,16 @@ import {
   succession364SourcePolicy,
 } from './succession364Research.js';
 import {
+  succession365ChapterFocus,
+  succession365ChapterResearch,
+  succession365DiplomaticSequence,
+  succession365Mysteries,
+  succession365RelationshipRecords,
+  succession365Room1014State,
+  succession365ShimanuAssessment,
+  succession365SourcePolicy,
+} from './succession365Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -241,6 +251,7 @@ export const chapterFocus = Object.freeze({
   ...succession362ChapterFocus,
   ...succession363ChapterFocus,
   ...succession364ChapterFocus,
+  ...succession365ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -251,7 +262,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -271,6 +282,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession362ChapterResearch,
   ...succession363ChapterResearch,
   ...succession364ChapterResearch,
+  ...succession365ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -316,6 +328,7 @@ export const successionRelationships = Object.freeze([
   ...succession362RelationshipRecords,
   ...succession363RelationshipRecords,
   ...succession364RelationshipRecords,
+  ...succession365RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -399,6 +412,9 @@ export const room1014CommunicationConstraints = succession363CommunicationConstr
 export const littleEyeTransferResearch = succession364LittleEyeTransfer;
 export const emperorTimeLifespanCostResearch = succession364EmperorTimeCost;
 export const room1014DiplomaticContactResearch = succession364DiplomaticContacts;
+export const room1014DiplomaticSequenceResearch = succession365DiplomaticSequence;
+export const shimanuSurvivalAssessmentResearch = succession365ShimanuAssessment;
+export const room1014Chapter365StateResearch = succession365Room1014State;
 
 export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
@@ -451,7 +467,15 @@ export const successionMysteries = Object.freeze([
   ...succession361Mysteries,
   ...succession362Mysteries,
   ...succession363Mysteries,
-  ...succession364Mysteries,
+  ...succession364Mysteries.filter((record) => record.question !== 'How will Room 1014 answer Benjamin, Zhang Lei, and Tubeppa without signaling an unwanted alliance?'),
+  {
+    question: 'How will Room 1014 answer Benjamin, Zhang Lei, and Tubeppa without signaling an unwanted alliance?',
+    evidence: 'Chapter 365 resolves the immediate call order: Shimanu connects Zhang Lei first, Kurapika then contacts Tubeppa through Maor, and Benjamin disconnects. The resulting truce negotiations remain separate developing questions.',
+    status: 'resolved immediate contact order / political consequences developing',
+    lastChapter: '365',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_365',
+  },
+  ...succession365Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -569,7 +593,7 @@ export const guardAssignmentGroups = Object.freeze([
         subject: 'Woble / Oito household',
         people: 'Kurapika, Bill, Shimanu',
         notes: 'Sandra is killed by Vincent, leaving two active guards and one surviving servant from the Chapter 361 core.',
-        status: 'active core at Chapter 364 endpoint',
+        status: 'historical snapshot · Chapter 363–364 · temporarily split by the Room 1003 visit in Chapter 365',
         source: 'https://hunterxhunter.fandom.com/wiki/Chapter_363',
       }),
     ]),
@@ -584,6 +608,26 @@ export const guardAssignmentGroups = Object.freeze([
         notes: 'Sent by Benjamin as Vincent’s successor after Vincent is restrained and dies by suicide.',
         status: 'active Benjamin-assigned Royal Guard · Voyage Day 1',
         source: 'https://hunterxhunter.fandom.com/wiki/Chapter_364',
+      }),
+    ]),
+  }),
+  Object.freeze({
+    group: 'Room 1014 during Zhang Lei visit',
+    description: 'Chapter 365 temporarily splits Woble’s core while Kurapika, Oito, and Woble visit Zhang Lei in Room 1003.',
+    records: Object.freeze([
+      Object.freeze({
+        subject: 'Room 1014',
+        people: 'Bill, Shimanu, Babimyna',
+        notes: 'Bill and Shimanu remain in Room 1014 with Benjamin-assigned Babimyna while Kurapika escorts Oito and Woble to Zhang Lei’s quarters.',
+        status: 'active temporary room state · Chapter 365',
+        source: 'https://hunterxhunter.fandom.com/wiki/Chapter_365',
+      }),
+      Object.freeze({
+        subject: 'Room 1003 delegation',
+        people: 'Kurapika, Oito Hui Guo Rou, Woble Hui Guo Rou',
+        notes: 'The delegation meets Zhang Lei and begins a Nen / Guardian Spirit Beast information exchange following his truce offer.',
+        status: 'active diplomatic visit · Chapter 365',
+        source: 'https://hunterxhunter.fandom.com/wiki/Chapter_365',
       }),
     ]),
   }),
@@ -632,6 +676,7 @@ export const dossierSources = Object.freeze({
   chapter362: 'https://hunterxhunter.fandom.com/wiki/Chapter_362',
   chapter363: 'https://hunterxhunter.fandom.com/wiki/Chapter_363',
   chapter364: 'https://hunterxhunter.fandom.com/wiki/Chapter_364',
+  chapter365: 'https://hunterxhunter.fandom.com/wiki/Chapter_365',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -661,6 +706,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy362: succession362SourcePolicy,
   sourcePolicy363: succession363SourcePolicy,
   sourcePolicy364: succession364SourcePolicy,
+  sourcePolicy365: succession365SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
