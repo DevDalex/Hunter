@@ -75,7 +75,12 @@ assert(integratedReferences.includes('WorldAtlas'), 'the retained general World 
 assert(router.includes("if (!parts.length || pathnameClean === '/index.html')"), 'the root route guard is missing');
 assert(router.includes("view: 'succession', target: 'archive'"), 'the root route must resolve to the Succession archive');
 assert(router.includes("['nen', { target: 'nen' }]") && router.includes("['world', { target: 'atlas' }]") , 'the retained /nen and /world routes are missing');
-assert(header.includes("label: 'Succession'") && header.includes("label: 'Nen'") && header.includes("label: 'World'"), 'the focused primary navigation is incomplete');
+assert(
+  header.includes("label: 'Succession Archive'")
+    && header.includes("label: 'Nen Library'")
+    && header.includes("label: 'World Atlas'"),
+  'the focused primary navigation is incomplete',
+);
 assert(!header.includes("label: 'Characters'") && !header.includes("label: 'Fights'") && !header.includes("label: 'Story'"), 'retired navigation returned');
 
 assert(css.includes('--content: 1240px') && css.includes('--wide: 1540px'), 'editorial content and visual-wide measures are missing');
