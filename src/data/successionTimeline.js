@@ -39,7 +39,7 @@ const normalizeResearchEvent = (research, event, index) => freeze({
   confidence: event.confidence || research.confidence?.[0] || 'Maintained chapter research',
   source: event.source || research.source,
   maintainedResearch: true,
-}));
+});
 
 const maintainedEventsByChapter = new Map(chronologyResearch.map((research) => [
   research.number,
