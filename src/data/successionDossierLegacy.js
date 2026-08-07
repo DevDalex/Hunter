@@ -1,7 +1,7 @@
 const wiki = (slug) => `https://hunterxhunter.fandom.com/wiki/${slug}`;
 const file = (name) => `https://hunterxhunter.fandom.com/wiki/Special:Redirect/file/${encodeURIComponent(name)}`;
 import { chapterTitles } from './chapterTitles';
-import { successionDays, successionPrelude, timelineTracks } from './successionTimeline';
+import { successionDays, successionPrelude, timelineTracks } from './successionTimelineLegacy';
 
 export const successionNavigation = [
   ['overview', 'Scope & source status'],
@@ -244,575 +244,3009 @@ export const princeDossiers = [
     nen: 'Specialist; Parallel Future gives him a ten-second precognitive vision during Zetsu and creates a divergence others experience as reality.',
     beast: 'Horse-like beast that questions suspicious people, marks lies, and progressively worsens the mark after repeated deception.',
     team: ['Theta', 'Salkov', 'Tserriednich’s private guards'],
-    pressure: ['Theta’s resistance', 'Kurapika’s objective', 'Rapid Nen growth', 'Personal Nen beast'],
+    pressure: ['Rapid training speed', 'Theta’s deception', 'Scarlet Eyes', 'Guardian Spirit Beast threat'],
     source: wiki('Tserriednich_Hui_Guo_Rou'),
   },
   {
-    order: 5, name: 'Tubeppa Hui Guo Rou', short: 'Tubeppa', mother: 'Duazul', room: '1005', status: 'active',
-    strategy: 'Pursues scientific and political partnership, using Maor and Longhi to evaluate Kurapika and construct a lower-prince alliance.',
-    nen: 'No confirmed personal ability; her camp contains hidden Nen users and a formal treaty with Woble’s side.',
-    beast: 'Transmuter that can concoct chemicals but requires a collaborative partner and manifests around perceived contracts.',
-    team: ['Maor', 'Longhi', 'Tubeppa’s guards'],
-    pressure: ['Beyond’s curse network', 'Treaty conditions', 'Unrevealed beast products', 'Higher-prince aggression'],
+    order: 5, name: 'Tubeppa Hui Guo Rou', short: 'Tubeppa', mother: 'Duazul', room: '1005 / relocated', status: 'active',
+    strategy: 'Pursues calculated alliances and uses Maor to negotiate with Kurapika’s group while resisting Benjamin’s pressure.',
+    nen: 'Personal Nen ability not revealed.',
+    beast: 'Transmuter symbiotic beast that requires a research partner and can synthesize substances with varied effects.',
+    team: ['Maor', 'Longhi', 'Queen Duazul guards'],
+    pressure: ['Relocation under martial law', 'Longhi’s hidden lineage', 'Alliance maintenance'],
     source: wiki('Tubeppa_Hui_Guo_Rou'),
   },
   {
     order: 6, name: 'Tyson Hui Guo Rou', short: 'Tyson', mother: 'Katrono', room: '1006', status: 'active',
-    strategy: 'Builds devotion through the Book of Tyson and an emotionally unified guard group rather than conventional assassination.',
-    nen: 'No confirmed personal Nen ability.',
-    beast: 'Emitter whose eye-wogs collect aura from followers, return happiness, deepen devotion, and punish violation of a taboo.',
-    team: ['Giuliano', 'Izunavi', 'Tyson’s attendants'],
-    pressure: ['Unknown taboo', 'Guard loyalty', 'Religious coercion', 'Exposure to rival operations'],
+    strategy: 'Maintains a devotional household centered on the Book of Tyson while her beast distributes eye-wog creatures among followers.',
+    nen: 'Personal Nen ability not revealed.',
+    beast: 'Emitter that creates fairies collecting aura from recipients who receive happiness in return; breaking the Book’s taboo triggers severe punishment.',
+    team: ['Izunavi', 'Giuliano'],
+    pressure: ['Nen class exposure', 'Book taboo', 'Guard loyalty'],
     source: wiki('Tyson_Hui_Guo_Rou'),
   },
   {
-    order: 7, name: 'Luzurus Hui Guo Rou', short: 'Luzurus', mother: 'Duazul', room: '1007', status: 'active',
-    strategy: 'Relies on experienced Hunter guards and Cha-R sponsorship while other camps consider whether his beast is harming Fugetsu.',
-    nen: 'No confirmed personal Nen ability.',
-    beast: 'Conjurer using pseudo-coercive manipulation; it creates desired bait and springs a trap when the target satisfies that desire.',
-    team: ['Bashō', 'Scairt', 'Cha-R connection'],
-    pressure: ['Fugetsu investigation', 'Assassination proposals', 'Mafia war', 'Unconfirmed beast involvement'],
+    order: 7, name: 'Luzurus Hui Guo Rou', short: 'Luzurus', mother: 'Duazul', room: '1007 / relocated', status: 'active',
+    strategy: 'Depends on Basho and a pragmatic guard detail while remaining entangled with Cha-R sponsorship and the wider mafia balance.',
+    nen: 'Personal Nen ability not revealed.',
+    beast: 'Conjurer that materializes a trap completing the target’s desire, then activates when the target falls for it.',
+    team: ['Basho'],
+    pressure: ['Relocation', 'Mafia sponsorship', 'Fugetsu conspiracy suspicion'],
     source: wiki('Luzurus_Hui_Guo_Rou'),
   },
   {
     order: 8, name: 'Salé-salé Hui Guo Rou', short: 'Salé-salé', mother: 'Swinko-swinko', room: '1008', status: 'deceased',
-    statusDetail: 'Assassinated after Rihan’s Predator eliminated his Guardian Spirit Beast.',
-    strategy: 'Attempted to turn popularity and mass goodwill into an effortless political victory.',
-    nen: 'No confirmed personal Nen ability.',
-    beast: 'Diffusive induction Manipulator that spread goodwill through smoke and created small influence-bearing clones.',
-    team: ['Mushaho', 'Royal attendants'],
-    pressure: ['Eliminated'],
+    strategy: 'Relied on charisma, comfort, and his beast’s influence rather than direct defensive planning.',
+    nen: 'Personal Nen ability not revealed.',
+    beast: 'Manipulator that emitted smoke creating clones attached to affected people; the spread increased support for Salé-salé.',
+    team: ['Nen Beast (destroyed)'],
+    pressure: ['Killed after Rihan’s Predator neutralized his beast'],
     source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou'),
   },
   {
-    order: 9, name: 'Halkenburg Hui Guo Rou', short: 'Halkenburg', mother: 'Unma (birth) / Duazul (raised)', room: '1009 / consciousness elsewhere', status: 'exceptional',
-    statusDetail: 'His original body is dead while his consciousness remains active in Balsamilco’s body.',
-    strategy: 'Turns mass public support and a collective Nen ability into a possession campaign aimed at the center of Benjamin’s command.',
-    nen: 'Collective aura forms an unavoidable arrow that displaces consciousness between shooter and target under complex rules.',
-    beast: 'Enhancer that marks loyal followers with pinions, magnifies unified group aura, and granted Halkenburg his ability.',
-    team: ['Sumidori', 'Yuhirai', 'Halkenburg’s marked followers'],
-    pressure: ['Body-state deadline', 'Benjamin’s command', 'Funeral operation', 'Legal custody'],
+    order: 9, name: 'Halkenburg Hui Guo Rou', short: 'Halkenburg', mother: 'Unma (biological) / Duazul (raised)', room: '1009 / body displaced', status: 'identity active in Balsamilco',
+    strategy: 'Uses collective loyalty and a possession arrow to overwhelm stronger opponents, then continues his plan through Balsamilco’s body.',
+    nen: 'Enhancer with a collective aura formation and possession arrow; the attacker’s body becomes unconscious while consciousness transfers into the struck target.',
+    beast: 'Enhancement-oriented pinion-mark beast that amplifies group aura and supports the collective system.',
+    team: ['Sumidori', 'Yuhirai', 'Shedule', 'Vict (occupied)'],
+    pressure: ['Body preserved for funeral', 'Possession continuity', 'Succession deadline'],
     source: wiki('Halkenburg_Hui_Guo_Rou'),
   },
   {
-    order: 10, name: 'Kacho Hui Guo Rou', short: 'Kacho', mother: 'Seiko', room: '1010 / GSB continuation', status: 'deceased',
-    statusDetail: 'Kacho died during the escape; Without You continues in her form beside Fugetsu.',
-    strategy: 'Protected Fugetsu through apparent hostility, Melody’s network, Justice cooperation, and a failed lifeboat escape.',
-    nen: 'No confirmed personal ability.',
-    beast: 'Without You assumes the form of whichever twin dies first and protects the survivor until death.',
-    team: ['Melody', 'Keeney', 'Kaiser', 'Without You'],
-    pressure: ['Identity secrecy', 'Fugetsu’s survival', 'Justice scrutiny', 'Ritual exit restriction'],
+    order: 10, name: 'Kacho Hui Guo Rou', short: 'Kacho', mother: 'Seiko', room: 'deceased / copy active', status: 'deceased, copy active',
+    strategy: 'Originally planned to escape with Fugetsu; after death, her Guardian Spirit Beast copy remains beside Fugetsu and continues protective action.',
+    nen: 'Personal Nen ability not revealed.',
+    beast: 'Without You creates an exact copy of the deceased twin and remains until the surviving twin dies.',
+    team: ['Melody', 'Keeney (deceased)', 'Without You copy'],
+    pressure: ['Fugetsu’s worsening condition', 'Justice surveillance', 'Identity secrecy'],
     source: wiki('Kacho_Hui_Guo_Rou'),
   },
   {
-    order: 11, name: 'Fugetsu Hui Guo Rou', short: 'Fugetsu', mother: 'Seiko', room: '1011 / Justice protection', status: 'active',
-    strategy: 'Uses Magical Worm, Kacho’s support, Melody, and Justice Bureau access to seek survival and communicate with other princes.',
-    nen: 'Her Guardian Spirit Beast granted a travel ability; her own Nen type is not confirmed.',
-    beast: 'Magical Worm creates an outgoing door and a return route; its frequency and return rules changed after Kacho’s death.',
-    team: ['Kacho / Without You', 'Melody', 'Kaiser'],
-    pressure: ['Curse-like spirits', 'Aura exhaustion', 'Luzurus theory', 'Escape restrictions'],
+    order: 11, name: 'Fugetsu Hui Guo Rou', short: 'Fugetsu', mother: 'Seiko', room: 'Justice custody / clinic access', status: 'alive, afflicted',
+    strategy: 'Uses Magical Worm for transport while increasingly depending on Melody, Kaiser, and the Kacho copy for survival.',
+    nen: 'Personal Nen ability not revealed.',
+    beast: 'Magical Worm creates reciprocal portal doors; Fugetsu gains access to multiple uses as her condition evolves.',
+    team: ['Kacho copy', 'Melody', 'Kaiser'],
+    pressure: ['Aura drain', 'Curse spirits', 'Judicial custody', 'Escape risk'],
     source: wiki('Fugetsu_Hui_Guo_Rou'),
   },
   {
-    order: 12, name: 'Momoze Hui Guo Rou', short: 'Momoze', mother: 'Sevanti', room: '1012', status: 'deceased',
-    statusDetail: 'Strangled by Tuffdy after her mother transferred most protection to Marayam.',
-    strategy: 'Entered with limited protection and attempted to conceal the danger created by her wandering beast.',
-    nen: 'No confirmed personal Nen ability.',
-    beast: 'Pseudo-coercive Manipulator that asks whether a target is free and seizes the body after an affirmative response.',
-    team: ['Hanzo', 'Tuffdy', 'Momoze’s reduced guard detail'],
-    pressure: ['Eliminated'],
+    order: 12, name: 'Momoze Hui Guo Rou', short: 'Momoze', mother: 'Sevanti', room: '1012 / burial chamber', status: 'deceased',
+    strategy: 'Entered the contest with minimal protection after guards were shifted toward Marayam.',
+    nen: 'Personal Nen ability not revealed.',
+    beast: 'Manipulator rat-like beast that asks whether a target is free, then coerces and drains the host’s aura through possession.',
+    team: ['Hanzo', 'Tuffdy (deceased)'],
+    pressure: ['Murdered after protection was reduced'],
     source: wiki('Momoze_Hui_Guo_Rou'),
   },
   {
-    order: 13, name: 'Marayam Hui Guo Rou', short: 'Marayam', mother: 'Sevanti', room: '1013 / isolated Nen space', status: 'active',
-    strategy: 'Survives behind a spatial barrier while Hunters compare the real room with an inaccessible empty counterpart.',
-    nen: 'No confirmed personal Nen ability.',
-    beast: 'Dragon-like beast suspected of creating the barrier and alternate-space effect around Room 1013.',
-    team: ['Biscuit Krueger', 'Hanzo', 'Belerainte', 'Sevanti'],
-    pressure: ['Isolation mechanics', 'Aura supply', 'Outside infiltration', 'Unknown beast rules'],
+    order: 13, name: 'Marayam Hui Guo Rou', short: 'Marayam', mother: 'Sevanti', room: 'Nen-isolated Room 1013', status: 'active',
+    strategy: 'Survives inside a hidden Nen-isolated room while a concentrated guard detail protects him.',
+    nen: 'Personal Nen ability not revealed.',
+    beast: 'Dragon-like beast responsible for an isolated Nen space duplicating the room and separating it from the normal corridor.',
+    team: ['Biscuit Krueger', 'Belerainte', 'Queen Sevanti guards'],
+    pressure: ['Isolation under martial law', 'Unknown exit conditions'],
     source: wiki('Marayam_Hui_Guo_Rou'),
   },
   {
-    order: 14, name: 'Woble Hui Guo Rou', short: 'Woble', mother: 'Oito', room: '1014', status: 'active',
-    strategy: 'Depends on Kurapika’s information-sharing, Nen lessons, alliances, and deterrence because Woble is an infant with the smallest initial force.',
-    nen: 'No personal Nen ability; Woble’s Guardian Spirit Beast has not yet been revealed.',
-    beast: 'Existence is expected from the ritual, but appearance and ability remain unknown.',
-    team: ['Oito', 'Kurapika', 'Bill', 'Shimano', 'Babimyna', 'Sakata', 'Hashito'],
-    pressure: ['Sarahell’s curse plan', 'Silent Majority', 'Kurapika’s lifespan', 'Unrevealed beast'],
+    order: 14, name: 'Woble Hui Guo Rou', short: 'Woble', mother: 'Oito', room: '1014 / identity crisis', status: 'alive, body-state under investigation',
+    strategy: 'Depends on Kurapika’s deterrence, alliance-building, Nen education, Queen Oito, and a shrinking guard network.',
+    nen: 'Infant; no personal Nen ability revealed.',
+    beast: 'Guardian Spirit Beast remains unrevealed in form. Current records separate the beast question from the later actual-Woble identity crisis.',
+    team: ['Kurapika', 'Oito', 'Bill', 'Shimano'],
+    pressure: ['Benjamin’s special martial law', 'Actual/substitute Woble crisis', 'Ritual eligibility', 'Room 1014 confinement'],
     source: wiki('Woble_Hui_Guo_Rou'),
   },
-].map((record) => ({
-  ...record,
-  age: 'Not confirmed by Hunterpedia',
-  mafia: princeMafiaLinks[record.order] || 'No confirmed direct mafia sponsorship',
-  currentLocation: record.room,
-  unresolved: record.pressure,
-}));
+];
 
 export const queenDossiers = [
-  ['1st', 'Unma', ['Benjamin', 'Tserriednich', 'Halkenburg (birth record)'], 'Highest-ranked queen; her household intersects Benjamin’s military power and Halkenburg’s concealed maternal history.', 'Unma_Hui_Guo_Rou'],
-  ['2nd', 'Duazul', ['Camilla', 'Tubeppa', 'Luzurus', 'Halkenburg (raised)'], 'Mother of three active contenders and the queen who raised Halkenburg.', 'Duazul_Hui_Guo_Rou'],
-  ['3rd', 'Tang Zhao Li', ['Zhang Lei'], 'Her branch is tied politically to Zhang Lei’s measured alliance strategy.', 'Tang_Zhao_Li_Hui_Guo_Rou'],
-  ['4th', 'Katrono', ['Tyson'], 'Mother of Tyson and head of her royal household.', 'Katrono_Hui_Guo_Rou'],
-  ['5th', 'Swinko-swinko', ['Salé-salé'], 'Mother of the eliminated 8th Prince.', 'Swinko-swinko_Hui_Guo_Rou'],
-  ['6th', 'Seiko', ['Kacho', 'Fugetsu'], 'Mother of the twin princes whose survival strategy became entangled with Justice and Melody.', 'Seiko_Hui_Guo_Rou'],
-  ['7th', 'Sevanti', ['Momoze', 'Marayam'], 'Transferred protection toward Marayam, leaving Momoze dangerously exposed.', 'Sevanti_Hui_Guo_Rou'],
-  ['8th', 'Oito', ['Woble'], 'Woble’s mother and Kurapika’s employer; an active participant in reconnaissance and alliance-building.', 'Oito_Hui_Guo_Rou'],
-].map(([rank, name, children, role, slug]) => ({ rank, name, children, role, source: wiki(slug) }));
-
-const beastTypes = {
-  Nasubi: 'Unknown', Benjamin: 'Unknown', Camilla: 'Manipulation', 'Zhang Lei': 'Conjuration', Tserriednich: 'Unknown',
-  Tubeppa: 'Transmutation', Tyson: 'Emission', Luzurus: 'Conjuration', 'Salé-salé': 'Manipulation', Halkenburg: 'Enhancement',
-  Kacho: 'Unknown / mutual cooperation', Fugetsu: 'Unknown', Momoze: 'Manipulation', Marayam: 'Unknown', Woble: 'Unknown',
-};
-
-const beastConditions = {
-  Nasubi: 'Previous-generation winner; current complete rules are unknown.',
-  Benjamin: 'Has dispersed low-level curse spirits; activation and cost are unknown.',
-  Camilla: 'Complete control follows conditions that have not been disclosed.',
-  'Zhang Lei': 'Produces one coin daily; gifted coins reset and change design; later activation remains unresolved.',
-  Tserriednich: 'Questions suspicious people, marks a lie, and escalates the mark after further deception.',
-  Tubeppa: 'Requires a collaborative partner and appears around a contract recognized by Tubeppa.',
-  Tyson: 'Eye-wogs attach to listeners; collected aura returns happiness; an unknown taboo carries punishment.',
-  Luzurus: 'Materializes a desired bait and activates when the target satisfies that desire.',
-  'Salé-salé': 'Diffusive smoke spreads goodwill and produces influence-bearing clones.',
-  Halkenburg: 'Loyal followers receive pinion marks; unified will and proximity amplify the group aura.',
-  Kacho: 'Activates when either twin dies, copies the deceased twin, and protects the survivor until death.',
-  Fugetsu: 'Creates an outgoing door and a return route; frequency and return behavior change after Kacho dies.',
-  Momoze: 'Asks whether the target is free and can seize the body after an affirmative response.',
-  Marayam: 'Spatial isolation is strongly associated with the beast, but its complete trigger remains unconfirmed.',
-  Woble: 'Appearance, type, behavior, trigger, cost, and restrictions remain unknown.',
-};
+  { rank: '1st', name: 'Unma', children: ['Benjamin', 'Tserriednich', 'Halkenburg (biological)'], role: 'Highest-ranked queen; biological mother of Benjamin, Tserriednich, and Halkenburg, although Halkenburg was raised by Duazul.', source: wiki('Unma') },
+  { rank: '2nd', name: 'Duazul', children: ['Camilla', 'Tubeppa', 'Luzurus', 'Halkenburg (raised)'], role: 'Second Queen; mother of Camilla, Tubeppa, and Luzurus, and the woman who raised Halkenburg.', source: wiki('Duazul') },
+  { rank: '3rd', name: 'Tang Zhao Li', children: ['Zhang Lei'], role: 'Third Queen and mother of Zhang Lei.', source: wiki('Tang_Zhao_Li') },
+  { rank: '4th', name: 'Katrono', children: ['Tyson'], role: 'Fourth Queen and mother of Tyson.', source: wiki('Katrono') },
+  { rank: '5th', name: 'Swinko-swinko', children: ['Salé-salé'], role: 'Fifth Queen and mother of Salé-salé.', source: wiki('Swinko-swinko') },
+  { rank: '6th', name: 'Seiko', children: ['Kacho', 'Fugetsu'], role: 'Sixth Queen and mother of the twins Kacho and Fugetsu.',
+    source: wiki('Seiko') },
+  { rank: '7th', name: 'Sevanti', children: ['Momoze', 'Marayam'], role: 'Seventh Queen and mother of Momoze and Marayam.', source: wiki('Sevanti') },
+  { rank: '8th', name: 'Oito', children: ['Woble'], role: 'Eighth Queen, mother of Woble, employer of Kurapika, and a direct participant in reconnaissance and survival planning.', source: wiki('Oito') },
+];
 
 export const guardianBeasts = [
-  ['King', 'Nasubi', 'Unknown', 'A previous-generation beast whose presence proves that a winner’s beast can persist beyond a contest.', "Chap 349 - Nasubi's sacred beast.png", 'Nasubi_Hui_Guo_Rou'],
-  ['1', 'Benjamin', 'Partially known', 'Beetle-like beast shown dispersing low-level curse spirits; full ability unresolved.', "Benjamin's Sacred Beast.png", 'Benjamin_Hui_Guo_Rou'],
-  ['2', 'Camilla', 'Known in part', 'Coercive Manipulator that completely controls a target after unknown conditions are met.', "Camilla's Sacred Beast.png", 'Camilla_Hui_Guo_Rou'],
-  ['3', 'Zhang Lei', 'Known in part', 'Conjures one coin each day; numbers accumulate and gifted owners may later awaken abilities.', "Zhang's Sacred Beast.png", 'Zhang_Lei_Hui_Guo_Rou'],
-  ['4', 'Tserriednich', 'Known in part', 'Questions suspicious people, marks lies, and escalates the mark after further deception.', 'Tserriednich Sacred Beast.png', 'Tserriednich_Hui_Guo_Rou'],
-  ['5', 'Tubeppa', 'Known in part', 'Collaborative Transmuter that requires a partner and can manufacture chemicals with varied effects.', 'Tubeppa Nen beast.png', 'Tubeppa_Hui_Guo_Rou'],
-  ['6', 'Tyson', 'Known in part', 'Eye-wogs collect aura, bestow happiness, deepen devotion, and enforce an unknown taboo.', 'Chap 375 - Tyson and her Guardian Spirit Beast.png', 'Tyson_Hui_Guo_Rou'],
-  ['7', 'Luzurus', 'Known in part', 'Conjures desired bait and activates pseudo-coercive manipulation when the target satisfies the desire.', 'Chap 375 - Luzurus and Guardian Spirit Beast.png', 'Luzurus_Hui_Guo_Rou'],
-  ['8', 'Salé-salé', 'Eliminated', 'Diffusive smoke and clones increased goodwill; Rihan’s Predator destroyed the beast.', "Salesale's Sacred Beast.png", 'Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou'],
-  ['9', 'Halkenburg', 'Known in part', 'Marks followers, amplifies unified group aura, and granted Halkenburg his possession arrow.', "Chap 361 - Halkenburg's Nen beast.png", 'Halkenburg_Hui_Guo_Rou'],
-  ['10', 'Kacho', 'Active after host death', 'Without You takes the form of the first deceased twin and protects the survivor.', 'Without-you.png', 'Kacho_Hui_Guo_Rou'],
-  ['11', 'Fugetsu', 'Known in part', 'Magical Worm manifests travel doors whose frequency and return rules have changed.', '374 - Door of Travel.png', 'Fugetsu_Hui_Guo_Rou'],
-  ['12', 'Momoze', 'Host deceased', 'Asks whether a target is free and can seize bodily control after an affirmative answer.', "Chap 361 - Momoze's Nen beast.png", 'Momoze_Hui_Guo_Rou'],
-  ['13', 'Marayam', 'Suspected', 'Dragon-like beast suspected of creating the sealed alternate-space effect around Room 1013.', 'Chap 366 - Marayam Nen beast.png', 'Marayam_Hui_Guo_Rou'],
-  ['14', 'Woble', 'Unknown', 'Appearance and ability remain unrevealed; no substitute image is used.', null, 'Woble_Hui_Guo_Rou'],
-].map(([order, host, knowledge, ability, imageName, slug]) => ({
-  order, host, knowledge, ability, type: beastTypes[host], conditions: beastConditions[host],
-  image: imageName ? file(imageName) : null, source: wiki(slug),
-}));
+  { host: 'Benjamin', type: 'Unknown', knowledge: 'Unknown', ability: 'Unknown ability; the beast has displayed the capacity to repel or erase weak curse spirits under specific conditions.', conditions: 'Complete conditions unknown.', source: wiki('Benjamin_Hui_Guo_Rou') },
+  { host: 'Camilla', type: 'Manipulation', knowledge: 'Known', ability: 'Full control of a target after unknown conditions are met.', conditions: 'Trigger conditions unknown.', source: wiki('Camilla_Hui_Guo_Rou') },
+  { host: 'Zhang Lei', type: 'Conjuration', knowledge: 'Known', ability: 'Produces one coin daily; coins accumulate value and may grant holders an ability after conditions are satisfied.', conditions: 'Activation condition remains unknown.', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { host: 'Tserriednich', type: 'Unknown', knowledge: 'Known', ability: 'Interrogates suspicious people and punishes repeated lies with progressive markings and transformation.', conditions: 'Effects escalate with repeated deception.', source: wiki('Tserriednich_Hui_Guo_Rou') },
+  { host: 'Tubeppa', type: 'Transmutation', knowledge: 'Known', ability: 'Requires a partner and can synthesize substances with varied effects.', conditions: 'Symbiotic partner required.', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { host: 'Tyson', type: 'Emission', knowledge: 'Known', ability: 'Creates fairies that collect aura from recipients while returning happiness; taboo violations trigger punishment.', conditions: 'Recipient must receive Tyson’s book; taboo breach is punished.', source: wiki('Tyson_Hui_Guo_Rou') },
+  { host: 'Luzurus', type: 'Conjuration', knowledge: 'Known', ability: 'Creates a trap that manifests the target’s desire and activates once the target falls for it.', conditions: 'Target must take the bait.', source: wiki('Luzurus_Hui_Guo_Rou') },
+  { host: 'Salé-salé', type: 'Manipulation', knowledge: 'Known', ability: 'Emitted smoke creates attached clones that increase political support.', conditions: 'Beast destroyed by Predator.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { host: 'Halkenburg', type: 'Enhancement', knowledge: 'Known', ability: 'Pinion marks amplify collective aura and support Halkenburg’s group possession arrow.', conditions: 'Requires aligned followers in formation.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { host: 'Kacho', type: 'Unknown', knowledge: 'Known', ability: 'Without You creates an exact copy of the dead twin and protects the survivor.', conditions: 'Activates when one twin dies.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { host: 'Fugetsu', type: 'Conjuration', knowledge: 'Known', ability: 'Magical Worm creates reciprocal portal doors between locations.', conditions: 'Activation rules changed after Kacho’s death; current limits remain under study.', source: wiki('Fugetsu_Hui_Guo_Rou') },
+  { host: 'Momoze', type: 'Manipulation', knowledge: 'Known', ability: 'Possesses a target after asking whether they are free; drains the host’s aura.', conditions: 'Conversational trigger and possession target required.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { host: 'Marayam', type: 'Unknown', knowledge: 'Known', ability: 'Creates an isolated duplicate-space around Room 1013.', conditions: 'Exact formation and exit conditions unknown.', source: wiki('Marayam_Hui_Guo_Rou') },
+  { host: 'Woble', type: 'Unknown', knowledge: 'Unknown', ability: 'Form and ability remain unrevealed.', conditions: 'Unknown.', source: wiki('Woble_Hui_Guo_Rou') },
+];
 
-export const beastRules = [
-  'Created by the Seed Urn ceremony and sustained by the host’s aura.',
-  'Hosts cannot see their own beast or the beasts of princes from the same generation.',
-  'They vanish during Zetsu or when the host cannot supply enough aura.',
-  'They do not kill one another and do not directly attack another beast’s host.',
-  'Their Nen type may differ from the host’s and their behavior reflects the host’s disposition.',
-  'They can be destroyed by Nen abilities; survival after host death depends on the individual ability.',
+export const successionAbilities = [
+  { owner: 'Kurapika', ability: 'Emperor Time', type: 'Specialization', mechanics: 'While his eyes are scarlet Kurapika can use all Nen categories at full efficiency.', conditions: 'Scarlet Eyes active.', limitations: 'Every second of use removes one hour from his lifespan.', source: wiki('Kurapika') },
+  { owner: 'Kurapika', ability: 'Stealth Dolphin', type: 'Conjuration / specialization-linked', mechanics: 'Extracts and analyzes another user’s ability, then can loan it through a dolphin to another person.', conditions: 'Uses Steal Chain and Emperor Time.', limitations: 'Emperor Time remains active while the borrowed ability is held.', source: wiki('Kurapika') },
+  { owner: 'Kurapika', ability: 'Dowsing Chain', type: 'Conjuration', mechanics: 'Detects lies and can be used through recorded footage; scarlet eyes improve performance.', conditions: 'Kurapika needs enough context to interpret the target.', limitations: 'Manipulated memory or self-believed falsehood can defeat the test.', source: wiki('Kurapika') },
+  { owner: 'Kurapika', ability: 'Judgment Chain', type: 'Emission / Manipulation', mechanics: 'Places a blade around a target’s heart and enforces stated rules.', conditions: 'Usable while eyes are scarlet.', limitations: 'Violation of the stated rule triggers death.', source: wiki('Kurapika') },
+  { owner: 'Kurapika', ability: 'Holy Chain', type: 'Enhancement', mechanics: 'Heals injuries; becomes dramatically stronger during Emperor Time.', conditions: 'Finger chain.', limitations: 'Combat use competes with other chains.', source: wiki('Kurapika') },
+  { owner: 'Kurapika', ability: 'Chain Jail', type: 'Conjuration', mechanics: 'Restrains a Phantom Troupe member and forces Zetsu.', conditions: 'May only be used on Troupe members.', limitations: 'Using it on anyone else kills Kurapika.', source: wiki('Kurapika') },
+  { owner: 'Chrollo Lucilfer', ability: 'Skill Hunter + Double Face', type: 'Specialization', mechanics: 'Steals abilities under Skill Hunter’s conditions; Double Face bookmarks a page so another ability can be used while the book is closed or another page is open.', conditions: 'Skill Hunter theft conditions plus bookmark management.', limitations: 'Complex setup and hand-use constraints shape combinations.', source: wiki('Chrollo_Lucilfer') },
+  { owner: 'Chrollo Lucilfer', ability: 'Sun and Moon', type: 'Emission / post-mortem persistence', mechanics: 'Places plus and minus marks that explode on contact; marks survive Gallery Fake copies and persist due to the original owner’s post-mortem Nen.', conditions: 'Opposite marks must touch.', limitations: 'Charge time affects explosion strength.', source: wiki('Chrollo_Lucilfer') },
+  { owner: 'Chrollo Lucilfer', ability: 'Gallery Fake', type: 'Conjuration', mechanics: 'Copies objects and corpses; the copies do not copy Nen powers.', conditions: 'Touches original with one hand and book with the other under normal use.', limitations: 'Copies have timed persistence.', source: wiki('Chrollo_Lucilfer') },
+  { owner: 'Chrollo Lucilfer', ability: 'Order Stamp', type: 'Manipulation', mechanics: 'Commands puppets stamped with an order.', conditions: 'Works on puppets rather than living humans; head must remain attached.', limitations: 'Cannot issue overly complex individual orders.', source: wiki('Chrollo_Lucilfer') },
+  { owner: 'Chrollo Lucilfer', ability: 'Convert Hands', type: 'Conjuration', mechanics: 'Left-hand touch makes the target look like Chrollo; right-hand touch makes Chrollo look like the target.', conditions: 'Touch with marked hands.', limitations: 'Using both hands can swap appearances completely.', source: wiki('Chrollo_Lucilfer') },
+  { owner: 'Chrollo Lucilfer', ability: 'Black Voice', type: 'Manipulation', mechanics: 'Controls a target pierced by an antenna through a cell phone.', conditions: 'Antenna must remain lodged.', limitations: 'Loses control if antenna is removed.', source: wiki('Shalnark') },
+  { owner: 'Chrollo Lucilfer', ability: 'The Sun and Moon + Gallery Fake + Order Stamp combo', type: 'Composite', mechanics: 'Creates copied bodies, stamps them, marks them with Sun and Moon, and sends them as persistent explosives.', conditions: 'Sequence of borrowed abilities and bookmark use.', limitations: 'High setup burden offset by prepared conditions.', source: wiki('Chapter_355') },
+  { owner: 'Hisoka Morow', ability: 'Bungee Gum', type: 'Transmutation', mechanics: 'Aura has the properties of rubber and gum; after death Hisoka orders it to restart his heart and lungs, then uses it as prosthetic tissue.', conditions: 'Aura attached to chosen surfaces or body parts.', limitations: 'Force and geometry still matter.', source: wiki('Hisoka_Morow') },
+  { owner: 'Hisoka Morow', ability: 'Texture Surprise', type: 'Transmutation', mechanics: 'Changes the appearance and texture of thin surfaces; after revival Hisoka uses it to cosmetically reconstruct damaged areas.', conditions: 'Applied to a surface.', limitations: 'Primarily visual/texture deception.', source: wiki('Hisoka_Morow') },
+  { owner: 'Halkenburg Hui Guo Rou', ability: 'Possession Arrow', type: 'Enhancement / group Nen', mechanics: 'Collective aura creates an arrow that overwhelms defenses and transfers an ally’s consciousness into the struck target.', conditions: 'Followers and pinion marks synchronize aura.', limitations: 'The attacker’s original body becomes unconscious; exact selection of attacker is not fully controlled.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { owner: 'Tserriednich Hui Guo Rou', ability: 'Parallel Future', type: 'Specialization', mechanics: 'During Zetsu, Tserriednich sees ten seconds ahead and then experiences the predicted sequence while acting independently of it.', conditions: 'Eyes closed / Zetsu sequence as trained.', limitations: 'Mechanics require precise Zetsu timing; discovery by enemies would be dangerous.', source: wiki('Tserriednich_Hui_Guo_Rou') },
+  { owner: 'Morena Prudo', ability: 'Contagion', type: 'Specialization', mechanics: 'Kiss-initiated game system grants members levels for killing; every level increases aura and level 20 grants a personal ability.', conditions: 'Maximum 23 members including Morena; points depend on victim type.', limitations: 'Member slots and game rules constrain expansion.', source: wiki('Morena_Prudo') },
+  { owner: 'Morena Prudo', ability: 'Negotiation game', type: 'Rule-based interaction', mechanics: 'Uses a five-card choice game to force a recruit to select Yes or No after exchanging questions and goals.', conditions: 'The target must play under Morena’s stated rules.', limitations: 'Not established as a separate Nen ability; tracked as a coercive procedure.', source: wiki('Chapter_408') },
+  { owner: 'Longhi', ability: 'Moonlight Act', type: 'Conjuration / contract', mechanics: 'Creates a mutually binding contract with up to three conditions, increasing aura while the contract is active.', conditions: 'Both parties agree to the terms.', limitations: 'A contract can only be made once per person.', source: wiki('Chapter_401') },
+  { owner: 'Beyond Netero', ability: 'Curse-child system', type: 'Nen curse network', mechanics: 'Cursed children are assigned to princes; their deaths are designed to activate a curse against the assigned prince.', conditions: 'Long-term ritual preparation and assigned targets.', limitations: 'Exact mechanics and Beyond’s direct role remain partly concealed.', source: wiki('Chapter_401') },
+  { owner: 'Kaiser', ability: 'Unknown / suspected manipulation', type: 'Unknown', mechanics: 'Melody suspects Kaiser may be manipulated because of his unnatural heartbeat and behavior.', conditions: 'Unknown.', limitations: 'Unconfirmed theory; not canonically named as an ability.', source: wiki('Kaiser') },
 ];
 
 export const nenLessonPhases = [
-  {
-    phase: 'Round 1 · introduction', chapters: '369–390', place: 'Room 1014',
-    summary: 'Kurapika promises rapid awakening through Stealth Dolphin-assisted instruction, forcing rival camps to send representatives and acknowledge Nen.',
-    people: ['Kurapika', 'Bill', 'Furykov', 'Loberry', 'Barrigen', 'Myuhan', 'Prince representatives'],
-    incidents: ['Silent Majority possesses Loberry', 'Barrigen is killed', 'Myuhan is killed', 'Four students awaken'],
-    source: wiki('Succession_Contest#Kurapika%27s_Nen_lessons'),
-  },
-  {
-    phase: 'Between rounds · alliance use', chapters: '391–410', place: 'Rooms 1014 / 1003 / Justice areas',
-    summary: 'New Nen literacy becomes diplomatic leverage while Kurapika investigates coins, contracts with Longhi, and balances Emperor Time’s cost.',
-    people: ['Kurapika', 'Oito', 'Bill', 'Longhi', 'Sakata', 'Hashito'],
-    incidents: ['Moonlight Act treaty', 'Beyond curse disclosure', 'Zhang Lei coin analysis', 'Expanded attendance negotiated'],
-    source: wiki('Chapter_401'),
-  },
-  {
-    phase: 'Round 2 · split curriculum', chapters: '411–current', place: 'Room 1014',
-    summary: 'Eighteen expected participants are split into introductory and beginner groups while Benjamin’s observers and Sarahell’s curse plan enter the room’s pressure system.',
-    people: ['Kurapika', 'Bill', 'Shimano', 'Furykov', 'Babimyna', 'Sakata', 'Hashito', 'Naipei', 'Belerainte', 'Sarahell'],
-    incidents: ['Two class levels', 'Additional aligned-prince seats', 'One-month basics plan', 'Woble curse infiltration risk'],
-    source: wiki('Chapter_411'),
-  },
+  { phase: 'Pre-class preparation', chapters: '359-368', summary: 'Kurapika reveals Nen, contains the Room 1014 crisis, demonstrates Stealth Dolphin through Oito, and proposes a public class to spread risk.', incidents: ['Woody and guards killed', 'Sayird manipulated', 'Vincent attack', 'Oito reconnaissance', 'Momoze death'], source: wiki('Chapter_368') },
+  { phase: 'Round 1', chapters: '369-390', summary: 'Kurapika opens the first class and uses it as both training and diplomatic leverage.', incidents: ['Barrigen killed by Silent Majority', 'Myuhan killed', 'Lower-prince alliance deepens', 'Students awaken aura'], source: wiki('Chapter_390') },
+  { phase: 'Round 2', chapters: '411-413', summary: 'Kurapika splits the class into awakened and novice groups while Sarahell, Longhi, and multiple political operations converge.', incidents: ['Awakened group advanced exercises', 'Novices begin water divination', 'Sarahell’s curse risk', 'Longhi’s treaty', 'Martial-law pressure'], source: wiki('Chapter_411') },
+];
+
+export const blackWhaleTiers = [
+  { tier: 1, access: 'VVIP / royalty', occupants: 'Royal family, queens, prince households, king, Beyond detention', key: ['Prince rooms 1001-1014', 'Banquet Hall', 'King’s quarters', 'Burial Chamber', 'Beyond detention'], source: wiki('Black_Whale') },
+  { tier: 2, access: 'VIP', occupants: 'Kakin elites, court and entertainment spaces', key: ['Theater', 'Courthouse access', 'Funeral routes'], source: wiki('Black_Whale') },
+  { tier: 3, access: 'Upper passenger / administration', occupants: 'First-class passengers, medical center, Justice facilities, mafia movement', key: ['Medical center', 'Justice Bureau', 'Room 3101 / hideout routes'], source: wiki('Black_Whale') },
+  { tier: 4, access: 'General passenger', occupants: 'Lower-tier population and Royal Army operations', key: ['Royal Army offices', 'Public corridors', 'Mafia territories'], source: wiki('Black_Whale') },
+  { tier: 5, access: 'General passenger / lower-class', occupants: 'Largest civilian population and lower-tier routes', key: ['Crowded communal areas', 'Mafia recruitment routes'], source: wiki('Black_Whale') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
 ];
 
 export const guardAssignmentGroups = [
   {
-    group: 'Prince original private guards',
-    description: 'Personnel originally assigned to a prince before the public Nen lesson reshuffled the information balance.',
+    group: 'Woble / Room 1014',
     records: [
-      ['Benjamin', 'Balsamilco, Babimyna, Furykov, Rihan, Yushohi, Vict, Musse, Shikaku, Vincent', 'Military command; several are confirmed Nen users.', 'mixed'],
-      ['Tserriednich', 'Theta, Salkov, Danjin, Momolly, Muherr', 'Training containment, loyalty testing, and internal resistance.', 'active'],
-      ['Woble', 'Kurapika, Bill, Shimano, Woody, Wolfe, Sandra and other initial guards', 'Most initial protection collapsed on Day 1; Kurapika rebuilt deterrence through Nen lessons.', 'fragile'],
-      ['Momoze', 'Hanzo, Tuffdy and reduced guard detail', 'Protection was weakened after Sevanti shifted attention to Marayam.', 'eliminated'],
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
     ],
   },
   {
-    group: 'Queen-appointed guards and spies',
-    description: 'Guards embedded across rival rooms as surveillance, deterrence, or assassination infrastructure.',
+    group: 'Other princes',
     records: [
-      ['Unma branch', 'Benjamin and Tserriednich-linked pressure', 'High-rank queen politics intersect with military authority and hidden maternity.', 'active'],
-      ['Duazul branch', 'Camilla, Tubeppa, Luzurus and Halkenburg household interests', 'Multiple active contenders create overlapping loyalties.', 'active'],
-      ['Seiko branch', 'Kacho and Fugetsu protection network', 'Twin-prince survival became tied to Melody, Kaiser, and Justice custody.', 'exceptional'],
-      ['Oito branch', 'Woble household and Kurapika contract', 'Lowest-ranked household relies on external Hunters and public information.', 'active'],
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
     ],
   },
-  {
-    group: 'Nen-class attendees and observers',
-    description: 'Representatives whose attendance changes whether their prince’s faction understands Nen.',
-    records: [
-      ['First-round attendees', 'Loberry, Barrigen, Myuhan, other prince representatives', 'Silent Majority murders expose the room as an information battlefield.', 'violent'],
-      ['Benjamin observers', 'Babimyna, Furykov and later aligned personnel', 'Observation becomes counterintelligence and assassination assessment.', 'active'],
-      ['Second-round expansion', 'Sakata, Hashito, Naipei, Belerainte, Sarahell and others', 'Kurapika splits introductory and beginner instruction while curse risks enter the room.', 'active'],
-    ],
-  },
-  {
-    group: 'State, servants, and temporary custody',
-    description: 'Royal Army, Justice Bureau, servants, maids, and detainees whose official status changes by day.',
-    records: [
-      ['Justice protection', 'Kaiser, Melody, Fugetsu, Without You', 'Protective custody overlaps with investigation and deception.', 'active'],
-      ['Royal Army custody', 'Benjamin, Balsamilco body state, Halkenburg funeral route', 'Special martial law changes movement, access, and command authority.', 'active'],
-      ['Servants and attendants', 'Room staff, maids, lower-ranked attendants', 'Ordinary staff repeatedly become witnesses, targets, or vectors.', 'needs room matrix'],
-    ],
-  },
-].map((group) => ({
-  ...group,
-  records: group.records.map(([subject, people, notes, status]) => ({ subject, people, notes, status, source: wiki('Succession_Contest') })),
-}));
-
-export const contestRules = [
-  ['Seed Urn origin', 'Kakin’s royal ritual creates Guardian Spirit Beasts through a blood ceremony; historical prior contests are implied rather than fully documented.', 'confirmed / incomplete'],
-  ['Eligibility', 'The legitimate princes participating in Nasubi’s succession line receive beasts and become contestants.', 'confirmed'],
-  ['Sole-survivor objective', 'The ritual is framed as producing one surviving monarch, but legal and ritual definitions of “eliminated” remain unresolved.', 'confirmed / ambiguous'],
-  ['Withdrawal and escape', 'Kacho and Fugetsu’s failed lifeboat attempt shows leaving the ship is prevented by the ritual.', 'confirmed'],
-  ['Beast restrictions', 'Guardian Spirit Beasts do not directly attack other princes or each other, forcing indirect tactics.', 'confirmed'],
-  ['Host awareness', 'Hosts cannot see their own beasts or same-generation prince beasts; non-prince Nen users may perceive them.', 'confirmed'],
-  ['Legal law vs ritual law', 'Murders still trigger Justice Bureau and military responses even while ritual law pushes the deathmatch forward.', 'developing'],
-  ['Sunday banquets', 'Formal gatherings are part of the royal routine and become communication and assassination opportunities.', 'confirmed'],
-  ['Funeral procedures', 'Deaths move into legal, ceremonial, and possibly ritual channels through the burial chamber and processions.', 'developing'],
-  ['Fourteen caskets', 'The burial chamber has fourteen caskets and an unexplained central apparatus.', 'confirmed / unknown purpose'],
-  ['King’s role', 'Nasubi interprets and sponsors the ritual, but his final intended role is still unresolved.', 'developing'],
-  ['Special martial law', 'Emergency authority changes access, movement, and investigation power without yet resolving the contest.', 'developing'],
-].map(([name, note, status]) => ({ name, note, status, source: wiki('Succession_Contest') }));
-
-const successionAbilityConditions = {
-  'Emperor Time / Stealth Dolphin / Chain abilities': 'Scarlet Eyes activate Emperor Time; each second costs Kurapika one hour of life. Stealth Dolphin requires Emperor Time and can loan an ability after analysis.',
-  Erigeron: 'Works on living growth; combat limits and maximum acceleration remain incompletely shown.',
-  'Silent Majority': 'Uses a possessed host and conjured snakes inside a defined area. User identity, host relationship, and complete target rule are unknown.',
-  'Benjamin Baton': 'The deceased soldier must be loyal to Benjamin, belong to his private army, and graduate from Kakin military academy for the ability to pass on.',
-  'Cat’s Name': 'Counteractive post-death activation requires Camilla to be killed; the cat takes the killer’s life and restores hers.',
-  'Untouchable curse plans': 'A Have-Not spends a lifetime near a target and dies close enough to power a post-mortem curse; each assignment and success state must be tracked separately.',
-  'Guardian coins': 'One coin is produced daily. Numbers and designs change with time and transfer; the eventual holder ability is not yet confirmed.',
-  'Parallel Future': 'Tserriednich closes his eyes and enters Zetsu to see ten seconds ahead; others continue through a divergent reality without perceiving his changed action.',
-  'Magical Worm': 'Outgoing and return doors have asymmetric roles; range, daily use, and post-Kacho changes are still being tested.',
-  'Without You': 'Only activates after one twin dies and remains in that twin’s form to protect the survivor.',
-  'Collective aura possession arrow': 'Requires marked followers acting in unity and formation. The arrow cannot be conventionally blocked; body and consciousness outcomes depend on who fires and who is hit.',
-  Predator: 'Rihan must observe and correctly analyze the target ability. More complex or misleading abilities require longer preparation and a tailored counter-beast.',
-  'Secret Window': 'Musse places an owl-like surveillance construct; the gathered information passes to Benjamin through Benjamin Baton after Musse dies.',
-  'Moonlight Act': 'A voluntary signed contract sets a limited term, restrictions, and possible loan of the ability; wording and consent are central.',
-  Contagion: 'Members gain points by killing; reaching level 20 awakens an ability, while level 100 permits a new infection. Morena controls membership through the kiss initiation.',
-  'Door / spatial and combat abilities': 'Each Heil-Ly member has separate level, trigger, range, and room conditions; shared affiliation does not imply shared mechanics.',
-  'Aboard-ship combat abilities': 'Only previously revealed or currently shown Troupe abilities should be attributed to a member; planned abilities remain unknown.',
-};
-
-const successionAbilitySources = {
-  'Emperor Time / Stealth Dolphin / Chain abilities': 'Kurapika#Nen',
-  Erigeron: 'Bill#Nen',
-  'Silent Majority': 'Silent_Majority',
-  'Benjamin Baton': 'Benjamin_Hui_Guo_Rou#Nen',
-  'Cat’s Name': 'Camilla_Hui_Guo_Rou#Nen',
-  'Untouchable curse plans': 'Camilla_Hui_Guo_Rou#Have-Nots',
-  'Guardian coins': 'Zhang_Lei_Hui_Guo_Rou#Guardian_Spirit_Beast',
-  'Parallel Future': 'Tserriednich_Hui_Guo_Rou#Nen',
-  'Magical Worm': 'Fugetsu_Hui_Guo_Rou#Guardian_Spirit_Beast',
-  'Without You': 'Kacho_Hui_Guo_Rou#Guardian_Spirit_Beast',
-  'Collective aura possession arrow': 'Halkenburg_Hui_Guo_Rou#Nen',
-  Predator: 'Rihan#Nen',
-  'Secret Window': 'Musse#Nen',
-  'Moonlight Act': 'Longhi#Nen',
-  Contagion: 'Morena_Prudo#Nen',
-  'Door / spatial and combat abilities': 'Heil-Ly_Family#Nen',
-  'Aboard-ship combat abilities': 'Phantom_Troupe#Abilities',
-};
-
-export const successionAbilities = [
-  ['Kurapika', 'Emperor Time / Stealth Dolphin / Chain abilities', 'Specialist while eyes are scarlet; multiple chain abilities', 'Long-term lifespan cost; ability loaning and instruction through Stealth Dolphin.', '340-current'],
-  ['Bill', 'Erigeron', 'Enhancement', 'Accelerates organic growth and supports Kurapika’s teaching plan.', '361'],
-  ['Unknown user', 'Silent Majority', 'Unknown', 'Possession and snake murders inside Room 1014; user remains unidentified.', '359'],
-  ['Benjamin', 'Benjamin Baton', 'Enhancement-linked inheritance', 'Inherits abilities from loyal deceased private soldiers who meet conditions.', '373'],
-  ['Camilla', 'Cat’s Name', 'Specialist counteractive', 'Revives Camilla after death by killing the attacker.', '373'],
-  ['Camilla Have-Nots', 'Untouchable curse plans', 'Curse / post-mortem Nen', 'Have-Nots prepare suicide-based curses against rival princes.', '389-current'],
-  ['Zhang Lei', 'Guardian coins', 'Conjuration', 'One coin per day accumulates value and may later awaken a holder.', '362-current'],
-  ['Tserriednich', 'Parallel Future', 'Specialist', 'Ten-second future sight during Zetsu with divergent perceived reality.', '385'],
-  ['Fugetsu', 'Magical Worm', 'Guardian Spirit Beast ability', 'Creates travel doors and altered return routes after Kacho’s death.', '374-current'],
-  ['Kacho', 'Without You', 'Guardian Spirit Beast ability', 'Takes the form of the deceased twin and protects the survivor.', '383'],
-  ['Halkenburg', 'Collective aura possession arrow', 'Enhancement / group ability', 'Unavoidable possession arrow created through unified marked followers.', '382-current'],
-  ['Rihan', 'Predator', 'Conjuration / analysis ability', 'Creates a counter-beast after sufficient analysis of the target ability.', '382'],
-  ['Musse', 'Secret Window', 'Surveillance ability', 'Monitors Camilla and transfers information to Benjamin after Musse’s death.', '373'],
-  ['Longhi', 'Moonlight Act', 'Conjuration / contract', 'Formal treaty ability that binds Kurapika and reveals Beyond’s curse network.', '401'],
-  ['Morena', 'Contagion', 'Specialist', 'Levels Heil-Ly members through murder points until abilities awaken.', '378-current'],
-  ['Heil-Ly members', 'Door / spatial and combat abilities', 'Mixed', 'Teleportation, trap rooms, and newly awakened combat abilities support the hideout war.', '391-current'],
-  ['Phantom Troupe', 'Aboard-ship combat abilities', 'Mixed', 'Known Troupe abilities remain relevant while the members hunt Hisoka and Heil-Ly.', '377-current'],
-].map(([user, ability, type, mechanics, chapters]) => ({
-  user, ability, type, mechanics, chapters, conditions: successionAbilityConditions[ability],
-  source: wiki(successionAbilitySources[ability]),
-}));
-
-export const successionFactions = [
-  ['Royal contest camps', 'Tier 1', 'Fourteen prince households competing, allying, spying, and surviving under ritual restrictions.', ['Princes', 'Queens', 'Private guards', 'Servants'], 'Kakin_Royal_Family'],
-  ['Benjamin’s military network', 'Tiers 1–3', 'Elite soldiers, inherited abilities, surveillance assignments, and special martial-law leverage.', ['Benjamin', 'Balsamilco', 'Furykov', 'Rihan'], 'Benjamin_Hui_Guo_Rou'],
-  ['Justice Bureau', 'Tier 2', 'Investigates crimes, holds hearings, protects witnesses, and limits royal action through legal procedure.', ['Kaiser', 'Cleapatro', 'Mizaistom', 'Melody'], 'Succession_Contest#Martial_Law'],
-  ['Xi-Yu', 'Tiers 1 / 3 / 4', 'Onior’s family sponsors Zhang Lei and hunts Heil-Ly while managing its relationship with the Troupe.', ['Onior', 'Hinrigh', 'Lynch', 'Zakuro'], 'Xi-Yu_Family'],
-  ['Cha-R', 'Tiers 1 / 5', 'Brocco Li’s family sponsors Luzurus, controls lower-tier logistics, and cooperates with the Troupe.', ['Brocco Li', 'Ken%27i Wang', 'Cha-R members'], 'Cha-R_Family'],
-  ['Heil-Ly', 'Tiers 1 / 3 / hidden band', 'Morena’s twenty-three-person group uses Contagion, murder levels, and a spatial hideout to overturn the social order.', ['Morena', 'Luini', 'Dogman', 'Borksen'], 'Heil-Ly_Family'],
-  ['Phantom Troupe', 'Tiers 3–5', 'Searches for Hisoka, bargains with mafia families, and probes the Heil-Ly network.', ['Chrollo', 'Nobunaga', 'Phinks', 'Feitan'], 'Phantom_Troupe'],
-  ['Expedition command', 'Upper ship / separate mission', 'Zodiacs, Beyond, V6, and expedition specialists prepare for the New Continent and Dark Continent beyond the royal war.', ['Beyond', 'Cheadle', 'Mizaistom', 'Leorio'], 'Dark_Continent_Expedition'],
-].map(([name, territory, objective, people, slug]) => ({ name, territory, objective, people, source: wiki(slug) }));
-
-export const mafiaDossiers = [
-  {
-    family: 'Xi-Yu',
-    sponsor: 'Zhang Lei branch / Onior',
-    base: 'Tier 4 office; royal connection through Tier 1',
-    leadership: ['Onior Longbao', 'Hinrigh Biganduffno', 'Zakuro Custard', 'Lynch Fullbokko'],
-    members: ['Onior Longbao', 'Hinrigh Biganduffno', 'Lynch Fullbokko', 'Zakuro Custard', 'Connelly', 'Tassi', 'Misha Hao'],
-    objectives: ['Control territory', 'Contain Heil-Ly', 'Find Hisoka', 'Manage Phantom Troupe cooperation'],
-    risks: ['Heil-Ly teleport routes', 'Troupe volatility', 'Royal sponsorship exposure', 'Lower-tier murders'],
-    source: wiki('Xi-Yu_Family'),
-  },
-  {
-    family: 'Cha-R',
-    sponsor: 'Luzurus branch / Brocco Li',
-    base: 'Tier 5 office and warehouse',
-    leadership: ['Brocco Li', "Ken'i Wang", 'Cha-R enforcers', 'surveillance staff'],
-    members: ['Brocco Li', 'Tajao', "Ken'i Wang", 'Ittoku', 'Sun-bin', 'Tsudonke', 'Vic', 'eight indexed associates'],
-    objectives: ['Control Tier 5 traffic', 'Cooperate with Troupe against Heil-Ly', 'Search for Hisoka', 'Protect cargo routes'],
-    risks: ['Heil-Ly expansion', 'Troupe independent action', 'Military pressure', 'Warehouse exposure'],
-    source: wiki('Cha-R_Family'),
-  },
-  {
-    family: 'Heil-Ly',
-    sponsor: 'Morena Prudo / broken Tserriednich tie',
-    base: 'Hidden band between Tiers 2 and 3',
-    leadership: ['Morena Prudo', 'Dogman', 'Borksen', 'Contagion players'],
-    members: ['Morena Prudo', 'Bille', 'Cashew', 'Chiffon Toto', 'Daemon', 'Dogman', 'Gateaume', 'Gelato', 'Luini', 'Matvere', 'Montblanc Toto', 'Notre', 'Orarge', 'Padaille', 'Perigord', 'Quorolle', 'Sodom', 'Soufflé', 'Terebellum', 'Tevelares', 'Voconte', 'Yokotani', 'unidentified Associate 9', 'Borksen (recruit)'],
-    objectives: ['Spread Contagion', 'Level through murders', 'Break the social order', 'Recruit or coerce useful targets'],
-    risks: ['Xi-Yu and Cha-R response', 'Troupe invasion', 'Royal Army', 'Borksen negotiation outcome'],
-    source: wiki('Heil-Ly_Family'),
-  },
-];
-
-const mafiaRoles = {
-  'Onior Longbao': 'Boss / royal half-brother', 'Hinrigh Biganduffno': 'Underboss / field lead', 'Lynch Fullbokko': 'Enforcer / search team', 'Zakuro Custard': 'Enforcer / search team',
-  'Brocco Li': 'Boss / royal half-brother', "Ken'i Wang": 'Underboss / operations', Tajao: 'Route escort', Ittoku: 'Associate', 'Sun-bin': 'Associate', Tsudonke: 'Associate', Vic: 'Associate',
-  'Morena Prudo': 'Boss / Contagion administrator', Dogman: 'Levelled search specialist', Borksen: 'Coerced recruit', Luini: 'Spatial attacker', Yokotani: 'Hideout defense', Voconte: 'Spatial route user',
-};
-const deceasedMafiaMembers = new Set(['Lynch Fullbokko', 'Luini', 'Padaille']);
-export const mafiaMemberLedger = mafiaDossiers.flatMap((family) => family.members.map((name) => ({
-  family: family.family,
-  name,
-  role: mafiaRoles[name] || (family.family === 'Heil-Ly' ? 'Contagion member / civilian occupation indexed on Hunterpedia' : 'Family member / associate'),
-  nen: family.family === 'Heil-Ly' ? 'Contagion-awakened or unrevealed; verify per member' : 'Known only where individually revealed',
-  location: family.base,
-  status: deceasedMafiaMembers.has(name) ? 'Confirmed deceased' : name === 'Borksen (recruit)' ? 'Recruitment state / constrained choice' : 'Active or current state not individually confirmed',
-  source: family.source,
-})));
-
-const troupeTrackerDetails = {
-  'Chrollo Lucilfer': ['405–407', 'Upper-tier casino and funeral-route planning are shown; later route remains developing.', 'Chapter-scoped'],
-  'Nobunaga Hazama': ['393–406', 'Kills Luini, enters the Room 3101 route, then moves toward Tier 2 with Phinks and Feitan.', 'Chapter-scoped'],
-  'Phinks Magcub': ['398–406', 'Part of the three-person Heil-Ly breach group and Tier 2 approach.', 'Chapter-scoped'],
-  'Feitan Portor': ['398–406', 'Part of the three-person Heil-Ly breach group and Tier 2 approach.', 'Chapter-scoped'],
-  'Franklin Bordeau': ['377', 'Explicit stationary waiting strategy in the Tier 5 dining area.', 'Chapter-scoped'],
-  'Hisoka Morow': ['405', 'Confirmed in the Tier 1 casino; sightings before that require separate confidence labels.', 'Chapter-scoped'],
-};
-
-export const troupeHisokaTracker = [
-  ['Chrollo Lucilfer', 'Aboard', 'Preparing for Hisoka and possible treasure-related plans; exact route is incomplete.', 'unknown upper/lower transition'],
-  ['Nobunaga Hazama', 'Aboard', 'Works with Phinks and Feitan, enters Heil-Ly route, kills Luini.', 'lower tiers / Heil-Ly route'],
-  ['Phinks Magcub', 'Aboard', 'Lower-tier search party and Heil-Ly response.', 'lower tiers'],
-  ['Feitan Portor', 'Aboard', 'Lower-tier search party and mafia contact.', 'lower tiers'],
-  ['Machi Komacine', 'Aboard', 'Hisoka hunt; exact current location not always shown.', 'unknown'],
-  ['Franklin Bordeau', 'Aboard', 'Stationary waiting strategy while others search.', 'Tier 5 dining area'],
-  ['Bonolenov Ndongo', 'Aboard', 'Searches using disguise-related movement; mistaken sightings must be separated from confirmed Hisoka.', 'uncertain'],
-  ['Shizuku Murasaki', 'Aboard', 'Assigned search movements with Chrollo-related objectives.', 'uncertain'],
-  ['Illumi Zoldyck', 'Aboard / contracted', 'Joined the Troupe under Hisoka-related contract terms.', 'shipboard'],
-  ['Kalluto Zoldyck', 'Aboard', 'Troupe member present in the Hisoka hunt.', 'shipboard'],
-  ['Hisoka Morow', 'Target / possibly disguised', 'Confirmed as the hunt target; sightings and disguises require strict confidence labels.', 'unknown'],
-  ['Pakunoda, Shalnark, Kortopi, Uvogin', 'Absent / deceased', 'Historical Troupe deaths should not be displayed as physically present aboard.', 'not aboard'],
-].map(([name, status, objective, location]) => {
-  const [lastChapter = 'Unknown', evidence = 'The current page does not establish a later location.', confidence = 'Unknown'] = troupeTrackerDetails[name] || [];
-  return { name, status, objective, location, lastChapter, evidence, confidence, source: wiki(name.split(',')[0].replaceAll(' ', '_')) };
-});
-
-export const justiceMilitaryLedger = [
-  ['Ministry of Justice / Supreme Court', 'Cleapatro', 'Final judicial authority aboard; legal procedure intersects with prince immunity.', 'Tier 1'],
-  ['Justice Bureau', 'Kaiser', 'Witness protection, investigations, visitation, custody, and Fugetsu/Kacho-related operations.', 'Tier 2'],
-  ['Crime Hunter authority', 'Mizaistom', 'Zodiac and security role constrained by Kakin command and legal jurisdiction.', 'Tier 3 / lower tiers'],
-  ['Kakin Royal Army', 'Benjamin and senior officers', 'Security, surveillance, martial law, guard reassignment, and bulkhead closures.', 'Tiers 1-3'],
-  ['Benjamin command staff', 'Balsamilco, Babimyna, Furykov', 'Operations against rival princes, analysis of Nen classes, and emergency power.', 'Tier 1'],
-  ['Detention and hearings', 'Justice officials', 'Arrest, questioning, VIP witness protection, and investigation records.', 'Justice Bureau'],
-  ['Special martial law', 'Benjamin’s emergency authority', 'Closes routes and changes access between upper tiers while the ritual continues.', 'Tiers 1-3'],
-].map(([area, people, authority, place]) => ({ area, people, authority, place, source: wiki('Succession_Contest#Martial_Law') }));
-
-export const expeditionLayer = [
-  ['Beyond Netero', 'Detained figurehead of the Dark Continent expedition; also tied to the hidden curse-child network.', 'Tier 1 holding cell'],
-  ['Zodiacs', 'Cheadle, Mizaistom, Botobai, Kurapika, Leorio and others carry the expedition governance burden.', 'Upper ship / offices'],
-  ['V5 / V6', 'International framework expands to include Kakin after the public expedition declaration.', 'Political layer'],
-  ['New Continent deception', 'Public destination differs from the true Dark Continent objective.', 'Voyage route'],
-  ['Pariston and Ging group', 'Separate expedition faction whose agenda runs beside the royal contest.', 'background'],
-  ['Temp Hunters and specialists', 'Personnel recruited for expedition labor and expertise, distinct from royal bodyguards.', 'shipwide'],
-  ['Known calamities and guide requirements', 'Dark Continent risk frame remains background pressure during the voyage.', 'expedition dossier'],
-  ['Beyond’s children and curses', 'A hidden network that may directly affect the royal contest.', 'current-arc reveal'],
-].map(([topic, note, location]) => ({ topic, note, location, source: wiki('Dark_Continent_Expedition') }));
-
-export const successionOperations = [
-  ['Silent Majority murders', 'Unknown user weaponizes guards and Nen-class gatherings inside Room 1014.', '359–376', 'Room 1014', 'unresolved'],
-  ['Vincent’s Room 1014 operation', 'Benjamin’s soldier enters under legal cover, kills Sandra, and attempts to control Woble’s remaining staff before Kurapika and Bill stop him.', '361', 'Room 1014', 'resolved'],
-  ['Benjamin’s deployments', 'Elite soldiers enter rival rooms to observe beasts, abilities, and opportunities for legal assassination.', '361–current', 'Tier 1', 'active'],
-  ['Momoze murder and retaliation', 'Tuffdy kills Momoze; Hanzo’s double obtains a confession and kills him.', '368–370', 'Rooms 1012 / 1013', 'resolved'],
-  ['Camilla counterattack', 'Camilla kills Musse, confronts Benjamin, and demonstrates the danger of killing her directly.', '373', 'VVIP / Tier 1', 'contained'],
-  ['Salé-salé elimination', 'Rihan removes the prince’s beast and Yushohi completes the assassination.', '381–382', 'Room 1008', 'resolved'],
-  ['Twin-prince escape', 'Melody’s banquet performance covers a lifeboat attempt that triggers the ritual’s exit restriction.', '383', 'Banquet hall / lifeboats', 'failed'],
-  ['Halkenburg possession campaign', 'Collective aura displaces consciousness and carries Halkenburg’s plan inside Benjamin’s command structure.', '382–current', 'Tiers 1–3', 'active'],
-  ['Theta’s Zetsu test', 'Theta tries to exploit Tserriednich’s training, revealing his future-sight ability and personal beast.', '383–387', 'Room 1004', 'failed'],
-  ['Fugetsu curse investigation', 'Melody, Kaiser, Kacho’s continuing beast, and allied guards investigate the spirits, exhaustion, routes, and possible culprit around Fugetsu.', '388–current', 'Justice Bureau / Tier 1', 'active'],
-  ['Hisoka search', 'Troupe and mafia teams sweep the lower and upper recreational tiers through real and false sightings.', '377–current', 'Tiers 1–5', 'active'],
-  ['Heil-Ly leveling war', 'Contagion turns civilian murders into ability growth and opens conflict with every established faction.', '378–current', 'Tiers 3–5', 'active'],
-  ['Room 3101 breach', 'Hinrigh and Nobunaga enter the hidden route, map the Nen-reinforced base, and leave a transmitter.', '398–405', 'Tier 3 / hidden band', 'active'],
-  ['Borksen recruitment game', 'Heil-Ly abducts Borksen and Morena uses a rule-bound card negotiation to force a membership decision under special martial law.', '407–410', 'Heil-Ly hideout', 'resolved'],
-  ['Sarahell curse infiltration', 'A Camilla Have-Not enters Kurapika’s expanded class with a death-powered curse plan aimed at Woble.', '411–current', 'Room 1014', 'active'],
-  ['Funeral and special martial law', 'Halkenburg’s procession becomes a convergence point while the military closes the upper bulkhead and the casket reaches the King’s gate.', '405–413', 'Tiers 1–3', 'active'],
-].map(([name, summary, chapters, place, status]) => ({ name, summary, chapters, place, status, source: wiki(`Chapter_${chapters.split('–')[0]}`) }));
-
-export const exceptionalStatuses = [
-  ['Confirmed deceased', 'A red X marks a death confirmed by Hunterpedia.'],
-  ['Eliminated', 'The prince is out of the ritual contest; this may require more context than physical death alone.'],
-  ['Body deceased / consciousness active', 'Halkenburg’s original body and continuing consciousness are tracked separately.'],
-  ['Guardian beast continuation', 'Kacho is deceased while Without You remains active in her form.'],
-  ['Possessed or displaced', 'The body’s occupant and original consciousness are recorded as separate state fields.'],
-  ['Confined or detained', 'Legal location is not treated as death or elimination.'],
-  ['Unknown', 'Missing, disguised, or unresolved identity is not converted into a factual status.'],
 ];
 
 export const bodyStateLedger = [
-  ['Confirmed deceased', 'Salé-salé, Kacho, Momoze, Vincent, Musse, and other confirmed deaths', 'Red X only applies here.', 'deceased'],
-  ['Original body deceased / consciousness active', 'Halkenburg', 'His original body is dead while his consciousness remains active elsewhere.', 'exceptional'],
-  ['Body occupied', 'Balsamilco Might', 'Balsamilco’s body is occupied; original consciousness status remains unresolved.', 'exceptional'],
-  ['Guardian Spirit Beast continuation', 'Kacho / Without You', 'Kacho is dead but her beast continues in her form beside Fugetsu.', 'exceptional'],
-  ['Possessed or displaced', 'Shikaku and Halkenburg operation victims', 'Body and consciousness must be tracked separately.', 'exceptional'],
-  ['Confined or detained', 'Camilla, Benjamin, Beyond, others by circumstance', 'Legal confinement is not equivalent to death or elimination.', 'legal'],
-  ['Missing / unknown', 'Hisoka and several lower-tier positions', 'Unknown location must remain unknown until sourced.', 'unknown'],
-  ['Disguised or identity uncertain', 'Potential Hisoka sightings and Troupe movement', 'Confirmed sightings and mistaken sightings need separate records.', 'unknown'],
-].map(([state, examples, rule, className]) => ({ state, examples, rule, className, source: wiki('Succession_Contest_arc') }));
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection is weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralizes his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
 
 export const successionRelationships = [
-  ['Kurapika', 'Oito & Woble', 'Contract / protection', 'Kurapika’s central mission is keeping Woble alive while pursuing the Scarlet Eyes.', 'Preparation onward', '349–current', 'active'],
-  ['Kurapika', 'Zhang Lei', 'Working alliance', 'Information, guards, and coin analysis move between Rooms 1014 and 1003.', 'Voyage', '370–current', 'active'],
-  ['Kurapika', 'Tubeppa / Longhi', 'Conditional treaty', 'Moonlight Act formalizes cooperation while Beyond’s curse network remains a hidden risk.', 'Voyage', '401–current', 'conditional'],
-  ['Kurapika', 'Bill', 'Hunter partnership', 'Bill manages room defense, borrowed abilities, teaching support, and direct tactical work beside Kurapika.', 'Preparation onward', '349–current', 'active'],
-  ['Kurapika', 'Shimano', 'Employer / strategic trust', 'Shimano becomes the room’s communication coordinator and repeatedly stabilizes negotiations among stronger actors.', 'Voyage', '359–current', 'active'],
-  ['Kurapika', 'Nen students', 'Teacher / political exchange', 'The lessons exchange knowledge for time, visibility, and a broader stalemate among the royal camps.', 'Voyage Days 2–12', '369–current', 'active'],
-  ['Benjamin', 'Elite soldiers', 'Command / inheritance', 'Loyal military service gives Benjamin surveillance reach and post-mortem ability inheritance.', 'Voyage', '359–current', 'strained'],
-  ['Benjamin', 'Balsamilco', 'Command / adviser', 'Balsamilco turns Benjamin’s political objectives into disciplined military operations until Halkenburg’s body-transfer attack.', 'Voyage', '359–current', 'exceptional'],
-  ['Benjamin', 'Camilla', 'Sibling rivalry / detention', 'Open hostility becomes a legal and military contest after Camilla’s failed attack and revival.', 'Voyage', '373–current', 'hostile'],
-  ['Benjamin', 'Halkenburg', 'Assassination target / body conflict', 'Each camp attempts to neutralize the other while the possession operation destabilizes identity and command.', 'Voyage', '382–current', 'hostile'],
-  ['Camilla', 'Have-Nots', 'Royal loyalty / curse contract', 'Personal soldiers prepare long-term curses powered by their own deaths.', 'Preparation onward', '359–current', 'active'],
-  ['Camilla', 'Sarahell', 'Curse operator / Woble target', 'Sarahell seeks an assignment near Room 1014 so her death-powered curse can reach Woble.', 'Voyage Day 12', '411–current', 'active'],
-  ['Zhang Lei', 'Coventoba', 'Guard / embedded surveillance', 'Benjamin’s soldier observes the Third Prince while receiving one of the beast’s numbered coins.', 'Voyage', '362–current', 'covert'],
-  ['Tserriednich', 'Theta', 'Teacher / assassination target', 'Theta teaches Nen while secretly trying to prevent Tserriednich’s growth and kill him if possible.', 'Voyage', '362–current', 'deceptive'],
-  ['Tserriednich', 'Salkov', 'Guard / Nen instructor', 'Salkov supports the prince’s training while remaining uncertain about Theta’s private plan.', 'Voyage', '362–current', 'active'],
-  ['Tubeppa', 'Longhi', 'Prince / hidden curse child', 'Longhi serves Tubeppa while concealing her origin in Beyond’s sacrifice network until bargaining with Kurapika.', 'Voyage', '400–current', 'disclosed'],
-  ['Halkenburg', 'Marked followers', 'Collective will', 'Shared resolve amplifies aura and enables the possession arrow.', 'Voyage', '382–current', 'active'],
-  ['Halkenburg', 'Balsamilco', 'Possessor / possessed body', 'Halkenburg’s consciousness operates through Balsamilco’s body after the assassination exchange.', 'Voyage Day 12', '404–current', 'exceptional'],
-  ['Kacho', 'Fugetsu', 'Twin protection', 'Without You makes the sisters’ emotional bond a literal post-death defense.', 'Voyage', '359–current', 'exceptional'],
-  ['Melody', 'Kaiser', 'Justice cooperation', 'They coordinate protection, investigation, letters, and the consequences of the escape attempt.', 'Voyage', '383–current', 'uncertain'],
-  ['Melody', 'Kacho & Fugetsu', 'Hunter contract / emotional loyalty', 'A bodyguard contract becomes a personal effort to protect both twins from the ritual and their household.', 'Preparation onward', '349–current', 'active'],
-  ['Sevanti', 'Marayam', 'Mother / protected child', 'Sevanti concentrates guards around Marayam and remains with him inside the isolated Nen space.', 'Voyage', '359–current', 'isolated'],
-  ['Sevanti', 'Momoze', 'Mother / reassignment', 'Moving most protection away from Momoze leaves the Twelfth Prince exposed before her murder.', 'Voyage Day 1', '359–368', 'ended'],
-  ['Onior', 'Zhang Lei', 'Mafia sponsorship / kinship', 'Xi-Yu’s royal branch supports the Third Prince.', 'Preparation onward', '350–current', 'active'],
-  ['Brocco Li', 'Luzurus', 'Mafia sponsorship / kinship', 'Cha-R’s royal branch supports the Seventh Prince.', 'Preparation onward', '350–current', 'active'],
-  ['Morena', 'Tserriednich', 'Former sponsorship / royal tie', 'Heil-Ly’s break from the old order threatens its former benefactor and every established family.', 'Voyage', '378–current', 'broken'],
-  ['Morena', 'Heil-Ly members', 'Leader / Contagion network', 'Leveling, recruitment, and ability awakening bind civilian members to Morena’s destruction campaign.', 'Voyage', '378–current', 'active'],
-  ['Morena', 'Borksen', 'Captor / recruit', 'A formalized card negotiation constrains coercion, questions, and the available outcomes of recruitment.', 'Voyage', '407–410', 'forced'],
-  ['Xi-Yu', 'Cha-R', 'Nonaggression / shared enemy', 'The two established families preserve the balance of lower-tier territory while coordinating against Heil-Ly.', 'Voyage', '378–current', 'conditional'],
-  ['Xi-Yu & Cha-R', 'Phantom Troupe', 'Temporary cooperation', 'The mafia uses the Troupe against Heil-Ly while trying to control the Hisoka search.', 'Voyage', '378–current', 'conditional'],
-  ['Phantom Troupe', 'Hisoka', 'Mutual hunt', 'Revenge and preemption drive movement across the ship.', 'Voyage', '377–current', 'hostile'],
-  ['Hinrigh', 'Nobunaga', 'Operational cooperation', 'Xi-Yu intelligence and Troupe combat experience combine during the Room 3101 hideout breach.', 'Voyage', '398–current', 'temporary'],
-  ['Justice Bureau', 'Royal Army', 'Overlapping authority', 'Investigation, custody, security, and special martial law create competing chains of command.', 'Voyage', '359–current', 'strained'],
-  ['Kaiser', 'Kakin Justice Bureau', 'Officer / uncertain loyalty', 'Kaiser uses legal access to protect the twins and move information while his motives remain questioned.', 'Voyage', '383–current', 'uncertain'],
-  ['Beyond Netero', 'Curse children', 'Hidden parentage / sacrifice', 'Longhi describes a network designed to affect the royal contest from within.', 'Before voyage onward', '340–current', 'hidden'],
-  ['Beyond Netero', 'Zodiacs', 'Detainee / expedition authority', 'The Zodiacs guard Beyond while relying on his expedition expertise and preparing for the true destination.', 'Expedition setup onward', '340–current', 'strained'],
-].map(([from, to, type, note, phase, chapters, state]) => ({ from, to, type, note, phase, chapters, state, source: wiki('Succession_Contest_arc') }));
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
 
-export const successionObjects = [
-  ['Seed Urn', 'Creates the princes’ parasitic Guardian Spirit Beasts through the royal blood ritual.', 'Guardian_Spirit_Beast#The_Seed_Urn'],
-  ['Burial chamber', 'Fourteen caskets and a central apparatus whose complete ritual purpose remains unknown.', 'Black_Whale#Princes%27_Burial_Chamber'],
-  ['Zhang Lei’s coins', 'Daily conjured objects that accumulate numbers and may awaken holders under later conditions.', 'Zhang_Lei_Hui_Guo_Rou'],
-  ['Scarlet Eyes', 'Tserriednich’s collection remains Kurapika’s personal objective inside the political mission.', 'Scarlet_Eyes'],
-  ['Book of Tyson', 'Doctrine distributed to followers and tied to the conditions of Tyson’s beast.', 'Tyson_Hui_Guo_Rou'],
-  ['Kacho’s letters', 'Messages carried through Tier 1 to share warnings and influence alliances after the escape attempt.', 'Chapter_402'],
-  ['Magical Worm doors', 'Outgoing and return routes generated by Fugetsu’s Guardian Spirit Beast.', 'Fugetsu_Hui_Guo_Rou'],
-  ['TSK-17', 'Biological agent used in the Halkenburg and Balsamilco operation.', 'Chapter_404'],
-  ['Room tickets', 'Access controls movement through class-divided corridors and lower-tier passages.', 'Black_Whale'],
-  ['Tracking transmitters', 'Used to test and map the Heil-Ly spatial hideout.', 'Chapter_405'],
-  ['Lifeboat controls', 'Secured emergency system used in Kacho and Fugetsu’s failed departure.', 'Black_Whale#Lifeboat_Launch_Site'],
-  ['Morena’s negotiation cards', 'Choice system used to recruit or bind Borksen through explicit options and consequences.', 'Chapter_407'],
-].map(([name, note, slug]) => ({ name, note, source: wiki(slug) }));
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
 
-export const successionEvidence = [
-  ['Seed Urn', 'Ritual trigger and beast creation mechanism.', 'Guardian_Spirit_Beast#The_Seed_Urn', 'ritual'],
-  ['Guardian Spirit Beast eggs', 'Symbolic and mechanical output of the ceremony.', 'Guardian_Spirit_Beast', 'ritual'],
-  ['Fourteen burial caskets', 'Endgame structure for the royal deathmatch.', 'Black_Whale#Princes%27_Burial_Chamber', 'ritual'],
-  ['Zhang Lei’s coins', 'Accumulating objects with delayed ability implications.', 'Zhang_Lei_Hui_Guo_Rou', 'ability'],
-  ['Scarlet Eyes', 'Tserriednich’s possession ties Kurapika’s personal mission to Room 1004.', 'Scarlet_Eyes', 'object'],
-  ['Kacho’s letters', 'Evidence and warning route after the escape attempt.', 'Chapter_402', 'document'],
-  ['Fugetsu’s doors', 'Routes and return constraints generated by Magical Worm.', 'Fugetsu_Hui_Guo_Rou', 'ability'],
-  ['TSK-17', 'Biological agent in the Halkenburg/Balsamilco operation.', 'Chapter_404', 'weapon'],
-  ['Tracking transmitters', 'Used to test Heil-Ly route mechanics.', 'Chapter_405', 'device'],
-  ['Room tickets and access passes', 'Movement restrictions across class and tier boundaries.', 'Black_Whale', 'access'],
-  ['Lifeboat controls', 'Escape route hardware blocked by ritual consequences.', 'Black_Whale#Lifeboat_Launch_Site', 'ship system'],
-  ['Surveillance devices', 'Military and mafia monitoring infrastructure.', 'Black_Whale', 'device'],
-  ['Morena’s negotiation cards', 'Card-game structure used in Borksen’s recruitment test.', 'Chapter_407', 'evidence'],
-  ['Tyson’s book', 'Doctrine and possible taboo object tied to Tyson’s followers.', 'Tyson_Hui_Guo_Rou', 'object'],
-].map(([name, note, slug, kind]) => ({ name, note, kind, source: wiki(slug) }));
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
 
-export const successionMysteries = [
-  ['Silent Majority user', 'The operator’s identity and complete targeting method remain unresolved.', 'open', '411'],
-  ['Woble’s Guardian Spirit Beast', 'Neither its appearance nor ability has been revealed.', 'open', '411'],
-  ['Burial chamber purpose', 'The central apparatus and fourteen-casket end condition remain unexplained.', 'open', '404'],
-  ['Nasubi’s intended role', 'The king’s interpretation of survival and the ritual’s final exchange remain uncertain.', 'open', '382'],
-  ['Beyond’s royal child', 'Longhi’s disclosure raises the possibility that one prince is Beyond’s child without identifying that prince.', 'open', '401'],
-  ['Remaining curse children', 'The identities, targets, and activation state of Beyond’s sacrificial children are incomplete.', 'open', '411'],
-  ['Halkenburg’s endgame', 'His consciousness remains active outside his dead original body, but the final transfer plan is unresolved.', 'developing', '411'],
-  ['Tserriednich’s limits', 'Parallel Future, his personal beast, and the speed of his development still have unknown constraints.', 'developing', '387'],
-  ['Fugetsu’s affliction', 'The source and cure of the curse-like spirits around her remain under investigation.', 'developing', '411'],
-  ['Kacho / Without You', 'How long the beast can preserve the deception and what happens if Fugetsu dies remain unresolved.', 'open', '411'],
-  ['Hisoka–Troupe collision', 'Both sides’ next confirmed meeting point remains unknown.', 'open', '406'],
-  ['Chrollo’s preparation', 'The exact treasures, abilities, and route required for his plan are incomplete.', 'developing', '406'],
-  ['Heil-Ly route network', 'The full map of entrances, exits, and spatial conditions is not known.', 'developing', '410'],
-  ['Kurapika’s lifespan', 'Emperor Time’s accumulated cost and his route to the Scarlet Eyes remain central dangers.', 'open', '411'],
-  ['Martial-law outcome', 'The legal and ritual consequences of Benjamin’s emergency authority remain unresolved through Chapter 413.', 'developing', '413'],
-].map(([question, evidence, status, lastChapter]) => ({ question, evidence, status, lastChapter, source: wiki('Succession_Contest_arc') }));
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection is weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralizes his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
 
-export const shipRouteLayers = [
-  ['Royal ring', 'King’s quarters ↔ banquet hall ↔ prince rooms 1001–1014 ↔ VVIP and associate housing', 'Guarded walls and prescribed access'],
-  ['Justice route', 'Tier 1 court and jail ↔ Tier 2 Justice Bureau ↔ Tier 3 political ward', 'Legal escorts and custody'],
-  ['Public spine', 'Tier 2 entertainment ↔ Tier 3 civic decks ↔ Tier 4 commerce ↔ Tier 5 mass housing', 'Tickets and class restrictions'],
-  ['Mafia vertical links', 'Tier 1 bosses ↔ Xi-Yu Tier 4 ↔ Cha-R Tier 5 ↔ abandoned Heil-Ly Tier 3 office', 'Unofficial controlled passages'],
-  ['Heil-Ly network', 'Rooms 3101 / 3131 ↔ shower Rooms A/B ↔ secret hideout entrances', 'Nen-mediated teleportation'],
-  ['Emergency route', 'Banquet passage ↔ secured lifeboat launch ↔ hull waterway', 'Keypad and Royal Army control'],
-  ['Funeral route', 'Tier 3 hospital ↔ Tier 2 Justice area ↔ Tier 1 funeral hall', 'Procession under martial law'],
-  ['Service band', 'Warehouses, clinics, food systems, and sewage facility between Tiers 4–5', 'Infrastructure and supply'],
-].map(([name, path, access]) => ({ name, path, access, source: wiki('Black_Whale') }));
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
 
-export const dossierSources = {
-  arc: wiki('Succession_Contest_arc'),
-  contest: wiki('Succession_Contest'),
-  family: wiki('Kakin_Royal_Family'),
-  beasts: wiki('Guardian_Spirit_Beast'),
-  roster: wiki('List_of_Hunter_%C3%97_Hunter_Characters/Chapters_340-current'),
-  ship: wiki('Black_Whale'),
-};
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia / Contagion network', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection is weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection is weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection is weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Cha-R_Family') },
+  { name: 'Phantom Troupe', type: 'criminal group', leadership: 'Chrollo', role: 'Hunts Hisoka while cooperating tactically with mafia factions against Heil-Ly.', chapters: '351-current', source: wiki('Phantom_Troupe') },
+];
+
+export const guardAssignmentGroups = [
+  {
+    group: 'Woble / Room 1014',
+    records: [
+      { subject: 'Woble', people: 'Kurapika, Bill, Shimano, Queen Oito', notes: 'Core survival group after repeated guard losses.', status: 'active', source: wiki('Chapter_359') },
+      { subject: 'Woble', people: 'Babimyna', notes: 'Benjamin private soldier embedded as observer after Vincent’s death.', status: 'embedded / conditional', source: wiki('Babimyna') },
+    ],
+  },
+  {
+    group: 'Other princes',
+    records: [
+      { subject: 'Benjamin', people: 'Balsamilco, Furykov, Rihan, Yushohi, Vict, Babimyna', notes: 'Military chain and observation network.', status: 'active', source: wiki('Benjamin_Hui_Guo_Rou') },
+      { subject: 'Camilla', people: 'Sarahell, Have-Nots', notes: 'Private guards and curse network.', status: 'active', source: wiki('Camilla_Hui_Guo_Rou') },
+      { subject: 'Zhang Lei', people: 'Sakata, Hashito, Tenftory, Coventoba', notes: 'Royal guards plus Kurapika-linked contacts.', status: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+      { subject: 'Tserriednich', people: 'Theta, Salkov, private guards', notes: 'Training and succession defense.', status: 'active', source: wiki('Tserriednich_Hui_Guo_Rou') },
+      { subject: 'Tubeppa', people: 'Maor, Longhi', notes: 'Alliance channel to Kurapika and bodyguard presence.', status: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+      { subject: 'Tyson', people: 'Izunavi, Giuliano', notes: 'Hunter bodyguard plus Tyson religious household.', status: 'active', source: wiki('Tyson_Hui_Guo_Rou') },
+      { subject: 'Luzurus', people: 'Basho', notes: 'Hunter bodyguard with Cha-R background pressure.', status: 'active', source: wiki('Luzurus_Hui_Guo_Rou') },
+      { subject: 'Kacho', people: 'Melody, Kacho copy', notes: 'After Kacho’s death, Without You remains with Fugetsu.', status: 'deceased / copy active', source: wiki('Kacho_Hui_Guo_Rou') },
+      { subject: 'Fugetsu', people: 'Melody, Kaiser, Kacho copy', notes: 'Judicial custody and medical protection.', status: 'active', source: wiki('Fugetsu_Hui_Guo_Rou') },
+      { subject: 'Momoze', people: 'Hanzo', notes: 'Prince deceased; Hanzo later killed her murderer.', status: 'deceased', source: wiki('Momoze_Hui_Guo_Rou') },
+      { subject: 'Marayam', people: 'Biscuit, Belerainte', notes: 'Protected inside isolated Nen space.', status: 'active', source: wiki('Marayam_Hui_Guo_Rou') },
+    ],
+  },
+];
+
+export const bodyStateLedger = [
+  { person: 'Kacho', chapter: 383, state: 'dead / beast-copy active', detail: 'Kacho dies during the escape attempt; Without You creates a copy that remains with Fugetsu.', source: wiki('Kacho_Hui_Guo_Rou') },
+  { person: 'Halkenburg', chapter: 403, state: 'body unconscious / consciousness in Balsamilco', detail: 'Halkenburg’s possession arrow transfers consciousness into Balsamilco while the original body later dies for the funeral plan.', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { person: 'Shikaku', chapter: 389, state: 'dead after possession', detail: 'Shikaku’s body dies after serving as a possession vessel for Halkenburg’s follower.', source: wiki('Shikaku') },
+  { person: 'Keeney', chapter: 383, state: 'deceased', detail: 'Keeney dies during the twins’ escape operation.', source: wiki('Keeney') },
+  { person: 'Momoze', chapter: 368, state: 'deceased', detail: 'Momoze is murdered after her protection was weakened.', source: wiki('Momoze_Hui_Guo_Rou') },
+  { person: 'Sale-sale', chapter: 382, state: 'deceased', detail: 'Sale-sale is assassinated after Rihan’s Predator neutralized his Guardian Spirit Beast.', source: wiki('Sal%C3%A9-sal%C3%A9_Hui_Guo_Rou') },
+  { person: 'Woble (actual infant)', chapter: 414, state: 'alive / separated', detail: 'Chapter 414 distinguishes the actual Woble from a substitute infant and shows the actual child separated from Oito under disputed circumstances.', source: wiki('Chapter_414') },
+  { person: 'Woble (substitute infant)', chapter: 414, state: 'substitute identity', detail: 'A substitute infant is presented inside the royal system while Oito recognizes the child is not Woble.', source: wiki('Chapter_414') },
+  { person: 'Borksen', chapter: 410, state: 'alive / forcibly recruited', detail: 'Borksen survives Morena’s negotiation game but is forced into Heil-Ly under the final Yes.', source: wiki('Borksen') },
+];
+
+export const successionRelationships = [
+  { from: 'Kurapika', to: 'Oito', type: 'bodyguard / employer', note: 'Kurapika is contractually protecting Woble and works directly with Oito on alliances and reconnaissance.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Oito') },
+  { from: 'Kurapika', to: 'Woble', type: 'protector / prince', note: 'Kurapika’s central goal inside the contest is Woble’s survival.', phase: 'active contest', chapters: '358-current', state: 'active', source: wiki('Woble_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Longhi', type: 'treaty / provisional ally', note: 'Moonlight Act binds a conditional alliance centered on Woble and the Beyond curse-child problem.', phase: 'active contest', chapters: '401-current', state: 'active', source: wiki('Longhi') },
+  { from: 'Kurapika', to: 'Zhang Lei', type: 'alliance', note: 'Zhang Lei supports Kurapika’s Room 1014 position while seeking Nen and succession information.', phase: 'active contest', chapters: '368-current', state: 'active', source: wiki('Zhang_Lei_Hui_Guo_Rou') },
+  { from: 'Kurapika', to: 'Tubeppa camp', type: 'alliance', note: 'Maor and Longhi maintain an alliance channel between Tubeppa and Kurapika.', phase: 'active contest', chapters: '371-current', state: 'active', source: wiki('Tubeppa_Hui_Guo_Rou') },
+  { from: 'Benjamin', to: 'Balsamilco', type: 'command', note: 'Balsamilco is Benjamin’s senior strategist and executor of high-risk military plans.', phase: 'active contest', chapters: '359-current', state: 'active until possession', source: wiki('Balsamilco_Might') },
+  { from: 'Halkenburg', to: 'Balsamilco', type: 'possession / infiltration', note: 'Halkenburg’s plan continues through Balsamilco’s body after the TSK-17 operation.', phase: 'martial law', chapters: '403-current', state: 'active', source: wiki('Halkenburg_Hui_Guo_Rou') },
+  { from: 'Kacho copy', to: 'Fugetsu', type: 'guardian beast / twin protection', note: 'Without You maintains Kacho’s copy beside Fugetsu after Kacho’s death.', phase: 'active contest', chapters: '383-current', state: 'active', source: wiki('Kacho_Hui_Guo_Rou') },
+  { from: 'Morena', to: 'Borksen', type: 'coercive recruitment', note: 'Morena uses the negotiation game to force Borksen toward Heil-Ly membership.', phase: 'martial law', chapters: '407-410', state: 'resolved into recruitment', source: wiki('Borksen') },
+  { from: 'Hisoka', to: 'Phantom Troupe', type: 'mutual hunt', note: 'After his revival, Hisoka abandons duel conditions and declares he will kill Troupe members on sight.', phase: 'post-Heavens Arena / voyage', chapters: '357-current', state: 'active', source: wiki('Hisoka_Morow') },
+  { from: 'Phantom Troupe', to: 'Heil-Ly', type: 'hostility', note: 'The Troupe shifts from Hisoka search to explicit Heil-Ly destruction after Luini’s approach.', phase: 'lower-tier conflict', chapters: '393-current', state: 'active', source: wiki('Chapter_393') },
+];
+
+export const successionOrganizations = [
+  { name: 'Kakin Royal Family', type: 'royal house', leadership: 'Nasubi', role: 'Fourteen princes compete in the succession ritual while queens and guards act through ranked legal structures.', chapters: '349-current', source: wiki('Kakin_Empire') },
+  { name: 'Hunter Association / Zodiacs', type: 'expedition command', leadership: 'Cheadle', role: 'Runs the Dark Continent expedition framework, Beyond custody, medical and security roles, and selected royal assignments.', chapters: '340-current', source: wiki('Hunter_Association') },
+  { name: 'Kakin Royal Army', type: 'state security', leadership: 'Benjamin / national command', role: 'Controls ship security, custody, checkpoints, and special martial law.', chapters: '358-current', source: wiki('Kakin_Empire') },
+  { name: 'Justice Bureau', type: 'judicial / investigative', leadership: 'Chief Justice / Kakin state', role: 'Investigates killings, handles detention, and preserves formal evidence and custody procedures.', chapters: '369-current', source: wiki('Kakin_Empire') },
+  { name: 'Xi-Yu Family', type: 'mafia', leadership: 'Onior Longbao', role: 'Zhang Lei-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '378-current', source: wiki('Xi-Yu_Family') },
+  { name: 'Heil-Ly Family', type: 'mafia / Contagion network', leadership: 'Morena Prudo', role: 'Breakaway family using Contagion to level members and destabilize the ship.', chapters: '378-current', source: wiki('Heil-Ly_Family') },
+  { name: 'Cha-R Family', type: 'mafia', leadership: 'Brocco Li', role: 'Luzurus-linked family balancing Troupe cooperation and Heil-Ly suppression.', chapters: '
