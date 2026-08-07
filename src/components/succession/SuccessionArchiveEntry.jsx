@@ -24,6 +24,7 @@ import './SuccessionArchitectureVisualRevision.css';
 import './SuccessionPhase2PresentationConsistency.css';
 import './SuccessionFinalReleasePatch.css';
 import './SuccessionFinalContrastClosure.css';
+import SuccessionCommandHome from './SuccessionCommandHome';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));
@@ -34,8 +35,17 @@ function ArchiveRouteLoading() {
 }
 
 export default function SuccessionArchiveEntry(props) {
+  const isCommandHome = props.routeTarget === 'story' && Object.keys(props.routeParams || {}).length === 0;
   const isReader = props.routeTarget === 'reader';
   const isLightRoute = props.routeTarget === 'black-whale' || props.routeTarget === 'princes';
+
+  if (isCommandHome) {
+    return <SuccessionCommandHome
+      spoilerLimit={props.spoilerLimit}
+      onNavigate={props.onNavigate}
+      onOpenSearch={props.onOpenSearch}
+    />;
+  }
 
   return <Suspense fallback={<ArchiveRouteLoading />}>
     {isReader
