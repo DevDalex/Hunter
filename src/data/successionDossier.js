@@ -6,6 +6,12 @@ import {
   succession340SourcePolicy,
 } from './succession340Research.js';
 import {
+  succession341ChapterFocus,
+  succession341ChapterResearch,
+  succession341Mysteries,
+  succession341SourcePolicy,
+} from './succession341Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -59,6 +65,7 @@ export * from './successionDossierLegacy.js';
 export const chapterFocus = Object.freeze({
   ...legacy.chapterFocus,
   ...succession340ChapterFocus,
+  ...succession341ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -69,8 +76,9 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
+  ...succession341ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -112,6 +120,7 @@ export const successionMysteries = Object.freeze([
     source: 'https://hunterxhunter.fandom.com/wiki/Chapter_416',
   },
   ...succession340Mysteries,
+  ...succession341Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -159,6 +168,7 @@ export const guardAssignmentGroups = Object.freeze(legacy.guardAssignmentGroups.
 export const dossierSources = Object.freeze({
   ...legacy.dossierSources,
   chapter340: 'https://hunterxhunter.fandom.com/wiki/Chapter_340',
+  chapter341: 'https://hunterxhunter.fandom.com/wiki/Chapter_341',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -170,6 +180,7 @@ export const dossierSources = Object.freeze({
   viz414: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-414/chapter/50800',
   viz415: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-415/chapter/50829',
   sourcePolicy340: succession340SourcePolicy,
+  sourcePolicy341: succession341SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
