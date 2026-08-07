@@ -215,6 +215,19 @@ import {
   succession368TrainingSchedule,
 } from './succession368Research.js';
 import {
+  succession369AbilityRecords,
+  succession369BodyStates,
+  succession369ChapterFocus,
+  succession369ChapterResearch,
+  succession369EmperorTimeModel,
+  succession369FurykovAssessment,
+  succession369Mysteries,
+  succession369OitoNenAwakening,
+  succession369RelationshipRecords,
+  succession369SourcePolicy,
+  succession369TrainingRoster,
+} from './succession369Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -290,6 +303,7 @@ export const chapterFocus = Object.freeze({
   ...succession366ChapterFocus,
   ...succession367ChapterFocus,
   ...succession368ChapterFocus,
+  ...succession369ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -300,7 +314,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -324,6 +338,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession366ChapterResearch,
   ...succession367ChapterResearch,
   ...succession368ChapterResearch,
+  ...succession369ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -348,6 +363,7 @@ export const successionAbilities = Object.freeze([
   ...succession349AbilityRecords,
   ...succession351357AbilityRecords,
   ...succession361AbilityRecords,
+  ...succession369AbilityRecords,
   ...succession414415AbilityRecords,
 ]);
 
@@ -373,6 +389,7 @@ export const successionRelationships = Object.freeze([
   ...succession366RelationshipRecords,
   ...succession367RelationshipRecords,
   ...succession368RelationshipRecords,
+  ...succession369RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -387,6 +404,7 @@ export const bodyStateLedger = Object.freeze([
   ...succession363BodyStates,
   ...succession364BodyStates,
   ...succession368BodyStates,
+  ...succession369BodyStates,
   ...succession414415BodyStates,
 ]);
 
@@ -473,6 +491,11 @@ export const emperorTimeChapter368ExposureResearch = succession368EmperorTimeExp
 export const momozeChapter368MurderResearch = succession368MomozeMurder;
 export const nenClassChapter368ScheduleResearch = succession368TrainingSchedule;
 export const momozeChapter368CustodyResearch = succession368CustodyRecords;
+export const emperorTimeChapter369ModelResearch = succession369EmperorTimeModel;
+export const oitoChapter369NenAwakeningResearch = succession369OitoNenAwakening;
+export const nenClassChapter369RosterResearch = succession369TrainingRoster;
+export const furykovChapter369AssessmentResearch = succession369FurykovAssessment;
+export const silentMajorityChapter369Research = succession369AbilityRecords;
 
 export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
@@ -578,6 +601,7 @@ export const successionMysteries = Object.freeze([
     source: 'https://hunterxhunter.fandom.com/wiki/Chapter_368',
   },
   ...succession368Mysteries,
+  ...succession369Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -755,6 +779,17 @@ export const guardAssignmentGroups = Object.freeze([
       source: record.source,
     }))),
   }),
+  Object.freeze({
+    group: 'Chapter 369 Nen class roster',
+    description: 'At 9 a.m. on Voyage Day 2, sixteen representatives from ten rival prince camps gather in Room 1014 for Kurapika’s first public Nen lesson while simultaneously pursuing intelligence, recruitment, and security objectives.',
+    records: Object.freeze(succession369TrainingRoster.representatives.map((record) => Object.freeze({
+      subject: `${record.camp} camp`,
+      people: record.people.join(', '),
+      notes: record.purpose,
+      status: 'active class attendee / Voyage Day 2',
+      source: 'https://hunterxhunter.fandom.com/wiki/Chapter_369',
+    }))),
+  }),
   ...legacy.guardAssignmentGroups.map((group) => {
     if (group.group !== 'State, servants, and temporary custody') return group;
     return Object.freeze({
@@ -804,6 +839,7 @@ export const dossierSources = Object.freeze({
   chapter366: 'https://hunterxhunter.fandom.com/wiki/Chapter_366',
   chapter367: 'https://hunterxhunter.fandom.com/wiki/Chapter_367',
   chapter368: 'https://hunterxhunter.fandom.com/wiki/Chapter_368',
+  chapter369: 'https://hunterxhunter.fandom.com/wiki/Chapter_369',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -837,6 +873,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy366: succession366SourcePolicy,
   sourcePolicy367: succession367SourcePolicy,
   sourcePolicy368: succession368SourcePolicy,
+  sourcePolicy369: succession369SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
