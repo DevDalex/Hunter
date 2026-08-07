@@ -127,6 +127,17 @@ import {
   succession360SourcePolicy,
 } from './succession360Research.js';
 import {
+  succession361AbilityRecords,
+  succession361BodyStates,
+  succession361ChapterFocus,
+  succession361ChapterResearch,
+  succession361EscapeRoutes,
+  succession361GuardianBeastUpdates,
+  succession361Mysteries,
+  succession361RelationshipRecords,
+  succession361SourcePolicy,
+} from './succession361Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -194,6 +205,7 @@ export const chapterFocus = Object.freeze({
   ...succession358ChapterFocus,
   ...succession359ChapterFocus,
   ...succession360ChapterFocus,
+  ...succession361ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -204,7 +216,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -220,6 +232,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession358ChapterResearch,
   ...succession359ChapterResearch,
   ...succession360ChapterResearch,
+  ...succession361ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -243,6 +256,7 @@ export const successionAbilities = Object.freeze([
   ...succession347AbilityRecords,
   ...succession349AbilityRecords,
   ...succession351357AbilityRecords,
+  ...succession361AbilityRecords,
   ...succession414415AbilityRecords,
 ]);
 
@@ -260,6 +274,7 @@ export const successionRelationships = Object.freeze([
   ...succession358RelationshipRecords,
   ...succession359RelationshipRecords,
   ...succession360RelationshipRecords,
+  ...succession361RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -270,6 +285,7 @@ export const bodyStateLedger = Object.freeze([
   ...succession351357BodyStates,
   ...succession359BodyStates,
   ...succession360BodyStates,
+  ...succession361BodyStates,
   ...succession414415BodyStates,
 ]);
 
@@ -317,6 +333,8 @@ export const blackWhaleBoardingTierResearch = succession358TierRecords;
 export const blackWhaleVoyageRouteResearch = succession359VoyageRoute;
 export const guardianSpiritBeastParasiticNenResearch = succession360ParasiticNenRecord;
 export const oitoHigherQueenSpyNetwork = succession360QueenSpyNetwork;
+export const wobleEscapeRouteResearch = succession361EscapeRoutes;
+export const guardianSpiritBeastHostUpdates = succession361GuardianBeastUpdates;
 
 export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
@@ -348,7 +366,25 @@ export const successionMysteries = Object.freeze([
   ...succession351357Mysteries,
   ...succession358Mysteries,
   ...succession359Mysteries,
-  ...succession360Mysteries,
+  ...succession360Mysteries.filter((record) => ![
+    'Which Guardian Spirit Beast is manipulating Sayird, and who is its host?',
+    'What are the three escape routes Bill says are available to Oito and Woble?',
+  ].includes(record.question)),
+  {
+    question: 'Which Guardian Spirit Beast is manipulating Sayird, and who is its host?',
+    evidence: 'Chapter 361 shows the same hamster-like Guardian Spirit Beast behind Momoze, resolving Momoze as the royal host of the creature that manipulated Sayird. The complete activation rules remain unresolved.',
+    status: 'resolved host / mechanics developing',
+    lastChapter: '361',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_361',
+  },
+  {
+    question: 'What are the three escape routes Bill says are available to Oito and Woble?',
+    evidence: 'Chapter 361 identifies the three dependencies: Kurton’s five-passenger symbiotic vehicle transformation, now impossible because Kurton is dead; a difficult route requiring Pariston; and an even more difficult route requiring Beyond. The Pariston and Beyond methods themselves remain unexplained.',
+    status: 'resolved dependencies / methods developing',
+    lastChapter: '361',
+    source: 'https://hunterxhunter.fandom.com/wiki/Chapter_361',
+  },
+  ...succession361Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -421,6 +457,19 @@ export const guardAssignmentGroups = Object.freeze([
       source: assignment.source,
     }))),
   }),
+  Object.freeze({
+    group: 'Room 1014 active core after two hours',
+    description: 'Chapter 361 records the collapse of Woble’s original staffing after deaths, manipulation, arrest, and resignations.',
+    records: Object.freeze([
+      Object.freeze({
+        subject: 'Woble / Oito household',
+        people: 'Kurapika, Bill, Shimanu, Sandra',
+        notes: 'Only two guards and two servants remain from eleven guards and four servants two hours after departure.',
+        status: 'critical staffing depletion · Voyage Day 1',
+        source: 'https://hunterxhunter.fandom.com/wiki/Chapter_361',
+      }),
+    ]),
+  }),
   ...legacy.guardAssignmentGroups.map((group) => {
     if (group.group !== 'State, servants, and temporary custody') return group;
     return Object.freeze({
@@ -462,6 +511,7 @@ export const dossierSources = Object.freeze({
   chapter358: 'https://hunterxhunter.fandom.com/wiki/Chapter_358',
   chapter359: 'https://hunterxhunter.fandom.com/wiki/Chapter_359',
   chapter360: 'https://hunterxhunter.fandom.com/wiki/Chapter_360',
+  chapter361: 'https://hunterxhunter.fandom.com/wiki/Chapter_361',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -487,6 +537,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy358: succession358SourcePolicy,
   sourcePolicy359: succession359SourcePolicy,
   sourcePolicy360: succession360SourcePolicy,
+  sourcePolicy361: succession361SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
