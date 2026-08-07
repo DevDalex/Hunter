@@ -138,6 +138,16 @@ import {
   succession361SourcePolicy,
 } from './succession361Research.js';
 import {
+  succession362ChapterFocus,
+  succession362ChapterResearch,
+  succession362GuardianBeastReveals,
+  succession362GuardianBeastRules,
+  succession362Mysteries,
+  succession362PersonnelRecords,
+  succession362RelationshipRecords,
+  succession362SourcePolicy,
+} from './succession362Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -206,6 +216,7 @@ export const chapterFocus = Object.freeze({
   ...succession359ChapterFocus,
   ...succession360ChapterFocus,
   ...succession361ChapterFocus,
+  ...succession362ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -216,7 +227,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -233,6 +244,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession359ChapterResearch,
   ...succession360ChapterResearch,
   ...succession361ChapterResearch,
+  ...succession362ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -275,6 +287,7 @@ export const successionRelationships = Object.freeze([
   ...succession359RelationshipRecords,
   ...succession360RelationshipRecords,
   ...succession361RelationshipRecords,
+  ...succession362RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -325,6 +338,12 @@ export const contestRules = Object.freeze([
       status: 'confirmed / Chapter 349 boundary',
       source: record.source,
     })),
+  ...succession362GuardianBeastRules.map((record) => Object.freeze({
+    name: record.rule,
+    note: `${record.scope} ${record.implication}`,
+    status: 'confirmed / Chapter 362 Guardian Spirit Beast restriction',
+    source: record.source,
+  })),
 ]);
 
 export const hisokaChrolloFightResearch = succession351357FightResearch;
@@ -335,6 +354,9 @@ export const guardianSpiritBeastParasiticNenResearch = succession360ParasiticNen
 export const oitoHigherQueenSpyNetwork = succession360QueenSpyNetwork;
 export const wobleEscapeRouteResearch = succession361EscapeRoutes;
 export const guardianSpiritBeastHostUpdates = succession361GuardianBeastUpdates;
+export const guardianSpiritBeastRuleResearch = succession362GuardianBeastRules;
+export const guardianSpiritBeastRevealResearch = succession362GuardianBeastReveals;
+export const tserriednichNenPersonnelResearch = succession362PersonnelRecords;
 
 export const successionMysteries = Object.freeze([
   ...legacy.successionMysteries.filter((record) => record.question !== 'Martial-law outcome'),
@@ -385,6 +407,7 @@ export const successionMysteries = Object.freeze([
     source: 'https://hunterxhunter.fandom.com/wiki/Chapter_361',
   },
   ...succession361Mysteries,
+  ...succession362Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -470,6 +493,17 @@ export const guardAssignmentGroups = Object.freeze([
       }),
     ]),
   }),
+  Object.freeze({
+    group: 'Tserriednich Nen-capable bodyguards',
+    description: 'Chapter 362 identifies the Nen-capable personnel inside Tserriednich’s bodyguard detail and their attempted containment strategy.',
+    records: Object.freeze(succession362PersonnelRecords.map((record) => Object.freeze({
+      subject: record.household,
+      people: record.person,
+      notes: `${record.nenStatus}. ${record.role}`,
+      status: 'Voyage Day 1 · Nen secrecy collapsing',
+      source: record.source,
+    }))),
+  }),
   ...legacy.guardAssignmentGroups.map((group) => {
     if (group.group !== 'State, servants, and temporary custody') return group;
     return Object.freeze({
@@ -512,6 +546,7 @@ export const dossierSources = Object.freeze({
   chapter359: 'https://hunterxhunter.fandom.com/wiki/Chapter_359',
   chapter360: 'https://hunterxhunter.fandom.com/wiki/Chapter_360',
   chapter361: 'https://hunterxhunter.fandom.com/wiki/Chapter_361',
+  chapter362: 'https://hunterxhunter.fandom.com/wiki/Chapter_362',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -538,6 +573,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy359: succession359SourcePolicy,
   sourcePolicy360: succession360SourcePolicy,
   sourcePolicy361: succession361SourcePolicy,
+  sourcePolicy362: succession362SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
