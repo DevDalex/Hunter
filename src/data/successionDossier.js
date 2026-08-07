@@ -68,6 +68,16 @@ import {
   succession348SourcePolicy,
 } from './succession348Research.js';
 import {
+  succession349AbilityRecords,
+  succession349ChapterFocus,
+  succession349ChapterResearch,
+  succession349ContestRules,
+  succession349Mysteries,
+  succession349ObjectRecords,
+  succession349RelationshipRecords,
+  succession349SourcePolicy,
+} from './succession349Research.js';
+import {
   succession400ChapterFocus,
   succession400ChapterResearch,
   succession400Mysteries,
@@ -129,6 +139,7 @@ export const chapterFocus = Object.freeze({
   ...succession346ChapterFocus,
   ...succession347ChapterFocus,
   ...succession348ChapterFocus,
+  ...succession349ChapterFocus,
   ...succession400ChapterFocus,
   ...succession406ChapterFocus,
   ...succession408ChapterFocus,
@@ -139,7 +150,7 @@ export const chapterFocus = Object.freeze({
 });
 
 export const successionChapterResearch = Object.freeze([
-  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 400, 406, 408, 409, 410].includes(record.number)),
+  ...legacy.successionChapterResearch.filter((record) => ![340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 400, 406, 408, 409, 410].includes(record.number)),
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
   ...succession342ChapterResearch,
@@ -149,6 +160,7 @@ export const successionChapterResearch = Object.freeze([
   ...succession346ChapterResearch,
   ...succession347ChapterResearch,
   ...succession348ChapterResearch,
+  ...succession349ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
@@ -170,6 +182,7 @@ export const successionAbilities = Object.freeze([
   ...succession343AbilityRecords,
   ...succession346AbilityRecords,
   ...succession347AbilityRecords,
+  ...succession349AbilityRecords,
   ...succession414415AbilityRecords,
 ]);
 
@@ -181,6 +194,7 @@ export const successionRelationships = Object.freeze([
   ...succession346RelationshipRecords,
   ...succession347RelationshipRecords,
   ...succession348RelationshipRecords,
+  ...succession349RelationshipRecords,
   ...succession414415RelationshipRecords,
 ]);
 
@@ -192,10 +206,40 @@ export const bodyStateLedger = Object.freeze([
 ]);
 
 export const successionObjects = Object.freeze([
-  ...legacy.successionObjects,
+  ...legacy.successionObjects.map((record) => (
+    record.name === 'Seed Urn'
+      ? Object.freeze({ ...record, ...succession349ObjectRecords[0] })
+      : record
+  )),
   ...succession344ObjectRecords,
   ...succession345ObjectRecords,
   ...succession347ObjectRecords,
+]);
+
+export const contestRules = Object.freeze([
+  ...legacy.contestRules.map((record) => {
+    if (record.name === 'Seed Urn origin') return Object.freeze({
+      ...record,
+      note: 'Chapter 349 attributes the conjured Seed Urn to Kakin’s First King, links its design to the Worm Toxin tradition, and shows the blood ritual implanting Guardian Spirit Beast eggs.',
+      status: 'confirmed',
+      source: 'https://hunterxhunter.fandom.com/wiki/Chapter_349',
+    });
+    if (record.name === 'Eligibility') return Object.freeze({
+      ...record,
+      note: 'Only children of Nasubi’s eight legal wives are eligible; all fourteen are called Princes regardless of gender, and participation requires boarding the Black Whale and joining the departure ceremony.',
+      status: 'confirmed',
+      source: 'https://hunterxhunter.fandom.com/wiki/Chapter_349',
+    });
+    return record;
+  }),
+  ...succession349ContestRules
+    .filter((record) => !['Eligible bloodline', 'Boarding and ceremony requirement'].includes(record.rule))
+    .map((record) => Object.freeze({
+      name: record.rule,
+      note: record.detail,
+      status: 'confirmed / Chapter 349 boundary',
+      source: record.source,
+    })),
 ]);
 
 export const successionMysteries = Object.freeze([
@@ -216,6 +260,7 @@ export const successionMysteries = Object.freeze([
   ...succession346Mysteries,
   ...succession347Mysteries,
   ...succession348Mysteries,
+  ...succession349Mysteries,
   ...succession400Mysteries,
   ...succession406Mysteries,
   ...succession408Mysteries,
@@ -271,6 +316,7 @@ export const dossierSources = Object.freeze({
   chapter346: 'https://hunterxhunter.fandom.com/wiki/Chapter_346',
   chapter347: 'https://hunterxhunter.fandom.com/wiki/Chapter_347',
   chapter348: 'https://hunterxhunter.fandom.com/wiki/Chapter_348',
+  chapter349: 'https://hunterxhunter.fandom.com/wiki/Chapter_349',
   chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
   chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
   chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
@@ -290,6 +336,7 @@ export const dossierSources = Object.freeze({
   sourcePolicy346: succession346SourcePolicy,
   sourcePolicy347: succession347SourcePolicy,
   sourcePolicy348: succession348SourcePolicy,
+  sourcePolicy349: succession349SourcePolicy,
   sourcePolicy400: succession400SourcePolicy,
   sourcePolicy406: succession406SourcePolicy,
   sourcePolicy408: succession408SourcePolicy,
