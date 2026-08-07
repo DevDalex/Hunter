@@ -1,67 +1,149 @@
 import {
   successionDays as legacySuccessionDays,
-  successionPrelude,
+  successionPrelude as legacySuccessionPrelude,
   timelineSources as legacyTimelineSources,
-  timelineTracks,
+  timelineTracks as legacyTimelineTracks,
 } from './successionTimelineLegacy.js';
-import { succession400TimelineEvents } from './succession400Research.js';
-import { succession406TimelineEvents } from './succession406Research.js';
-import { succession408TimelineEvents } from './succession408Research.js';
-import { succession409TimelineEvents } from './succession409Research.js';
-import { succession410TimelineEvents } from './succession410Research.js';
-import { succession414415TimelineEvents } from './succession414415Research.js';
+import { maintainedSuccessionChapterResearch } from './successionMaintainedChapterResearch.js';
 
-export { successionPrelude, timelineTracks };
+const freeze = (value) => Object.freeze(value);
+const unique = (values) => [...new Set(values.filter(Boolean))];
+const parseVoyageDay = (value) => {
+  const match = String(value || '').match(/(?:voyage\s*)?day\s*(\d+)/i);
+  return match ? Number(match[1]) : null;
+};
+const chapterNumbersFromSpec = (value) => {
+  const values = String(value || '').match(/\d{3}/g)?.map(Number) || [];
+  if (!values.length) return [];
+  const [start, end = start] = values;
+  return Array.from({ length: Math.max(0, end - start) + 1 }, (_, index) => start + index);
+};
+const researchIsMaintained = (research) => Boolean(
+  research
+  && !String(research.status || '').toLowerCase().includes('pending')
+  && research.coverage?.summary,
+);
+const chronologyResearch = maintainedSuccessionChapterResearch.filter((research) => researchIsMaintained(research)
+  && research.coverage?.chronology
+  && research.events?.length);
+
+const normalizeResearchEvent = (research, event, index) => freeze({
+  id: event.id || `maintained-${research.number}-${index + 1}`,
+  time: event.time || research.voyageDay || 'Story-order placement',
+  title: event.title || `Chapter ${research.number} event ${index + 1}`,
+  detail: event.detail || research.focus,
+  tier: event.tier || event.location || 'Location not assigned',
+  location: event.location || 'Location not assigned',
+  tracks: freeze([...(event.tracks || [])]),
+  chapter: research.number,
+  confidence: event.confidence || research.confidence?.[0] || 'Maintained chapter research',
+  source: event.source || research.source,
+  maintainedResearch: true,
+});
+
+const maintainedEventsByChapter = new Map(chronologyResearch.map((research) => [
+  research.number,
+  freeze(research.events.map((event, index) => normalizeResearchEvent(research, event, index))),
+]));
 
 const replaceChapterEvents = (events, chapter, replacements) => {
   const insertionIndex = events.findIndex((event) => event.chapter === chapter);
   const filtered = events.filter((event) => event.chapter !== chapter);
-  if (insertionIndex < 0) return Object.freeze([...filtered, ...replacements]);
-  return Object.freeze([
+  if (insertionIndex < 0) return freeze([...filtered, ...replacements]);
+  return freeze([
     ...filtered.slice(0, insertionIndex),
     ...replacements,
     ...filtered.slice(insertionIndex),
   ]);
 };
 
-export const timelineSources = Object.freeze({
+const maintainedTrackIds = unique(chronologyResearch.flatMap((research) => research.events.flatMap((event) => event.tracks || [])));
+const legacyTrackById = new Map(legacyTimelineTracks.map((track) => [track.id, track]));
+const labelizeTrack = (value) => String(value || '').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+export const timelineTracks = freeze([
+  legacyTrackById.get('all') || { id: 'all', label: 'All threads' },
+  ...legacyTimelineTracks.filter((track) => track.id !== 'all'),
+  ...maintainedTrackIds
+    .filter((id) => id !== 'all' && !legacyTrackById.has(id))
+    .map((id) => freeze({ id, label: labelizeTrack(id) })),
+]);
+
+export const timelineSources = freeze({
   ...legacyTimelineSources,
-  chapter400: 'https://hunterxhunter.fandom.com/wiki/Chapter_400',
-  chapter406: 'https://hunterxhunter.fandom.com/wiki/Chapter_406',
-  chapter408: 'https://hunterxhunter.fandom.com/wiki/Chapter_408',
-  chapter409: 'https://hunterxhunter.fandom.com/wiki/Chapter_409',
-  chapter410: 'https://hunterxhunter.fandom.com/wiki/Chapter_410',
-  chapter414: 'https://hunterxhunter.fandom.com/wiki/Chapter_414',
-  chapter415: 'https://hunterxhunter.fandom.com/wiki/Chapter_415',
-  viz414: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-414/chapter/50800',
-  viz415: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-415/chapter/50829',
+  ...Object.fromEntries(chronologyResearch.map((research) => [`chapter${research.number}`, research.source])),
 });
 
-export const successionDays = Object.freeze(legacySuccessionDays.map((day) => {
-  if (day.day === 10) {
-    return Object.freeze({
-      ...day,
-      events: replaceChapterEvents(day.events, 400, succession400TimelineEvents),
-    });
-  }
-  if (day.day === 12) {
-    const expanded406Events = replaceChapterEvents(day.events, 406, succession406TimelineEvents);
-    const expanded408Events = replaceChapterEvents(expanded406Events, 408, succession408TimelineEvents);
-    const expanded409Events = replaceChapterEvents(expanded408Events, 409, succession409TimelineEvents);
-    const expanded410Events = replaceChapterEvents(expanded409Events, 410, succession410TimelineEvents);
-    return Object.freeze({
-      ...day,
-      chapterRange: '405–415',
-      intensity: 10,
-      headline: 'Martial law closes around the royal rooms',
-      summary: 'The funeral and ritual deadline give way to the actual-Woble search, coded outside contact, Beyond’s curse mechanics, forced royal relocations, disappearances, and conditional confinement under special martial law.',
-      events: Object.freeze([
-        ...expanded410Events,
-        ...succession414415TimelineEvents,
-      ]),
-    });
-  }
-  return day;
-}));
+const maintainedPreVoyage = chronologyResearch.filter((research) => parseVoyageDay(research.voyageDay) === null);
+const maintainedPreVoyageNumbers = new Set(maintainedPreVoyage.map((research) => research.number));
+const legacyPreludeForChapter = (chapter) => legacySuccessionPrelude.find((period) => chapterNumbersFromSpec(period.chapters).includes(chapter));
+const maintainedPrelude = maintainedPreVoyage.map((research) => {
+  const legacy = legacyPreludeForChapter(research.number);
+  const eventIds = (maintainedEventsByChapter.get(research.number) || []).map((event) => event.id);
+  return freeze({
+    id: `maintained-prelude-${research.number}`,
+    date: legacy?.date || research.voyageDay || 'Pre-voyage',
+    chapters: String(research.number),
+    confidence: legacy?.confidence || research.confidence?.[0] || 'Maintained chapter research',
+    title: research.title ? `Chapter ${research.number} · ${research.title}` : `Chapter ${research.number}`,
+    detail: research.focus,
+    points: freeze((maintainedEventsByChapter.get(research.number) || []).map((event) => event.title)),
+    source: research.source,
+    eventIds: freeze(eventIds),
+    maintainedResearch: true,
+  });
+});
+const uncoveredLegacyPrelude = legacySuccessionPrelude.filter((period) => !chapterNumbersFromSpec(period.chapters)
+  .some((chapter) => maintainedPreVoyageNumbers.has(chapter)));
+export const successionPrelude = freeze([
+  ...maintainedPrelude,
+  ...uncoveredLegacyPrelude,
+].sort((left, right) => (chapterNumbersFromSpec(left.chapters)[0] || 0) - (chapterNumbersFromSpec(right.chapters)[0] || 0)));
 
-export const timelineEventCount = successionDays.reduce((total, day) => total + day.events.length, 0);
+const dayByNumber = new Map(legacySuccessionDays.map((day) => [day.day, {
+  ...day,
+  events: [...day.events],
+}]));
+for (const research of chronologyResearch) {
+  const dayNumber = parseVoyageDay(research.voyageDay);
+  if (dayNumber === null) continue;
+  const replacements = maintainedEventsByChapter.get(research.number) || [];
+  const current = dayByNumber.get(dayNumber) || {
+    day: dayNumber,
+    date: `Voyage Day ${dayNumber}`,
+    chapterRange: String(research.number),
+    intensity: 5,
+    deaths: 0,
+    headline: research.title ? `Chapter ${research.number} · ${research.title}` : `Maintained voyage research · Chapter ${research.number}`,
+    summary: research.focus,
+    events: [],
+  };
+  current.events = [...replaceChapterEvents(current.events, research.number, replacements)];
+  if (!dayByNumber.has(dayNumber)) dayByNumber.set(dayNumber, current);
+}
+
+export const successionDays = freeze([...dayByNumber.values()]
+  .sort((left, right) => left.day - right.day)
+  .map((day) => {
+    const chapters = day.events.map((event) => event.chapter).filter(Number.isFinite);
+    const start = chapters.length ? Math.min(...chapters) : chapterNumbersFromSpec(day.chapterRange)[0];
+    const end = chapters.length ? Math.max(...chapters) : chapterNumbersFromSpec(day.chapterRange).at(-1);
+    return freeze({
+      ...day,
+      chapterRange: start === end ? String(start) : `${start}–${end}`,
+      events: freeze([...day.events].sort((left, right) => left.chapter - right.chapter)),
+    });
+  }));
+
+const visibleMaintainedEventIds = new Set([
+  ...successionPrelude.flatMap((period) => period.eventIds || []),
+  ...successionDays.flatMap((day) => day.events.filter((event) => event.maintainedResearch).map((event) => event.id)),
+]);
+for (const research of chronologyResearch) {
+  const missing = (maintainedEventsByChapter.get(research.number) || []).filter((event) => !visibleMaintainedEventIds.has(event.id));
+  if (missing.length) {
+    throw new Error(`Maintained Chapter ${research.number} chronology is missing from the public timeline surface: ${missing.map((event) => event.id).join(', ')}`);
+  }
+}
+
+export const timelineEventCount = successionDays.reduce((total, day) => total + day.events.length, 0)
+  + successionPrelude.reduce((total, period) => total + (period.eventIds?.length || 0), 0);
