@@ -16,11 +16,7 @@ const mime = {
   '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.json': 'application/json; charset=utf-8',
 };
 
-const normalizeText = (value) => String(value).trim().replace(/\s+/g, ' ').toLocaleLowerCase('en-US');
-const assertClose = (values, tolerance, label) => {
-  const spread = Math.max(...values) - Math.min(...values);
-  if (spread > tolerance) throw new Error(`${label} differ by ${spread.toFixed(2)}px: ${values.map((value) => value.toFixed(2)).join(' | ')}`);
-};
+const normalizeText = (value) => String(value || '').trim().replace(/\s+/g, ' ').toLocaleLowerCase('en-US');
 
 const firstAvailable = async (candidates) => {
   for (const candidate of candidates.filter(Boolean)) {
@@ -36,7 +32,8 @@ const serve = async () => {
       const pathname = decodeURIComponent(new URL(request.url, 'http://127.0.0.1').pathname);
       let filename = path.join(dist, pathname === '/' ? 'index.html' : pathname);
       if (!filename.startsWith(dist)) throw new Error('Invalid path');
-      try { if ((await stat(filename)).isDirectory()) filename = path.join(dist, 'index.html'); } catch { filename = path.join(dist, 'index.html'); }
+      try { if ((await stat(filename)).isDirectory()) filename = path.join(dist, 'index.html'); }
+      catch { filename = path.join(dist, 'index.html'); }
       response.setHeader('content-type', mime[path.extname(filename).toLowerCase()] || 'application/octet-stream');
       response.setHeader('cache-control', 'no-store');
       response.end(await readFile(filename));
@@ -83,113 +80,48 @@ const executablePath = await firstAvailable([
   requestedExecutable, chromium.executablePath(), '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser',
 ]);
 if (!executablePath) throw new Error('No Chromium executable is available.');
-const browser = await chromium.launch({ headless: true, executablePath, args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--no-zygote'] });
+const browser = await chromium.launch({
+  headless: true,
+  executablePath,
+  args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--no-zygote'],
+});
 const server = await serve();
 const base = `http://127.0.0.1:${server.address().port}`;
 
 try {
   const desktop = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 
-  await record('Succession root opens the approved locked architecture portal', desktop, async () => {
+  await record('Succession root opens the Black Whale command home', desktop, async () => {
     await desktop.goto(`${base}/story/succession-contest`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await desktop.waitForSelector('.succession-archive[data-architecture-status="approved"][data-architecture-version="1.0"]', { timeout: 15_000 });
+    await desktop.waitForSelector('.succession-command-home[data-archive-route="story"][data-archive-hub="story"]', { timeout: 15_000 });
 
-    const board = desktop.locator('.succession-architecture-board');
-    if (await board.count() !== 1) throw new Error('Approved architecture portal is missing or duplicated');
-    if (await board.locator('.succession-architecture__left-column #succession-desktop-navigation').count() !== 1) throw new Error('Persistent architecture navigation rail is missing or duplicated');
-
-    const title = await board.locator('.succession-architecture__title h1').innerText();
-    if (title.trim() !== 'Succession Contest') throw new Error(`Unexpected architecture title: ${title}`);
-    const subtitle = await board.locator('.succession-architecture__title p').innerText();
-    if (normalizeText(subtitle) !== normalizeText('Approved architecture for section redesign')) throw new Error(`Unexpected architecture subtitle: ${subtitle}`);
-
-    if (await board.getAttribute('data-architecture-status') !== 'approved') throw new Error('Architecture status is not approved');
-    if (await board.getAttribute('data-architecture-version') !== '1.0') throw new Error('Architecture version is not 1.0');
-    const metadata = normalizeText(await board.locator('.succession-architecture__document-meta').innerText());
-    if (!metadata.includes('approved') || !metadata.includes('1.0')) throw new Error(`Approved metadata is incomplete: ${metadata}`);
-    if (metadata.includes('draft') || metadata.includes('0.9')) throw new Error(`Draft metadata remains in the portal: ${metadata}`);
-
-    if (await board.locator('.succession-architecture__module').count() !== 4) throw new Error(`Architecture module count is ${await board.locator('.succession-architecture__module').count()}, expected 4`);
-    if (await board.locator('.succession-architecture__library').count() !== 1) throw new Error('Library Tools rail is missing or duplicated');
-    if (await board.locator('.succession-architecture__contracts').count() !== 1) throw new Error('Preserved Contracts panel is missing or duplicated');
-    if (await board.locator('.succession-architecture__skeleton-block').count() !== 1) throw new Error('Page Layout Skeleton is missing or duplicated');
-
-    const primaryLabels = await board.locator('#succession-desktop-navigation a span').allInnerTexts();
-    const expected = ['Story Intelligence', 'People & Power', 'Black Whale', 'Nen Systems', 'Search', 'Research', 'Glossary'];
-    if (primaryLabels.map(normalizeText).join('|') !== expected.map(normalizeText).join('|')) throw new Error(`Unexpected top-level navigation: ${primaryLabels.join(' | ')}`);
-
-    const storyTabs = await board.locator('.succession-hub-tabs a').evaluateAll((links) => links.map((link) => link.querySelector('strong')?.textContent || ''));
-    const expectedStoryTabs = ['Story', 'Chapters', 'Timeline', 'Events'];
-    if (storyTabs.map(normalizeText).join('|') !== expectedStoryTabs.map(normalizeText).join('|')) throw new Error(`Story architecture views are incomplete: ${storyTabs.join(' | ')}`);
-
-    const feedbackCount = await board.locator('[data-route-action]').count();
-    if (feedbackCount < 20) throw new Error(`Only ${feedbackCount} architecture destinations expose route feedback`);
-
-    const firstStoryLink = board.locator('.succession-hub-tabs a').first();
-    await firstStoryLink.focus();
-    const routeFeedback = await firstStoryLink.evaluate((element) => getComputedStyle(element, '::after').content);
-    if (!routeFeedback || routeFeedback === 'none' || !routeFeedback.toLowerCase().includes('open story')) throw new Error(`Focused route feedback is missing: ${routeFeedback}`);
-
-    const viewport = await desktop.evaluate(() => {
-      const rect = (selector) => document.querySelector(selector)?.getBoundingClientRect();
-      const sheet = rect('.succession-architecture__sheet');
-      const primaryColumns = [
-        rect('.succession-architecture__left-column'),
-        rect('.succession-architecture__modules'),
-        rect('.succession-architecture__library'),
-      ];
-      const modules = [...document.querySelectorAll('.succession-architecture__module')].map((element) => element.getBoundingClientRect());
-      const lowerLeft = document.querySelector('.succession-architecture__lower-grid > div')?.getBoundingClientRect();
-      const lowerRight = rect('.succession-architecture__skeleton-block');
-      const headingStyles = [...document.querySelectorAll('.succession-architecture__view-cell > strong, .succession-architecture__split-grid strong')].map((element) => {
-        const style = getComputedStyle(element);
-        return { wordBreak: style.wordBreak, overflowWrap: style.overflowWrap, hyphens: style.hyphens };
-      });
-
-      return {
-        horizontalOverflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-        verticalOverflow: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - innerHeight,
-        bodyOverflow: getComputedStyle(document.body).overflow,
-        boardPosition: getComputedStyle(document.querySelector('.succession-architecture-board')).position,
-        bodyBackground: getComputedStyle(document.body).backgroundColor,
-        sheetEdges: sheet ? [sheet.left, sheet.top, innerWidth - sheet.right, innerHeight - sheet.bottom] : [],
-        primaryColumnBottoms: primaryColumns.map((box) => box?.bottom || 0),
-        primaryColumnTops: primaryColumns.map((box) => box?.top || 0),
-        moduleRowBottoms: modules.length === 4 ? [modules[0].bottom, modules[1].bottom, modules[2].bottom, modules[3].bottom] : [],
-        lowerBandBottoms: [lowerLeft?.bottom || 0, lowerRight?.bottom || 0],
-        lowerBandTops: [lowerLeft?.top || 0, lowerRight?.top || 0],
-        headingStyles,
-      };
-    });
-
-    if (viewport.horizontalOverflow > 1) throw new Error(`Architecture canvas overflows horizontally by ${viewport.horizontalOverflow}px`);
-    if (viewport.verticalOverflow > 1) throw new Error(`Architecture canvas creates ${viewport.verticalOverflow}px of page scroll`);
-    if (viewport.bodyOverflow !== 'hidden') throw new Error(`Architecture body overflow is ${viewport.bodyOverflow}, expected hidden`);
-    if (viewport.boardPosition !== 'fixed') throw new Error(`Architecture canvas position is ${viewport.boardPosition}, expected fixed`);
-    if (viewport.bodyBackground === 'rgb(9, 11, 15)' || viewport.bodyBackground === 'rgb(13, 17, 23)') throw new Error('Dark side gutters remain behind the architecture canvas');
-    if (viewport.sheetEdges.some((distance) => Math.abs(distance) > 1.5)) throw new Error(`Architecture sheet does not touch all viewport edges: ${viewport.sheetEdges.join(' | ')}`);
-
-    assertClose(viewport.primaryColumnTops, 1.5, 'Primary column tops');
-    assertClose(viewport.primaryColumnBottoms, 1.5, 'Primary column bottoms');
-    assertClose(viewport.moduleRowBottoms.slice(0, 2), 1.5, 'Top module row bottoms');
-    assertClose(viewport.moduleRowBottoms.slice(2), 1.5, 'Bottom module row bottoms');
-    assertClose(viewport.lowerBandTops, 1.5, 'Lower band tops');
-    assertClose(viewport.lowerBandBottoms, 1.5, 'Lower band bottoms');
-
-    for (const style of viewport.headingStyles) {
-      if (style.wordBreak !== 'normal') throw new Error(`Architecture heading word-break is ${style.wordBreak}`);
-      if (style.overflowWrap !== 'normal') throw new Error(`Architecture heading overflow-wrap is ${style.overflowWrap}`);
-      if (style.hyphens !== 'none' && style.hyphens !== 'manual') throw new Error(`Architecture heading hyphens are ${style.hyphens}`);
+    const home = desktop.locator('.succession-command-home');
+    if (await home.count() !== 1) throw new Error('Command home is missing or duplicated');
+    if (await home.locator('.succession-command-home__ship-stage img').count() !== 1) throw new Error('Black Whale hero image is missing or duplicated');
+    if (await home.locator('.succession-command-home__search').count() !== 1) throw new Error('Archive search command is missing');
+    if (await home.locator('.succession-command-home__portal').count() !== 3) throw new Error(`Command home exposes ${await home.locator('.succession-command-home__portal').count()} core portals instead of 3`);
+    const portalTitles = await home.locator('.succession-command-home__portal h2').allInnerTexts();
+    for (const expected of ['Succession Contest', 'Nen Encyclopedia', 'World Atlas']) {
+      if (!portalTitles.some((title) => normalizeText(title) === normalizeText(expected))) throw new Error(`Core portal is missing: ${expected}`);
     }
+    const railLabels = await home.locator('.succession-command-home__rail nav a span').allInnerTexts();
+    if (railLabels.length < 7) throw new Error(`Command rail exposes only ${railLabels.length} destinations`);
+    if (await desktop.locator('main h1').count() !== 1) throw new Error(`Command home exposes ${await desktop.locator('main h1').count()} main headings instead of 1`);
+    if (await desktop.locator('.succession-architecture-board').count()) throw new Error('Retired architecture board is still mounted at the archive root');
+    if (await horizontalOverflow(desktop) > 1) throw new Error(`Command home overflows horizontally by ${await horizontalOverflow(desktop)}px`);
 
-    if (await desktop.getByRole('link', { name: 'Archive Home', exact: true }).count()) throw new Error('Archive Home returned to navigation');
-    if (await desktop.getByRole('link', { name: 'Reader', exact: true }).count()) throw new Error('Duplicate Reader returned to navigation');
-    if (await desktop.locator('.arc-page--succession-contest').count()) throw new Error('Legacy grouped arc page is still mounted at the archive root');
+    const timeline = home.locator('.succession-command-home__rail nav a').filter({ hasText: 'Timeline' }).first();
+    await timeline.focus();
+    const focus = await timeline.evaluate((element) => ({
+      style: getComputedStyle(element).outlineStyle,
+      width: Number.parseFloat(getComputedStyle(element).outlineWidth) || 0,
+    }));
+    if (focus.style === 'none' || focus.width < 2) throw new Error('Command-home keyboard focus is not visible');
 
-    await desktop.screenshot({ path: path.join(output, 'architecture-approved-1440x1000.png') });
+    await desktop.screenshot({ path: path.join(output, 'command-home-1440x1000.png') });
   });
 
-  await record('Consolidated child routes retain their hub and direct URLs', desktop, async () => {
+  await record('Consolidated child routes retain their hubs and direct URLs', desktop, async () => {
     const cases = [
       ['chapter-records', 'story', ['Story', 'Chapters', 'Timeline', 'Events']],
       ['organizations', 'people', ['Characters', 'Royal Family', 'Assignments', 'Organizations', 'Relationships']],
@@ -200,7 +132,7 @@ try {
       await desktop.goto(`${base}/story/succession-contest/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
       await desktop.waitForSelector(`.succession-archive[data-archive-hub="${hub}"] .succession-hub-tabs`, { timeout: 15_000 });
       const labels = await desktop.locator('.succession-hub-tabs a').allInnerTexts();
-      if (labels.join('|') !== expectedTabs.join('|')) throw new Error(`${route} tabs are incomplete: ${labels.join(' | ')}`);
+      if (labels.map(normalizeText).join('|') !== expectedTabs.map(normalizeText).join('|')) throw new Error(`${route} tabs are incomplete: ${labels.join(' | ')}`);
       if (!desktop.url().includes(`/story/succession-contest/${route}`)) throw new Error(`${route} deep link was replaced instead of preserved`);
     }
   });
@@ -267,32 +199,36 @@ try {
     if (await mediaResearch.locator('.succession-evidence-hero').count() !== 1) throw new Error('Research evidence hero is missing after Media redirect');
   });
 
-  await record('Existing chapter reader route remains separate and functional', desktop, async () => {
+  await record('Integrated chapter reader remains functional inside the archive shell', desktop, async () => {
     await desktop.goto(`${base}/story/succession-contest/chapters?chapter=${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await desktop.waitForSelector(`.succession-reader[data-reader-chapter], .succession-reader .succession-reader__reader[data-reader-chapter="${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}"]`, { timeout: 15_000 });
-    if (await desktop.locator('.succession-archive').count()) throw new Error('Reference archive shell incorrectly wraps the image reader');
-    if (await desktop.locator('.arc-page--succession-contest').count()) throw new Error('Full Succession arc page still wraps the chapter reader');
+    await desktop.waitForSelector('.succession-archive[data-archive-route="reader"] .succession-reader-command', { timeout: 15_000 });
+    await desktop.waitForSelector(`.succession-reader[data-reader-chapter="${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}"], .succession-reader__reader[data-reader-chapter="${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}"]`, { timeout: 15_000 });
+    if (await desktop.locator('.succession-archive').count() !== 1) throw new Error('Integrated reader is missing the archive shell');
+    if (await desktop.locator('.arc-page--succession-contest').count()) throw new Error('Legacy grouped arc page still wraps the chapter reader');
+    if (!desktop.url().includes('/story/succession-contest/chapters')) throw new Error(`Reader canonical path changed unexpectedly: ${desktop.url()}`);
   });
 
   const widescreen = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
-  await record('Approved architecture fills and balances a widescreen viewport', widescreen, async () => {
+  await record('Black Whale command home fills a widescreen viewport without spill', widescreen, async () => {
     await widescreen.goto(`${base}/story/succession-contest`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await widescreen.waitForSelector('.succession-architecture-board[data-architecture-status="approved"]', { timeout: 15_000 });
+    await widescreen.waitForSelector('.succession-command-home', { timeout: 15_000 });
     const proof = await widescreen.evaluate(() => {
-      const sheet = document.querySelector('.succession-architecture__sheet')?.getBoundingClientRect();
-      const modules = [...document.querySelectorAll('.succession-architecture__module')].map((element) => element.getBoundingClientRect());
+      const root = document.querySelector('.succession-command-home')?.getBoundingClientRect();
+      const hero = document.querySelector('.succession-command-home__hero')?.getBoundingClientRect();
       return {
-        edges: sheet ? [sheet.left, sheet.top, innerWidth - sheet.right, innerHeight - sheet.bottom] : [],
+        root: root ? { left: root.left, right: root.right, width: root.width, height: root.height } : null,
+        hero: hero ? { left: hero.left, right: hero.right, width: hero.width, height: hero.height } : null,
         overflowX: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-        overflowY: Math.max(document.documentElement.scrollHeight, document.body.scrollHeight) - innerHeight,
-        moduleRowBottoms: modules.map((box) => box.bottom),
+        portalCount: document.querySelectorAll('.succession-command-home__portal').length,
+        searchVisible: Boolean(document.querySelector('.succession-command-home__search')?.getClientRects().length),
       };
     });
-    if (proof.edges.some((distance) => Math.abs(distance) > 1.5)) throw new Error(`Widescreen architecture edges are uneven: ${proof.edges.join(' | ')}`);
-    if (proof.overflowX > 1 || proof.overflowY > 1) throw new Error(`Widescreen overflow is ${proof.overflowX}px × ${proof.overflowY}px`);
-    assertClose(proof.moduleRowBottoms.slice(0, 2), 1.5, 'Widescreen top module row');
-    assertClose(proof.moduleRowBottoms.slice(2), 1.5, 'Widescreen bottom module row');
-    await widescreen.screenshot({ path: path.join(output, 'architecture-approved-1920x1080.png') });
+    if (!proof.root || !proof.hero) throw new Error('Widescreen command home geometry is unavailable');
+    if (proof.root.left < -1 || proof.root.right > 1921 || proof.root.width < 1900) throw new Error(`Widescreen command home does not fill the viewport: ${JSON.stringify(proof.root)}`);
+    if (proof.overflowX > 1) throw new Error(`Widescreen command home overflows horizontally by ${proof.overflowX}px`);
+    if (proof.portalCount !== 3) throw new Error(`Widescreen command home exposes ${proof.portalCount} portals instead of 3`);
+    if (!proof.searchVisible) throw new Error('Widescreen archive search command is not visible');
+    await widescreen.screenshot({ path: path.join(output, 'command-home-1920x1080.png') });
   });
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
@@ -326,7 +262,12 @@ try {
   await new Promise((resolve) => server.close(resolve));
 }
 
-const summary = { generatedAt: new Date().toISOString(), checks: results.length, passed: results.length - failures.length, failed: failures.length };
+const summary = {
+  generatedAt: new Date().toISOString(),
+  checks: results.length,
+  passed: results.length - failures.length,
+  failed: failures.length,
+};
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results }, null, 2)}\n`);
 await writeFile(path.join(output, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
 console.log(`\nSuccession Archive shell QA: ${summary.passed}/${summary.checks} checks passed.`);
