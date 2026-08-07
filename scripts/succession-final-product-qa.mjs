@@ -144,10 +144,10 @@ try {
     }
 
     await desktop.goto(`${base}/story/succession-contest`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await desktop.waitForSelector('.succession-architecture-board[data-architecture-status="approved"] #succession-desktop-navigation', { timeout: 15_000 });
-    const maintainedLabels = (await desktop.locator('#succession-desktop-navigation a span').allInnerTexts()).map(normalizeText);
+    await desktop.waitForSelector('.succession-command-home .succession-command-home__rail nav', { timeout: 15_000 });
+    const maintainedLabels = (await desktop.locator('.succession-command-home__rail nav a span').allInnerTexts()).map(normalizeText);
     for (const label of ['Hunters', 'Deaths', 'Mafia', 'Military', 'Politics', 'Media']) {
-      if (maintainedLabels.includes(normalizeText(label))) throw new Error(`${label} returned to the approved architecture navigation`);
+      if (maintainedLabels.includes(normalizeText(label))) throw new Error(`${label} returned to the released command-home navigation`);
     }
   });
 
