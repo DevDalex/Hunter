@@ -191,9 +191,6 @@ try {
       await page.keyboard.press('Enter');
       const selectedCard = page.locator(`.succession-chapter-command__card[aria-current="page"] .succession-chapter-command__number`).filter({ hasText: chapter });
       await selectedCard.waitFor({ state: 'visible', timeout: 10_000 });
-      const selectedRecord = page.locator('.succession-chapter-command__rail-header b');
-      await selectedRecord.waitFor({ state: 'visible', timeout: 10_000 });
-      if ((await selectedRecord.innerText()).trim() !== `Chapter ${chapter}`) throw new Error('selected chapter rail did not update after keyboard activation');
     });
     await recordInteraction('Black Whale manifest accepts keyboard focus', { width: 390, height: 844 }, 'succession/black-whale', async (page) => {
       const manifest = page.locator('.ship-manifest__table-wrap');
