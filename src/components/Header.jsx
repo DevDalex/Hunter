@@ -5,7 +5,6 @@ import { routeToHref } from '../lib/appRouter';
 const primaryNav = [
   { id: 'archive', view: 'succession', target: 'archive', label: 'Succession Archive' },
   { id: 'nen-library', view: 'succession', target: 'nen', params: { scope: 'encyclopedia' }, label: 'Nen Library' },
-  { id: 'world-atlas', view: 'succession', target: 'locations', params: { scope: 'world' }, label: 'World Atlas' },
 ];
 
 export default function Header({
@@ -72,8 +71,7 @@ export default function Header({
   const itemIsActive = (item) => {
     if (activeView !== 'succession') return false;
     if (item.id === 'nen-library') return routeTarget === 'nen' && routeParams.scope === 'encyclopedia';
-    if (item.id === 'world-atlas') return routeTarget === 'locations' && routeParams.scope === 'world';
-    return item.id === 'archive' && !['encyclopedia', 'world'].includes(routeParams.scope);
+    return item.id === 'archive' && routeParams.scope !== 'encyclopedia';
   };
 
   return (

@@ -20,12 +20,10 @@ const legacySuccessionPathToTarget = new Map([
 
 const referenceTargetToPath = new Map([
   ['nen', 'nen'],
-  ['atlas', 'world'],
 ]);
 
 const cleanReferencePaths = new Map([
   ['nen', { target: 'nen' }],
-  ['world', { target: 'atlas' }],
 ]);
 
 const stringifyQuery = (params = {}) => {
@@ -83,6 +81,11 @@ const resolveSuccessionTarget = (target = '', params = {}) => {
     break;
   }
 
+  if (nextTarget === 'locations' && nextParams.scope === 'world') {
+    const { scope, ...rest } = nextParams;
+    nextParams = rest;
+  }
+
   return { target: nextTarget, params: nextParams };
 };
 
@@ -112,16 +115,9 @@ export function normalizeDestination(view, target = '', params = {}) {
     };
     if (!referencePrimary.includes(nextTarget)) return attempted(`/reference/${nextTarget || ''}`);
 
-    if (nextTarget === 'nen') {
-      return normalizeDestination('succession', 'nen', {
-        ...nextParams,
-        scope: 'encyclopedia',
-      });
-    }
-
-    return normalizeDestination('succession', 'locations', {
+    return normalizeDestination('succession', 'nen', {
       ...nextParams,
-      scope: 'world',
+      scope: 'encyclopedia',
     });
   }
 

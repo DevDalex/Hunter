@@ -2,11 +2,12 @@
 
 ## Current public scope
 
-The website is intentionally limited to three maintained areas:
+The website is intentionally limited to two maintained areas:
 
 - the **Succession Contest Archive**, opened at `/`;
-- the **general Nen Encyclopedia**, opened at `/nen`;
-- the **general World Atlas**, opened at `/world`.
+- the **general Nen Encyclopedia**, opened at `/nen`.
+
+The standalone **World Atlas** and `/world` route are retired. Succession-specific geography remains available through the maintained Black Whale and Locations workspaces inside the Succession Contest Archive.
 
 Earlier-arc Story pages, the global timeline, the general character encyclopedia, the general organizations workspace, the general fights archive, and the old site homepage are retired.
 
@@ -34,10 +35,9 @@ The dedicated archive owns:
 - Nen, ritual systems, and Guardian Spirit Beasts
 - events, relationships, chapter dossiers, research, and glossary
 
-### Retained general references
+### Retained general reference
 
 - `/nen` keeps the complete Nen system map and ability encyclopedia.
-- `/world` keeps the Known World, route, hierarchy, gallery, and voyage atlas.
 
 ## Run locally
 
@@ -78,7 +78,7 @@ A successful commit is not proof of a hosted release. Record deployment success 
 - Browser routing: `src/lib/appRouter.js`
 - Succession application: `src/components/succession/`
 - General Nen data and interface: `src/data/nenEncyclopedia.js`, `src/components/NenEncyclopedia.jsx`
-- General World data and interface: `src/data/worldAtlas.js`, `src/components/WorldAtlas.jsx`
+- Succession geography: `src/data/succession/blackWhaleCanonicalMap.js` and the Black Whale / Locations workspaces
 - Succession chapter media: `src/data/successionChapterMedia.generated.js`
 - Cloudflare Worker: `server/index.js`, `server/chapter-admin.js`, `wrangler.jsonc`
 

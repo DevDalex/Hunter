@@ -17,7 +17,6 @@ const fontSizes = [...explicitFontSizes, ...shorthandFontSizes];
 const guidedViews = [
   'src/components/FamilyTree.jsx',
   'src/components/BlackWhaleGuide.jsx',
-  'src/components/WorldAtlas.jsx',
   'src/components/SystemsDesk.jsx',
   'src/components/SuccessionDossier.jsx',
   'src/components/SuccessionTimeline.jsx',

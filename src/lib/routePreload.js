@@ -8,13 +8,11 @@ export const routeModuleLoaders = {
   blackWhale: () => import('../components/BlackWhaleGuide'),
   successionDossier: () => import('../components/SuccessionDossier'),
   nen: () => import('../components/NenEncyclopedia'),
-  worldAtlas: () => import('../components/WorldAtlas'),
 };
 
 const loaderForRoute = (view, target = '') => {
   if (view === 'succession') return routeModuleLoaders.successionArchive;
   if (view === 'reference' && target === 'nen') return routeModuleLoaders.nen;
-  if (view === 'reference' && target === 'atlas') return routeModuleLoaders.worldAtlas;
   return null;
 };
 

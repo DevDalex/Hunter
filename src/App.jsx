@@ -39,22 +39,18 @@ export default function App() {
   const [spoilerLimit, setSpoilerLimit] = useState(readSpoilerLimit);
 
   const successionPage = getSuccessionArchiveRoute(routeTarget);
+  const isCommandHome = activeView === 'succession'
+    && (routeTarget === 'archive' || (routeTarget === 'story' && Object.keys(routeParams || {}).length === 0));
   const integratedReferenceMode = activeView === 'succession'
     && routeTarget === 'nen'
     && routeParams.scope === 'encyclopedia'
     ? 'nen'
-    : activeView === 'succession'
-      && routeTarget === 'locations'
-      && routeParams.scope === 'world'
-      ? 'world'
-      : '';
+    : '';
 
   const routeTitle = activeView === 'succession'
     ? integratedReferenceMode === 'nen'
       ? 'Nen and ability encyclopedia'
-      : integratedReferenceMode === 'world'
-        ? 'World and location atlas'
-        : successionPage.title
+      : successionPage.title
     : 'Page not found';
 
   const applyRoute = (next) => {
@@ -126,8 +122,8 @@ export default function App() {
   };
 
   return (
-    <div id="top" className={`app-shell view-${activeView}`}>
-      <button
+    <div id="top" className={`app-shell view-${activeView}${isCommandHome ? ' is-command-home' : ''}`}>
+      {!isCommandHome && <button
         type="button"
         className="skip-link"
         onClick={() => {
@@ -137,16 +133,16 @@ export default function App() {
         }}
       >
         Skip to content
-      </button>
+      </button>}
 
-      <Header
+      {!isCommandHome && <Header
         activeView={activeView}
         routeTarget={routeTarget}
         routeParams={routeParams}
         onNavigate={navigate}
         onOpenSearch={() => navigate('succession', 'search')}
         onPrefetch={preloadRoute}
-      />
+      />}
 
       <main id="main-content" tabIndex="-1">
         <p className="sr-only" role="status" aria-live="polite">Opened {routeTitle}</p>
@@ -188,7 +184,7 @@ export default function App() {
                 <div>
                   <span className="section-kicker">Unified archive</span>
                   <h2>Everything now lives inside the Succession Contest application.</h2>
-                  <p>The general Nen encyclopedia and World Atlas are retained as internal Succession reference modules.</p>
+                  <p>The general Nen encyclopedia remains available as the archive's retained reference module.</p>
                 </div>
               </div>
               <div className="story-grid">
@@ -204,32 +200,25 @@ export default function App() {
                   <p>Browse the general power-system library from inside Succession.</p>
                   <button onClick={() => navigate('succession', 'nen', { scope: 'encyclopedia' })}>Open Nen</button>
                 </article>
-                <article>
-                  <span>Internal module</span>
-                  <h3>World Atlas</h3>
-                  <p>Explore world geography without leaving the Succession archive.</p>
-                  <button onClick={() => navigate('succession', 'locations', { scope: 'world' })}>Open World</button>
-                </article>
               </div>
             </section>
           </>
         )}
       </main>
 
-      <footer className="site-footer">
+      {!isCommandHome && <footer className="site-footer">
         <div>
           <b>Hunter × Hunter Succession Archive</b>
-          <p>One unified Succession Contest application with Nen and World reference modules built inside it.</p>
+          <p>One unified Succession Contest application with the Nen reference library built inside it.</p>
         </div>
         <nav aria-label="Footer links">
           <button onClick={() => navigate('succession', 'archive')}>Archive</button>
           <button onClick={() => navigate('succession', 'nen', { scope: 'encyclopedia' })}>Nen Library</button>
-          <button onClick={() => navigate('succession', 'locations', { scope: 'world' })}>World Atlas</button>
         </nav>
         <a href="https://hunterxhunter.fandom.com/" target="_blank" rel="noreferrer">
           Hunterpedia <ExternalLink size={11} />
         </a>
-      </footer>
+      </footer>}
     </div>
   );
 }

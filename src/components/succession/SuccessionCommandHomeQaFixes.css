@@ -10,11 +10,20 @@
 .succession-command-home__voyage dd,
 .succession-command-home__portal-number,
 .succession-command-home__portal small,
-.succession-command-home__portal p {
+.succession-command-home__portal p,
+.succession-command-home__telemetry span,
+.succession-command-home__telemetry small,
+.succession-command-home__reader-visual span,
+.succession-command-home__quick a span,
+.succession-command-home__updates a small,
+.succession-command-home__updates a b,
+.succession-command-home__updates a em,
+.succession-command-home__updates header button {
   font-size: max(11px, .6875rem);
 }
 
-.succession-command-home__search {
+.succession-command-home__search,
+.succession-command-home__updates header button {
   min-height: 44px;
 }
 
@@ -22,5 +31,16 @@
   .succession-command-home__rail nav a {
     min-width: 44px;
     min-height: 44px;
+  }
+}
+
+@media (max-width: 620px) {
+  .succession-command-home__ship-stage {
+    left: 0;
+    right: 0;
+  }
+
+  .succession-command-home__portal-visual {
+    left: 48%;
   }
 }

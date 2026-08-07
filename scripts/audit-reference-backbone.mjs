@@ -28,8 +28,8 @@ const expectedDomains = ['nen', 'world', 'organizations', 'conflicts'];
 
 assert(referenceBackbonePrototype.batch === 'Batch 8', 'reference backbone must remain Batch 8');
 assert(referenceBackbonePrototype.title === 'Reference backbone', 'reference backbone title changed');
-assert(same(referenceBackboneDomains.map((domain) => domain.id), expectedDomains), 'reference backbone domains must remain Nen, World, Organizations, and Conflicts in order');
-assert(referenceBackboneStats.domains === 4, 'Batch 8 must cover four reference domains');
+assert(same(referenceBackboneDomains.map((domain) => domain.id), expectedDomains), 'reference backbone data domains must remain Nen, World, Organizations, and Conflicts in order');
+assert(referenceBackboneStats.domains === 4, 'Batch 8 must cover four reference data domains');
 assert(referenceBackboneStats.lanes >= 16, 'each reference domain needs structured lanes');
 assert(referenceBackboneStats.records >= 20, 'reference backbone needs enough prototype records');
 assert(referenceBackboneStats.chimeraBridgeItems >= 20, 'Chimera Ant must remain the stress-test bridge across domains');
@@ -102,7 +102,6 @@ const nenMap = await readFile(path.resolve('src/components/NenSystemExpansionMap
 const nenExpansionData = await readFile(path.resolve('src/data/nenSpectrumExpansion.js'), 'utf8');
 const nenExpansionCss = await readFile(path.resolve('src/nen-spectrum-expansion.css'), 'utf8');
 const nenShell = await readFile(path.resolve('src/nen-map-shell.css'), 'utf8');
-const atlas = await readFile(path.resolve('src/components/WorldAtlas.jsx'), 'utf8');
 const organizations = await readFile(path.resolve('src/components/OrganizationArchive.jsx'), 'utf8');
 const conflicts = await readFile(path.resolve('src/components/ConflictArchive.jsx'), 'utf8');
 const panel = await readFile(path.resolve('src/components/ReferenceBackbonePanel.jsx'), 'utf8');
@@ -115,10 +114,17 @@ assert(nenMap.includes('data-qa-pan-zoom-canvas="true"') && nenMap.includes('dat
 assert(nenExpansionData.includes('nenExpansionCompletion') && nenExpansionData.includes('abilityKind') && nenExpansionData.includes('categoryUse'), 'Nen completion metadata and uncertainty boundaries must remain maintained');
 assert(nenExpansionCss.includes('clip-path: polygon') && nenExpansionCss.includes('.nen-placement-marker') && nenExpansionCss.includes('.is-named-ability'), 'Nen expansion styling must preserve hexagonal categories, placement markers, and named-ability cards');
 assert(nenShell.includes('.page-intro') && nenShell.includes('.workspace-nav') && nenShell.includes('.reference-backbone') && nenShell.includes('display:none'), 'Nen map-only shell must remove the legacy reference wrappers');
-assert(atlas.includes('ReferenceBackbonePanel') && atlas.includes('domain="world"'), 'World Atlas must surface the reference backbone');
 assert(organizations.includes('ReferenceBackbonePanel') && organizations.includes('domain="organizations"'), 'Organization archive must surface the reference backbone');
 assert(conflicts.includes('ReferenceBackbonePanel') && conflicts.includes('domain="conflicts"'), 'Conflict archive must surface the reference backbone');
 assert(panel.includes('referenceBackbonePrototype') && panel.includes('reference-backbone__records') && panel.includes('reference-backbone__sources'), 'ReferenceBackbonePanel must render records and sources from canonical data');
+
+assert(referencePages.map((page) => page.id).join(',') === 'nen', 'Nen must be the only retained public reference page');
+assert(!Object.values(referenceAliases).some((alias) => alias.target === 'atlas' || alias.target === 'world'), 'no public reference alias may reopen the retired World Atlas');
+const retiredWorld = parseCleanRoute('/world', '');
+assert(retiredWorld.view === 'not-found' && retiredWorld.params.attemptedPath === '/world', 'the retired /world URL must resolve to the not-found route');
+let worldAtlasComponentExists = true;
+try { await access(path.resolve('src/components/WorldAtlas.jsx')); } catch { worldAtlasComponentExists = false; }
+assert(!worldAtlasComponentExists, 'src/components/WorldAtlas.jsx must remain deleted');
 
 assert(!referencePages.some((page) => page.id === 'notebook'), 'the Notebook navigation button must remain removed from the Reference workspace');
 assert(!Object.values(referenceAliases).some((alias) => alias.target === 'notebook'), 'no legacy Reference alias may reopen Notebook');
@@ -133,4 +139,4 @@ await access(path.resolve('src/components/ReferenceBackbonePanel.css'));
 await access(path.resolve('src/data/referenceBackbonePrototype.js'));
 await access(path.resolve('docs/REFERENCE-BACKBONE.md'));
 
-console.log(`Reference backbone audit passed: ${referenceBackboneStats.domains} domains, ${referenceBackboneStats.lanes} lanes, ${referenceBackboneStats.records} records, ${referenceBackboneStats.chimeraBridgeItems} Chimera bridge items, ${referenceBackboneStats.sources} approved sources, and final Nen coverage includes ${nenExpansionCompletion.secondaryUsers} secondary users, ${nenExpansionCompletion.placements} spectrum placements, and ${nenExpansionCompletion.abilityProfiles} maintained ability/system profiles.`);
+console.log(`Reference backbone audit passed: public references are Nen-only; ${referenceBackboneStats.domains} maintained data domains, ${referenceBackboneStats.lanes} lanes, ${referenceBackboneStats.records} records, ${referenceBackboneStats.sources} approved sources, and final Nen coverage includes ${nenExpansionCompletion.secondaryUsers} secondary users, ${nenExpansionCompletion.placements} spectrum placements, and ${nenExpansionCompletion.abilityProfiles} maintained ability/system profiles.`);
