@@ -218,5 +218,5 @@ export const successionArchiveData = Object.freeze({
   storyPhaseProfiles,
   storyLaneProfiles,
   storyThreadProfiles,
-  storyCausalLinksById: Object.freeze(Object.fromEntries(causalLinkValues.map((link) => [link.id, link])),
+  storyCausalLinksById: Object.freeze(Object.fromEntries(causalLinkValues.map((link) => [link.id, link]))),
 });
