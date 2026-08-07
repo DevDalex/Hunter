@@ -35,7 +35,7 @@ export const succession345TimelineEvents = freeze([
   timelineEvent({
     id: 'pre-voyage-345-gon-calls-ging',
     title: 'Gon tells Ging that he cannot bring out aura',
-    detail: 'Gon calls Ging and reports that he can no longer bring out aura. Ging answers that Gon's aura is most probably still coming out but Gon simply cannot see it, interpreting the change as Gon having returned to normal. Ging tells him to be grateful that this was the extent of the cost and advises him to use the opportunity to search for something new.',
+    detail: 'Gon calls Ging and reports that he can no longer bring out aura. Ging answers that Gon’s aura is most probably still coming out but Gon simply cannot see it, interpreting the change as Gon having returned to normal. Ging tells him to be grateful that this was the extent of the cost and advises him to use the opportunity to search for something new.',
     location: 'Remote call · Gon and Ging',
     tracks: ['gon', 'ging', 'nen'],
     confidence: 'Gon being unable to use Nen is confirmed by the supplied notes; aura probably still being emitted and the idea that Gon has returned to normal are Ging’s interpretation in the chapter',
