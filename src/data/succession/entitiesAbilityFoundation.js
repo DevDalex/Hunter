@@ -8,8 +8,9 @@ import { abilityFoundation372Expansion } from './abilityFoundation372Expansion.j
 import { abilityFoundation373Expansion } from './abilityFoundation373Expansion.js';
 import { abilityFoundation374Expansion } from './abilityFoundation374Expansion.js';
 import { abilityFoundation375Expansion } from './abilityFoundation375Expansion.js';
+import { abilityFoundation377Expansion } from './abilityFoundation377Expansion.js';
 
-const ARCHIVE_DATE = '2026-08-08';
+const ARCHIVE_DATE = '2026-08-09';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const abilityExpansions = Object.freeze([
@@ -19,6 +20,7 @@ const abilityExpansions = Object.freeze([
   ...abilityFoundation373Expansion,
   ...abilityFoundation374Expansion,
   ...abilityFoundation375Expansion,
+  ...abilityFoundation377Expansion,
 ]);
 
 const abilities = Object.freeze(uniqueById([
