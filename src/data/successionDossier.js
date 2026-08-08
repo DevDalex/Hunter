@@ -24,23 +24,40 @@ import {
   succession371SourcePolicy,
   succession371TroupeSearchResearch,
 } from './succession371Research.js';
+import {
+  succession372BodyStates,
+  succession372ChapterFocus,
+  succession372ChapterResearch,
+  succession372HalkenburgGuardianBeastResearch,
+  succession372HiddenNenUserResearch,
+  succession372MarayamRoomResearch,
+  succession372MomozeMurderResolution,
+  succession372Mysteries,
+  succession372NenClassResearch,
+  succession372RelationshipRecords,
+  succession372SourcePolicy,
+  succession372TysonBeastResearch,
+} from './succession372Research.js';
 
 export * from './successionDossierBase.js';
 
 const source370 = 'https://hunterxhunter.fandom.com/wiki/Chapter_370';
 const source371 = 'https://hunterxhunter.fandom.com/wiki/Chapter_371';
+const source372 = 'https://hunterxhunter.fandom.com/wiki/Chapter_372';
 const freeze = (value) => Object.freeze(value);
 
 export const chapterFocus = freeze({
   ...base.chapterFocus,
   ...succession370ChapterFocus,
   ...succession371ChapterFocus,
+  ...succession372ChapterFocus,
 });
 
 export const successionChapterResearch = freeze([
-  ...base.successionChapterResearch.filter((record) => ![370, 371].includes(record.number)),
+  ...base.successionChapterResearch.filter((record) => ![370, 371, 372].includes(record.number)),
   ...succession370ChapterResearch,
   ...succession371ChapterResearch,
+  ...succession372ChapterResearch,
 ].sort((left, right) => left.number - right.number));
 
 const silentMajority370Ability = freeze({
@@ -55,20 +72,52 @@ const silentMajority370Ability = freeze({
   source: source370,
 });
 
+const hanzoSkill4372Ability = freeze({
+  ability: 'Hanzo Skill 4',
+  owner: 'Hanzo',
+  category: 'Projected-double infiltration / investigation',
+  knownAtChapterBoundary: 'Hanzo uses a projected double during his investigation of Momoze’s murder and the Room 1013 situation.',
+  mechanics: 'The supplied Chapter 372 text confirms the projected-double use but does not fully enumerate activation, range, duration, or interruption mechanics.',
+  target: 'Hanzo’s own projected investigative double',
+  confidence: 'Ability name and observed use confirmed in Chapter 372; detailed mechanics remain partial.',
+  chapter: 372,
+  source: source372,
+});
+
+const theTouch372Ability = freeze({
+  ability: 'The Touch',
+  owner: 'Tuffdy',
+  category: 'Assassination ability',
+  knownAtChapterBoundary: 'The chapter notes identify The Touch as Tuffdy’s ability and state that he used it to assassinate Momoze.',
+  mechanics: 'Complete activation conditions and mechanics are not supplied in the current Chapter 372 text.',
+  target: 'Momoze Hui Guo Rou',
+  confidence: 'Name, owner, and use in Momoze’s murder are confirmed; mechanics remain unresolved.',
+  chapter: 372,
+  source: source372,
+});
+
 export const successionAbilities = freeze([
-  ...base.successionAbilities.filter((record) => !(record.ability === 'Silent Majority' && record.chapter === 369)),
+  ...base.successionAbilities.filter((record) => !(
+    (record.ability === 'Silent Majority' && record.chapter === 369)
+    || record.ability === 'Hanzo Skill 4'
+    || record.ability === 'The Touch'
+  )),
   silentMajority370Ability,
+  hanzoSkill4372Ability,
+  theTouch372Ability,
 ]);
 
 export const successionRelationships = freeze([
   ...base.successionRelationships,
   ...succession370RelationshipRecords,
   ...succession371RelationshipRecords,
+  ...succession372RelationshipRecords,
 ]);
 
 export const bodyStateLedger = freeze([
-  ...base.bodyStateLedger,
+  ...base.bodyStateLedger.filter((record) => record.person !== 'Tuffdy'),
   ...succession370BodyStates,
+  ...succession372BodyStates,
 ]);
 
 const supersededMysteryQuestions = new Set([
@@ -76,30 +125,57 @@ const supersededMysteryQuestions = new Set([
   'Can Room 1014 keep Oito’s role as the Little Eye user hidden from Babimyna?',
   'Who is using Silent Majority inside Room 1014, and what does the ability do?',
   'Who are the four concealed Nen users Furykov believes are pretending to be beginners?',
+  'What caused all eleven of Halkenburg’s bodyguards to lose consciousness?',
+  'Who killed Momoze, and what Nen method allowed the killer to bypass the protection detail?',
+  'What causes Marayam’s Guardian Spirit Beast to grow, and what does that growth enable?',
+  'What exactly does Salé-salé intend to do at the next banquet?',
 ]);
 
 const superseded370MysteryQuestions = new Set([
   'Who is the Silent Majority user inside or connected to the Room 1014 class?',
+  'Which four attendees is Furykov identifying as concealed Nen users?',
 ]);
 
 export const successionMysteries = freeze([
   ...base.successionMysteries.filter((record) => !supersededMysteryQuestions.has(record.question)),
   freeze({
     question: 'Who or what killed Woody and the four other Oito guards by draining their blood?',
-    evidence: 'Chapter 370 demonstrates Silent Majority killing Barrigen with four blood-draining snakes in a pattern explicitly compared by the supplied notes to the Chapter 359 deaths. This disproves the theory that Woble’s Guardian Spirit Beast caused those deaths, but Chapters 370–371 still do not identify the earlier killer as the same Silent Majority user.',
+    evidence: 'Chapter 370 demonstrates Silent Majority killing Barrigen with four blood-draining snakes in a pattern explicitly compared by the supplied notes to the Chapter 359 deaths. This disproves the theory that Woble’s Guardian Spirit Beast caused those deaths, but Chapters 370–372 still do not identify the earlier killer as the same Silent Majority user.',
     status: 'Woble Guardian Beast theory disproved / killer identity still open',
-    lastChapter: '371',
-    source: source371,
+    lastChapter: '372',
+    source: source372,
   }),
   freeze({
     question: 'Can Room 1014 keep Oito’s role as the Little Eye user hidden from Babimyna?',
-    evidence: 'By Chapter 370 Babimyna has concluded that the cockroach-control ability demonstrated in Chapter 367 was not Bill’s actual ability. Chapter 371 does not establish that he has identified Oito as the true temporary user.',
+    evidence: 'By Chapter 370 Babimyna has concluded that the cockroach-control ability demonstrated in Chapter 367 was not Bill’s actual ability. Chapters 371–372 do not establish that he has identified Oito as the true temporary user.',
     status: 'cover broken / Oito attribution not yet confirmed',
-    lastChapter: '371',
-    source: source371,
+    lastChapter: '372',
+    source: source372,
+  }),
+  freeze({
+    question: 'Who killed Momoze, and what Nen method allowed the killer to bypass the protection detail?',
+    evidence: 'Chapter 372 identifies Tuffdy as the killer after Hanzo traps him into self-incrimination. The chapter notes identify Tuffdy’s ability as The Touch and state that it was used to assassinate Momoze, but the supplied text does not provide its complete mechanics.',
+    status: 'killer resolved: Tuffdy / ability name resolved: The Touch / detailed mechanics still open',
+    lastChapter: '372',
+    source: source372,
+  }),
+  freeze({
+    question: 'What caused all eleven of Halkenburg’s bodyguards to lose consciousness?',
+    evidence: 'Chapter 372 connects the blackout to a feather-mark phenomenon around Halkenburg’s Guardian Spirit Beast. The guards have no memory of losing consciousness and Shedule/Yuhirai are half-awakened Nen users. Kurapika identifies soliciting-type Manipulation hallmarks and considers memory revision likely.',
+    status: 'partially resolved / Guardian Beast manipulation established, exact trigger and conditions open',
+    lastChapter: '372',
+    source: source372,
+  }),
+  freeze({
+    question: 'What causes Marayam’s Guardian Spirit Beast to grow, and what does that growth enable?',
+    evidence: 'Chapter 372 confirms continued growth and a more defensive appearance. Hanzo and Biscuit believe Momoze’s death accelerated it, but that causal link is not confirmed. Hanzo later encounters a smaller, more menacing version in an anomalously empty Room 1013.',
+    status: 'open / growth and spatial anomaly now linked as investigation threads',
+    lastChapter: '372',
+    source: source372,
   }),
   ...succession370Mysteries.filter((record) => !superseded370MysteryQuestions.has(record.question)),
   ...succession371Mysteries,
+  ...succession372Mysteries,
 ]);
 
 export const silentMajorityChapter370Research = succession370SilentMajorityMechanics;
@@ -112,6 +188,12 @@ export const mafiaPrinceChapter371Research = succession371MafiaPrinceLinks;
 export const troupeChapter371SearchResearch = succession371TroupeSearchResearch;
 export const successionRitualCapsuleResearch = succession371RitualCapsuleResearch;
 export const chapter371CustodyResearch = succession371CustodyRecords;
+export const hiddenNenUsersChapter372Research = succession372HiddenNenUserResearch;
+export const halkenburgGuardianBeastChapter372Research = succession372HalkenburgGuardianBeastResearch;
+export const momozeMurderChapter372Resolution = succession372MomozeMurderResolution;
+export const marayamRoomChapter372Research = succession372MarayamRoomResearch;
+export const tysonBeastChapter372Research = succession372TysonBeastResearch;
+export const nenClassChapter372Research = succession372NenClassResearch;
 
 export const dossierSources = freeze({
   ...base.dossierSources,
@@ -119,6 +201,8 @@ export const dossierSources = freeze({
   sourcePolicy370: succession370SourcePolicy,
   chapter371: source371,
   sourcePolicy371: succession371SourcePolicy,
+  chapter372: source372,
+  sourcePolicy372: succession372SourcePolicy,
 });
 
 export const guardAssignmentGroups = freeze([
@@ -138,6 +222,15 @@ export const guardAssignmentGroups = freeze([
       freeze({ subject: 'Silent Majority investigation', people: 'Loberry', notes: 'Royal Army custody as a murder suspect. Possession is established by Chapter 370, but willing complicity is not.', status: 'detained / guilt unresolved', source: source371 }),
       freeze({ subject: 'Seiko household investigation', people: 'Kaiser, Seiko Hui Guo Rou', notes: 'Cleapatro sends Kaiser for a seventy-two-hour observation rather than granting Sakata’s requested immediate case.', status: 'active judicial observation', source: source371 }),
       freeze({ subject: 'Nen class assistants', people: 'Furykov, Belerainte', notes: 'Kurapika divides the class into three groups and appoints the two openly experienced Nen users to help check aura flow.', status: 'active class assignment', source: source371 }),
+    ]),
+  }),
+  freeze({
+    group: 'Chapter 372 half-awakening and coalition state',
+    description: 'The first class ends at 12:30 while Kurapika’s investigation separates involuntary half-awakened participants from the still-hidden experienced user and converts Halkenburg’s feather-mark problem into a new lower-prince intelligence channel.',
+    records: freeze([
+      freeze({ subject: 'Halkenburg camp', people: 'Shedule, Yuhirai', notes: 'Both can use Nen in a limited involuntary fashion after Guardian Spirit Beast manipulation but cannot consciously control it.', status: 'half-awakened / active intelligence subjects', source: source372 }),
+      freeze({ subject: 'Momoze murder case', people: 'Tuffdy', notes: 'Identified as Momoze’s killer through Hanzo’s trap; killed by Hanzo and staged as suicide.', status: 'deceased / killer identified', source: source372 }),
+      freeze({ subject: 'Lower-prince coordination', people: 'Kurapika, Sakata, Yuhirai', notes: 'Agree to prioritize prince protection while Kurapika proposes a broader appeal through Hunter Association connections.', status: 'coalition proposal developing', source: source372 }),
     ]),
   }),
 ]);
