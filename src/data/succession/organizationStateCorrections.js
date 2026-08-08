@@ -1,5 +1,35 @@
 export const organizationStateProfileCorrections = Object.freeze({
+  'organization:xi-yu': Object.freeze([
+    Object.freeze({
+      id: 'organization-state:xi-yu:377',
+      organizationId: 'organization:xi-yu',
+      chapterRange: Object.freeze({ start: 377, end: 377 }),
+      status: 'active',
+      operationalState: 'Chapter 377 identifies Xi-Yu as the Kakin mafia family controlling Tier 4 within the lower-passenger-tier territorial arrangement.',
+      authority: 'Traditional Kakin mafia territorial influence and unofficial access within Tier 4.',
+      territoryIds: Object.freeze(['location:black-whale:tier-4']),
+      objectiveStates: Object.freeze(['Maintain Xi-Yu control of its assigned passenger tier.']),
+      pressure: Object.freeze(['The Phantom Troupe is searching beyond Tier 5 and may seek unofficial mafia access between tiers.']),
+      relatedEventIds: Object.freeze(['event:troupe-hisoka-hunt-reorganization']),
+      certainty: 'confirmed',
+      sourceIds: Object.freeze(['source:chapter-377']),
+    }),
+  ]),
   'organization:heil-ly': Object.freeze([
+    Object.freeze({
+      id: 'organization-state:heil-ly:377',
+      organizationId: 'organization:heil-ly',
+      chapterRange: Object.freeze({ start: 377, end: 377 }),
+      status: 'active',
+      operationalState: 'Chapter 377 identifies Heil-Ly as the Kakin mafia family controlling Tier 3 within the lower-passenger-tier territorial arrangement.',
+      authority: 'Traditional Kakin mafia territorial influence and unofficial access within Tier 3 at this chapter boundary.',
+      territoryIds: Object.freeze(['location:black-whale:tier-3']),
+      objectiveStates: Object.freeze(['Maintain Heil-Ly control of its assigned passenger tier.']),
+      pressure: Object.freeze(['The Phantom Troupe is searching beyond Tier 5 and the lower-tier mafia access system is becoming operationally relevant.']),
+      relatedEventIds: Object.freeze(['event:troupe-hisoka-hunt-reorganization']),
+      certainty: 'confirmed',
+      sourceIds: Object.freeze(['source:chapter-377']),
+    }),
     Object.freeze({
       id: 'organization-state:heil-ly:399',
       organizationId: 'organization:heil-ly',
@@ -41,6 +71,22 @@ export const organizationStateProfileCorrections = Object.freeze({
       relatedEventIds: Object.freeze(['event:room-3101-breach', 'event:borksen-recruitment-game']),
       certainty: 'confirmed',
       sourceIds: Object.freeze(['source:chapter-410']),
+    }),
+  ]),
+  'organization:cha-r': Object.freeze([
+    Object.freeze({
+      id: 'organization-state:cha-r:377',
+      organizationId: 'organization:cha-r',
+      chapterRange: Object.freeze({ start: 377, end: 377 }),
+      status: 'active',
+      operationalState: 'Chapter 377 identifies Cha-R as the Kakin mafia family controlling Tier 5. Cha-R directly contacts the Phantom Troupe, offers recruitment/access assistance, and then decides the Troupe is too dangerous to control.',
+      authority: 'Traditional Kakin mafia territorial influence and unofficial access within Tier 5.',
+      territoryIds: Object.freeze(['location:black-whale:tier-5']),
+      objectiveStates: Object.freeze(['Maintain Cha-R control of Tier 5.', 'Prevent the Phantom Troupe from destabilizing upper-tier access and mafia order.']),
+      pressure: Object.freeze(['The Troupe refuses recruitment and asks how to reach Tier 1.', 'Cha-R expects the Troupe to push through the ship regardless of ordinary restrictions.']),
+      relatedEventIds: Object.freeze(['event:troupe-hisoka-hunt-reorganization']),
+      certainty: 'confirmed',
+      sourceIds: Object.freeze(['source:chapter-377']),
     }),
   ]),
 });
