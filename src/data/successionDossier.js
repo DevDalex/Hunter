@@ -35,6 +35,18 @@ import {
   succession376TserriednichNenResearch,
   succession376ZhangLeiCoinResearch,
 } from './succession376Research.js';
+import {
+  succession377IllumiContractResearch,
+  succession377KachoBeastResearch,
+  succession377KachoEscapeResearch,
+  succession377LovelyGhostwriterResearch,
+  succession377MafiaTierResearch,
+  succession377MetamorphorsenResearch,
+  succession377Mysteries,
+  succession377RelationshipRecords,
+  succession377SourcePolicy,
+  succession377TroupeSearchResearch,
+} from './succession377Research.js';
 
 export * from './successionDossierMaintained.js';
 
@@ -42,6 +54,7 @@ const freeze = (value) => Object.freeze(value);
 const source374 = 'https://hunterxhunter.fandom.com/wiki/Chapter_374';
 const source375 = 'https://hunterxhunter.fandom.com/wiki/Chapter_375';
 const source376 = 'https://hunterxhunter.fandom.com/wiki/Chapter_376';
+const source377 = 'https://hunterxhunter.fandom.com/wiki/Chapter_377';
 
 const legacyChapterLabel = (record) => {
   const value = record.chapters ?? record.chapter;
@@ -88,8 +101,21 @@ const guardianBeast375Abilities = freeze([
   freeze({ ability: 'Marayam Guardian Spirit Beast spatial barrier', owner: 'Marayam Hui Guo Rou', category: 'One-way Nen-space boundary', knownAtChapterBoundary: 'Belerainte’s test proves that an occupant can exit the hidden Room 1013 state but cannot see the occupants or return after leaving.', mechanics: 'Biscuit classifies the boundary as one-way and considers Marayam’s Guardian Spirit Beast the likely source; creation trigger and access exceptions remain unknown.', target: 'Room 1013 occupants / doorway boundary', confidence: 'One-way behavior confirmed / Guardian Spirit Beast authorship probable.', chapter: 375, source: source375 }),
 ]);
 
+const metamorphorsen377Ability = freeze({
+  ability: 'Battle Cantabile: Metamorphorsen',
+  owner: 'Bonolenov Ndongo',
+  category: 'Transformation / disguise',
+  knownAtChapterBoundary: succession377MetamorphorsenResearch.demonstratedFunction,
+  mechanics: 'Bonolenov can transform into various things/forms; complete transformation range, duration, activation details, costs, and copied properties are not established in Chapter 377.',
+  target: 'Bonolenov / self-transformation',
+  confidence: 'Core transformation function confirmed / detailed mechanics open.',
+  chapter: 377,
+  source: source377,
+});
+
 const replacementAbilityNames = new Set([
   'Predator',
+  'Battle Cantabile: Metamorphorsen',
   ...guardianBeast375Abilities.map((record) => record.ability),
 ]);
 
@@ -97,6 +123,7 @@ export const successionAbilities = freeze([
   ...maintained.successionAbilities.filter((record) => !replacementAbilityNames.has(record.ability)),
   predator374Ability,
   ...guardianBeast375Abilities,
+  metamorphorsen377Ability,
 ].map(normalizeAbilityForLegacyConsumers));
 
 export const successionRelationships = freeze([
@@ -104,6 +131,7 @@ export const successionRelationships = freeze([
   ...succession374RelationshipRecords,
   ...succession375RelationshipRecords,
   ...succession376RelationshipRecords,
+  ...succession377RelationshipRecords,
 ]);
 
 const isSupersededRoomOrDoorMystery = (record) => {
@@ -120,15 +148,29 @@ const isSuperseded376Mystery = (record) => {
     || (question.includes('Theta') && question.includes('wound'));
 };
 
+const isSuperseded377Mystery = (record) => {
+  const question = String(record.question || '');
+  return (question.includes('Kacho') && question.includes('Guardian Spirit Beast'))
+    || (question.includes('Hisoka') && (question.includes('where') || question.includes('Where')))
+    || question.includes('Metamorphorsen')
+    || question.includes('Lovely Ghostwriter')
+    || question.includes('Neon Nostrade');
+};
+
 const priorMysteries = [
   ...maintained.successionMysteries.filter((record) => !isSupersededRoomOrDoorMystery(record)),
   ...succession374Mysteries.filter((record) => !isSupersededRoomOrDoorMystery(record)),
   ...succession375Mysteries,
 ];
 
-export const successionMysteries = freeze([
+const through376Mysteries = [
   ...priorMysteries.filter((record) => !isSuperseded376Mystery(record)),
   ...succession376Mysteries,
+];
+
+export const successionMysteries = freeze([
+  ...through376Mysteries.filter((record) => !isSuperseded377Mystery(record)),
+  ...succession377Mysteries,
 ]);
 
 export const dossierSources = freeze({
@@ -139,6 +181,8 @@ export const dossierSources = freeze({
   sourcePolicy375: succession375SourcePolicy,
   chapter376: source376,
   sourcePolicy376: succession376SourcePolicy,
+  chapter377: source377,
+  sourcePolicy377: succession377SourcePolicy,
 });
 
 export const guardAssignmentGroups = freeze([
@@ -171,6 +215,16 @@ export const guardAssignmentGroups = freeze([
       freeze({ subject: 'Kacho–Melody covert channel', people: 'Kacho, Melody', notes: 'Mosquitone devices and Morse code establish a private communication route under the cover of studying.', status: 'secret channel active', source: source376 }),
     ]),
   }),
+  freeze({
+    group: 'Chapter 377 twin escape and Troupe hunt state',
+    description: 'Kacho and Melody convert covert communication into a banquet escape operation while the Phantom Troupe reorganizes its Hisoka hunt around lower-tier mafia access and disguise tactics.',
+    records: freeze([
+      freeze({ subject: 'Kacho–Fugetsu banquet escape plan', people: 'Kacho, Fugetsu, Melody, Keeney', notes: 'The next Sunday music show becomes the planned escape window. Melody wants the performance broadcast across Tier 1 while performers can wait in the passageway.', status: 'escape operation developing', source: source377 }),
+      freeze({ subject: 'Kacho Guardian Spirit Beast', people: 'Kacho, Melody, Keeney', notes: 'No usable information about the beast is available to the protection team.', status: 'unobserved / tactical role unknown', source: source377 }),
+      freeze({ subject: 'Phantom Troupe Hisoka hunt', people: 'Chrollo, Illumi, Shizuku, Bonolenov, Phinks', notes: 'Tier 5 search fails; Chrollo keeps Hisoka as the priority, Illumi reveals his assassination contract, and Shizuku/Bonolenov join Chrollo for disguise-based searching.', status: 'decentralized hunt active', source: source377 }),
+      freeze({ subject: 'Cha-R / Troupe contact', people: 'Cha-R Family, Phantom Troupe, Sun-bin, Ken’i Wang', notes: 'Chrollo refuses Cha-R recruitment and asks about Tier 1; Cha-R subsequently judges the Troupe uncontrollable and moves to obstruct them.', status: 'relationship shifting toward opposition', source: source377 }),
+    ]),
+  }),
 ]);
 
 export const room1013Chapter374Research = succession374Room1013Research;
@@ -194,3 +248,10 @@ export const mosquitoneChapter376Research = succession376MosquitoneResearch;
 export const zhangLeiCoinChapter376Research = succession376ZhangLeiCoinResearch;
 export const fugetsuDoorChapter376Research = succession376FugetsuDoorResearch;
 export const tserriednichChapter376NenResearch = succession376TserriednichNenResearch;
+export const kachoEscapeChapter377Research = succession377KachoEscapeResearch;
+export const kachoBeastChapter377Research = succession377KachoBeastResearch;
+export const mafiaTierChapter377Research = succession377MafiaTierResearch;
+export const illumiContractChapter377Research = succession377IllumiContractResearch;
+export const troupeSearchChapter377Research = succession377TroupeSearchResearch;
+export const metamorphorsenChapter377Research = succession377MetamorphorsenResearch;
+export const lovelyGhostwriterChapter377Research = succession377LovelyGhostwriterResearch;
