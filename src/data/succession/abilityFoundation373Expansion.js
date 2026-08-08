@@ -58,7 +58,7 @@ export const abilityFoundation373Expansion = freeze([
     summary: 'Musse’s surveillance ability. Chapter 366 establishes its intended evidence-gathering use, while Chapter 373 states that touching Camilla completes a condition that gives Musse telepathic knowledge of her actions; Benjamin later inherits the ability through Benjamin Baton.',
     owners: ['Musse'],
     nenTypes: ['unknown'],
-    certainty: 'partial',
+    certainty: 'confirmed',
     category: 'surveillance / information acquisition',
     activation: 'Chapter 373 states that Musse completes a condition by touching Camilla.',
     conditions: ['Touching Camilla completes the condition described in the supplied Chapter 373 notes.'],
