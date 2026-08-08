@@ -72,4 +72,18 @@ export const organizationPersonnelHistoryCorrections = Object.freeze({
       sourceIds: Object.freeze(['source:chapter-410']),
     }),
   ]),
+  'organization:phantom-troupe': Object.freeze([
+    Object.freeze({
+      id: 'organization-personnel:phantom-troupe:illumi-zoldyck:377',
+      organizationId: 'organization:phantom-troupe',
+      characterId: 'character:illumi-zoldyck',
+      chapterRange: Object.freeze({ start: 377, end: null }),
+      role: 'Member / Hisoka assassination contractor',
+      status: 'active',
+      transitionType: 'membership',
+      note: 'Chapter 377 reveals Illumi as the newest Phantom Troupe member. Illumi states that Hisoka requested his membership and contracted him to kill Hisoka; the supplied notes say Illumi occupies the vacancy left by Uvogin.',
+      certainty: 'confirmed',
+      sourceIds: Object.freeze(['source:chapter-377']),
+    }),
+  ]),
 });
