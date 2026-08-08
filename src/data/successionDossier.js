@@ -21,12 +21,27 @@ import {
   succession375ShikakuAssessment,
   succession375SourcePolicy,
 } from './succession375Research.js';
+import {
+  succession376BelerainteAllianceResearch,
+  succession376CourtResearch,
+  succession376DayMarkers,
+  succession376FugetsuDoorResearch,
+  succession376HalkenburgAppealResearch,
+  succession376MosquitoneResearch,
+  succession376Mysteries,
+  succession376RelationshipRecords,
+  succession376SilentMajorityResearch,
+  succession376SourcePolicy,
+  succession376TserriednichNenResearch,
+  succession376ZhangLeiCoinResearch,
+} from './succession376Research.js';
 
 export * from './successionDossierMaintained.js';
 
 const freeze = (value) => Object.freeze(value);
 const source374 = 'https://hunterxhunter.fandom.com/wiki/Chapter_374';
 const source375 = 'https://hunterxhunter.fandom.com/wiki/Chapter_375';
+const source376 = 'https://hunterxhunter.fandom.com/wiki/Chapter_376';
 
 const legacyChapterLabel = (record) => {
   const value = record.chapters ?? record.chapter;
@@ -88,6 +103,7 @@ export const successionRelationships = freeze([
   ...maintained.successionRelationships,
   ...succession374RelationshipRecords,
   ...succession375RelationshipRecords,
+  ...succession376RelationshipRecords,
 ]);
 
 const isSupersededRoomOrDoorMystery = (record) => {
@@ -96,10 +112,23 @@ const isSupersededRoomOrDoorMystery = (record) => {
     || (question.includes('Fugetsu') && (question.includes('door') || question.includes('tunnel')));
 };
 
-export const successionMysteries = freeze([
+const isSuperseded376Mystery = (record) => {
+  const question = String(record.question || '');
+  return question.includes('Silent Majority')
+    || (question.includes('Zhang Lei') && question.includes('coin'))
+    || (question.includes('Fugetsu') && (question.includes('door') || question.includes('tunnel')))
+    || (question.includes('Theta') && question.includes('wound'));
+};
+
+const priorMysteries = [
   ...maintained.successionMysteries.filter((record) => !isSupersededRoomOrDoorMystery(record)),
   ...succession374Mysteries.filter((record) => !isSupersededRoomOrDoorMystery(record)),
   ...succession375Mysteries,
+];
+
+export const successionMysteries = freeze([
+  ...priorMysteries.filter((record) => !isSuperseded376Mystery(record)),
+  ...succession376Mysteries,
 ]);
 
 export const dossierSources = freeze({
@@ -108,6 +137,8 @@ export const dossierSources = freeze({
   sourcePolicy374: succession374SourcePolicy,
   chapter375: source375,
   sourcePolicy375: succession375SourcePolicy,
+  chapter376: source376,
+  sourcePolicy376: succession376SourcePolicy,
 });
 
 export const guardAssignmentGroups = freeze([
@@ -130,6 +161,16 @@ export const guardAssignmentGroups = freeze([
       freeze({ subject: 'Halkenburg observation', people: 'Shikaku', notes: 'Shikaku delays an immediate assassination attempt after witnessing the fellowship aura surge and requests one or two additional Benjamin-aligned people.', status: 'surveillance active / attack delayed', source: source375 }),
     ]),
   }),
+  freeze({
+    group: 'Chapter 376 class, court, and covert-channel state',
+    description: 'The third voyage day turns Kurapika’s public class into an even sharper trust crisis while royal judicial containment and covert communications expand around it; the chapter then crosses into Day 4 for Fugetsu and Tserriednich developments.',
+    records: freeze([
+      freeze({ subject: 'Room 1014 Silent Majority crisis', people: 'Kurapika, Belerainte, Maor, Satobi, Myuhan', notes: 'Myuhan is killed by Silent Majority. Maor and Satobi suspect the course, while Belerainte argues that canceling it would let the assassin escape.', status: 'class continues / assassin unidentified / Myuhan deceased', source: source376 }),
+      freeze({ subject: 'Room 1013 covert reporting', people: 'Belerainte, Bill, Hanzo, Vergei', notes: 'Belerainte uses a natural conversation with Bill near the boundary as cover for passing information toward the hidden Room 1013 side.', status: 'covert reporting active', source: source376 }),
+      freeze({ subject: 'Benjamin–Camilla judicial containment', people: 'Benjamin, Camilla, Cleapatro, Balsamilco', notes: 'The case is postponed; both princes are monitored while Rooms 1001 and 1002 are searched. Benjamin retains Secret Window surveillance of Camilla.', status: 'court surveillance active', source: source376 }),
+      freeze({ subject: 'Kacho–Melody covert channel', people: 'Kacho, Melody', notes: 'Mosquitone devices and Morse code establish a private communication route under the cover of studying.', status: 'secret channel active', source: source376 }),
+    ]),
+  }),
 ]);
 
 export const room1013Chapter374Research = succession374Room1013Research;
@@ -144,3 +185,12 @@ export const fugetsuDoorChapter375Research = succession375FugetsuDoorResearch;
 export const room1013Chapter375BoundaryResearch = succession375Room1013BoundaryResearch;
 export const biscuitChapter375TrainingResearch = succession375BiscuitTrainingResearch;
 export const halkenburgChapter375OperationResearch = succession375HalkenburgOperation;
+export const voyageChapter376DayMarkers = succession376DayMarkers;
+export const halkenburgChapter376AppealResearch = succession376HalkenburgAppealResearch;
+export const benjaminCamillaChapter376CourtResearch = succession376CourtResearch;
+export const silentMajorityChapter376Research = succession376SilentMajorityResearch;
+export const belerainteChapter376AllianceResearch = succession376BelerainteAllianceResearch;
+export const mosquitoneChapter376Research = succession376MosquitoneResearch;
+export const zhangLeiCoinChapter376Research = succession376ZhangLeiCoinResearch;
+export const fugetsuDoorChapter376Research = succession376FugetsuDoorResearch;
+export const tserriednichChapter376NenResearch = succession376TserriednichNenResearch;
