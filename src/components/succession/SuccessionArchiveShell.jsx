@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
   BookOpen,
@@ -22,11 +22,12 @@ import {
 } from '../../data/succession/archiveRoutes';
 import SpoilerControl from '../SpoilerControl';
 import SuccessionCommandHome from './SuccessionCommandHome';
-import SuccessionInformationConsistencyPanel from './SuccessionInformationConsistencyPanel';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveContrastFixes.css';
 import './SuccessionArchiveDeepContrastFixes.css';
 import './SuccessionArchiveNenFixes.css';
+
+const SuccessionInformationConsistencyPanel = lazy(() => import('./SuccessionInformationConsistencyPanel'));
 
 const iconByHub = {
   story: BookOpen,
@@ -48,6 +49,14 @@ const tabRouteParams = (hub, tab, routeParams = {}) => {
     if (routeParams.room) shared.room = routeParams.room;
   }
   return { ...shared, ...(tab.params || {}) };
+};
+
+const needsCharacterConsistency = (routeId, routeParams = {}) => {
+  if (!['characters', 'princes', 'queens'].includes(routeId)) return false;
+  if (routeParams.entity) return true;
+  if (routeId === 'princes' && Number.isFinite(Number(routeParams.prince))) return true;
+  if (routeId === 'queens' && routeParams.focus) return true;
+  return false;
 };
 
 function ArchiveNavigation({ activeHubId, onNavigate, onIntent, id }) {
@@ -117,6 +126,7 @@ export default function SuccessionArchiveShell({
   const route = getSuccessionArchiveRoute(activeId);
   const activeHub = getSuccessionArchiveHub(route.id);
   const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
+  const showCharacterConsistency = needsCharacterConsistency(route.id, routeParams);
 
   useEffect(() => setDrawerOpen(false), [activeId, routeParams]);
 
@@ -269,7 +279,9 @@ export default function SuccessionArchiveShell({
             aria-label={`${route.label} workspace content`}
             tabIndex="-1"
           >
-            <SuccessionInformationConsistencyPanel activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} />
+            {showCharacterConsistency && <Suspense fallback={null}>
+              <SuccessionInformationConsistencyPanel activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} />
+            </Suspense>}
             {route.id === 'archive' ? null : children}
           </div>
         </div>
