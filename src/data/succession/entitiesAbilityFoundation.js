@@ -4,13 +4,15 @@ import {
   guardianBeastAbilityExpansion,
 } from './abilityFoundationExpansion.js';
 import { abilityFoundation370Expansion } from './abilityFoundation370Expansion.js';
+import { abilityFoundation372Expansion } from './abilityFoundation372Expansion.js';
 
-const ARCHIVE_DATE = '2026-08-07';
+const ARCHIVE_DATE = '2026-08-08';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const abilityExpansions = Object.freeze([
   ...abilityFoundationExpansion,
   ...abilityFoundation370Expansion,
+  ...abilityFoundation372Expansion,
 ]);
 
 const abilities = Object.freeze(uniqueById([
