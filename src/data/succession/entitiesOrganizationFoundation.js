@@ -7,16 +7,26 @@ import {
   organizationPersonnelHistoryCorrections,
   organizationStateProfileCorrections,
 } from './organizationStateCorrections.js';
+import { organizationState379Corrections } from './organizationState379Corrections.js';
 
-const mergeRecordMaps = (baseMap, correctionMap) => Object.freeze(Object.fromEntries(
-  [...new Set([...Object.keys(baseMap), ...Object.keys(correctionMap)])].map((key) => {
+const mergeRecordMaps = (baseMap, ...correctionMaps) => Object.freeze(Object.fromEntries(
+  [...new Set([
+    ...Object.keys(baseMap),
+    ...correctionMaps.flatMap((map) => Object.keys(map)),
+  ])].map((key) => {
     const records = new Map((baseMap[key] || []).map((record) => [record.id, record]));
-    for (const correction of correctionMap[key] || []) records.set(correction.id, correction);
+    for (const correctionMap of correctionMaps) {
+      for (const correction of correctionMap[key] || []) records.set(correction.id, correction);
+    }
     return [key, Object.freeze([...records.values()].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id)))];
   }),
 ));
 
-const organizationStateProfiles = mergeRecordMaps(baseOrganizationStateProfiles, organizationStateProfileCorrections);
+const organizationStateProfiles = mergeRecordMaps(
+  baseOrganizationStateProfiles,
+  organizationStateProfileCorrections,
+  organizationState379Corrections,
+);
 const organizationPersonnelHistory = mergeRecordMaps(baseOrganizationPersonnelHistory, organizationPersonnelHistoryCorrections);
 
 export const successionArchiveData = Object.freeze({
