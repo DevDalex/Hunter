@@ -2,6 +2,7 @@ import { successionArchiveData as foundationData } from './entitiesAbilityFounda
 import { eventFoundationExpansion } from './eventFoundationExpansion.js';
 import { eventFoundation370Expansion } from './eventFoundation370Expansion.js';
 import { eventFoundation371Expansion } from './eventFoundation371Expansion.js';
+import { eventFoundation372Expansion } from './eventFoundation372Expansion.js';
 
 const ARCHIVE_DATE = '2026-08-08';
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -11,6 +12,7 @@ const eventExpansions = Object.freeze([
   ...eventFoundationExpansion,
   ...eventFoundation370Expansion,
   ...eventFoundation371Expansion,
+  ...eventFoundation372Expansion,
 ]);
 
 const events = Object.freeze(uniqueById([
