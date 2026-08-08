@@ -1,14 +1,16 @@
 import { successionArchiveData as foundationData } from './entitiesAbilityFoundation.js';
 import { eventFoundationExpansion } from './eventFoundationExpansion.js';
 import { eventFoundation370Expansion } from './eventFoundation370Expansion.js';
+import { eventFoundation371Expansion } from './eventFoundation371Expansion.js';
 
-const ARCHIVE_DATE = '2026-08-07';
+const ARCHIVE_DATE = '2026-08-08';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const includesChapter = (range, chapter) => chapter >= range.start && chapter <= (range.end ?? range.start);
 const eventExpansions = Object.freeze([
   ...eventFoundationExpansion,
   ...eventFoundation370Expansion,
+  ...eventFoundation371Expansion,
 ]);
 
 const events = Object.freeze(uniqueById([
