@@ -20,8 +20,7 @@ const chapterNumbersFromSpec = (value) => {
 };
 const researchIsMaintained = (research) => Boolean(
   research
-  && !String(research.status || '').toLowerCase().includes('pending')
-  && research.coverage?.summary,
+  && !String(research.status || '').toLowerCase().includes('pending'),
 );
 const chronologyResearch = maintainedSuccessionChapterResearch.filter((research) => researchIsMaintained(research)
   && research.coverage?.chronology
