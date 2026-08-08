@@ -110,7 +110,15 @@ try {
   assert(Object.keys(successionArchiveData.storyCausalLinksById || {}).length >= 17, 'Batch 4 must retain at least seventeen causal links');
 
   const closure = getStoryIntelligenceClosureReport();
-  assert(closure?.closureReady && closure.status === 'closed', 'Batch 4 story intelligence closure must be closed');
+  assert(closure?.closureReady && closure.status === 'closed', `Batch 4 story intelligence closure must be closed; diagnostics=${JSON.stringify({
+    phaseCoverageIssues: closure?.phaseCoverageIssues || [],
+    phaseContinuityIssues: closure?.phaseContinuityIssues || [],
+    missingReferences: closure?.missingReferences || [],
+    chapterProjectionIssues: (closure?.chapterProjectionIssues || []).map((chapter) => chapter.id),
+    eventProjectionIssues: (closure?.eventProjectionIssues || []).map((event) => event.id),
+    pendingChapterIds: closure?.pendingChapterIds || [],
+    counts: closure?.counts || null,
+  })}`);
   assert(closure.counts.chapters === chapters.length, 'closure chapter count must follow the canonical chapter catalogue');
   assert(closure.chapterRange.start === firstChapter && closure.chapterRange.end === latestChapter, 'closure range must follow canonical chapter boundaries');
   assert(closure.phaseCoverageIssues.length === 0, 'every chapter must resolve exactly one story phase');
