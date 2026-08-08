@@ -54,6 +54,24 @@ export const personnelTransitions = [
     state: 'Guardian Spirit Beast manipulation partially identified / exact conditions unresolved',
     source: wiki('Chapter_372'),
   },
+  {
+    day: 'Day 2',
+    chapters: '373',
+    subject: 'Camilla / Musse / Wolfe / Benjamin',
+    route: 'Room 1002 → Room 1001 confrontation → solitary confinement',
+    change: 'Musse kills Camilla, Cat’s Name kills Musse and revives her, Camilla kills Wolfe and shoots Benjamin, and Furykov arrests her. Benjamin Baton is revealed to have inherited Air Blow from Vincent and Secret Window from Musse.',
+    state: 'Camilla alive/revived/detained / Musse and Wolfe deceased / Benjamin inherited abilities expanded',
+    source: wiki('Chapter_373'),
+  },
+  {
+    day: 'Day 2',
+    chapters: '372–373',
+    subject: 'Marayam household / Hanzo',
+    route: 'Room 1013 projected exploration → occupied/empty state split',
+    change: 'Hanzo encounters an empty Room 1013 state in Chapter 372. Chapter 373 proves Vergei, Marayam, and Sevanti still occupy a functioning room state capable of calling Room 1014, while Hanzo remains unable to appear there.',
+    state: 'Spatial anomaly strongly confirmed / mechanism unresolved',
+    source: wiki('Chapter_373'),
+  },
 ].sort((left, right) => String(left.chapters).localeCompare(String(right.chapters), undefined, { numeric: true }));
 
 export const wobleCoreTimeline = [
@@ -92,5 +110,13 @@ export const wobleCoreTimeline = [
     detail: 'Kurapika’s first public Nen class becomes a murder scene when Silent Majority kills Barrigen. Loberry is detained, Kaiser begins observing Seiko’s household, and Kurapika continues the class in three groups. By Chapter 372 Shedule and Yuhirai are identified as involuntarily half-awakened through Halkenburg’s Guardian Spirit Beast, the one remaining concealed experienced user stays unknown, and the first session ends at 12:30 p.m.',
     people: 'Kurapika, Barrigen, Loberry, Furykov, Belerainte, Shedule, Yuhirai, Sakata, Kaiser, Seiko',
     source: wiki('Chapter_372'),
+  },
+  {
+    chapters: '372–373',
+    time: 'Day 2',
+    title: 'Marayam Room 1013 spatial anomaly',
+    detail: 'Hanzo’s projected investigation encounters an empty Room 1013 state, but Vergei later calls Room 1014 while sitting with Marayam and Sevanti in an occupied state from which Hanzo is absent. Kurapika treats Nen as a more likely cause than a simple communication malfunction.',
+    people: 'Hanzo, Kurapika, Vergei, Marayam, Sevanti, Shimanu',
+    source: wiki('Chapter_373'),
   },
 ].sort((left, right) => String(left.chapters).localeCompare(String(right.chapters), undefined, { numeric: true }));
