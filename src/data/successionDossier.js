@@ -47,6 +47,19 @@ import {
   succession377SourcePolicy,
   succession377TroupeSearchResearch,
 } from './succession377Research.js';
+import {
+  succession378ContagionResearch,
+  succession378HisokaSearchResearch,
+  succession378LuiniProgressionResearch,
+  succession378MafiaEconomyResearch,
+  succession378MafiaLeadershipResearch,
+  succession378MizaistomInvestigationResearch,
+  succession378Mysteries,
+  succession378RelationshipRecords,
+  succession378RoyalScarResearch,
+  succession378SourcePolicy,
+  succession378TroupeWarehouseResearch,
+} from './succession378Research.js';
 
 export * from './successionDossierMaintained.js';
 
@@ -55,6 +68,7 @@ const source374 = 'https://hunterxhunter.fandom.com/wiki/Chapter_374';
 const source375 = 'https://hunterxhunter.fandom.com/wiki/Chapter_375';
 const source376 = 'https://hunterxhunter.fandom.com/wiki/Chapter_376';
 const source377 = 'https://hunterxhunter.fandom.com/wiki/Chapter_377';
+const source378 = 'https://hunterxhunter.fandom.com/wiki/Chapter_378';
 
 const legacyChapterLabel = (record) => {
   const value = record.chapters ?? record.chapter;
@@ -113,9 +127,22 @@ const metamorphorsen377Ability = freeze({
   source: source377,
 });
 
+const contagion378Ability = freeze({
+  ability: 'Contagion',
+  owner: 'Morena Prudo',
+  category: 'Infection / community progression',
+  knownAtChapterBoundary: 'Morena infects twenty-two followers by kissing them on the lips, forming a twenty-three-person community including herself. Killing grants levels according to victim class.',
+  mechanics: 'Civilian kills are worth 1 level, Nen-user kills 10, and prince kills 50. Level 20 grants an individual Nen ability; level 100 permits the member to start a new infected community.',
+  target: 'Morena’s selected recruits / infected members',
+  confidence: 'Core Chapter 378 progression rules confirmed; later membership and control mechanics excluded from this boundary.',
+  chapter: 378,
+  source: source378,
+});
+
 const replacementAbilityNames = new Set([
   'Predator',
   'Battle Cantabile: Metamorphorsen',
+  'Contagion',
   ...guardianBeast375Abilities.map((record) => record.ability),
 ]);
 
@@ -124,6 +151,7 @@ export const successionAbilities = freeze([
   predator374Ability,
   ...guardianBeast375Abilities,
   metamorphorsen377Ability,
+  contagion378Ability,
 ].map(normalizeAbilityForLegacyConsumers));
 
 export const successionRelationships = freeze([
@@ -132,6 +160,7 @@ export const successionRelationships = freeze([
   ...succession375RelationshipRecords,
   ...succession376RelationshipRecords,
   ...succession377RelationshipRecords,
+  ...succession378RelationshipRecords,
 ]);
 
 const isSupersededRoomOrDoorMystery = (record) => {
@@ -157,6 +186,13 @@ const isSuperseded377Mystery = (record) => {
     || question.includes('Neon Nostrade');
 };
 
+const isSuperseded378Mystery = (record) => {
+  const question = String(record.question || '');
+  return (question.includes('Hisoka') && (question.includes('where') || question.includes('Where')))
+    || question.includes('Contagion')
+    || question.includes('Luini');
+};
+
 const priorMysteries = [
   ...maintained.successionMysteries.filter((record) => !isSupersededRoomOrDoorMystery(record)),
   ...succession374Mysteries.filter((record) => !isSupersededRoomOrDoorMystery(record)),
@@ -168,9 +204,14 @@ const through376Mysteries = [
   ...succession376Mysteries,
 ];
 
-export const successionMysteries = freeze([
+const through377Mysteries = [
   ...through376Mysteries.filter((record) => !isSuperseded377Mystery(record)),
   ...succession377Mysteries,
+];
+
+export const successionMysteries = freeze([
+  ...through377Mysteries.filter((record) => !isSuperseded378Mystery(record)),
+  ...succession378Mysteries,
 ]);
 
 export const dossierSources = freeze({
@@ -183,6 +224,8 @@ export const dossierSources = freeze({
   sourcePolicy376: succession376SourcePolicy,
   chapter377: source377,
   sourcePolicy377: succession377SourcePolicy,
+  chapter378: source378,
+  sourcePolicy378: succession378SourcePolicy,
 });
 
 export const guardAssignmentGroups = freeze([
@@ -225,6 +268,16 @@ export const guardAssignmentGroups = freeze([
       freeze({ subject: 'Cha-R / Troupe contact', people: 'Cha-R Family, Phantom Troupe, Sun-bin, Ken’i Wang', notes: 'Chrollo refuses Cha-R recruitment and asks about Tier 1; Cha-R subsequently judges the Troupe uncontrollable and moves to obstruct them.', status: 'relationship shifting toward opposition', source: source377 }),
     ]),
   }),
+  freeze({
+    group: 'Chapter 378 lower-tier mafia and Contagion state',
+    description: 'The three mafia bosses are identified, Xi-Yu and Cha-R escalate their Hisoka search, Morena activates a twenty-three-person Contagion community, and Luini turns the Troupe’s warehouse route into the first immediate Heil-Ly spatial threat.',
+    records: freeze([
+      freeze({ subject: 'Mafia leadership', people: 'Onior Longbao, Brocco Li, Morena Prudo', notes: 'Onior leads Xi-Yu, Brocco leads Cha-R, and Morena leads Heil-Ly; the supplied notes identify Onior and Brocco as Nasubi’s half brothers and Morena as his illegitimate daughter.', status: 'leadership and royal relations confirmed', source: source378 }),
+      freeze({ subject: 'Hisoka interception', people: 'Ken’i Wang, Hinrigh Biganduffno', notes: 'Cha-R uses cash rewards and labor contacts while Xi-Yu uses manifests and seeks an ID-and-ticket verification sweep.', status: 'parallel mafia searches active / Hisoka unfound', source: source378 }),
+      freeze({ subject: 'Contagion community', people: 'Morena Prudo and twenty-two followers', notes: 'Morena infects the group through kisses; kill values and level-20/level-100 thresholds are disclosed.', status: 'twenty-three-person infected community active', source: source378 }),
+      freeze({ subject: 'Luini / Troupe warehouse contact', people: 'Luini, Nobunaga, Phinks, Feitan', notes: 'Luini is identified as the Tier 3 mass killer, has acquired an unnamed transportation ability, kills a Cha-R warehouse guide, and watches the Troupe trio through a spatial opening.', status: 'Heil-Ly–Troupe collision beginning', source: source378 }),
+    ]),
+  }),
 ]);
 
 export const room1013Chapter374Research = succession374Room1013Research;
@@ -255,3 +308,11 @@ export const illumiContractChapter377Research = succession377IllumiContractResea
 export const troupeSearchChapter377Research = succession377TroupeSearchResearch;
 export const metamorphorsenChapter377Research = succession377MetamorphorsenResearch;
 export const lovelyGhostwriterChapter377Research = succession377LovelyGhostwriterResearch;
+export const mafiaLeadershipChapter378Research = succession378MafiaLeadershipResearch;
+export const hisokaSearchChapter378Research = succession378HisokaSearchResearch;
+export const contagionChapter378Research = succession378ContagionResearch;
+export const royalScarChapter378Research = succession378RoyalScarResearch;
+export const mafiaEconomyChapter378Research = succession378MafiaEconomyResearch;
+export const luiniChapter378ProgressionResearch = succession378LuiniProgressionResearch;
+export const troupeWarehouseChapter378Research = succession378TroupeWarehouseResearch;
+export const mizaistomChapter378InvestigationResearch = succession378MizaistomInvestigationResearch;
