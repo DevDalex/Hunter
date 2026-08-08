@@ -7,6 +7,8 @@ const root = process.cwd();
 const dist = path.join(root, 'dist/client');
 const output = path.resolve(root, process.env.INTERACTION_QA_OUTPUT || '.interaction-qa');
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
+const NEN_ROUTE = '/story/succession-contest/nen?scope=encyclopedia';
+const RELATIONSHIPS_ROUTE = '/story/succession-contest/relationships';
 
 const mime = {
   '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -94,7 +96,7 @@ const run = async (name, viewport, route, test) => {
   const runtimeErrors = [];
   page.on('pageerror', (error) => runtimeErrors.push(error.message));
   try {
-    await page.goto(`${base}/#/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+    await page.goto(`${base}${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
     await settle(page);
     await test(page);
     if (runtimeErrors.length) throw new Error(`Runtime errors: ${runtimeErrors.join(' | ')}`);
@@ -113,7 +115,7 @@ const run = async (name, viewport, route, test) => {
 };
 
 try {
-  await run('Nen hex category focus reveals users and abilities', { width: 1440, height: 1000 }, 'reference/nen', async (page) => {
+  await run('Nen hex category focus reveals users and abilities', { width: 1440, height: 1000 }, NEN_ROUTE, async (page) => {
     await page.waitForSelector('.nen-expansion-map[data-qa-pan-zoom-canvas="true"]');
     const enhancement = page.locator('.nen-pipe-node.is-category').filter({ hasText: 'Enhancement' }).first();
     const clipPath = await enhancement.evaluate((element) => getComputedStyle(element).clipPath);
@@ -145,7 +147,7 @@ try {
     if (await page.locator('.nen-pipe-node.is-named-ability').count()) throw new Error('named abilities remained after collapse');
   });
 
-  await run('Nen spectrum markers preserve midpoint and leaning placements', { width: 1440, height: 1000 }, 'reference/nen', async (page) => {
+  await run('Nen spectrum markers preserve midpoint and leaning placements', { width: 1440, height: 1000 }, NEN_ROUTE, async (page) => {
     await page.waitForSelector('.nen-placement-marker');
     const markerCount = await page.locator('.nen-placement-marker').count();
     if (markerCount < 15) throw new Error(`only ${markerCount} spectrum placement markers rendered`);
@@ -156,7 +158,7 @@ try {
     if (!inspector.includes('Emission') || !inspector.includes('Enhancement')) throw new Error('Franklin placement did not identify both spectrum endpoints');
   });
 
-  await run('Nen pan and zoom canvas stays contained on mobile', { width: 390, height: 844 }, 'reference/nen', async (page) => {
+  await run('Nen pan and zoom canvas stays contained on mobile', { width: 390, height: 844 }, NEN_ROUTE, async (page) => {
     await page.waitForSelector('.nen-expansion-map[data-qa-pan-zoom-canvas="true"] [data-qa-scaled-canvas="true"]');
     const controls = page.locator('.nen-pipe-controls button');
     if (await controls.count() !== 4) throw new Error('map controls are incomplete');
@@ -169,7 +171,7 @@ try {
     if (health.brokenImages.length) throw new Error(`mobile broken images: ${JSON.stringify(health.brokenImages)}`);
   });
 
-  await run('Dedicated relationship workspace filters and links remain readable', { width: 1440, height: 1000 }, 'succession/relationships', async (page) => {
+  await run('Dedicated relationship workspace filters and links remain readable', { width: 1440, height: 1000 }, RELATIONSHIPS_ROUTE, async (page) => {
     await page.waitForSelector('.succession-canonical-relationships .succession-relationship-network');
     const rootNode = page.locator('.succession-canonical-relationships');
     await rootNode.getByRole('button', { name: /Accessible edge list/i }).click();
@@ -208,7 +210,7 @@ try {
     if (health.bodyOverflow > 1) throw new Error(`relationship-linked canonical dossier overflowed by ${health.bodyOverflow}px`);
   });
 
-  await run('Dedicated relationship workspace remains contained on mobile', { width: 390, height: 844 }, 'succession/relationships', async (page) => {
+  await run('Dedicated relationship workspace remains contained on mobile', { width: 390, height: 844 }, RELATIONSHIPS_ROUTE, async (page) => {
     await page.waitForSelector('.succession-canonical-relationships .succession-relationship-network');
     const rootNode = page.locator('.succession-canonical-relationships');
     await rootNode.getByRole('button', { name: /Accessible edge list/i }).click();
