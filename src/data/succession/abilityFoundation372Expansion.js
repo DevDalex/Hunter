@@ -40,7 +40,7 @@ export const abilityFoundation372Expansion = freeze([
     summary: 'Hanzo uses a projected double for covert investigation while his physical body remains elsewhere. Chapter 372 is the first maintained chapter in the current upgrade run that actually demonstrates and names this ability.',
     owners: ['Hanzo'],
     nenTypes: ['unknown'],
-    certainty: 'partial',
+    certainty: 'confirmed',
     category: 'projected-double / infiltration',
     activation: 'Hanzo deploys a double while off duty to investigate Momoze’s murder and later returns through the same projected state toward Room 1013.',
     conditions: [],
