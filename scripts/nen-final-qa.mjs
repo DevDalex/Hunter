@@ -8,6 +8,7 @@ const dist = path.join(root, 'dist/client');
 const output = path.resolve(root, process.env.NEN_FINAL_QA_OUTPUT || '.nen-final-qa');
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
 const categories = ['Enhancement', 'Transmutation', 'Conjuration', 'Specialization', 'Manipulation', 'Emission'];
+const NEN_ROUTE = '/story/succession-contest/nen?scope=encyclopedia';
 
 const mime = {
   '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -69,7 +70,7 @@ try {
     const runtimeErrors = [];
     page.on('pageerror', (error) => runtimeErrors.push(error.message));
     try {
-      await page.goto(`${base}/#/reference/nen`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+      await page.goto(`${base}${NEN_ROUTE}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
       await page.waitForSelector('.nen-expansion-map[data-qa-pan-zoom-canvas="true"]', { timeout: 12_000 });
       await page.waitForTimeout(180);
 
@@ -119,7 +120,7 @@ try {
   }
 
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
-  await page.goto(`${base}/#/reference/nen`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.goto(`${base}${NEN_ROUTE}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
   await page.waitForSelector('.nen-placement-marker');
   const markerCount = await page.locator('.nen-placement-marker').count();
   if (markerCount < 18) failures.push({ category: 'spectrum', status: 'failed', error: `only ${markerCount} placement markers rendered` });
