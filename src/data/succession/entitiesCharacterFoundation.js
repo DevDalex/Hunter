@@ -4,6 +4,7 @@ import { characterStateExpansionProfiles } from './characterStateExpansion.js';
 import { characterStateRoyalExpansionProfiles } from './characterStateRoyalExpansion.js';
 import { characterStateInstitutionExpansionProfiles } from './characterStateInstitutionExpansion.js';
 import { characterStateInstitutionClosureExpansionProfiles } from './characterStateInstitutionClosureExpansion.js';
+import { characterState376CorrectionProfiles } from './characterState376Corrections.js';
 import { characterStatusKnowledge } from './characterStatusKnowledge.js';
 
 const characterIds = new Set([
@@ -12,6 +13,7 @@ const characterIds = new Set([
   ...Object.keys(characterStateRoyalExpansionProfiles),
   ...Object.keys(characterStateInstitutionExpansionProfiles),
   ...Object.keys(characterStateInstitutionClosureExpansionProfiles),
+  ...Object.keys(characterState376CorrectionProfiles),
 ]);
 
 const retiredStateIds = new Set([
@@ -33,6 +35,7 @@ const mergeCharacterRecords = (characterId) => {
     characterStateRoyalExpansionProfiles,
     characterStateInstitutionExpansionProfiles,
     characterStateInstitutionClosureExpansionProfiles,
+    characterState376CorrectionProfiles,
   ]) {
     for (const record of layer[characterId] || []) {
       if (retiredStateIds.has(record.id)) continue;
