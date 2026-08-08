@@ -101,7 +101,7 @@ try {
     if (await home.locator('.succession-command-home__search').count() !== 1) throw new Error('Archive search command is missing');
     if (await home.locator('.succession-command-home__portal').count() !== 3) throw new Error(`Command home exposes ${await home.locator('.succession-command-home__portal').count()} core portals instead of 3`);
     const portalTitles = await home.locator('.succession-command-home__portal h2').allInnerTexts();
-    for (const expected of ['Succession Contest', 'Nen Encyclopedia', 'World Atlas']) {
+    for (const expected of ['Succession Contest Archive', 'Nen Encyclopedia', 'Manga Reader']) {
       if (!portalTitles.some((title) => normalizeText(title) === normalizeText(expected))) throw new Error(`Core portal is missing: ${expected}`);
     }
     const railLabels = await home.locator('.succession-command-home__rail nav a span').allInnerTexts();
