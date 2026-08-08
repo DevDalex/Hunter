@@ -36,6 +36,24 @@ export const personnelTransitions = [
     state: 'Loberry detained / Seiko under suspicion / Kaiser observation active; guilt unresolved',
     source: wiki('Chapter_371'),
   },
+  {
+    day: 'Day 2',
+    chapters: '372',
+    subject: 'Tuffdy / Hanzo',
+    route: 'Momoze murder investigation → staged suicide scene',
+    change: 'Hanzo uses a fabricated Benjamin recruitment and framing story to make Tuffdy incriminate himself as Momoze’s killer. The Touch is identified as Tuffdy’s murder ability; Hanzo kills him and stages the death as suicide.',
+    state: 'Momoze killer identified / Tuffdy deceased / The Touch mechanics still partial',
+    source: wiki('Chapter_372'),
+  },
+  {
+    day: 'Day 2',
+    chapters: '362–372',
+    subject: 'Halkenburg guards / feather marks',
+    route: 'Unexplained group blackout → Room 1014 Nen analysis',
+    change: 'Chapter 372 explains that the guards awakened with feather marks and no memory of losing consciousness. Shedule and Yuhirai are half-awakened and can use aura in a limited involuntary way; Kurapika identifies soliciting-type Manipulation hallmarks and considers memory revision likely.',
+    state: 'Guardian Spirit Beast manipulation partially identified / exact conditions unresolved',
+    source: wiki('Chapter_372'),
+  },
 ].sort((left, right) => String(left.chapters).localeCompare(String(right.chapters), undefined, { numeric: true }));
 
 export const wobleCoreTimeline = [
@@ -68,11 +86,11 @@ export const wobleCoreTimeline = [
     source: wiki('Chapter_369'),
   },
   {
-    chapters: '369–371',
+    chapters: '369–372',
     time: 'Day 2',
-    title: 'First Nen class murder investigation',
-    detail: 'Kurapika’s first public Nen class becomes an active murder scene when Silent Majority kills Barrigen. Loberry is detained under suspicion, Cleapatro orders Kaiser to watch the Seiko household for seventy-two hours, and Kurapika continues the class by dividing the remaining students into three groups with Furykov and Belerainte assisting.',
-    people: 'Kurapika, Barrigen, Loberry, Sakata, Hashito, Cleapatro, Kaiser, Seiko, Furykov, Belerainte',
-    source: wiki('Chapter_371'),
+    title: 'First Nen class and murder investigation',
+    detail: 'Kurapika’s first public Nen class becomes a murder scene when Silent Majority kills Barrigen. Loberry is detained, Kaiser begins observing Seiko’s household, and Kurapika continues the class in three groups. By Chapter 372 Shedule and Yuhirai are identified as involuntarily half-awakened through Halkenburg’s Guardian Spirit Beast, the one remaining concealed experienced user stays unknown, and the first session ends at 12:30 p.m.',
+    people: 'Kurapika, Barrigen, Loberry, Furykov, Belerainte, Shedule, Yuhirai, Sakata, Kaiser, Seiko',
+    source: wiki('Chapter_372'),
   },
 ].sort((left, right) => String(left.chapters).localeCompare(String(right.chapters), undefined, { numeric: true }));
