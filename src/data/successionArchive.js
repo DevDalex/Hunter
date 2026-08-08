@@ -27,6 +27,15 @@ export const personnelTransitions = [
     state: 'Loberry possessed/witness state / Barrigen deceased',
     source: wiki('Chapter_370'),
   },
+  {
+    day: 'Day 2',
+    chapters: '371',
+    subject: 'Loberry / Seiko / Kaiser',
+    route: 'Room 1014 murder scene → Royal Army custody / Room 1010 judicial observation',
+    change: 'Sakata and Hashito accuse Loberry after Barrigen’s murder and she is detained. Sakata asks Cleapatro to pursue Seiko as an accomplice, but Cleapatro declines the immediate case and dispatches Kaiser for a seventy-two-hour observation instead.',
+    state: 'Loberry detained / Seiko under suspicion / Kaiser observation active; guilt unresolved',
+    source: wiki('Chapter_371'),
+  },
 ].sort((left, right) => String(left.chapters).localeCompare(String(right.chapters), undefined, { numeric: true }));
 
 export const wobleCoreTimeline = [
@@ -57,5 +66,13 @@ export const wobleCoreTimeline = [
     detail: 'Kurapika transfers Little Eye to Oito, disguises the operation behind Bill, and Oito scouts Marayam before witnessing Momoze’s murder in progress. The prolonged shared Stealth Dolphin state keeps Emperor Time active for roughly twelve hours, causes linked blackouts, awakens Oito’s aura nodes, and ends when Tserriednich’s Guardian Spirit Beast consumes the controlled cockroach.',
     people: 'Oito, Kurapika, Bill, Babimyna, Marayam, Momoze, Tserriednich',
     source: wiki('Chapter_369'),
+  },
+  {
+    chapters: '369–371',
+    time: 'Day 2',
+    title: 'First Nen class murder investigation',
+    detail: 'Kurapika’s first public Nen class becomes an active murder scene when Silent Majority kills Barrigen. Loberry is detained under suspicion, Cleapatro orders Kaiser to watch the Seiko household for seventy-two hours, and Kurapika continues the class by dividing the remaining students into three groups with Furykov and Belerainte assisting.',
+    people: 'Kurapika, Barrigen, Loberry, Sakata, Hashito, Cleapatro, Kaiser, Seiko, Furykov, Belerainte',
+    source: wiki('Chapter_371'),
   },
 ].sort((left, right) => String(left.chapters).localeCompare(String(right.chapters), undefined, { numeric: true }));
