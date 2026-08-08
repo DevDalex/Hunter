@@ -6,8 +6,9 @@ import {
 } from './nenSystemFoundation.js';
 import { nenSystemAbilityExpansion } from './nenSystemAbilityExpansion.js';
 import { guardianBeastState375Corrections } from './nenSystemFoundation375Corrections.js';
+import { nenSystemProfile378Corrections } from './nenSystemFoundation378Corrections.js';
 
-const ARCHIVE_DATE = '2026-08-08';
+const ARCHIVE_DATE = '2026-08-09';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 
@@ -78,12 +79,17 @@ const correctedGuardianBeastStateProfiles = Object.freeze(Object.fromEntries(
   }),
 ));
 
+const correctedNenSystemProfiles = Object.freeze({
+  ...nenSystemProfiles,
+  ...nenSystemProfile378Corrections,
+});
+
 export const successionArchiveData = Object.freeze({
   ...organizationFoundationData,
   abilities,
   guardianBeasts,
   chapters,
-  nenSystemProfiles,
+  nenSystemProfiles: correctedNenSystemProfiles,
   guardianBeastStateProfiles: correctedGuardianBeastStateProfiles,
   abilitySystemLinks,
 });
