@@ -5,7 +5,7 @@ import { chromium } from 'playwright';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
-const output = path.resolve(root, process.env.NEN_FINAL_QA_OUTPUT || '.nen-final-qa');
+const output = path.resolve(root, process.env.NEN_FINAL_QA_OUTPUT || '.browser-qa/nen-final');
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
 const categories = ['Enhancement', 'Transmutation', 'Conjuration', 'Specialization', 'Manipulation', 'Emission'];
 const NEN_ROUTE = '/story/succession-contest/nen?scope=encyclopedia';
@@ -52,6 +52,28 @@ const serve = async () => {
   return server;
 };
 
+const collectRouteDiagnostics = async (page, runtimeErrors = []) => {
+  const state = await page.evaluate(() => ({
+    href: window.location.href,
+    title: document.title,
+    bodyText: document.body?.innerText?.slice(0, 1600) || '',
+    integratedReference: Boolean(document.querySelector('.succession-integrated-reference')),
+    routeLoading: Boolean(document.querySelector('.route-loading')),
+    notFound: Boolean(document.body?.innerText?.includes('Route removed')),
+    mainHtmlPrefix: document.querySelector('main')?.innerHTML?.slice(0, 1200) || '',
+  })).catch((error) => ({ diagnosticError: error.message }));
+  return { ...state, runtimeErrors };
+};
+
+const waitForNenMap = async (page, runtimeErrors = [], timeout = 12_000) => {
+  try {
+    await page.waitForSelector('.nen-expansion-map[data-qa-pan-zoom-canvas="true"]', { timeout });
+  } catch (error) {
+    const diagnostics = await collectRouteDiagnostics(page, runtimeErrors);
+    throw new Error(`Nen map did not render: ${JSON.stringify(diagnostics)}; ${error.message}`);
+  }
+};
+
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({
@@ -71,7 +93,7 @@ try {
     page.on('pageerror', (error) => runtimeErrors.push(error.message));
     try {
       await page.goto(`${base}${NEN_ROUTE}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-      await page.waitForSelector('.nen-expansion-map[data-qa-pan-zoom-canvas="true"]', { timeout: 12_000 });
+      await waitForNenMap(page, runtimeErrors);
       await page.waitForTimeout(180);
 
       const category = page.locator('.nen-pipe-node.is-category').filter({ hasText: categoryName }).first();
@@ -120,8 +142,10 @@ try {
   }
 
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  const runtimeErrors = [];
+  page.on('pageerror', (error) => runtimeErrors.push(error.message));
   await page.goto(`${base}${NEN_ROUTE}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-  await page.waitForSelector('.nen-placement-marker');
+  await waitForNenMap(page, runtimeErrors, 30_000);
   const markerCount = await page.locator('.nen-placement-marker').count();
   if (markerCount < 18) failures.push({ category: 'spectrum', status: 'failed', error: `only ${markerCount} placement markers rendered` });
   else process.stdout.write(`✓ spectrum: ${markerCount} placement markers\n`);
