@@ -23,9 +23,10 @@ const routes = [
   { id: 'hisoka-chrollo', hash: 'reference/hisoka-chrollo' },
 ];
 
+// The released archive is desktop-scoped. Mobile and constrained-mobile profiles are
+// intentionally excluded from release gating.
 const profiles = [
-  { id: 'desktop', viewport: { width: 1440, height: 1000 }, constrained: false },
-  { id: 'constrained-mobile', viewport: { width: 390, height: 844 }, constrained: true },
+  { id: 'desktop', viewport: { width: 1440, height: 1000 } },
 ];
 
 const mime = {
@@ -102,20 +103,14 @@ await page.addInitScript(() => {
 try {
   for (const profile of profiles) {
     await page.setViewportSize(profile.viewport);
-    await session.send('Network.emulateNetworkConditions', profile.constrained ? {
-      offline: false,
-      latency: 100,
-      downloadThroughput: 1_600_000 / 8,
-      uploadThroughput: 750_000 / 8,
-      connectionType: 'cellular4g',
-    } : {
+    await session.send('Network.emulateNetworkConditions', {
       offline: false,
       latency: 0,
       downloadThroughput: -1,
       uploadThroughput: -1,
       connectionType: 'none',
     });
-    await session.send('Emulation.setCPUThrottlingRate', { rate: profile.constrained ? 4 : 1 });
+    await session.send('Emulation.setCPUThrottlingRate', { rate: 1 });
     for (const route of routes) {
       const runtimeErrors = [];
       const failedRequests = [];
@@ -206,5 +201,5 @@ const summary = {
 };
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results }, null, 2)}\n`);
 await writeFile(path.join(output, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
-console.log(`\nPerformance QA: ${summary.passed}/${summary.checks} route/profile checks passed; ${summary.clsDebt} CLS debt item(s); ${summary.approvedExternalFailures} approved external media availability event(s); slowest ready state ${summary.slowestReadyMs}ms.`);
+console.log(`\nPerformance QA: ${summary.passed}/${summary.checks} desktop route checks passed; ${summary.clsDebt} CLS debt item(s); ${summary.approvedExternalFailures} approved external media availability event(s); slowest ready state ${summary.slowestReadyMs}ms.`);
 if (failures.length) process.exitCode = 1;
