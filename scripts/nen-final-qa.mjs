@@ -60,6 +60,7 @@ const collectRouteDiagnostics = async (page, runtimeErrors = []) => {
     integratedReference: Boolean(document.querySelector('.succession-integrated-reference')),
     routeLoading: Boolean(document.querySelector('.route-loading')),
     notFound: Boolean(document.body?.innerText?.includes('Route removed')),
+    recoveryError: window.__HXA_RECOVERY_ERROR__ || null,
     mainHtmlPrefix: document.querySelector('main')?.innerHTML?.slice(0, 1200) || '',
   })).catch((error) => ({ diagnosticError: error.message }));
   return { ...state, runtimeErrors };
