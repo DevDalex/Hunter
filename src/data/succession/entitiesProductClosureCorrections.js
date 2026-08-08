@@ -122,10 +122,26 @@ const restoredStoryPhaseProfiles = Object.freeze({
   ...(pendingPhase ? { [PENDING_PHASE_ID]: pendingPhase } : {}),
 });
 
+const normalizeStoryPhaseStatus = (chapter) => {
+  const restored = restoreCurrentReleaseStoryProjection(chapter);
+  if (restored.storyIntelligenceStatus !== PENDING_STORY_STATUS) return restored;
+
+  const phases = (restored.storyPhaseIds || [])
+    .map((phaseId) => restoredStoryPhaseProfiles[phaseId])
+    .filter(Boolean);
+  const pendingStoryPhase = phases.some((phase) => phase.status === 'pending-maintained-research');
+  if (pendingStoryPhase || phases.length !== 1) return restored;
+
+  return Object.freeze({
+    ...restored,
+    storyIntelligenceStatus: phases[0].status || 'documented',
+  });
+};
+
 export const successionArchiveData = Object.freeze({
   ...chapterCurrencyData,
   characters: Object.freeze(chapterCurrencyData.characters.map(normalizeCharacterBoundary)),
-  chapters: Object.freeze(chapterCurrencyData.chapters.map(restoreCurrentReleaseStoryProjection)),
+  chapters: Object.freeze(chapterCurrencyData.chapters.map(normalizeStoryPhaseStatus)),
   storyPhaseProfiles: restoredStoryPhaseProfiles,
   characterStateProfiles: closeSupersededStateRanges(chapterCurrencyData.characterStateProfiles),
 });
