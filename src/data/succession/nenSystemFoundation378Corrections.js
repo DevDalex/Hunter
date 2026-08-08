@@ -25,7 +25,7 @@ export const nenSystemProfile378Corrections = freeze({
     guardianBeastIds: freeze([]),
     characterIds: freeze(['character:morena-prudo']),
     organizationIds: freeze(['organization:heil-ly']),
-    locationIds: freeze(['location:black-whale:tier-3:heil-ly-hideout']),
+    locationIds: freeze([]),
     sourceIds: freeze(['source:chapter-378']),
     certainty: 'confirmed',
   }),
