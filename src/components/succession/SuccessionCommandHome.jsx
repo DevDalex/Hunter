@@ -18,7 +18,10 @@ import {
   ARCHIVE_DETAILED_BOUNDARY,
   ARCHIVE_REVIEW_DATE,
 } from '../../data/archiveMeta';
-import { getEntitiesByType } from '../../data/succession/successionData';
+import {
+  successionHomeCounts,
+  successionHomeRecentChapters,
+} from '../../data/successionHomeSummary';
 import { routeToHref } from '../../lib/appRouter';
 import './SuccessionCommandHome.css';
 import './SuccessionCommandHomeQaFixes.css';
@@ -93,15 +96,7 @@ function QuickAccessItem({ label, count, icon: Icon, target, params = {}, onNavi
 const chapterLabel = (chapter) => chapter.title || chapter.name || `Chapter ${chapter.number}`;
 
 export default function SuccessionCommandHome({ spoilerLimit, onNavigate, onOpenSearch }) {
-  const characters = getEntitiesByType('character');
-  const princes = characters.filter((entity) => (entity.roles || []).includes('prince'));
-  const queens = characters.filter((entity) => (entity.roles || []).includes('queen'));
-  const organizations = getEntitiesByType('organization');
-  const assignments = getEntitiesByType('assignment');
-  const chapters = [...getEntitiesByType('chapter')]
-    .filter((chapter) => Number(chapter.number) >= 340)
-    .sort((left, right) => Number(right.number || 0) - Number(left.number || 0));
-  const recentChapters = chapters.slice(0, 4);
+  const recentChapters = successionHomeRecentChapters;
 
   const openSuccession = (event) => {
     event.preventDefault();
@@ -225,11 +220,11 @@ export default function SuccessionCommandHome({ spoilerLimit, onNavigate, onOpen
         <section className="succession-command-home__quick" aria-labelledby="succession-quick-title">
           <header><h2 id="succession-quick-title">Quick access</h2></header>
           <div>
-            <QuickAccessItem label="Princes" count={princes.length} icon={Crown} target="princes" onNavigate={onNavigate} />
-            <QuickAccessItem label="Families" count={queens.length} icon={Users} target="princes" params={{ view: 'tree' }} onNavigate={onNavigate} />
-            <QuickAccessItem label="Organizations" count={organizations.length} icon={Network} target="organizations" onNavigate={onNavigate} />
-            <QuickAccessItem label="Assignments" count={assignments.length} icon={FileSearch} target="bodyguards" onNavigate={onNavigate} />
-            <QuickAccessItem label="Chapters" count={chapters.length} icon={BookOpen} target="chapters" onNavigate={onNavigate} />
+            <QuickAccessItem label="Princes" count={successionHomeCounts.princes} icon={Crown} target="princes" onNavigate={onNavigate} />
+            <QuickAccessItem label="Families" count={successionHomeCounts.families} icon={Users} target="princes" params={{ view: 'tree' }} onNavigate={onNavigate} />
+            <QuickAccessItem label="Organizations" count={successionHomeCounts.organizations} icon={Network} target="organizations" onNavigate={onNavigate} />
+            <QuickAccessItem label="Assignments" count={successionHomeCounts.assignments} icon={FileSearch} target="bodyguards" onNavigate={onNavigate} />
+            <QuickAccessItem label="Chapters" count={successionHomeCounts.chapters} icon={BookOpen} target="chapters" onNavigate={onNavigate} />
           </div>
         </section>
 
