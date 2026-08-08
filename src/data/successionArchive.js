@@ -171,6 +171,42 @@ export const personnelTransitions = [
     state: 'Tserriednich Specialist confirmed / Zetsu training active / Kurapika-manipulation theory unconfirmed',
     source: wiki('Chapter_376'),
   },
+  {
+    day: 'Day 4',
+    chapters: '377',
+    subject: 'Kacho / Fugetsu / Melody / Keeney',
+    route: 'Mosquitone covert channel → Sunday banquet music show → planned twin-prince escape',
+    change: 'Kacho and Melody turn the next Sunday banquet performance into an escape window for Kacho and Fugetsu. Melody wants performers staged in the passageway with the music broadcast across Tier 1. Keeney independently infers that Fugetsu was the person who appeared from Kacho’s bed the previous night through a transportation ability.',
+    state: 'Banquet escape operation developing / Fugetsu transportation role strongly inferred / Kacho Guardian Spirit Beast still unknown',
+    source: wiki('Chapter_377'),
+  },
+  {
+    day: 'Day 4',
+    chapters: '377',
+    subject: 'Phantom Troupe / Illumi / Cha-R',
+    route: 'Tier 5 search failure → mafia access map → decentralized Hisoka hunt',
+    change: 'The Troupe fails to locate Hisoka in Tier 5, learns that Heil-Ly controls Tier 3, Xi-Yu Tier 4, and Cha-R Tier 5, and hears Illumi explain that Hisoka hired him to join the Troupe and kill Hisoka. Chrollo refuses Cha-R recruitment, keeps Hisoka as the priority, and disperses the members; Cha-R decides to obstruct them.',
+    state: 'Hisoka hunt decentralized / Illumi contract active / Cha-R relationship adversarial / lower-tier mafia control map established',
+    source: wiki('Chapter_377'),
+  },
+  {
+    day: 'Day 4',
+    chapters: '377',
+    subject: 'Bonolenov / Shizuku / Chrollo',
+    route: 'Troupe team-up → disguise plan → Metamorphorsen reveal',
+    change: 'Shizuku and Bonolenov join Chrollo for the Hisoka search. Bonolenov reveals Battle Cantabile: Metamorphorsen, which lets him transform into various things/forms, and asks Chrollo how best to use it.',
+    state: 'Three-person search team active / Metamorphorsen core transformation function confirmed',
+    source: wiki('Chapter_377'),
+  },
+  {
+    day: 'Day 4',
+    chapters: '377',
+    subject: 'Chrollo / Lovely Ghostwriter / Neon Nostrade',
+    route: 'Skill Hunter ability state → missing stolen fortune-telling ability',
+    change: 'Chrollo reveals that Lovely Ghostwriter has disappeared from Skill Hunter. The supplied notes say this heavily implies Neon Nostrade’s death, but Chapter 377 does not directly confirm Neon’s death.',
+    state: 'Lovely Ghostwriter unavailable / Neon death strongly implied but unconfirmed',
+    source: wiki('Chapter_377'),
+  },
 ].sort((left, right) => String(left.chapters).localeCompare(String(right.chapters), undefined, { numeric: true }));
 
 export const wobleCoreTimeline = [
