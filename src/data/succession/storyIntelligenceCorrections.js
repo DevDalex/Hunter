@@ -25,6 +25,51 @@ const deathmatchOutcomeThread = Object.freeze({
   evidenceState: 'Resolved when Hisoka revives after the battle and declares that he will hunt the Phantom Troupe on sight.',
 });
 
+const currentReleasePhase = Object.freeze({
+  id: 'story-phase:current-releases-414-416',
+  name: 'Current releases under martial law',
+  summary: 'Chapters 414–416 move from Room 1014’s Woble crisis and Beyond-curse analysis into active Special Martial Law, royal confinement and relocation, Benjamin’s emergency campaign, Camilla’s countermeasures, and the armed breach of Tserriednich’s quarters.',
+  chapterRange: Object.freeze({ start: 414, end: 416 }),
+  laneIds: Object.freeze([
+    'story-lane:royal-succession',
+    'story-lane:woble-defense',
+    'story-lane:nen-information-war',
+    'story-lane:mafia-war',
+    'story-lane:justice-military',
+  ]),
+  eventIds: Object.freeze([]),
+  entityIds: Object.freeze([
+    'character:benjamin-hui-guo-rou',
+    'character:camilla-hui-guo-rou',
+    'character:tserriednich-hui-guo-rou',
+    'character:oito-hui-guo-rou',
+    'character:woble-hui-guo-rou',
+    'character:kurapika',
+  ]),
+  organizationIds: Object.freeze([
+    'organization:kakin-royal-family',
+    'organization:kakin-military',
+    'organization:kakin-justice-bureau',
+  ]),
+  locationIds: Object.freeze([
+    'location:black-whale:tier-1',
+    'location:black-whale:tier-1:room-1014',
+  ]),
+  threadIds: Object.freeze([
+    'story-thread:succession-completion-condition',
+    'story-thread:woble-guardian-beast',
+    'story-thread:tserriednich-future-growth',
+    'story-thread:martial-law-end-state',
+    'story-thread:sarahell-curse-operation',
+  ]),
+  sourceIds: Object.freeze([
+    'source:chapter-414',
+    'source:chapter-415',
+    'source:chapter-416',
+  ]),
+  status: 'documented',
+});
+
 export const correctedStoryThreadProfiles = Object.freeze({
   ...storyThreadProfiles,
   [threadId]: deathmatchOutcomeThread,
@@ -37,11 +82,16 @@ export const correctedStoryLaneProfiles = Object.freeze(Object.fromEntries(
   }),
 ));
 
-export const correctedStoryPhaseProfiles = Object.freeze(Object.fromEntries(
+const correctedBasePhases = Object.fromEntries(
   Object.entries(storyPhaseProfiles).map(([id, profile]) => {
     if (id !== 'story-phase:heavens-arena-consequence') return [id, profile];
     return [id, Object.freeze({ ...profile, threadIds: addUnique(profile.threadIds, threadId) })];
   }),
-));
+);
+
+export const correctedStoryPhaseProfiles = Object.freeze({
+  ...correctedBasePhases,
+  [currentReleasePhase.id]: currentReleasePhase,
+});
 
 export { storyCausalLinks };
