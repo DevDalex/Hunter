@@ -104,21 +104,36 @@ const dayByNumber = new Map(legacySuccessionDays.map((day) => [day.day, {
   events: [...day.events],
 }]));
 for (const research of chronologyResearch) {
-  const dayNumber = parseVoyageDay(research.voyageDay);
-  if (dayNumber === null) continue;
+  const defaultDayNumber = parseVoyageDay(research.voyageDay);
   const replacements = maintainedEventsByChapter.get(research.number) || [];
-  const current = dayByNumber.get(dayNumber) || {
-    day: dayNumber,
-    date: `Voyage Day ${dayNumber}`,
-    chapterRange: String(research.number),
-    intensity: 5,
-    deaths: 0,
-    headline: research.title ? `Chapter ${research.number} · ${research.title}` : `Maintained voyage research · Chapter ${research.number}`,
-    summary: research.focus,
-    events: [],
-  };
-  current.events = [...replaceChapterEvents(current.events, research.number, replacements)];
-  if (!dayByNumber.has(dayNumber)) dayByNumber.set(dayNumber, current);
+  if (defaultDayNumber === null) continue;
+
+  for (const day of dayByNumber.values()) {
+    day.events = day.events.filter((event) => event.chapter !== research.number);
+  }
+
+  const replacementsByDay = new Map();
+  for (const event of replacements) {
+    const eventDayNumber = parseVoyageDay(event.time) ?? defaultDayNumber;
+    const current = replacementsByDay.get(eventDayNumber) || [];
+    current.push(event);
+    replacementsByDay.set(eventDayNumber, current);
+  }
+
+  for (const [dayNumber, dayReplacements] of replacementsByDay.entries()) {
+    const current = dayByNumber.get(dayNumber) || {
+      day: dayNumber,
+      date: `Voyage Day ${dayNumber}`,
+      chapterRange: String(research.number),
+      intensity: 5,
+      deaths: 0,
+      headline: research.title ? `Chapter ${research.number} · ${research.title}` : `Maintained voyage research · Chapter ${research.number}`,
+      summary: research.focus,
+      events: [],
+    };
+    current.events = [...replaceChapterEvents(current.events, research.number, dayReplacements)];
+    if (!dayByNumber.has(dayNumber)) dayByNumber.set(dayNumber, current);
+  }
 }
 
 export const successionDays = freeze([...dayByNumber.values()]
