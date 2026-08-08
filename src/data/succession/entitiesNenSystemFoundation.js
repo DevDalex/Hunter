@@ -5,8 +5,9 @@ import {
   nenSystemProfiles,
 } from './nenSystemFoundation.js';
 import { nenSystemAbilityExpansion } from './nenSystemAbilityExpansion.js';
+import { guardianBeastState375Corrections } from './nenSystemFoundation375Corrections.js';
 
-const ARCHIVE_DATE = '2026-07-25';
+const ARCHIVE_DATE = '2026-08-08';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 
@@ -64,12 +65,25 @@ const guardianBeasts = Object.freeze(organizationFoundationData.guardianBeasts.m
   });
 }));
 
+const guardianBeastProfileKeys = new Set([
+  ...Object.keys(guardianBeastStateProfiles),
+  ...Object.keys(guardianBeastState375Corrections),
+]);
+
+const correctedGuardianBeastStateProfiles = Object.freeze(Object.fromEntries(
+  [...guardianBeastProfileKeys].map((beastId) => {
+    const records = new Map((guardianBeastStateProfiles[beastId] || []).map((record) => [record.id, record]));
+    for (const correction of guardianBeastState375Corrections[beastId] || []) records.set(correction.id, correction);
+    return [beastId, Object.freeze([...records.values()].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id)))];
+  }),
+));
+
 export const successionArchiveData = Object.freeze({
   ...organizationFoundationData,
   abilities,
   guardianBeasts,
   chapters,
   nenSystemProfiles,
-  guardianBeastStateProfiles,
+  guardianBeastStateProfiles: correctedGuardianBeastStateProfiles,
   abilitySystemLinks,
 });
