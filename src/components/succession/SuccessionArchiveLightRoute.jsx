@@ -3,8 +3,8 @@ import SuccessionArchiveShell from './SuccessionArchiveShell';
 import './SuccessionArchiveSearch.css';
 
 const PrincesWorkspace = lazy(() => import('./SuccessionArchiveWorkspaces').then((module) => ({ default: module.PrincesWorkspace })));
-const FamilyTree = lazy(() => import('../FamilyTree'));
-const BlackWhaleGuide = lazy(() => import('../BlackWhaleGuide'));
+const FamilyTree = lazy(() => import('../FamilyTreeDeferred'));
+const BlackWhaleGuide = lazy(() => import('../BlackWhaleGuideDeferred'));
 const SuccessionWorkspaceRefinementDeck = lazy(() => import('./SuccessionWorkspaceRefinementDeck'));
 
 function LightWorkspaceLoading({ label }) {
