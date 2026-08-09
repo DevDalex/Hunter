@@ -1,0 +1,103 @@
+const freeze = (value) => Object.freeze(value);
+const chapterSourceId = (number) => `source:chapter-${number}`;
+
+const knowledge = ({ id, abilityName = null, knowledgeState = 'documented', certainty = 'confirmed', summary, activation, conditions = [], limitations = [], costs = [], targets = [], range = 'unknown', duration = 'unknown', knownUses = [], sources = [392] }) => freeze({
+  id,
+  abilityName,
+  chapterRange: freeze({ start: 392, end: 392 }),
+  knowledgeState,
+  certainty,
+  summary,
+  mechanics: freeze({
+    activation,
+    conditions: freeze(conditions),
+    limitations: freeze(limitations),
+    costs: freeze(costs),
+    targets: freeze(targets),
+    range,
+    duration,
+    knownUses: freeze(knownUses),
+  }),
+  sourceIds: freeze(sources.map(chapterSourceId)),
+});
+
+export const abilityKnowledge392Overrides = freeze({
+  'ability:bloody-mary': freeze([
+    knowledge({
+      id: 'ability-knowledge:bloody-mary:392',
+      knowledgeState: 'search application continuing / complete mechanics unresolved',
+      summary: 'By Chapter 392, Zakuro’s Bloody Mary search drops continue moving through Tier 3 and identify multiple possible Hisoka candidates, including Hanal and the man Lynch and Zakuro come to believe is Hisoka. The Chapter 391 statement that the demonstrated search drops run out of Nen after roughly 30 to 40 minutes remains the latest explicit duration rule.',
+      activation: 'Zakuro deploys his own blood as numerous mobile search drops.',
+      conditions: ['Numerous drops are already active in the continuing Tier 3 search.', 'The drops can lead Zakuro and Lynch toward candidate people during the demonstrated search.'],
+      limitations: ['The demonstrated Chapter 391 search-drop lifetime is roughly 30 to 40 minutes before Nen expires and the drops revert to ordinary blood.', 'Search range, candidate-selection logic, sensory method, communication rules, maximum drop count, maximum blood volume, and Nen category remain unresolved.', 'The fact that a drop points the pair toward a candidate does not establish infallible identity recognition; Hanal is a false candidate and the later target’s objective identity remains unresolved inside Chapter 392.'],
+      costs: ['Uses Zakuro’s blood as the demonstrated medium; complete blood-cost rules remain unresolved.'],
+      targets: ['possible Hisoka candidates during the Tier 3 search'],
+      range: 'mobile search range unresolved',
+      duration: 'approximately 30–40 minutes for the demonstrated search drops, per Chapter 391',
+      knownUses: ['Chapter 391: numerous drops search Tier 3 for Hisoka.', 'Chapter 392: drops lead Zakuro and Lynch to Hanal and later to a man they believe is Hisoka.'],
+      sources: [391, 392],
+    }),
+  ]),
+  'ability:body-and-soul': freeze([
+    knowledge({
+      id: 'ability-knowledge:body-and-soul:392',
+      knowledgeState: 'successful identity-check use plus unresolved counter case',
+      summary: 'Chapter 392 demonstrates Body and Soul producing Hanal’s inner-soul answer that he is not Hisoka. Lynch then attempts the same ability on a man she and Zakuro believe is Hisoka, but her punch seemingly does not work and she suddenly falls after what the man calls a reflexive counter. The failure/counter mechanism is not explained.',
+      activation: 'The demonstrated uses combine a close-range punch with Lynch asking the target a question.',
+      conditions: ['Lynch asks Hanal whether he is Hisoka before punching him; his inner soul answers that he is not.', 'Lynch later attempts a punch/question activation against the man she and Zakuro believe is Hisoka.'],
+      limitations: ['Nen category, exact wording requirements, range, repeat-use rules, and complete resistance/counter conditions remain unresolved.', 'No mechanism is assigned to the apparent failure against the second target. The chapter does not establish aura resistance, speed, a separate Nen ability, physical interception, or any other specific explanation.', 'The Chapter 392 ability record does not resolve the second target’s objective identity.'],
+      targets: ['close-range questioned targets'],
+      range: 'close-range physical strike / maximum range unresolved',
+      duration: 'immediate answer sequence in demonstrated successful use',
+      knownUses: ['Chapter 390: interrogation use during the Tier 3 Heil-Ly information exchange.', 'Chapter 392: Hanal’s inner soul answers that he is not Hisoka.', 'Chapter 392: attempted use on the apparent Hisoka is followed by Lynch being reflexively countered; exact cause unresolved.'],
+      sources: [390, 392],
+    }),
+  ]),
+  'ability:hinrigh-object-animal-transformation': freeze([
+    knowledge({
+      id: 'ability-knowledge:hinrigh-object-animal-transformation:392',
+      abilityName: 'Biohazard',
+      knowledgeState: 'formal name and Chapter 390–391 demonstrations retained / no new mechanic in 392',
+      summary: 'Biohazard remains known from Chapter 390’s gun-to-snake transformation and Chapter 391’s camcorder-cat and aura-reinforced handcuff-pigeon demonstrations. Chapter 392 adds no new Biohazard mechanic.',
+      activation: 'Hinrigh transforms selected ordinary objects into living-animal forms; Chapter 390 directly shows contact with the guns before transformation.',
+      conditions: ['Specific demonstrated objects include guns, a recording camcorder, and handcuffs.', 'The handcuff-pigeons are explicitly stated to be aura-reinforced in Chapter 391.'],
+      limitations: ['Nen category, maximum transformed mass, simultaneous count, duration, command range, aura cost, and animal-selection rules remain unresolved.', 'Function retention is demonstrated in specific cases and is not universalized to every possible object.'],
+      targets: ['ordinary physical objects selected for transformation'],
+      range: 'mobile transformed-animal operation / full range unresolved',
+      duration: 'unknown',
+      knownUses: ['Chapter 390: guns become live firing snakes.', 'Chapter 391: recording camcorder becomes a surveillance cat.', 'Chapter 391: handcuffs become aura-reinforced pigeons and revert to restraints.'],
+      sources: [390, 391],
+    }),
+  ]),
+  'ability:contagion': freeze([
+    knowledge({
+      id: 'ability-knowledge:contagion:392',
+      knowledgeState: 'Chapter 391 leveling rule retained / no new system rule in 392',
+      summary: 'At the Chapter 392 boundary, the latest supplied Contagion rule remains Chapter 391’s explicit statement that killing a Nen user is worth ten levels. Multi-attacker allocation remains unresolved, and Quorolle’s idea that Morena may be able to monitor members continuously remains inference rather than demonstrated surveillance.',
+      activation: 'Morena’s existing Contagion community governs level progression.',
+      conditions: ['Chapter 391 members explicitly state the Nen-user kill value as ten levels.'],
+      limitations: ['Multi-attacker reward allocation remains unresolved.', 'Continuous Morena monitoring is not confirmed.', 'Chapter 392 adds no new point value, threshold, infection, or monitoring rule.'],
+      targets: ['Heil-Ly Contagion members participating in the leveling system'],
+      range: 'community-system range unresolved',
+      duration: 'ongoing community progression',
+      knownUses: ['Chapter 391: Tevelares, Quorolle, and Padaille discuss the +10 Nen-user kill value.'],
+      sources: [391],
+    }),
+  ]),
+  'ability:misha-post-mortem-disposal': freeze([
+    knowledge({
+      id: 'ability-knowledge:misha-post-mortem-disposal:392',
+      abilityName: 'Misha Hao’s Post-Mortem Disposal Ability',
+      knowledgeState: 'formally unnamed post-mortem cleanup effect documented',
+      summary: 'Chapter 392 reveals that deceased former Xi-Yu undertaker Misha Hao has a post-mortem Nen ability that causes her to appear and inconspicuously dispose of a person killed by a Xi-Yu member, then vanish once the corpse has been dealt with. The archive name is descriptive because the chapter supplies no official ability name.',
+      activation: 'The supplied synopsis describes the post-mortem effect as causing Misha to appear when a person killed by a Xi-Yu member is to be disposed of.',
+      conditions: ['Misha is deceased.', 'The ability is explicitly post-mortem Nen.', 'The stated target class is a person killed by a Xi-Yu member.', 'Padaille, killed by Hinrigh in Chapter 391, is the demonstrated Chapter 392 target.', 'Misha vanishes after the corpse has been dealt with in the demonstrated sequence.'],
+      limitations: ['Official ability name and Nen category are unsupplied.', 'Trigger timing, range, visibility, corpse-control method, disposal destination/method, cost, exceptions, simultaneous-target limit, and repeat-use rules remain unknown.', 'Padaille’s apparent movement is not a revival or return of consciousness.'],
+      costs: ['Post-mortem persistence after Misha’s death is confirmed; no additional cost is supplied.'],
+      targets: ['corpses of people killed by Xi-Yu members, as stated in Chapter 392'],
+      range: 'unknown',
+      duration: 'through the demonstrated disposal sequence / complete rule unknown',
+      knownUses: ['Chapter 392: Padaille’s corpse is inconspicuously removed through Misha’s post-mortem effect and Misha vanishes afterward.'],
+    }),
+  ]),
+});
