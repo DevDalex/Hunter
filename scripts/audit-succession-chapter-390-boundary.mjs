@@ -94,7 +94,7 @@ try {
 
   const note = fs.readFileSync('docs/source-notes/chapter-390.md', 'utf8');
   assert(/same aura/i.test(note) && /Tenftory/i.test(note), 'source note must preserve the coin continuity and comparison boundary');
-  assert(/does not.*formal name|does not provide the formal name|no formal ability name/i.test(note), 'source note must preserve Hinrigh’s unnamed-ability boundary');
+  assert(/formal name of Hinrigh’s ability/i.test(note) && /descriptive label/i.test(note) && /rather than inventing an official ability name/i.test(note), 'source note must preserve Hinrigh’s unnamed-ability boundary');
   assert(/civilians rather than Mafia/i.test(note), 'source note must preserve the Heil-Ly civilian-registration boundary');
 
   console.log(`Chapter 390 boundary audit passed: ${events390.length} canonical events preserve Zhang Lei coin continuity, Onior/Xi-Yu command, Heil-Ly civilian cover, Bloody Mary, Body and Soul, and Hinrigh’s unnamed gun-to-snake transformation.`);
