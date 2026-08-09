@@ -11,13 +11,13 @@ try {
   const archive = await vite.ssrLoadModule('/src/data/succession/successionData.js');
   const maintained = await vite.ssrLoadModule('/src/data/successionMaintainedChapterResearch.js');
   const chapterModule = await vite.ssrLoadModule('/src/data/succession390Research.js');
-  const dossier = await vite.ssrLoadModule('/src/data/successionDossier.js');
+  const dossier = await vite.ssrLoadModule('/src/data/successionDossierThrough390.js');
   const timeline = await vite.ssrLoadModule('/src/data/successionTimeline.js');
 
   const numbers = maintained.maintainedSuccessionChapterNumbers;
   const index389 = numbers.indexOf(389);
   assert(index389 >= 0 && numbers[index389 + 1] === 390, 'maintained publication chain must place Chapter 390 directly after Chapter 389');
-  assert(numbers[numbers.indexOf(390) + 1] === 400, 'Chapter 390 must remain before the pre-existing Chapter 400 maintained packet');
+  assert(numbers[numbers.indexOf(390) + 1] === 391, 'Chapter 390 must now hand directly to Chapter 391');
 
   const chapter390 = chapterModule.succession390ChapterResearch?.[0];
   assert(chapter390?.number === 390, 'dedicated Chapter 390 research must load');
@@ -55,6 +55,7 @@ try {
   const bloody390 = archive.getAbilityKnowledgeAtChapter('ability:bloody-mary', 390);
   assert(!bloody389?.known, 'Bloody Mary must not be available before Chapter 390');
   assert(bloody390?.known && /blood/i.test(text(bloody390)) && /subdu/i.test(text(bloody390)), 'Bloody Mary must preserve the demonstrated blood-linked subdual');
+  assert(!/30 to 40|30–40|search drops/i.test(text(bloody390)), 'Chapter 391 Bloody Mary search duration must not leak backward into Chapter 390');
   assert(/unknown|unresolved/i.test(text(bloody390.mechanics?.limitations)), 'Bloody Mary complete mechanics must remain unresolved');
 
   const body389 = archive.getAbilityKnowledgeAtChapter('ability:body-and-soul', 389);
@@ -68,6 +69,7 @@ try {
   assert(!hinrigh389?.known, 'Hinrigh transformation ability must not be available before Chapter 390');
   assert(hinrigh390?.known && /snake/i.test(text(hinrigh390)) && /gun/i.test(text(hinrigh390)), 'Hinrigh Chapter 390 knowledge must preserve the gun-to-snake demonstration');
   assert(/formal ability name.*not supplied|formal name.*unsupplied/i.test(text(hinrigh390)), 'Hinrigh formal ability name must remain unsupplied at the Chapter 390 boundary');
+  assert(!/Biohazard|camcorder|handcuff-pigeon|handcuff pigeon/i.test(text(hinrigh390)), 'Chapter 391 Biohazard name and applications must not leak backward into Chapter 390');
 
   const zhangOnior = archive.getEntityById('relationship:zhang-lei-onior-father-son');
   assert(zhangOnior?.relationshipType === 'family' && /father/i.test(text(zhangOnior)), 'Zhang Lei and Onior father-son relationship must be represented canonically');
@@ -89,15 +91,15 @@ try {
   assert(!publicTimeline390.some((event) => /Four students|Nen class produces newly awakened|Ladiolus|Maor|Yuri|Satobi/i.test(text(event))), 'legacy Chapter 390 Nen-class misattribution must be removed from the public timeline surface');
 
   const dossierNames = new Set((dossier.successionAbilities || []).map((record) => record.ability));
-  assert(dossierNames.has('Bloody Mary') && dossierNames.has('Body and Soul') && dossierNames.has('Hinrigh object-to-animal transformation') && dossierNames.has('Zhang Lei’s Guardian Coins'), 'active dossier must layer all Chapter 390 ability records');
-  assert((dossier.guardAssignmentGroups || []).some((group) => group.group?.includes('Chapter 390')), 'active dossier must include the Chapter 390 operational group');
+  assert(dossierNames.has('Bloody Mary') && dossierNames.has('Body and Soul') && dossierNames.has('Hinrigh object-to-animal transformation') && dossierNames.has('Zhang Lei’s Guardian Coins'), 'frozen Chapter 390 dossier must preserve all Chapter 390 ability records');
+  assert((dossier.guardAssignmentGroups || []).some((group) => group.group?.includes('Chapter 390')), 'frozen Chapter 390 dossier must include the Chapter 390 operational group');
 
   const note = fs.readFileSync('docs/source-notes/chapter-390.md', 'utf8');
   assert(/same aura/i.test(note) && /Tenftory/i.test(note), 'source note must preserve the coin continuity and comparison boundary');
   assert(/formal name of Hinrigh’s ability/i.test(note) && /descriptive label/i.test(note) && /rather than inventing an official ability name/i.test(note), 'source note must preserve Hinrigh’s unnamed-ability boundary');
   assert(/civilians rather than Mafia/i.test(note), 'source note must preserve the Heil-Ly civilian-registration boundary');
 
-  console.log(`Chapter 390 boundary audit passed: ${events390.length} canonical events preserve Zhang Lei coin continuity, Onior/Xi-Yu command, Heil-Ly civilian cover, Bloody Mary, Body and Soul, and Hinrigh’s unnamed gun-to-snake transformation.`);
+  console.log(`Chapter 390 boundary audit passed: ${events390.length} canonical events preserve Zhang Lei coin continuity, Onior/Xi-Yu command, Heil-Ly civilian cover, Bloody Mary, Body and Soul, and Hinrigh’s unnamed gun-to-snake transformation before Chapter 391 resolves Biohazard.`);
 } finally {
   await vite.close();
 }
