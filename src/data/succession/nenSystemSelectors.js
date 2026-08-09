@@ -64,6 +64,7 @@ export const createNenSystemSelectors = ({ data, archive }) => {
     const overrideMechanics = override?.mechanics || null;
     const boundedAbility = override ? Object.freeze({
       ...ability,
+      name: override.abilityName || ability.name,
       summary: override.summary || ability.summary,
       activation: overrideMechanics?.activation ?? ability.activation,
       conditions: Object.freeze([...(overrideMechanics?.conditions ?? ability.conditions ?? [])]),
