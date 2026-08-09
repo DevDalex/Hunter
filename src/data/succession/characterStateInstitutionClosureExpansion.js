@@ -22,10 +22,10 @@ export const characterStateInstitutionClosureExpansionProfiles = Object.freeze({
   'character:ken-i-wang': Object.freeze([
     state({
       start: 378,
-      end: 392,
+      end: 391,
       operationalState: 'Acts as Cha-R underboss and operational coordinator while the family protects Tier 5, searches for Hisoka, and contains Heil-Ly expansion.',
       nenKnowledge: 'institutional awareness of Nen-enabled lower-tier conflict; personal ability is not established',
-      sources: [378, 390, 392],
+      sources: [378, 390],
     }),
     state({
       start: 393,
