@@ -1,7 +1,8 @@
 import { successionArchiveData as locationFoundationData } from './entitiesLocationFoundation.js';
 import { assignmentFoundationExpansion } from './assignmentFoundationExpansion.js';
+import { remapJusticeLocationId386 } from './locationFoundation386Corrections.js';
 
-const ARCHIVE_DATE = '2026-07-24';
+const ARCHIVE_DATE = '2026-08-09';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const eventIdAliases = Object.freeze({
   'event:camilla-have-not-network-disclosure': 'event:camilla-curse-network-disclosure',
@@ -89,6 +90,7 @@ const normalizeAssignment = (assignment) => {
     .map((eventId) => eventIdAliases[eventId] || eventId);
   return Object.freeze({
     ...assignment,
+    locationId: remapJusticeLocationId386(assignment.locationId),
     objective: assignment.objective || enrichment.objective || assignment.summary,
     authorityBasis: assignment.authorityBasis || enrichment.authorityBasis || 'Household, military, Justice, or contracted authority documented in the voyage record.',
     operationalNotes: Object.freeze([...(assignment.operationalNotes || enrichment.operationalNotes || [])]),
