@@ -43,7 +43,7 @@ export const abilityFoundation391Expansion = freeze([
     firstChapter: 390,
     latestChapter: 391,
     sourceChapterNumbers: freeze([390, 391]),
-    researchStatus: 'official name, blood medium, mobile search use, and demonstrated 30–40 minute search-drop lifetime confirmed / full mechanics unresolved',
+    researchStatus: 'documented through Chapter 391 / complete mechanics unresolved',
   }),
   freeze({
     id: 'ability:hinrigh-object-animal-transformation',
