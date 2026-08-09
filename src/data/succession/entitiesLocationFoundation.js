@@ -3,19 +3,25 @@ import {
   locationFoundationExpansion,
   locationHistoryExpansion,
 } from './locationFoundationExpansion.js';
+import {
+  LEGACY_TIER1_JUSTICE_BUREAU_ID,
+  locationFoundation386Corrections,
+  remapJusticeLocation386,
+} from './locationFoundation386Corrections.js';
 
-const ARCHIVE_DATE = '2026-07-24';
+const ARCHIVE_DATE = '2026-08-09';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const includesChapter = (range, chapter) => chapter >= range.start && chapter <= (range.end ?? Number.POSITIVE_INFINITY);
 
 const locations = Object.freeze(uniqueById([
-  ...foundationData.locations,
-  ...locationFoundationExpansion,
+  ...foundationData.locations.filter((location) => location.id !== LEGACY_TIER1_JUSTICE_BUREAU_ID),
+  ...locationFoundationExpansion.filter((location) => location.id !== LEGACY_TIER1_JUSTICE_BUREAU_ID),
+  ...locationFoundation386Corrections,
 ]));
 
 const locationHistory = Object.freeze(uniqueById([
-  ...foundationData.locationHistory,
-  ...locationHistoryExpansion,
+  ...foundationData.locationHistory.map(remapJusticeLocation386),
+  ...locationHistoryExpansion.map(remapJusticeLocation386),
 ]));
 
 const chapters = foundationData.chapters;
