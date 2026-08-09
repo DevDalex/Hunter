@@ -7,6 +7,7 @@ const audits = Object.freeze([
   ['contract', 'scripts/audit-succession-runtime-contract.mjs'],
   ['chapter-385-boundary', 'scripts/audit-succession-chapter-385-boundary.mjs'],
   ['chapter-386-boundary', 'scripts/audit-succession-chapter-386-boundary.mjs'],
+  ['chapter-387-boundary', 'scripts/audit-succession-chapter-387-boundary.mjs'],
   ['shell', 'scripts/audit-succession-archive-shell.mjs'],
   ['visual-foundation', 'scripts/audit-succession-visual-foundation.mjs'],
   ['shell-redesign', 'scripts/audit-succession-shell-redesign.mjs'],
