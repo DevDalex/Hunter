@@ -98,7 +98,7 @@ try {
   assert(/fifty-million|50-million|50 million/i.test(text(keniDeal)) && /five-million|5-million|5 million/i.test(text(keniDeal)), 'Ken’i deal must preserve both the 50M match and 5M identification incentive');
   assert(/Fourth Prince approval.*statement|statement.*Fourth Prince approval|preserved as.*statement/i.test(text(keniDeal)), 'Fourth Prince approval must remain Ken’i’s statement rather than independent confirmation');
   const keniState = archive.getCharacterStateAtChapter('character:ken-i-wang', 393);
-  assert(!/smile.*ability|Nen.*smile|curse.*smile/i.test(text(keniState)), 'Ken’i smile rumor must not become a Nen/curse mechanic');
+  assert(/not converted into a Nen mechanic|not.*Nen mechanic|remains only a rumor/i.test(text(keniState)), 'Ken’i smile rumor must remain explicitly non-mechanical rather than becoming a Nen/curse rule');
 
   const heilLyState = archive.getOrganizationStateAtChapter('organization:heil-ly', 393);
   const troupeState = archive.getOrganizationStateAtChapter('organization:phantom-troupe', 393);
