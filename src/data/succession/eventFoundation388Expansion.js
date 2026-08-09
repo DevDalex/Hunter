@@ -1,0 +1,83 @@
+const freeze = (value) => Object.freeze(value);
+const characterId = (name) => `character:${String(name).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
+const chapterSourceId = (number) => `source:chapter-${number}`;
+const event = ({ slug, name, summary, category, sequence, day = 9, timeOfDay = null, certainty = 'explicit-day-no-clock-time', participants = [], locations = [], abilities = [], causes = [], outcomes = [], stateChanges = [], openQuestions = [], importance = 'major' }) => freeze({
+  id: `event:${slug}`, entityType: 'event', slug, name, aliases: freeze([]), summary,
+  sourceIds: freeze([chapterSourceId(388)]), publicationStatus: 'published', canonLevel: 'canon', createdAt: '2026-08-09', updatedAt: '2026-08-09',
+  category, importance, chapterRange: freeze({ start: 388, end: 388 }), chronology: freeze({ sequence, day, timeOfDay, certainty }),
+  participantIds: freeze(participants.map(characterId)), organizationIds: freeze([]), locationIds: freeze(locations), abilityIds: freeze(abilities.map((value) => `ability:${value}`)),
+  causes: freeze(causes), outcomes: freeze(outcomes), consequenceEventIds: freeze([]), status: 'completed', stateChanges: freeze(stateChanges), openQuestions: freeze(openQuestions),
+});
+
+export const eventFoundation388Expansion = freeze([
+  event({
+    slug: 'room-1014-awakened-students-and-gag-order',
+    name: 'Room 1014 Nen Class Produces Four Awakened Students',
+    summary: 'Kurapika’s private testing and semi-coercive awakening procedure produces four newly awakened students that day: Ladiolus, Maor, Yuri, and Satobi. Kurapika also imposes a gag order on individual results until everyone has completed the test.',
+    category: 'nen-training', importance: 'critical', sequence: 1,
+    participants: ['Kurapika', 'Bill', 'Ladiolus', 'Maor', 'Yuri', 'Satobi', 'Furykov', 'Babimyna'],
+    locations: ['location:black-whale:tier-1:room-1014'],
+    abilities: ['stealth-dolphin', 'bill-growth-ability'],
+    outcomes: ['Ladiolus, Maor, Yuri, and Satobi are identified by the supplied Chapter 388 text and note as awakened to Nen that day.', 'Furykov judges the visible students do not appear manipulated.', 'Individual Nen-test results are placed under a class-wide gag order.'],
+    openQuestions: ['What Nen types will each awakened student ultimately identify?'],
+  }),
+  event({
+    slug: 'bill-growth-ability-demonstration',
+    name: 'Bill Demonstrates His Unnamed Growth Ability',
+    summary: 'Bill surrounds a water-and-seed glass with his hands; the water overflows and the seed sprouts. Kurapika identifies Bill as an Enhancer and says his ability causes growth in its target.',
+    category: 'nen-ability-demonstration', importance: 'critical', sequence: 2,
+    participants: ['Kurapika', 'Bill', 'Maor', 'Oito Hui Guo Rou', 'Woble Hui Guo Rou'],
+    locations: ['location:black-whale:tier-1:room-1014'],
+    abilities: ['bill-growth-ability'],
+    outcomes: ['Bill’s Enhancement classification is directly stated.', 'The growth effect is directly demonstrated.', 'The official ability name and broader operating limits remain unsupplied.'],
+  }),
+  event({
+    slug: 'stealth-dolphin-growth-loan-awakening',
+    name: 'Stealth Dolphin Loans Bill’s Growth Ability for Nen Awakening',
+    summary: 'Kurapika borrows Bill’s growth ability and lends it to students as a semi-coercive Nen-awakening method. Yuri is explicitly shown receiving the borrowed ability through Stealth Dolphin and is told that the aura and ability are borrowed rather than her own.',
+    category: 'nen-ability-transfer', importance: 'critical', sequence: 3,
+    participants: ['Kurapika', 'Bill', 'Maor', 'Yuri'],
+    locations: ['location:black-whale:tier-1:room-1014'],
+    abilities: ['stealth-dolphin', 'bill-growth-ability'],
+    outcomes: ['The class gains a demonstrated accelerated-awakening method.', 'Yuri is told that the loan does not make Bill’s ability her own.', 'Kurapika says later Ten and Hatsu mastery will let Yuri perform Water Divination privately.'],
+    openQuestions: ['Do all transferable abilities interact with Nen awakening this way, or is the result specific to this procedure?'],
+  }),
+  event({
+    slug: 'bill-woble-assignment-resolve-reveal',
+    name: 'Bill Explains His Choice to Guard Woble and His Decision to Stay',
+    summary: 'Bill says Beyond stationed him aboard the Black Whale but that he personally chose Woble’s guard assignment, initially expecting little combat around an infant. Vincent’s attack and Kurapika’s exchanges with Oito helped turn his earlier urge to run into resolve to face the danger.',
+    category: 'character-motive', sequence: 4,
+    participants: ['Kurapika', 'Bill', 'Beyond Netero', 'Woble Hui Guo Rou', 'Oito Hui Guo Rou', 'Vincent'],
+    locations: ['location:black-whale:tier-1:room-1014'],
+    outcomes: ['Bill’s deployment by Beyond is separated from his personal choice of Woble’s assignment.', 'Bill remains committed to Woble’s defense despite acknowledging his fear.'],
+  }),
+  event({
+    slug: 'tubeppa-authorizes-woble-alliance-negotiation',
+    name: 'Tubeppa Authorizes Continued Negotiations with Woble’s Camp',
+    summary: 'Maor and Longhi report that Kurapika’s Nen training worked and that Woble’s camp is most strongly allied with Zhang Lei. Tubeppa tells them to continue negotiating an alliance and permits more of her guards to attend future Nen classes.',
+    category: 'royal-alliance-negotiation', importance: 'critical', sequence: 5,
+    participants: ['Tubeppa Hui Guo Rou', 'Maor', 'Longhi', 'Kurapika', 'Woble Hui Guo Rou', 'Zhang Lei Hui Guo Rou'],
+    outcomes: ['Tubeppa’s camp advances from observation toward active alliance negotiation.', 'Tubeppa authorizes additional guards to participate in future Nen classes.'],
+    stateChanges: ['This is a negotiation-stage state and does not backdate later formal alliance terms.'],
+  }),
+  event({
+    slug: 'rihan-reassesses-tubeppa-halkenburg-kurapika',
+    name: 'Rihan Reassesses Tubeppa, Halkenburg, and Kurapika as Predator Problems',
+    summary: 'With Tubeppa’s Guardian Spirit Beast still unseen, Rihan weighs patience against changing targets. He worries about Halkenburg after the Shikaku incident and about Kurapika’s Nen-distribution strategy, while his belief that Kurapika might possess five abilities remains only a hypothesis.',
+    category: 'threat-assessment', sequence: 6,
+    participants: ['Rihan', 'Tubeppa Hui Guo Rou', 'Halkenburg Hui Guo Rou', 'Kurapika', 'Balsamilco Might', 'Shikaku'],
+    abilities: ['predator'],
+    outcomes: ['Rihan remains uncertain about his optimal Predator target.', 'Balsamilco withholds detailed advice because advice would reduce Predator’s effectiveness.'],
+    openQuestions: ['When will Tubeppa’s Guardian Spirit Beast appear?', 'Which target will Rihan ultimately commit Predator against?'],
+  }),
+  event({
+    slug: 'fourth-halkenburg-thread-aura-rumbling',
+    name: 'The Fourth Aura Rumbling Occurs at 11:30 a.m. on Voyage Day 10',
+    summary: 'Kurapika, Bill, and Oito feel the fourth recurrence of the powerful aura rumbling at 11:30 a.m. on Voyage Day 10, and the intervals between occurrences are becoming shorter.',
+    category: 'nen-disturbance', importance: 'critical', sequence: 7, day: 10, timeOfDay: '11:30', certainty: 'exact-day-and-clock-time',
+    participants: ['Kurapika', 'Bill', 'Oito Hui Guo Rou'],
+    locations: ['location:black-whale:tier-1:room-1014'],
+    outcomes: ['The recurring aura-rumbling count reaches four.', 'The interval between recurrences is observed to be shortening.'],
+    openQuestions: ['What exact action produces each recurrence?', 'Who is the immediate target of the fourth pulse?'],
+  }),
+]);
