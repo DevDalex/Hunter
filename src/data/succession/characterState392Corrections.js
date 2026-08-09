@@ -1,0 +1,110 @@
+const freeze = (value) => Object.freeze(value);
+
+const state = ({ characterId, life = 'alive', bodyState = 'living body', consciousnessState = 'active in own body', operationalState, protectionState, threatLevel, nenKnowledge, allegianceState, locationId = 'location:black-whale:tier-3', openQuestions = [], certainty = 'confirmed' }) => freeze({
+  id: `character-state:${characterId.replace('character:', '')}:392`,
+  characterId,
+  chapterRange: freeze({ start: 392, end: 392 }),
+  life,
+  bodyState,
+  consciousnessState,
+  operationalState,
+  protectionState,
+  threatLevel,
+  nenKnowledge,
+  allegianceState,
+  locationId,
+  openQuestions: freeze(openQuestions),
+  certainty,
+  sourceIds: freeze(['source:chapter-392']),
+});
+
+export const characterState392CorrectionProfiles = freeze({
+  'character:padaille': freeze([
+    state({
+      characterId: 'character:padaille',
+      life: 'dead',
+      bodyState: 'deceased body under Misha Hao’s post-mortem Xi-Yu disposal process; apparent walking/movement does not restore life',
+      consciousnessState: 'absent; Chapter 392 supplies no evidence that Padaille regains consciousness after Hinrigh killed him in Chapter 391',
+      operationalState: 'No longer an active Heil-Ly combatant. His corpse is removed from the public Tier 3 scene through Misha’s post-mortem cleanup effect.',
+      protectionState: 'none; corpse handled through Xi-Yu cleanup contingency',
+      threatLevel: 'resolved by death',
+      nenKnowledge: 'Fistful of Weapons remains documented from Chapter 391, but Chapter 392 does not establish post-mortem continuation of Padaille’s own ability.',
+      allegianceState: 'former active Heil-Ly member at death; no new post-death agency established',
+      openQuestions: ['What exact physical mechanism does Misha’s ability use to move or dispose of the corpse?'],
+    }),
+  ]),
+  'character:misha-hao': freeze([
+    state({
+      characterId: 'character:misha-hao',
+      life: 'dead',
+      bodyState: 'deceased; appears as a post-mortem Nen manifestation with a visible bullet wound in the supplied scene',
+      consciousnessState: 'post-mortem agency sufficient for the demonstrated cleanup effect; the synopsis does not define whether this is ordinary continuing consciousness, an automatic Nen construct, or another mechanism',
+      operationalState: 'Former Xi-Yu undertaker whose post-mortem Nen appears when a person killed by a Xi-Yu member must be inconspicuously disposed of. Chapter 392 demonstrates the effect on Padaille and resolves Hinrigh’s Chapter 391 reliance on Misha.',
+      protectionState: 'post-mortem Xi-Yu support function; no living-body protection state applies',
+      threatLevel: 'specialized post-mortem operational asset',
+      nenKnowledge: 'A formally unnamed post-mortem disposal ability is confirmed. Nen category, range, visibility rules, corpse-control method, disposal destination, cost, and limits remain unresolved.',
+      allegianceState: 'Xi-Yu member / former family undertaker; post-mortem effect continues to serve Xi-Yu cleanup',
+      openQuestions: ['What is the ability’s official name?', 'Is Misha consciously directing the effect or is it automatic?', 'Who can perceive the manifestation?', 'Where and how are corpses disposed of?'],
+    }),
+  ]),
+  'character:hinrigh-biganduffno': freeze([
+    state({
+      characterId: 'character:hinrigh-biganduffno',
+      bodyState: 'living body; Chapter 391 left-hand drill wound remains the most recent supplied injury and Chapter 392 gives no new medical resolution',
+      operationalState: 'Maintains the Xi-Yu lower-tier operation, uses Misha’s cleanup contingency after Padaille’s death, negotiates an intelligence deal with Corporal Maizan, and requires personal verification of the unplanned-room lead before accepting it as reliable.',
+      protectionState: 'Operates under Xi-Yu underboss authority with a post-mortem cleanup contingency and access to paid lower-tier intelligence.',
+      threatLevel: 'high',
+      nenKnowledge: 'Biohazard remains confirmed from Chapter 391; Chapter 392 adds no new Biohazard mechanic.',
+      allegianceState: 'Xi-Yu underboss executing the Morena/Heil-Ly and Hisoka operation.',
+      openQuestions: ['Will Maizan’s unplanned-room lead verify as Heil-Ly territory?', 'How serious is Hinrigh’s left-hand wound?'],
+    }),
+  ]),
+  'character:lynch-fullbokko': freeze([
+    state({
+      characterId: 'character:lynch-fullbokko',
+      bodyState: 'living body; abruptly knocked down during the apparent-Hisoka encounter and later heard groaning',
+      consciousnessState: 'alive; temporarily incapacitated/down after the reflexive counter',
+      operationalState: 'Uses Body and Soul to rule Hanal out as Hisoka, then attempts the ability on a man she and Zakuro believe is Hisoka. Her punch seemingly fails and she is reflexively countered.',
+      protectionState: 'paired with Zakuro during the Xi-Yu Hisoka search',
+      threatLevel: 'temporarily incapacitated during contact with the apparent Hisoka',
+      nenKnowledge: 'Body and Soul successfully produces Hanal’s inner-soul negative answer. The later apparent failure/counter is observed but its mechanism is unresolved.',
+      allegianceState: 'Xi-Yu field member under Hinrigh’s contact-first search instruction.',
+      openQuestions: ['Why did Body and Soul seemingly fail against the apparent Hisoka?', 'What is Lynch’s immediate condition after the encounter?'],
+    }),
+  ]),
+  'character:zakuro-custard': freeze([
+    state({
+      characterId: 'character:zakuro-custard',
+      operationalState: 'Continues the Tier 3 Hisoka search with Bloody Mary drops, helps rule out Hanal, then reaches a man he believes must be Hisoka after seeing Lynch effortlessly countered.',
+      protectionState: 'paired with Lynch but becomes the sole standing Xi-Yu contact during the apparent-Hisoka corridor exchange',
+      threatLevel: 'high personal danger during the apparent-Hisoka contact',
+      nenKnowledge: 'Bloody Mary’s Chapter 391 30–40 minute search-drop lifetime remains in force; Chapter 392 demonstrates the drops locating multiple candidates but adds no exact sensory/range rule.',
+      allegianceState: 'Xi-Yu field member following Hinrigh’s Hisoka-search protocol.',
+      openQuestions: ['Will the apparent Hisoka accept Zakuro’s invitation to accompany Xi-Yu?', 'How do Bloody Mary drops choose candidate targets?'],
+    }),
+  ]),
+  'character:ken-i-wang': freeze([
+    state({
+      characterId: 'character:ken-i-wang',
+      operationalState: 'Makes finding Hisoka Cha-R’s top priority, expands the information search, orders personnel not to approach Hisoka before he arrives, and plans to use a successful negotiation to preserve balance by turning Hisoka, Heil-Ly, and the Phantom Troupe against one another.',
+      protectionState: 'commands Cha-R field personnel while the Troupe remains at the Tier 5 office',
+      threatLevel: 'strategic command exposure',
+      nenKnowledge: 'Ken’i believes the Heil-Ly hitman’s marking condition has already been fulfilled; this is retained as his assessment rather than a fully demonstrated ability rule.',
+      allegianceState: 'Cha-R underboss prioritizing family balance and survival.',
+      locationId: 'location:black-whale:tier-5',
+      openQuestions: ['Can Ken’i or Hinrigh negotiate with the apparent Hisoka?', 'Is Ken’i correct about Luini’s marking condition?', 'Can Cha-R prevent the Troupe from eventually moving against Tier 1?'],
+    }),
+  ]),
+  'character:luini': freeze([
+    state({
+      characterId: 'character:luini',
+      operationalState: 'Directly infiltrates/probes the Cha-R office through spatial openings and confronts Nobunaga, Phinks, and Feitan, taunting them over their cooperation with Cha-R.',
+      protectionState: 'uses spatial openings to maintain separation from the Troupe during the Chapter 392 contact',
+      threatLevel: 'extreme confrontation with three Phantom Troupe members',
+      nenKnowledge: 'Spatial openings are directly demonstrated. Ken’i separately believes a marking condition has already been fulfilled. The supplied synopsis does not provide a formal ability name or complete rule set.',
+      allegianceState: 'active Heil-Ly member confronting the Phantom Troupe',
+      locationId: 'location:black-whale:tier-5',
+      openQuestions: ['What are the full mechanics of Luini’s spatial ability?', 'What happens after Nobunaga draws his katana?'],
+    }),
+  ]),
+});
