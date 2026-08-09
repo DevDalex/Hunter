@@ -60,6 +60,13 @@ export default defineConfig({
             // dedicated lazy chunk so canon density can grow without raising
             // the 750 kB hard ceiling on the central Succession data graph.
             { name: 'succession-chapter-391-biohazard-contagion', test: /src\/data\/(?:succession391Research|succession\/(?:abilityFoundation391Expansion|eventFoundation391Expansion|eventFoundation391Corrections|relationshipFoundation391Expansion|organizationState391Corrections|characterState391Corrections|nenSystemFoundation391Corrections))\.js$/ },
+            // Chapter 392 resolves Misha's post-mortem cleanup role, extends
+            // Body and Soul/Bloody Mary search mechanics, adds Maizan's
+            // unverified infrastructure lead, and moves the Cha-R/Troupe/Luini
+            // lower-tier conflict forward. Keep the chapter-specific research
+            // and correction leaves together instead of consuming the small
+            // amount of headroom remaining in the central Succession chunk.
+            { name: 'succession-chapter-392-misha-apparent-hisoka', test: /src\/data\/(?:succession392Research|succession\/(?:abilityFoundation392Expansion|eventFoundation392Expansion|relationshipFoundation392Expansion|organizationState392Corrections|characterState392Corrections|nenSystemFoundation392Corrections))\.js$/ },
           ],
         },
       },
