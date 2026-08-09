@@ -1,8 +1,10 @@
 const freeze = (value) => Object.freeze(value);
 const chapterSourceId = (number) => `source:chapter-${number}`;
 
-const knowledge = ({ id, abilityId, start = 390, end = null, knowledgeState = 'documented', certainty = 'confirmed', summary, activation, conditions = [], limitations = [], costs = [], targets = [], range = 'unknown', duration = 'unknown', knownUses = [], sources = [390] }) => freeze({
+const knowledge = ({ id, abilityId, abilityName = null, start = 390, end = null, knowledgeState = 'documented', certainty = 'confirmed', summary, activation, conditions = [], limitations = [], costs = [], targets = [], range = 'unknown', duration = 'unknown', knownUses = [], sources = [390] }) => freeze({
   id,
+  abilityId,
+  abilityName,
   chapterRange: freeze({ start, end }),
   knowledgeState,
   certainty,
@@ -90,6 +92,7 @@ export const abilityKnowledge390Overrides = freeze({
     knowledge({
       id: 'ability-knowledge:hinrigh-object-animal-transformation:390',
       abilityId: 'ability:hinrigh-object-animal-transformation',
+      abilityName: 'Hinrigh Object-to-Animal Transformation',
       end: 390,
       knowledgeState: 'demonstrated effect / formal name and full mechanics unresolved',
       summary: 'Hinrigh touches two soldiers’ guns; their barrels become live snakes whose mouths retain the guns’ firing function and kill the soldiers. The Chapter 390 synopsis supplies no formal ability name or Nen category.',
