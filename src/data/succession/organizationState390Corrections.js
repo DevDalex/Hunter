@@ -1,0 +1,82 @@
+const freeze = (value) => Object.freeze(value);
+const chapterSourceId = (number) => `source:chapter-${number}`;
+
+const state = ({ organizationId, start, end = null, operationalState, authority, territoryIds = [], objectiveStates = [], pressure = [], relatedEventIds = [], certainty = 'confirmed', sources = [] }) => freeze({
+  id: `organization-state:${organizationId.replace('organization:', '')}:${start}`,
+  organizationId,
+  chapterRange: freeze({ start, end }),
+  status: 'active',
+  operationalState,
+  authority,
+  territoryIds: freeze(territoryIds),
+  objectiveStates: freeze(objectiveStates),
+  pressure: freeze(pressure),
+  relatedEventIds: freeze(relatedEventIds),
+  certainty,
+  sourceIds: freeze(sources.map(chapterSourceId)),
+});
+
+export const organizationState390Corrections = freeze({
+  'organization:xi-yu': freeze([
+    state({
+      organizationId: 'organization:xi-yu',
+      start: 378,
+      end: 389,
+      operationalState: 'Operates as an established Kakin mafia family under Onior Longbao, protects its territory, supports Zhang Lei, and participates in the developing Hisoka and Heil-Ly search while the lower-tier balance deteriorates.',
+      authority: 'Traditional Kakin mafia hierarchy, territorial control, and royal sponsorship through the Third Prince.',
+      territoryIds: ['location:black-whale:tier-3:xi-yu-office', 'location:black-whale:tier-3'],
+      objectiveStates: ['Protect Xi-Yu territory.', 'Contain Morena’s breakaway Heil-Ly.', 'Preserve Zhang Lei’s sponsorship and family interests.'],
+      pressure: ['Heil-Ly breaks the traditional mafia balance.', 'The Phantom Troupe creates a dangerous external variable in the Hisoka search.'],
+      sources: [378, 379],
+    }),
+    state({
+      organizationId: 'organization:xi-yu',
+      start: 390,
+      end: 390,
+      operationalState: 'Onior expands Xi-Yu’s field operation: Hinrigh must find Hisoka on Tier 3, permit the Phantom Troupe to search Tier 4 under controlled access, and kill Morena. Hinrigh forms a team with Lynch and Zakuro and makes direct contact with Heil-Ly personnel on Tier 3.',
+      authority: 'Onior’s traditional mafia-family command delegated to Hinrigh for field execution, backed by Xi-Yu territorial influence and Zhang Lei sponsorship.',
+      territoryIds: ['location:black-whale:tier-3:xi-yu-office', 'location:black-whale:tier-3', 'location:black-whale:tier-4'],
+      objectiveStates: ['Find Hisoka on Tier 3.', 'Kill Morena.', 'Permit but constrain Phantom Troupe movement on Tier 4.', 'Avoid an uncontrolled Mafia-versus-civilian incident after Heil-Ly paperwork is discovered.'],
+      pressure: ['The encountered Heil-Ly members are officially registered as civilians.', 'The Phantom Troupe is useful but not controllable in the ordinary mafia sense.', 'Xi-Yu personnel expose Nen abilities during a public confrontation.', 'Hinrigh’s killing of two soldiers creates additional security risk.'],
+      relatedEventIds: ['event:onior-expands-xiyu-hisoka-morena-operation', 'event:xiyu-team-confronts-heilly-tier3', 'event:bloody-mary-body-and-soul-first-ch390-demonstration', 'event:heilly-tier3-civilian-registration-revealed', 'event:hinrigh-transforms-soldier-guns-into-snakes'],
+      sources: [390],
+    }),
+  ]),
+  'organization:heil-ly': freeze([
+    state({
+      organizationId: 'organization:heil-ly',
+      start: 378,
+      end: 389,
+      operationalState: 'Morena’s breakaway Heil-Ly operates outside the traditional mafia balance through the Contagion community while Xi-Yu, Cha-R, and the Phantom Troupe begin converging against it.',
+      authority: 'Morena’s personal command and the community structure created through Contagion rather than recognized traditional-mafia legitimacy.',
+      territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-4'],
+      objectiveStates: ['Expand Morena’s organization.', 'Protect the family’s hidden operations.', 'Resist the traditional mafia families.'],
+      pressure: ['Xi-Yu and Cha-R are hostile.', 'The Phantom Troupe is entering the lower-tier conflict.', 'The complete hidden-base route remains unresolved at this boundary.'],
+      sources: [378, 379, 380],
+    }),
+    state({
+      organizationId: 'organization:heil-ly',
+      start: 390,
+      end: 390,
+      operationalState: 'Heil-Ly personnel encountered by Xi-Yu on Tier 3 operate under official civilian registration. One member is sent to inform Morena while others fight Lynch and Zakuro, making the civilian paperwork itself a tactical shield against open mafia retaliation.',
+      authority: 'Morena’s internal command persists, while the encountered members’ shipboard paperwork identifies them as civilians rather than Mafia.',
+      territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-4'],
+      objectiveStates: ['Warn Morena of Xi-Yu contact.', 'Maintain operational cover on Tier 3.', 'Resist Xi-Yu field personnel.'],
+      pressure: ['Xi-Yu is now actively hunting Morena.', 'The Phantom Troupe is being granted Tier 4 search access by Xi-Yu.', 'Nen abilities are exposed during direct confrontation.'],
+      relatedEventIds: ['event:xiyu-team-confronts-heilly-tier3', 'event:bloody-mary-body-and-soul-first-ch390-demonstration', 'event:heilly-tier3-civilian-registration-revealed'],
+      sources: [390],
+    }),
+    state({
+      organizationId: 'organization:heil-ly',
+      start: 391,
+      end: 398,
+      operationalState: 'Morena’s Contagion community escalates into increasingly public violence and hidden-route defense while Xi-Yu, Cha-R, police, military, and the Phantom Troupe converge on the family.',
+      authority: 'Morena’s personal command, Contagion progression, and concealed community infrastructure rather than recognized mafia legitimacy.',
+      territoryIds: ['location:black-whale:tier-3:heil-ly-hideout', 'location:black-whale:tier-3:public-corridor'],
+      objectiveStates: ['Expand Contagion through killing.', 'Protect the hidden base and route system.', 'Resist or destroy opposing mafia and security pressure.'],
+      pressure: ['Traditional mafia families and the Phantom Troupe actively hunt Heil-Ly.', 'Public violence exposes members and routes.', 'Spatial and counteractive defenses become increasingly important.'],
+      relatedEventIds: ['event:tier-3-padaille-battle', 'event:luini-troupe-confrontation'],
+      sources: [391, 392, 393, 394, 398],
+    }),
+  ]),
+});
