@@ -105,6 +105,42 @@ export const personnelTransitions = [
     state: 'Immediate lower-tier lockdown ended / announced stowaway identity not supplied in Chapter 381 material',
     source: wiki('Chapter_381'),
   },
+  {
+    day: 'Day 8 · before 20:00',
+    chapters: '382',
+    subject: 'Halkenburg / Nasubi / Nugui',
+    route: 'Four days of repeated petitions → armed entry → direct confrontation with the King',
+    change: 'Halkenburg exploits the entrance soldiers’ lowered guard, confronts Nasubi at gunpoint, fires once at him, and sees the bullet stop before reaching the King. After Nugui says the incident is within expected parameters, Halkenburg attempts suicide and his Guardian Spirit Beast visibly stops the self-fired bullet.',
+    state: 'Halkenburg resistance escalated to direct action / mechanism protecting Nasubi unresolved / Guardian Spirit Beast self-shot interception confirmed',
+    source: wiki('Chapter_382'),
+  },
+  {
+    day: 'Day 8 · before 20:00',
+    chapters: '382',
+    subject: 'Halkenburg / Shikaku / Benjamin',
+    route: 'Benjamin assassination order → Culdcept defense → collective aura arrow → first body/will exchange',
+    change: 'Benjamin orders Shikaku to kill Halkenburg and take his ability. Shikaku forms Culdcept, but Halkenburg’s collective bow-and-arrow attack pierces the card shield. One Halkenburg follower collapses and Shikaku’s body rises acting under Halkenburg’s side after the target’s original will is suppressed.',
+    state: 'First collective-arrow exchange observed / Shikaku original-will state displaced or suppressed / full consciousness topology unresolved',
+    source: wiki('Chapter_382'),
+  },
+  {
+    day: 'Day 8 · before 20:00',
+    chapters: '382',
+    subject: 'Yushohi / Salé-salé / Benjamin',
+    route: 'Predator-cleared target → Yushohi assassination phase → successful kill report',
+    change: 'Salé-salé is shown unresponsive and apparently not breathing while attendants attempt CPR. Yushohi reports directly to Benjamin that the assassination succeeded. The supplied Chapter 382 synopsis does not name the killing ability or method.',
+    state: 'Salé-salé deceased / second prince death in maintained chronology / assassination method unresolved',
+    source: wiki('Chapter_382'),
+  },
+  {
+    day: 'Day 8 · 20:00',
+    chapters: '382',
+    subject: 'Kacho / Fugetsu / Melody / Sunday banquet',
+    route: 'Twin escape preparation → scheduled Sunday banquet opening',
+    change: 'At 8:00 p.m. on Voyage Day 8, Kacho, Fugetsu, and Melody wait nervously in the banquet hall immediately before the Sunday banquet begins.',
+    state: 'Banquet opening reached / escape operation poised but not yet executed in Chapter 382',
+    source: wiki('Chapter_382'),
+  },
 ].sort((left, right) => String(left.chapters).localeCompare(String(right.chapters), undefined, { numeric: true }));
 
 export const wobleCoreTimeline = base.wobleCoreTimeline;
