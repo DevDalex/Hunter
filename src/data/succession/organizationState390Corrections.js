@@ -20,17 +20,6 @@ export const organizationState390Corrections = freeze({
   'organization:xi-yu': freeze([
     state({
       organizationId: 'organization:xi-yu',
-      start: 378,
-      end: 389,
-      operationalState: 'Operates as an established Kakin mafia family under Onior Longbao, protects its territory, supports Zhang Lei, and participates in the developing Hisoka and Heil-Ly search while the lower-tier balance deteriorates.',
-      authority: 'Traditional Kakin mafia hierarchy, territorial control, and royal sponsorship through the Third Prince.',
-      territoryIds: ['location:black-whale:tier-3:xi-yu-office', 'location:black-whale:tier-3'],
-      objectiveStates: ['Protect Xi-Yu territory.', 'Contain Morena’s breakaway Heil-Ly.', 'Preserve Zhang Lei’s sponsorship and family interests.'],
-      pressure: ['Heil-Ly breaks the traditional mafia balance.', 'The Phantom Troupe creates a dangerous external variable in the Hisoka search.'],
-      sources: [378, 379],
-    }),
-    state({
-      organizationId: 'organization:xi-yu',
       start: 390,
       end: 390,
       operationalState: 'Onior expands Xi-Yu’s field operation: Hinrigh must find Hisoka on Tier 3, permit the Phantom Troupe to search Tier 4 under controlled access, and kill Morena. Hinrigh forms a team with Lynch and Zakuro and makes direct contact with Heil-Ly personnel on Tier 3.',
@@ -43,17 +32,6 @@ export const organizationState390Corrections = freeze({
     }),
   ]),
   'organization:heil-ly': freeze([
-    state({
-      organizationId: 'organization:heil-ly',
-      start: 378,
-      end: 389,
-      operationalState: 'Morena’s breakaway Heil-Ly operates outside the traditional mafia balance through the Contagion community while Xi-Yu, Cha-R, and the Phantom Troupe begin converging against it.',
-      authority: 'Morena’s personal command and the community structure created through Contagion rather than recognized traditional-mafia legitimacy.',
-      territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-4'],
-      objectiveStates: ['Expand Morena’s organization.', 'Protect the family’s hidden operations.', 'Resist the traditional mafia families.'],
-      pressure: ['Xi-Yu and Cha-R are hostile.', 'The Phantom Troupe is entering the lower-tier conflict.', 'The complete hidden-base route remains unresolved at this boundary.'],
-      sources: [378, 379, 380],
-    }),
     state({
       organizationId: 'organization:heil-ly',
       start: 390,
