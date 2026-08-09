@@ -22,9 +22,10 @@ const researchIsMaintained = (research) => Boolean(
   research
   && !String(research.status || '').toLowerCase().includes('pending'),
 );
+const researchEvents = (research) => research?.events?.length ? research.events : research?.timelineEvents || [];
 const chronologyResearch = maintainedSuccessionChapterResearch.filter((research) => researchIsMaintained(research)
-  && research.coverage?.chronology
-  && research.events?.length);
+  && (research.coverage?.chronology || research.timelineEvents?.length)
+  && researchEvents(research).length);
 
 const normalizeResearchEvent = (research, event, index) => freeze({
   id: event.id || `maintained-${research.number}-${index + 1}`,
@@ -42,7 +43,7 @@ const normalizeResearchEvent = (research, event, index) => freeze({
 
 const maintainedEventsByChapter = new Map(chronologyResearch.map((research) => [
   research.number,
-  freeze(research.events.map((event, index) => normalizeResearchEvent(research, event, index))),
+  freeze(researchEvents(research).map((event, index) => normalizeResearchEvent(research, event, index))),
 ]));
 
 const replaceChapterEvents = (events, chapter, replacements) => {
@@ -56,7 +57,7 @@ const replaceChapterEvents = (events, chapter, replacements) => {
   ]);
 };
 
-const maintainedTrackIds = unique(chronologyResearch.flatMap((research) => research.events.flatMap((event) => event.tracks || [])));
+const maintainedTrackIds = unique(chronologyResearch.flatMap((research) => researchEvents(research).flatMap((event) => event.tracks || [])));
 const legacyTrackById = new Map(legacyTimelineTracks.map((track) => [track.id, track]));
 const labelizeTrack = (value) => String(value || '').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 export const timelineTracks = freeze([
