@@ -22,7 +22,7 @@ const halkenburgArrow382Ability = freeze({
   owner: 'Halkenburg Hui Guo Rou',
   type: 'Collective symbiotic body-will transfer attack',
   category: 'Collective symbiotic body-will transfer attack',
-  chapters: '375, 382',
+  chapters: '382',
   chapter: 382,
   conditions: 'The attack draws on Halkenburg’s collective fellowship aura. A successful hit suppresses the target host’s will in exchange for the body of one of Halkenburg’s followers.',
   mechanics: 'Followers’ aura forms both overwhelming protection and the projectile while Halkenburg’s own aura forms the bow. The supplied synopsis states that once the bow is drawn the arrow cannot be intercepted or blocked. Against Shikaku it pierces Culdcept, one follower collapses, and Shikaku’s body rises acting under Halkenburg’s side.',
