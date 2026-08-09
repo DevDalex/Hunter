@@ -53,6 +53,13 @@ export default defineConfig({
             // chapter slice instead of feeding another ~50 kB into the already
             // large Succession core chunk.
             { name: 'succession-chapter-390-lower-tier-operation', test: /src\/data\/(?:succession390Research|succession\/(?:abilityFoundation390Expansion|eventFoundation390Expansion|relationshipFoundation390Expansion|organizationState390Corrections|nenSystemFoundation390Corrections))\.js$/ },
+            // Chapter 391 expands the same lower-tier conflict into timed Bloody
+            // Mary search drops, Biohazard surveillance/restraint, Contagion's
+            // Nen-user reward rule, Fistful of Weapons, exact character states,
+            // and a corrected Padaille battle boundary. Keep those leaves in a
+            // dedicated lazy chunk so canon density can grow without raising
+            // the 750 kB hard ceiling on the central Succession data graph.
+            { name: 'succession-chapter-391-biohazard-contagion', test: /src\/data\/(?:succession391Research|succession\/(?:abilityFoundation391Expansion|eventFoundation391Expansion|eventFoundation391Corrections|relationshipFoundation391Expansion|organizationState391Corrections|characterState391Corrections|nenSystemFoundation391Corrections))\.js$/ },
           ],
         },
       },
