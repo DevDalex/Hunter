@@ -26,7 +26,7 @@ export const relationshipFoundation381Expansion = freeze([
     operationalState: 'Fugetsu is returned to Tier 1 under jurisdiction surveillance; Mizaistom’s protective intent is active even though Fugetsu remains guarded and does not fully cooperate with questioning.',
     strength: 'material',
     certainty: 'confirmed',
-    relatedEventIds: freeze(['event:fugetsu-lower-tier-custody', 'event:fugetsu-police-surveillance-transition']),
+    relatedEventIds: freeze(['event:fugetsu-lower-tier-custody-reveal', 'event:fugetsu-police-surveillance-transition']),
     evidenceNotes: freeze(['Protection and investigation coexist; the relationship should not be simplified into unrestricted alliance or trust.']),
     legacyIds: freeze([]),
   }),
