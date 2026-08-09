@@ -1,0 +1,142 @@
+const freeze = (value) => Object.freeze(value);
+
+const state = ({ characterId, life = 'alive', bodyState = 'living body', consciousnessState = 'active in own body', operationalState, protectionState = 'no new structured protection state', threatLevel = 'unknown', nenKnowledge = 'unknown', allegianceState = 'no chapter-bounded allegiance override', locationId = 'location:black-whale', openQuestions = [], certainty = 'confirmed' }) => freeze({
+  id: `character-state:${characterId.replace('character:', '')}:393`,
+  characterId,
+  chapterRange: freeze({ start: 393, end: 393 }),
+  life,
+  bodyState,
+  consciousnessState,
+  operationalState,
+  protectionState,
+  threatLevel,
+  nenKnowledge,
+  allegianceState,
+  locationId,
+  openQuestions: freeze(openQuestions),
+  certainty,
+  sourceIds: freeze(['source:chapter-393']),
+});
+
+const heilLyProfile = ({ characterId, level, occupation, nenType = 'unsupplied', extra = '' }) => state({
+  characterId,
+  operationalState: `Active Heil-Ly member disclosed at level ${level} with occupation ${occupation}.${extra ? ` ${extra}` : ''}`,
+  protectionState: 'Operates inside the Heil-Ly community while the group reassesses hunting and ability development after Luini’s death.',
+  threatLevel: 'active lower-tier Nen-development threat',
+  nenKnowledge: nenType === 'unsupplied' ? 'Innate Nen type not supplied in Chapter 393.' : `Confirmed natural Nen type: ${nenType}.`,
+  allegianceState: 'Active Heil-Ly / Morena community member.',
+  openQuestions: nenType === 'unsupplied' ? ['What is this member’s innate Nen type and eventual developed ability?'] : [],
+});
+
+export const characterState393CorrectionProfiles = freeze({
+  'character:luini': freeze([
+    state({
+      characterId: 'character:luini',
+      life: 'dead',
+      bodyState: 'deceased; Chapter 393 shows a decapitated and bisected corpse after Nobunaga’s katana attack',
+      consciousnessState: 'ended; no continuing consciousness or post-mortem agency is established',
+      operationalState: 'Killed by Nobunaga immediately after proposing a destructive alliance with the Phantom Troupe. His death removes Heil-Ly’s living user of the previously documented spatial transportation ability.',
+      protectionState: 'none after death',
+      threatLevel: 'resolved by death',
+      nenKnowledge: 'Luini’s spatial transportation ability remains documented, but Perigord’s belief that Luini was an Emitter is not promoted to confirmed classification and no post-mortem continuation is established.',
+      allegianceState: 'Former active Heil-Ly member at death.',
+      locationId: 'location:black-whale:tier-5',
+      openQuestions: ['Was Luini actually an Emitter?', 'Does any part of his spatial setup persist after death? Chapter 393 does not establish that it does.'],
+    }),
+  ]),
+  'character:lynch-fullbokko': freeze([
+    state({
+      characterId: 'character:lynch-fullbokko',
+      operationalState: 'Recovers alive after the apparent-Hisoka counter, confirms the man was gone when she woke, and recommends that the outmatched pair report the situation to Hinrigh.',
+      protectionState: 'Returns to Xi-Yu coordination with Zakuro rather than re-engaging the apparent Hisoka.',
+      threatLevel: 'high during continued Hisoka-search operations',
+      nenKnowledge: 'Body and Soul remains known from Chapters 390 and 392; Chapter 393 adds recovery/aftermath rather than a new activation.',
+      allegianceState: 'Active Xi-Yu field member.',
+      locationId: 'location:black-whale:tier-3',
+      openQuestions: ['What exact physical counter dropped Lynch in the prior encounter?'],
+    }),
+  ]),
+  'character:zakuro-custard': freeze([
+    state({
+      characterId: 'character:zakuro-custard',
+      operationalState: 'Wakes alive after losing consciousness when he looked away from the apparent Hisoka. He withdraws from direct contact, plans to regroup with Lynch, and considers finding Chrollo to trade location information for help against Heil-Ly.',
+      protectionState: 'Directed by Hinrigh to withdraw so the cinema approach is not mistaken for revenge.',
+      threatLevel: 'high but disengaged from direct apparent-Hisoka contact',
+      nenKnowledge: 'Bloody Mary remains active knowledge; Chapter 393 adds no new duration or search mechanics.',
+      allegianceState: 'Active Xi-Yu field member.',
+      locationId: 'location:black-whale:tier-3',
+      openQuestions: ['Can Zakuro and Lynch safely make contact with the Troupe leadership?'],
+    }),
+  ]),
+  'character:hinrigh-biganduffno': freeze([
+    state({
+      characterId: 'character:hinrigh-biganduffno',
+      bodyState: 'living body; no new Chapter 393 injury is supplied',
+      operationalState: 'Clears the Tier 3 cinema with Xi-Yu personnel, negotiates a temporary VVIP non-initiation arrangement with the man Xi-Yu believes is Hisoka, then joins Ken’i and Maizan at Room 3101 and begins testing the disappearance boundary after Maizan vanishes from view.',
+      protectionState: 'Operates with Xi-Yu personnel and temporary Cha-R coordination.',
+      threatLevel: 'high',
+      nenKnowledge: 'Biohazard remains confirmed. Chapter 393 demonstrates analytical testing at Room 3101 but does not supply a new Biohazard use there.',
+      allegianceState: 'Xi-Yu underboss coordinating anti-Heil-Ly operations and temporary inter-family cooperation.',
+      locationId: 'location:black-whale:tier-3:room-3101',
+      openQuestions: ['Where did Maizan go?', 'What triggers the Room 3101 disappearance?', 'Will the apparent-Hisoka arrangement hold?'],
+    }),
+  ]),
+  'character:ken-i-wang': freeze([
+    state({
+      characterId: 'character:ken-i-wang',
+      operationalState: 'Matches Hinrigh’s fifty-million intelligence offer to Maizan, creates additional paid Heil-Ly identification incentives and a cover-up plan, then joins the Room 3101 inspection while remaining outside when Maizan disappears.',
+      protectionState: 'Commands Cha-R personnel while coordinating tactically with Xi-Yu.',
+      threatLevel: 'high strategic and legal exposure',
+      nenKnowledge: 'No new personal Nen ability is supplied. The rumor about people Ken’i smiles at dying is explicitly not converted into a Nen mechanic or factual rule.',
+      allegianceState: 'Cha-R underboss pursuing temporary anti-Heil-Ly cooperation with Xi-Yu.',
+      locationId: 'location:black-whale:tier-3:room-3101',
+      openQuestions: ['What does Ken’i’s claimed Fourth Prince approval actually authorize?', 'How will Cha-R and Xi-Yu proceed after Maizan disappears?'],
+    }),
+  ]),
+  'character:maizan': freeze([
+    state({
+      characterId: 'character:maizan',
+      life: 'unknown',
+      bodyState: 'living and armed immediately before entering Room 3101; bodily location becomes unobservable to Hinrigh and Ken’i after entry',
+      consciousnessState: 'unknown after disappearance; Chapter 393 establishes neither death nor unconsciousness',
+      operationalState: 'Accepts overlapping paid-intelligence arrangements, guides Xi-Yu and Cha-R to Room 3101, enters first to make contact with the resident, and disappears from the observers’ view.',
+      protectionState: 'Kakin military corporal operating in a corrupt transactional arrangement with mafia underbosses.',
+      threatLevel: 'unknown after disappearance',
+      nenKnowledge: 'No Nen ability or Nen-user status is supplied for Maizan in Chapter 393.',
+      allegianceState: 'Kakin military corporal temporarily cooperating with Xi-Yu and Cha-R for payment and personal safety.',
+      locationId: 'location:black-whale:tier-3:room-3101',
+      openQuestions: ['Where is Maizan?', 'Is he still physically inside the room system?', 'What condition is he in?', 'What mechanism affected him?'],
+      certainty: 'confirmed',
+    }),
+  ]),
+  'character:morena-prudo': freeze([
+    state({
+      characterId: 'character:morena-prudo',
+      operationalState: 'Receives Tevelares, Quorolle, and Gelato after the Padaille/Luini losses and coaches the community to analyze opponent abilities and design creative restrictions rather than copying one obvious Nen category.',
+      protectionState: 'Remains within Heil-Ly’s concealed community structure; exact physical room is not assigned from this synopsis alone.',
+      threatLevel: 'extreme',
+      nenKnowledge: 'Contagion user and Nen-development adviser. Her hit-count example is hypothetical design advice, not a revealed ability.',
+      allegianceState: 'Heil-Ly boss and Contagion community leader.',
+      openQuestions: ['How will Heil-Ly replace Luini’s lost mobility?', 'Which members will reach level 21 and what abilities will they develop?'],
+    }),
+  ]),
+  'character:voconte': freeze([
+    heilLyProfile({ characterId: 'character:voconte', level: 26, occupation: 'human trafficker', nenType: 'Emitter', extra: 'He proposes using his unnamed door ability to catch prey who enter a trap; full mechanics remain unresolved.' }),
+  ]),
+  'character:daemon': freeze([heilLyProfile({ characterId: 'character:daemon', level: 20, occupation: 'construction worker' })]),
+  'character:gelato': freeze([heilLyProfile({ characterId: 'character:gelato', level: 19, occupation: 'professional gamer', extra: 'She declines Morena’s offer to reveal her Nen type because she wants it to remain a surprise.' })]),
+  'character:perigord': freeze([heilLyProfile({ characterId: 'character:perigord', level: 18, occupation: 'investigator’s assistant', extra: 'He believes Luini was an Emitter; that judgment remains inference.' })]),
+  'character:bille': freeze([heilLyProfile({ characterId: 'character:bille', level: 20, occupation: 'arcade employee', extra: 'He says he has already decided what ability he wants to develop, but no ability details are supplied.' })]),
+  'character:matvere': freeze([heilLyProfile({ characterId: 'character:matvere', level: 18, occupation: 'college student', extra: 'He wants to be an Emitter and make a firearm, but the group explicitly notes that innate type is not chosen by preference.' })]),
+  'character:connelly': freeze([
+    state({
+      characterId: 'character:connelly',
+      operationalState: 'Xi-Yu lieutenant who arrives with the requested bag of cash before the combined mafia party proceeds to Room 3101.',
+      protectionState: 'Operates with Xi-Yu underboss Hinrigh and the joint mafia group.',
+      threatLevel: 'active lower-tier operation',
+      nenKnowledge: 'No personal Nen ability is supplied in Chapter 393.',
+      allegianceState: 'Xi-Yu lieutenant.',
+      locationId: 'location:black-whale:tier-3:room-3101',
+    }),
+  ]),
+});
