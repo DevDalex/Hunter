@@ -28,7 +28,6 @@ export const abilityFoundation387Expansion = freeze([
       'Chapter 387 does not establish an ultimate maximum duration for continuous future viewing.',
       'The demonstrated divergence rule is established through Theta’s interaction; the chapter does not enumerate every possible multi-observer or Nen-interaction case.',
       'No separate aura cost or cooldown beyond the demonstrated Zetsu requirement is supplied.',
-      'Tserriednich’s early fear that he must remain defenseless for ten seconds is superseded by his subsequent continuing-vision and divergence experiment and is not treated as the final limitation.',
     ]),
     costs: freeze(['The demonstrated activation requires Zetsu, suppressing Tserriednich’s ordinary aura output while the state is maintained.']),
     targets: freeze(['self perception', 'future sequence involving surrounding events']),
@@ -38,6 +37,7 @@ export const abilityFoundation387Expansion = freeze([
     knownUses: freeze([
       'Chapter 385: Theta perceives a lethal headshot and corpse while Tserriednich physically survives; the complete mechanism is not yet revealed at that chapter boundary.',
       'Chapter 386: luminol finds no blood where Theta remembers the corpse, adding forensic evidence while the full temporal model remains withheld.',
+      'Chapter 387 flashback: Tserriednich initially worries about a ten-second defensive exposure, then immediately refines that provisional model by maintaining Zetsu and testing continued viewing.',
       'Chapter 387 flashback: Tserriednich discovers that the vision is ten seconds ahead when Theta repeats forecast dialogue.',
       'Chapter 387 flashback: he maintains Zetsu beyond the initial preview, experiences present sensory information alongside the continuing future vision, and experimentally demonstrates divergence from the forecast.',
       'Chapter 387 flashback: he sees Theta draw her gun, moves his actual body away from the forecast position, and survives while Theta fires at the forecast version she perceives.',
