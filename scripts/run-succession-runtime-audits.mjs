@@ -4,6 +4,7 @@ import path from 'node:path';
 const root = process.cwd();
 const audits = Object.freeze([
   ['stabilization', 'scripts/audit-succession-stabilization.mjs'],
+  ['people-closure-debug', 'scripts/debug-succession-people-closure.mjs'],
   ['contract', 'scripts/audit-succession-runtime-contract.mjs'],
   ['chapter-385-boundary', 'scripts/audit-succession-chapter-385-boundary.mjs'],
   ['chapter-386-boundary', 'scripts/audit-succession-chapter-386-boundary.mjs'],
