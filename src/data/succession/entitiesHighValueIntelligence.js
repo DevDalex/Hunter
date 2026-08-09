@@ -7,6 +7,7 @@ import {
   phase4PredecessorData,
   phase4ProtocolRecords,
 } from './highValueIntelligenceFoundation.js';
+import { highValueIntelligence384Protocols } from './highValueIntelligence384Expansion.js';
 
 /* A consumed or deployed artifact remains part of the chapter-bounded archive
    after its physical state changes. The Guardian Spirit Beast eggs manifest by
@@ -18,15 +19,20 @@ const objects = Object.freeze(phase4Objects.map((record) => record.id === 'objec
   })
   : record));
 
+const protocolRecords = Object.freeze([
+  ...phase4ProtocolRecords.filter((record) => !highValueIntelligence384Protocols.some((addition) => addition.id === record.id)),
+  ...highValueIntelligence384Protocols,
+]);
+
 /* Phase 4 promotes previously scattered intelligence into the canonical graph
    without replacing Phase 3's normalized people and state contracts. */
 export const successionArchiveData = Object.freeze({
   ...phase4PredecessorData,
   knowledgeRecords: phase4KnowledgeRecords,
-  protocolRecords: phase4ProtocolRecords,
+  protocolRecords,
   objects,
   documents: phase4Documents,
   evidenceItems: phase4EvidenceItems,
   editorialChangeLog: phase4EditorialChangeLog,
-  highValueIntelligenceVersion: 'phase-4-v1',
+  highValueIntelligenceVersion: 'phase-4-v1-ch384-protocol',
 });
