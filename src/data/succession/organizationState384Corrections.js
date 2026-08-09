@@ -3,9 +3,9 @@ export const organizationState384Corrections = Object.freeze({
     Object.freeze({
       id: 'organization-state:cha-r:384',
       organizationId: 'organization:cha-r',
-      chapterRange: Object.freeze({ start: 384, end: 392 }),
+      chapterRange: Object.freeze({ start: 384, end: 391 }),
       status: 'active',
-      operationalState: 'Cha-R is dealing with eight missing members, more than 300 missing workers across the wider lower-tier crisis, and the possibility that Heil-Ly’s unresolved attacks will cross the Kakin mafia settlement threshold into all-out war. Tajao and Ken’i deepen tactical cooperation with the Phantom Troupe while verifying Morena’s location. This state remains the active Cha-R profile until the Chapter 393 organization transition.',
+      operationalState: 'Cha-R is dealing with eight missing members, more than 300 missing workers across the wider lower-tier crisis, and the possibility that Heil-Ly’s unresolved attacks will cross the Kakin mafia settlement threshold into all-out war. Tajao and Ken’i deepen tactical cooperation with the Phantom Troupe while verifying Morena’s location. This state remains active through Chapter 391 before Chapter 392 receives its exact Hisoka-search and Luini-contact state.',
       authority: 'Brocco Li remains the boss; Tajao operates as vice boss and military adviser to Luzurus’s army, while Ken’i coordinates Tier 5 field dealings with the Phantom Troupe.',
       territoryIds: Object.freeze(['location:black-whale:tier-5']),
       objectiveStates: Object.freeze(['Verify Morena’s location and whether the inter-family settlement procedure still applies.', 'Contain the lower-tier killer/disappearance threat.', 'Use the Phantom Troupe tactically without surrendering Cha-R control.']),
@@ -51,9 +51,9 @@ export const organizationState384Corrections = Object.freeze({
     Object.freeze({
       id: 'organization-state:phantom-troupe:384',
       organizationId: 'organization:phantom-troupe',
-      chapterRange: Object.freeze({ start: 384, end: 392 }),
+      chapterRange: Object.freeze({ start: 384, end: 391 }),
       status: 'active',
-      operationalState: 'The Troupe’s Hisoka hunt remains primary, but Phinks ties the search to a tactical bargain with Cha-R and Xi-Yu access while Nobunaga openly accepts the possibility of war with Heil-Ly and proposes removing Morena. This Chapter 384 state supersedes the earlier pre-384 Troupe state and remains the active profile until the Chapter 393 transition.',
+      operationalState: 'The Troupe’s Hisoka hunt remains primary, but Phinks ties the search to a tactical bargain with Cha-R and Xi-Yu access while Nobunaga openly accepts the possibility of war with Heil-Ly and proposes removing Morena. This Chapter 384 state supersedes the earlier pre-384 Troupe state and remains active through Chapter 391 before Chapter 392 receives its exact Cha-R-office and Luini-contact state.',
       authority: 'Independent Troupe decision-making remains intact; cooperation with the Kakin mafia is conditional and non-subordinate.',
       territoryIds: Object.freeze(['location:black-whale:tier-5']),
       objectiveStates: Object.freeze(['Find Hisoka beyond Tier 5.', 'Hunt the lower-tier hitman.', 'Gather the other Spiders.', 'Use mafia access while preserving Troupe autonomy.']),
