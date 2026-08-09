@@ -16,7 +16,8 @@ try {
   const numbers = maintained.maintainedSuccessionChapterNumbers;
   const index388 = numbers.indexOf(388);
   assert(index388 >= 0 && numbers[index388 + 1] === 389, 'maintained publication chain must place Chapter 389 directly after Chapter 388');
-  assert(numbers[numbers.indexOf(389) + 1] === 400, 'Chapter 389 must remain before the pre-existing Chapter 400 maintained packet');
+  assert(numbers[numbers.indexOf(389) + 1] === 390, 'Chapter 389 must now lead directly into the maintained Chapter 390 packet');
+  assert(numbers[numbers.indexOf(390) + 1] === 400, 'Chapter 390 must remain before the pre-existing Chapter 400 maintained packet');
 
   const chapter389 = chapterModule.succession389ChapterResearch?.[0];
   assert(chapter389?.number === 389, 'dedicated Chapter 389 research must load');
@@ -67,8 +68,10 @@ try {
   const coin = archive.getAbilityKnowledgeAtChapter('ability:zhang-lei-coins', 389);
   assert(coin?.known && /1 to 10/i.test(text(coin)), 'Zhang Lei coin knowledge must preserve the observed 1-to-10 change');
   assert(/meaning.*unknown|meaning.*unresolved/i.test(text(coin)), 'Chapter 389 coin-number meaning must remain unresolved');
+  assert(!/same aura/i.test(text(coin)), 'Chapter 390 same-aura observation must not leak backward into Chapter 389');
   const zhangState = archive.getGuardianBeastStateAtChapter('guardian-beast:zhang-lei', 389);
   assert(/1 to 10/i.test(text(zhangState)), 'Zhang Lei Guardian Spirit Beast state must expose the Chapter 389 1-to-10 observation');
+  assert(!/same aura/i.test(text(zhangState)), 'Chapter 390 same-aura beast-state observation must not leak backward into Chapter 389');
 
   const halkenburg = archive.getAbilityKnowledgeAtChapter('ability:halkenburg-possession-arrow', 389);
   assert(halkenburg?.known && /unresolved/i.test(halkenburg.summary), 'Halkenburg bow mechanics must remain partial at Chapter 389');
@@ -96,14 +99,14 @@ try {
   assert(camilla411 && /Room 1014/i.test(text(camilla411)), 'later Camilla organization state must preserve later Room 1014 progression');
 
   const dossierNames = new Set((dossier.successionAbilities || []).map((record) => record.ability));
-  assert(dossierNames.has('Tackle Shield') && dossierNames.has('Have-Not Curse') && dossierNames.has('Zhang Lei’s Guardian Coins'), 'active dossier must layer the three Chapter 389 ability records');
-  assert((dossier.guardAssignmentGroups || []).some((group) => group.group?.includes('Chapter 389')), 'active dossier must include the Chapter 389 operational group');
+  assert(dossierNames.has('Tackle Shield') && dossierNames.has('Have-Not Curse') && dossierNames.has('Zhang Lei’s Guardian Coins'), 'active dossier must retain the three Chapter 389 ability records after the Chapter 390 overlay');
+  assert((dossier.guardAssignmentGroups || []).some((group) => group.group?.includes('Chapter 389')), 'active dossier must retain the Chapter 389 operational group after the Chapter 390 overlay');
 
   const note = fs.readFileSync('docs/source-notes/chapter-389.md', 'utf8');
   assert(/10:00 a\.m\. on Voyage Day 9/i.test(note) && /11:30 a\.m\. on Voyage Day 10/i.test(note), 'source note must preserve both exact chronology anchors');
   assert(/does not establish that his feelings were caused by Nen/i.test(note), 'source note must protect the Giuliano/Tyson non-causation boundary');
 
-  console.log(`Chapter 389 boundary audit passed: ${events389.length} canonical events preserve the Day 9 flashback, Day 10 11:30 Vict confrontation, Halkenburg custody, Have-Not curse ritual, Sarahell planning boundary, and Zhang Lei coin 1→10 observation.`);
+  console.log(`Chapter 389 boundary audit passed: ${events389.length} canonical events preserve the Day 9 flashback, Day 10 11:30 Vict confrontation, Halkenburg custody, Have-Not curse ritual, Sarahell planning boundary, and Zhang Lei coin 1→10 observation before Chapter 390 adds same-aura continuity.`);
 } finally {
   await vite.close();
 }
