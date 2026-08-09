@@ -7,6 +7,7 @@ import { relationshipFoundation383Expansion } from './relationshipFoundation383E
 import { relationshipFoundation384Expansion } from './relationshipFoundation384Expansion.js';
 import { relationshipFoundation385Expansion } from './relationshipFoundation385Expansion.js';
 import { relationshipFoundation386Expansion } from './relationshipFoundation386Expansion.js';
+import { relationshipFoundation388Expansion } from './relationshipFoundation388Expansion.js';
 
 const ARCHIVE_DATE = '2026-08-09';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
@@ -35,26 +36,14 @@ const relationshipEnrichment = Object.freeze({
   'relationship:kurapika-oito': Object.freeze({
     basis: 'Oito’s bodyguard contract and their shared command of Room 1014’s survival strategy.',
     operationalState: 'Active employer, strategist, and political-partner relationship.',
-    strength: 'command-critical',
-    certainty: 'confirmed',
-    relatedEventIds: Object.freeze(['event:room-1014-opening-crisis', 'event:oito-little-eye-reconnaissance', 'event:lower-prince-alliance-formation']),
-    evidenceNotes: Object.freeze(['Professional duty develops into strategic cooperation without erasing Oito’s authority as employer and queen.']),
+    strength: 'command-critical', certainty: 'confirmed',
+    relatedEventIds: Object.freeze(['event:room-1014-opening-crisis', 'event:oito-little-eye-reconnaissance', 'event:lower-prince-alliance-formation']), evidenceNotes: Object.freeze([]),
   }),
   'relationship:kurapika-woble': Object.freeze({
-    basis: 'Kurapika’s contracted bodyguard duty and explicit commitment to the infant prince’s survival.',
-    operationalState: 'Active protection, deterrence, diplomacy, and Nen-instruction strategy.',
-    strength: 'existential',
-    certainty: 'confirmed',
-    relatedEventIds: Object.freeze(['event:room-1014-opening-crisis', 'event:vincent-room-1014-attack', 'event:lower-prince-alliance-formation']),
-    evidenceNotes: Object.freeze([]),
+    basis: 'Kurapika’s contracted bodyguard duty and explicit commitment to the infant prince’s survival.', operationalState: 'Active protection, deterrence, diplomacy, and Nen-instruction strategy.', strength: 'existential', certainty: 'confirmed', relatedEventIds: Object.freeze(['event:room-1014-opening-crisis', 'event:vincent-room-1014-attack', 'event:lower-prince-alliance-formation']), evidenceNotes: Object.freeze([]),
   }),
   'relationship:morena-heil-ly': Object.freeze({
-    basis: 'Morena’s leadership of the Contagion community and breakaway Heil-Ly campaign.',
-    operationalState: 'Active command, recruitment, leveling, and ideological control.',
-    strength: 'institutional',
-    certainty: 'confirmed',
-    relatedEventIds: Object.freeze(['event:heil-ly-contagion-activation', 'event:borksen-recruitment-game']),
-    evidenceNotes: Object.freeze([]),
+    basis: 'Morena’s leadership of the Contagion community and breakaway Heil-Ly campaign.', operationalState: 'Active command, recruitment, leveling, and ideological control.', strength: 'institutional', certainty: 'confirmed', relatedEventIds: Object.freeze(['event:heil-ly-contagion-activation', 'event:borksen-recruitment-game']), evidenceNotes: Object.freeze([]),
   }),
 });
 
@@ -74,8 +63,7 @@ const normalizeRelationship = (relationship) => {
   });
 };
 
-const retainedRelationships = assignmentFoundationData.relationships
-  .filter((relationship) => !legacyRelationshipAliases[relationship.id]);
+const retainedRelationships = assignmentFoundationData.relationships.filter((relationship) => !legacyRelationshipAliases[relationship.id]);
 
 const relationships = Object.freeze(uniqueById([
   ...retainedRelationships,
@@ -87,9 +75,7 @@ const relationships = Object.freeze(uniqueById([
   ...relationshipFoundation384Expansion,
   ...relationshipFoundation385Expansion,
   ...relationshipFoundation386Expansion,
+  ...relationshipFoundation388Expansion,
 ]).map(normalizeRelationship));
 
-export const successionArchiveData = Object.freeze({
-  ...assignmentFoundationData,
-  relationships,
-});
+export const successionArchiveData = Object.freeze({ ...assignmentFoundationData, relationships });
