@@ -44,7 +44,7 @@ export const relationshipFoundation391Expansion = freeze([
     updatedAt: '2026-08-09',
     sourceEntityId: 'character:padaille',
     targetEntityId: 'character:morena-prudo',
-    relationshipType: 'allegiance',
+    relationshipType: 'alliance',
     subtype: 'contagion-member-personal-devotion',
     direction: 'directed',
     sentiment: 'allied',
