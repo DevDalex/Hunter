@@ -11,6 +11,7 @@ import {
   abilityKnowledge385Overrides,
   guardianBeastState385Corrections,
 } from './nenSystemFoundation385Corrections.js';
+import { abilityKnowledge386Overrides } from './nenSystemFoundation386Corrections.js';
 
 const ARCHIVE_DATE = '2026-08-09';
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -90,6 +91,20 @@ const correctedNenSystemProfiles = Object.freeze({
   ...nenSystemProfile378Corrections,
 });
 
+const inheritedAbilityKnowledgeOverrides = organizationFoundationData.abilityKnowledgeOverrides || {};
+const abilityKnowledgeOverrideKeys = new Set([
+  ...Object.keys(inheritedAbilityKnowledgeOverrides),
+  ...Object.keys(abilityKnowledge385Overrides),
+  ...Object.keys(abilityKnowledge386Overrides),
+]);
+const correctedAbilityKnowledgeOverrides = Object.freeze(Object.fromEntries(
+  [...abilityKnowledgeOverrideKeys].map((abilityId) => [abilityId, Object.freeze([
+    ...(inheritedAbilityKnowledgeOverrides[abilityId] || []),
+    ...(abilityKnowledge385Overrides[abilityId] || []),
+    ...(abilityKnowledge386Overrides[abilityId] || []),
+  ])]),
+));
+
 export const successionArchiveData = Object.freeze({
   ...organizationFoundationData,
   abilities,
@@ -97,9 +112,6 @@ export const successionArchiveData = Object.freeze({
   chapters,
   nenSystemProfiles: correctedNenSystemProfiles,
   guardianBeastStateProfiles: correctedGuardianBeastStateProfiles,
-  abilityKnowledgeOverrides: Object.freeze({
-    ...(organizationFoundationData.abilityKnowledgeOverrides || {}),
-    ...abilityKnowledge385Overrides,
-  }),
+  abilityKnowledgeOverrides: correctedAbilityKnowledgeOverrides,
   abilitySystemLinks,
 });
