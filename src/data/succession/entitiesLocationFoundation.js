@@ -7,11 +7,13 @@ import {
   isLegacyJusticeLocation386,
   locationFoundation386Corrections,
   remapJusticeLocation386,
+  remapJusticeLocationId386,
 } from './locationFoundation386Corrections.js';
 
 const ARCHIVE_DATE = '2026-08-09';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const includesChapter = (range, chapter) => chapter >= range.start && chapter <= (range.end ?? Number.POSITIVE_INFINITY);
+const remapLocationIds = (values = []) => Object.freeze([...new Set(values.map(remapJusticeLocationId386).filter(Boolean))]);
 
 const locations = Object.freeze(uniqueById([
   ...foundationData.locations.filter((location) => !isLegacyJusticeLocation386(location.id)),
@@ -24,7 +26,18 @@ const locationHistory = Object.freeze(uniqueById([
   ...locationHistoryExpansion.map(remapJusticeLocation386),
 ]));
 
-const chapters = foundationData.chapters;
+const events = Object.freeze(foundationData.events.map((event) => Object.freeze({
+  ...event,
+  locationIds: remapLocationIds(event.locationIds || []),
+  updatedAt: (event.locationIds || []).some(isLegacyJusticeLocation386) ? ARCHIVE_DATE : event.updatedAt,
+})));
+
+const chapters = Object.freeze(foundationData.chapters.map((chapter) => Object.freeze({
+  ...chapter,
+  locationIds: remapLocationIds(chapter.locationIds || []),
+  updatedAt: (chapter.locationIds || []).some(isLegacyJusticeLocation386) ? ARCHIVE_DATE : chapter.updatedAt,
+})));
+
 const latestChapter = chapters.at(-1)?.number || 414;
 const historiesByCharacter = new Map();
 for (const record of locationHistory) {
@@ -58,5 +71,6 @@ export const successionArchiveData = Object.freeze({
   characters,
   locations,
   locationHistory,
+  events,
   chapters,
 });
