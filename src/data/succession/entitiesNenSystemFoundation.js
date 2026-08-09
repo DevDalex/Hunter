@@ -12,6 +12,7 @@ import {
   guardianBeastState385Corrections,
 } from './nenSystemFoundation385Corrections.js';
 import { abilityKnowledge386Overrides } from './nenSystemFoundation386Corrections.js';
+import { abilityKnowledge387Overrides } from './nenSystemFoundation387Corrections.js';
 
 const ARCHIVE_DATE = '2026-08-09';
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -21,16 +22,17 @@ const enrichAbility = (ability) => {
   if (ability.id !== 'ability:parallel-future') return ability;
   return Object.freeze({
     ...ability,
-    summary: 'Tserriednich enters Zetsu to receive a ten-second precognitive vision, then remains aware as the predicted sequence unfolds while his own actions can diverge from it.',
-    activation: 'Tserriednich closes his eyes and enters Zetsu to receive the ten-second precognitive vision.',
+    summary: 'Tserriednich enters Zetsu with his eyes closed to receive a vision ten seconds ahead; if he maintains the state, the future view continues while real time advances and his actual actions can diverge from the forecast perceived by the demonstrated observer.',
+    activation: 'Tserriednich closes his eyes and fully enters Zetsu; static precedes the ten-second-ahead vision.',
     conditions: Object.freeze(unique([
       ...(ability.conditions || []),
-      'The precognitive vision is linked to entering Zetsu.',
-      'Other people continue through the perceived sequence without sharing Tserriednich’s awareness of the divergence.',
+      'The demonstrated activation uses an eyes-closed Zetsu state.',
+      'Maintaining the required state lets the future vision continue beyond the first ten-second preview.',
+      'In the demonstrated Theta interaction, the observer continues through the forecast sequence without sharing Tserriednich’s awareness of his divergent actual behavior.',
     ])),
     knownUses: Object.freeze(unique([
       ...(ability.knownUses || []),
-      'Used during Theta’s attempted assassination while Tserriednich’s Zetsu training develops.',
+      'Chapter 387 reveals the ten-second forecast, continuing future view, and demonstrated divergence mechanics behind Theta’s failed assassination.',
     ])),
     updatedAt: ARCHIVE_DATE,
   });
@@ -96,12 +98,14 @@ const abilityKnowledgeOverrideKeys = new Set([
   ...Object.keys(inheritedAbilityKnowledgeOverrides),
   ...Object.keys(abilityKnowledge385Overrides),
   ...Object.keys(abilityKnowledge386Overrides),
+  ...Object.keys(abilityKnowledge387Overrides),
 ]);
 const correctedAbilityKnowledgeOverrides = Object.freeze(Object.fromEntries(
   [...abilityKnowledgeOverrideKeys].map((abilityId) => [abilityId, Object.freeze([
     ...(inheritedAbilityKnowledgeOverrides[abilityId] || []),
     ...(abilityKnowledge385Overrides[abilityId] || []),
     ...(abilityKnowledge386Overrides[abilityId] || []),
+    ...(abilityKnowledge387Overrides[abilityId] || []),
   ])]),
 ));
 
