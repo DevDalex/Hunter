@@ -1,8 +1,9 @@
 const freeze = (value) => Object.freeze(value);
 const chapterSourceId = (number) => `source:chapter-${number}`;
 
-const knowledge = ({ id, start = 391, end = 391, knowledgeState = 'documented', certainty = 'confirmed', summary, activation, conditions = [], limitations = [], costs = [], targets = [], range = 'unknown', duration = 'unknown', knownUses = [], sources = [391] }) => freeze({
+const knowledge = ({ id, abilityName = null, start = 391, end = 391, knowledgeState = 'documented', certainty = 'confirmed', summary, activation, conditions = [], limitations = [], costs = [], targets = [], range = 'unknown', duration = 'unknown', knownUses = [], sources = [391] }) => freeze({
   id,
+  abilityName,
   chapterRange: freeze({ start, end }),
   knowledgeState,
   certainty,
@@ -55,6 +56,7 @@ export const abilityKnowledge391Overrides = freeze({
   'ability:hinrigh-object-animal-transformation': freeze([
     knowledge({
       id: 'ability-knowledge:hinrigh-object-animal-transformation:391',
+      abilityName: 'Biohazard',
       knowledgeState: 'formal name and expanded demonstrations documented',
       summary: 'Chapter 391 identifies Hinrigh’s transformation ability as Biohazard. In addition to the Chapter 390 gun-to-snake use, Hinrigh transforms a recording camcorder into a surveillance cat and uses aura-reinforced handcuff-pigeons that can revert to cuff form around Padaille.',
       activation: 'Biohazard transforms ordinary objects into living-animal forms. Chapter 390 directly shows Hinrigh touching guns before transformation; Chapter 391 supplies the formal name and additional uses.',
