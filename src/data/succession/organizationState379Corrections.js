@@ -49,9 +49,9 @@ export const organizationState379Corrections = Object.freeze({
     Object.freeze({
       id: 'organization-state:phantom-troupe:379',
       organizationId: 'organization:phantom-troupe',
-      chapterRange: Object.freeze({ start: 379, end: 392 }),
+      chapterRange: Object.freeze({ start: 379, end: 383 }),
       status: 'active',
-      operationalState: 'The Troupe’s Hisoka hunt remains primary. Franklin adopts a passive Tier 5 interception strategy while Nobunaga, Phinks, and Feitan enter a tactical-cooperation environment with Cha-R after being cleared of the warehouse murders; later chapter-specific events can refine activity within this continuing pre-393 state.',
+      operationalState: 'The Troupe’s Hisoka hunt remains primary. Franklin adopts a passive Tier 5 interception strategy while Nobunaga, Phinks, and Feitan enter a tactical-cooperation environment with Cha-R after being cleared of the warehouse murders; later chapter-specific events can refine activity within this continuing pre-384 state.',
       authority: 'Independent Troupe command; cooperation with mafia actors remains temporary and non-subordinate.',
       territoryIds: Object.freeze(['location:black-whale:tier-5']),
       objectiveStates: Object.freeze(['Kill Hisoka.', 'Recover weapons and move searches beyond Tier 5.', 'Use lower-tier mafia access or cooperation when useful without accepting mafia control.']),
