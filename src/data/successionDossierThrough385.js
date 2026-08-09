@@ -60,7 +60,6 @@ export const successionMysteries = freeze([
 ]);
 
 export const successionResolvedQuestions = freeze([
-  ...(base.successionResolvedQuestions || []),
   ...succession385ResolvedQuestions,
 ]);
 
