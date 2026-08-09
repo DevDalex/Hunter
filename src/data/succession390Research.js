@@ -19,13 +19,15 @@ export const succession390SourcePolicy = freeze({
 const timelineEvent = ({ id, label, detail, people = [], tracks = [], location = null, confidence = 'Confirmed in the supplied Hunterpedia Chapter 390 synopsis' }) => freeze({
   id,
   day: 10,
-  time: null,
+  time: 'Voyage Day 10 · exact clock time unsupplied',
   chronology: 'direct Chapter 389 present-day continuation; exact clock time unsupplied',
   label,
+  title: label,
   detail,
   people: freeze(people),
   tracks: freeze(tracks),
   location,
+  tier: location,
   chapter: 390,
   confidence,
   source: source390,
@@ -38,7 +40,7 @@ export const succession390TimelineEvents = freeze([
     detail: 'Coventoba is startled that his Zhang Lei coin now displays 10 instead of 1. He briefly wonders whether it could be a different coin, but recognizes the same aura he felt from the original. He considers placing it into the Guardian Spirit Beast’s mouth and rejects the experiment as too risky. Tenftory’s separately received coin still displays 1.',
     people: ['Coventoba', 'Tenftory', 'Zhang Lei Hui Guo Rou'],
     tracks: ['zhang-lei', 'guardian-spirit-beast', 'coins', 'nen'],
-    location: 'Room 1003 / Zhang Lei household',
+    location: 'Tier 1 · Room 1003',
   }),
   timelineEvent({
     id: '390-zhang-lei-consults-onior',
@@ -46,7 +48,7 @@ export const succession390TimelineEvents = freeze([
     detail: 'Zhang Lei visits Xi-Yu boss Onior, says three siblings have already died in the succession battle, and asks whether Onior knows anything about Guardian Spirit Beasts or Nen. Onior says he knows nothing about Guardian Spirit Beasts and, as a Second-Track Faker, has no personal Nen expertise, but knows younger members of his organization who know about Nen and promises to ask them.',
     people: ['Zhang Lei Hui Guo Rou', 'Onior Longbao'],
     tracks: ['zhang-lei', 'xi-yu', 'nen', 'succession'],
-    location: 'Xi-Yu boss room',
+    location: 'Tier 3 · Xi-Yu boss room',
   }),
   timelineEvent({
     id: '390-onior-orders-hinrigh-hisoka-morena-operation',
@@ -54,7 +56,7 @@ export const succession390TimelineEvents = freeze([
     detail: 'Onior calls Hinrigh while Hinrigh is returning toward the Heil-Ly base on Tier 4. Hinrigh favors crushing Morena first. Onior orders Xi-Yu to search for Hisoka on Tier 3, permit the Phantom Troupe to search Tier 4, and kill Morena during the operation, hoping the controlled access will help constrain the Troupe’s movements.',
     people: ['Onior Longbao', 'Hinrigh Biganduffno', 'Morena Prudo', 'Hisoka Morow'],
     tracks: ['xi-yu', 'heil-ly', 'troupe', 'hisoka', 'mafia'],
-    location: 'Tier 4 / telephone coordination',
+    location: 'Tier 4 · telephone coordination',
   }),
   timelineEvent({
     id: '390-hinrigh-lynch-zakuro-enter-tier3',
@@ -62,7 +64,7 @@ export const succession390TimelineEvents = freeze([
     detail: 'Hinrigh recruits Lynch Fullbokko and Zakuro Custard for the new task. The three enter Tier 3 and notice two Heil-Ly members at a burger restaurant. The male sends his female companion to notify Morena; Hinrigh follows her while Lynch and Zakuro confront the man.',
     people: ['Hinrigh Biganduffno', 'Lynch Fullbokko', 'Zakuro Custard'],
     tracks: ['xi-yu', 'heil-ly', 'tier-3', 'manhunt'],
-    location: 'Tier 3 / burger restaurant area',
+    location: 'Tier 3 · burger restaurant area',
   }),
   timelineEvent({
     id: '390-tier3-heilly-fight-bloody-mary-body-and-soul',
@@ -70,7 +72,7 @@ export const succession390TimelineEvents = freeze([
     detail: 'A third Heil-Ly member slashes Zakuro deeply across the neck while the first opponent kicks Lynch. Zakuro then subdues his attacker with Bloody Mary and explicitly thanks him for drawing blood that Zakuro says he could not draw from himself. Lynch strikes her opponent and uses Body and Soul while questioning him, learning basic information about Heil-Ly’s goal and Morena’s ability.',
     people: ['Lynch Fullbokko', 'Zakuro Custard'],
     tracks: ['xi-yu', 'heil-ly', 'nen', 'bloody-mary', 'body-and-soul'],
-    location: 'Tier 3 / burger restaurant area',
+    location: 'Tier 3 · burger restaurant area',
   }),
   timelineEvent({
     id: '390-heilly-civilian-registration-warning',
@@ -86,7 +88,7 @@ export const succession390TimelineEvents = freeze([
     detail: 'Two soldiers agree to let Hinrigh’s group leave if they do not return to Tier 3. Hinrigh appears to accept, offers bribe money, and touches their guns. Afterward, the gun barrels become live snakes whose mouths fire gunshots, killing both soldiers. Hinrigh mockingly apologizes for breaking his promise.',
     people: ['Hinrigh Biganduffno', 'Lynch Fullbokko', 'Zakuro Custard'],
     tracks: ['xi-yu', 'nen', 'ship-security', 'tier-3'],
-    location: 'Tier 3 exit route',
+    location: 'Tier 3 · exit route',
   }),
 ]);
 
@@ -205,6 +207,8 @@ export const succession390ChapterResearch = freeze([
     number: 390,
     title: null,
     titleStatus: 'not-supplied-no-title-invented',
+    phase: 'Active contest and voyage',
+    voyageDay: 'Voyage Day 10',
     source: source390,
     sourcePolicy: succession390SourcePolicy,
     chronology: freeze({
@@ -217,6 +221,18 @@ export const succession390ChapterResearch = freeze([
     status: 'chapter-bounded research packet complete',
     lanes: freeze(['Zhang Lei coins', 'Xi-Yu Family', 'Heil-Ly', 'Phantom Troupe / Hisoka search', 'Nen ability demonstrations', 'Tier 3 security']),
     events: succession390TimelineEvents,
+    prelude: freeze([]),
+    characters: freeze(['Coventoba', 'Tenftory', 'Zhang Lei Hui Guo Rou', 'Onior Longbao', 'Hinrigh Biganduffno', 'Lynch Fullbokko', 'Zakuro Custard', 'Morena Prudo', 'Hisoka Morow']),
+    locations: freeze(['Tier 1 · Room 1003', 'Tier 3 · Xi-Yu boss room', 'Tier 4', 'Tier 3 · burger restaurant area', 'Tier 3 · exit route']),
+    threadLabels: freeze(['Zhang Lei', 'Mafia families', 'Heil-Ly', 'Troupe & Hisoka', 'Nen development', 'Ship operations']),
+    confidence: freeze([
+      'All story details derive only from the user-supplied Hunterpedia Chapter 390 synopsis.',
+      'Voyage Day 10 is retained from the immediate Chapter 389 present-day handoff; no Chapter 390 clock time is invented.',
+      'Coin-number cause and effect remain unresolved.',
+      'Hinrigh’s formal ability name and Nen category are not supplied.',
+      'Bloody Mary and Body and Soul are not expanded beyond the demonstrated effects.',
+    ]),
+    coverage: freeze({ summary: true, chronology: true, locations: true, source: true }),
     keyResearch: freeze({
       zhangLeiCoins: succession390ZhangLeiCoinResearch,
       zhangLeiOnior: succession390ZhangLeiOniorResearch,
