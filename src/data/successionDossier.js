@@ -1,127 +1,80 @@
-import * as base from './successionDossierThrough382.js';
+import * as base from './successionDossierThrough383.js';
 import {
-  succession383BanquetResearch,
-  succession383BodyStates,
-  succession383HunterCodeResearch,
-  succession383KeeneyResearch,
-  succession383MagicalWormResearch,
-  succession383MarayamSpaceResearch,
-  succession383MelodyPerformanceResearch,
-  succession383Mysteries,
-  succession383RelationshipRecords,
-  succession383SourcePolicy,
-  succession383TwinEscapeResearch,
-  succession383WithoutYouResearch,
-} from './succession383Research.js';
+  succession384MafiaProtocolResearch,
+  succession384MorenaLocationResearch,
+  succession384Mysteries,
+  succession384RelationshipRecords,
+  succession384SecondTrackFakerResearch,
+  succession384SourcePolicy,
+  succession384TroupeMafiaResearch,
+  succession384TserriednichBeastResearch,
+  succession384ZetsuTrainingResearch,
+} from './succession384Research.js';
 
-export * from './successionDossierThrough382.js';
+export * from './successionDossierThrough383.js';
 
 const freeze = (value) => Object.freeze(value);
-const source383 = 'https://hunterxhunter.fandom.com/wiki/Chapter_383';
+const source384 = 'https://hunterxhunter.fandom.com/wiki/Chapter_384';
 
-const melody383Ability = freeze({
-  ability: 'Melody’s Aura Performance',
-  user: 'Melody',
-  owner: 'Melody',
-  type: 'Mass auditory entrancement / Nen classification unsupplied',
-  category: 'Mass auditory entrancement',
-  chapters: '383',
-  chapter: 383,
-  conditions: 'Melody plays sincerely and the listener hears the performance, directly or through the banquet loudspeakers in the Chapter 383 demonstration.',
-  mechanics: 'Everyone who can hear the performance is entranced for three minutes and experiences a vivid scenic vision. The effect reaches absent princes through relayed banquet audio and creates the window for Keeney to move Kacho and Fugetsu to the lifeboat.',
-  knownAtChapterBoundary: 'Three-minute duration, auditory targeting, scenic entrancement, and loudspeaker relay are directly demonstrated. Formal Nen category and broader immunity/range rules are not supplied.',
-  target: 'Everyone who can hear the performance.',
-  confidence: 'Core demonstrated effect confirmed / formal Nen classification and broader limits unresolved.',
-  source: source383,
-});
-
-const magicalWorm383Ability = freeze({
-  ability: 'Magical Worm',
-  user: 'Fugetsu Hui Guo Rou Guardian Spirit Beast',
-  owner: 'Fugetsu Hui Guo Rou Guardian Spirit Beast',
-  type: 'Guardian Spirit Beast translocation tunnel',
-  category: 'Translocation tunnel',
-  chapters: '383',
-  chapter: 383,
-  conditions: 'The cooperative twin Guardian Spirit Beast system assigns the outward journey to Fugetsu and the return journey to Kacho. Fugetsu actively opens the emergency return door during the failed lifeboat escape.',
-  mechanics: 'Magical Worm manifests the twins’ door/tunnel route. It works in cooperation with Kacho’s Without You. Exact range, destination rules, and post-Kacho return-control topology remain incomplete.',
-  knownAtChapterBoundary: 'Official name, translocation function, twin directional roles, and cooperation with Without You are confirmed.',
-  target: 'Fugetsu and Kacho / the Kacho-side cooperative counterpart.',
-  confidence: 'Core route mechanics confirmed / complete range and post-death control topology unresolved.',
-  source: source383,
-});
-
-const withoutYou383Ability = freeze({
-  ability: 'Without You',
-  user: 'Kacho Hui Guo Rou Guardian Spirit Beast',
-  owner: 'Kacho Hui Guo Rou Guardian Spirit Beast',
-  type: 'Death-triggered Guardian Spirit Beast protective continuation',
-  category: 'Death-triggered protective continuation',
-  chapters: '383',
-  chapter: 383,
-  conditions: 'One of the twins dies. Chapter 383 demonstrates the previously formless Guardian Spirit Beast appearing in Kacho’s form after Kacho’s death and remaining with the surviving sister.',
-  mechanics: 'After Kacho dies on the lifeboat, Without You appears in Kacho’s form and reunites with Fugetsu. The chapter identifies the entity as Kacho’s Guardian Spirit Beast and does not establish that Kacho’s human consciousness survives inside it. The broader form-selection rule is not expanded beyond the supplied explanation and this demonstrated activation.',
-  knownAtChapterBoundary: 'Official name, death trigger, demonstrated Kacho-form manifestation, protective purpose, and cooperation with Magical Worm are confirmed.',
-  target: 'The surviving twin sister; Fugetsu in the Chapter 383 activation.',
-  confidence: 'Core trigger and demonstrated purpose confirmed / general form-selection and human-consciousness persistence unresolved.',
-  source: source383,
+const tserriednichSpecialistBeast384Ability = freeze({
+  ability: 'Tserriednich’s Instinctive Specialist Nen Beast',
+  user: 'Tserriednich Hui Guo Rou',
+  owner: 'Tserriednich Hui Guo Rou',
+  type: 'Instinctively manifested Specialist Nen beast / full ability unresolved',
+  category: 'Specialist Nen-beast manifestation',
+  chapters: '384',
+  chapter: 384,
+  conditions: 'Theta identifies the second beast as a product of Tserriednich’s own Specialist Nen that manifested instinctively and without his conscious intent. It is separate from his Seed Urn Guardian Spirit Beast.',
+  mechanics: 'A dark aura mass and second Nen beast appear around Tserriednich during training. Theta calls it his alter ego, but Chapter 384 does not supply an official ability name or reveal its complete function, targets, costs, range, or later relationship to other abilities.',
+  knownAtChapterBoundary: 'Existence, Specialist origin, unintended manifestation, and separation from the Seed Urn Guardian Spirit Beast are confirmed. Complete mechanics are not.',
+  target: 'Unknown.',
+  confidence: 'Core manifestation confirmed / official name and complete ability unresolved.',
+  source: source384,
 });
 
 export const successionAbilities = freeze([
-  ...base.successionAbilities.filter((record) => !['Melody’s Aura Performance', 'Magical Worm', 'Without You'].includes(record.ability)),
-  melody383Ability,
-  magicalWorm383Ability,
-  withoutYou383Ability,
+  ...base.successionAbilities.filter((record) => record.ability !== 'Tserriednich’s Instinctive Specialist Nen Beast'),
+  tserriednichSpecialistBeast384Ability,
 ]);
 
 export const successionRelationships = freeze([
   ...base.successionRelationships,
-  ...succession383RelationshipRecords,
+  ...succession384RelationshipRecords,
 ]);
 
-export const bodyStateLedger = freeze([
-  ...(base.bodyStateLedger || []),
-  ...succession383BodyStates,
-]);
-
-const superseded383Mystery = (record) => {
-  const question = String(record.question || '');
-  return (question.includes('Fugetsu') && (question.includes('lower') || question.includes('route') || question.includes('reach')))
-    || (question.includes('Kacho') && question.includes('Guardian Spirit Beast') && !question.includes('consciousness'));
-};
+export const bodyStateLedger = freeze([...(base.bodyStateLedger || [])]);
 
 export const successionMysteries = freeze([
-  ...base.successionMysteries.filter((record) => !superseded383Mystery(record)),
-  ...succession383Mysteries,
+  ...base.successionMysteries,
+  ...succession384Mysteries,
 ]);
 
 export const dossierSources = freeze({
   ...base.dossierSources,
-  chapter383: source383,
-  sourcePolicy383: succession383SourcePolicy,
+  chapter384: source384,
+  sourcePolicy384: succession384SourcePolicy,
 });
 
 export const guardAssignmentGroups = freeze([
   ...base.guardAssignmentGroups,
   freeze({
-    group: 'Chapter 383 Sunday banquet escape, twin-beast reveal, and Kacho death',
-    description: 'Melody turns the Sunday banquet into a three-minute escape window, Keeney launches the twins’ lifeboat and then dies by suicide, the succession boundary prevents Kacho and Fugetsu from leaving, Kacho dies, and Without You continues her protective role beside Fugetsu. Room 1013 also reveals a one-way re-entry problem for departing servants, while the Hunter Code finally decodes Mizaistom’s Chapter 381 call.',
+    group: 'Chapter 384 mafia-war flashback and Tserriednich Nen escalation',
+    description: 'Chapter 384 rewinds to Voyage Day 7 at 10:30 p.m. The Cha-R leadership and Phantom Troupe compare the disappearance crisis, define the Kakin mafia hit-and-raid settlement procedure, and make Morena’s location the hinge between settlement and open war. The chapter also identifies the three mafia bosses as Second-track Fakers, then reveals that Tserriednich has instinctively created a second Specialist Nen beast while Theta advances him into Zetsu training.',
     records: freeze([
-      freeze({ subject: 'Sunday banquet escape window', people: 'Melody, Keeney, Kacho Hui Guo Rou, Fugetsu Hui Guo Rou', notes: 'Melody’s sincere flute performance entrances everyone who can hear it for three minutes, including through loudspeakers. Keeney uses the window to escort the twins to a lifeboat.', status: 'escape launched / auditory Nen mechanics materially clarified', source: source383 }),
-      freeze({ subject: 'Keeney final operation', people: 'Keeney, Melody, Hunter Association', notes: 'Keeney explains his family loss and concern that exposed accomplices could implicate the Hunter Association. After launching the twins’ lifeboat, he kills himself.', status: 'Keeney deceased / route-lead role ended', source: source383 }),
-      freeze({ subject: 'Twin escape boundary', people: 'Kacho Hui Guo Rou, Fugetsu Hui Guo Rou', notes: 'A mass of hands attacks the twins as the lifeboat approaches open water. Fugetsu opens an emergency return door, survives, and returns toward the ship; Kacho remains behind and dies on the lifeboat.', status: 'physical escape failed / Kacho deceased / exact ritual-enforcement mechanism unresolved', source: source383 }),
-      freeze({ subject: 'Magical Worm and Without You', people: 'Fugetsu Hui Guo Rou, Kacho Hui Guo Rou Guardian Spirit Beast', notes: 'Magical Worm is revealed as the twins’ translocation tunnel system. Without You activates after Kacho’s death, appears in Kacho’s form, and remains beside Fugetsu as protection.', status: 'cooperative twin Guardian Spirit Beast system confirmed / Kacho-form entity distinct from deceased human Kacho', source: source383 }),
-      freeze({ subject: 'Room 1013 isolated-space staffing', people: 'Marayam Hui Guo Rou, Vergei, Biscuit Krueger', notes: 'Servants who leave the isolated Nen space for the banquet are stated to be unable to return. Biscuit proposes staffing the real room with Hunters while she remains inside with Marayam.', status: 're-entry restriction confirmed for departing servants / complete spatial rule unresolved', source: source383 }),
-      freeze({ subject: 'Hunter Code retrospective', people: 'Mizaistom Nana, Melody', notes: 'Chapter 383 reveals the numerical Hunter Code rule and decodes the Chapter 381 call as “Assist Princes escape fully.” The decode is recorded as Chapter 383 knowledge rather than backdated into Chapter 381.', status: 'Chapter 381 covert message resolved retrospectively', source: source383 }),
+      freeze({ subject: 'Cha-R / Phantom Troupe briefing', people: 'Ken’i Wang, Tajao, Phinks Magcub, Nobunaga Hazama', notes: 'Ken’i reports eight missing Cha-R men and more than 300 missing workers overall. Phinks offers to kill the hitman if the Troupe can obtain Xi-Yu permission to search Tier 4 for Hisoka.', status: 'conditional tactical cooperation / several hitman-route deductions remain hypotheses', source: source384 }),
+      freeze({ subject: 'Kakin mafia conflict protocol', people: 'Ken’i Wang, Tajao, Cha-R, Xi-Yu, Heil-Ly', notes: 'The chapter presents a boss-notification and settlement procedure for inter-family hits and raids, including a twenty-four-hour notice window and an away-from-home-turf condition. Morena’s location determines whether the unresolved incident can still fit that procedure.', status: 'procedure clarified / Morena-location hinge unresolved', source: source384 }),
+      freeze({ subject: 'Phantom Troupe / Heil-Ly war risk', people: 'Phantom Troupe, Heil-Ly Family, Morena Prudo', notes: 'Tajao says killing the hitman will put the Spiders at war with Heil-Ly. Nobunaga accepts the cost and proposes killing Morena, while Phinks prioritizes gathering the Troupe and hunting the hitman first.', status: 'prospective hostility accepted / direct Morena attack not yet executed', source: source384 }),
+      freeze({ subject: 'Second-track Fakers', people: 'Onior Longbao, Brocco Li, Morena Prudo', notes: 'The three mafia bosses are identified as Second-track Fakers, illegitimate royal heirs allowed to live and covertly compensated while remaining outside the spotlight and obeying the monarchy system. Morena’s Tier 1 room is empty.', status: 'shared royal-mafia status revealed / Morena exact location unresolved', source: source384 }),
+      freeze({ subject: 'Tserriednich / Morena search', people: 'Tserriednich Hui Guo Rou, Morena Prudo', notes: 'Tserriednich says Morena is absent from the VVIP area, estimates that she has probably been in the lower tiers since boarding, and orders lower-tier soldiers to search for her hideout.', status: 'search order active / lower-tier history remains Tserriednich estimate', source: source384 }),
+      freeze({ subject: 'Tserriednich second Nen beast', people: 'Tserriednich Hui Guo Rou, Theta', notes: 'Theta recognizes a second Nen beast created instinctively from Tserriednich’s own Specialist Nen, distinct from the Seed Urn Guardian Spirit Beast. She calls it his alter ego, but no official name or full function is supplied.', status: 'second Nen beast confirmed / mechanics unresolved', source: source384 }),
+      freeze({ subject: 'Theta Zetsu training', people: 'Theta, Tserriednich Hui Guo Rou', notes: 'Theta advances Tserriednich to sustained Zetsu practice after assessing his Ten and Ren progress. She privately thinks she can do “it” tomorrow if necessary, but the intended action is not identified in the supplied synopsis.', status: 'Zetsu training begun / Theta next-day action unresolved', source: source384 }),
     ]),
   }),
 ]);
 
-export const banquetChapter383Research = succession383BanquetResearch;
-export const marayamChapter383SpaceResearch = succession383MarayamSpaceResearch;
-export const melodyChapter383PerformanceResearch = succession383MelodyPerformanceResearch;
-export const keeneyChapter383Research = succession383KeeneyResearch;
-export const twinEscapeChapter383Research = succession383TwinEscapeResearch;
-export const magicalWormChapter383Research = succession383MagicalWormResearch;
-export const withoutYouChapter383Research = succession383WithoutYouResearch;
-export const hunterCodeChapter383Research = succession383HunterCodeResearch;
+export const troupeMafiaChapter384Research = succession384TroupeMafiaResearch;
+export const mafiaProtocolChapter384Research = succession384MafiaProtocolResearch;
+export const secondTrackFakersChapter384Research = succession384SecondTrackFakerResearch;
+export const morenaLocationChapter384Research = succession384MorenaLocationResearch;
+export const tserriednichSpecialistBeastChapter384Research = succession384TserriednichBeastResearch;
+export const zetsuTrainingChapter384Research = succession384ZetsuTrainingResearch;
