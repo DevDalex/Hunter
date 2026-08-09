@@ -9,7 +9,10 @@ import {
 } from './organizationStateCorrections.js';
 import { organizationState379Corrections } from './organizationState379Corrections.js';
 import { organizationState384Corrections } from './organizationState384Corrections.js';
+import { organizationFoundation389Expansion } from './organizationFoundation389Expansion.js';
+import { organizationState389Corrections } from './organizationState389Corrections.js';
 
+const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const mergeRecordMaps = (baseMap, ...correctionMaps) => Object.freeze(Object.fromEntries(
   [...new Set([
     ...Object.keys(baseMap),
@@ -23,16 +26,23 @@ const mergeRecordMaps = (baseMap, ...correctionMaps) => Object.freeze(Object.fro
   }),
 ));
 
+const organizations = Object.freeze(uniqueById([
+  ...characterFoundationData.organizations,
+  ...organizationFoundation389Expansion,
+]));
+
 const organizationStateProfiles = mergeRecordMaps(
   baseOrganizationStateProfiles,
   organizationStateProfileCorrections,
   organizationState379Corrections,
   organizationState384Corrections,
+  organizationState389Corrections,
 );
 const organizationPersonnelHistory = mergeRecordMaps(baseOrganizationPersonnelHistory, organizationPersonnelHistoryCorrections);
 
 export const successionArchiveData = Object.freeze({
   ...characterFoundationData,
+  organizations,
   organizationStateProfiles,
   organizationPersonnelHistory,
 });
