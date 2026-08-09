@@ -58,7 +58,7 @@ try {
   assert(successionArchiveData.highValueIntelligenceVersion === 'phase-4-v1', 'the active data layer must identify Phase 4');
   assert(successionArchiveValidation.valid, `canonical validation failed: ${successionArchiveValidation.errors.join(' · ')}`);
   assert(successionArchiveValidation.stats.knowledgeRecords === 8, 'exactly eight initial knowledge records are required');
-  assert(successionArchiveValidation.stats.protocols === 9, 'exactly nine protocol records are required');
+  assert(successionArchiveValidation.stats.protocols === 10, 'exactly ten current protocol records are required after the Chapter 384 mafia-procedure addition');
   assert(successionArchiveValidation.stats.objects === 10, 'exactly ten first-class objects are required');
   assert(successionArchiveValidation.stats.documents === 3, 'exactly three first-class documents are required');
   assert(successionArchiveValidation.stats.evidenceItems === 6, 'exactly six first-class evidence items are required');
@@ -84,8 +84,9 @@ try {
   assert(getKnowledgeRecordsAtChapter(400).every((record) => record.chapterRange.start <= 400), 'knowledge records must respect the chapter boundary');
 
   const protocols = getProtocolRecordsAtChapter(410);
-  assert(new Set(protocols.map((record) => record.domain)).size >= 5, 'protocol records must preserve distinct legal, ritual, military, judicial, and Nen domains');
+  assert(new Set(protocols.map((record) => record.domain)).size >= 5, 'protocol records must preserve distinct legal, ritual, military, judicial, Nen, and operational domains');
   assert(protocols.some((record) => record.id === 'protocol:succession-withdrawal-and-survivor-rule' && record.protocolStatus === 'disputed'), 'the withdrawal rule must remain explicitly disputed');
+  assert(protocols.some((record) => record.id === 'protocol:kakin-mafia-hit-raid-settlement' && record.domain === 'operational-rule'), 'the Chapter 384 Kakin mafia settlement procedure must remain indexed as an operational protocol');
 
   const artifacts = getArtifactsAtChapter(410);
   assert(artifacts.length === 19, 'all Phase 4 objects, documents, and evidence must be available by Chapter 410');
@@ -103,14 +104,14 @@ try {
   assert(changes.entries.every((entry) => entry.commit && entry.status === 'merged'), 'published editorial entries must point to merged commits');
 
   const summary = getIntelligenceWorkbenchSummary(410);
-  assert(summary.knowledgeRecords === 8 && summary.protocolRecords === 9 && summary.editorialEntries === 4, 'workbench summary counts are incorrect');
+  assert(summary.knowledgeRecords === 8 && summary.protocolRecords === 10 && summary.editorialEntries === 4, 'workbench summary counts are incorrect');
 
   const seedSearch = searchArchiveProduct('Seed Urn', { chapter: 410, limit: 20 });
   assert(seedSearch.some((result) => result.id === 'object:seed-urn' && result.route === 'research' && result.params.mode === 'artifacts'), 'global search must route the Seed Urn object into the Research artifact view');
   const knowledgeSearch = searchArchiveProduct('curse child network', { chapter: 410, limit: 20 });
   assert(knowledgeSearch.some((result) => result.id === 'knowledge-record:beyond-curse-child-network'), 'global search must index Knowledge & Secrecy records');
 
-  console.log('Succession Phase 4 high-value intelligence audit passed: global chapter diffs, Knowledge & Secrecy, protocol separation, first-class artifacts/evidence, same-type comparisons, editorial history, search routing, shared graph routing, and direct Research integration verified.');
+  console.log('Succession Phase 4 high-value intelligence audit passed: global chapter diffs, Knowledge & Secrecy, ten protocol records including the Chapter 384 mafia procedure, first-class artifacts/evidence, same-type comparisons, editorial history, search routing, shared graph routing, and direct Research integration verified.');
 } finally {
   await vite.close();
 }
