@@ -30,7 +30,9 @@ try {
   assert(bill?.firstChapter === 388 && bill?.latestChapter === 388, 'Bill growth ability must first enter the maintained ability foundation at Chapter 388');
   const billText = JSON.stringify(bill);
   assert(/seed/i.test(billText) && /growth/i.test(billText), 'Bill ability must preserve the demonstrated seed-growth effect');
-  assert(!/regeneration|aging/i.test(billText), 'Bill ability must not invent regeneration or aging mechanics');
+  const billPositiveClaimText = JSON.stringify({ summary: bill?.summary, activation: bill?.activation, targets: bill?.targets, knownUses: bill?.knownUses });
+  assert(!/regeneration|aging/i.test(billPositiveClaimText), 'Bill ability must not positively claim regeneration or aging mechanics');
+  assert((bill?.limitations || []).some((value) => /does not by itself establish/i.test(value) && /regeneration/i.test(value) && /aging/i.test(value)), 'Bill ability must explicitly preserve the regeneration/aging non-inference boundary');
 
   const dolphin = archive.getEntityById('ability:stealth-dolphin');
   assert(dolphin?.latestChapter === 388 && dolphin?.sourceChapterNumbers?.includes(388), 'Stealth Dolphin must extend through its explicit Chapter 388 use');
