@@ -4,7 +4,7 @@ import {
   locationHistoryExpansion,
 } from './locationFoundationExpansion.js';
 import {
-  LEGACY_TIER1_JUSTICE_BUREAU_ID,
+  isLegacyJusticeLocation386,
   locationFoundation386Corrections,
   remapJusticeLocation386,
 } from './locationFoundation386Corrections.js';
@@ -14,8 +14,8 @@ const uniqueById = (values) => [...new Map(values.map((value) => [value.id, valu
 const includesChapter = (range, chapter) => chapter >= range.start && chapter <= (range.end ?? Number.POSITIVE_INFINITY);
 
 const locations = Object.freeze(uniqueById([
-  ...foundationData.locations.filter((location) => location.id !== LEGACY_TIER1_JUSTICE_BUREAU_ID),
-  ...locationFoundationExpansion.filter((location) => location.id !== LEGACY_TIER1_JUSTICE_BUREAU_ID),
+  ...foundationData.locations.filter((location) => !isLegacyJusticeLocation386(location.id)),
+  ...locationFoundationExpansion.filter((location) => !isLegacyJusticeLocation386(location.id)),
   ...locationFoundation386Corrections,
 ]));
 
