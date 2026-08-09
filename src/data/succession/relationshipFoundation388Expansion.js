@@ -19,7 +19,7 @@ export const relationshipFoundation388Expansion = freeze([
     relationshipType: 'alliance',
     subtype: 'alliance-negotiation',
     direction: 'directed',
-    sentiment: 'cooperative',
+    sentiment: 'allied',
     status: 'active',
     chapterRange: freeze({ start: 388, end: 400 }),
     basis: 'Tubeppa’s explicit instruction to continue negotiations after receiving the successful Nen-class report.',
