@@ -34,5 +34,5 @@ export const successionArchiveData = Object.freeze({
   documents: phase4Documents,
   evidenceItems: phase4EvidenceItems,
   editorialChangeLog: phase4EditorialChangeLog,
-  highValueIntelligenceVersion: 'phase-4-v1-ch384-protocol',
+  highValueIntelligenceVersion: 'phase-4-v1',
 });
