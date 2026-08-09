@@ -18,6 +18,10 @@ import {
   guardianBeastState389Corrections,
   nenSystemProfile389Corrections,
 } from './nenSystemFoundation389Corrections.js';
+import {
+  abilityKnowledge390Overrides,
+  guardianBeastState390Corrections,
+} from './nenSystemFoundation390Corrections.js';
 
 const ARCHIVE_DATE = '2026-08-09';
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -73,6 +77,7 @@ const guardianBeastProfileKeys = new Set([
   ...Object.keys(guardianBeastState375Corrections),
   ...Object.keys(guardianBeastState385Corrections),
   ...Object.keys(guardianBeastState389Corrections),
+  ...Object.keys(guardianBeastState390Corrections),
 ]);
 
 const correctedGuardianBeastStateProfiles = Object.freeze(Object.fromEntries(
@@ -81,6 +86,7 @@ const correctedGuardianBeastStateProfiles = Object.freeze(Object.fromEntries(
     for (const correction of guardianBeastState375Corrections[beastId] || []) records.set(correction.id, correction);
     for (const correction of guardianBeastState385Corrections[beastId] || []) records.set(correction.id, correction);
     for (const correction of guardianBeastState389Corrections[beastId] || []) records.set(correction.id, correction);
+    for (const correction of guardianBeastState390Corrections[beastId] || []) records.set(correction.id, correction);
     return [beastId, Object.freeze([...records.values()].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id)))];
   }),
 ));
@@ -98,6 +104,7 @@ const abilityKnowledgeOverrideKeys = new Set([
   ...Object.keys(abilityKnowledge386Overrides),
   ...Object.keys(abilityKnowledge387Overrides),
   ...Object.keys(abilityKnowledge389Overrides),
+  ...Object.keys(abilityKnowledge390Overrides),
 ]);
 const correctedAbilityKnowledgeOverrides = Object.freeze(Object.fromEntries(
   [...abilityKnowledgeOverrideKeys].map((abilityId) => [abilityId, Object.freeze([
@@ -106,6 +113,7 @@ const correctedAbilityKnowledgeOverrides = Object.freeze(Object.fromEntries(
     ...(abilityKnowledge386Overrides[abilityId] || []),
     ...(abilityKnowledge387Overrides[abilityId] || []),
     ...(abilityKnowledge389Overrides[abilityId] || []),
+    ...(abilityKnowledge390Overrides[abilityId] || []),
   ])]),
 ));
 
