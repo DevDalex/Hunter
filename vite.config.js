@@ -33,6 +33,13 @@ export default defineConfig({
             // so the main Succession graph stays under 750 kB without raising
             // the budget or moving a broad selector family into startup.
             { name: 'succession-parallel-future-385-387', test: /src\/data\/succession\/(?:abilityFoundation387Expansion|eventFoundation387Expansion|nenSystemFoundation38[5-7]Corrections)\.js$/ },
+            // Chapter 388 is a coherent Room 1014/system-expansion slice:
+            // Bill's growth ability, Stealth Dolphin lending, the accelerated
+            // awakening class, Tubeppa's negotiation state, and the fourth aura
+            // pulse. Pull the dedicated research and its direct foundation
+            // leaves out together now instead of letting the core graph sit at
+            // ~749 kB and fail as soon as Chapter 389 adds another record.
+            { name: 'succession-chapter-388-system-expansion', test: /src\/data\/(?:succession388Research|succession\/(?:abilityFoundation388Expansion|eventFoundation388Expansion|relationshipFoundation388Expansion))\.js$/ },
           ],
         },
       },
