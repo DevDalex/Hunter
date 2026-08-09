@@ -40,6 +40,12 @@ export default defineConfig({
             // leaves out together now instead of letting the core graph sit at
             // ~749 kB and fail as soon as Chapter 389 adds another record.
             { name: 'succession-chapter-388-system-expansion', test: /src\/data\/(?:succession388Research|succession\/(?:abilityFoundation388Expansion|eventFoundation388Expansion|relationshipFoundation388Expansion))\.js$/ },
+            // Chapter 389 adds the Have-Not curse system, Vict/Tackle Shield,
+            // Halkenburg's custody operation, organization-state corrections,
+            // and Zhang Lei's coin progression. Keep those chapter-bounded
+            // leaves together so continued canon integration preserves the
+            // existing 750 kB performance ceiling instead of raising it.
+            { name: 'succession-chapter-389-system-expansion', test: /src\/data\/(?:succession389Research|succession\/(?:abilityFoundation389Expansion|eventFoundation389Expansion|relationshipFoundation389Expansion|organizationFoundation389Expansion|organizationState389Corrections|nenSystemFoundation389Corrections))\.js$/ },
           ],
         },
       },
