@@ -81,15 +81,15 @@ try {
     'isolated Room 1013 breadcrumbs must preserve physical and Nen-space hierarchy',
   );
 
-  const justiceMedicalSnapshot = getLocationSnapshot('location:black-whale:tier-1:justice-bureau:medical-wing', 402);
-  assert(justiceMedicalSnapshot?.occupants.some(({ entity }) => entity.id === 'character:fugetsu-hui-guo-rou'), 'Chapter 402 Justice medical snapshot must contain Fugetsu');
+  const justiceMedicalSnapshot = getLocationSnapshot('location:black-whale:tier-2:justice-bureau:medical-wing', 402);
+  assert(justiceMedicalSnapshot?.occupants.some(({ entity }) => entity.id === 'character:fugetsu-hui-guo-rou'), 'Chapter 402 Justice medical snapshot must contain Fugetsu under the corrected Tier 2 Justice hierarchy');
 
   const morenaAt410 = getCurrentLocationRecordForCharacter('character:morena-prudo', 410);
   assert(morenaAt410?.locationId === 'location:black-whale:tier-3:heil-ly-hideout', 'Morena’s Chapter 410 location must resolve to the Heil-Ly hidden band');
 
   const camillaMovement = getMovementHistoryForCharacter('character:camilla-hui-guo-rou');
   assert(camillaMovement.some((record) => record.locationId === 'location:black-whale:tier-1:room-1002'), 'Camilla movement history must retain Room 1002');
-  assert(camillaMovement.some((record) => record.locationId === 'location:black-whale:tier-1:justice-bureau:detention-wing'), 'Camilla movement history must retain confinement');
+  assert(camillaMovement.some((record) => record.locationId === 'location:black-whale:tier-2:justice-bureau:detention-wing'), 'Camilla movement history must retain confinement under the corrected Tier 2 Justice hierarchy');
 
   const chapter405 = getChapter(405);
   assert(chapter405?.locationIds?.includes('location:black-whale:tier-1:casino'), 'Chapter 405 must inherit Hisoka’s casino sighting location');
