@@ -51,9 +51,9 @@ export const organizationState384Corrections = Object.freeze({
     Object.freeze({
       id: 'organization-state:phantom-troupe:384',
       organizationId: 'organization:phantom-troupe',
-      chapterRange: Object.freeze({ start: 384, end: 384 }),
+      chapterRange: Object.freeze({ start: 384, end: 392 }),
       status: 'active',
-      operationalState: 'The Troupe’s Hisoka hunt remains primary, but Phinks ties the search to a tactical bargain with Cha-R and Xi-Yu access while Nobunaga openly accepts the possibility of war with Heil-Ly and proposes removing Morena.',
+      operationalState: 'The Troupe’s Hisoka hunt remains primary, but Phinks ties the search to a tactical bargain with Cha-R and Xi-Yu access while Nobunaga openly accepts the possibility of war with Heil-Ly and proposes removing Morena. This Chapter 384 state supersedes the earlier pre-384 Troupe state and remains the active profile until later chapter-specific organization records take over.',
       authority: 'Independent Troupe decision-making remains intact; cooperation with the Kakin mafia is conditional and non-subordinate.',
       territoryIds: Object.freeze(['location:black-whale:tier-5']),
       objectiveStates: Object.freeze(['Find Hisoka beyond Tier 5.', 'Hunt the lower-tier hitman.', 'Gather the other Spiders.', 'Use mafia access while preserving Troupe autonomy.']),
