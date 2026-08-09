@@ -65,7 +65,7 @@ export const eventFoundation393Expansion = freeze([
     participants: ['character:daemon', 'character:gelato', 'character:perigord', 'character:bille', 'character:voconte', 'character:tevelares', 'character:quorolle', 'character:matvere'],
     organizations: ['organization:heil-ly'],
     locations: ['location:black-whale'],
-    abilities: ['ability:contagion', 'ability:voconte-door-ability', 'ability:biohazard'],
+    abilities: ['ability:contagion', 'ability:voconte-door-ability', 'ability:hinrigh-object-animal-transformation'],
     outcomes: ['Voconte is disclosed as a level 26 Emitter and human trafficker.', 'The group discusses reaching level 21 for ability development.', 'Matvere’s wish to choose Emission is corrected by the group’s understanding that Nen type is innate.', 'Voconte’s door ability is acknowledged, but its official name and complete mechanics remain unresolved.'],
     openQuestions: ['What is Voconte’s door ability’s full rule set?', 'What Nen types will the still-undeveloped members reveal?', 'Was Luini actually an Emitter?'],
   }),
@@ -145,6 +145,5 @@ export const eventFoundation393Expansion = freeze([
     outcomes: ['Maizan disappears from Hinrigh and Ken’i’s observation after entering Room 3101.', 'A thrown knife does not disappear.', 'The unidentified resident exits when threatened.', 'No destination, transport rule, ability owner, or Heil-Ly route connection is established by Chapter 393 alone.'],
     stateChanges: ['Maizan: active guide at Room 3101 → whereabouts and immediate condition unresolved after entering.'],
     openQuestions: ['Where is Maizan?', 'What triggered the disappearance?', 'Why did the knife remain visible?', 'Who controls the mechanism?', 'Does Room 3101 connect to Heil-Ly?'],
-    status: 'open-mystery',
   }),
 ]);
