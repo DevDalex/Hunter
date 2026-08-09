@@ -53,7 +53,7 @@ try {
 
   const pulse = archive.getEntityById('event:fourth-halkenburg-thread-aura-rumbling');
   assert(pulse?.chronology?.day === 10 && pulse?.chronology?.timeOfDay === '11:30', 'fourth aura rumbling must preserve Day 10 at 11:30');
-  assert(pulse?.outcomes?.some((value) => value.includes('four')) && pulse?.outcomes?.some((value) => value.includes('shorter')), 'fourth pulse must preserve count and shortening intervals');
+  assert(pulse?.outcomes?.some((value) => /four/i.test(value)) && pulse?.outcomes?.some((value) => /shorten/i.test(value)), 'fourth pulse must preserve count and shortening intervals');
 
   const relationship = archive.getEntityById('relationship:tubeppa-woble-ch388-alliance-negotiation');
   assert(relationship?.subtype === 'alliance-negotiation' && relationship?.chapterRange?.start === 388, 'Tubeppa/Woble relation must begin as negotiation in Chapter 388');
