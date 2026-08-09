@@ -8,6 +8,7 @@ const audits = Object.freeze([
   ['chapter-385-boundary', 'scripts/audit-succession-chapter-385-boundary.mjs'],
   ['chapter-386-boundary', 'scripts/audit-succession-chapter-386-boundary.mjs'],
   ['chapter-387-boundary', 'scripts/audit-succession-chapter-387-boundary.mjs'],
+  ['chapter-388-boundary', 'scripts/audit-succession-chapter-388-boundary.mjs'],
   ['shell', 'scripts/audit-succession-archive-shell.mjs'],
   ['visual-foundation', 'scripts/audit-succession-visual-foundation.mjs'],
   ['shell-redesign', 'scripts/audit-succession-shell-redesign.mjs'],
@@ -49,24 +50,11 @@ const audits = Object.freeze([
 ]);
 
 const failures = [];
-
 for (const [name, relativePath] of audits) {
   console.log(`\n=== Succession runtime audit: ${name} ===`);
-  const result = spawnSync(process.execPath, [path.join(root, relativePath)], {
-    cwd: root,
-    env: process.env,
-    stdio: 'inherit',
-  });
-
-  if (result.error || result.status !== 0) {
-    failures.push({
-      name,
-      status: result.status ?? 1,
-      error: result.error?.message || null,
-    });
-  }
+  const result = spawnSync(process.execPath, [path.join(root, relativePath)], { cwd: root, env: process.env, stdio: 'inherit' });
+  if (result.error || result.status !== 0) failures.push({ name, status: result.status ?? 1, error: result.error?.message || null });
 }
-
 if (failures.length) {
   console.error(`\nSuccession runtime audit sweep failed in ${failures.length}/${audits.length} audit(s):`);
   for (const failure of failures) console.error(`- ${failure.name}: exit code ${failure.status}${failure.error ? ` · ${failure.error}` : ''}`);
