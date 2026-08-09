@@ -92,7 +92,7 @@ Maizan enters first and then disappears from Hinrigh and Ken’i’s view. Chapt
 
 Hinrigh throws a knife through the doorway and observes that the knife does **not** disappear. One knife test is not generalized into a rule that objects are immune, only people can be transported, or any other complete mechanism.
 
-Maizan’s Chapter 393 life/body/consciousness state is therefore recorded as **unresolved after disappearance**, not dead.
+**Maizan is not marked dead, and the knife does not disappear in the observed Chapter 393 test.** Maizan’s life/body/consciousness state is recorded as unresolved after disappearance, while the Room 3101 mechanism remains open.
 
 ## Trivia boundary
 
