@@ -46,6 +46,13 @@ export default defineConfig({
             // leaves together so continued canon integration preserves the
             // existing 750 kB performance ceiling instead of raising it.
             { name: 'succession-chapter-389-system-expansion', test: /src\/data\/(?:succession389Research|succession\/(?:abilityFoundation389Expansion|eventFoundation389Expansion|relationshipFoundation389Expansion|organizationFoundation389Expansion|organizationState389Corrections|nenSystemFoundation389Corrections))\.js$/ },
+            // Chapter 390 modernizes a formerly legacy-only chapter and adds
+            // Zhang Lei coin continuity, Xi-Yu/Heil-Ly state boundaries, three
+            // field ability records, and a Tier 3 event/relationship layer.
+            // Keep the whole lower-tier operation together as an on-demand
+            // chapter slice instead of feeding another ~50 kB into the already
+            // large Succession core chunk.
+            { name: 'succession-chapter-390-lower-tier-operation', test: /src\/data\/(?:succession390Research|succession\/(?:abilityFoundation390Expansion|eventFoundation390Expansion|relationshipFoundation390Expansion|organizationState390Corrections|nenSystemFoundation390Corrections))\.js$/ },
           ],
         },
       },
