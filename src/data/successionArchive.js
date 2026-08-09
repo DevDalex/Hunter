@@ -1,40 +1,40 @@
-import * as base from './successionArchiveThrough389.js';
+import * as base from './successionArchiveThrough390.js';
 
-export * from './successionArchiveThrough389.js';
+export * from './successionArchiveThrough390.js';
 
 const wiki = (slug) => `https://hunterxhunter.fandom.com/wiki/${slug}`;
 
 export const personnelTransitions = [
   ...base.personnelTransitions,
   {
-    day: 'Day 10 · direct continuation from Chapter 389 · exact time unsupplied', chapters: '390', subject: 'Coventoba / Tenftory / Zhang Lei',
-    route: 'Room 1003 coin observation → same-aura comparison → rejected Guardian Spirit Beast mouth experiment → Zhang Lei leaves to consult Onior',
-    change: 'Coventoba confirms that the coin now displaying 10 carries the same aura he associated with the original coin, while Tenftory’s separate coin still displays 1. Coventoba considers but rejects placing the coin into the beast’s mouth as too risky.',
-    state: 'same-aura continuity and 10-versus-1 comparison confirmed / number trigger, meaning, threshold, and eventual holder effect unresolved', source: wiki('Chapter_390'),
+    day: 'Day 10 · direct continuation from Chapter 390 · exact time unsupplied', chapters: '391', subject: 'Hinrigh / Lynch / Zakuro / Hisoka search',
+    route: 'Tier 3 soldier-killing aftermath → Lynch and Zakuro continue Hisoka search → contact-Hinrigh-before-action protocol → Bloody Mary blood-drop search',
+    change: 'Hinrigh splits from Lynch and Zakuro to trace Heil-Ly while they continue searching for Hisoka. Zakuro deploys numerous blood drops and states that the demonstrated search drops will run out of Nen after roughly 30 to 40 minutes before returning to ordinary blood.',
+    state: 'Hisoka search active / Bloody Mary search function and 30–40 minute lifetime confirmed / range and sensory mechanics unresolved', source: wiki('Chapter_391'),
   },
   {
-    day: 'Day 10 · exact time unsupplied', chapters: '390', subject: 'Zhang Lei / Onior',
-    route: 'Room 1003 → Xi-Yu boss room → Nen and Guardian Spirit Beast consultation',
-    change: 'Zhang Lei asks Onior for information about Guardian Spirit Beasts and Nen. Onior says he lacks Guardian Spirit Beast knowledge and personal Nen expertise but knows younger Xi-Yu members who know Nen and agrees to ask them. The supplied synopsis explicitly identifies Onior as Zhang Lei’s father.',
-    state: 'Zhang Lei–Onior information channel active / no new Guardian Spirit Beast mechanic established', source: wiki('Chapter_390'),
+    day: 'Day 10 · exact time unsupplied', chapters: '391', subject: 'Hinrigh / Heil-Ly surveillance',
+    route: 'civilian camera-footage review → standard-cabin access hallway identified → camcorder confiscated → Biohazard camcorder-cat surveillance',
+    change: 'Hinrigh concludes Heil-Ly is watching the standard-cabin hallway, says the group aims to identify all 23 members, and transforms a recording camcorder into a small surveillance cat. Chapter 391 formally names the ability Biohazard.',
+    state: 'access-route watch inferred by Hinrigh / Biohazard formal name and surveillance application confirmed / rebellion and killing-as-training model remains Hinrigh hypothesis', source: wiki('Chapter_391'),
   },
   {
-    day: 'Day 10 · exact time unsupplied', chapters: '390', subject: 'Onior / Hinrigh / Xi-Yu',
-    route: 'Onior phone order → Hisoka search assigned to Tier 3 → Phantom Troupe granted controlled Tier 4 search access → Morena elimination objective',
-    change: 'Onior expands Xi-Yu’s field operation. Hinrigh is ordered to find Hisoka, permit the Troupe to search Tier 4 while Xi-Yu tries to manage its movement, and kill Morena.',
-    state: 'expanded Xi-Yu operation active / Hisoka and Morena outcomes unresolved', source: wiki('Chapter_390'),
+    day: 'Day 10 · exact time unsupplied', chapters: '391', subject: 'Tevelares / Quorolle / Padaille / Contagion',
+    route: 'three Heil-Ly members identify Hinrigh → debate attack and five-meter En → discuss Nen-user kill reward → member profiles disclosed',
+    change: 'Tevelares is revealed as a level 24 Enhancer civil engineer, Quorolle as a level 22 Emitter repairman, and Padaille as a level 29 Conjurer demolition worker. Their discussion explicitly treats killing a Nen user as worth ten levels.',
+    state: 'three Heil-Ly profiles and +10 Nen-user value confirmed / multi-attacker reward allocation unresolved / Quorolle’s continuous Morena-monitoring idea remains speculation', source: wiki('Chapter_391'),
   },
   {
-    day: 'Day 10 · exact time unsupplied', chapters: '390', subject: 'Hinrigh / Lynch / Zakuro',
-    route: 'Tier 3 manhunt → Heil-Ly burger-joint contact → fight → Bloody Mary and Body and Soul demonstrations → civilian-registration warning',
-    change: 'Zakuro subdues an attacker with Bloody Mary after receiving a deep neck cut, while Lynch uses Body and Soul to obtain basic Heil-Ly and Morena information. Hinrigh learns that the encountered Heil-Ly members are officially registered as civilians and stops the public Mafia confrontation.',
-    state: 'two Xi-Yu abilities demonstrated / encountered Heil-Ly civilian cover confirmed / complete ability rules unresolved', source: wiki('Chapter_390'),
+    day: 'Day 10 · exact time unsupplied', chapters: '391', subject: 'Hinrigh / Padaille',
+    route: 'Padaille hammer attack → Biohazard handcuff-pigeon restraint → handgun fire fails against aura-reinforced pigeons → Padaille drill escape → second restraint',
+    change: 'Padaille demonstrates Fistful of Weapons with hammer and drill forms. Hinrigh demonstrates Biohazard handcuff-pigeons that revert to restraints and are stated to be aura-reinforced; Padaille’s drill pierces Hinrigh’s left hand before Hinrigh restrains him again.',
+    state: 'Fistful of Weapons and expanded Biohazard combat mechanics confirmed / full limits unresolved', source: wiki('Chapter_391'),
   },
   {
-    day: 'Day 10 · exact time unsupplied', chapters: '390', subject: 'Hinrigh / Tier 3 soldiers',
-    route: 'soldiers impose no-return condition → Hinrigh offers bribe and touches guns → group leaves → gun barrels transform into live snakes → soldiers killed',
-    change: 'After outwardly agreeing not to return to Tier 3, Hinrigh covertly transforms the soldiers’ gun barrels into live snakes. The snake mouths retain the guns’ firing function and kill both soldiers.',
-    state: 'Hinrigh transformation effect confirmed / formal ability name, Nen type, duration, and general transformation rules unresolved', source: wiki('Chapter_390'),
+    day: 'Day 10 · exact time unsupplied', chapters: '391', subject: 'Padaille / Hinrigh / Tevelares / Quorolle / Misha',
+    route: 'Padaille axe-form escape attempt → Hinrigh turns axe against Padaille → Padaille killed → Tevelares and Quorolle flee → survivors decide to seek Morena instructions',
+    change: 'Hinrigh forces Padaille’s axe-form hand into the back of his head, killing him. Tevelares and Quorolle escape rather than risk torture over the hideout and decide to ask Morena for instructions. Hinrigh says he is counting on Misha, but the supplied synopsis does not define her task.',
+    state: 'Padaille body death confirmed / Tevelares and Quorolle retreat / Misha role unresolved', source: wiki('Chapter_391'),
   },
 ].sort((left, right) => String(left.chapters).localeCompare(String(right.chapters), undefined, { numeric: true }));
 
