@@ -45,6 +45,6 @@ export const abilityFoundation387Expansion = freeze([
     firstChapter: 385,
     latestChapter: 387,
     sourceChapterNumbers: freeze([385, 386, 387]),
-    researchStatus: 'core ten-second forecast, continuous viewing, and demonstrated observer-divergence mechanics explicitly documented at Chapter 387 boundary / maximum duration and broader interaction cases unresolved',
+    researchStatus: 'documented through Chapter 387 / broader interaction cases unresolved',
   }),
 ]);
