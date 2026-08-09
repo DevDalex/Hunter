@@ -20,7 +20,6 @@ export const abilityKnowledge387Overrides = freeze({
           'Chapter 387 does not supply an ultimate maximum duration for continuous viewing.',
           'The chapter demonstrates the observer-perception/divergence behavior with Theta but does not enumerate every possible multi-observer configuration.',
           'The chapter does not define every interaction with other Nen abilities.',
-          'Tserriednich’s initial fear that he must remain defenseless for ten seconds is an early hypothesis that is immediately refined by the continuing-vision/divergence experiment and is not retained as the final rule.',
         ]),
         costs: freeze([
           'The demonstrated activation requires Zetsu, suppressing Tserriednich’s ordinary aura output while he maintains the state.',
@@ -30,6 +29,7 @@ export const abilityKnowledge387Overrides = freeze({
         duration: 'ten-second forecast lead; continuous viewing can persist beyond the initial ten seconds while the required state is maintained, with no maximum supplied',
         knownUses: freeze([
           'Tserriednich recognizes the first vision as ten seconds ahead when Theta repeats the forecast dialogue.',
+          'His initial concern about having to remain defenseless for ten seconds is a provisional hypothesis that is superseded by the next experiment rather than a final ability limitation.',
           'He keeps Zetsu after the first ten seconds and simultaneously senses present Theta while visually watching the future Theta ten seconds ahead.',
           'He changes his actual behavior from the forecast during the coffee-cup experiment while Theta continues reacting to the forecast version of him.',
           'He sees Theta draw her gun in the future sequence, moves his actual body away from the forecast position, and survives while Theta fires at the forecast version she perceives.',
