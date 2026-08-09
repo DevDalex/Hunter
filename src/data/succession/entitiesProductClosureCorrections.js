@@ -7,16 +7,17 @@ const CURRENT_RELEASE_PHASE_ID = 'story-phase:current-releases-414-416';
 const PENDING_STORY_STATUS = 'Reader media indexed; detailed research pending verified chapter documentation';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 
-const systemIdCorrections = Object.freeze({
+const entityIdCorrections = Object.freeze({
   'nen-system:post-mortem-nen-continuation': 'nen-system:post-mortem-nen',
   'nen-system:royal-curse-networks': 'nen-system:curse-networks',
   'nen-system:contracts-vows-conditional-power': 'nen-system:contracts-vows-and-conditions',
   'nen-system:possession-consciousness-transfer': 'nen-system:possession-and-consciousness-transfer',
+  'location:black-whale:tier-1:justice-bureau': 'location:black-whale:tier-2:justice-bureau',
 });
 
 const glossaryEntries = Object.freeze((productFoundationData.glossaryEntries || []).map((entry) => Object.freeze({
   ...entry,
-  relatedEntityIds: Object.freeze((entry.relatedEntityIds || []).map((id) => systemIdCorrections[id] || id)),
+  relatedEntityIds: Object.freeze((entry.relatedEntityIds || []).map((id) => entityIdCorrections[id] || id)),
 })));
 
 const pendingPhaseTemplate = productFoundationData.storyPhaseProfiles?.[PENDING_PHASE_ID] || null;
