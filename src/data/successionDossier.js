@@ -1,90 +1,86 @@
-import * as base from './successionDossierThrough390.js';
+import * as base from './successionDossierThrough391.js';
 import {
-  succession391BiohazardResearch,
-  succession391BloodyMaryResearch,
-  succession391ChapterResearch,
-  succession391ContagionResearch,
-  succession391FistfulOfWeaponsResearch,
-  succession391HinrighOperationalResearch,
-  succession391Mysteries,
-  succession391RelationshipRecords,
-  succession391ResolvedQuestions,
-  succession391SourcePolicy,
-} from './succession391Research.js';
+  succession392ApparentHisokaResearch,
+  succession392ChaRStrategyResearch,
+  succession392ChapterResearch,
+  succession392LuiniTroupeResearch,
+  succession392MaizanIntelResearch,
+  succession392MishaResearch,
+  succession392Mysteries,
+  succession392RelationshipRecords,
+  succession392ResolvedQuestions,
+  succession392SourcePolicy,
+} from './succession392Research.js';
 
-export * from './successionDossierThrough390.js';
+export * from './successionDossierThrough391.js';
 
 const freeze = (value) => Object.freeze(value);
-const source391 = 'https://hunterxhunter.fandom.com/wiki/Chapter_391';
+const source392 = 'https://hunterxhunter.fandom.com/wiki/Chapter_392';
 
-const bloodyMary391Ability = freeze({
-  ability: 'Bloody Mary', user: 'Zakuro Custard', owner: 'Zakuro Custard', type: 'Nen type unknown · blood-control named ability', category: 'Blood search and combat', chapters: '390, 391', chapter: 391,
-  conditions: 'Zakuro uses his own blood as the demonstrated medium. Chapter 391 shows numerous drops moving through Tier 3 to search for Hisoka.',
-  mechanics: 'The searching drops move independently through the corridor for the assigned search. Zakuro states that they will run out of Nen after approximately 30 to 40 minutes and then return to ordinary blood.',
-  knownAtChapterBoundary: 'The mobile search application and 30–40 minute demonstrated Nen lifetime are confirmed. Search range, sensory method, communication rules, maximum blood volume, exact Nen type, and whether the drops possess any independent intelligence remain unresolved.',
-  target: 'Hisoka in the Chapter 391 search; combat opponents in the Chapter 390 use.', confidence: 'Search use and duration confirmed / complete mechanics unresolved.', source: source391,
+const bloodyMary392Ability = freeze({
+  ability: 'Bloody Mary', user: 'Zakuro Custard', owner: 'Zakuro Custard', type: 'Nen type unknown · blood-control named ability', category: 'Blood search and combat', chapters: '390–392', chapter: 392,
+  conditions: 'Zakuro’s existing mobile blood drops continue searching Tier 3. Chapter 392 shows the drops leading Lynch and Zakuro toward multiple possible Hisoka candidates.',
+  mechanics: 'The Chapter 391 30–40 minute demonstrated Nen lifetime remains the latest explicit duration rule. Chapter 392 demonstrates candidate-finding behavior but not infallible identity recognition: Hanal is a false candidate and the later target is only believed by Lynch and Zakuro to be Hisoka at this chapter boundary.',
+  knownAtChapterBoundary: 'Search continuation and candidate-finding are confirmed. Search range, sensory method, communication rules, candidate-selection logic, maximum blood volume/drop count, and Nen type remain unresolved. The drops do not establish objective identity.',
+  target: 'Possible Hisoka candidates during the Xi-Yu Tier 3 search.', confidence: 'Search continuation confirmed / identity-recognition and full mechanics unresolved.', source: source392,
 });
-const biohazard391Ability = freeze({
-  ability: 'Biohazard', user: 'Hinrigh Biganduffno', owner: 'Hinrigh Biganduffno', type: 'Nen type unknown · object-to-living-animal transformation', category: 'Transformation / surveillance / restraint', chapters: '390, 391', chapter: 391,
-  conditions: 'Biohazard transforms ordinary physical objects into animal forms. Chapter 390 directly showed Hinrigh touching guns before their transformation; Chapter 391 formally names the ability and expands its uses.',
-  mechanics: 'A recording camcorder becomes a small surveillance cat. Ordinary handcuffs become aura-reinforced pigeons that can fly to a target and revert into handcuff form around limbs. Alongside Chapter 390’s firing snake-guns, the demonstrated transformations preserve useful original functions in specific cases.',
-  knownAtChapterBoundary: 'Formal name Biohazard, camcorder-cat surveillance, handcuff-pigeon restraint/reversion, and aura reinforcement are confirmed. Nen category, mass limit, transformation count, duration, full range, aura cost, and universal function-retention rules remain unknown.',
-  target: 'Selected ordinary objects.', confidence: 'Formal name and multiple transformation applications confirmed / complete limits unresolved.', source: source391,
+const bodyAndSoul392Ability = freeze({
+  ability: 'Body and Soul', user: 'Lynch Fullbokko', owner: 'Lynch Fullbokko', type: 'Nen type unknown · named interrogation ability', category: 'Close-range interrogation / information acquisition', chapters: '390, 392', chapter: 392,
+  conditions: 'Lynch asks a target a question and strikes at close range in the demonstrated uses.',
+  mechanics: 'Lynch asks Hanal whether he is Hisoka and punches him; Hanal’s inner soul answers that he is not. Lynch later attempts the ability on a man she and Zakuro believe is Hisoka, but her punch seemingly fails and she abruptly falls after what the man calls a reflexive counter.',
+  knownAtChapterBoundary: 'The Hanal identity-check use is confirmed. The second target’s objective identity and the reason Body and Soul seemingly fails are unresolved. No aura-resistance, speed, counter-ability, or other failure mechanic is invented.',
+  target: 'Close-range questioned targets.', confidence: 'Successful identity-question use confirmed / apparent counter case unresolved.', source: source392,
 });
-const contagion391Ability = freeze({
-  ability: 'Contagion', user: 'Morena Prudo', owner: 'Morena Prudo', type: 'Community leveling Nen system', category: 'Infection / progression', chapters: '378, 391', chapter: 391,
-  conditions: 'Heil-Ly members operate within Morena’s existing level-progression system.',
-  mechanics: 'Tevelares, Quorolle, and Padaille explicitly treat killing a Nen user as worth ten levels. They disagree over how that value should be allocated when several members participate and expect Morena, as the ability user and game master, to decide.',
-  knownAtChapterBoundary: 'Nen-user kill value of +10 levels is directly stated. Multi-attacker reward allocation remains unresolved. Quorolle’s belief that Morena can probably monitor members at all times is character inference, not a confirmed surveillance mechanic.',
-  target: 'Members of Morena’s Contagion community.', confidence: 'Nen-user +10 value confirmed / allocation and continuous-surveillance claims unresolved.', source: source391,
-});
-const fistful391Ability = freeze({
-  ability: 'Fistful of Weapons', user: 'Padaille', owner: 'Padaille', type: 'Conjuration', category: 'Body-part weapon transformation', chapters: '391', chapter: 391,
-  conditions: 'Padaille transforms his right hand into weapon forms during close combat.',
-  mechanics: 'Chapter 391 directly shows hammer, drill, and axe forms. The drill lets Padaille slip a handcuff and attack; the axe is used in an attempt to cut free before Hinrigh turns it against him.',
-  knownAtChapterBoundary: 'Official ability name, Conjurer user type, and hammer/drill/axe forms are confirmed. Complete weapon list, other transformable body parts, duration, aura cost, switching rules, and durability remain unknown.',
-  target: 'Close-range combat targets.', confidence: 'Three forms demonstrated / complete rule set unresolved.', source: source391,
+const misha392Ability = freeze({
+  ability: 'Misha Hao’s Post-Mortem Disposal Ability', user: 'Misha Hao', owner: 'Misha Hao', type: 'Nen type unknown · post-mortem Nen · descriptive archive label', category: 'Post-mortem corpse disposal', chapters: '392', chapter: 392,
+  conditions: 'Misha is deceased. The synopsis states that her post-mortem Nen causes her to appear and inconspicuously dispose of a person killed by a Xi-Yu member.',
+  mechanics: 'Padaille, killed by Hinrigh in Chapter 391, is the demonstrated cleanup target. Misha appears with the corpse during the public removal sequence and vanishes after the corpse has been dealt with.',
+  knownAtChapterBoundary: 'Post-mortem cleanup purpose and Padaille use are confirmed. No formal ability name is supplied. Nen category, trigger timing, range, visibility, corpse-control mechanism, disposal destination/method, cost, exceptions, and other limits remain unresolved. Padaille is not revived.',
+  target: 'Corpses of people killed by Xi-Yu members, as stated in Chapter 392.', confidence: 'Post-mortem cleanup function confirmed / formal name and full mechanics unresolved.', source: source392,
 });
 
-const abilityNamesReplacedAt391 = new Set(['Bloody Mary', 'Hinrigh object-to-animal transformation', 'Biohazard', 'Contagion']);
+const abilityNamesReplacedAt392 = new Set(['Bloody Mary', 'Body and Soul']);
 export const successionAbilities = freeze([
-  ...base.successionAbilities.filter((record) => !abilityNamesReplacedAt391.has(record.ability)),
-  bloodyMary391Ability,
-  biohazard391Ability,
-  contagion391Ability,
-  fistful391Ability,
+  ...base.successionAbilities.filter((record) => !abilityNamesReplacedAt392.has(record.ability)),
+  bloodyMary392Ability,
+  bodyAndSoul392Ability,
+  misha392Ability,
 ]);
 
 export const successionRelationships = freeze([
   ...(base.successionRelationships || []),
-  ...succession391RelationshipRecords,
+  ...succession392RelationshipRecords,
 ]);
-export const successionMysteries = freeze([...base.successionMysteries, ...succession391Mysteries]);
-export const successionResolvedQuestions = freeze([...(base.successionResolvedQuestions || []), ...succession391ResolvedQuestions]);
-export const dossierSources = freeze({ ...base.dossierSources, chapter391: source391, sourcePolicy391: succession391SourcePolicy });
+
+const unresolvedMishaAt391 = (record) => /what exactly is hinrigh relying on misha|misha.*task|misha.*role/i.test(String(record?.question || record?.title || record?.summary || ''));
+export const successionMysteries = freeze([
+  ...base.successionMysteries.filter((record) => !unresolvedMishaAt391(record)),
+  ...succession392Mysteries,
+]);
+export const successionResolvedQuestions = freeze([...(base.successionResolvedQuestions || []), ...succession392ResolvedQuestions]);
+export const dossierSources = freeze({ ...base.dossierSources, chapter392: source392, sourcePolicy392: succession392SourcePolicy });
 
 export const guardAssignmentGroups = freeze([
   ...base.guardAssignmentGroups,
   freeze({
-    group: 'Chapter 391 Xi-Yu / Heil-Ly Tier 3 pursuit and Padaille battle',
-    description: 'Chapter 391 continues the Tier 3 operation, expands Bloody Mary and Biohazard, discloses three Heil-Ly member profiles and the Nen-user +10 leveling value, and ends with Padaille’s death.',
+    group: 'Chapter 392 Xi-Yu apparent-Hisoka contact / Cha-R balance strategy / Luini office confrontation',
+    description: 'Chapter 392 resolves Misha’s cleanup role, opens an unverified Maizan secret-room lead, extends Bloody Mary and Body and Soul into the Hisoka search, develops Ken’i’s balancing plan, and ends with Luini directly confronting the Troupe.',
     records: freeze([
-      freeze({ subject: 'Hisoka search protocol', people: 'Hinrigh, Lynch, Zakuro', notes: 'Lynch and Zakuro continue searching for Hisoka but must contact Hinrigh before acting if they find him.', status: 'search active / Hisoka not found in this synopsis', source: source391 }),
-      freeze({ subject: 'Bloody Mary search drops', people: 'Zakuro, Lynch', notes: 'Numerous blood drops search Tier 3 for Hisoka. Zakuro states roughly 30–40 minutes of Nen before they return to normal blood.', status: 'search function and duration confirmed / range and sensory rules unresolved', source: source391 }),
-      freeze({ subject: 'Biohazard formal reveal', people: 'Hinrigh', notes: 'The formerly unnamed transformation ability is formally called Biohazard. Hinrigh uses a recording camcorder-cat and aura-reinforced handcuff-pigeons.', status: 'formal name and new applications confirmed / full limits unresolved', source: source391 }),
-      freeze({ subject: 'Heil-Ly trio profiles', people: 'Tevelares, Quorolle, Padaille', notes: 'Tevelares: level 24 Enhancer, civil engineer. Quorolle: level 22 Emitter, repairman. Padaille: level 29 Conjurer, demolition worker.', status: 'profile disclosures confirmed at Chapter 391', source: source391 }),
-      freeze({ subject: 'Contagion Nen-user kill value', people: 'Tevelares, Quorolle, Padaille, Morena', notes: 'The trio treats killing a Nen user as worth ten levels but disagrees on multi-attacker allocation. Quorolle’s continuous-monitoring idea about Morena remains speculation.', status: '+10 value confirmed / allocation and surveillance unresolved', source: source391 }),
-      freeze({ subject: 'Fistful of Weapons', people: 'Padaille, Hinrigh', notes: 'Padaille demonstrates hammer, drill, and axe forms from his right hand.', status: 'named Conjuration ability demonstrated / complete weapon set unresolved', source: source391 }),
-      freeze({ subject: 'Padaille death', people: 'Padaille, Hinrigh, Tevelares, Quorolle', notes: 'Hinrigh forces Padaille’s axe-form hand into the back of his head, killing him. Tevelares and Quorolle escape and decide to ask Morena for instructions.', status: 'Padaille body death confirmed / survivors retreat', source: source391 }),
-      freeze({ subject: 'Misha mention', people: 'Hinrigh, Misha Hao', notes: 'Hinrigh says he is counting on Misha after Padaille’s death, but the supplied synopsis gives no task or ability for her.', status: 'named reliance confirmed / exact role unresolved', source: source391 }),
+      freeze({ subject: 'Padaille corpse cleanup', people: 'Misha Hao, Padaille, Hinrigh', notes: 'Misha’s post-mortem Nen inconspicuously disposes of a person killed by a Xi-Yu member. Padaille remains dead; the apparent walking corpse is not revival.', status: 'Misha cleanup role confirmed / exact mechanics and formal ability name unresolved', source: source392 }),
+      freeze({ subject: 'Maizan intelligence deal', people: 'Maizan, Hinrigh, Morena', notes: 'Hinrigh offers 50 million for reliable information; Maizan wants at least 30 million upfront and claims knowledge of an unplanned wired room. His Heil-Ly attribution is only a guess and Hinrigh demands personal guidance/verification.', status: 'lead and negotiation confirmed / Heil-Ly ownership unverified', source: source392 }),
+      freeze({ subject: 'Hanal identity check', people: 'Lynch, Zakuro, Hanal', notes: 'Body and Soul produces Hanal’s inner-soul answer that he is not Hisoka.', status: 'Hanal ruled out as search candidate', source: source392 }),
+      freeze({ subject: 'Apparent-Hisoka encounter', people: 'Lynch, Zakuro, unidentified apparent Hisoka', notes: 'Lynch’s Body and Soul attempt seemingly fails and she is reflexively countered. Zakuro concludes from the man’s aura and Lynch’s defeat that he must be Hisoka. The event does not objectively tag Hisoka or Bonolenov at the Chapter 392 boundary.', status: 'Lynch alive but down / target identity unresolved inside Chapter 392 / later Chapter 405 reveal not backfilled', source: source392 }),
+      freeze({ subject: 'Voyage shipment logistics', people: 'Tsudonke', notes: 'The kiosk woman states Voyage Day 14 as the last air-shipment order deadline and three days earlier for high-speed boat; small-item drone delivery and deadline flexibility depend on connections/cash.', status: 'reported logistics preserved as speaker information, not universal guarantee', source: source392 }),
+      freeze({ subject: 'Cha-R balance plan', people: "Ken'i Wang, Ittoku, Tsudonke", notes: 'Ken’i makes Hisoka the top priority, orders members not to approach him first, and hopes to use negotiation to turn Hisoka, Heil-Ly, and the Troupe against one another.', status: 'orders confirmed / projected balancing outcome remains strategy', source: source392 }),
+      freeze({ subject: 'Luini / Troupe direct contact', people: 'Luini, Nobunaga, Phinks, Feitan', notes: 'Luini probes and confronts the Cha-R office through spatial openings. Nobunaga draws his katana and threatens him.', status: 'direct hostile contact confirmed / Luini alive at Chapter 392 end / later result excluded', source: source392 }),
     ]),
   }),
 ]);
 
-export const bloodyMaryChapter391Research = succession391BloodyMaryResearch;
-export const biohazardChapter391Research = succession391BiohazardResearch;
-export const contagionChapter391Research = succession391ContagionResearch;
-export const fistfulOfWeaponsChapter391Research = succession391FistfulOfWeaponsResearch;
-export const hinrighOperationChapter391Research = succession391HinrighOperationalResearch;
-export const relationshipsChapter391Research = succession391RelationshipRecords;
-export const chapter391Research = succession391ChapterResearch;
+export const mishaChapter392Research = succession392MishaResearch;
+export const maizanIntelChapter392Research = succession392MaizanIntelResearch;
+export const apparentHisokaChapter392Research = succession392ApparentHisokaResearch;
+export const chaRStrategyChapter392Research = succession392ChaRStrategyResearch;
+export const luiniTroupeChapter392Research = succession392LuiniTroupeResearch;
+export const relationshipsChapter392Research = succession392RelationshipRecords;
+export const chapter392Research = succession392ChapterResearch;
