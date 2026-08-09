@@ -19,9 +19,9 @@ export const organizationState384Corrections = Object.freeze({
     Object.freeze({
       id: 'organization-state:xi-yu:384',
       organizationId: 'organization:xi-yu',
-      chapterRange: Object.freeze({ start: 384, end: 390 }),
+      chapterRange: Object.freeze({ start: 384, end: 389 }),
       status: 'active',
-      operationalState: 'Xi-Yu is reported to be suffering disappearances similar to Cha-R while its permission becomes necessary for the Phantom Troupe to extend the Hisoka search into Tier 4. The family shares the risk that unresolved Heil-Ly attacks will break the mafia settlement framework. This state remains active until the Chapter 391 Xi-Yu field-operations transition.',
+      operationalState: 'Xi-Yu is reported to be suffering disappearances similar to Cha-R while its permission becomes necessary for the Phantom Troupe to extend the Hisoka search into Tier 4. The family shares the risk that unresolved Heil-Ly attacks will break the mafia settlement framework. This state remains active until Chapter 390 adds Onior’s expanded Tier 3/Tier 4 operation.',
       authority: 'Onior Longbao remains the Xi-Yu boss and is shown in his Tier 1 room during the Chapter 384 location check.',
       territoryIds: Object.freeze(['location:black-whale:tier-4']),
       objectiveStates: Object.freeze(['Manage Tier 4 access.', 'Contain lower-tier disappearances and Heil-Ly pressure.', 'Coordinate within the three-family conflict framework.']),
@@ -35,9 +35,9 @@ export const organizationState384Corrections = Object.freeze({
     Object.freeze({
       id: 'organization-state:heil-ly:384',
       organizationId: 'organization:heil-ly',
-      chapterRange: Object.freeze({ start: 384, end: 398 }),
+      chapterRange: Object.freeze({ start: 384, end: 389 }),
       status: 'active',
-      operationalState: 'Heil-Ly’s lower-tier violence and disappearances have pushed Cha-R and Xi-Yu toward a procedural war threshold. Morena is absent from her observed Tier 1 room and from the VVIP area, and Tserriednich orders soldiers to search for her lower-tier hideout. This Chapter 384 state remains the active profile until the Chapter 399 hidden-community transition.',
+      operationalState: 'Heil-Ly’s lower-tier violence and disappearances have pushed Cha-R and Xi-Yu toward a procedural war threshold. Morena is absent from her observed Tier 1 room and from the VVIP area, and Tserriednich orders soldiers to search for her lower-tier hideout. This state remains active through Chapter 389 before Chapter 390 reveals the encountered members’ civilian-registration cover.',
       authority: 'Morena remains the Heil-Ly boss. Her exact location is unresolved at the Chapter 384 boundary despite Tserriednich’s estimate that she has probably remained in the lower tiers.',
       territoryIds: Object.freeze(['location:black-whale:tier-3']),
       objectiveStates: Object.freeze(['Continue the breakaway Heil-Ly campaign.', 'Remain concealed from rival mafia and royal searches.', 'Exploit lower-tier access and violence.']),
