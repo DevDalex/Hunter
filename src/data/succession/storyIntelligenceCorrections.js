@@ -6,7 +6,10 @@ import {
 } from './storyIntelligenceFoundation.js';
 
 const threadId = 'story-thread:hisoka-chrollo-deathmatch-outcome';
+const legacyJusticeId = 'location:black-whale:tier-1:justice-bureau';
+const correctedJusticeId = 'location:black-whale:tier-2:justice-bureau';
 const addUnique = (values, value) => Object.freeze([...new Set([...(values || []), value])]);
+const remapJusticeLocations = (values = []) => Object.freeze(values.map((value) => value === legacyJusticeId ? correctedJusticeId : value));
 
 const deathmatchOutcomeThread = Object.freeze({
   id: threadId,
@@ -76,10 +79,13 @@ export const correctedStoryThreadProfiles = Object.freeze({
 });
 
 export const correctedStoryLaneProfiles = Object.freeze(Object.fromEntries(
-  Object.entries(storyLaneProfiles).map(([id, profile]) => {
-    if (!deathmatchOutcomeThread.laneIds.includes(id)) return [id, profile];
-    return [id, Object.freeze({ ...profile, threadIds: addUnique(profile.threadIds, threadId) })];
-  }),
+  Object.entries(storyLaneProfiles).map(([id, profile]) => [id, Object.freeze({
+    ...profile,
+    locationIds: remapJusticeLocations(profile.locationIds),
+    threadIds: deathmatchOutcomeThread.laneIds.includes(id)
+      ? addUnique(profile.threadIds, threadId)
+      : profile.threadIds,
+  })]),
 ));
 
 const correctedBasePhases = Object.fromEntries(
