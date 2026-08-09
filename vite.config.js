@@ -67,6 +67,12 @@ export default defineConfig({
             // and correction leaves together instead of consuming the small
             // amount of headroom remaining in the central Succession chunk.
             { name: 'succession-chapter-392-misha-apparent-hisoka', test: /src\/data\/(?:succession392Research|succession\/(?:abilityFoundation392Expansion|eventFoundation392Expansion|relationshipFoundation392Expansion|organizationState392Corrections|characterState392Corrections|nenSystemFoundation392Corrections))\.js$/ },
+            // Chapter 393 kills Luini, expands Heil-Ly ability-development
+            // information, adds Voconte's descriptive door technique, advances
+            // the apparent-Hisoka truce, and opens the Room 3101 disappearance
+            // mystery. Keep the whole chapter boundary together so these new
+            // records do not consume the ~15 kB remaining in the core chunk.
+            { name: 'succession-chapter-393-room3101-heilly', test: /src\/data\/(?:succession393Research|succession\/(?:abilityFoundation393Expansion|eventFoundation393Expansion|relationshipFoundation393Expansion|organizationState393Corrections|characterState393Corrections|nenSystemFoundation393Corrections))\.js$/ },
           ],
         },
       },
