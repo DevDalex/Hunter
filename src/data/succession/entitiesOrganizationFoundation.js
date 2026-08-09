@@ -14,6 +14,7 @@ import { organizationState389Corrections } from './organizationState389Correctio
 import { organizationState390Corrections } from './organizationState390Corrections.js';
 import { organizationState391Corrections } from './organizationState391Corrections.js';
 import { organizationState392Corrections } from './organizationState392Corrections.js';
+import { organizationState393Corrections } from './organizationState393Corrections.js';
 
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const mergeRecordMaps = (baseMap, ...correctionMaps) => Object.freeze(Object.fromEntries(
@@ -43,6 +44,7 @@ const organizationStateProfiles = mergeRecordMaps(
   organizationState390Corrections,
   organizationState391Corrections,
   organizationState392Corrections,
+  organizationState393Corrections,
 );
 const organizationPersonnelHistory = mergeRecordMaps(baseOrganizationPersonnelHistory, organizationPersonnelHistoryCorrections);
 
