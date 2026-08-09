@@ -57,6 +57,7 @@ export const abilityKnowledge390Overrides = freeze({
     knowledge({
       id: 'ability-knowledge:bloody-mary:390',
       abilityId: 'ability:bloody-mary',
+      end: 390,
       knowledgeState: 'demonstrated effect / complete mechanics unresolved',
       summary: 'Zakuro’s Bloody Mary is demonstrated after a deep neck wound supplies blood; he then subdues the attacker. The complete blood-control method and Nen category are not supplied.',
       activation: 'Demonstrated after Zakuro receives a deep neck cut and has blood available.',
@@ -73,6 +74,7 @@ export const abilityKnowledge390Overrides = freeze({
     knowledge({
       id: 'ability-knowledge:body-and-soul:390',
       abilityId: 'ability:body-and-soul',
+      end: 390,
       knowledgeState: 'demonstrated interrogation / complete mechanics unresolved',
       summary: 'Lynch’s Body and Soul is demonstrated by combining a physical attack with questions and successfully obtaining basic information about Heil-Ly’s goal and Morena’s ability.',
       activation: 'The demonstrated sequence combines Lynch striking the target and asking questions through the ability.',
@@ -88,6 +90,7 @@ export const abilityKnowledge390Overrides = freeze({
     knowledge({
       id: 'ability-knowledge:hinrigh-object-animal-transformation:390',
       abilityId: 'ability:hinrigh-object-animal-transformation',
+      end: 390,
       knowledgeState: 'demonstrated effect / formal name and full mechanics unresolved',
       summary: 'Hinrigh touches two soldiers’ guns; their barrels become live snakes whose mouths retain the guns’ firing function and kill the soldiers. The Chapter 390 synopsis supplies no formal ability name or Nen category.',
       activation: 'Hinrigh physically touches the guns before the transformation manifests.',
