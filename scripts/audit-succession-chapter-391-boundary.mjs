@@ -17,7 +17,7 @@ try {
   const numbers = maintained.maintainedSuccessionChapterNumbers;
   const index390 = numbers.indexOf(390);
   assert(index390 >= 0 && numbers[index390 + 1] === 391, 'maintained publication chain must place Chapter 391 directly after Chapter 390');
-  assert(numbers[numbers.indexOf(391) + 1] === 400, 'Chapter 391 must remain before the pre-existing Chapter 400 maintained packet');
+  assert(numbers[numbers.indexOf(391) + 1] === 392 && numbers[numbers.indexOf(392) + 1] === 400, 'Chapter 391 must lead into maintained Chapter 392 before the pre-existing Chapter 400 packet');
 
   const chapter391 = chapterModule.succession391ChapterResearch?.[0];
   assert(chapter391?.number === 391, 'dedicated Chapter 391 research must load');
@@ -92,7 +92,7 @@ try {
   const xiYu392 = archive.getOrganizationStateAtChapter('organization:xi-yu', 392);
   const heilLy391 = archive.getOrganizationStateAtChapter('organization:heil-ly', 391);
   assert(/contact/i.test(text(xiYu391)) && /Hisoka/i.test(text(xiYu391)) && /Padaille/i.test(text(xiYu391)), 'Xi-Yu Chapter 391 state must preserve the split Hisoka/Heil-Ly field operation');
-  assert(/Room 3101/i.test(text(xiYu392)), 'Xi-Yu post-391 state continuity must retain later Room 3101 reconnaissance without backdating it');
+  assert(/Misha|Maizan|Hisoka/i.test(text(xiYu392)) && !/Room 3101/i.test(text(xiYu392)), 'Chapter 392 Xi-Yu state must advance to Misha/Maizan/apparent-Hisoka material without leaking later Room 3101 reconnaissance');
   assert(/level 24/i.test(text(heilLy391)) && /level 22/i.test(text(heilLy391)) && /level 29/i.test(text(heilLy391)), 'Heil-Ly Chapter 391 state must preserve all three disclosed levels');
   assert(!/Room 3101|Luini/i.test(text(heilLy391)), 'Chapter 392+ Heil-Ly route and Luini developments must not leak into 391');
 
