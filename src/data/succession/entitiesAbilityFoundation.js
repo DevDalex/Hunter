@@ -21,6 +21,7 @@ import { abilityFoundation388Expansion } from './abilityFoundation388Expansion.j
 import { abilityFoundation389Expansion } from './abilityFoundation389Expansion.js';
 import { abilityFoundation390Expansion } from './abilityFoundation390Expansion.js';
 import { abilityFoundation391Expansion } from './abilityFoundation391Expansion.js';
+import { abilityFoundation392Expansion } from './abilityFoundation392Expansion.js';
 
 const ARCHIVE_DATE = '2026-08-09';
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -45,6 +46,7 @@ const abilityExpansions = Object.freeze([
   ...abilityFoundation389Expansion,
   ...abilityFoundation390Expansion,
   ...abilityFoundation391Expansion,
+  ...abilityFoundation392Expansion,
 ]);
 
 const abilities = Object.freeze(uniqueById([
