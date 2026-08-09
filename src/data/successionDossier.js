@@ -1,99 +1,87 @@
-import * as base from './successionDossierThrough385.js';
+import * as base from './successionDossierThrough386.js';
 import {
-  succession386BodyStates,
-  succession386ChapterResearch,
-  succession386GuardianBeastObservationResearch,
-  succession386HalkenburgArrowResearch,
-  succession386JusticeResearch,
-  succession386Mysteries,
-  succession386NenClassResearch,
-  succession386RelationshipRecords,
-  succession386ResolvedQuestions,
-  succession386SourcePolicy,
-  succession386ThetaForensicsResearch,
-  succession386TserriednichTrainingResearch,
-} from './succession386Research.js';
+  succession387AssassinationPerspectiveResearch,
+  succession387ChapterResearch,
+  succession387MelodyOverlapResearch,
+  succession387Mysteries,
+  succession387ParallelFutureResearch,
+  succession387ResolvedQuestions,
+  succession387SourcePolicy,
+  succession387TrainingResearch,
+} from './succession387Research.js';
 
-export * from './successionDossierThrough385.js';
+export * from './successionDossierThrough386.js';
 
 const freeze = (value) => Object.freeze(value);
-const source386 = 'https://hunterxhunter.fandom.com/wiki/Chapter_386';
+const source387 = 'https://hunterxhunter.fandom.com/wiki/Chapter_387';
 
-const halkenburgArrow386Ability = freeze({
-  ability: 'Halkenburg collective possession arrow',
-  user: 'Halkenburg Hui Guo Rou',
-  owner: 'Halkenburg Hui Guo Rou',
-  type: 'Collective symbiotic body-will transfer attack / consciousness topology still unresolved',
-  category: 'Collective symbiotic body-will transfer attack',
-  chapters: '382, 386',
-  chapter: 386,
-  conditions: 'Chapter 382 establishes the collective fellowship aura, bow-and-arrow strike, follower collapse, and target-body control. Chapter 386 treats Sumidori as the consciousness controlling Shikaku’s body and deliberately tests what occurs when that occupied body dies.',
-  mechanics: 'Halkenburg lists four possible locations/states for Shikaku’s original consciousness. The Sumidori-controlled Shikaku body then commits suicide. Sumidori’s original body wakes afterward and Halkenburg begins an identity check by asking for post and service number, but the supplied synopsis ends before the answer. The exact return rule and Shikaku consciousness state therefore remain unresolved.',
-  knownAtChapterBoundary: 'The controller of Shikaku’s body is treated by Halkenburg’s group as Sumidori, and occupied-body death is followed by Sumidori’s original body waking. The awakened identity and Shikaku’s original consciousness remain unresolved at the endpoint.',
-  target: 'Shikaku in the first documented exchange; Chapter 386 is a follow-up experiment rather than a new arrow target.',
-  confidence: 'Observed transfer experiment confirmed / Shikaku consciousness and post-death return topology unresolved.',
-  source: source386,
+const parallelFuture387Ability = freeze({
+  ability: 'Parallel Future',
+  user: 'Tserriednich Hui Guo Rou',
+  owner: 'Tserriednich Hui Guo Rou',
+  type: 'Specialization · ten-second future perception and demonstrated forecast divergence',
+  category: 'Future perception / divergence',
+  chapters: '385, 386, 387',
+  chapter: 387,
+  conditions: 'In the demonstrated Chapter 387 sequence Tserriednich closes his eyes and fully enters Zetsu. Static precedes a vision ten seconds ahead. Maintaining the eyes-closed Zetsu state allows the future view to continue beyond the initial ten-second preview.',
+  mechanics: 'Real time continues while Tserriednich watches the future sequence. He can register present sensory information while visually observing events ten seconds ahead. During the demonstrated Theta interaction he can change his actual actions relative to the forecast, while Theta continues perceiving and acting against the forecast version of him. He uses this offset to evade her gunshot.',
+  knownAtChapterBoundary: 'The ten-second forecast lead, continuing future view under maintained Zetsu, simultaneous present sensory awareness, and demonstrated forecast-versus-actual divergence are explicit. Maximum sustainable duration and broader multi-observer/Nen-interaction rules remain unresolved.',
+  target: 'Self perception and the future sequence involving surrounding events; separate target/range limits are not quantified.',
+  confidence: 'Core Chapter 387 mechanics confirmed / ultimate duration and broader interaction cases unresolved.',
+  source: source387,
 });
 
+const isOlderTserriednichTemporalRecord = (record) => {
+  const ability = String(record.ability || '');
+  return ability === 'Parallel Future' || ability === 'Tserriednich’s Zetsu-linked temporal anomaly';
+};
+
 export const successionAbilities = freeze([
-  ...base.successionAbilities.filter((record) => record.ability !== 'Halkenburg collective possession arrow'),
-  halkenburgArrow386Ability,
+  ...base.successionAbilities.filter((record) => !isOlderTserriednichTemporalRecord(record)),
+  parallelFuture387Ability,
 ]);
 
-export const successionRelationships = freeze([
-  ...base.successionRelationships,
-  ...succession386RelationshipRecords,
-]);
-
-export const bodyStateLedger = freeze([
-  ...(base.bodyStateLedger || []),
-  ...succession386BodyStates,
-]);
-
-const superseded386Mystery = (record) => {
-  const question = String(record.question || '');
-  return (question.includes('Theta') && question.includes('Tserriednich') && (question.includes('die') || question.includes('skipped interval')))
-    || (question.includes('Shikaku') && (question.includes('conscious') || question.includes('will')));
+const superseded387Mystery = (record) => {
+  const question = String(record.question || '').toLowerCase();
+  return (question.includes('theta') && question.includes('bloodless') && question.includes('mechanism'))
+    || (question.includes('theta') && question.includes('apparent assassination') && question.includes('mechanism'))
+    || (question.includes('sub-second') && question.includes('tserriednich'));
 };
 
 export const successionMysteries = freeze([
-  ...base.successionMysteries.filter((record) => !superseded386Mystery(record)),
-  ...succession386Mysteries,
+  ...base.successionMysteries.filter((record) => !superseded387Mystery(record)),
+  ...succession387Mysteries,
 ]);
 
 export const successionResolvedQuestions = freeze([
   ...(base.successionResolvedQuestions || []),
-  ...succession386ResolvedQuestions,
+  ...succession387ResolvedQuestions,
 ]);
 
 export const dossierSources = freeze({
   ...base.dossierSources,
-  chapter386: source386,
-  sourcePolicy386: succession386SourcePolicy,
+  chapter387: source387,
+  sourcePolicy387: succession387SourcePolicy,
 });
 
 export const guardAssignmentGroups = freeze([
   ...base.guardAssignmentGroups,
   freeze({
-    group: 'Chapter 386 Day 9 consciousness testing, Justice protection, and Nen-class escalation',
-    description: 'Chapter 386 opens Voyage Day 9 by adding forensic evidence to Theta’s bloodless apparent assassination scene, keeping Melody and the surviving twin operation under Justice questioning, and turning Halkenburg’s first possession-arrow exchange into a deliberate consciousness experiment. Kurapika simultaneously advances the Room 1014 class into Water Divination while Tserriednich trains toward faster Zetsu activation.',
+    group: 'Chapter 387 Parallel Future mechanics reveal and Day 8 flashback reconstruction',
+    description: 'Chapter 387 rewinds to 25 minutes before the Sunday banquet and explains Tserriednich’s survival of Theta’s assassination attempt from his own perspective. The chapter establishes the ten-second forecast lead, continuing future view, and demonstrated observer-divergence behavior while preserving the earlier 385 and 386 knowledge boundaries. Its final scene returns to Voyage Day 9 for Tserriednich’s refined sub-second eye-cycle training target.',
     records: freeze([
-      freeze({ subject: 'Theta / Salkov forensic check', people: 'Theta, Salkov, Tserriednich Hui Guo Rou', notes: 'Salkov uses luminol where Theta remembers Tserriednich’s corpse and finds no blood. This strengthens the conclusion that the apparent Chapter 385 death did not leave an ordinary physical trace without yet supplying the complete temporal mechanism.', status: 'no-blood result confirmed / complete Parallel Future mechanics still withheld', source: source386 }),
-      freeze({ subject: 'Melody under Justice questioning', people: 'Melody, Kaiser, Keeney, Fugetsu Hui Guo Rou, Kacho-form Without You', notes: 'Keeney’s suicide note claims sole responsibility and the two girls say he forced them onto the lifeboat. Kaiser says neither version is proved or disproved. Biological Kacho remains dead; the Kacho-form participant is Without You.', status: 'questioning and protection continue / escape cover accounts unresolved', source: source386 }),
-      freeze({ subject: 'Halkenburg consciousness models', people: 'Halkenburg Hui Guo Rou, Sumidori, Shikaku', notes: 'Halkenburg explicitly lists four possibilities for Shikaku’s original consciousness and admits he needs Nen expertise before treating any one model as established.', status: 'four models formalized / no model confirmed', source: source386 }),
-      freeze({ subject: 'Shikaku-body suicide experiment', people: 'Sumidori, Shikaku, Halkenburg Hui Guo Rou, Basho, Benjamin Hui Guo Rou, Balsamilco Might', notes: 'The consciousness treated as Sumidori makes Shikaku’s body shoot itself outside Luzurus’s quarters. The Shikaku body dies; Benjamin’s side treats the event as evidence of Halkenburg’s threat.', status: 'Shikaku body deceased / Shikaku original consciousness unresolved', source: source386 }),
-      freeze({ subject: 'Sumidori original-body wakeup', people: 'Halkenburg Hui Guo Rou, Sumidori', notes: 'Sumidori’s original body wakes after the Shikaku body dies. Halkenburg asks for post and service number to identify the consciousness, but the supplied chapter packet ends before the response.', status: 'original body awake / occupant identity not yet confirmed', source: source386 }),
-      freeze({ subject: 'Room 1014 Water Divination', people: 'Kurapika, Bill, Ladiolus, Satobi, Babimyna, Furykov', notes: 'Kurapika demonstrates Water Divination, identifies his displayed result as Specialization, and makes private Nen-type disclosure part of the class’s information price and stalemate strategy.', status: 'class advances / Nen-type intelligence becomes explicit payment', source: source386 }),
-      freeze({ subject: 'Woble and Tubeppa beast surveillance', people: 'Babimyna, Furykov, Rihan, Woble Hui Guo Rou, Tubeppa Hui Guo Rou', notes: 'Both beasts remain unavailable to the observers. Babimyna’s age and counterattack explanations for Woble remain hypotheses.', status: 'nonappearance confirmed / explanation unresolved', source: source386 }),
-      freeze({ subject: 'Tserriednich Zetsu response target', people: 'Tserriednich Hui Guo Rou, Salkov', notes: 'Tserriednich says he is shortening his Zetsu response time and will spar once he can enter it in less than one second.', status: 'sub-second target stated / not yet achieved', source: source386 }),
+      freeze({ subject: 'First ten-second future vision', people: 'Tserriednich Hui Guo Rou, Theta', notes: 'After fully entering eyes-closed Zetsu, Tserriednich sees a future scene and identifies its ten-second lead when Theta repeats the forecast dialogue.', status: 'ten-second lead explicitly revealed at Chapter 387 boundary', source: source387 }),
+      freeze({ subject: 'Continuous future viewing', people: 'Tserriednich Hui Guo Rou, Theta', notes: 'Tserriednich maintains Zetsu beyond the first ten seconds. The future view continues while real time advances, and he can feel present Theta while visually seeing the Theta ten seconds ahead.', status: 'continuous viewing demonstrated / maximum duration unresolved', source: source387 }),
+      freeze({ subject: 'Forecast divergence and observer perception', people: 'Tserriednich Hui Guo Rou, Theta', notes: 'The coffee-cup experiment shows Tserriednich changing his actual behavior while Theta continues reacting to the version of him contained in the forecast sequence.', status: 'demonstrated Theta interaction confirmed / broader observer configurations unresolved', source: source387 }),
+      freeze({ subject: 'Theta assassination dodge', people: 'Tserriednich Hui Guo Rou, Theta', notes: 'Tserriednich sees the gun draw in the future, moves his actual body away from the predicted position, and survives while Theta fires at the forecast version she perceives.', status: 'Chapter 385 apparent-death mechanism retrospectively explained', source: source387 }),
+      freeze({ subject: 'Melody landscape overlap', people: 'Tserriednich Hui Guo Rou, Melody', notes: 'The beautiful landscape is recognized by Tserriednich as someone else’s Nen and is linked to Melody’s already established concert effect rather than to Parallel Future.', status: 'external Nen effect separated from Parallel Future', source: source387 }),
+      freeze({ subject: 'Day 9 Zetsu eye-cycle target', people: 'Tserriednich Hui Guo Rou, Salkov', notes: 'The next day Tserriednich says sparring will begin once he can close and reopen his eyes in less than one second.', status: 'refined sub-second target stated / not achieved at Chapter 387 boundary', source: source387 }),
     ]),
   }),
 ]);
 
-export const thetaForensicsChapter386Research = succession386ThetaForensicsResearch;
-export const justiceChapter386Research = succession386JusticeResearch;
-export const halkenburgArrowChapter386Research = succession386HalkenburgArrowResearch;
-export const nenClassChapter386Research = succession386NenClassResearch;
-export const guardianBeastObservationChapter386Research = succession386GuardianBeastObservationResearch;
-export const tserriednichTrainingChapter386Research = succession386TserriednichTrainingResearch;
-export const chapter386Research = succession386ChapterResearch;
+export const parallelFutureChapter387Research = succession387ParallelFutureResearch;
+export const assassinationPerspectiveChapter387Research = succession387AssassinationPerspectiveResearch;
+export const melodyOverlapChapter387Research = succession387MelodyOverlapResearch;
+export const tserriednichTrainingChapter387Research = succession387TrainingResearch;
+export const chapter387Research = succession387ChapterResearch;
