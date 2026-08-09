@@ -27,6 +27,11 @@ export default defineConfig({
             // without promoting the much larger product/search graph into the
             // startup dependency closure.
             { name: 'succession-information-consistency', test: /src\/data\/succession\/informationConsistency\.js$/ },
+            // Chapter 387 adds a dense but cohesive Parallel Future mechanics
+            // layer across the ability, event, and chapter-bounded Nen
+            // foundations. Isolate only those three leaf modules rather than
+            // increasing the 750 kB ceiling or splitting a broad runtime graph.
+            { name: 'succession-387-mechanics', test: /src\/data\/succession\/(?:abilityFoundation387Expansion|eventFoundation387Expansion|nenSystemFoundation387Corrections)\.js$/ },
           ],
         },
       },
