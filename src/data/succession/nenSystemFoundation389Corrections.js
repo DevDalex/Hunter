@@ -54,7 +54,7 @@ export const nenSystemProfile389Corrections = freeze({
     abilityIds: ['ability:stealth-dolphin', 'ability:steal-chain', 'ability:bill-growth-ability', 'ability:silent-majority', 'ability:emperor-time'],
     characterIds: ['character:kurapika', 'character:bill', 'character:furykov', 'character:babimyna'],
     locationIds: ['location:black-whale:tier-1:room-1014'],
-    sources: [369, 376, 381, 388, 390, 411, 412, 413],
+    sources: [369, 376, 381, 388, 411, 412, 413],
   }),
   'nen-system:camilla-have-not-curse-network': system({
     id: 'nen-system:camilla-have-not-curse-network',
@@ -128,7 +128,7 @@ export const guardianBeastState389Corrections = freeze({
     beastState({
       beastId: 'guardian-beast:zhang-lei',
       start: 389,
-      end: 403,
+      end: 389,
       knowledge: 'coin number progression directly observed',
       operationalState: 'Tenftory receives a coin openly after successful Nen training, while Coventoba reveals internally that he secretly obtained one earlier and observes its displayed number changing from 1 to 10.',
       knownAbilityIds: ['ability:zhang-lei-coins'],
@@ -139,7 +139,7 @@ export const guardianBeastState389Corrections = freeze({
       beastId: 'guardian-beast:zhang-lei',
       start: 404,
       knowledge: 'coin system remains under active analysis',
-      operationalState: 'Later maintained records continue analysis of Zhang Lei’s Guardian Coins beyond the Chapter 389 1-to-10 observation.',
+      operationalState: 'Later maintained records continue analysis of Zhang Lei’s Guardian Coins beyond the Chapter 390 same-aura observation.',
       knownAbilityIds: ['ability:zhang-lei-coins'],
       unresolved: ['Complete holder effect', 'Full progression rule', 'Final activation threshold'],
       sources: [404],
@@ -187,7 +187,7 @@ export const abilityKnowledge389Overrides = freeze({
   'ability:zhang-lei-coins': freeze([
     freeze({
       id: 'ability-knowledge:zhang-lei-coins:389',
-      chapterRange: freeze({ start: 389, end: 403 }),
+      chapterRange: freeze({ start: 389, end: 389 }),
       knowledgeState: 'partially documented',
       certainty: 'confirmed',
       summary: 'By Chapter 389, Zhang Lei’s Guardian Spirit Beast is known to produce numbered coins, and Coventoba directly observes his secretly acquired coin change from 1 to 10. The meaning, trigger, threshold, and eventual holder effect remain unresolved.',
