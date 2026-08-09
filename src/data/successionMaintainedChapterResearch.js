@@ -34,6 +34,7 @@ import { succession378ChapterResearch } from './succession378Research.js';
 import { succession379ChapterResearch } from './succession379Research.js';
 import { succession380ChapterResearch } from './succession380Research.js';
 import { succession381ChapterResearch } from './succession381Research.js';
+import { succession382ChapterResearch } from './succession382Research.js';
 import { succession400ChapterResearch } from './succession400Research.js';
 import { succession406ChapterResearch } from './succession406Research.js';
 import { succession408ChapterResearch } from './succession408Research.js';
@@ -79,6 +80,7 @@ export const maintainedSuccessionChapterResearch = Object.freeze([
   ...succession379ChapterResearch,
   ...succession380ChapterResearch,
   ...succession381ChapterResearch,
+  ...succession382ChapterResearch,
   ...succession400ChapterResearch,
   ...succession406ChapterResearch,
   ...succession408ChapterResearch,
