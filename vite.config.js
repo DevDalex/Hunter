@@ -14,7 +14,14 @@ export default defineConfig({
       output: {
         codeSplitting: {
           minSize: 20000,
-          groups: [{ name: 'vendor', test: /node_modules/ }],
+          groups: [
+            { name: 'vendor', test: /node_modules/ },
+            // The maintained chapter archive grows every time a dedicated
+            // research module is added. Keep the older 340–368 records in a
+            // stable data chunk so later chapter upgrades do not repeatedly
+            // push the active maintained-research chunk over its CI budget.
+            { name: 'succession-maintained-340-368', test: /src\/data\/succession(?:34\d|35\d|36[0-8])\d*Research\.js$/ },
+          ],
         },
       },
     },
