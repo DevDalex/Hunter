@@ -19,7 +19,7 @@ export const relationshipFoundation381Expansion = freeze([
     relationshipType: 'protective',
     subtype: 'protective-investigation-and-monitored-release',
     direction: 'directed',
-    sentiment: 'protective',
+    sentiment: 'mixed',
     status: 'active',
     chapterRange: freeze({ start: 380, end: 381 }),
     basis: 'Mizaistom controls Fugetsu’s confidential lower-tier custody, questions her, and works to avoid harsher confinement while trying to understand the twins’ escape risk.',
