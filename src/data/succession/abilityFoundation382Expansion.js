@@ -61,7 +61,7 @@ export const abilityFoundation382Expansion = freeze([
       'Halkenburg fires at Shikaku after Shikaku activates Culdcept.',
       'The arrow pierces Culdcept, one Halkenburg follower collapses, and Shikaku’s body rises and asks Halkenburg for orders.',
     ],
-    sourceChapters: [375, 382],
+    sourceChapters: [382],
     researchStatus: 'core first-use mechanics confirmed / official name and full consciousness rules unresolved',
   }),
   ability({
