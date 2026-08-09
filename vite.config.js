@@ -21,10 +21,12 @@ export default defineConfig({
             // stable data chunk so later chapter upgrades do not repeatedly
             // push the active maintained-research chunk over its CI budget.
             { name: 'succession-maintained-340-368', test: /src\/data\/succession(?:34\d|35\d|36[0-8])\d*Research\.js$/ },
-            // Product/search closure selectors are a coherent runtime layer
-            // and otherwise accumulate inside successionData. Split them as
-            // their own chunk instead of raising the 750 kB performance gate.
-            { name: 'succession-product-closure', test: /src\/data\/succession\/(?:productClosureSelectors(?:Final|Phase4|Release)?|finalReleaseClosure|releaseManifest)\.js$/ },
+            // Keep this split deliberately narrow. Information consistency is
+            // a leaf runtime selector used inside the on-demand Succession
+            // data graph, so extracting it relieves the per-chunk ceiling
+            // without promoting the much larger product/search graph into the
+            // startup dependency closure.
+            { name: 'succession-information-consistency', test: /src\/data\/succession\/informationConsistency\.js$/ },
           ],
         },
       },
