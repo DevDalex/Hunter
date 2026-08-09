@@ -23,6 +23,7 @@ import {
   guardianBeastState390Corrections,
 } from './nenSystemFoundation390Corrections.js';
 import { abilityKnowledge391Overrides } from './nenSystemFoundation391Corrections.js';
+import { abilityKnowledge392Overrides } from './nenSystemFoundation392Corrections.js';
 
 const ARCHIVE_DATE = '2026-08-09';
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -107,6 +108,7 @@ const abilityKnowledgeOverrideKeys = new Set([
   ...Object.keys(abilityKnowledge389Overrides),
   ...Object.keys(abilityKnowledge390Overrides),
   ...Object.keys(abilityKnowledge391Overrides),
+  ...Object.keys(abilityKnowledge392Overrides),
 ]);
 const correctedAbilityKnowledgeOverrides = Object.freeze(Object.fromEntries(
   [...abilityKnowledgeOverrideKeys].map((abilityId) => [abilityId, Object.freeze([
@@ -117,6 +119,7 @@ const correctedAbilityKnowledgeOverrides = Object.freeze(Object.fromEntries(
     ...(abilityKnowledge389Overrides[abilityId] || []),
     ...(abilityKnowledge390Overrides[abilityId] || []),
     ...(abilityKnowledge391Overrides[abilityId] || []),
+    ...(abilityKnowledge392Overrides[abilityId] || []),
   ])]),
 ));
 
