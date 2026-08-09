@@ -1,100 +1,103 @@
-import * as base from './successionDossierThrough380.js';
+import * as base from './successionDossierThrough381.js';
 import {
-  succession381FugetsuCustodyResearch,
-  succession381HunterCodeRetrospective,
-  succession381MelodySupervisorResearch,
-  succession381Mysteries,
-  succession381PredatorResolutionResearch,
-  succession381RelationshipRecords,
-  succession381SecurityResolutionResearch,
-  succession381SourcePolicy,
-  succession381StingerBallResearch,
-} from './succession381Research.js';
+  succession382BanquetResearch,
+  succession382BodyStates,
+  succession382CuldceptResearch,
+  succession382HalkenburgArrowResearch,
+  succession382HalkenburgNasubiResearch,
+  succession382Mysteries,
+  succession382RelationshipRecords,
+  succession382SaleSaleAssassinationResearch,
+  succession382SourcePolicy,
+} from './succession382Research.js';
 
-export * from './successionDossierThrough380.js';
+export * from './successionDossierThrough381.js';
 
 const freeze = (value) => Object.freeze(value);
-const source381 = 'https://hunterxhunter.fandom.com/wiki/Chapter_381';
+const source382 = 'https://hunterxhunter.fandom.com/wiki/Chapter_382';
 
-const predator381Ability = freeze({
-  ability: 'Predator',
-  user: 'Rihan',
-  owner: 'Rihan',
-  type: 'Analysis-dependent counter ability',
-  category: 'Analysis-dependent counter ability',
-  chapters: '374, 381',
-  chapter: 381,
-  conditions: 'Rihan develops a counter from his own analysis of a selected target ability; effectiveness depends on the accuracy of that analysis and outside analytical assistance is prohibited.',
-  mechanics: 'In Chapter 381 Predator consumes Koroabde’s clone, breaking the induced affection, and then consumes Salé-salé’s Guardian Spirit Beast. The successful mission leaves Rihan unable to use Nen for 48 hours.',
-  knownAtChapterBoundary: 'Successful anti-Guardian-Spirit-Beast use and the 48-hour post-success Nen lockout are confirmed.',
-  target: 'Selected Nen ability / Nen construct; Chapter 381 target is Salé-salé’s Guardian Spirit Beast.',
-  confidence: 'Core use and post-use cost confirmed; complete generic failure/range rules remain open.',
-  source: source381,
+const halkenburgArrow382Ability = freeze({
+  ability: 'Halkenburg collective possession arrow',
+  user: 'Halkenburg Hui Guo Rou',
+  owner: 'Halkenburg Hui Guo Rou',
+  type: 'Collective symbiotic body-will transfer attack',
+  category: 'Collective symbiotic body-will transfer attack',
+  chapters: '375, 382',
+  chapter: 382,
+  conditions: 'The attack draws on Halkenburg’s collective fellowship aura. A successful hit suppresses the target host’s will in exchange for the body of one of Halkenburg’s followers.',
+  mechanics: 'Followers’ aura forms both overwhelming protection and the projectile while Halkenburg’s own aura forms the bow. The supplied synopsis states that once the bow is drawn the arrow cannot be intercepted or blocked. Against Shikaku it pierces Culdcept, one follower collapses, and Shikaku’s body rises acting under Halkenburg’s side.',
+  knownAtChapterBoundary: 'First successful body/will exchange is observed. Official ability name and complete consciousness-transfer topology remain unresolved.',
+  target: 'Shikaku in the Chapter 382 demonstration.',
+  confidence: 'Core first-use mechanics confirmed / official name and full transfer rules unresolved.',
+  source: source382,
 });
 
-const stingerBall381Ability = freeze({
-  ability: 'Stinger Ball',
-  user: 'Yushohi',
-  owner: 'Yushohi',
-  type: 'Attachment-based assassination ability / mechanics unresolved',
-  category: 'Attachment-based assassination ability / mechanics unresolved',
-  chapters: '381',
-  chapter: 381,
-  conditions: 'Yushohi has successfully attached Stinger Ball to Fugetsu; Chapter 381 does not reveal the complete attachment or activation conditions.',
-  mechanics: 'The target carries the attached ability, but its trigger, effect, removal method, range, duration, and Nen category remain unsupplied at this chapter boundary.',
-  knownAtChapterBoundary: 'Ability name, user, target, and successful attachment are confirmed.',
-  target: 'Fugetsu Hui Guo Rou',
-  confidence: 'Attachment confirmed / mechanics unresolved.',
-  source: source381,
+const culdcept382Ability = freeze({
+  ability: 'Culdcept',
+  user: 'Shikaku',
+  owner: 'Shikaku',
+  type: 'Card-based defensive Nen ability / broader mechanics unresolved',
+  category: 'Card-based defensive Nen ability / broader mechanics unresolved',
+  chapters: '382',
+  chapter: 382,
+  conditions: 'Shikaku activates the ability and forms a card-like construct as a shield.',
+  mechanics: 'The demonstrated card is used defensively against Halkenburg’s collective arrow and is pierced by it.',
+  knownAtChapterBoundary: 'Ability name and defensive card manifestation are confirmed.',
+  target: 'Self / incoming attack.',
+  confidence: 'Observed use confirmed; Nen category and broader card mechanics unsupplied.',
+  source: source382,
 });
 
 export const successionAbilities = freeze([
-  ...base.successionAbilities.filter((record) => !['Predator', 'Stinger Ball'].includes(record.ability)),
-  predator381Ability,
-  stingerBall381Ability,
+  ...base.successionAbilities.filter((record) => !['Halkenburg collective possession arrow', 'Culdcept'].includes(record.ability)),
+  halkenburgArrow382Ability,
+  culdcept382Ability,
 ]);
 
 export const successionRelationships = freeze([
   ...base.successionRelationships,
-  ...succession381RelationshipRecords,
+  ...succession382RelationshipRecords,
 ]);
 
-const superseded381Mystery = (record) => {
+export const bodyStateLedger = freeze([
+  ...(base.bodyStateLedger || []),
+  ...succession382BodyStates,
+]);
+
+const superseded382Mystery = (record) => {
   const question = String(record.question || '');
-  return (question.includes('Fugetsu') && (question.includes('lower') || question.includes('route') || question.includes('reach')))
-    || (question.includes('Salé-salé') && question.includes('Predator'))
-    || question.includes('Stinger Ball');
+  return question.includes('Salé-salé') && question.includes('protection') && question.includes('Predator');
 };
 
 export const successionMysteries = freeze([
-  ...base.successionMysteries.filter((record) => !superseded381Mystery(record)),
-  ...succession381Mysteries,
+  ...base.successionMysteries.filter((record) => !superseded382Mystery(record)),
+  ...succession382Mysteries,
 ]);
 
 export const dossierSources = freeze({
   ...base.dossierSources,
-  chapter381: source381,
-  sourcePolicy381: succession381SourcePolicy,
+  chapter382: source382,
+  sourcePolicy382: succession382SourcePolicy,
 });
 
 export const guardAssignmentGroups = freeze([
   ...base.guardAssignmentGroups,
   freeze({
-    group: 'Chapter 381 twin surveillance, Predator resolution, and assassination handoff',
-    description: 'Fugetsu moves from lower-tier custody to monitored Tier 1 release, Predator removes Salé-salé’s Guardian Spirit Beast and locks Rihan out of Nen for 48 hours, and Yushohi reveals Stinger Ball is already attached to Fugetsu.',
+    group: 'Chapter 382 Halkenburg escalation, possession-arrow breakthrough, and Salé-salé elimination',
+    description: 'Halkenburg turns four days of failed petitions into an armed confrontation with Nasubi, survives a self-directed gunshot because his Guardian Spirit Beast stops the bullet, then returns to Room 1009 and defeats Shikaku with the first observed collective body/will exchange. Yushohi separately reports Salé-salé’s assassination as successful before the Sunday banquet opens.',
     records: freeze([
-      freeze({ subject: 'Fugetsu monitored release', people: 'Fugetsu Hui Guo Rou, Mizaistom, Melody, Keeney', notes: 'Fugetsu is returned to Tier 1 instead of confinement but placed under seventy-two-hour surveillance. Ordinary corridor footage does not explain her lower-tier movement.', status: 'monitored release active / teleportation route still incomplete', source: source381 }),
-      freeze({ subject: 'Hunter Code call', people: 'Melody, Keeney, Mizaistom side', notes: 'The spoken call outwardly orders an anti-escape mission. The supplied notes retrospectively decode the hidden Chapter 383 Hunter Code message as “Assist Princes escape fully”; this decode is not treated as explicit Chapter 381 character knowledge.', status: 'covert message preserved as retrospective annotation', source: source381 }),
-      freeze({ subject: 'Predator mission', people: 'Rihan, Salé-salé Hui Guo Rou, Koroabde', notes: 'Predator consumes Koroabde’s clone and Salé-salé’s Guardian Spirit Beast. Rihan then enters a forty-eight-hour Nen lockout.', status: 'Guardian Spirit Beast neutralized / Rihan temporarily Nen-disabled', source: source381 }),
-      freeze({ subject: 'Yushohi assassination threat', people: 'Yushohi, Fugetsu Hui Guo Rou, Rihan', notes: 'Yushohi confirms Stinger Ball is attached to Fugetsu and receives the order to replace Rihan after the Predator mission.', status: 'Stinger Ball attached / assassination handoff active', source: source381 }),
-      freeze({ subject: 'Lower-tier lockdown', people: 'Black Whale security', notes: 'At 8:00 p.m. on Voyage Day 5, a shipwide announcement says the stowaway has been captured and the lockdown is lifted.', status: 'lockdown ended / announced stowaway identity not supplied', source: source381 }),
+      freeze({ subject: 'Halkenburg / Nasubi confrontation', people: 'Halkenburg Hui Guo Rou, Nasubi Hui Guo Rou, Nugui', notes: 'Halkenburg holds the entrance soldiers at gunpoint and demands suspension of the contest. A shot toward Nasubi stops by an unidentified mechanism. Nasubi’s claim that he cannot die until the ritual ends remains a character claim, not a universally verified rule.', status: 'armed confrontation completed / ritual-survival mechanism unresolved', source: source382 }),
+      freeze({ subject: 'Halkenburg self-directed gunshot', people: 'Halkenburg Hui Guo Rou, Halkenburg Guardian Spirit Beast', notes: 'Halkenburg shoots at his own head and his Guardian Spirit Beast visibly stops the bullet inches away.', status: 'direct Guardian Spirit Beast interception confirmed', source: source382 }),
+      freeze({ subject: 'Shikaku defensive operation', people: 'Shikaku, Benjamin Hui Guo Rou, Halkenburg Hui Guo Rou', notes: 'Benjamin orders Shikaku to kill Halkenburg and take his ability. Shikaku activates Culdcept, but Halkenburg’s collective arrow pierces the card shield.', status: 'Benjamin order failed / Culdcept defeated', source: source382 }),
+      freeze({ subject: 'First collective-arrow exchange', people: 'Halkenburg Hui Guo Rou, Shikaku, one unnamed Halkenburg follower', notes: 'The successful arrow suppresses Shikaku’s original will while one Halkenburg follower collapses; Shikaku’s body rises and asks Halkenburg for orders. Complete consciousness-transfer topology remains unresolved.', status: 'first successful exchange observed', source: source382 }),
+      freeze({ subject: 'Salé-salé assassination', people: 'Salé-salé Hui Guo Rou, Yushohi, Benjamin Hui Guo Rou', notes: 'Salé-salé is unresponsive and not breathing while CPR is attempted. Yushohi reports the assassination as successful. The specific ability or method is not supplied and is not equated with Stinger Ball.', status: 'Salé-salé deceased / murder method unresolved', source: source382 }),
+      freeze({ subject: 'Sunday banquet', people: 'Kacho Hui Guo Rou, Fugetsu Hui Guo Rou, Melody', notes: 'At 8:00 p.m. on Voyage Day 8 the trio waits nervously immediately before the Sunday banquet begins.', status: 'banquet opening reached / escape execution pending', source: source382 }),
     ]),
   }),
 ]);
 
-export const fugetsuChapter381CustodyResearch = succession381FugetsuCustodyResearch;
-export const hunterCodeChapter381Retrospective = succession381HunterCodeRetrospective;
-export const melodyChapter381SupervisorResearch = succession381MelodySupervisorResearch;
-export const predatorChapter381ResolutionResearch = succession381PredatorResolutionResearch;
-export const stingerBallChapter381Research = succession381StingerBallResearch;
-export const securityChapter381ResolutionResearch = succession381SecurityResolutionResearch;
+export const halkenburgNasubiChapter382Research = succession382HalkenburgNasubiResearch;
+export const halkenburgArrowChapter382Research = succession382HalkenburgArrowResearch;
+export const culdceptChapter382Research = succession382CuldceptResearch;
+export const saleSaleChapter382AssassinationResearch = succession382SaleSaleAssassinationResearch;
+export const sundayBanquetChapter382Research = succession382BanquetResearch;
