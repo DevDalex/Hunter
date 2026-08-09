@@ -1,103 +1,127 @@
-import * as base from './successionDossierThrough381.js';
+import * as base from './successionDossierThrough382.js';
 import {
-  succession382BanquetResearch,
-  succession382BodyStates,
-  succession382CuldceptResearch,
-  succession382HalkenburgArrowResearch,
-  succession382HalkenburgNasubiResearch,
-  succession382Mysteries,
-  succession382RelationshipRecords,
-  succession382SaleSaleAssassinationResearch,
-  succession382SourcePolicy,
-} from './succession382Research.js';
+  succession383BanquetResearch,
+  succession383BodyStates,
+  succession383HunterCodeResearch,
+  succession383KeeneyResearch,
+  succession383MagicalWormResearch,
+  succession383MarayamSpaceResearch,
+  succession383MelodyPerformanceResearch,
+  succession383Mysteries,
+  succession383RelationshipRecords,
+  succession383SourcePolicy,
+  succession383TwinEscapeResearch,
+  succession383WithoutYouResearch,
+} from './succession383Research.js';
 
-export * from './successionDossierThrough381.js';
+export * from './successionDossierThrough382.js';
 
 const freeze = (value) => Object.freeze(value);
-const source382 = 'https://hunterxhunter.fandom.com/wiki/Chapter_382';
+const source383 = 'https://hunterxhunter.fandom.com/wiki/Chapter_383';
 
-const halkenburgArrow382Ability = freeze({
-  ability: 'Halkenburg collective possession arrow',
-  user: 'Halkenburg Hui Guo Rou',
-  owner: 'Halkenburg Hui Guo Rou',
-  type: 'Collective symbiotic body-will transfer attack',
-  category: 'Collective symbiotic body-will transfer attack',
-  chapters: '375, 382',
-  chapter: 382,
-  conditions: 'The attack draws on Halkenburg’s collective fellowship aura. A successful hit suppresses the target host’s will in exchange for the body of one of Halkenburg’s followers.',
-  mechanics: 'Followers’ aura forms both overwhelming protection and the projectile while Halkenburg’s own aura forms the bow. The supplied synopsis states that once the bow is drawn the arrow cannot be intercepted or blocked. Against Shikaku it pierces Culdcept, one follower collapses, and Shikaku’s body rises acting under Halkenburg’s side.',
-  knownAtChapterBoundary: 'First successful body/will exchange is observed. Official ability name and complete consciousness-transfer topology remain unresolved.',
-  target: 'Shikaku in the Chapter 382 demonstration.',
-  confidence: 'Core first-use mechanics confirmed / official name and full transfer rules unresolved.',
-  source: source382,
+const melody383Ability = freeze({
+  ability: 'Melody’s Aura Performance',
+  user: 'Melody',
+  owner: 'Melody',
+  type: 'Mass auditory entrancement / Nen classification unsupplied',
+  category: 'Mass auditory entrancement',
+  chapters: '383',
+  chapter: 383,
+  conditions: 'Melody plays sincerely and the listener hears the performance, directly or through the banquet loudspeakers in the Chapter 383 demonstration.',
+  mechanics: 'Everyone who can hear the performance is entranced for three minutes and experiences a vivid scenic vision. The effect reaches absent princes through relayed banquet audio and creates the window for Keeney to move Kacho and Fugetsu to the lifeboat.',
+  knownAtChapterBoundary: 'Three-minute duration, auditory targeting, scenic entrancement, and loudspeaker relay are directly demonstrated. Formal Nen category and broader immunity/range rules are not supplied.',
+  target: 'Everyone who can hear the performance.',
+  confidence: 'Core demonstrated effect confirmed / formal Nen classification and broader limits unresolved.',
+  source: source383,
 });
 
-const culdcept382Ability = freeze({
-  ability: 'Culdcept',
-  user: 'Shikaku',
-  owner: 'Shikaku',
-  type: 'Card-based defensive Nen ability / broader mechanics unresolved',
-  category: 'Card-based defensive Nen ability / broader mechanics unresolved',
-  chapters: '382',
-  chapter: 382,
-  conditions: 'Shikaku activates the ability and forms a card-like construct as a shield.',
-  mechanics: 'The demonstrated card is used defensively against Halkenburg’s collective arrow and is pierced by it.',
-  knownAtChapterBoundary: 'Ability name and defensive card manifestation are confirmed.',
-  target: 'Self / incoming attack.',
-  confidence: 'Observed use confirmed; Nen category and broader card mechanics unsupplied.',
-  source: source382,
+const magicalWorm383Ability = freeze({
+  ability: 'Magical Worm',
+  user: 'Fugetsu Hui Guo Rou Guardian Spirit Beast',
+  owner: 'Fugetsu Hui Guo Rou Guardian Spirit Beast',
+  type: 'Guardian Spirit Beast translocation tunnel',
+  category: 'Translocation tunnel',
+  chapters: '383',
+  chapter: 383,
+  conditions: 'The cooperative twin Guardian Spirit Beast system assigns the outward journey to Fugetsu and the return journey to Kacho. Fugetsu actively opens the emergency return door during the failed lifeboat escape.',
+  mechanics: 'Magical Worm manifests the twins’ door/tunnel route. It works in cooperation with Kacho’s Without You. Exact range, destination rules, and post-Kacho return-control topology remain incomplete.',
+  knownAtChapterBoundary: 'Official name, translocation function, twin directional roles, and cooperation with Without You are confirmed.',
+  target: 'Fugetsu and Kacho / the Kacho-side cooperative counterpart.',
+  confidence: 'Core route mechanics confirmed / complete range and post-death control topology unresolved.',
+  source: source383,
+});
+
+const withoutYou383Ability = freeze({
+  ability: 'Without You',
+  user: 'Kacho Hui Guo Rou Guardian Spirit Beast',
+  owner: 'Kacho Hui Guo Rou Guardian Spirit Beast',
+  type: 'Death-triggered Guardian Spirit Beast protective continuation',
+  category: 'Death-triggered protective continuation',
+  chapters: '383',
+  chapter: 383,
+  conditions: 'One of the twins dies, causing the previously formless Guardian Spirit Beast to take the deceased twin’s form and remain with the surviving sister.',
+  mechanics: 'After Kacho dies on the lifeboat, Without You appears in Kacho’s form and reunites with Fugetsu. The chapter identifies the entity as Kacho’s Guardian Spirit Beast and does not establish that Kacho’s human consciousness survives inside it.',
+  knownAtChapterBoundary: 'Official name, death trigger, Kacho-form manifestation, protective purpose, and cooperation with Magical Worm are confirmed.',
+  target: 'The surviving twin sister; Fugetsu in the Chapter 383 activation.',
+  confidence: 'Core trigger and purpose confirmed / human-consciousness persistence explicitly unresolved.',
+  source: source383,
 });
 
 export const successionAbilities = freeze([
-  ...base.successionAbilities.filter((record) => !['Halkenburg collective possession arrow', 'Culdcept'].includes(record.ability)),
-  halkenburgArrow382Ability,
-  culdcept382Ability,
+  ...base.successionAbilities.filter((record) => !['Melody’s Aura Performance', 'Magical Worm', 'Without You'].includes(record.ability)),
+  melody383Ability,
+  magicalWorm383Ability,
+  withoutYou383Ability,
 ]);
 
 export const successionRelationships = freeze([
   ...base.successionRelationships,
-  ...succession382RelationshipRecords,
+  ...succession383RelationshipRecords,
 ]);
 
 export const bodyStateLedger = freeze([
   ...(base.bodyStateLedger || []),
-  ...succession382BodyStates,
+  ...succession383BodyStates,
 ]);
 
-const superseded382Mystery = (record) => {
+const superseded383Mystery = (record) => {
   const question = String(record.question || '');
-  return question.includes('Salé-salé') && question.includes('protection') && question.includes('Predator');
+  return (question.includes('Fugetsu') && (question.includes('lower') || question.includes('route') || question.includes('reach')))
+    || (question.includes('Kacho') && question.includes('Guardian Spirit Beast') && !question.includes('consciousness'));
 };
 
 export const successionMysteries = freeze([
-  ...base.successionMysteries.filter((record) => !superseded382Mystery(record)),
-  ...succession382Mysteries,
+  ...base.successionMysteries.filter((record) => !superseded383Mystery(record)),
+  ...succession383Mysteries,
 ]);
 
 export const dossierSources = freeze({
   ...base.dossierSources,
-  chapter382: source382,
-  sourcePolicy382: succession382SourcePolicy,
+  chapter383: source383,
+  sourcePolicy383: succession383SourcePolicy,
 });
 
 export const guardAssignmentGroups = freeze([
   ...base.guardAssignmentGroups,
   freeze({
-    group: 'Chapter 382 Halkenburg escalation, possession-arrow breakthrough, and Salé-salé elimination',
-    description: 'Halkenburg turns four days of failed petitions into an armed confrontation with Nasubi, survives a self-directed gunshot because his Guardian Spirit Beast stops the bullet, then returns to Room 1009 and defeats Shikaku with the first observed collective body/will exchange. Yushohi separately reports Salé-salé’s assassination as successful before the Sunday banquet opens.',
+    group: 'Chapter 383 Sunday banquet escape, twin-beast reveal, and Kacho death',
+    description: 'Melody turns the Sunday banquet into a three-minute escape window, Keeney launches the twins’ lifeboat and then dies by suicide, the succession boundary prevents Kacho and Fugetsu from leaving, Kacho dies, and Without You continues her protective role beside Fugetsu. Room 1013 also reveals a one-way re-entry problem for departing servants, while the Hunter Code finally decodes Mizaistom’s Chapter 381 call.',
     records: freeze([
-      freeze({ subject: 'Halkenburg / Nasubi confrontation', people: 'Halkenburg Hui Guo Rou, Nasubi Hui Guo Rou, Nugui', notes: 'Halkenburg holds the entrance soldiers at gunpoint and demands suspension of the contest. A shot toward Nasubi stops by an unidentified mechanism. Nasubi’s claim that he cannot die until the ritual ends remains a character claim, not a universally verified rule.', status: 'armed confrontation completed / ritual-survival mechanism unresolved', source: source382 }),
-      freeze({ subject: 'Halkenburg self-directed gunshot', people: 'Halkenburg Hui Guo Rou, Halkenburg Guardian Spirit Beast', notes: 'Halkenburg shoots at his own head and his Guardian Spirit Beast visibly stops the bullet inches away.', status: 'direct Guardian Spirit Beast interception confirmed', source: source382 }),
-      freeze({ subject: 'Shikaku defensive operation', people: 'Shikaku, Benjamin Hui Guo Rou, Halkenburg Hui Guo Rou', notes: 'Benjamin orders Shikaku to kill Halkenburg and take his ability. Shikaku activates Culdcept, but Halkenburg’s collective arrow pierces the card shield.', status: 'Benjamin order failed / Culdcept defeated', source: source382 }),
-      freeze({ subject: 'First collective-arrow exchange', people: 'Halkenburg Hui Guo Rou, Shikaku, one unnamed Halkenburg follower', notes: 'The successful arrow suppresses Shikaku’s original will while one Halkenburg follower collapses; Shikaku’s body rises and asks Halkenburg for orders. Complete consciousness-transfer topology remains unresolved.', status: 'first successful exchange observed', source: source382 }),
-      freeze({ subject: 'Salé-salé assassination', people: 'Salé-salé Hui Guo Rou, Yushohi, Benjamin Hui Guo Rou', notes: 'Salé-salé is unresponsive and not breathing while CPR is attempted. Yushohi reports the assassination as successful. The specific ability or method is not supplied and is not equated with Stinger Ball.', status: 'Salé-salé deceased / murder method unresolved', source: source382 }),
-      freeze({ subject: 'Sunday banquet', people: 'Kacho Hui Guo Rou, Fugetsu Hui Guo Rou, Melody', notes: 'At 8:00 p.m. on Voyage Day 8 the trio waits nervously immediately before the Sunday banquet begins.', status: 'banquet opening reached / escape execution pending', source: source382 }),
+      freeze({ subject: 'Sunday banquet escape window', people: 'Melody, Keeney, Kacho Hui Guo Rou, Fugetsu Hui Guo Rou', notes: 'Melody’s sincere flute performance entrances everyone who can hear it for three minutes, including through loudspeakers. Keeney uses the window to escort the twins to a lifeboat.', status: 'escape launched / auditory Nen mechanics materially clarified', source: source383 }),
+      freeze({ subject: 'Keeney final operation', people: 'Keeney, Melody, Hunter Association', notes: 'Keeney explains his family loss and concern that exposed accomplices could implicate the Hunter Association. After launching the twins’ lifeboat, he kills himself.', status: 'Keeney deceased / route-lead role ended', source: source383 }),
+      freeze({ subject: 'Twin escape boundary', people: 'Kacho Hui Guo Rou, Fugetsu Hui Guo Rou', notes: 'A mass of hands attacks the twins as the lifeboat approaches open water. Fugetsu opens an emergency return door, survives, and returns toward the ship; Kacho remains behind and dies on the lifeboat.', status: 'physical escape failed / Kacho deceased / exact ritual-enforcement mechanism unresolved', source: source383 }),
+      freeze({ subject: 'Magical Worm and Without You', people: 'Fugetsu Hui Guo Rou, Kacho Hui Guo Rou Guardian Spirit Beast', notes: 'Magical Worm is revealed as the twins’ translocation tunnel system. Without You activates after Kacho’s death, takes Kacho’s form, and remains beside Fugetsu as protection.', status: 'cooperative twin Guardian Spirit Beast system confirmed / Kacho-form entity distinct from deceased human Kacho', source: source383 }),
+      freeze({ subject: 'Room 1013 isolated-space staffing', people: 'Marayam Hui Guo Rou, Vergei, Biscuit Krueger', notes: 'Servants who leave the isolated Nen space for the banquet are stated to be unable to return. Biscuit proposes staffing the real room with Hunters while she remains inside with Marayam.', status: 're-entry restriction confirmed for departing servants / complete spatial rule unresolved', source: source383 }),
+      freeze({ subject: 'Hunter Code retrospective', people: 'Mizaistom Nana, Melody', notes: 'Chapter 383 reveals the numerical Hunter Code rule and decodes the Chapter 381 call as “Assist Princes escape fully.” The decode is recorded as Chapter 383 knowledge rather than backdated into Chapter 381.', status: 'Chapter 381 covert message resolved retrospectively', source: source383 }),
     ]),
   }),
 ]);
 
-export const halkenburgNasubiChapter382Research = succession382HalkenburgNasubiResearch;
-export const halkenburgArrowChapter382Research = succession382HalkenburgArrowResearch;
-export const culdceptChapter382Research = succession382CuldceptResearch;
-export const saleSaleChapter382AssassinationResearch = succession382SaleSaleAssassinationResearch;
-export const sundayBanquetChapter382Research = succession382BanquetResearch;
+export const banquetChapter383Research = succession383BanquetResearch;
+export const marayamChapter383SpaceResearch = succession383MarayamSpaceResearch;
+export const melodyChapter383PerformanceResearch = succession383MelodyPerformanceResearch;
+export const keeneyChapter383Research = succession383KeeneyResearch;
+export const twinEscapeChapter383Research = succession383TwinEscapeResearch;
+export const magicalWormChapter383Research = succession383MagicalWormResearch;
+export const withoutYouChapter383Research = succession383WithoutYouResearch;
+export const hunterCodeChapter383Research = succession383HunterCodeResearch;
