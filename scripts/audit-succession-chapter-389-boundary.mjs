@@ -17,7 +17,7 @@ try {
   const index388 = numbers.indexOf(388);
   assert(index388 >= 0 && numbers[index388 + 1] === 389, 'maintained publication chain must place Chapter 389 directly after Chapter 388');
   assert(numbers[numbers.indexOf(389) + 1] === 390, 'Chapter 389 must now lead directly into the maintained Chapter 390 packet');
-  assert(numbers[numbers.indexOf(390) + 1] === 400, 'Chapter 390 must remain before the pre-existing Chapter 400 maintained packet');
+  assert(numbers[numbers.indexOf(390) + 1] === 391 && numbers[numbers.indexOf(391) + 1] === 400, 'maintained ordering must preserve 390 → 391 before the pre-existing Chapter 400 packet');
 
   const chapter389 = chapterModule.succession389ChapterResearch?.[0];
   assert(chapter389?.number === 389, 'dedicated Chapter 389 research must load');
@@ -99,8 +99,8 @@ try {
   assert(camilla411 && /Room 1014/i.test(text(camilla411)), 'later Camilla organization state must preserve later Room 1014 progression');
 
   const dossierNames = new Set((dossier.successionAbilities || []).map((record) => record.ability));
-  assert(dossierNames.has('Tackle Shield') && dossierNames.has('Have-Not Curse') && dossierNames.has('Zhang Lei’s Guardian Coins'), 'active dossier must retain the three Chapter 389 ability records after the Chapter 390 overlay');
-  assert((dossier.guardAssignmentGroups || []).some((group) => group.group?.includes('Chapter 389')), 'active dossier must retain the Chapter 389 operational group after the Chapter 390 overlay');
+  assert(dossierNames.has('Tackle Shield') && dossierNames.has('Have-Not Curse') && dossierNames.has('Zhang Lei’s Guardian Coins'), 'active dossier must retain the three Chapter 389 ability records after the later chapter overlays');
+  assert((dossier.guardAssignmentGroups || []).some((group) => group.group?.includes('Chapter 389')), 'active dossier must retain the Chapter 389 operational group after later chapter overlays');
 
   const note = fs.readFileSync('docs/source-notes/chapter-389.md', 'utf8');
   assert(/10:00 a\.m\. on Voyage Day 9/i.test(note) && /11:30 a\.m\. on Voyage Day 10/i.test(note), 'source note must preserve both exact chronology anchors');
