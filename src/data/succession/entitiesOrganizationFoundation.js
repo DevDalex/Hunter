@@ -8,6 +8,7 @@ import {
   organizationStateProfileCorrections,
 } from './organizationStateCorrections.js';
 import { organizationState379Corrections } from './organizationState379Corrections.js';
+import { organizationState384Corrections } from './organizationState384Corrections.js';
 
 const mergeRecordMaps = (baseMap, ...correctionMaps) => Object.freeze(Object.fromEntries(
   [...new Set([
@@ -26,6 +27,7 @@ const organizationStateProfiles = mergeRecordMaps(
   baseOrganizationStateProfiles,
   organizationStateProfileCorrections,
   organizationState379Corrections,
+  organizationState384Corrections,
 );
 const organizationPersonnelHistory = mergeRecordMaps(baseOrganizationPersonnelHistory, organizationPersonnelHistoryCorrections);
 
