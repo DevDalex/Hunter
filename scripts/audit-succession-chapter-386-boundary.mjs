@@ -58,7 +58,7 @@ try {
   const shikakuBodyState = chapterModule.succession386BodyStates.find((record) => record.subject === 'Shikaku');
   const sumidoriBodyState = chapterModule.succession386BodyStates.find((record) => record.subject === 'Sumidori');
   assert(shikakuBodyState?.state.includes('dead') && shikakuBodyState?.consciousness.includes('unresolved'), 'Shikaku body death must remain separate from unresolved consciousness state');
-  assert(sumidoriBodyState?.state.includes('wakes') && sumidoriBodyState?.consciousness.includes('not') && sumidoriBodyState?.consciousness.includes('confirmed'), 'Sumidori original body may wake without the archive pre-answering the identity check');
+  assert(sumidoriBodyState?.state.includes('wakes') && sumidoriBodyState?.consciousness.includes('identity verification') && sumidoriBodyState?.consciousness.includes('before the result'), 'Sumidori original body may wake without the archive pre-answering the identity check');
 
   const halkenburgResearch = chapterModule.succession386HalkenburgArrowResearch;
   assert(halkenburgResearch?.shikakuConsciousnessOptions?.length === 4, 'all four Chapter 386 Shikaku consciousness models must be preserved');
