@@ -22,6 +22,20 @@ export const guardianBeastState385Corrections = freeze({
       sourceIds: freeze([chapterSourceId(385)]),
       certainty: 'confirmed',
     }),
+    freeze({
+      id: 'guardian-beast-state:tserriednich:386',
+      beastId: 'guardian-beast:tserriednich',
+      chapterRange: freeze({ start: 386, end: null }),
+      knowledge: 'lie-marking escalation known in part',
+      operationalState: 'The beast questions, marks, and warns deceptive targets, with later maintained evidence continuing the escalation model beyond the Chapter 385-only boundary.',
+      hostState: 'host active',
+      visibility: 'visible to eligible Nen users other than the host',
+      knownAbilityIds: freeze(['ability:tserriednich-lie-marking-beast']),
+      suspectedAbilityIds: freeze([]),
+      unresolved: freeze(['Terminal effect', 'Complete coercion sequence']),
+      sourceIds: freeze([chapterSourceId(386), chapterSourceId(387)]),
+      certainty: 'probable',
+    }),
   ]),
 });
 
