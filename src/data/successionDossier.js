@@ -1,86 +1,87 @@
-import * as base from './successionDossierThrough391.js';
+import * as base from './successionDossierThrough392.js';
 import {
-  succession392ApparentHisokaResearch,
-  succession392ChaRStrategyResearch,
-  succession392ChapterResearch,
-  succession392LuiniTroupeResearch,
-  succession392MaizanIntelResearch,
-  succession392MishaResearch,
-  succession392Mysteries,
-  succession392RelationshipRecords,
-  succession392ResolvedQuestions,
-  succession392SourcePolicy,
-} from './succession392Research.js';
+  succession393ApparentHisokaResearch,
+  succession393ChapterResearch,
+  succession393HeilLyResearch,
+  succession393LuiniResearch,
+  succession393Mysteries,
+  succession393RelationshipRecords,
+  succession393ResolvedQuestions,
+  succession393Room3101Research,
+  succession393SourcePolicy,
+} from './succession393Research.js';
 
-export * from './successionDossierThrough391.js';
+export * from './successionDossierThrough392.js';
 
 const freeze = (value) => Object.freeze(value);
-const source392 = 'https://hunterxhunter.fandom.com/wiki/Chapter_392';
+const source393 = 'https://hunterxhunter.fandom.com/wiki/Chapter_393';
 
-const bloodyMary392Ability = freeze({
-  ability: 'Bloody Mary', user: 'Zakuro Custard', owner: 'Zakuro Custard', type: 'Nen type unknown · blood-control named ability', category: 'Blood search and combat', chapters: '390–392', chapter: 392,
-  conditions: 'Zakuro’s existing mobile blood drops continue searching Tier 3. Chapter 392 shows the drops leading Lynch and Zakuro toward multiple possible Hisoka candidates.',
-  mechanics: 'The Chapter 391 30–40 minute demonstrated Nen lifetime remains the latest explicit duration rule. Chapter 392 demonstrates candidate-finding behavior but not infallible identity recognition: Hanal is a false candidate and the later target is only believed by Lynch and Zakuro to be Hisoka at this chapter boundary.',
-  knownAtChapterBoundary: 'Search continuation and candidate-finding are confirmed. Search range, sensory method, communication rules, candidate-selection logic, maximum blood volume/drop count, and Nen type remain unresolved. The drops do not establish objective identity.',
-  target: 'Possible Hisoka candidates during the Xi-Yu Tier 3 search.', confidence: 'Search continuation confirmed / identity-recognition and full mechanics unresolved.', source: source392,
+const luini393Ability = freeze({
+  ability: 'Luini transportation ability', user: 'Luini', owner: 'Luini', type: 'Nen type unknown · spatial transportation / marked-location travel', category: 'Spatial transportation / marked-location travel', chapters: '379, 392–393', chapter: 393,
+  conditions: 'Earlier maintained research establishes a sealed room with exactly one door as Luini’s origin hub and marked destinations as travel points. Chapter 392 shows openings into the Cha-R office.',
+  mechanics: 'The earlier sealed-hub and marked-destination mechanics remain the established core. Chapter 393 ends Luini’s living use when Nobunaga kills him. Perigord says he believes Luini was an Emitter, but that remains character inference rather than confirmed classification.',
+  knownAtChapterBoundary: 'Luini is dead at Chapter 393. Official ability name, confirmed Nen type, maximum range, complete marking rules, and any post-mortem persistence remain unresolved. No post-mortem continuation is established.',
+  target: 'Luini / spatial route between the prepared hub and marked locations', confidence: 'Core spatial mechanics retained / owner dead / Nen type and post-mortem persistence unresolved.', source: source393,
 });
-const bodyAndSoul392Ability = freeze({
-  ability: 'Body and Soul', user: 'Lynch Fullbokko', owner: 'Lynch Fullbokko', type: 'Nen type unknown · named interrogation ability', category: 'Close-range interrogation / information acquisition', chapters: '390, 392', chapter: 392,
-  conditions: 'Lynch asks a target a question and strikes at close range in the demonstrated uses.',
-  mechanics: 'Lynch asks Hanal whether he is Hisoka and punches him; Hanal’s inner soul answers that he is not. Lynch later attempts the ability on a man she and Zakuro believe is Hisoka, but her punch seemingly fails and she abruptly falls after what the man calls a reflexive counter.',
-  knownAtChapterBoundary: 'The Hanal identity-check use is confirmed. The second target’s objective identity and the reason Body and Soul seemingly fails are unresolved. No aura-resistance, speed, counter-ability, or other failure mechanic is invented.',
-  target: 'Close-range questioned targets.', confidence: 'Successful identity-question use confirmed / apparent counter case unresolved.', source: source392,
+const contagion393Ability = freeze({
+  ability: 'Contagion', user: 'Morena Prudo', owner: 'Morena Prudo', type: 'Community leveling Nen system', category: 'Infection / progression / ability development', chapters: '378, 391, 393', chapter: 393,
+  conditions: 'Heil-Ly members participate in Morena’s established level-progression system. Chapter 393 members discuss needing to reach level 21 to develop abilities and state that each person has an innate Nen type.',
+  mechanics: 'The Chapter 391 Nen-user kill value remains +10 levels. Chapter 393 adds the level-21 ability-development discussion and the innate-type constraint. Morena coaches members to analyze opponents and build useful restrictions/counters rather than simply selecting a preferred Nen category.',
+  knownAtChapterBoundary: 'Level 21 is discussed by the members as the ability-development threshold, and innate Nen type is treated as not freely chosen. Multi-attacker reward allocation remains unresolved. Morena’s example of an ability that reports how many hits are required to defeat an enemy is hypothetical coaching, not an actual ability.',
+  target: 'Members of Morena’s Contagion community.', confidence: 'Leveling/ability-development discussion confirmed / individual future abilities and unresolved allocation rules remain open.', source: source393,
 });
-const misha392Ability = freeze({
-  ability: 'Misha Hao’s Post-Mortem Disposal Ability', user: 'Misha Hao', owner: 'Misha Hao', type: 'Nen type unknown · post-mortem Nen · descriptive archive label', category: 'Post-mortem corpse disposal', chapters: '392', chapter: 392,
-  conditions: 'Misha is deceased. The synopsis states that her post-mortem Nen causes her to appear and inconspicuously dispose of a person killed by a Xi-Yu member.',
-  mechanics: 'Padaille, killed by Hinrigh in Chapter 391, is the demonstrated cleanup target. Misha appears with the corpse during the public removal sequence and vanishes after the corpse has been dealt with.',
-  knownAtChapterBoundary: 'Post-mortem cleanup purpose and Padaille use are confirmed. No formal ability name is supplied. Nen category, trigger timing, range, visibility, corpse-control mechanism, disposal destination/method, cost, exceptions, and other limits remain unresolved. Padaille is not revived.',
-  target: 'Corpses of people killed by Xi-Yu members, as stated in Chapter 392.', confidence: 'Post-mortem cleanup function confirmed / formal name and full mechanics unresolved.', source: source392,
+const voconte393Ability = freeze({
+  ability: 'Voconte’s Door Ability', user: 'Voconte', owner: 'Voconte', type: 'Nen type of ability unknown · owner is a confirmed Emitter · descriptive archive label', category: 'Door / trap-support ability', chapters: '393', chapter: 393,
+  conditions: 'Voconte proposes using the unnamed door ability to catch prey that wander into a trap.',
+  mechanics: 'Chapter 393 confirms the ability exists and records the proposed trap use, but does not provide a full activation sequence. Voconte’s natural type is Emitter; the ability itself is not automatically classified as Emission.',
+  knownAtChapterBoundary: 'Official name, ability-specific Nen category, door placement/creation, trigger, transport/capture mechanism, range, duration, target limits, aura cost, and reset rules remain unresolved.',
+  target: 'Prey entering the proposed trap.', confidence: 'Existence/proposed use confirmed / complete mechanics unresolved.', source: source393,
 });
 
-const abilityNamesReplacedAt392 = new Set(['Bloody Mary', 'Body and Soul']);
+const abilityNamesReplacedAt393 = new Set(['Luini transportation ability', 'Contagion']);
 export const successionAbilities = freeze([
-  ...base.successionAbilities.filter((record) => !abilityNamesReplacedAt392.has(record.ability)),
-  bloodyMary392Ability,
-  bodyAndSoul392Ability,
-  misha392Ability,
+  ...base.successionAbilities.filter((record) => !abilityNamesReplacedAt393.has(record.ability)),
+  luini393Ability,
+  contagion393Ability,
+  voconte393Ability,
 ]);
 
 export const successionRelationships = freeze([
   ...(base.successionRelationships || []),
-  ...succession392RelationshipRecords,
+  ...succession393RelationshipRecords,
 ]);
 
-const unresolvedMishaAt391 = (record) => /what exactly is hinrigh relying on misha|misha.*task|misha.*role/i.test(String(record?.question || record?.title || record?.summary || ''));
+const superseded392Mystery = (record) => {
+  const question = String(record?.question || '');
+  return /where exactly is the unplanned wired room/i.test(question)
+    || /will ken.i or hinrigh successfully negotiate/i.test(question);
+};
 export const successionMysteries = freeze([
-  ...base.successionMysteries.filter((record) => !unresolvedMishaAt391(record)),
-  ...succession392Mysteries,
+  ...base.successionMysteries.filter((record) => !superseded392Mystery(record)),
+  ...succession393Mysteries,
 ]);
-export const successionResolvedQuestions = freeze([...(base.successionResolvedQuestions || []), ...succession392ResolvedQuestions]);
-export const dossierSources = freeze({ ...base.dossierSources, chapter392: source392, sourcePolicy392: succession392SourcePolicy });
+export const successionResolvedQuestions = freeze([...(base.successionResolvedQuestions || []), ...succession393ResolvedQuestions]);
+export const dossierSources = freeze({ ...base.dossierSources, chapter393: source393, sourcePolicy393: succession393SourcePolicy });
 
 export const guardAssignmentGroups = freeze([
   ...base.guardAssignmentGroups,
   freeze({
-    group: 'Chapter 392 Xi-Yu apparent-Hisoka contact / Cha-R balance strategy / Luini office confrontation',
-    description: 'Chapter 392 resolves Misha’s cleanup role, opens an unverified Maizan secret-room lead, extends Bloody Mary and Body and Soul into the Hisoka search, develops Ken’i’s balancing plan, and ends with Luini directly confronting the Troupe.',
+    group: 'Chapter 393 Luini death / Heil-Ly adaptation / apparent-Hisoka truce / Room 3101 investigation',
+    description: 'Chapter 393 kills Luini and changes the Troupe–Heil-Ly conflict, expands Contagion-era ability-development information, advances Xi-Yu’s temporary apparent-Hisoka deal, and converts Maizan’s unplanned-room lead into the unresolved Room 3101 disappearance case.',
     records: freeze([
-      freeze({ subject: 'Padaille corpse cleanup', people: 'Misha Hao, Padaille, Hinrigh', notes: 'Misha’s post-mortem Nen inconspicuously disposes of a person killed by a Xi-Yu member. Padaille remains dead; the apparent walking corpse is not revival.', status: 'Misha cleanup role confirmed / exact mechanics and formal ability name unresolved', source: source392 }),
-      freeze({ subject: 'Maizan intelligence deal', people: 'Maizan, Hinrigh, Morena', notes: 'Hinrigh offers 50 million for reliable information; Maizan wants at least 30 million upfront and claims knowledge of an unplanned wired room. His Heil-Ly attribution is only a guess and Hinrigh demands personal guidance/verification.', status: 'lead and negotiation confirmed / Heil-Ly ownership unverified', source: source392 }),
-      freeze({ subject: 'Hanal identity check', people: 'Lynch, Zakuro, Hanal', notes: 'Body and Soul produces Hanal’s inner-soul answer that he is not Hisoka.', status: 'Hanal ruled out as search candidate', source: source392 }),
-      freeze({ subject: 'Apparent-Hisoka encounter', people: 'Lynch, Zakuro, unidentified apparent Hisoka', notes: 'Lynch’s Body and Soul attempt seemingly fails and she is reflexively countered. Zakuro concludes from the man’s aura and Lynch’s defeat that he must be Hisoka. The event does not objectively tag Hisoka or Bonolenov at the Chapter 392 boundary.', status: 'Lynch alive but down / target identity unresolved inside Chapter 392 / later Chapter 405 reveal not backfilled', source: source392 }),
-      freeze({ subject: 'Voyage shipment logistics', people: 'Tsudonke', notes: 'The kiosk woman states Voyage Day 14 as the last air-shipment order deadline and three days earlier for high-speed boat; small-item drone delivery and deadline flexibility depend on connections/cash.', status: 'reported logistics preserved as speaker information, not universal guarantee', source: source392 }),
-      freeze({ subject: 'Cha-R balance plan', people: "Ken'i Wang, Ittoku, Tsudonke", notes: 'Ken’i makes Hisoka the top priority, orders members not to approach him first, and hopes to use negotiation to turn Hisoka, Heil-Ly, and the Troupe against one another.', status: 'orders confirmed / projected balancing outcome remains strategy', source: source392 }),
-      freeze({ subject: 'Luini / Troupe direct contact', people: 'Luini, Nobunaga, Phinks, Feitan', notes: 'Luini probes and confronts the Cha-R office through spatial openings. Nobunaga draws his katana and threatens him.', status: 'direct hostile contact confirmed / Luini alive at Chapter 392 end / later result excluded', source: source392 }),
+      freeze({ subject: 'Luini death', people: 'Luini, Nobunaga, Phinks, Feitan', notes: 'Nobunaga immediately kills Luini after rejecting his destructive alliance proposal. The Troupe then makes Heil-Ly destruction an explicit priority alongside the Hisoka hunt.', status: 'Luini dead / no post-mortem spatial continuation established', source: source393 }),
+      freeze({ subject: 'Heil-Ly ability development', people: 'Morena, Daemon, Gelato, Perigord, Bille, Voconte, Tevelares, Quorolle, Matvere', notes: 'Members discuss reaching level 21, innate Nen types, replacing Luini’s hunting utility, and counters to Biohazard. Morena’s hit-count example is hypothetical design advice.', status: 'level/type discussion confirmed / individual future abilities mostly unresolved', source: source393 }),
+      freeze({ subject: 'Voconte door technique', people: 'Voconte', notes: 'Voconte is a level 26 Emitter and proposes his unnamed door ability as a trap. The archive does not infer the technique’s category from his natural type.', status: 'existence and proposed trap use confirmed / official name and mechanics unresolved', source: source393 }),
+      freeze({ subject: 'Apparent-Hisoka cinema arrangement', people: 'Hinrigh, unidentified apparent Hisoka', notes: 'Hinrigh offers Tier 1/VVIP access and asks the man not to initiate a Troupe fight until Heil-Ly is handled. He accepts while reserving the right to fight if attacked first.', status: 'temporary arrangement confirmed under Chapter 393 working identity / Chapter 405 reveal not backfilled', source: source393 }),
+      freeze({ subject: 'Maizan / Ken’i intelligence transaction', people: 'Maizan, Ken’i, Hinrigh, Connelly', notes: 'Ken’i matches the 50-million offer, adds paid identification incentives, and joins the Xi-Yu/Cha-R verification party.', status: 'transaction and tactical cooperation confirmed / Fourth Prince approval remains Ken’i’s statement', source: source393 }),
+      freeze({ subject: 'Room 3101', people: 'Maizan, Hinrigh, Ken’i', notes: 'Maizan guides the group to Room 3101, enters first, and disappears from the observers’ view. Hinrigh’s thrown knife does not disappear, but one test does not establish a complete transport rule.', status: 'Room 3101 identified / Maizan whereabouts and mechanism unresolved / Heil-Ly connection not yet confirmed', source: source393 }),
     ]),
   }),
 ]);
 
-export const mishaChapter392Research = succession392MishaResearch;
-export const maizanIntelChapter392Research = succession392MaizanIntelResearch;
-export const apparentHisokaChapter392Research = succession392ApparentHisokaResearch;
-export const chaRStrategyChapter392Research = succession392ChaRStrategyResearch;
-export const luiniTroupeChapter392Research = succession392LuiniTroupeResearch;
-export const relationshipsChapter392Research = succession392RelationshipRecords;
-export const chapter392Research = succession392ChapterResearch;
+export const luiniChapter393Research = succession393LuiniResearch;
+export const heilLyChapter393Research = succession393HeilLyResearch;
+export const apparentHisokaChapter393Research = succession393ApparentHisokaResearch;
+export const room3101Chapter393Research = succession393Room3101Research;
+export const relationshipsChapter393Research = succession393RelationshipRecords;
+export const chapter393Research = succession393ChapterResearch;
