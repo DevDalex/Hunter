@@ -70,7 +70,7 @@ export const abilityFoundation399Expansion = freeze([
     createdAt: '2026-08-10',
     updatedAt: '2026-08-10',
     ownerIds: freeze(['character:terebellum']),
-    classification: freeze({ nenTypes: freeze(['Emission']), certainty: 'confirmed' }),
+    classification: freeze({ nenTypes: freeze(['emission']), certainty: 'confirmed' }),
     category: 'damage and attacking-material displacement / transfer',
     activation: 'For protecting another target, Terebellum must be touching that target with his right hand at the exact moment the damage is received. Received damage can then be transferred onward through contact with his left hand. The complete handling of direct attacks on Terebellum himself is only demonstrated, not exhaustively explained.',
     conditions: freeze([
@@ -114,7 +114,7 @@ export const abilityFoundation399Expansion = freeze([
     createdAt: '2026-08-10',
     updatedAt: '2026-08-10',
     ownerIds: freeze(['character:yokotani']),
-    classification: freeze({ nenTypes: freeze(['Conjuration']), certainty: 'confirmed' }),
+    classification: freeze({ nenTypes: freeze(['conjuration']), certainty: 'confirmed' }),
     category: 'law-conditioned hideout defense / conjured autonomous guards',
     activation: 'Yokotani identifies himself to an intruder at the hideout where Morena is located and identifies/establishes that the intruder has broken the law. Chapter 399 then shows the guards identify the criminals and charges before carrying out the ordered expulsion.',
     conditions: freeze([

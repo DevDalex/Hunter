@@ -61,7 +61,7 @@ try {
   const sweetHome = archive.getEntityById('ability:terebellum-damage-sweet-home');
   assert(sweetHome?.firstChapter === 399 && sweetHome?.latestChapter === 399, 'Sweet Home must first appear at Chapter 399');
   assert((sweetHome.ownerIds || []).includes('character:terebellum'), 'Sweet Home owner must be Terebellum');
-  assert(sweetHome.classification?.nenTypes?.includes('Emission'), 'Sweet Home must be classified as Emission');
+  assert(sweetHome.classification?.nenTypes?.includes('emission'), 'Sweet Home must be classified as Emission');
   assert(/right hand/i.test(text(sweetHome)) && /left hand/i.test(text(sweetHome)), 'Sweet Home must preserve right-hand intake and left-hand transfer');
   assert(/moment/i.test(text(sweetHome)) && /damage/i.test(text(sweetHome)), 'Sweet Home must preserve moment-of-damage contact timing');
   assert(/bears|receives.*himself|himself.*damage/i.test(text(sweetHome)), 'Sweet Home must preserve Terebellum self-cost when damage is not transferred');
@@ -76,7 +76,7 @@ try {
   const lsdf = archive.getEntityById('ability:yokotani-battle-of-wits-lsdf');
   assert(lsdf?.firstChapter === 399 && lsdf?.latestChapter === 399, 'LSDF must first appear at Chapter 399');
   assert((lsdf.ownerIds || []).includes('character:yokotani'), 'LSDF owner must be Yokotani');
-  assert(lsdf.classification?.nenTypes?.includes('Conjuration'), 'LSDF must be classified as Conjuration');
+  assert(lsdf.classification?.nenTypes?.includes('conjuration'), 'LSDF must be classified as Conjuration');
   assert(/only.*hideout.*Morena|hideout where Morena/i.test(text(lsdf)), 'LSDF must preserve the Morena-hideout location condition');
   assert(/identif/i.test(text(lsdf)) && /law|crime/i.test(text(lsdf)), 'LSDF must preserve Yokotani identity/law-breaking activation');
   assert(/seven guards/i.test(text(lsdf)) && /alert level 4|alert.*4/i.test(text(lsdf)) && /maximum alert/i.test(text(lsdf)), 'LSDF must preserve the seven-guard alert 4 to maximum-alert demonstration');
