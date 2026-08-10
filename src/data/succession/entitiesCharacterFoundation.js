@@ -9,6 +9,7 @@ import { characterState378CorrectionProfiles } from './characterState378Correcti
 import { characterState391CorrectionProfiles } from './characterState391Corrections.js';
 import { characterState392CorrectionProfiles } from './characterState392Corrections.js';
 import { characterState393CorrectionProfiles } from './characterState393Corrections.js';
+import { characterState394CorrectionProfiles } from './characterState394Corrections.js';
 import { characterStatusKnowledge } from './characterStatusKnowledge.js';
 
 const characterIds = new Set([
@@ -22,6 +23,7 @@ const characterIds = new Set([
   ...Object.keys(characterState391CorrectionProfiles),
   ...Object.keys(characterState392CorrectionProfiles),
   ...Object.keys(characterState393CorrectionProfiles),
+  ...Object.keys(characterState394CorrectionProfiles),
 ]);
 
 const retiredStateIds = new Set([
@@ -48,6 +50,7 @@ const mergeCharacterRecords = (characterId) => {
     characterState391CorrectionProfiles,
     characterState392CorrectionProfiles,
     characterState393CorrectionProfiles,
+    characterState394CorrectionProfiles,
   ]) {
     for (const record of layer[characterId] || []) {
       if (retiredStateIds.has(record.id)) continue;
