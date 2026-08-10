@@ -37,5 +37,5 @@ export const deathLedger = [
   ['Kortopi', 'Pre-voyage', '357', 'Killed by Hisoka after the Heavens Arena death match.', 'Heavens Arena area'],
   ['Shalnark', 'Pre-voyage', '357', 'Killed by Hisoka after the Heavens Arena death match.', 'Heavens Arena area'],
   ['Sarasa', 'Meteor City flashback', '397', 'Found murdered in Uga Forest after being missing since the previous day. Chrollo’s group recovers her body, and her death becomes the catalyst for his three-year protection/revenge strategy and explicit villain turn. The killers, exact unseen abduction sequence, and note contents remain unresolved.', 'Uga Forest'],
-  ['Halkenburg’s body', 'Day 12', '405', 'Original body declared dead; consciousness remains elsewhere.', 'Tier 3 hospital'],
+  ['Halkenburg’s body', 'Day 12', '404', 'Original body declared dead; Halkenburg remains immediately active through Balsamilco’s living body.', 'Tier 3 central medical clinic'],
 ].map(([name, day, chapter, cause, place]) => ({ name, day, chapter, cause, place, source: `https://hunterxhunter.fandom.com/wiki/Chapter_${chapter}` }));

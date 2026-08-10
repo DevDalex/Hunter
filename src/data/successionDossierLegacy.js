@@ -93,6 +93,7 @@ const chapterDayFor = (number) => {
   if (number <= 390) return 'Voyage Day 9';
   if (number <= 402) return 'Voyage Day 10';
   if (number === 403) return 'Voyage Day 11';
+  if (number === 404) return 'Voyage Days 11–12';
   return 'Voyage Day 12';
 };
 
@@ -161,7 +162,7 @@ export const chapterFocus = {
   401: 'Longhi reveals Moonlight Act and Beyond\'s curse-child network, then offers Kurapika a binding alliance centered on Woble\'s survival.',
   402: 'Zhang Lei, Tubeppa, and Woble formalize a lower-prince arrangement while Kacho\'s letters carry warnings and requests across Tier 1.',
   403: 'Balsamilco enters the Tier 2 courthouse to poison Halkenburg, but Halkenburg\'s prepared possession operation turns the attack back on him.',
-  404: 'Kurapika tests Zhang Lei\'s changing coins while Halkenburg, operating through Balsamilco, advances the TSK-17 death-and-funeral plan.',
+  404: 'Kurapika tests Zhang Lei\'s changing coins while Halkenburg explains the forced-swap priority rules, loses his original body, and remains active through Balsamilco as the funeral is announced.',
   405: 'Hisoka appears in the Tier 1 casino while funeral preparations and the competing searches bring Hisoka, Chrollo, and the upper tiers closer.',
   406: 'Tajao leads Nobunaga, Phinks, and Feitan toward Tier 2 as Chrollo connects Kakin\'s national treasures to the ability he needs against Hisoka.',
   407: 'Halkenburg\'s funeral procession moves through the ship as Borksen disappears and is brought to Morena for recruitment.',
@@ -233,7 +234,7 @@ export const princeDossiers = [
     order: 3, name: 'Zhang Lei Hui Guo Rou', short: 'Zhang Lei', mother: 'Tang Zhao Li', room: '1003', status: 'active',
     strategy: 'Builds a measured alliance network through Kurapika while studying the long-term political value of his beast’s coins.',
     nen: 'Personal Nen type and ability have not been revealed.',
-    beast: 'Conjurer that produces one accumulating coin per day; gifted holders may awaken abilities after satisfying unknown conditions.',
+    beast: 'Produces one coin per day; holder-linked design and number changes are observed, while cumulative Conjuration and future holder abilities remain Kurapika’s hypotheses.',
     team: ['Sakata', 'Hashito', 'Tenftory', 'Coventoba'],
     pressure: ['Coin activation remains delayed', 'Queen spies', 'Alliance durability', 'Mafia sponsorship'],
     source: wiki('Zhang_Lei_Hui_Guo_Rou'),
@@ -370,7 +371,7 @@ const beastConditions = {
   Nasubi: 'Previous-generation winner; current complete rules are unknown.',
   Benjamin: 'Has dispersed low-level curse spirits; activation and cost are unknown.',
   Camilla: 'Complete control follows conditions that have not been disclosed.',
-  'Zhang Lei': 'Produces one coin daily; gifted coins reset and change design; later activation remains unresolved.',
+  'Zhang Lei': 'Produces one coin daily; the demonstrated transfer changes the reverse and 10→1, while return restores the reverse but not the number. The complete rule remains unresolved.',
   Tserriednich: 'Questions suspicious people, marks a lie, and escalates the mark after further deception.',
   Tubeppa: 'Requires a collaborative partner and appears around a contract recognized by Tubeppa.',
   Tyson: 'Eye-wogs attach to listeners; collected aura returns happiness; an unknown taboo carries punishment.',
@@ -388,7 +389,7 @@ export const guardianBeasts = [
   ['King', 'Nasubi', 'Unknown', 'A previous-generation beast whose presence proves that a winner’s beast can persist beyond a contest.', "Chap 349 - Nasubi's sacred beast.png", 'Nasubi_Hui_Guo_Rou'],
   ['1', 'Benjamin', 'Partially known', 'Beetle-like beast shown dispersing low-level curse spirits; full ability unresolved.', "Benjamin's Sacred Beast.png", 'Benjamin_Hui_Guo_Rou'],
   ['2', 'Camilla', 'Known in part', 'Coercive Manipulator that completely controls a target after unknown conditions are met.', "Camilla's Sacred Beast.png", 'Camilla_Hui_Guo_Rou'],
-  ['3', 'Zhang Lei', 'Known in part', 'Conjures one coin each day; numbers accumulate and gifted owners may later awaken abilities.', "Zhang's Sacred Beast.png", 'Zhang_Lei_Hui_Guo_Rou'],
+  ['3', 'Zhang Lei', 'Known in part', 'Produces one coin each day and shows holder-linked visible changes; cumulative Conjuration and eventual holder powers remain unconfirmed theories.', "Zhang's Sacred Beast.png", 'Zhang_Lei_Hui_Guo_Rou'],
   ['4', 'Tserriednich', 'Known in part', 'Questions suspicious people, marks lies, and escalates the mark after further deception.', 'Tserriednich Sacred Beast.png', 'Tserriednich_Hui_Guo_Rou'],
   ['5', 'Tubeppa', 'Known in part', 'Collaborative Transmuter that requires a partner and can manufacture chemicals with varied effects.', 'Tubeppa Nen beast.png', 'Tubeppa_Hui_Guo_Rou'],
   ['6', 'Tyson', 'Known in part', 'Eye-wogs collect aura, bestow happiness, deepen devotion, and enforce an unknown taboo.', 'Chap 375 - Tyson and her Guardian Spirit Beast.png', 'Tyson_Hui_Guo_Rou'],
@@ -504,7 +505,7 @@ const successionAbilityConditions = {
   'Benjamin Baton': 'The deceased soldier must be loyal to Benjamin, belong to his private army, and graduate from Kakin military academy for the ability to pass on.',
   'Cat’s Name': 'Counteractive post-death activation requires Camilla to be killed; the cat takes the killer’s life and restores hers.',
   'Untouchable curse plans': 'A Have-Not spends a lifetime near a target and dies close enough to power a post-mortem curse; each assignment and success state must be tracked separately.',
-  'Guardian coins': 'One coin is produced daily. Numbers and designs change with time and transfer; the eventual holder ability is not yet confirmed.',
+  'Guardian coins': 'One coin is produced daily. Holder transfer directly changes the demonstrated design and 10→1 value; age progression and any eventual holder ability remain unconfirmed.',
   'Parallel Future': 'Tserriednich closes his eyes and enters Zetsu to see ten seconds ahead; others continue through a divergent reality without perceiving his changed action.',
   'Magical Worm': 'Outgoing and return doors have asymmetric roles; range, daily use, and post-Kacho changes are still being tested.',
   'Without You': 'Only activates after one twin dies and remains in that twin’s form to protect the survivor.',
@@ -544,7 +545,7 @@ export const successionAbilities = [
   ['Benjamin', 'Benjamin Baton', 'Enhancement-linked inheritance', 'Inherits abilities from loyal deceased private soldiers who meet conditions.', '373'],
   ['Camilla', 'Cat’s Name', 'Specialist counteractive', 'Revives Camilla after death by killing the attacker.', '373'],
   ['Camilla Have-Nots', 'Untouchable curse plans', 'Curse / post-mortem Nen', 'Have-Nots prepare suicide-based curses against rival princes.', '389-current'],
-  ['Zhang Lei', 'Guardian coins', 'Conjuration', 'One coin per day accumulates value and may later awaken a holder.', '362-current'],
+  ['Zhang Lei', 'Guardian coins', 'Guardian Spirit Beast coin system · category unresolved', 'One coin per day persists and changes visibly by holder; cumulative Conjuration and eventual awakening remain Kurapika’s hypotheses.', '362-current'],
   ['Tserriednich', 'Parallel Future', 'Specialist', 'Ten-second future sight during Zetsu with divergent perceived reality.', '385'],
   ['Fugetsu', 'Magical Worm', 'Guardian Spirit Beast ability', 'Creates travel doors and altered return routes after Kacho’s death.', '374-current'],
   ['Kacho', 'Without You', 'Guardian Spirit Beast ability', 'Takes the form of the deceased twin and protects the survivor.', '383'],

@@ -1,0 +1,60 @@
+const freeze = (value) => Object.freeze(value);
+const sourceId = 'source:chapter-404';
+
+const location = ({ id, slug, name, summary, locationType = 'facility', parentId, ancestorIds, deck, accessLevel = 'controlled', zoneRole, certainty = 'confirmed' }) => freeze({
+  id,
+  entityType: 'location',
+  slug,
+  name,
+  aliases: freeze([]),
+  summary,
+  sourceIds: freeze([sourceId]),
+  publicationStatus: 'published',
+  canonLevel: 'canon',
+  createdAt: '2026-08-11',
+  updatedAt: '2026-08-11',
+  locationType,
+  parentId,
+  ancestorIds: freeze(ancestorIds),
+  deck,
+  accessLevel,
+  zoneRole,
+  certainty,
+});
+
+export const locationFoundation404Expansion = freeze([
+  location({
+    id: 'location:black-whale:tier-3:central-medical-clinic',
+    slug: 'black-whale-tier-3-central-medical-clinic',
+    name: 'Tier 3 Central Medical Clinic',
+    summary: 'Tier 3 clinical facility where Cheadle’s team receives Halkenburg, orders diagnostic and forensic work, is displaced by royal/military teams, and where Halkenburg’s original body later dies.',
+    parentId: 'location:black-whale:tier-3',
+    ancestorIds: ['location:black-whale', 'location:black-whale:tier-3'],
+    deck: 3,
+    accessLevel: 'medical-controlled',
+    zoneRole: 'emergency-treatment-and-royal-medical-takeover',
+  }),
+  location({
+    id: 'location:black-whale:tier-3:central-stairwell-square',
+    slug: 'black-whale-tier-3-central-stairwell-square',
+    name: 'Tier 3 Central Stairwell Square',
+    summary: 'Tier 3 public gathering area named in the ship-wide announcement as the place where supporters may assemble for Halkenburg’s scheduled noon send-off. Chapter 404 does not begin the procession.',
+    parentId: 'location:black-whale:tier-3',
+    ancestorIds: ['location:black-whale', 'location:black-whale:tier-3'],
+    deck: 3,
+    accessLevel: 'public-controlled',
+    zoneRole: 'announced-funeral-gathering-point',
+  }),
+  location({
+    id: 'location:black-whale:tier-1:morgue',
+    slug: 'black-whale-tier-1-morgue',
+    name: 'Tier 1 Morgue',
+    summary: 'Authorized destination for Halkenburg’s remains after the planned Tier 3-to-Tier 2 central-stairwell movement. It is a scheduled destination only at the Chapter 404 boundary.',
+    parentId: 'location:black-whale:tier-1',
+    ancestorIds: ['location:black-whale', 'location:black-whale:tier-1'],
+    deck: 1,
+    accessLevel: 'royal-medical-restricted',
+    zoneRole: 'planned-royal-remains-destination',
+    certainty: 'confirmed-as-planned-destination',
+  }),
+]);

@@ -138,6 +138,11 @@ export default defineConfig({
             // observation. Isolate the exact chapter states plus their future
             // continuity splits so the central graph and the 402 island stay stable.
             { name: 'succession-chapter-403-halkenburg-possession-red-alert', test: /src\/data\/(?:succession(?:403Research|ArchiveThrough403|DossierThrough403)|succession\/(?:eventFoundation403Expansion|relationshipFoundation403Expansion|locationFoundation403Expansion|organizationState403(?:Corrections|LegacySplits)|characterState403(?:Corrections|LegacySplits)|nenSystemFoundation403Corrections))\.js$/ },
+            // Chapter 404 spans Day 11 into early Day 12: the direct Guardian
+            // Coin holder test, Grimmel's forced-swap priority topology,
+            // Halkenburg's original-body death, and the class/funeral setup.
+            // Keep the exact states and continuity splits in one lazy island.
+            { name: 'succession-chapter-404-coins-mind-swap-death', test: /src\/data\/(?:succession(?:404Research|ArchiveThrough404|DossierThrough404)|succession\/(?:eventFoundation404Expansion|relationshipFoundation404Expansion|locationFoundation404Expansion|organizationState404(?:Corrections|LegacySplits)|characterState404(?:Corrections|LegacySplits)|nenSystemFoundation404Corrections))\.js$/ },
           ],
         },
       },
