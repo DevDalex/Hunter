@@ -1,0 +1,65 @@
+const freeze = (value) => Object.freeze(value);
+const sourceId = 'source:chapter-395';
+
+const state = ({ organizationId, operationalState, authority, territoryIds = [], objectiveStates = [], pressure = [], relatedEventIds = [], certainty = 'confirmed' }) => freeze({
+  id: `organization-state:${organizationId.replace('organization:', '')}:395`,
+  organizationId,
+  chapterRange: freeze({ start: 395, end: 395 }),
+  status: 'active',
+  operationalState,
+  authority,
+  territoryIds: freeze(territoryIds),
+  objectiveStates: freeze(objectiveStates),
+  pressure: freeze(pressure),
+  relatedEventIds: freeze(relatedEventIds),
+  certainty,
+  sourceIds: freeze([sourceId]),
+});
+
+export const organizationState395Corrections = freeze({
+  'organization:xi-yu': freeze([state({
+    organizationId: 'organization:xi-yu',
+    operationalState: 'Hinrigh’s review of the recovered camcorder footage convinces him that Heil-Ly is using Nen-mediated teleportation or spatial access to reach its hideout. He returns to Ken’i and the soldier group, then joins Ken’i in a plan to track the two Heil-Ly members seen on the recording and capture them alive if possible.',
+    authority: 'Hinrigh remains Xi-Yu underboss directing the field investigation and choosing an evidence-led pursuit rather than entering the Room 3101 trap blindly.',
+    territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-3:standard-cabin-corridor'],
+    objectiveStates: ['Track the two Heil-Ly members recorded by the surveillance camcorder.', 'Capture the pair alive if possible to reduce police involvement.', 'Use footage and physical reconnaissance to map Heil-Ly access without inventing a specific ability user.', 'Continue temporary Cha-R and Troupe coordination against Heil-Ly.'],
+    pressure: ['Heil-Ly has spatial access that bypasses the only visible corridor route.', 'The exact Nen user and route trigger remain unknown.', 'Tserriednich’s soldiers cannot safely act as direct partners because Heil-Ly likely knows their faces.'],
+    relatedEventIds: ['event:hinrigh-footage-confirms-heilly-spatial-access', 'event:mafia-military-heilly-pursuit-briefing'],
+  })]),
+  'organization:cha-r': freeze([state({
+    organizationId: 'organization:cha-r',
+    operationalState: 'Ken’i coordinates the Chapter 395 lower-tier briefing, confirms the military status of the registered Heil-Ly office, identifies the probable hideout behind Room 3101, assigns the Troupe trio to investigate it, and joins Hinrigh in tracking the two recorded Heil-Ly members.',
+    authority: 'Ken’i Wang remains active underboss for the lower-tier anti-Heil-Ly operation while Brocco Li retains family leadership.',
+    territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-5'],
+    objectiveStates: ['Use the Troupe’s anti-Heil-Ly hostility to test the probable hidden base.', 'Track and preferably capture the two recorded Heil-Ly members with Xi-Yu.', 'Keep killings and evidence handling from escalating police involvement.'],
+    pressure: ['The official Heil-Ly office is sealed and empty.', 'The hidden-room network can bypass ordinary corridor movement.', 'The Troupe accepts major trap risk rather than submitting to mafia control.'],
+    relatedEventIds: ['event:mafia-military-heilly-pursuit-briefing', 'event:troupe-breaches-room3102-wall'],
+  })]),
+  'organization:heil-ly': freeze([state({
+    organizationId: 'organization:heil-ly',
+    operationalState: 'Heil-Ly’s Tier 3 route network remains active even though the registered office is empty and Room 3101 has been compromised. Hinrigh’s footage shows two members apparently using Nen-mediated spatial access around the standard cabins, while the Troupe physically breaches into a recently occupied hidden room from adjacent Room 3102 after Heil-Ly personnel have already left it.',
+    authority: 'Morena remains the established Heil-Ly boss, but Chapter 395 does not show her issuing a new command in the scenes supplied.',
+    territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-3:standard-cabin-corridor', 'location:black-whale:tier-3:heilly-hidden-room'],
+    objectiveStates: ['Preserve covert movement and hideout access despite Room 3101 exposure.', 'Avoid direct capture by Xi-Yu, Cha-R, the Troupe, and Tserriednich’s soldiers.', 'Maintain hidden-room and route advantages while enemies attempt physical and surveillance-based mapping.'],
+    pressure: ['Hinrigh has footage strongly indicating Nen-mediated spatial access.', 'The registered office is sealed and empty.', 'Nobunaga, Phinks, and Feitan have physically entered a recently used hidden room.', 'Xi-Yu and Cha-R intend to capture two recorded members alive.'],
+    relatedEventIds: ['event:hinrigh-footage-confirms-heilly-spatial-access', 'event:mafia-military-heilly-pursuit-briefing', 'event:troupe-breaches-room3102-wall', 'event:troupe-finds-recently-used-heilly-hidden-room'],
+  })]),
+  'organization:phantom-troupe': freeze([state({
+    organizationId: 'organization:phantom-troupe',
+    operationalState: 'Nobunaga, Phinks, and Feitan take the Chapter 393 anti-Heil-Ly declaration into direct hideout reconnaissance. They enter Room 3102, physically cut through its bathroom wall into a recently occupied hidden space, and analyze why Heil-Ly allowed Luini to confront them. Their discussion prompts an extended childhood flashback that supplies origin context without showing the formal founding decision.',
+    authority: 'The shown lower-tier team acts as a three-member Troupe cell. No new Chapter 395 order from Chrollo in the present-day sequence is supplied.',
+    territoryIds: ['location:black-whale:tier-3:room-3102', 'location:black-whale:tier-3:heilly-hidden-room', 'location:black-whale:tier-5'],
+    objectiveStates: ['Investigate and destroy Heil-Ly interference.', 'Map or bypass the hidden-room network without relying on the Room 3101 doorway.', 'Continue the broader Hisoka hunt; Chapter 395 does not state that objective has ended.'],
+    pressure: ['The Heil-Ly occupants detect or evade the Troupe before direct contact.', 'The route may include dangerous Nen triggers beyond the ordinary door.', 'Mafia partners are willing to use the Troupe as the highest-risk breach force.'],
+    relatedEventIds: ['event:mafia-military-heilly-pursuit-briefing', 'event:troupe-breaches-room3102-wall', 'event:troupe-finds-recently-used-heilly-hidden-room'],
+  })]),
+  'organization:kakin-military': freeze([state({
+    organizationId: 'organization:kakin-military',
+    operationalState: 'Tserriednich’s six-soldier lower-tier group confirms that the registered Heil-Ly office is known, sealed after the warehouse-guard body was found, and empty. The group receives Ken’i and Hinrigh’s probable-hideout briefing, but Borksen says they cannot directly assist because Heil-Ly likely knows their faces.',
+    authority: 'Gipper remains the corporal in the shown soldier circle; Borksen continues as the limited Nen-information adviser and peer strategist.',
+    territoryIds: ['location:black-whale:tier-3'],
+    objectiveStates: ['Support the Morena/Heil-Ly search without exposing the whole soldier group to a known-face trap.', 'Share verified office and security information with the mafia underbosses.', 'Preserve the Chapter 394 survival-first posture around unknown Nen threats.'],
+    pressure: ['Heil-Ly likely possesses identifying information on the soldiers.', 'The group still lacks detailed Nen mechanics.', 'The mafia/Troupe operation could result in deaths that create police or legal consequences.'],
+    relatedEventIds: ['event:mafia-military-heilly-pursuit-briefing'],
+  })]),
+});
