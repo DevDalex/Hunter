@@ -93,7 +93,7 @@ try {
   const kurapika = archive.getCharacterStateAtChapter('character:kurapika', 403);
   assert(/Black Whale.*urn|worm toxin/i.test(text(kurapika)), 'Kurapika state must preserve the Black Whale/urn interpretation');
   assert(/letter.*public|publication/i.test(text(kurapika)) && /Nen class/i.test(text(kurapika)), 'Kurapika state must preserve the public-letter Nen-class strategy');
-  assert(/contents/i.test(text(kurapika?.openQuestions)), 'Oito letter contents must remain unresolved');
+  assert((kurapika?.openQuestions || []).some((question) => /Oito.*letter|letter.*Oito/i.test(question)), 'Oito letter contents must remain unresolved');
 
   const courthouse = archive.getEntityById('location:black-whale:tier-2:justice-bureau:prosecution-courthouse');
   const corridor = archive.getEntityById('location:black-whale:tier-2:justice-bureau:prosecution-courthouse:corridor');
