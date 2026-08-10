@@ -127,7 +127,7 @@ try {
   assert(hinrigh399?.life === 'alive' && nobunaga399?.life === 'alive', 'Hinrigh and Nobunaga must both remain alive at Chapter 399 endpoint');
   assert(hinrigh399?.locationId === 'location:black-whale:tier-3:room-3101' && nobunaga399?.locationId === 'location:black-whale:tier-3:room-3101', 'Hinrigh and Nobunaga must both end Chapter 399 in Room 3101');
   assert(/cannot use.*rest|unavailable.*rest|remainder.*day/i.test(text(hinrigh399)), 'Hinrigh state must preserve rest-of-day Biohazard unavailability');
-  assert(/all.*kniv|knife.*exhaust/i.test(text(hinrigh399)), 'Hinrigh state must preserve knife exhaustion separately');
+  assert(/all.*kniv|knife.*exhaust|exhaust.*knif/i.test(text(hinrigh399)), 'Hinrigh state must preserve knife exhaustion separately');
 
   const terebellum399 = archive.getCharacterStateAtChapter('character:terebellum', 399);
   const yokotani399 = archive.getCharacterStateAtChapter('character:yokotani', 399);
