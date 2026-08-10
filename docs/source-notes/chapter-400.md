@@ -46,7 +46,7 @@ Five princes seek Melody’s performance in different forms: Zhang Lei and Tserr
 
 Kaiser also explicitly says he is in love with Melody. Melody hears a heartbeat she regards as unnaturally precise and privately theorizes that Kaiser may be a **Manipulator** or may be manipulating himself while presenting as a non-user. This remains **Melody’s suspicion**. Chapter 400 does not confirm Kaiser’s Nen type, a self-manipulation ability, an external controller, or the sincerity of his love declaration.
 
-Kaiser explains the consequences of a possible future **Special Martial Law** declaration and prepares Steiner for a worst-case military takeover of the Justice Bureau. Special Martial Law is **not declared or active in Chapter 400**. Later declaration, enforcement, and consequences belong to later chapters and are not imported backward.
+Kaiser explains the consequences of a possible future **Special Martial Law** declaration and prepares Steiner for a worst-case military takeover of the Justice Bureau. Special Martial Law is not declared or active in Chapter 400. Later declaration, enforcement, and consequences belong to later chapters and are not imported backward.
 
 ## Fugetsu / Magical Worm boundary
 
