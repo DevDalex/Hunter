@@ -14,6 +14,7 @@ import { locationFoundation396Expansion } from './locationFoundation396Expansion
 import { locationFoundation397Expansion } from './locationFoundation397Expansion.js';
 import { locationFoundation398Expansion } from './locationFoundation398Expansion.js';
 import { locationFoundation399Expansion } from './locationFoundation399Expansion.js';
+import { locationFoundation400Expansion } from './locationFoundation400Expansion.js';
 
 const ARCHIVE_DATE = '2026-08-10';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
@@ -29,6 +30,7 @@ const locations = Object.freeze(uniqueById([
   ...locationFoundation397Expansion,
   ...locationFoundation398Expansion,
   ...locationFoundation399Expansion,
+  ...locationFoundation400Expansion,
 ]));
 
 const locationHistory = Object.freeze(uniqueById([
