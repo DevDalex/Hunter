@@ -1,0 +1,43 @@
+name: One-time Chapter 400 broadcast boundary repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/chapter-400-broadcast-owner-fix.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out Chapter 400 event foundation
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: src/data/succession/eventFoundation400Expansion.js
+          sparse-checkout-cone-mode: false
+
+      - name: Remove unsupported broadcast owner attribution
+        shell: python
+        run: |
+          from pathlib import Path
+          path = Path('src/data/succession/eventFoundation400Expansion.js')
+          content = path.read_text()
+          old = "    organizations: ['organization:kakin-military'],\n    locations: ['location:black-whale'],\n    outcomes: ['A shipwide emergency announcement begins.'"
+          new = "    locations: ['location:black-whale'],\n    outcomes: ['A shipwide emergency announcement begins.'"
+          if old not in content:
+              raise SystemExit('Expected Chapter 400 emergency-broadcast organization attribution not found')
+          path.write_text(content.replace(old, new, 1))
+
+      - name: Commit boundary repair
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/data/succession/eventFoundation400Expansion.js
+          git commit -m 'Remove unsupported Chapter 400 broadcast owner'
+          git push origin HEAD:main
