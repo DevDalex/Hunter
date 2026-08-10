@@ -64,7 +64,7 @@ Zhang Lei personally gives Melody a coin marked **1**. Vantine later appears on 
 
 Longhi tells Kurapika that Water Divination is unnecessary because she can already use Nen. After hearing Longhi’s explanation, Kurapika **accepts the contract** and explicitly agrees to collaborate with **Tubeppa**.
 
-The supplied Chapter 400 synopsis does **not** reproduce the contract’s terms. Therefore the archive does not import **Moonlight Act**, later treaty mechanics, later penalties, later duration rules, or Chapter 401+ alliance consequences into the Chapter 400 boundary. At 400, the agreement exists and the terms remain unsupplied.
+The supplied Chapter 400 synopsis does not reproduce the contract’s terms. Therefore the archive does not import **Moonlight Act**, later treaty mechanics, later penalties, later duration rules, or Chapter 401+ alliance consequences into the Chapter 400 boundary. At 400, the agreement exists and the terms remain unsupplied.
 
 ## Stopping point
 
