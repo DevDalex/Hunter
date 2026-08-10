@@ -1,0 +1,67 @@
+name: One-time Chapter 402 wiring helper
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    if: github.event.head_commit.message == 'Add one-time Chapter 402 wiring helper'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Patch Chapter 402 plumbing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              if old not in text:
+                  raise SystemExit(f'expected text not found in {path}: {old[:120]}')
+              if text.count(old) != 1:
+                  raise SystemExit(f'expected exactly one match in {path}, got {text.count(old)}')
+              p.write_text(text.replace(old, new, 1))
+
+          replace_once(
+              'scripts/audit-succession-chapter-400-boundary.mjs',
+              "assert(index399 >= 0 && numbers[index399 + 1] === 400 && numbers[index399 + 2] === 401 && numbers[index399 + 3] === 406, 'maintained publication chain must place modernized Chapter 400 directly after 399, then Chapter 401, before the pre-existing 406 packet');",
+              "assert(index399 >= 0 && numbers[index399 + 1] === 400 && numbers[index399 + 2] === 401 && numbers[index399 + 3] === 402 && numbers[index399 + 4] === 406, 'maintained publication chain must place modernized Chapter 400 directly after 399, then Chapters 401 and 402, before the pre-existing 406 packet');",
+          )
+
+          replace_once(
+              'scripts/audit-succession-chapter-401-boundary.mjs',
+              "assert(index400 >= 0 && numbers[index400 + 1] === 401 && numbers[index400 + 2] === 406, 'maintained publication chain must place Chapter 401 directly after 400 and before the pre-existing 406 packet');",
+              "assert(index400 >= 0 && numbers[index400 + 1] === 401 && numbers[index400 + 2] === 402 && numbers[index400 + 3] === 406, 'maintained publication chain must place Chapter 401 directly after 400, then Chapter 402, before the pre-existing 406 packet');",
+          )
+
+          replace_once(
+              'scripts/run-succession-runtime-audits.mjs',
+              "  ['chapter-401-boundary', 'scripts/audit-succession-chapter-401-boundary.mjs'],",
+              "  ['chapter-401-boundary', 'scripts/audit-succession-chapter-401-boundary.mjs'],\n  ['chapter-402-boundary', 'scripts/audit-succession-chapter-402-boundary.mjs'],",
+          )
+
+          group401 = "            { name: 'succession-chapter-401-moonlight-beyond-contract', test: /src\\/data\\/(?:succession401Research|succession\\/(?:abilityFoundation401Expansion|eventFoundation401Expansion|relationshipFoundation401Expansion|locationFoundation401Expansion|characterState401Corrections|nenSystemFoundation401Corrections))\\.js$/ },"
+          group402 = """            { name: 'succession-chapter-401-moonlight-beyond-contract', test: /src\\/data\\/(?:succession401Research|succession\\/(?:abilityFoundation401Expansion|eventFoundation401Expansion|relationshipFoundation401Expansion|locationFoundation401Expansion|characterState401Corrections|nenSystemFoundation401Corrections))\\.js$/ },
+            // Chapter 402 is a four-lane Day 10/11 packet: lower-prince diplomacy,
+            // Balsamilco's Halkenburg weapon plan, Tserriednich's 9.67-second
+            // Zetsu checkpoint, and the Fugetsu/Kacho-form/Melody/Kaiser crisis.
+            // Keep every direct 402 leaf together so the central Succession graph
+            // retains its existing 750 kB preferred budget without swallowing the
+            // chapter's large event/state/epistemic-boundary payload.
+            { name: 'succession-chapter-402-fugetsu-diplomacy-halkenburg', test: /src\\/data\\/(?:succession402Research|succession\\/(?:abilityFoundation402Expansion|eventFoundation402Expansion|relationshipFoundation402Expansion|locationFoundation402Expansion|organizationState402Corrections|characterState402Corrections|nenSystemFoundation402Corrections))\\.js$/ },"""
+          replace_once('vite.config.js', group401, group402)
+          PY
+
+          git config user.name "DevDalex"
+          git config user.email "58445340+DevDalex@users.noreply.github.com"
+          git add scripts/audit-succession-chapter-400-boundary.mjs scripts/audit-succession-chapter-401-boundary.mjs scripts/run-succession-runtime-audits.mjs vite.config.js
+          git diff --cached --check
+          git commit -m "Wire Chapter 402 audit order and lazy chunk"
+          git push origin HEAD:main
