@@ -96,6 +96,14 @@ export default defineConfig({
             // and historical Spider founding. Keep the entire origin payload in
             // its own lazy data island rather than raising the 750 kB ceiling.
             { name: 'succession-chapter-397-sarasa-spider-origin', test: /src\/data\/(?:succession397Research|succession\/(?:abilityFoundation397Expansion|eventFoundation397Expansion|relationshipFoundation397Expansion|locationFoundation397Expansion))\.js$/ },
+            // Chapter 398 returns to Tier 3 and adds a dense spatial-mechanics
+            // packet: repeat front-door teleport testing, barrier/land-mine trap
+            // exposition, Biohazard's transmitter-oyster rules, temporary
+            // Hinrigh/Nobunaga cooperation, exact character states, and the
+            // self-restoring hideout stage. Keep the chapter's direct leaves in
+            // one lazy island while preserving the current soft-warning and
+            // emergency chunk-budget policy unchanged.
+            { name: 'succession-chapter-398-teleport-hideout-infiltration', test: /src\/data\/(?:succession398Research|succession\/(?:abilityFoundation398Expansion|eventFoundation398Expansion|relationshipFoundation398Expansion|locationFoundation398Expansion|characterState398Corrections|nenSystemFoundation398Corrections))\.js$/ },
           ],
         },
       },
