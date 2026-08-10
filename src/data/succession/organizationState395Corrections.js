@@ -1,10 +1,10 @@
 const freeze = (value) => Object.freeze(value);
 const sourceId = 'source:chapter-395';
 
-const state = ({ organizationId, operationalState, authority, territoryIds = [], objectiveStates = [], pressure = [], relatedEventIds = [], certainty = 'confirmed' }) => freeze({
-  id: `organization-state:${organizationId.replace('organization:', '')}:395`,
+const state = ({ organizationId, start = 395, end = 395, operationalState, authority, territoryIds = [], objectiveStates = [], pressure = [], relatedEventIds = [], certainty = 'confirmed', sourceIds = [sourceId] }) => freeze({
+  id: `organization-state:${organizationId.replace('organization:', '')}:${start}`,
   organizationId,
-  chapterRange: freeze({ start: 395, end: 395 }),
+  chapterRange: freeze({ start, end }),
   status: 'active',
   operationalState,
   authority,
@@ -13,7 +13,7 @@ const state = ({ organizationId, operationalState, authority, territoryIds = [],
   pressure: freeze(pressure),
   relatedEventIds: freeze(relatedEventIds),
   certainty,
-  sourceIds: freeze([sourceId]),
+  sourceIds: freeze(sourceIds),
 });
 
 export const organizationState395Corrections = freeze({
@@ -53,13 +53,29 @@ export const organizationState395Corrections = freeze({
     pressure: ['The Heil-Ly occupants detect or evade the Troupe before direct contact.', 'The route may include dangerous Nen triggers beyond the ordinary door.', 'Mafia partners are willing to use the Troupe as the highest-risk breach force.'],
     relatedEventIds: ['event:mafia-military-heilly-pursuit-briefing', 'event:troupe-breaches-room3102-wall', 'event:troupe-finds-recently-used-heilly-hidden-room'],
   })]),
-  'organization:kakin-military': freeze([state({
-    organizationId: 'organization:kakin-military',
-    operationalState: 'Tserriednich’s six-soldier lower-tier group confirms that the registered Heil-Ly office is known, sealed after the warehouse-guard body was found, and empty. The group receives Ken’i and Hinrigh’s probable-hideout briefing, but Borksen says they cannot directly assist because Heil-Ly likely knows their faces.',
-    authority: 'Gipper remains the corporal in the shown soldier circle; Borksen continues as the limited Nen-information adviser and peer strategist.',
-    territoryIds: ['location:black-whale:tier-3'],
-    objectiveStates: ['Support the Morena/Heil-Ly search without exposing the whole soldier group to a known-face trap.', 'Share verified office and security information with the mafia underbosses.', 'Preserve the Chapter 394 survival-first posture around unknown Nen threats.'],
-    pressure: ['Heil-Ly likely possesses identifying information on the soldiers.', 'The group still lacks detailed Nen mechanics.', 'The mafia/Troupe operation could result in deaths that create police or legal consequences.'],
-    relatedEventIds: ['event:mafia-military-heilly-pursuit-briefing'],
-  })]),
+  'organization:kakin-military': freeze([
+    state({
+      organizationId: 'organization:kakin-military',
+      start: 394,
+      end: 394,
+      operationalState: 'Tserriednich’s personal soldiers conduct a Tier 3 search for Morena, force entry into a registered Heil-Ly office, construct a cover story around the entry and discovered body, restrict their weapons to handguns to limit attention, and debate Nen, forensic/institutional exposure, and the risk of a wider Kakin–mafia conflict. Otocin’s information causes Gipper to request Borksen as an adviser; Borksen then confirms Tserriednich’s classified Nen training under Theta and recommends survival-first contact with Xi-Yu or Cha-R.',
+      authority: 'Corporal Gipper commands the shown Tier 3 group. The group remains personally aligned with Tserriednich while operating inside the broader Kakin military structure.',
+      territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-1'],
+      objectiveStates: ['Capture Morena before Tserriednich must personally handle the lower-tier rebellion.', 'Search Tier 3 without provoking unnecessary Royal Army/police attention.', 'Learn enough about Nen to avoid walking into an unknown Heil-Ly threat.', 'Use transfer-request status as a proposed early-warning signal for any classified mafia-eradication operation.', 'Develop a capture contingency and seek tactical contact with Xi-Yu or Cha-R.'],
+      pressure: ['The unit lacks detailed Nen knowledge.', 'Morena likely has identifying information on Tserriednich’s personal soldiers.', 'Forensic or legal mishandling could transform mafia violence into a broader institutional crisis.', 'Possible Hunter Association scrutiny is discussed but not confirmed.'],
+      relatedEventIds: ['event:gipper-raids-heilly-office-cover-story', 'event:otocin-reveals-nen-borksen-transfer', 'event:tserriednich-soldiers-model-mafia-war-risk', 'event:borksen-confirms-tserriednich-nen-training', 'event:borksen-warns-heilly-knows-soldiers'],
+      sourceIds: ['source:chapter-394'],
+    }),
+    state({
+      organizationId: 'organization:kakin-military',
+      start: 395,
+      end: 409,
+      operationalState: 'Tserriednich’s six-soldier lower-tier group confirms that the registered Heil-Ly office is known, sealed after the warehouse-guard body was found, and empty. The group receives Ken’i and Hinrigh’s probable-hideout briefing, but Borksen says they cannot directly assist because Heil-Ly likely knows their faces.',
+      authority: 'Gipper remains the corporal in the shown soldier circle; Borksen continues as the limited Nen-information adviser and peer strategist.',
+      territoryIds: ['location:black-whale:tier-3'],
+      objectiveStates: ['Support the Morena/Heil-Ly search without exposing the whole soldier group to a known-face trap.', 'Share verified office and security information with the mafia underbosses.', 'Preserve the Chapter 394 survival-first posture around unknown Nen threats.'],
+      pressure: ['Heil-Ly likely possesses identifying information on the soldiers.', 'The group still lacks detailed Nen mechanics.', 'The mafia/Troupe operation could result in deaths that create police or legal consequences.'],
+      relatedEventIds: ['event:mafia-military-heilly-pursuit-briefing'],
+    }),
+  ]),
 });
