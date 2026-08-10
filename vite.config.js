@@ -78,6 +78,12 @@ export default defineConfig({
             // and introduces the Borksen/Gipper lower-tier soldier intelligence
             // lane. Keep its dense evidence boundary out of the core chunk.
             { name: 'succession-chapter-394-room-network-soldiers', test: /src\/data\/(?:succession394Research|succession\/(?:abilityFoundation394Expansion|eventFoundation394Expansion|relationshipFoundation394Expansion|organizationState394Corrections|characterState394Corrections|nenSystemFoundation394Corrections))\.js$/ },
+            // Chapter 395 combines another dense lower-tier spatial investigation
+            // with the opening Meteor City origin flashback. Keep the dedicated
+            // research, event/relationship/location leaves, and current-day
+            // state corrections together so the historical material does not
+            // inflate the central Succession graph or blur the lazy boundary.
+            { name: 'succession-chapter-395-room-network-origin', test: /src\/data\/(?:succession395Research|succession\/(?:eventFoundation395Expansion|relationshipFoundation395Expansion|locationFoundation395Expansion|organizationState395Corrections|characterState395Corrections))\.js$/ },
           ],
         },
       },
