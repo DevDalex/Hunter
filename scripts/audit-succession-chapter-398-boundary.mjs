@@ -81,11 +81,11 @@ try {
   const bio397 = archive.getAbilityKnowledgeAtChapter('ability:hinrigh-object-animal-transformation', 397);
   const bio398 = archive.getAbilityKnowledgeAtChapter('ability:hinrigh-object-animal-transformation', 398);
   assert(bio397?.known && bio398?.known, 'Biohazard must be known at both Chapter 397 and Chapter 398 boundaries');
-  assert(!/oyster|two hours|2 hours|one kilometer|1 kilometer|aura depletion|depends on object size/i.test(text(bio397)), 'Chapter 398 Biohazard transmitter mechanics must not leak backward into Chapter 397');
-  assert(/oyster/i.test(text(bio398)) && /aura depletion|aura.*deplet/i.test(text(bio398)), 'Chapter 398 Biohazard knowledge must preserve transmitter-oyster and aura-depletion reversion');
-  assert(/two hours|2 hours/i.test(text(bio398)) && /size/i.test(text(bio398)), 'Chapter 398 Biohazard knowledge must preserve size-dependent duration and the roughly two-hour use-specific estimate');
-  assert(/one kilometer|1 kilometer/i.test(text(bio398)) && /altitude/i.test(text(bio398)), 'Chapter 398 Biohazard tracking knowledge must preserve receiver radius and altitude limitation');
-  assert(/not a universal|not.*universal|no.*universal/i.test(text(bio398)), 'Biohazard knowledge must not universalize the oyster duration estimate');
+  assert(!/oyster|two hours|2 hours|one kilometer|1 kilometer|aura depletion|depends on object size/i.test(text(bio397.knowledge)), 'Chapter 398 Biohazard transmitter mechanics must not leak backward into Chapter 397');
+  assert(/oyster/i.test(text(bio398.knowledge)) && /aura depletion|aura.*deplet/i.test(text(bio398.knowledge)), 'Chapter 398 Biohazard knowledge must preserve transmitter-oyster and aura-depletion reversion');
+  assert(/two hours|2 hours/i.test(text(bio398.knowledge)) && /size/i.test(text(bio398.knowledge)), 'Chapter 398 Biohazard knowledge must preserve size-dependent duration and the roughly two-hour use-specific estimate');
+  assert(/one kilometer|1 kilometer/i.test(text(bio398.knowledge)) && /altitude/i.test(text(bio398.knowledge)), 'Chapter 398 Biohazard tracking knowledge must preserve receiver radius and altitude limitation');
+  assert(/not a universal|not.*universal|no.*universal/i.test(text(bio398.knowledge)), 'Biohazard knowledge must not universalize the oyster duration estimate');
   const bioEntity = archive.getEntityById('ability:hinrigh-object-animal-transformation');
   assert(bioEntity?.latestChapter === 398, 'current Biohazard entity must advance through Chapter 398');
 

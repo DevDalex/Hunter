@@ -18,7 +18,7 @@ try {
   const numbers = maintained.maintainedSuccessionChapterNumbers;
   const index396 = numbers.indexOf(396);
   assert(index396 >= 0 && numbers[index396 + 1] === 397, 'maintained publication chain must place Chapter 397 directly after Chapter 396');
-  assert(numbers[numbers.indexOf(397) + 1] === 400, 'Chapter 397 must remain directly before the pre-existing Chapter 400 maintained packet');
+  assert(numbers[numbers.indexOf(397) + 1] === 398 && numbers[numbers.indexOf(398) + 1] === 400, 'Chapter 397 must remain directly before the pre-existing Chapter 400 maintained packet');
 
   const chapter397 = chapterModule.succession397ChapterResearch?.[0];
   assert(chapter397?.number === 397, 'dedicated Chapter 397 research must load');
