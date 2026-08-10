@@ -14,10 +14,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out repository
+      - name: Check out audit files only
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          sparse-checkout: |
+            scripts/audit-succession-chapter-389-boundary.mjs
+            scripts/audit-succession-chapter-391-boundary.mjs
+            scripts/audit-succession-chapter-392-boundary.mjs
+            scripts/audit-succession-chapter-393-boundary.mjs
+            scripts/audit-succession-chapter-394-boundary.mjs
+            scripts/audit-succession-chapter-395-boundary.mjs
+            scripts/audit-succession-chapter-396-boundary.mjs
+            scripts/audit-succession-chapter-397-boundary.mjs
+            scripts/audit-succession-chapter-398-boundary.mjs
+          sparse-checkout-cone-mode: false
 
       - name: Advance historical audit handoffs and fix Biohazard knowledge scope
         shell: python
