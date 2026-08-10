@@ -23,7 +23,7 @@ jobs:
             src/data/succession/characterState399Corrections.js
           sparse-checkout-cone-mode: false
 
-      - name: Restore proven Chapter 398 audit and patch only live-entity assertions
+      - name: Restore proven Chapter 398 audit and patch Biohazard live-entity assertion
         shell: bash
         run: |
           git fetch origin f001fc36a8d775b819fe80b3b00310975a168916 --depth=1
@@ -32,17 +32,11 @@ jobs:
           from pathlib import Path
           path = Path('scripts/audit-succession-chapter-398-boundary.mjs')
           content = path.read_text()
-          replacements = {
-              "assert(trap?.firstChapter === 398 && trap?.latestChapter === 398, 'descriptive front-door trap ability must enter at Chapter 398');":
-              "assert(trap?.firstChapter === 398 && trap?.latestChapter >= 398, 'descriptive front-door trap ability must enter at Chapter 398 even when later chapters extend the live entity');",
-              "assert(bioEntity?.latestChapter === 398, 'current Biohazard entity must advance through Chapter 398');":
-              "assert(bioEntity?.latestChapter >= 398, 'current Biohazard entity must include Chapter 398 even when later chapters extend the live entity');",
-          }
-          for old, new in replacements.items():
-              if old not in content:
-                  raise SystemExit(f'Missing Chapter 398 recovery marker: {old}')
-              content = content.replace(old, new, 1)
-          path.write_text(content)
+          old = "assert(bioEntity?.latestChapter === 398, 'current Biohazard entity must advance through Chapter 398');"
+          new = "assert(bioEntity?.latestChapter >= 398, 'current Biohazard entity must include Chapter 398 even when later chapters extend the live entity');"
+          if old not in content:
+              raise SystemExit('Missing Chapter 398 Biohazard recovery marker')
+          path.write_text(content.replace(old, new, 1))
           PY
 
       - name: Preserve Hinrigh knife exhaustion in Chapter 399 state
