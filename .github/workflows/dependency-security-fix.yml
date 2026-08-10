@@ -1,0 +1,52 @@
+name: One-time dependency security repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/dependency-security-fix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install current dependencies
+        run: npm ci
+
+      - name: Apply non-breaking npm security fixes
+        run: npm audit fix
+
+      - name: Verify no high-severity advisories remain
+        run: npm audit --audit-level=high
+
+      - name: Run full production build
+        run: npm run build
+
+      - name: Commit repaired lockfile
+        shell: bash
+        run: |
+          if git diff --quiet -- package.json package-lock.json; then
+            echo 'No dependency files changed.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package.json package-lock.json
+          git commit -m 'Fix npm security advisories'
+          git push origin HEAD:main
