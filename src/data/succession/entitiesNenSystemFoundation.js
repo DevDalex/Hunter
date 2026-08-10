@@ -26,6 +26,10 @@ import { abilityKnowledge391Overrides } from './nenSystemFoundation391Correction
 import { abilityKnowledge392Overrides } from './nenSystemFoundation392Corrections.js';
 import { abilityKnowledge393Overrides } from './nenSystemFoundation393Corrections.js';
 import { abilityKnowledge394Overrides } from './nenSystemFoundation394Corrections.js';
+import {
+  abilityKnowledge398Overrides,
+  nenSystemProfile398Corrections,
+} from './nenSystemFoundation398Corrections.js';
 
 const ARCHIVE_DATE = '2026-08-10';
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -99,6 +103,7 @@ const correctedNenSystemProfiles = Object.freeze({
   ...nenSystemProfiles,
   ...nenSystemProfile378Corrections,
   ...nenSystemProfile389Corrections,
+  ...nenSystemProfile398Corrections,
 });
 
 const inheritedAbilityKnowledgeOverrides = organizationFoundationData.abilityKnowledgeOverrides || {};
@@ -113,6 +118,7 @@ const abilityKnowledgeOverrideKeys = new Set([
   ...Object.keys(abilityKnowledge392Overrides),
   ...Object.keys(abilityKnowledge393Overrides),
   ...Object.keys(abilityKnowledge394Overrides),
+  ...Object.keys(abilityKnowledge398Overrides),
 ]);
 const correctedAbilityKnowledgeOverrides = Object.freeze(Object.fromEntries(
   [...abilityKnowledgeOverrideKeys].map((abilityId) => [abilityId, Object.freeze([
@@ -126,6 +132,7 @@ const correctedAbilityKnowledgeOverrides = Object.freeze(Object.fromEntries(
     ...(abilityKnowledge392Overrides[abilityId] || []),
     ...(abilityKnowledge393Overrides[abilityId] || []),
     ...(abilityKnowledge394Overrides[abilityId] || []),
+    ...(abilityKnowledge398Overrides[abilityId] || []),
   ])]),
 ));
 
