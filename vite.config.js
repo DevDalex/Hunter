@@ -117,6 +117,14 @@ export default defineConfig({
             // state splits/corrections isolated so the core does not spend its
             // remaining headroom while we preserve 401+ imported continuity.
             { name: 'succession-chapter-400-tier2-justice-fugetsu', test: /src\/data\/(?:succession(?:400Research|ArchiveThrough400|DossierThrough400)|succession\/(?:abilityFoundation400Expansion|eventFoundation400(?:Expansion|Corrections)|relationshipFoundation400Expansion|locationFoundation400Expansion|organizationState400(?:Corrections|LegacySplits)|characterState400(?:Corrections|LegacySplits)|nenSystemFoundation400Corrections))\.js$/ },
+            // Chapter 401 is the first fresh post-400 boundary and carries a
+            // dense Room 1014 contract/lineage packet: Moonlight Act, Longhi's
+            // Beyond parentage, the death-released curse-sacrifice network,
+            // exact character states, the weekly Tubeppa–Woble treaty, and the
+            // 2:00 p.m. Beyond detention coda. Keep only the direct 401 leaves
+            // together so the already-large Chapter 400 island is not dragged
+            // into this new chunk through the Through401 overlay chain.
+            { name: 'succession-chapter-401-moonlight-beyond-contract', test: /src\/data\/(?:succession401Research|succession\/(?:abilityFoundation401Expansion|eventFoundation401Expansion|relationshipFoundation401Expansion|locationFoundation401Expansion|characterState401Corrections|nenSystemFoundation401Corrections))\.js$/ },
           ],
         },
       },
