@@ -93,7 +93,7 @@ export const relationshipFoundation400Expansion = freeze([
     slug: 'without-you-fugetsu-ch400-protective-continuation',
     name: 'Without You Continues Kacho’s Protective Bond with Fugetsu',
     summary: 'Human Kacho remains dead, while Without You continues in Kacho’s form and prioritizes Fugetsu’s survival, kingship, and protection. The Kacho-form actor conceals Kacho’s true death from Fugetsu and reacts urgently to Fugetsu’s worsening state.',
-    sourceEntityId: 'guardian-beast:kacho-hui-guo-rou',
+    sourceEntityId: 'guardian-beast:kacho',
     targetEntityId: 'character:fugetsu-hui-guo-rou',
     relationshipType: 'protective',
     subtype: 'post-mortem-guardian-beast-twin-protection',
