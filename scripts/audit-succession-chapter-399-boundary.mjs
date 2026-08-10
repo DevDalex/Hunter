@@ -175,7 +175,7 @@ try {
   assert(/does not.*LSDF.*creates? or owns|does not.*conclude.*LSDF/i.test(note.replaceAll('**', '')), 'source note must preserve LSDF/teleport ownership separation');
   assert(/member-only jump point.*hypothesis|member-only.*not directly demonstrated/i.test(note), 'source note must preserve member-only route uncertainty');
   assert(/rest-of-day availability limit/i.test(note) && /does not infer/i.test(note), 'source note must preserve bounded Biohazard resource limit');
-  assert(/exact room/i.test(note) && /does not.*Morena.*personally operates/i.test(note.replaceAll('**', '')), 'source note must preserve Morena exact-room/operator uncertainty');
+  assert(/does not establish:.*Morena’s exact room.*Morena personally operates the Room 3101 teleport route.*Morena personally operates the self-restoring wall\/stage/i.test(note.replaceAll('**', '').replace(/\s+/g, ' ')), 'source note must preserve Morena exact-room/operator uncertainty');
   assert(/reference metadata/i.test(note) && /does not change story mechanics/i.test(note), 'trivia must remain reference-only metadata');
 
   console.log(`Chapter 399 boundary audit passed: ${events399.length} canonical Chapter 399 events preserve the nine-member hideout contact, Sweet Home and LSDF reveals, Room 3101 return route, hidden transmitter, Hinrigh’s rest-of-day Biohazard limit, and unresolved member-only/kikan/Morena boundaries.`);
