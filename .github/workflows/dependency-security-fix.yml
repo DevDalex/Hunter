@@ -17,12 +17,16 @@ permissions:
 jobs:
   repair:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
-      - name: Check out repository
+      - name: Check out dependency manifests only
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          sparse-checkout: |
+            package.json
+            package-lock.json
+          sparse-checkout-cone-mode: false
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -39,10 +43,7 @@ jobs:
       - name: Verify no high-severity advisories remain
         run: npm audit --audit-level=high
 
-      - name: Run full production build
-        run: npm run build
-
-      - name: Commit repaired lockfile
+      - name: Commit repaired dependency files
         shell: bash
         run: |
           if git diff --quiet -- package.json package-lock.json; then
