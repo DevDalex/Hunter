@@ -93,7 +93,7 @@ try {
   assert(morena399?.life === 'alive', 'Morena must remain alive at Chapter 399');
   assert(morena399?.locationId === 'location:black-whale:tier-3:heil-ly-hideout', 'LSDF location condition must advance Morena to the hideout root without inventing an exact room');
   assert(/exact room.*unresolved|exact room.*unknown|somewhere/i.test(text(morena399)), 'Morena’s exact room must remain unresolved');
-  assert(!/operates the teleport|owner of.*teleport|operates.*self-restoring/i.test(text(morena399)), 'Morena must not be assigned ownership of the spatial/restorative mechanisms');
+  assert(/does not make her the owner.*Room 3101 teleport route.*self-restoring stage/i.test(text(morena399)), 'Morena state must explicitly preserve non-ownership of the spatial/restorative mechanisms');
 
   const organEvent = archive.getEntityById('event:orarge-blocks-knife-perigord-organ-reminder');
   assert(/organ|kikan/i.test(text(organEvent)) && /Morena/i.test(text(organEvent)), 'Perigord organ selection and Morena instruction must be preserved');

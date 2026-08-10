@@ -17,7 +17,7 @@ try {
   const numbers = maintained.maintainedSuccessionChapterNumbers;
   const index390 = numbers.indexOf(390);
   assert(index390 >= 0 && numbers[index390 + 1] === 391, 'maintained publication chain must place Chapter 391 directly after Chapter 390');
-  assert(numbers[numbers.indexOf(391) + 1] === 392 && numbers[numbers.indexOf(392) + 1] === 393 && numbers[numbers.indexOf(393) + 1] === 394 && numbers[numbers.indexOf(394) + 1] === 395 && numbers[numbers.indexOf(395) + 1] === 396 && numbers[numbers.indexOf(396) + 1] === 397 && numbers[numbers.indexOf(397) + 1] === 398 && numbers[numbers.indexOf(398) + 1] === 400, 'Chapter 391 must lead through maintained Chapters 392, 393, 394, 395, 396, and 397 before the pre-existing Chapter 400 packet');
+  assert(numbers[numbers.indexOf(391) + 1] === 392 && numbers[numbers.indexOf(392) + 1] === 393 && numbers[numbers.indexOf(393) + 1] === 394 && numbers[numbers.indexOf(394) + 1] === 395 && numbers[numbers.indexOf(395) + 1] === 396 && numbers[numbers.indexOf(396) + 1] === 397 && numbers[numbers.indexOf(397) + 1] === 398 && numbers[numbers.indexOf(398) + 1] === 399 && numbers[numbers.indexOf(399) + 1] === 400, 'Chapter 391 must lead through maintained Chapters 392, 393, 394, 395, 396, and 397 before the pre-existing Chapter 400 packet');
 
   const chapter391 = chapterModule.succession391ChapterResearch?.[0];
   assert(chapter391?.number === 391, 'dedicated Chapter 391 research must load');

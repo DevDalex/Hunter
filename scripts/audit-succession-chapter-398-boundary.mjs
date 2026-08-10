@@ -59,7 +59,7 @@ try {
   assert(/second/i.test(text(secondTrigger)) && /repeat|continu/i.test(text(secondTrigger)), 'second-hostage test must preserve repeated activation');
 
   const trap = archive.getEntityById('ability:heil-ly-front-door-teleport-trap');
-  assert(trap?.firstChapter === 398 && trap?.latestChapter === 398, 'descriptive front-door trap ability must enter at Chapter 398');
+  assert(trap?.firstChapter === 398 && trap?.latestChapter >= 398, 'descriptive front-door trap ability must enter at Chapter 398 even when later chapters extend the live entity');
   assert(trap.classification?.nenTypes?.includes('unknown'), 'front-door trap Nen category must remain unknown');
   assert((trap.ownerIds || []).length === 0, 'front-door trap must not invent an owner');
   assert(/descriptive archive label|official ability name.*unsupplied/i.test(text(trap)), 'front-door trap name must remain descriptive');
