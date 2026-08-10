@@ -75,7 +75,7 @@ export const locationFoundation400Expansion = freeze([
     slug: 'justice-bureau-controlled-hallway',
     name: 'Justice Bureau Controlled Hallway',
     summary: 'Controlled hallway where Melody and Fugetsu are deliberately routed past one another so Melody can assess Fugetsu’s condition. Melody detects Zetsu-like aura weakness, an unstable heartbeat, and numerous hostile spirits.',
-    locationType: 'passage',
+    locationType: 'corridor',
     parentId: justice,
     ancestorIds: ['location:black-whale', 'location:black-whale:tier-2', justice],
     deck: 2,
