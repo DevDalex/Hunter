@@ -60,7 +60,7 @@ try {
   const bedroom = archive.getEntityById('location:black-whale:tier-1:room-1014:master-bedroom');
   const beyondCell = archive.getEntityById('location:black-whale:tier-1:beyond-detention-cell');
   assert(bedroom?.parentId === 'location:black-whale:tier-1:room-1014', 'Room 1014 master bedroom must be a canonical child location');
-  assert(beyondCell?.locationType === 'detention' && beyondCell?.parentId === 'location:black-whale:tier-1', 'Beyond detention cell must be a Tier 1 detention location');
+  assert(beyondCell?.locationType === 'facility' && beyondCell?.parentId === 'location:black-whale:tier-1', 'Beyond detention cell must be modeled as a Tier 1 detention facility using the registered location vocabulary');
 
   const moonlight400 = archive.getAbilityKnowledgeAtChapter('ability:moonlight-act', 400);
   const moonlight401 = archive.getAbilityKnowledgeAtChapter('ability:moonlight-act', 401);
