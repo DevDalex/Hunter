@@ -18,6 +18,8 @@ import { characterState400LegacySplits } from './characterState400LegacySplits.j
 import { characterState401CorrectionProfiles } from './characterState401Corrections.js';
 import { characterState402LegacySplits } from './characterState402LegacySplits.js';
 import { characterState402CorrectionProfiles } from './characterState402Corrections.js';
+import { characterState403LegacySplits } from './characterState403LegacySplits.js';
+import { characterState403CorrectionProfiles } from './characterState403Corrections.js';
 import { characterStatusKnowledge } from './characterStatusKnowledge.js';
 
 const characterIds = new Set([
@@ -40,6 +42,8 @@ const characterIds = new Set([
   ...Object.keys(characterState401CorrectionProfiles),
   ...Object.keys(characterState402LegacySplits),
   ...Object.keys(characterState402CorrectionProfiles),
+  ...Object.keys(characterState403LegacySplits),
+  ...Object.keys(characterState403CorrectionProfiles),
 ]);
 
 const retiredStateIds = new Set([
@@ -85,6 +89,8 @@ const mergeCharacterRecords = (characterId) => {
     characterState401CorrectionProfiles,
     characterState402LegacySplits,
     characterState402CorrectionProfiles,
+    characterState403LegacySplits,
+    characterState403CorrectionProfiles,
   ]) {
     for (const record of layer[characterId] || []) {
       if (retiredStateIds.has(record.id)) continue;
