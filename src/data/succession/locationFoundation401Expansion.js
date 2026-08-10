@@ -39,7 +39,7 @@ export const locationFoundation401Expansion = freeze([
     slug: 'tier-1-beyond-detention-cell',
     name: 'Beyond Netero Detention Cell',
     summary: 'The Tier 1 confinement cell where Beyond remains under Zodiac custody. At 2:00 p.m. in Chapter 401 he reads, jokes with Kanzai about security restrictions, and asks Kanzai to arrange a meeting with an unnamed person.',
-    locationType: 'detention',
+    locationType: 'facility',
     parentId: 'location:black-whale:tier-1',
     ancestorIds: ['location:black-whale', 'location:black-whale:tier-1'],
     accessLevel: 'Zodiac-controlled detention',
