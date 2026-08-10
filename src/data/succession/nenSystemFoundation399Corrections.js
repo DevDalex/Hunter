@@ -1,0 +1,86 @@
+const freeze = (value) => Object.freeze(value);
+const chapterSourceId = (number) => `source:chapter-${number}`;
+
+const knowledge = ({ id, abilityName = null, start, end = start, knowledgeState = 'documented', certainty = 'confirmed', summary, activation, conditions = [], limitations = [], costs = [], targets = [], range = 'unknown', duration = 'unknown', knownUses = [], sources = [start] }) => freeze({
+  id,
+  abilityName,
+  chapterRange: freeze({ start, end }),
+  knowledgeState,
+  certainty,
+  summary,
+  mechanics: freeze({ activation, conditions: freeze(conditions), limitations: freeze(limitations), costs: freeze(costs), targets: freeze(targets), range, duration, knownUses: freeze(knownUses) }),
+  sourceIds: freeze(sources.map(chapterSourceId)),
+});
+
+export const abilityKnowledge399Overrides = freeze({
+  'ability:hinrigh-object-animal-transformation': freeze([
+    knowledge({
+      id: 'ability-knowledge:hinrigh-object-animal-transformation:399',
+      start: 399,
+      abilityName: 'Biohazard',
+      knowledgeState: 'transmitter concealment and rest-of-day availability limit added',
+      summary: 'Chapter 399 continues the Chapter 398 transmitter-oyster operation. Hinrigh retreats to the laundry room, induces vomiting, retrieves the still-transformed oyster, and hides it under a cabinet. After returning to Room 3101, he says he cannot use Biohazard anymore that day. At the chapter endpoint the transmitter remains in oyster form and beeps twice.',
+      activation: 'Existing Biohazard transformation mechanics remain as known through Chapter 398. Chapter 399 adds no new activation procedure; it shows the transformed transmitter being physically recovered by vomiting and concealed while the transformation remains active.',
+      conditions: ['The swallowed transmitter is still transformed as an oyster when Hinrigh retrieves and hides it.', 'The oyster is hidden beneath a laundry-room cabinet and remains there at the chapter endpoint.', 'Hinrigh states after returning to Room 3101 that he cannot use Biohazard again for the remainder of that day.'],
+      limitations: ['The rest-of-day unavailability does not establish a universal fixed number of Biohazard uses per day.', 'No exact aura threshold, cooldown duration, reset clock, recovery condition, or mathematical resource formula is supplied.', 'Hinrigh separately says he used all of his knives; the chapter does not establish that knife exhaustion causes Biohazard unavailability.', 'Nen category, maximum transformed mass/count, complete transformation range, and full resource cost remain unresolved.'],
+      costs: ['Chapter 398 establishes aura sustains the transmitter transformation until depletion; Chapter 399 additionally establishes current rest-of-day inability to activate Biohazard again, without quantifying the resource cost.'],
+      targets: ['ordinary physical objects selected for transformation; the active Chapter 399 tracked object is the transmitter-oyster'],
+      range: 'Biohazard transformation range unresolved; paired receiver remains a separate one-kilometer tracking device from Chapter 398',
+      duration: 'transmitter-oyster remains transformed through the Chapter 399 endpoint; Chapter 398’s roughly two-hour estimate remains the latest stated estimate for this object',
+      knownUses: ['Chapter 399: Hinrigh vomits up the still-transformed transmitter-oyster, hides it beneath a laundry-room cabinet, and later reports Biohazard unavailable for the rest of the day.'],
+      sources: [398, 399],
+    }),
+  ]),
+  'ability:heil-ly-front-door-teleport-trap': freeze([
+    knowledge({
+      id: 'ability-knowledge:heil-ly-front-door-teleport-trap:399',
+      start: 399,
+      abilityName: 'Heil-Ly Front-Door Teleport Trap',
+      knowledgeState: 'inbound trap plus hideout-to-Room-3101 return result documented / operator and member-only route unresolved',
+      summary: 'Chapter 399 expands the previously demonstrated Room 3101-side inward teleport trigger by showing the reverse operational result: Nobunaga and Hinrigh both return from the concealed hideout to Room 3101 during/after the defensive expulsion sequence. Nobunaga therefore describes the route as both a trap and a secret passage. He further infers that Heil-Ly must have a separate member-only jump point, but that jump point is not demonstrated.',
+      activation: 'Chapter 398 directly demonstrates inward crossing of the tested Room 3101-side/front doorway sending targets into the hideout. Chapter 399 demonstrates hideout-side exit/expulsion returning targets to Room 3101. Exact switch geometry and operator control remain unresolved.',
+      conditions: ['The Chapter 398 bathroom-side bypass remains a demonstrated non-trigger for inbound teleport.', 'Chapter 398 front-door inward crossing repeatedly sends nonmembers into the hideout.', 'Chapter 399 returns Nobunaga from the hideout to Room 3101 during expulsion.', 'Chapter 399 also returns Hinrigh from the hideout to Room 3101 after he hides the transmitter.', 'Nobunaga’s proposed member-only jump point is an inference, not an observed route.'],
+      limitations: ['Official ability name, user identity, ability-specific Nen category, setup procedure, exact switch boundaries, capacity, cost, and reset rules remain unresolved.', 'The route is not assigned to Gateaume or Voconte by Chapter 399 evidence.', 'Yokotani’s LSDF participates in the expulsion encounter, but Chapter 399 does not establish that LSDF creates or owns the pre-existing Room 3101 teleport route.', 'The demonstrated two-way operational result does not prove every doorway in the hideout shares this route behavior.', 'The proposed Heil-Ly-member-only jump point remains unconfirmed.'],
+      targets: ['people crossing the demonstrated Room 3101-side entry and people expelled/exiting through the demonstrated hideout-side route; complete targeting rules unresolved'],
+      range: 'Room 3101-side access ↔ concealed Heil-Ly hideout operational connection; exact physical displacement and coordinates remain unresolved',
+      duration: 'prepared route remains operational across Chapters 398–399; total maintenance duration unknown',
+      knownUses: ['Chapter 398: two unnamed Mafia hostages, Hinrigh, and Nobunaga enter the hideout through the tested front-door trigger.', 'Chapter 399: Nobunaga and Hinrigh return from the hideout to Room 3101.'],
+      sources: [398, 399],
+    }),
+  ]),
+  'ability:terebellum-damage-sweet-home': freeze([
+    knowledge({
+      id: 'ability-knowledge:terebellum-damage-sweet-home:399',
+      start: 399,
+      abilityName: 'Damage: “Sweet Home”',
+      knowledgeState: 'official name, Emitter classification, and core bilateral contact-transfer mechanics revealed',
+      summary: 'Chapter 399 formally reveals Terebellum’s Emission ability Damage: “Sweet Home”. If something Terebellum is touching with his right hand receives damage at that moment, the damage is taken into Terebellum. He can transfer received damage onward to something touched with his left hand. If he does not transfer it, he bears it himself. The demonstrated knife and katana interactions also displace attacking blade material with the damage.',
+      activation: 'Right-hand contact with the protected target must exist at the moment the damage is received. Onward transfer uses left-hand contact. The complete handling of attacks directed at Terebellum himself is demonstrated but not exhaustively narrated.',
+      conditions: ['Right-hand target contact must exist at the moment of damage for protection/interception.', 'Damage is received by Terebellum.', 'Left-hand contact can transfer the received damage onward.', 'Untransferred damage remains on Terebellum.', 'The demonstrated attacks displace attacking material/tips together with the transferred damage.'],
+      limitations: ['Maximum transferable damage, maximum simultaneous targets, transfer distance, aura cost, and any allowable delay between intake and onward transfer remain unknown.', 'The ability is not generalized into healing, erasure, unconditional immunity, or ranged interception.', 'Nobunaga’s earlier interceptor-type speculation does not add a separate canonical subtype beyond the revealed mechanics.'],
+      costs: ['If intercepted damage is not transferred onward, Terebellum bears it himself; exact aura cost is unresolved.'],
+      targets: ['Terebellum and right-hand protected targets / left-hand transfer targets under the demonstrated contact conditions'],
+      range: 'contact-based in the demonstrated mechanics; broader range unknown',
+      duration: 'moment-of-damage interception and transfer timing limits unresolved',
+      knownUses: ['Hinrigh’s knife head strike is displaced into Terebellum’s drink can.', 'Terebellum protects Yokotani from Nobunaga’s katana while touching Yokotani’s shoulder with his right hand; the katana tip disappears and Terebellum bears the untransferred injury.'],
+      sources: [399],
+    }),
+  ]),
+  'ability:yokotani-battle-of-wits-lsdf': freeze([
+    knowledge({
+      id: 'ability-knowledge:yokotani-battle-of-wits-lsdf:399',
+      start: 399,
+      abilityName: 'A Battle of Wits: “LSDF”',
+      knowledgeState: 'official name, Conjuration classification, hideout/law conditions, guard scaling, defensive immunity, and expulsion demonstrated',
+      summary: 'Chapter 399 formally reveals Yokotani’s Conjuration ability A Battle of Wits: “LSDF”. It is usable only at the hideout where Morena is located and activates when Yokotani identifies himself to a law-breaking intruder. It conjures guards whose level rises with the seriousness of the crime. The guards cannot harm the criminal, while the criminal’s attacks are ineffective against them under the established conditions. Seven guards appear at alert level 4, and Nobunaga’s attack pushes one to maximum alert before the guards restrain and expel him.',
+      activation: 'At the qualifying hideout, Yokotani identifies himself to an intruder who has broken the law. The demonstrated guards then identify the criminals/charges and carry out Yokotani’s expulsion order.',
+      conditions: ['Can only be used at the hideout where Morena is located.', 'Yokotani identifies himself to a law-breaking intruder.', 'More serious crimes permit higher-level guards.', 'Seven guards are conjured in Chapter 399.', 'Trespassing and attempted murder correspond to alert level 4 in the demonstrated encounter.', 'Nobunaga attacking a guard causes that guard to reach maximum alert and display increased aura.', 'The guards cannot harm the criminal.', 'The criminal’s attacks are ineffective against the guards once the conditions apply.', 'The guards can restrain, confiscate a weapon, carry a target away, and enforce expulsion without directly harming the criminal.'],
+      limitations: ['The ability is restricted to the hideout where Morena is located.', 'The complete crime-to-level table, full alert scale, maximum guard count, maximum aura, range, duration, and aura cost remain unresolved.', 'Nobunaga calls the guards autopilot; Hinrigh additionally infers Yokotani cannot see through them, but that visual-link limitation is not independently established by narration.', 'Nobunaga is teleported to Room 3101 during expulsion, but the existing spatial route is not assigned as an intrinsic LSDF-created mechanism.', 'The location condition supports Morena being somewhere within the qualifying hideout/complex, not in Yokotani’s exact room.'],
+      targets: ['law-breaking intruders identified by Yokotani at the qualifying Morena hideout'],
+      range: 'within the qualifying hideout defense area; exact range unresolved',
+      duration: 'active through the demonstrated guard enforcement/expulsion sequence; maximum duration unresolved',
+      knownUses: ['Chapter 399: seven guards charge Hinrigh and Nobunaga, escalate against Nobunaga, restrain him, confiscate his katana, expel him, and continue toward Hinrigh.'],
+      sources: [399],
+    }),
+  ]),
+});
