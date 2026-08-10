@@ -6,6 +6,7 @@ const assert = (condition, message) => {
 };
 const text = (value) => JSON.stringify(value || null);
 const sourceNote = fs.readFileSync('docs/source-notes/chapter-403.md', 'utf8').replace(/\*\*/g, '');
+const royalFamilyTreeSource = fs.readFileSync('src/components/succession/RoyalFamilyGuardTree.jsx', 'utf8');
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {
@@ -67,6 +68,8 @@ try {
   const unmaRelationship = archive.getEntityById('relationship:unma-halkenburg-ch403-biological-mother-son');
   assert(/biological maternity|addresses.*son|mother/i.test(text(unma)) && /biological mother/i.test(text(unmaRelationship)), 'Unma maternity must be confirmed');
   assert(/unresolved|online theory|not.*confirmed|rumor/i.test(text(unmaRelationship)), 'the Duazul transfer motive must remain unresolved');
+  assert(/spoilerLimit\s*>=\s*403\s*\?\s*biologicalRoyalFamilyTree\s*:\s*legalRoyalFamilyTree/.test(royalFamilyTreeSource), 'royal-family UI must reveal Halkenburg’s biological maternity at Chapter 403, not earlier');
+  assert(!/spoilerLimit\s*>=\s*40[12]\s*\?\s*biologicalRoyalFamilyTree/.test(royalFamilyTreeSource), 'royal-family UI must not leak the Unma–Halkenburg reveal into Chapters 401–402');
 
   const coin402 = archive.getAbilityKnowledgeAtChapter('ability:zhang-lei-coins', 402);
   const coin403 = archive.getAbilityKnowledgeAtChapter('ability:zhang-lei-coins', 403);
