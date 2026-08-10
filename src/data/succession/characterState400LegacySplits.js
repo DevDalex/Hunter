@@ -34,7 +34,7 @@ export const characterState400LegacySplits = freeze({
       allegianceState: 'Kacho and Melody protection network under Justice control.',
       locationId: `${justice}:medical-wing`,
       openQuestions: freeze(['The exact Chapter 401 development remains pending dedicated modernization.']),
-      certainty: 'legacy-carry-forward',
+      certainty: 'confirmed',
       sourceIds: freeze(['source:chapter-401']),
     }),
   ]),
