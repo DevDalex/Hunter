@@ -90,6 +90,12 @@ export default defineConfig({
             // Keep its research/event/location/relationship leaves together so
             // the central Succession graph remains below the 750 kB hard cap.
             { name: 'succession-chapter-396-meteor-city-performance', test: /src\/data\/(?:succession396Research|succession\/(?:eventFoundation396Expansion|relationshipFoundation396Expansion|locationFoundation396Expansion))\.js$/ },
+            // Chapter 397 resolves Sarasa's cliffhanger, introduces Renko's
+            // bounded embalming ability and Machi's aura perception, then turns
+            // Chrollo's grief into the three-year criminal-attraction strategy
+            // and historical Spider founding. Keep the entire origin payload in
+            // its own lazy data island rather than raising the 750 kB ceiling.
+            { name: 'succession-chapter-397-sarasa-spider-origin', test: /src\/data\/(?:succession397Research|succession\/(?:abilityFoundation397Expansion|eventFoundation397Expansion|relationshipFoundation397Expansion|locationFoundation397Expansion))\.js$/ },
           ],
         },
       },
