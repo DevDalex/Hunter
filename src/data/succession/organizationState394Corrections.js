@@ -1,10 +1,10 @@
 const freeze = (value) => Object.freeze(value);
-const sourceId = 'source:chapter-394';
+const chapterSourceId = (number) => `source:chapter-${number}`;
 
-const state = ({ organizationId, operationalState, authority, territoryIds = [], objectiveStates = [], pressure = [], relatedEventIds = [], certainty = 'confirmed' }) => freeze({
-  id: `organization-state:${organizationId.replace('organization:', '')}:394`,
+const state = ({ organizationId, start = 394, end = 394, operationalState, authority, territoryIds = [], objectiveStates = [], pressure = [], relatedEventIds = [], certainty = 'confirmed', sources = [394] }) => freeze({
+  id: `organization-state:${organizationId.replace('organization:', '')}:${start}`,
   organizationId,
-  chapterRange: freeze({ start: 394, end: 394 }),
+  chapterRange: freeze({ start, end }),
   status: 'active',
   operationalState,
   authority,
@@ -13,7 +13,7 @@ const state = ({ organizationId, operationalState, authority, territoryIds = [],
   pressure: freeze(pressure),
   relatedEventIds: freeze(relatedEventIds),
   certainty,
-  sourceIds: freeze([sourceId]),
+  sourceIds: freeze(sources.map(chapterSourceId)),
 });
 
 export const organizationState394Corrections = freeze({
@@ -53,13 +53,29 @@ export const organizationState394Corrections = freeze({
     pressure: ['Mafia underbosses intend to use the Troupe as a weapon against Heil-Ly.', 'The active Room 3101 trap demonstrates that Luini’s death did not end Heil-Ly’s spatial/access threat.'],
     relatedEventIds: ['event:room3101-tassi-disappears'],
   })]),
-  'organization:kakin-military': freeze([state({
-    organizationId: 'organization:kakin-military',
-    operationalState: 'Tserriednich’s personal soldiers conduct a Tier 3 search for Morena, force entry into a registered Heil-Ly office, construct a cover story around the entry and discovered body, restrict their weapons to handguns to limit attention, and debate Nen, forensic/institutional exposure, and the risk of a wider Kakin–mafia conflict. Otocin’s information causes Gipper to request Borksen as an adviser; Borksen then confirms Tserriednich’s classified Nen training under Theta and recommends survival-first contact with Xi-Yu or Cha-R.',
-    authority: 'Corporal Gipper commands the shown Tier 3 group. The group remains personally aligned with Tserriednich while operating inside the broader Kakin military structure.',
-    territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-1'],
-    objectiveStates: ['Capture Morena before Tserriednich must personally handle the lower-tier rebellion.', 'Search Tier 3 without provoking unnecessary Royal Army/police attention.', 'Learn enough about Nen to avoid walking into an unknown Heil-Ly threat.', 'Use transfer-request status as a proposed early-warning signal for any classified mafia-eradication operation.', 'Develop a capture contingency and seek tactical contact with Xi-Yu or Cha-R.'],
-    pressure: ['The unit lacks detailed Nen knowledge.', 'Morena likely has identifying information on Tserriednich’s personal soldiers.', 'Forensic or legal mishandling could transform mafia violence into a broader institutional crisis.', 'Possible Hunter Association scrutiny is discussed but not confirmed.'],
-    relatedEventIds: ['event:gipper-raids-heilly-office-cover-story', 'event:otocin-reveals-nen-borksen-transfer', 'event:tserriednich-soldiers-model-mafia-war-risk', 'event:borksen-confirms-tserriednich-nen-training', 'event:borksen-warns-heilly-knows-soldiers'],
-  })]),
+  'organization:kakin-military': freeze([
+    state({
+      organizationId: 'organization:kakin-military',
+      start: 358,
+      end: 393,
+      operationalState: 'Security units and prince-linked soldiers run surveillance, escort, deployment, detention, and coercive operations while balancing royal-household orders against shipwide stability.',
+      authority: 'Kakin military hierarchy, prince-specific command channels, and emergency security mandates.',
+      territoryIds: ['location:black-whale:tier-1', 'location:black-whale:tier-2', 'location:black-whale:tier-3'],
+      objectiveStates: ['Protect royal households.', 'Execute deployment, custody, and surveillance orders.', 'Contain security escalation without losing military initiative.'],
+      pressure: ['Conflicting prince interests.', 'Hunter Association presence.', 'Justice procedural pressure.', 'Mafia activity on lower tiers.'],
+      relatedEventIds: ['event:benjamin-deploys-private-soldiers', 'event:martial-law-legal-risk'],
+      sources: [358, 359, 370, 382, 390],
+    }),
+    state({
+      organizationId: 'organization:kakin-military',
+      start: 394,
+      end: 409,
+      operationalState: 'Tserriednich’s personal soldiers conduct a Tier 3 search for Morena, force entry into a registered Heil-Ly office, construct a cover story around the entry and discovered body, restrict their weapons to handguns to limit attention, and debate Nen, forensic/institutional exposure, and the risk of a wider Kakin–mafia conflict. Otocin’s information causes Gipper to request Borksen as an adviser; Borksen then confirms Tserriednich’s classified Nen training under Theta and recommends survival-first contact with Xi-Yu or Cha-R.',
+      authority: 'Corporal Gipper commands the shown Tier 3 group. The group remains personally aligned with Tserriednich while operating inside the broader Kakin military structure.',
+      territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-1'],
+      objectiveStates: ['Capture Morena before Tserriednich must personally handle the lower-tier rebellion.', 'Search Tier 3 without provoking unnecessary Royal Army/police attention.', 'Learn enough about Nen to avoid walking into an unknown Heil-Ly threat.', 'Use transfer-request status as a proposed early-warning signal for any classified mafia-eradication operation.', 'Develop a capture contingency and seek tactical contact with Xi-Yu or Cha-R.'],
+      pressure: ['The unit lacks detailed Nen knowledge.', 'Morena likely has identifying information on Tserriednich’s personal soldiers.', 'Forensic or legal mishandling could transform mafia violence into a broader institutional crisis.', 'Possible Hunter Association scrutiny is discussed but not confirmed.'],
+      relatedEventIds: ['event:gipper-raids-heilly-office-cover-story', 'event:otocin-reveals-nen-borksen-transfer', 'event:tserriednich-soldiers-model-mafia-war-risk', 'event:borksen-confirms-tserriednich-nen-training', 'event:borksen-warns-heilly-knows-soldiers'],
+    }),
+  ]),
 });
