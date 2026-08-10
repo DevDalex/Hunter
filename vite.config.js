@@ -73,6 +73,11 @@ export default defineConfig({
             // mystery. Keep the whole chapter boundary together so these new
             // records do not consume the ~15 kB remaining in the core chunk.
             { name: 'succession-chapter-393-room3101-heilly', test: /src\/data\/(?:succession393Research|succession\/(?:abilityFoundation393Expansion|eventFoundation393Expansion|relationshipFoundation393Expansion|organizationState393Corrections|characterState393Corrections|nenSystemFoundation393Corrections))\.js$/ },
+            // Chapter 394 turns Room 3101 into a confirmed Heil-Ly access lane,
+            // expands Voconte/processing logistics and Contagion progression,
+            // and introduces the Borksen/Gipper lower-tier soldier intelligence
+            // lane. Keep its dense evidence boundary out of the core chunk.
+            { name: 'succession-chapter-394-room-network-soldiers', test: /src\/data\/(?:succession394Research|succession\/(?:abilityFoundation394Expansion|eventFoundation394Expansion|relationshipFoundation394Expansion|organizationState394Corrections|characterState394Corrections|nenSystemFoundation394Corrections))\.js$/ },
           ],
         },
       },
