@@ -36,6 +36,6 @@ export const deathLedger = [
   ['Luini', 'Day 10', '393', 'Killed by Nobunaga after attempting to recruit the Troupe.', 'Lower tiers'],
   ['Kortopi', 'Pre-voyage', '357', 'Killed by Hisoka after the Heavens Arena death match.', 'Heavens Arena area'],
   ['Shalnark', 'Pre-voyage', '357', 'Killed by Hisoka after the Heavens Arena death match.', 'Heavens Arena area'],
-  ['Sarasa', 'Meteor City flashback', '397', 'Abducted and murdered; her death becomes the decisive trauma behind the Troupe’s founding.', 'Meteor City'],
+  ['Sarasa', 'Meteor City flashback', '397', 'Found murdered in Uga Forest after being missing since the previous day. Chrollo’s group recovers her body, and her death becomes the catalyst for his three-year protection/revenge strategy and explicit villain turn. The killers, exact unseen abduction sequence, and note contents remain unresolved.', 'Uga Forest'],
   ['Halkenburg’s body', 'Day 12', '405', 'Original body declared dead; consciousness remains elsewhere.', 'Tier 3 hospital'],
 ].map(([name, day, chapter, cause, place]) => ({ name, day, chapter, cause, place, source: `https://hunterxhunter.fandom.com/wiki/Chapter_${chapter}` }));
