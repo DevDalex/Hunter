@@ -44,7 +44,7 @@ const audits = Object.freeze([
   ['batch-4-story', 'scripts/audit-succession-batch-4-story.mjs'],
   ['batch-4-events', 'scripts/audit-succession-batch-4-events.mjs'],
   ['batch-4-nen', 'scripts/audit-succession-batch-4-nen-release.mjs'],
-  ['batch-4-guardian-beasts', 'scripts/audit-succession-guardian-beasts-release.mjs'],
+  ['batch-4-guardian-beasts', 'scripts/audit-succession-batch-4-guardian-beasts.mjs'],
   ['batch-4-spatial', 'scripts/audit-succession-batch-4-spatial.mjs'],
   ['batch-5-timeline', 'scripts/audit-succession-batch-5-timeline.mjs'],
   ['batch-5-relationships', 'scripts/audit-succession-batch-5-relationships.mjs'],
