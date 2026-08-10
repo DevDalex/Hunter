@@ -29,6 +29,7 @@ const chronologyResearch = maintainedSuccessionChapterResearch.filter((research)
 
 const normalizeResearchEvent = (research, event, index) => freeze({
   id: event.id || `maintained-${research.number}-${index + 1}`,
+  day: Number.isFinite(event.day) ? event.day : null,
   time: event.time || research.voyageDay || 'Story-order placement',
   title: event.title || `Chapter ${research.number} event ${index + 1}`,
   detail: event.detail || research.focus,
@@ -73,7 +74,8 @@ export const timelineSources = freeze({
   ...Object.fromEntries(chronologyResearch.map((research) => [`chapter${research.number}`, research.source])),
 });
 
-const maintainedPreVoyage = chronologyResearch.filter((research) => parseVoyageDay(research.voyageDay) === null);
+const hasExplicitEventDay = (research) => researchEvents(research).some((event) => Number.isFinite(event.day));
+const maintainedPreVoyage = chronologyResearch.filter((research) => parseVoyageDay(research.voyageDay) === null && !hasExplicitEventDay(research));
 const maintainedPreVoyageNumbers = new Set(maintainedPreVoyage.map((research) => research.number));
 const legacyPreludeForChapter = (chapter) => legacySuccessionPrelude.find((period) => chapterNumbersFromSpec(period.chapters).includes(chapter));
 const maintainedPrelude = maintainedPreVoyage.map((research) => {
@@ -106,7 +108,8 @@ const dayByNumber = new Map(legacySuccessionDays.map((day) => [day.day, {
 for (const research of chronologyResearch) {
   const defaultDayNumber = parseVoyageDay(research.voyageDay);
   const replacements = maintainedEventsByChapter.get(research.number) || [];
-  if (defaultDayNumber === null) continue;
+  const replacementsHaveExplicitDay = replacements.some((event) => Number.isFinite(event.day));
+  if (defaultDayNumber === null && !replacementsHaveExplicitDay) continue;
 
   for (const day of dayByNumber.values()) {
     day.events = day.events.filter((event) => event.chapter !== research.number);
@@ -114,7 +117,8 @@ for (const research of chronologyResearch) {
 
   const replacementsByDay = new Map();
   for (const event of replacements) {
-    const eventDayNumber = parseVoyageDay(event.time) ?? defaultDayNumber;
+    const eventDayNumber = Number.isFinite(event.day) ? event.day : (parseVoyageDay(event.time) ?? defaultDayNumber);
+    if (!Number.isFinite(eventDayNumber)) continue;
     const current = replacementsByDay.get(eventDayNumber) || [];
     current.push(event);
     replacementsByDay.set(eventDayNumber, current);
