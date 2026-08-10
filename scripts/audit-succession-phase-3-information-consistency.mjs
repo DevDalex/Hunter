@@ -71,7 +71,7 @@ try {
 
   const report = getInformationConsistencyReport();
   assert(report.version === 'phase-3-v1', 'the information consistency report must identify the preserved Phase 3 model');
-  assert(report.hardErrorCount === 0, `the consistency report contains ${report.hardErrorCount} hard error(s)`);
+  assert(report.hardErrorCount === 0, `the consistency report contains ${report.hardErrorCount} hard error(s): ${[...(report.validation?.errors || []), ...(report.impossibleStates || []).map((record) => `${record.characterId}: ${record.reasons.join('; ')}`), ...(report.crossLinkErrors || [])].join(' · ')}`);
   assert(report.aliasCollisions.length === 0, `ambiguous aliases remain: ${report.aliasCollisions.map((record) => record.key).join(', ')}`);
   assert(report.impossibleStates.length === 0, `impossible character state tuples remain: ${report.impossibleStates.map((record) => record.characterId).join(', ')}`);
   assert(report.crossLinkErrors.length === 0, `broken information cross-links remain: ${report.crossLinkErrors.join(', ')}`);
