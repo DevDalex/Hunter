@@ -1,0 +1,101 @@
+name: One-time Chapter 399 audit maintenance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/chapter-399-audit-maintenance.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out affected boundary audits
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts/audit-succession-chapter-389-boundary.mjs
+            scripts/audit-succession-chapter-391-boundary.mjs
+            scripts/audit-succession-chapter-392-boundary.mjs
+            scripts/audit-succession-chapter-393-boundary.mjs
+            scripts/audit-succession-chapter-394-boundary.mjs
+            scripts/audit-succession-chapter-395-boundary.mjs
+            scripts/audit-succession-chapter-396-boundary.mjs
+            scripts/audit-succession-chapter-397-boundary.mjs
+            scripts/audit-succession-chapter-398-boundary.mjs
+            scripts/audit-succession-chapter-399-boundary.mjs
+          sparse-checkout-cone-mode: false
+
+      - name: Advance publication handoffs and fix live-entity assertions
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          chronology_paths = [
+              Path('scripts/audit-succession-chapter-389-boundary.mjs'),
+              Path('scripts/audit-succession-chapter-391-boundary.mjs'),
+              Path('scripts/audit-succession-chapter-392-boundary.mjs'),
+              Path('scripts/audit-succession-chapter-393-boundary.mjs'),
+              Path('scripts/audit-succession-chapter-394-boundary.mjs'),
+              Path('scripts/audit-succession-chapter-395-boundary.mjs'),
+              Path('scripts/audit-succession-chapter-396-boundary.mjs'),
+              Path('scripts/audit-succession-chapter-397-boundary.mjs'),
+          ]
+
+          terminal_400 = re.compile(r"numbers\[(?P<var>[A-Za-z0-9_]+)\s*\+\s*(?P<offset>\d+)\]\s*===\s*400")
+          for path in chronology_paths:
+              text = path.read_text()
+              lines = text.splitlines(True)
+              changed = False
+              for i, line in enumerate(lines):
+                  if 'pre-existing Chapter 400' not in line or '=== 400' not in line:
+                      continue
+                  if '=== 399' in line:
+                      continue
+                  matches = list(terminal_400.finditer(line))
+                  if not matches:
+                      raise SystemExit(f'Could not find terminal Chapter 400 condition in {path}')
+                  match = matches[-1]
+                  var = match.group('var')
+                  offset = int(match.group('offset'))
+                  replacement = f"numbers[{var} + {offset}] === 399 && numbers[{var} + {offset + 1}] === 400"
+                  line = line[:match.start()] + replacement + line[match.end():]
+                  line = line.replace('before the pre-existing Chapter 400', 'through Chapter 399 before the pre-existing Chapter 400')
+                  line = line.replace('directly before the pre-existing Chapter 400', 'before Chapter 398 and Chapter 399, followed by the pre-existing Chapter 400')
+                  lines[i] = line
+                  changed = True
+                  break
+              if not changed:
+                  raise SystemExit(f'No chronology assertion repaired in {path}')
+              path.write_text(''.join(lines))
+
+          path398 = Path('scripts/audit-succession-chapter-398-boundary.mjs')
+          text398 = path398.read_text()
+          old398 = "assert(trap?.firstChapter === 398 && trap?.latestChapter === 398, 'descriptive front-door trap ability must enter at Chapter 398');"
+          new398 = "assert(trap?.firstChapter === 398 && trap?.latestChapter >= 398, 'descriptive front-door trap ability must enter at Chapter 398 even when later chapters extend the live entity');"
+          if old398 not in text398:
+              raise SystemExit('Chapter 398 live trap assertion marker missing')
+          path398.write_text(text398.replace(old398, new398, 1))
+
+          path399 = Path('scripts/audit-succession-chapter-399-boundary.mjs')
+          text399 = path399.read_text()
+          old399 = "assert(!/operates the teleport|owner of.*teleport|operates.*self-restoring/i.test(text(morena399)), 'Morena must not be assigned ownership of the spatial/restorative mechanisms');"
+          new399 = "assert(/does not make her the owner.*Room 3101 teleport route.*self-restoring stage/i.test(text(morena399)), 'Morena state must explicitly preserve non-ownership of the spatial/restorative mechanisms');"
+          if old399 not in text399:
+              raise SystemExit('Chapter 399 Morena non-ownership assertion marker missing')
+          path399.write_text(text399.replace(old399, new399, 1))
+
+      - name: Commit audit maintenance
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts
+          git commit -m 'Advance boundary audits through Chapter 399'
+          git push origin HEAD:main
