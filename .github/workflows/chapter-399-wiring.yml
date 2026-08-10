@@ -1,0 +1,133 @@
+name: One-time Chapter 399 wiring
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/chapter-399-wiring.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  wire:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out Chapter 399 wiring targets
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            src/data/successionMaintainedChapterResearch.js
+            src/data/succession/entitiesAbilityFoundation.js
+            src/data/succession/entitiesEventFoundation.js
+            src/data/succession/entitiesRelationshipFoundation.js
+            src/data/succession/entitiesLocationFoundation.js
+            src/data/succession/entitiesCharacterFoundation.js
+            src/data/succession/entitiesOrganizationFoundation.js
+            src/data/succession/entitiesNenSystemFoundation.js
+            src/data/successionDossier.js
+            src/data/successionArchive.js
+            scripts/run-succession-runtime-audits.mjs
+            scripts/audit-succession-chapter-398-boundary.mjs
+            vite.config.js
+          sparse-checkout-cone-mode: false
+
+      - name: Wire Chapter 399 into maintained runtime
+        shell: python
+        run: |
+          from pathlib import Path
+
+          def replace(path, old, new, count=1):
+              p = Path(path)
+              s = p.read_text()
+              if old not in s:
+                  raise SystemExit(f'Expected wiring marker not found in {path}: {old[:120]}')
+              p.write_text(s.replace(old, new, count))
+
+          replace('src/data/successionMaintainedChapterResearch.js',
+              "import { succession398ChapterResearch } from './succession398Research.js';\nimport { succession400ChapterResearch } from './succession400Research.js';",
+              "import { succession398ChapterResearch } from './succession398Research.js';\nimport { succession399ChapterResearch } from './succession399Research.js';\nimport { succession400ChapterResearch } from './succession400Research.js';")
+          replace('src/data/successionMaintainedChapterResearch.js',
+              '  ...succession398ChapterResearch,\n  ...succession400ChapterResearch,',
+              '  ...succession398ChapterResearch,\n  ...succession399ChapterResearch,\n  ...succession400ChapterResearch,')
+
+          replace('src/data/succession/entitiesAbilityFoundation.js',
+              "import { abilityFoundation398Expansion } from './abilityFoundation398Expansion.js';",
+              "import { abilityFoundation398Expansion } from './abilityFoundation398Expansion.js';\nimport { abilityFoundation399Expansion } from './abilityFoundation399Expansion.js';")
+          replace('src/data/succession/entitiesAbilityFoundation.js',
+              '  ...abilityFoundation398Expansion,\n]);',
+              '  ...abilityFoundation398Expansion,\n  ...abilityFoundation399Expansion,\n]);')
+
+          replace('src/data/succession/entitiesEventFoundation.js',
+              "import { eventFoundation398Expansion } from './eventFoundation398Expansion.js';",
+              "import { eventFoundation398Expansion } from './eventFoundation398Expansion.js';\nimport { eventFoundation399Expansion } from './eventFoundation399Expansion.js';")
+          replace('src/data/succession/entitiesEventFoundation.js',
+              '  ...eventFoundation398Expansion,\n]);',
+              '  ...eventFoundation398Expansion,\n  ...eventFoundation399Expansion,\n]);')
+
+          replace('src/data/succession/entitiesRelationshipFoundation.js',
+              "import { relationshipFoundation398Expansion } from './relationshipFoundation398Expansion.js';",
+              "import { relationshipFoundation398Expansion } from './relationshipFoundation398Expansion.js';\nimport { relationshipFoundation399Expansion } from './relationshipFoundation399Expansion.js';")
+          replace('src/data/succession/entitiesRelationshipFoundation.js',
+              '  ...relationshipFoundation398Expansion,\n]).map(normalizeRelationship));',
+              '  ...relationshipFoundation398Expansion,\n  ...relationshipFoundation399Expansion,\n]).map(normalizeRelationship));')
+
+          replace('src/data/succession/entitiesLocationFoundation.js',
+              "import { locationFoundation398Expansion } from './locationFoundation398Expansion.js';",
+              "import { locationFoundation398Expansion } from './locationFoundation398Expansion.js';\nimport { locationFoundation399Expansion } from './locationFoundation399Expansion.js';")
+          replace('src/data/succession/entitiesLocationFoundation.js',
+              '  ...locationFoundation398Expansion,\n]));',
+              '  ...locationFoundation398Expansion,\n  ...locationFoundation399Expansion,\n]));')
+
+          replace('src/data/succession/entitiesCharacterFoundation.js',
+              "import { characterState398CorrectionProfiles } from './characterState398Corrections.js';",
+              "import { characterState398CorrectionProfiles } from './characterState398Corrections.js';\nimport { characterState399CorrectionProfiles } from './characterState399Corrections.js';")
+          replace('src/data/succession/entitiesCharacterFoundation.js',
+              '  ...Object.keys(characterState398CorrectionProfiles),\n]);',
+              '  ...Object.keys(characterState398CorrectionProfiles),\n  ...Object.keys(characterState399CorrectionProfiles),\n]);')
+          replace('src/data/succession/entitiesCharacterFoundation.js',
+              '    characterState398CorrectionProfiles,\n  ]) {',
+              '    characterState398CorrectionProfiles,\n    characterState399CorrectionProfiles,\n  ]) {')
+
+          replace('src/data/succession/entitiesOrganizationFoundation.js',
+              "import { organizationState395Corrections } from './organizationState395Corrections.js';",
+              "import { organizationState395Corrections } from './organizationState395Corrections.js';\nimport { organizationState399Corrections } from './organizationState399Corrections.js';")
+          replace('src/data/succession/entitiesOrganizationFoundation.js',
+              '  organizationState395Corrections,\n);',
+              '  organizationState395Corrections,\n  organizationState399Corrections,\n);')
+
+          replace('src/data/succession/entitiesNenSystemFoundation.js',
+              "} from './nenSystemFoundation398Corrections.js';",
+              "} from './nenSystemFoundation398Corrections.js';\nimport { abilityKnowledge399Overrides } from './nenSystemFoundation399Corrections.js';")
+          replace('src/data/succession/entitiesNenSystemFoundation.js',
+              '  ...Object.keys(abilityKnowledge398Overrides),\n]);',
+              '  ...Object.keys(abilityKnowledge398Overrides),\n  ...Object.keys(abilityKnowledge399Overrides),\n]);')
+          replace('src/data/succession/entitiesNenSystemFoundation.js',
+              '    ...(abilityKnowledge398Overrides[abilityId] || []),\n  ])]),',
+              '    ...(abilityKnowledge398Overrides[abilityId] || []),\n    ...(abilityKnowledge399Overrides[abilityId] || []),\n  ])]),')
+
+          replace('src/data/successionDossier.js', "export * from './successionDossierThrough398.js';", "export * from './successionDossierThrough399.js';")
+          replace('src/data/successionArchive.js', "export * from './successionArchiveThrough398.js';", "export * from './successionArchiveThrough399.js';")
+
+          replace('scripts/run-succession-runtime-audits.mjs',
+              "  ['chapter-398-boundary', 'scripts/audit-succession-chapter-398-boundary.mjs'],",
+              "  ['chapter-398-boundary', 'scripts/audit-succession-chapter-398-boundary.mjs'],\n  ['chapter-399-boundary', 'scripts/audit-succession-chapter-399-boundary.mjs'],")
+
+          replace('scripts/audit-succession-chapter-398-boundary.mjs',
+              "assert(index397 >= 0 && numbers[index397 + 1] === 398 && numbers[index397 + 2] === 400, 'maintained publication chain must place Chapter 398 between 397 and the pre-existing Chapter 400 packet');",
+              "assert(index397 >= 0 && numbers[index397 + 1] === 398 && numbers[index397 + 2] === 399 && numbers[index397 + 3] === 400, 'maintained publication chain must place Chapter 398 before Chapter 399 and the pre-existing Chapter 400 packet');")
+
+          replace('vite.config.js',
+              "            { name: 'succession-chapter-398-teleport-hideout-infiltration', test: /src\\/data\\/(?:succession398Research|succession\\/(?:abilityFoundation398Expansion|eventFoundation398Expansion|relationshipFoundation398Expansion|locationFoundation398Expansion|characterState398Corrections|nenSystemFoundation398Corrections))\\.js$/ },",
+              "            { name: 'succession-chapter-398-teleport-hideout-infiltration', test: /src\\/data\\/(?:succession398Research|succession\\/(?:abilityFoundation398Expansion|eventFoundation398Expansion|relationshipFoundation398Expansion|locationFoundation398Expansion|characterState398Corrections|nenSystemFoundation398Corrections))\\.js$/ },\n            // Chapter 399 opens the hideout's defended gathering room, formally\n            // reveals Terebellum's Sweet Home and Yokotani's LSDF, advances the\n            // Room 3101 return route, and adds exact resource/organization state\n            // boundaries. Keep this dense confrontation in its own lazy island.\n            { name: 'succession-chapter-399-sweet-home-lsdf', test: /src\\/data\\/(?:succession399Research|succession\\/(?:abilityFoundation399Expansion|eventFoundation399Expansion|relationshipFoundation399Expansion|locationFoundation399Expansion|organizationState399Corrections|characterState399Corrections|nenSystemFoundation399Corrections))\\.js$/ },")
+
+      - name: Commit Chapter 399 wiring
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/data scripts vite.config.js
+          git commit -m 'Wire Chapter 399 into Succession runtime'
+          git push origin HEAD:main
