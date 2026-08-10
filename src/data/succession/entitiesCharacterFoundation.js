@@ -38,12 +38,22 @@ const retiredStateIds = new Set([
   'character-state:chrollo-lucilfer:379',
 ]);
 
-const normalizeStateRecord = (record) => record.id === 'character-state:borksen:408'
-  ? Object.freeze({
-    ...record,
-    chapterRange: Object.freeze({ ...record.chapterRange, end: 409 }),
-  })
-  : record;
+const normalizeStateRecord = (record) => {
+  if (record.id === 'character-state:borksen:408') {
+    return Object.freeze({
+      ...record,
+      chapterRange: Object.freeze({ ...record.chapterRange, end: 409 }),
+    });
+  }
+  if (record.id === 'character-state:kurapika:358') {
+    return Object.freeze({
+      ...record,
+      chapterRange: Object.freeze({ ...record.chapterRange, end: 399 }),
+      sourceIds: Object.freeze((record.sourceIds || []).filter((sourceId) => sourceId !== 'source:chapter-400')),
+    });
+  }
+  return record;
+};
 
 const mergeCharacterRecords = (characterId) => {
   const records = new Map();
