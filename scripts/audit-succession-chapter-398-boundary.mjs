@@ -144,7 +144,7 @@ try {
   assert(/character-level Nen analysis|character.*analysis/i.test(note) && /does \*\*not\*\* canonically classify|does not canonically classify/i.test(note), 'source note must separate Gateaume/trap theories from confirmed classification');
   assert(/Barrier type/i.test(note) && /Land-mine type/i.test(note) && /two or three locations/i.test(note), 'source note must preserve general prepared-trap exposition');
   assert(/roughly \*\*two hours\*\*|roughly two hours/i.test(note) && /one kilometer/i.test(note) && /does \*\*not\*\* account for altitude|does not account for altitude/i.test(note), 'source note must preserve Biohazard tracking specifics');
-  assert(/does not prove Morena personally operates|does not.*Morena.*personally operates/i.test(note), 'source note must preserve Morena-operator uncertainty');
+  assert(/does not prove Morena personally operates|does not.*Morena.*personally operates/i.test(note.replaceAll('**', '')), 'source note must preserve Morena-operator uncertainty');
   assert(/endpoint.*laundry|Chapter 398 endpoint.*laundry/i.test(note), 'source note must stop at the laundry-filled room');
 
   console.log(`Chapter 398 boundary audit passed: ${dedicatedEventIds.length} dedicated canonical events plus ${projected398.length} maintained-research projections preserve the tested front-door teleport trigger, barrier/land-mine theory boundary, Biohazard transmitter mechanics, temporary Hinrigh–Nobunaga cooperation, self-restoring hideout uncertainty, and laundry-room endpoint.`);
