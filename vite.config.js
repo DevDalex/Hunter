@@ -84,6 +84,12 @@ export default defineConfig({
             // state corrections together so the historical material does not
             // inflate the central Succession graph or blur the lazy boundary.
             { name: 'succession-chapter-395-room-network-origin', test: /src\/data\/(?:succession395Research|succession\/(?:eventFoundation395Expansion|relationshipFoundation395Expansion|locationFoundation395Expansion|organizationState395Corrections|characterState395Corrections))\.js$/ },
+            // Chapter 396 stays entirely inside the Meteor City childhood layer:
+            // the live Power Cleaners performance, incomplete troupe naming,
+            // Uvogin's stage ambition, and Sarasa's Uga Forest cliffhanger.
+            // Keep its research/event/location/relationship leaves together so
+            // the central Succession graph remains below the 750 kB hard cap.
+            { name: 'succession-chapter-396-meteor-city-performance', test: /src\/data\/(?:succession396Research|succession\/(?:eventFoundation396Expansion|relationshipFoundation396Expansion|locationFoundation396Expansion))\.js$/ },
           ],
         },
       },
