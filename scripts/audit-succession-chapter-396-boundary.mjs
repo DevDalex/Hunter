@@ -13,6 +13,7 @@ try {
   const chapterModule = await vite.ssrLoadModule('/src/data/succession396Research.js');
   const dossier = await vite.ssrLoadModule('/src/data/successionDossier.js');
   const frozen395 = await vite.ssrLoadModule('/src/data/successionDossierThrough395.js');
+  const frozen396 = await vite.ssrLoadModule('/src/data/successionDossierThrough396.js');
   const timeline = await vite.ssrLoadModule('/src/data/successionTimeline.js');
 
   const numbers = maintained.maintainedSuccessionChapterNumbers;
@@ -132,7 +133,8 @@ try {
   assert((dossier.guardAssignmentGroups || []).some((group) => group.group?.includes('Chapter 396')), 'active dossier must include the Chapter 396 historical group');
   assert(!(frozen395.guardAssignmentGroups || []).some((group) => group.group?.includes('Chapter 396')), 'frozen through-395 dossier must remain unaware of Chapter 396');
   assert((dossier.successionResolvedQuestions || []).some((record) => record.chapter === 396 && /group label|label.*children|What group label/i.test(String(record.question || ''))), 'active dossier must publish the Chapter 396 incomplete troupe-label resolution');
-  assert((dossier.successionMysteries || []).some((record) => record.chapter === 396 && /Sarasa.*kidnappers|kidnappers.*Sarasa/i.test(String(record.question || ''))), 'active dossier must preserve the unresolved Sarasa/kidnapper cliffhanger');
+  assert((frozen396.successionMysteries || []).some((record) => record.chapter === 396 && /Sarasa.*kidnappers|kidnappers.*Sarasa/i.test(String(record.question || ''))), 'frozen through-396 dossier must preserve the unresolved Sarasa/kidnapper cliffhanger');
+  assert(!(dossier.successionMysteries || []).some((record) => record.chapter === 396 && /Sarasa.*kidnappers|kidnappers.*Sarasa/i.test(String(record.question || ''))), 'active post-397 dossier must retire the resolved Sarasa/kidnapper cliffhanger');
 
   const note = fs.readFileSync('docs/source-notes/chapter-396.md', 'utf8');
   assert(/incomplete performance-group label/i.test(note) && /full formal naming/i.test(note), 'source note must preserve the incomplete troupe-name boundary');
