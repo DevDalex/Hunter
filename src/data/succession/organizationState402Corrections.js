@@ -34,6 +34,6 @@ export const organizationState402Corrections = freeze({
     objectiveStates: ['Maintain military security and First Prince command structures.', 'Retain readiness for crisis escalation without an active martial-law transfer in Chapter 402.'],
     pressure: ['Musse remains missing.', 'Halkenburg is a major rival to Benjamin.', 'Justice and royal privilege complicate unrestricted military searches.'],
     relatedEventIds: ['event:chapter402-balsamilco-shoe-aerosol-pathogen-halkenburg-plan', 'event:chapter402-kaiser-leads-benjamin-into-martial-law-threshold-discussion'],
-    certainty: 'mixed: institutional weapon origin and Benjamin threshold statement confirmed; Balsamilco operation is not generalized into a military-wide order',
+    certainty: 'confirmed',
   })]),
 });
