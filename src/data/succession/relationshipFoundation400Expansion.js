@@ -66,7 +66,7 @@ export const relationshipFoundation400Expansion = freeze([
     summary: 'Longhi states that she already uses Nen and asks Kurapika whether he will accept the contract after hearing her explanation. Kurapika agrees. The supplied Chapter 400 synopsis does not reproduce the contract terms, so later Moonlight Act mechanics are not backfilled.',
     sourceEntityId: 'character:kurapika',
     targetEntityId: 'character:longhi',
-    relationshipType: 'negotiation',
+    relationshipType: 'political',
     subtype: 'accepted-contract-terms-unsupplied-at-ch400-boundary',
     sentiment: 'allied',
     basis: 'Explicit acceptance in Room 1014 at the Chapter 400 endpoint.',
