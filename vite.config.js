@@ -113,9 +113,10 @@ export default defineConfig({
             // strict boundary architecture: Tier 2 hideout localization, Phinks
             // En limits, Tyson/Izunavi planning, Without You/Fugetsu updates,
             // Melody/Kaiser Justice pressure, the hostile-spirit affliction and
-            // Longhi contract stopping point. Keep all direct leaves isolated so
-            // the central graph does not spend its remaining ~13 kB headroom.
-            { name: 'succession-chapter-400-tier2-justice-fugetsu', test: /src\/data\/(?:succession(?:400Research|ArchiveThrough400|DossierThrough400)|succession\/(?:abilityFoundation400Expansion|eventFoundation400Expansion|relationshipFoundation400Expansion|locationFoundation400Expansion|organizationState400Corrections|characterState400Corrections|nenSystemFoundation400Corrections))\.js$/ },
+            // Longhi contract stopping point. Keep direct leaves plus the legacy
+            // state splits/corrections isolated so the core does not spend its
+            // remaining headroom while we preserve 401+ imported continuity.
+            { name: 'succession-chapter-400-tier2-justice-fugetsu', test: /src\/data\/(?:succession(?:400Research|ArchiveThrough400|DossierThrough400)|succession\/(?:abilityFoundation400Expansion|eventFoundation400(?:Expansion|Corrections)|relationshipFoundation400Expansion|locationFoundation400Expansion|organizationState400(?:Corrections|LegacySplits)|characterState400(?:Corrections|LegacySplits)|nenSystemFoundation400Corrections))\.js$/ },
           ],
         },
       },
