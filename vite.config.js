@@ -104,6 +104,11 @@ export default defineConfig({
             // one lazy island while preserving the current soft-warning and
             // emergency chunk-budget policy unchanged.
             { name: 'succession-chapter-398-teleport-hideout-infiltration', test: /src\/data\/(?:succession398Research|succession\/(?:abilityFoundation398Expansion|eventFoundation398Expansion|relationshipFoundation398Expansion|locationFoundation398Expansion|characterState398Corrections|nenSystemFoundation398Corrections))\.js$/ },
+            // Chapter 399 opens the hideout's defended gathering room, formally
+            // reveals Terebellum's Sweet Home and Yokotani's LSDF, advances the
+            // Room 3101 return route, and adds exact resource/organization state
+            // boundaries. Keep this dense confrontation in its own lazy island.
+            { name: 'succession-chapter-399-sweet-home-lsdf', test: /src\/data\/(?:succession399Research|succession\/(?:abilityFoundation399Expansion|eventFoundation399Expansion|relationshipFoundation399Expansion|locationFoundation399Expansion|organizationState399Corrections|characterState399Corrections|nenSystemFoundation399Corrections))\.js$/ },
           ],
         },
       },
