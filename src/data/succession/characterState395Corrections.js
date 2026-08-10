@@ -1,0 +1,61 @@
+const freeze = (value) => Object.freeze(value);
+
+const state = ({ characterId, life = 'alive', bodyState = 'living body', consciousnessState = 'active in own body', operationalState, protectionState = 'no new structured protection state', threatLevel = 'unknown', nenKnowledge = 'unknown', allegianceState = 'no chapter-bounded allegiance override', locationId = 'location:black-whale', openQuestions = [], certainty = 'confirmed' }) => freeze({
+  id: `character-state:${characterId.replace('character:', '')}:395`,
+  characterId,
+  chapterRange: freeze({ start: 395, end: 395 }),
+  life,
+  bodyState,
+  consciousnessState,
+  operationalState,
+  protectionState,
+  threatLevel,
+  nenKnowledge,
+  allegianceState,
+  locationId,
+  openQuestions: freeze(openQuestions),
+  certainty,
+  sourceIds: freeze(['source:chapter-395']),
+});
+
+export const characterState395CorrectionProfiles = freeze({
+  'character:hinrigh-biganduffno': freeze([state({
+    characterId: 'character:hinrigh-biganduffno',
+    operationalState: 'Finishes reviewing the recovered camcorder footage, concludes Heil-Ly is using Nen-mediated teleportation/spatial access around the standard cabins, briefs Ken’i and Tserriednich’s soldiers, and joins Ken’i in tracking the two recorded members with the goal of capturing them alive.',
+    protectionState: 'Operates with Xi-Yu resources and temporary Cha-R/military information sharing while avoiding a blind entry into the known trap network.',
+    threatLevel: 'critical lower-tier route-investigation exposure',
+    nenKnowledge: 'Biohazard surveillance remains confirmed. Chapter 395 adds Hinrigh’s analytical conclusion that a Nen ability is enabling the observed spatial access, but does not identify the user or mechanics.',
+    allegianceState: 'Xi-Yu underboss in temporary tactical cooperation with Cha-R and information-sharing contact with Tserriednich’s soldiers.',
+    locationId: 'location:black-whale:tier-3',
+    openQuestions: ['Which Heil-Ly user or ability produces the observed spatial access?', 'Can Hinrigh and Ken’i capture the recorded pair alive?'],
+  })]),
+  'character:ken-i-wang': freeze([state({
+    characterId: 'character:ken-i-wang',
+    operationalState: 'Uses a Black Whale map to combine military office intelligence with the Room 3101 lead, tells the soldiers that Nobunaga will investigate the probable hideout with two Troupe members, and joins Hinrigh in a live-capture pursuit of the two people recorded by the camcorder.',
+    protectionState: 'Commands Cha-R personnel while coordinating tactically with Xi-Yu and exchanging information with Tserriednich’s soldier group.',
+    threatLevel: 'high strategic and legal exposure',
+    nenKnowledge: 'No personal Nen ability is supplied. Ken’i treats the probable hidden-room network as a Nen-enabled threat without claiming a specific operator.',
+    allegianceState: 'Cha-R underboss continuing temporary anti-Heil-Ly cooperation with Xi-Yu and the Troupe.',
+    locationId: 'location:black-whale:tier-3',
+    openQuestions: ['Will the live-capture plan avoid police involvement?', 'How much of the probable hideout lies behind the standard cabins?'],
+  })]),
+  'character:borksen': freeze([state({
+    characterId: 'character:borksen',
+    operationalState: 'Participates in the six-soldier briefing with Hinrigh and Ken’i and states that the soldiers cannot directly help pursue the recorded Heil-Ly pair because Heil-Ly knows their faces.',
+    protectionState: 'Remains with Tserriednich’s lower-tier soldier circle and follows the survival-first posture established in Chapter 394.',
+    threatLevel: 'critical identification and capture risk',
+    nenKnowledge: 'Still lacks detailed Nen mechanics. Chapter 395 gives her no new Nen technique or user status; her contribution is operational risk assessment based on Heil-Ly knowing the soldiers’ identities.',
+    allegianceState: 'Kakin soldier / Tserriednich acquaintance; no later Heil-Ly recruitment state is imported into Chapter 395.',
+    locationId: 'location:black-whale:tier-3',
+    openQuestions: ['Can the soldier group support the search without exposing themselves to Morena’s capture plan?'],
+  })]),
+  'character:gipper': freeze([state({
+    characterId: 'character:gipper',
+    operationalState: 'Remains with the full six-soldier lower-tier group while the military confirms the status of Heil-Ly’s sealed official office and receives Ken’i and Hinrigh’s probable-hideout briefing.',
+    protectionState: 'Operates within Tserriednich’s personal-soldier and Kakin military structure.',
+    threatLevel: 'high lower-tier operational exposure',
+    nenKnowledge: 'Retains only the limited Nen-danger awareness gained in Chapter 394; Chapter 395 supplies no new detailed mechanics.',
+    allegianceState: 'Tserriednich-aligned Kakin corporal.',
+    locationId: 'location:black-whale:tier-3',
+  })]),
+});
