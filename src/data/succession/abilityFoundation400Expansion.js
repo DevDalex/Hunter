@@ -90,7 +90,7 @@ export const abilityFoundation400Expansion = freeze([
     summary: 'A descriptive archive label for the unresolved hostile Nen condition Melody detects around Fugetsu in Chapter 400. Melody senses Fugetsu’s aura weakened to a Zetsu-like level, an unstable heartbeat, and many evil spirits clustered around her. No responsible user, official ability name, Nen category, activation route, or visible ability body is identified.',
     sourceIds: freeze([chapterSourceId(400)]),
     publicationStatus: 'published',
-    canonLevel: 'inferred',
+    canonLevel: 'inference',
     createdAt: '2026-08-10',
     updatedAt: '2026-08-10',
     ownerIds: freeze([]),
