@@ -9,8 +9,9 @@ import {
   remapJusticeLocation386,
   remapJusticeLocationId386,
 } from './locationFoundation386Corrections.js';
+import { locationFoundation395Expansion } from './locationFoundation395Expansion.js';
 
-const ARCHIVE_DATE = '2026-08-09';
+const ARCHIVE_DATE = '2026-08-10';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const includesChapter = (range, chapter) => chapter >= range.start && chapter <= (range.end ?? Number.POSITIVE_INFINITY);
 const remapLocationIds = (values = []) => Object.freeze([...new Set(values.map(remapJusticeLocationId386).filter(Boolean))]);
@@ -19,6 +20,7 @@ const locations = Object.freeze(uniqueById([
   ...foundationData.locations.filter((location) => !isLegacyJusticeLocation386(location.id)),
   ...locationFoundationExpansion.filter((location) => !isLegacyJusticeLocation386(location.id)),
   ...locationFoundation386Corrections,
+  ...locationFoundation395Expansion,
 ]));
 
 const locationHistory = Object.freeze(uniqueById([
