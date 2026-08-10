@@ -211,7 +211,7 @@ function fittedView(viewport) {
 }
 
 export default function RoyalFamilyGuardTree({ onNavigate, spoilerLimit = Number.MAX_SAFE_INTEGER, initialPrince = 14 }) {
-  const royalTree = spoilerLimit >= 401 ? biologicalRoyalFamilyTree : legalRoyalFamilyTree;
+  const royalTree = spoilerLimit >= 403 ? biologicalRoyalFamilyTree : legalRoyalFamilyTree;
   const initialOrder = PRINCE_LAYOUT[initialPrince] ? initialPrince : 14;
   const [selectedOrder, setSelectedOrder] = useState(initialOrder);
   const [hoveredRecord, setHoveredRecord] = useState(null);
