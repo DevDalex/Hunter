@@ -33,6 +33,7 @@ import {
 import { abilityKnowledge399Overrides } from './nenSystemFoundation399Corrections.js';
 import { abilityKnowledge400Overrides } from './nenSystemFoundation400Corrections.js';
 import { abilityKnowledge401Overrides } from './nenSystemFoundation401Corrections.js';
+import { guardianBeastState402LegacySplits } from './guardianBeastState402LegacySplits.js';
 import { abilityKnowledge402Overrides, guardianBeastState402Corrections } from './nenSystemFoundation402Corrections.js';
 
 const ARCHIVE_DATE = '2026-08-10';
@@ -90,6 +91,7 @@ const guardianBeastProfileKeys = new Set([
   ...Object.keys(guardianBeastState385Corrections),
   ...Object.keys(guardianBeastState389Corrections),
   ...Object.keys(guardianBeastState390Corrections),
+  ...Object.keys(guardianBeastState402LegacySplits),
   ...Object.keys(guardianBeastState402Corrections),
 ]);
 
@@ -100,6 +102,7 @@ const correctedGuardianBeastStateProfiles = Object.freeze(Object.fromEntries(
     for (const correction of guardianBeastState385Corrections[beastId] || []) records.set(correction.id, correction);
     for (const correction of guardianBeastState389Corrections[beastId] || []) records.set(correction.id, correction);
     for (const correction of guardianBeastState390Corrections[beastId] || []) records.set(correction.id, correction);
+    for (const correction of guardianBeastState402LegacySplits[beastId] || []) records.set(correction.id, correction);
     for (const correction of guardianBeastState402Corrections[beastId] || []) records.set(correction.id, correction);
     return [beastId, Object.freeze([...records.values()].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id)))];
   }),
