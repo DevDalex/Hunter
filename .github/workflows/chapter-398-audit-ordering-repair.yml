@@ -1,0 +1,69 @@
+name: One-time Chapter 398 audit ordering repair
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/chapter-398-audit-ordering-repair.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Advance historical audit handoffs and fix Biohazard knowledge scope
+        shell: python
+        run: |
+          from pathlib import Path
+
+          ordering_files = [
+              'scripts/audit-succession-chapter-389-boundary.mjs',
+              'scripts/audit-succession-chapter-391-boundary.mjs',
+              'scripts/audit-succession-chapter-392-boundary.mjs',
+              'scripts/audit-succession-chapter-393-boundary.mjs',
+              'scripts/audit-succession-chapter-394-boundary.mjs',
+              'scripts/audit-succession-chapter-395-boundary.mjs',
+              'scripts/audit-succession-chapter-396-boundary.mjs',
+              'scripts/audit-succession-chapter-397-boundary.mjs',
+          ]
+          old = 'numbers[numbers.indexOf(397) + 1] === 400'
+          new = 'numbers[numbers.indexOf(397) + 1] === 398 && numbers[numbers.indexOf(398) + 1] === 400'
+          for file_name in ordering_files:
+              path = Path(file_name)
+              content = path.read_text()
+              if old not in content:
+                  raise SystemExit(f'Expected 397→400 ordering assertion not found in {file_name}')
+              path.write_text(content.replace(old, new, 1))
+
+          audit398 = Path('scripts/audit-succession-chapter-398-boundary.mjs')
+          content = audit398.read_text()
+          if 'text(bio397)' not in content or 'text(bio398)' not in content:
+              raise SystemExit('Expected Chapter 398 Biohazard wrapper assertions not found')
+          content = content.replace('text(bio397)', 'text(bio397.knowledge)')
+          content = content.replace('text(bio398)', 'text(bio398.knowledge)')
+          audit398.write_text(content)
+
+      - name: Commit audit repairs
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/audit-succession-chapter-389-boundary.mjs \
+                  scripts/audit-succession-chapter-391-boundary.mjs \
+                  scripts/audit-succession-chapter-392-boundary.mjs \
+                  scripts/audit-succession-chapter-393-boundary.mjs \
+                  scripts/audit-succession-chapter-394-boundary.mjs \
+                  scripts/audit-succession-chapter-395-boundary.mjs \
+                  scripts/audit-succession-chapter-396-boundary.mjs \
+                  scripts/audit-succession-chapter-397-boundary.mjs \
+                  scripts/audit-succession-chapter-398-boundary.mjs
+          git commit -m 'Advance audit chain through Chapter 398'
+          git push origin HEAD:main
