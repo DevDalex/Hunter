@@ -148,7 +148,8 @@ try {
   assert(/does not invent, reconstruct, quote, summarize, or infer the note/i.test(note), 'source note must prohibit reconstruction of the killers’ note');
   assert(/Sheila.*exact motive|exact motive.*Sheila|no explanatory dialogue/i.test(note), 'source note must preserve Sheila motive uncertainty');
   assert(/Renko.*Nen category|Nen category.*remain.*unresolved/i.test(note), 'source note must preserve Renko’s unknown Nen category');
-  assert(/Machi.*aura perception/i.test(note) && /does not.*Nen category|not.*Nen category/i.test(note), 'source note must confirm Machi aura perception without inventing her type');
+  assert(/evidence of aura perception/i.test(note) || /Machi[^\n]*perceiv(?:e|es|ing)[^\n]*aura/i.test(note), 'source note must confirm Machi aura perception');
+  assert(/does \*\*not\*\* by itself establish Machi[’']s Nen category|does not by itself establish Machi[’']s Nen category|Machi[’']s Nen category[^\n]*(?:not supplied|unresolved)/i.test(note), 'source note must not infer Machi’s Nen category from aura perception');
   assert(/three years/i.test(note) && /before he turns fourteen/i.test(note), 'source note must preserve Chrollo’s preparation window');
   assert(/future plan|not an already completed network/i.test(note), 'source note must keep Chrollo’s criminal network unbuilt at Chapter 397');
   assert(/Chapter 397 changes that boundary|explicit criminal\/villain program|theater-only/i.test(note), 'source note must mark the transition beyond Chapter 396 theatrical villain language');
