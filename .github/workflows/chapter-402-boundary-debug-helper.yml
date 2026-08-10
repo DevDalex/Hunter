@@ -1,0 +1,59 @@
+name: One-time Chapter 402 boundary debug helper
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.head_commit.message == 'Add one-time Chapter 402 boundary debug helper'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Remove future vocabulary and expose consistency error
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected one match, found {count}: {old}')
+              p.write_text(text.replace(old, new, 1))
+
+          path = 'src/data/succession/nenSystemFoundation402Corrections.js'
+          replace_once(path,
+              "knowledgeState: 'Chapter 400 hearing and side-effect knowledge carried forward without Chapter 402 operation detail',",
+              "knowledgeState: 'Chapter 400 hearing and side-effect knowledge carried forward',")
+          replace_once(path,
+              "'Chapter 401 does not yet establish the Chapter 402 operational statement about Melody being unable to perform another task while using the planned ocarina performance.'",
+              "'Further operational concurrency limits of the performance remain unresolved at the Chapter 401 boundary.'")
+          replace_once(path,
+              "knowledgeState: 'Chapter 400 repeated-use and solo-return behavior carried forward without Chapter 402 destination tests',",
+              "knowledgeState: 'Chapter 400 repeated-use and solo-return behavior carried forward',")
+          replace_once(path,
+              "'Chapter 401 does not yet know the Chapter 402 outside-ship failure, lifeboat destination, pre-visit routing condition, door-closure descriptions, or proposed third-party test.'",
+              "'Further destination limits, route eligibility, and passenger-access mechanics remain unresolved at the Chapter 401 boundary.'")
+          replace_once(path,
+              "'Chapter 401 does not yet know the Chapter 402 shoulder mark, multistep-trap/addiction theories, Luzurus suspicion, Benjamin-beast dispersal, or Basho charm interaction.'",
+              "'Further physical markers, culprit hypotheses, suppression interactions, and countermeasures remain unresolved at the Chapter 401 boundary.'")
+
+          audit = 'scripts/audit-succession-phase-3-information-consistency.mjs'
+          replace_once(audit,
+              "assert(report.hardErrorCount === 0, `the consistency report contains ${report.hardErrorCount} hard error(s)`);",
+              "assert(report.hardErrorCount === 0, `the consistency report contains ${report.hardErrorCount} hard error(s): ${[...(report.validation?.errors || []), ...(report.impossibleStates || []).map((record) => `${record.characterId}: ${record.reasons.join('; ')}`), ...(report.crossLinkErrors || [])].join(' · ')}`);")
+          PY
+
+          git config user.name "DevDalex"
+          git config user.email "58445340+DevDalex@users.noreply.github.com"
+          git add src/data/succession/nenSystemFoundation402Corrections.js scripts/audit-succession-phase-3-information-consistency.mjs
+          git diff --cached --check
+          git commit -m "Remove Chapter 402 vocabulary from Chapter 401 Nen baselines"
+          git push origin HEAD:main
