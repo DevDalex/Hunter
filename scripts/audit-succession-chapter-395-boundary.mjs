@@ -30,7 +30,7 @@ try {
 
   const events395 = archive.getEntitiesByType('event').filter((event) => event.chapterRange?.start === 395 && event.chapterRange?.end === 395);
   const eventIds = new Set(events395.map((event) => event.id));
-  for (const id of [
+  const dedicatedEventIds = [
     'event:hinrigh-footage-confirms-heilly-spatial-access',
     'event:mafia-military-heilly-pursuit-briefing',
     'event:troupe-breaches-room3102-wall',
@@ -42,8 +42,11 @@ try {
     'event:lisores-elder-discuss-chrollo-potential',
     'event:chrollo-pakunoda-power-cleaners-dubbing-plan',
     'event:sheila-sarasa-join-dubbing-unidentified-children-abducted',
-  ]) assert(eventIds.has(id), `${id} must exist at the Chapter 395 canonical event boundary`);
-  assert(events395.length === 11, 'Chapter 395 canonical event foundation must contain exactly the 11 maintained beats');
+  ];
+  for (const id of dedicatedEventIds) assert(eventIds.has(id), `${id} must exist at the Chapter 395 canonical event boundary`);
+  const projected395 = events395.filter((event) => event.maintainedResearch === true);
+  assert(projected395.length === 11, 'story-intelligence must project all 11 maintained Chapter 395 research beats alongside the dedicated canonical event foundation');
+  assert(dedicatedEventIds.every((id) => !archive.getEntityById(id)?.maintainedResearch), 'dedicated Chapter 395 event IDs must remain distinct from the maintained-research projection layer');
 
   const footage = archive.getEntityById('event:hinrigh-footage-confirms-heilly-spatial-access');
   assert(/Nen/i.test(text(footage)) && /spatial|teleport/i.test(text(footage)), 'Hinrigh footage event must preserve the Nen-mediated spatial-access conclusion');
@@ -138,7 +141,7 @@ try {
   assert(/three unidentified abducted children|does not identify these captives/i.test(note), 'source note must keep the three van children unidentified');
   assert(/No Chapter 396\+|No Chapter 396\+ knowledge|Chapter 396\+.*not imported/i.test(note), 'source note must quarantine Chapter 396+ knowledge');
 
-  console.log(`Chapter 395 boundary audit passed: ${events395.length} canonical events preserve Hinrigh’s Nen-spatial conclusion without invented ownership, the Room 3102 physical breach, the undated Meteor City childhood layer, present-state death boundaries, and the unidentified-captive / no-396+ quarantine.`);
+  console.log(`Chapter 395 boundary audit passed: ${dedicatedEventIds.length} dedicated canonical events plus ${projected395.length} maintained-research projections preserve Hinrigh’s Nen-spatial conclusion without invented ownership, the Room 3102 physical breach, the undated Meteor City childhood layer, present-state death boundaries, and the unidentified-captive / no-396+ quarantine.`);
 } finally {
   await vite.close();
 }
