@@ -109,6 +109,13 @@ export default defineConfig({
             // Room 3101 return route, and adds exact resource/organization state
             // boundaries. Keep this dense confrontation in its own lazy island.
             { name: 'succession-chapter-399-sweet-home-lsdf', test: /src\/data\/(?:succession399Research|succession\/(?:abilityFoundation399Expansion|eventFoundation399Expansion|relationshipFoundation399Expansion|locationFoundation399Expansion|organizationState399Corrections|characterState399Corrections|nenSystemFoundation399Corrections))\.js$/ },
+            // Chapter 400 modernizes the older maintained packet into the same
+            // strict boundary architecture: Tier 2 hideout localization, Phinks
+            // En limits, Tyson/Izunavi planning, Without You/Fugetsu updates,
+            // Melody/Kaiser Justice pressure, the hostile-spirit affliction and
+            // Longhi contract stopping point. Keep all direct leaves isolated so
+            // the central graph does not spend its remaining ~13 kB headroom.
+            { name: 'succession-chapter-400-tier2-justice-fugetsu', test: /src\/data\/(?:succession(?:400Research|ArchiveThrough400|DossierThrough400)|succession\/(?:abilityFoundation400Expansion|eventFoundation400Expansion|relationshipFoundation400Expansion|locationFoundation400Expansion|organizationState400Corrections|characterState400Corrections|nenSystemFoundation400Corrections))\.js$/ },
           ],
         },
       },
