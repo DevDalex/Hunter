@@ -19,6 +19,7 @@ import { relationshipFoundation396Expansion } from './relationshipFoundation396E
 import { relationshipFoundation397Expansion } from './relationshipFoundation397Expansion.js';
 import { relationshipFoundation398Expansion } from './relationshipFoundation398Expansion.js';
 import { relationshipFoundation399Expansion } from './relationshipFoundation399Expansion.js';
+import { relationshipFoundation400Expansion } from './relationshipFoundation400Expansion.js';
 
 const ARCHIVE_DATE = '2026-08-10';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
@@ -98,6 +99,7 @@ const relationships = Object.freeze(uniqueById([
   ...relationshipFoundation397Expansion,
   ...relationshipFoundation398Expansion,
   ...relationshipFoundation399Expansion,
+  ...relationshipFoundation400Expansion,
 ]).map(normalizeRelationship));
 
 export const successionArchiveData = Object.freeze({ ...assignmentFoundationData, relationships });
