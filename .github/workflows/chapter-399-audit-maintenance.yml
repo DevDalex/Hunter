@@ -35,7 +35,6 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import re
 
           chronology_paths = [
               Path('scripts/audit-succession-chapter-389-boundary.mjs'),
@@ -47,33 +46,13 @@ jobs:
               Path('scripts/audit-succession-chapter-396-boundary.mjs'),
               Path('scripts/audit-succession-chapter-397-boundary.mjs'),
           ]
-
-          terminal_400 = re.compile(r"numbers\[(?P<var>[A-Za-z0-9_]+)\s*\+\s*(?P<offset>\d+)\]\s*===\s*400")
+          old_handoff = "numbers[numbers.indexOf(398) + 1] === 400"
+          new_handoff = "numbers[numbers.indexOf(398) + 1] === 399 && numbers[numbers.indexOf(399) + 1] === 400"
           for path in chronology_paths:
               text = path.read_text()
-              lines = text.splitlines(True)
-              changed = False
-              for i, line in enumerate(lines):
-                  if 'pre-existing Chapter 400' not in line or '=== 400' not in line:
-                      continue
-                  if '=== 399' in line:
-                      continue
-                  matches = list(terminal_400.finditer(line))
-                  if not matches:
-                      raise SystemExit(f'Could not find terminal Chapter 400 condition in {path}')
-                  match = matches[-1]
-                  var = match.group('var')
-                  offset = int(match.group('offset'))
-                  replacement = f"numbers[{var} + {offset}] === 399 && numbers[{var} + {offset + 1}] === 400"
-                  line = line[:match.start()] + replacement + line[match.end():]
-                  line = line.replace('before the pre-existing Chapter 400', 'through Chapter 399 before the pre-existing Chapter 400')
-                  line = line.replace('directly before the pre-existing Chapter 400', 'before Chapter 398 and Chapter 399, followed by the pre-existing Chapter 400')
-                  lines[i] = line
-                  changed = True
-                  break
-              if not changed:
-                  raise SystemExit(f'No chronology assertion repaired in {path}')
-              path.write_text(''.join(lines))
+              if text.count(old_handoff) != 1:
+                  raise SystemExit(f'Expected exactly one 398→400 handoff in {path}; found {text.count(old_handoff)}')
+              path.write_text(text.replace(old_handoff, new_handoff, 1))
 
           path398 = Path('scripts/audit-succession-chapter-398-boundary.mjs')
           text398 = path398.read_text()
