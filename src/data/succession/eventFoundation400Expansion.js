@@ -87,7 +87,6 @@ export const eventFoundation400Expansion = freeze([
     summary: 'A shipwide emergency broadcast interrupts the Troupe discussion and asks everyone to pay attention to sad and unfortunate news. The supplied synopsis does not reproduce the substantive announcement, so no specific content is assigned to the broadcast at this boundary.',
     category: 'shipwide-broadcast',
     sequence: 5,
-    organizations: ['organization:kakin-military'],
     locations: ['location:black-whale'],
     outcomes: ['A shipwide emergency announcement begins.', 'Its substantive content remains unsupplied in the provided Chapter 400 synopsis.'],
   }),
