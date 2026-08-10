@@ -1,0 +1,65 @@
+const freeze = (value) => Object.freeze(value);
+const sourceId = 'source:chapter-394';
+
+const state = ({ organizationId, operationalState, authority, territoryIds = [], objectiveStates = [], pressure = [], relatedEventIds = [], certainty = 'confirmed' }) => freeze({
+  id: `organization-state:${organizationId.replace('organization:', '')}:394`,
+  organizationId,
+  chapterRange: freeze({ start: 394, end: 394 }),
+  status: 'active',
+  operationalState,
+  authority,
+  territoryIds: freeze(territoryIds),
+  objectiveStates: freeze(objectiveStates),
+  pressure: freeze(pressure),
+  relatedEventIds: freeze(relatedEventIds),
+  certainty,
+  sourceIds: freeze([sourceId]),
+});
+
+export const organizationState394Corrections = freeze({
+  'organization:heil-ly': freeze([state({
+    organizationId: 'organization:heil-ly',
+    operationalState: 'Room 3101 is exposed as part of Heil-Ly’s operational route after Gateaume’s deceptive resident body is tested and Tassi is transferred into the network. Bille kills Tassi and reaches level 21; Terebellum routes the corpse to Chiffon Toto and Montblanc Toto through a direct Voconte connection. Morena treats Room 3101 as compromised, shifts access to Door C, assigns guards and Room 3131 route checks, plans to capture and infect a Tserriednich soldier for tracking, and orders Dogman to level past 50 for the priority mission.',
+    authority: 'Morena remains the direct boss, Contagion user, route-security decision maker, and mission allocator for the Heil-Ly community.',
+    territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-3:heil-ly-hideout', 'location:black-whale:tier-3:room-3101'],
+    objectiveStates: ['Abandon compromised Room 3101 access and operate through Door C/other routes.', 'Capture a member of Tserriednich’s personal-soldier network.', 'Use Contagion infection as a tracking/intelligence tool against Tserriednich’s side.', 'Continue leveling members and develop operational abilities.', 'Prepare Dogman to exceed level 50 before the priority search mission.'],
+    pressure: ['Room 3101 has been discovered by Xi-Yu and Cha-R.', 'The VVIP liaison to Tserriednich has gone silent.', 'The Phantom Troupe has declared Heil-Ly an elimination target.', 'Tserriednich’s soldiers are actively searching Tier 3 for Morena.', 'Xi-Yu and Cha-R are conducting parallel anti-Heil-Ly operations.'],
+    relatedEventIds: ['event:room3101-gateaume-decoy-exposed', 'event:room3101-tassi-disappears', 'event:bille-kills-tassi-reaches-level21', 'event:heilly-corpse-processing-route-expanded', 'event:morena-assesses-vvip-liaison-room3101', 'event:morena-orders-tserriednich-soldier-capture', 'event:morena-contagion-tracking-door-c-guards', 'event:room3131-processing-route-briefing', 'event:dogman-ordered-past-level50'],
+  })]),
+  'organization:xi-yu': freeze([state({
+    organizationId: 'organization:xi-yu',
+    operationalState: 'Hinrigh exposes Gateaume’s bloodless Room 3101 resident body, witnesses Tassi disappear after entering the room, and continues the investigation without attributing the active route to dead Luini. Tassi is subsequently killed inside Heil-Ly’s network. Hinrigh separately recovers the transformed cat/camcorder and reviews surveillance footage.',
+    authority: 'Hinrigh remains Xi-Yu underboss directing the field investigation; Tassi is an Xi-Yu member lost during the Room 3101 operation.',
+    territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-3:room-3101'],
+    objectiveStates: ['Identify the active Heil-Ly route mechanism and locate Morena.', 'Use surveillance evidence rather than blindly entering the route.', 'Continue tactical coordination with Cha-R against Heil-Ly.', 'Preserve the temporary apparent-Hisoka arrangement without retroactively confirming identity.'],
+    pressure: ['Tassi is killed after Room 3101 transfers him into Heil-Ly’s network.', 'Maizan remains missing.', 'Gateaume’s real body and ability mechanism remain unknown.', 'Heil-Ly has multiple access routes and processing spaces.'],
+    relatedEventIds: ['event:room3101-gateaume-decoy-exposed', 'event:room3101-tassi-disappears', 'event:bille-kills-tassi-reaches-level21', 'event:hinrigh-recovers-cat-camcorder'],
+  })]),
+  'organization:cha-r': freeze([state({
+    organizationId: 'organization:cha-r',
+    operationalState: 'Ken’i witnesses the Room 3101 deception and Tassi disappearance, tells Hinrigh that Nobunaga has already killed Luini, and argues that the Phantom Troupe can now be directed at the Heil-Ly hideout/trap. Separately, Tserriednich’s soldiers discover an old body they believe is a Cha-R member inside the registered Heil-Ly office, creating legal and political risk around the conflict.',
+    authority: 'Ken’i Wang remains active underboss for the lower-tier operation while Brocco Li retains family leadership.',
+    territoryIds: ['location:black-whale:tier-5', 'location:black-whale:tier-3', 'location:black-whale:tier-3:room-3101'],
+    objectiveStates: ['Exploit the Troupe’s declared anti-Heil-Ly intent.', 'Continue tactical cooperation with Xi-Yu while preserving separate command.', 'Avoid allowing Heil-Ly violence to trigger an uncontrolled Kakin–mafia conflict.'],
+    pressure: ['Luini is dead but the Room 3101 trap remains active through another mechanism.', 'A probable Cha-R corpse is discovered in a registered Heil-Ly office.', 'Military/police framing of the lower-tier killings could escalate the conflict.'],
+    relatedEventIds: ['event:room3101-gateaume-decoy-exposed', 'event:room3101-tassi-disappears', 'event:gipper-raids-heilly-office-cover-story', 'event:tserriednich-soldiers-model-mafia-war-risk'],
+  })]),
+  'organization:phantom-troupe': freeze([state({
+    organizationId: 'organization:phantom-troupe',
+    operationalState: 'The Troupe is not directly shown acting in the Chapter 394 scenes, but Ken’i reports Luini’s corpse remains at the Cha-R office and repeats the Troupe’s Chapter 393 declaration that it will eliminate Heil-Ly. The Hisoka search is not shown as abandoned.',
+    authority: 'No new Chapter 394 command decision from Chrollo or the lower-tier Troupe trio is supplied.',
+    territoryIds: ['location:black-whale:tier-5'],
+    objectiveStates: ['Destroy Heil-Ly interference under the declaration established in Chapter 393.', 'Continue the Hisoka hunt.'],
+    pressure: ['Mafia underbosses intend to use the Troupe as a weapon against Heil-Ly.', 'The active Room 3101 trap demonstrates that Luini’s death did not end Heil-Ly’s spatial/access threat.'],
+    relatedEventIds: ['event:room3101-tassi-disappears'],
+  })]),
+  'organization:kakin-military': freeze([state({
+    organizationId: 'organization:kakin-military',
+    operationalState: 'Tserriednich’s personal soldiers conduct a Tier 3 search for Morena, force entry into a registered Heil-Ly office, construct a cover story around the entry and discovered body, restrict their weapons to handguns to limit attention, and debate Nen, forensic/institutional exposure, and the risk of a wider Kakin–mafia conflict. Otocin’s information causes Gipper to request Borksen as an adviser; Borksen then confirms Tserriednich’s classified Nen training under Theta and recommends survival-first contact with Xi-Yu or Cha-R.',
+    authority: 'Corporal Gipper commands the shown Tier 3 group. The group remains personally aligned with Tserriednich while operating inside the broader Kakin military structure.',
+    territoryIds: ['location:black-whale:tier-3', 'location:black-whale:tier-1'],
+    objectiveStates: ['Capture Morena before Tserriednich must personally handle the lower-tier rebellion.', 'Search Tier 3 without provoking unnecessary Royal Army/police attention.', 'Learn enough about Nen to avoid walking into an unknown Heil-Ly threat.', 'Use transfer-request status as a proposed early-warning signal for any classified mafia-eradication operation.', 'Develop a capture contingency and seek tactical contact with Xi-Yu or Cha-R.'],
+    pressure: ['The unit lacks detailed Nen knowledge.', 'Morena likely has identifying information on Tserriednich’s personal soldiers.', 'Forensic or legal mishandling could transform mafia violence into a broader institutional crisis.', 'Possible Hunter Association scrutiny is discussed but not confirmed.'],
+    relatedEventIds: ['event:gipper-raids-heilly-office-cover-story', 'event:otocin-reveals-nen-borksen-transfer', 'event:tserriednich-soldiers-model-mafia-war-risk', 'event:borksen-confirms-tserriednich-nen-training', 'event:borksen-warns-heilly-knows-soldiers'],
+  })]),
+});
