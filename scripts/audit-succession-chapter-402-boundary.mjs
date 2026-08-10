@@ -118,7 +118,10 @@ try {
 
   assert((dossier.guardAssignmentGroups || []).some((group) => /Chapter 402/.test(group.group || '')), 'active dossier must include the Chapter 402 modernization group');
   assert(!(frozen401.guardAssignmentGroups || []).some((group) => /Chapter 402/.test(group.group || '')), 'frozen through-401 dossier must remain unaware of Chapter 402');
-  assert(!(frozen401.successionMysteries || []).some((record) => /Luzurus.*Fugetsu|shoulder mark|martial/i.test(record.question || '')), 'Through401 mysteries must not backfill Chapter 402 questions');
+  const frozen401MysteryIds = new Set((frozen401.successionMysteries || []).map((record) => record.id).filter(Boolean));
+  const active402MysteryIds = new Set((dossier.successionMysteries || []).map((record) => record.id).filter(Boolean));
+  assert(chapterModule.succession402Mysteries.every((record) => !frozen401MysteryIds.has(record.id)), 'frozen through-401 dossier must not contain Chapter 402 mystery records');
+  assert(chapterModule.succession402Mysteries.every((record) => active402MysteryIds.has(record.id)), 'active through-402 dossier must expose every Chapter 402 mystery record');
 
   assert(/sole substantive story source/i.test(sourceNote) && /user-supplied/i.test(sourceNote), 'source note must preserve the current synopsis as sole substantive story source');
   assert(/no title.*invented|no title.*supplied/i.test(sourceNote), 'source note must explain the unsupplied-title boundary');

@@ -131,7 +131,7 @@ export default defineConfig({
   // Keep every direct 402 leaf together so the central Succession graph
   // retains its existing 750 kB preferred budget without swallowing the
   // chapter's large event/state/epistemic-boundary payload.
-  { name: 'succession-chapter-402-fugetsu-diplomacy-halkenburg', test: /src\/data\/(?:succession402Research|succession\/(?:abilityFoundation402Expansion|eventFoundation402Expansion|relationshipFoundation402Expansion|locationFoundation402Expansion|organizationState402Corrections|characterState402Corrections|nenSystemFoundation402Corrections))\.js$/ },
+  { name: 'succession-chapter-402-fugetsu-diplomacy-halkenburg', test: /src\/data\/(?:succession402Research|succession\/(?:abilityFoundation402Expansion|eventFoundation402Expansion|relationshipFoundation402Expansion|locationFoundation402Expansion|organizationState402Corrections|organizationState402LegacySplits|characterState402Corrections|characterState402LegacySplits|guardianBeastState402LegacySplits|nenSystemFoundation402Corrections))\.js$/ },
           ],
         },
       },
