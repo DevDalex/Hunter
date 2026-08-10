@@ -35,6 +35,7 @@ import { abilityKnowledge400Overrides } from './nenSystemFoundation400Correction
 import { abilityKnowledge401Overrides } from './nenSystemFoundation401Corrections.js';
 import { guardianBeastState402LegacySplits } from './guardianBeastState402LegacySplits.js';
 import { abilityKnowledge402Overrides, guardianBeastState402Corrections } from './nenSystemFoundation402Corrections.js';
+import { abilityKnowledge403Overrides, guardianBeastState403Corrections } from './nenSystemFoundation403Corrections.js';
 
 const ARCHIVE_DATE = '2026-08-10';
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -93,6 +94,7 @@ const guardianBeastProfileKeys = new Set([
   ...Object.keys(guardianBeastState390Corrections),
   ...Object.keys(guardianBeastState402LegacySplits),
   ...Object.keys(guardianBeastState402Corrections),
+  ...Object.keys(guardianBeastState403Corrections),
 ]);
 
 const correctedGuardianBeastStateProfiles = Object.freeze(Object.fromEntries(
@@ -104,6 +106,7 @@ const correctedGuardianBeastStateProfiles = Object.freeze(Object.fromEntries(
     for (const correction of guardianBeastState390Corrections[beastId] || []) records.set(correction.id, correction);
     for (const correction of guardianBeastState402LegacySplits[beastId] || []) records.set(correction.id, correction);
     for (const correction of guardianBeastState402Corrections[beastId] || []) records.set(correction.id, correction);
+    for (const correction of guardianBeastState403Corrections[beastId] || []) records.set(correction.id, correction);
     return [beastId, Object.freeze([...records.values()].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id)))];
   }),
 ));
@@ -132,6 +135,7 @@ const abilityKnowledgeOverrideKeys = new Set([
   ...Object.keys(abilityKnowledge400Overrides),
   ...Object.keys(abilityKnowledge401Overrides),
   ...Object.keys(abilityKnowledge402Overrides),
+  ...Object.keys(abilityKnowledge403Overrides),
 ]);
 const correctedAbilityKnowledgeOverrides = Object.freeze(Object.fromEntries(
   [...abilityKnowledgeOverrideKeys].map((abilityId) => [abilityId, Object.freeze([
@@ -150,6 +154,7 @@ const correctedAbilityKnowledgeOverrides = Object.freeze(Object.fromEntries(
     ...(abilityKnowledge400Overrides[abilityId] || []),
     ...(abilityKnowledge401Overrides[abilityId] || []),
     ...(abilityKnowledge402Overrides[abilityId] || []),
+    ...(abilityKnowledge403Overrides[abilityId] || []),
   ])]),
 ));
 

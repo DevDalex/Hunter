@@ -125,13 +125,19 @@ export default defineConfig({
             // together so the already-large Chapter 400 island is not dragged
             // into this new chunk through the Through401 overlay chain.
             { name: 'succession-chapter-401-moonlight-beyond-contract', test: /src\/data\/(?:succession401Research|succession\/(?:abilityFoundation401Expansion|eventFoundation401Expansion|relationshipFoundation401Expansion|locationFoundation401Expansion|characterState401Corrections|nenSystemFoundation401Corrections))\.js$/ },
-  // Chapter 402 is a four-lane Day 10/11 packet: lower-prince diplomacy,
-  // Balsamilco's Halkenburg weapon plan, Tserriednich's 9.67-second
-  // Zetsu checkpoint, and the Fugetsu/Kacho-form/Melody/Kaiser crisis.
-  // Keep every direct 402 leaf together so the central Succession graph
-  // retains its existing 750 kB preferred budget without swallowing the
-  // chapter's large event/state/epistemic-boundary payload.
-  { name: 'succession-chapter-402-fugetsu-diplomacy-halkenburg', test: /src\/data\/(?:succession402Research|succession\/(?:abilityFoundation402Expansion|eventFoundation402Expansion|relationshipFoundation402Expansion|locationFoundation402Expansion|organizationState402Corrections|organizationState402LegacySplits|characterState402Corrections|characterState402LegacySplits|guardianBeastState402LegacySplits|nenSystemFoundation402Corrections))\.js$/ },
+            // Chapter 402 is a four-lane Day 10/11 packet: lower-prince diplomacy,
+            // Balsamilco's Halkenburg weapon plan, Tserriednich's 9.67-second
+            // Zetsu checkpoint, and the Fugetsu/Kacho-form/Melody/Kaiser crisis.
+            // Keep every direct 402 leaf together so the central Succession graph
+            // retains its existing 750 kB preferred budget without swallowing the
+            // chapter's large event/state/epistemic-boundary payload.
+            { name: 'succession-chapter-402-fugetsu-diplomacy-halkenburg', test: /src\/data\/(?:succession402Research|succession\/(?:abilityFoundation402Expansion|eventFoundation402Expansion|relationshipFoundation402Expansion|locationFoundation402Expansion|organizationState402Corrections|organizationState402LegacySplits|characterState402Corrections|characterState402LegacySplits|guardianBeastState402LegacySplits|nenSystemFoundation402Corrections))\.js$/ },
+            // Chapter 403 resolves the immediate Halkenburg/Balsamilco collision,
+            // escalates Benjamin to red alert, confirms Unma's maternity, advances
+            // Justice/Fugetsu intelligence, and records Zhang Lei's 1→10 coin
+            // observation. Isolate the exact chapter states plus their future
+            // continuity splits so the central graph and the 402 island stay stable.
+            { name: 'succession-chapter-403-halkenburg-possession-red-alert', test: /src\/data\/(?:succession(?:403Research|ArchiveThrough403|DossierThrough403)|succession\/(?:eventFoundation403Expansion|relationshipFoundation403Expansion|locationFoundation403Expansion|organizationState403(?:Corrections|LegacySplits)|characterState403(?:Corrections|LegacySplits)|nenSystemFoundation403Corrections))\.js$/ },
           ],
         },
       },
