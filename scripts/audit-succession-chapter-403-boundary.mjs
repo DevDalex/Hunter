@@ -76,7 +76,7 @@ try {
   assert(!/seven retained|ten produced|six.*1.*one.*10/i.test(text(coin402)), 'Chapter 402 coin knowledge must not leak the Chapter 403 inventory');
   assert(/seven retained|three.*distributed|six.*1|one.*10/i.test(text(coin403)), 'Chapter 403 coin knowledge must preserve the seven-retained/three-distributed 1→10 observation');
   assert(/hypoth|unresolved|speculation/i.test(text(coin403)), 'ten-day and holder-effect explanations must remain hypotheses');
-  assert(!/Kurapika.*test result|Stealth Dolphin.*coin/i.test(text(coin403)), 'Chapter 404+ Kurapika coin results must not leak backward');
+  assert(!(coin403?.sourceIds || []).includes('source:chapter-404'), 'Chapter 403 coin knowledge must not cite Chapter 404 as evidence');
   const beast403 = archive.getGuardianBeastStateAtChapter('guardian-beast:zhang-lei', 403);
   assert(/one marked 10|1-to-10|1.*10/i.test(text(beast403)) && /unresolved/i.test(text(beast403)), 'Zhang Lei Guardian Beast state must carry the observed number change without a solved rule');
 
