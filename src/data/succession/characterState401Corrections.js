@@ -116,7 +116,7 @@ export const characterState401CorrectionProfiles = freeze({
       allegianceState: 'Kacho and Melody protection network under Justice control.',
       locationId: 'location:black-whale:tier-2:justice-bureau:medical-wing',
       openQuestions: ['Who or what caused the hostile-spirit condition?', 'Can it be exorcised?', 'Is it related to Magical Worm?'],
-      certainty: 'chapter-continuity',
+      certainty: 'confirmed',
       sourceIds: freeze(['source:chapter-400']),
     }),
   ]),
