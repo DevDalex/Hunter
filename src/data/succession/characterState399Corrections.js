@@ -21,7 +21,7 @@ const state = ({ characterId, life = 'alive', bodyState = 'living body', conscio
 export const characterState399CorrectionProfiles = freeze({
   'character:hinrigh-biganduffno': freeze([state({
     characterId: 'character:hinrigh-biganduffno',
-    operationalState: 'Continues the hideout sweep with Nobunaga, confronts nine Heil-Ly members, tests Terebellum with thrown knives, observes Sweet Home and LSDF, retreats from Yokotani’s automatic guards, vomits and hides the still-transformed transmitter-oyster beneath a laundry-room cabinet, then returns to Room 3101 and divides the next Heil-Ly search work with Nobunaga.',
+    operationalState: 'Continues the hideout sweep with Nobunaga, confronts nine Heil-Ly members, tests Terebellum with thrown knives, observes Sweet Home and LSDF, retreats from Yokotani’s automatic guards, vomits and hides the still-transformed transmitter-oyster beneath a laundry-room cabinet, then returns to Room 3101 with his carried knife supply exhausted and divides the next Heil-Ly search work with Nobunaga.',
     protectionState: 'Back in Room 3101 with Nobunaga after the hideout reconnaissance; the hidden transmitter remains behind as the tracking asset.',
     threatLevel: 'high active anti-Heil-Ly operational exposure',
     nenKnowledge: 'Biohazard remains confirmed. Chapter 399 shows the transmitter still transformed when hidden and Hinrigh states that he cannot use Biohazard again for the rest of that day. This does not establish a universal daily-use count or exact reset/aura formula. He directly witnesses Sweet Home and LSDF mechanics.',

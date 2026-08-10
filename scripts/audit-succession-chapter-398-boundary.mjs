@@ -22,52 +22,61 @@ try {
   const chapter398 = chapterModule.succession398ChapterResearch?.[0];
   assert(chapter398?.number === 398, 'dedicated Chapter 398 research must load');
   assert(chapter398.title === null && chapter398.titleStatus === 'not-supplied-no-title-invented', 'Chapter 398 title must remain unsupplied');
-  assert(chapter398.voyageDay === 'Voyage Day 10', 'Chapter 398 must remain Voyage Day 10 present-day action');
+  assert(chapter398.voyageDay === 'Voyage Day 10', 'Chapter 398 must return to Voyage Day 10 present-day action');
   assert(chapter398.chronology?.exactClockTime === null, 'Chapter 398 must not invent an exact clock time');
-  assert(chapter398.chronology?.presentDay === true && chapter398.chronology?.flashback === false, 'Chapter 398 must return to present-day action rather than extend the Meteor City flashback');
+  assert(chapter398.chronology?.presentDay === true && chapter398.chronology?.flashback === false, 'Chapter 398 must be present-day Tier 3 action rather than a continuation of the Meteor City flashback');
   assert(chapterModule.succession398TimelineEvents.length === 13, 'dedicated research must preserve all 13 maintained Chapter 398 beats');
 
   const events398 = archive.getEntitiesByType('event').filter((event) => event.chapterRange?.start === 398 && event.chapterRange?.end === 398);
   const eventIds = new Set(events398.map((event) => event.id));
   const dedicatedEventIds = [
-    'event:room3101-first-hostage-front-door-test',
-    'event:room3101-second-hostage-teleport-repeat',
-    'event:troupe-debates-barrier-land-mine-trap',
-    'event:hinrigh-prepares-transmitter-oyster',
-    'event:hinrigh-enters-heilly-teleport-trap',
+    'event:troupe-debates-gateaume-teleport-mechanism',
+    'event:bathroom-bypass-front-door-test',
+    'event:first-hostage-front-door-reentry-teleports',
+    'event:barrier-land-mine-nen-exposition',
+    'event:second-hostage-confirms-continuous-teleport',
+    'event:keni-hinrigh-offer-anti-heilly-cooperation',
+    'event:hinrigh-transmitter-oyster-biohazard',
+    'event:hinrigh-explains-receiver-and-enters-trap',
     'event:receiver-distance-band-troupe-triangulation',
-    'event:hinrigh-arrives-heilly-hideout-blood-sounds',
+    'event:hinrigh-arrives-heilly-hideout',
     'event:nobunaga-follows-hinrigh-coop',
     'event:nobunaga-tests-self-restoring-hideout-wall',
-    'event:hinrigh-nobunaga-sweep-shower-bathroom',
-    'event:hinrigh-nobunaga-find-three-toilets',
-    'event:hinrigh-nobunaga-open-laundry-room',
-    'event:morena-smiles-during-hideout-intrusion',
+    'event:hinrigh-nobunaga-sweep-to-laundry',
   ];
   for (const id of dedicatedEventIds) assert(eventIds.has(id), `${id} must exist at the Chapter 398 canonical boundary`);
   const projected398 = events398.filter((event) => event.maintainedResearch === true);
   assert(projected398.length === 13, 'story intelligence must project all 13 maintained Chapter 398 research beats');
   assert(dedicatedEventIds.every((id) => !archive.getEntityById(id)?.maintainedResearch), 'dedicated Chapter 398 events must remain distinct from maintained-research projections');
-  for (const id of dedicatedEventIds) assert(archive.getEntityById(id)?.chronology?.day === 10, `${id} must remain Voyage Day 10`);
+  for (const id of dedicatedEventIds) assert(archive.getEntityById(id)?.chronology?.day === 10, `${id} must remain present-day Voyage Day 10 action`);
 
-  const firstTest = archive.getEntityById('event:room3101-first-hostage-front-door-test');
-  const secondTest = archive.getEntityById('event:room3101-second-hostage-teleport-repeat');
-  assert(/bathroom|bypass/i.test(text(firstTest)) && /does not teleport|no teleport/i.test(text(firstTest)), 'first hostage must preserve the bathroom-side non-trigger');
-  assert(/front door|front-door/i.test(text(firstTest)) && /re-enter|reenter|enter.*front/i.test(text(firstTest)) && /disappear|teleport/i.test(text(firstTest)), 'first hostage must preserve front-door inward activation');
-  assert(/second/i.test(text(secondTest)) && /disappear|teleport/i.test(text(secondTest)), 'second hostage must establish repeated activation');
-  assert(!/unlimited|infinite/i.test(text(firstTest) + text(secondTest)), 'repeated activation must not become unlimited-use canon');
+  const bypass = archive.getEntityById('event:bathroom-bypass-front-door-test');
+  const firstTrigger = archive.getEntityById('event:first-hostage-front-door-reentry-teleports');
+  const secondTrigger = archive.getEntityById('event:second-hostage-confirms-continuous-teleport');
+  assert(/without disappearing|does not trigger|does not activate/i.test(text(bypass)), 'bathroom-side entry must remain a demonstrated non-trigger');
+  assert(/exit|walks out/i.test(text(firstTrigger)) && /re-enter|reentry|re-entry/i.test(text(firstTrigger)) && /disappear|teleport/i.test(text(firstTrigger)), 'first-hostage event must preserve safe exit followed by teleport on inward re-entry');
+  assert(/Gateaume.*not visibly present|not visibly present.*Gateaume/i.test(text(firstTrigger)), 'front-door activation must preserve Gateaume-double absence without overclaiming ownership');
+  assert(/second/i.test(text(secondTrigger)) && /repeat|continu/i.test(text(secondTrigger)), 'second-hostage test must preserve repeated activation');
 
   const trap = archive.getEntityById('ability:heil-ly-front-door-teleport-trap');
   assert(trap?.firstChapter === 398 && trap?.latestChapter >= 398, 'descriptive front-door trap ability must enter at Chapter 398 even when later chapters extend the live entity');
-  assert(trap.classification?.nenTypes?.includes('unknown'), 'front-door trap category must remain unknown');
-  assert((trap.ownerIds || []).length === 0, 'front-door trap user must remain unassigned');
-  assert(/Gateaume/i.test(text(trap)) && /not.*prove|does not.*prove|unresolved|not.*assign/i.test(text(trap)), 'Gateaume relationship to the trap must remain unresolved');
-  assert(/exact trigger|switch geometry|boundary/i.test(text(trap)) && /unresolved|unknown|does not prove/i.test(text(trap)), 'exact trigger geometry must remain unresolved');
+  assert(trap.classification?.nenTypes?.includes('unknown'), 'front-door trap Nen category must remain unknown');
+  assert((trap.ownerIds || []).length === 0, 'front-door trap must not invent an owner');
+  assert(/descriptive archive label|official ability name.*unsupplied/i.test(text(trap)), 'front-door trap name must remain descriptive');
+  assert(/land-mine.*inference|land-mine.*not confirmed|classification.*inference/i.test(text(trap)), 'front-door trap must not canonize Nobunaga’s land-mine classification');
+  assert(/Gateaume.*not.*confirm|Gateaume.*not.*user|relationship to Gateaume.*unresolved/i.test(text(trap)), 'front-door trap must not assign ownership to Gateaume');
 
-  const trapTheory = archive.getEntityById('event:troupe-debates-barrier-land-mine-trap');
-  assert(/barrier/i.test(text(trapTheory)) && /land-mine|land mine/i.test(text(trapTheory)), 'barrier/land-mine system exposition must be preserved');
-  assert(/two or three|2 or 3|2–3/i.test(text(trapTheory)), 'land-mine exposition must preserve the rough two-or-three-location limit');
-  assert(/infer|deduc|theor|guess|not.*confirm/i.test(text(trapTheory)), 'application of land-mine theory to this trap must remain character analysis');
+  const preparedSystem397 = archive.getNenSystemDossier('nen-system:prepared-spatial-traps', 397);
+  const preparedSystem398 = archive.getNenSystemDossier('nen-system:prepared-spatial-traps', 398);
+  assert(!preparedSystem397 && preparedSystem398, 'barrier/land-mine prepared-trap system must become available at Chapter 398, not earlier');
+  assert(/rope|talismans/i.test(text(preparedSystem398)) && /two or three|2.*3/i.test(text(preparedSystem398)), 'prepared-trap system must preserve barrier support objects and land-mine two/three-location limit');
+  assert(/inference|hypothesis|unconfirmed/i.test(text(preparedSystem398)), 'specific Heil-Ly land-mine classification must remain uncertain inside system dossier');
+
+  const gateaume398 = archive.getAbilityKnowledgeAtChapter('ability:gateaume-decoy-body', 398);
+  assert(gateaume398?.known, 'Gateaume decoy-body knowledge must remain available at Chapter 398');
+  assert(gateaume398.ability.classification?.nenTypes?.includes('unknown'), 'Gateaume decoy-body category must remain unknown after Chapter 398 debate');
+  assert(/theor|unresolved|unconfirmed/i.test(text(gateaume398)), 'Chapter 398 Gateaume knowledge must preserve theory boundaries');
+  assert(!/confirmed teleport(?:ation)? trap user|Gateaume is the teleport/i.test(text(gateaume398)), 'Gateaume must not become confirmed teleport-trap user');
 
   const bio397 = archive.getAbilityKnowledgeAtChapter('ability:hinrigh-object-animal-transformation', 397);
   const bio398 = archive.getAbilityKnowledgeAtChapter('ability:hinrigh-object-animal-transformation', 398);
@@ -85,45 +94,60 @@ try {
   assert(/not.*precise|does not.*precise|exact.*unresolved/i.test(text(receiver)), 'receiver reading must not become an exact coordinate');
 
   const wall = archive.getEntityById('ability:heil-ly-self-restoring-hideout-stage');
-  assert(wall?.firstChapter === 398, 'self-restoring hideout stage must enter at Chapter 398');
-  assert(wall.classification?.nenTypes?.includes('unknown') && (wall.ownerIds || []).length === 0, 'self-restoring stage must retain unknown category and owner');
-  assert(/Conjuration|Transmutation|Specialization/i.test(text(wall)) && /Nobunaga|analysis|possible|could/i.test(text(wall)), 'candidate categories must remain Nobunaga analysis');
-  assert(/Morena/i.test(text(wall)) && /does not prove|not.*prove|unresolved|not.*assign/i.test(text(wall)), 'Morena smile must not assign stage ownership');
+  const wallEvent = archive.getEntityById('event:nobunaga-tests-self-restoring-hideout-wall');
+  assert(wall?.firstChapter === 398 && wall.classification?.nenTypes?.includes('unknown') && (wall.ownerIds || []).length === 0, 'self-restoring stage must enter at 398 with unknown category and owner');
+  assert(/rapidly disappears|damage rapidly disappears|restore/i.test(text(wallEvent)), 'wall event must preserve directly observed restoration');
+  assert(/Conjuration/i.test(text(wallEvent)) && /Transmutation/i.test(text(wallEvent)) && /Specialization/i.test(text(wallEvent)), 'wall event must preserve Nobunaga’s three category possibilities');
+  assert(/theor|hypoth|unresolved|not.*confirmed/i.test(text(wallEvent)), 'wall category/operator/proximity analysis must remain uncertain');
+  assert(!((wall.ownerIds || []).includes('character:morena-prudo')), 'Morena must not be assigned as self-restoring-stage owner');
+  assert(/Morena.*does not prove|Morena.*not.*prove|Morena.*not.*operator/i.test(text(wallEvent)), 'Morena smile juxtaposition must not become proof of wall control');
 
-  const hideoutArrival = archive.getEntityById('event:hinrigh-arrives-heilly-hideout-blood-sounds');
-  assert(/fresh blood/i.test(text(hideoutArrival)) && /sound/i.test(text(hideoutArrival)), 'Hinrigh hideout arrival must preserve fresh blood and nearby sounds');
-  const coop = archive.getEntityById('relationship:hinrigh-nobunaga-ch398-hideout-cooperation');
-  assert(coop && /temporary/i.test(text(coop)), 'Hinrigh/Nobunaga hideout relationship must remain temporary cooperation');
-  assert(/not.*permanent|not.*friend|does not.*permanent|institution/i.test(text(coop)), 'temporary cooperation must not become permanent alliance or membership');
+  const entryRoom = archive.getEntityById('location:black-whale:tier-3:heil-ly-hideout:entry-room');
+  const laundryRoom = archive.getEntityById('location:black-whale:tier-3:heil-ly-hideout:laundry-room');
+  assert(entryRoom && laundryRoom, 'Chapter 398 entry and laundry locations must exist');
+  assert(entryRoom.parentId === 'location:black-whale:tier-3:heil-ly-hideout' && laundryRoom.parentId === 'location:black-whale:tier-3:heil-ly-hideout', 'new Chapter 398 rooms must remain children of the existing Heil-Ly hideout location');
+  assert(/complete.*topology|full.*topology|does not.*complete/i.test(text(entryRoom) + text(laundryRoom)), 'new hideout locations must not pretend the complete topology is solved');
 
-  const laundry = archive.getEntityById('event:hinrigh-nobunaga-open-laundry-room');
-  assert(/laundry/i.test(text(laundry)), 'Chapter 398 endpoint must remain the laundry-filled room');
-  assert(/endpoint|end of.*chapter|chapter endpoint|stops/i.test(text(laundry)), 'laundry event must preserve the Chapter 398 stopping point');
-  assert(!/Sweet Home|LSDF|Yokotani|Terebellum.*ability/i.test(text(laundry)), 'Chapter 399 hideout-defense reveals must not leak into the Chapter 398 endpoint event');
+  const sweep = archive.getEntityById('event:hinrigh-nobunaga-sweep-to-laundry');
+  assert(/shower/i.test(text(sweep)) && /bathroom/i.test(text(sweep)) && /three toilets/i.test(text(sweep)) && /laundry/i.test(text(sweep)), 'hideout sweep must preserve shower, bathroom, three toilets, and laundry endpoint');
+  assert(/not.*solv|unresolved|without solving/i.test(text(sweep)), 'hideout sweep must preserve topology uncertainty');
+
+  const hinrighState = archive.getCharacterStateAtChapter('character:hinrigh-biganduffno', 398);
+  const nobunagaState = archive.getCharacterStateAtChapter('character:nobunaga-hazama', 398);
+  assert(hinrighState?.life === 'alive' && nobunagaState?.life === 'alive', 'Hinrigh and Nobunaga must both remain alive at Chapter 398 endpoint');
+  assert(hinrighState?.locationId === 'location:black-whale:tier-3:heil-ly-hideout:laundry-room', 'Hinrigh must end Chapter 398 at the laundry-room boundary');
+  assert(nobunagaState?.locationId === 'location:black-whale:tier-3:heil-ly-hideout:laundry-room', 'Nobunaga must end Chapter 398 at the laundry-room boundary');
+
+  const fieldPair = archive.getEntityById('relationship:hinrigh-nobunaga-ch398-hideout-cooperation');
+  const orgPair = archive.getEntityById('relationship:xi-yu-phantom-troupe-ch398-anti-heilly-cooperation');
+  assert(fieldPair && orgPair, 'Chapter 398 tactical cooperation relationships must exist');
+  assert(/temporary/i.test(text(fieldPair)) && /not.*permanent|does not establish permanent/i.test(text(fieldPair)), 'Hinrigh/Nobunaga cooperation must remain temporary');
+  assert(/institutionally separate|no permanent alliance|not.*permanent/i.test(text(orgPair)), 'Xi-Yu/Troupe cooperation must not become a permanent merger');
 
   const publicTimeline398 = timeline.successionDays.flatMap((day) => day.events).filter((event) => event.chapter === 398);
   assert(publicTimeline398.length === chapterModule.succession398TimelineEvents.length, 'public timeline must expose all maintained Chapter 398 beats');
-  assert(publicTimeline398.some((event) => event.id === '398-hinrigh-prepares-transmitter-oyster'), 'public timeline must include transmitter-oyster preparation');
-  assert(publicTimeline398.some((event) => event.id === '398-hinrigh-nobunaga-open-laundry-room'), 'public timeline must include laundry-room endpoint');
+  assert(publicTimeline398.some((event) => event.id === '398-hinrigh-transmitter-oyster-biohazard'), 'public timeline must include Biohazard transmitter-oyster use');
+  assert(publicTimeline398.some((event) => event.id === '398-nobunaga-tests-self-restoring-wall'), 'public timeline must include self-restoring wall test');
+  assert(publicTimeline398.some((event) => event.id === '398-hinrigh-nobunaga-sweep-to-laundry'), 'public timeline must stop at the laundry-room sweep');
 
   const activeAbilityNames = new Set((dossier.successionAbilities || []).map((record) => record.ability));
   const frozenAbilityNames = new Set((frozen397.successionAbilities || []).map((record) => record.ability));
-  assert(activeAbilityNames.has('Heil-Ly Front-Door Teleport Trap') && activeAbilityNames.has('Heil-Ly Self-Restoring Hideout Stage'), 'active dossier must expose the descriptive Chapter 398 ability records');
-  assert(!frozenAbilityNames.has('Heil-Ly Front-Door Teleport Trap') && !frozenAbilityNames.has('Heil-Ly Self-Restoring Hideout Stage'), 'frozen through-397 dossier must remain unaware of Chapter 398 descriptive abilities');
-  assert((dossier.guardAssignmentGroups || []).some((group) => group.group?.includes('Chapter 398')), 'active dossier must include Chapter 398 evidence group');
+  assert(activeAbilityNames.has('Heil-Ly Front-Door Teleport Trap') && activeAbilityNames.has('Heil-Ly Self-Restoring Hideout Stage'), 'active dossier must expose the two descriptive Chapter 398 Nen phenomena');
+  assert(!frozenAbilityNames.has('Heil-Ly Front-Door Teleport Trap') && !frozenAbilityNames.has('Heil-Ly Self-Restoring Hideout Stage'), 'frozen through-397 dossier must remain unaware of Chapter 398 Nen phenomena');
+  const frozenBio = (frozen397.successionAbilities || []).find((record) => record.ability === 'Biohazard');
+  assert(frozenBio && !/oyster|two hours|1 kilometer|one kilometer/i.test(text(frozenBio)), 'frozen through-397 dossier must preserve pre-398 Biohazard knowledge');
+  assert((dossier.guardAssignmentGroups || []).some((group) => group.group?.includes('Chapter 398')), 'active dossier must include the Chapter 398 evidence group');
   assert(!(frozen397.guardAssignmentGroups || []).some((group) => group.group?.includes('Chapter 398')), 'frozen through-397 dossier must remain unaware of Chapter 398');
 
   const note = fs.readFileSync('docs/source-notes/chapter-398.md', 'utf8');
   assert(/No Chapter 399\+ backfill/i.test(note), 'source note must quarantine Chapter 399+ knowledge');
-  assert(/does not.*prove.*unlimited|does not.*prove.*unlimited use/i.test(note), 'source note must preserve repeated-use boundary');
-  assert(/does not.*canonically classify Gateaume|does not.*classify Gateaume/i.test(note), 'source note must preserve Gateaume category uncertainty');
-  assert(/roughly.*two or three|roughly.*2.*3/i.test(note), 'source note must preserve land-mine location exposition');
-  assert(/does not upgrade.*deduction|remain.*deduction|not.*absolute/i.test(note), 'source note must preserve Troupe trap deductions as deductions');
-  assert(/roughly.*two hours|roughly.*2 hours/i.test(note) && /one kilometer|1 kilometer/i.test(note), 'source note must preserve transmitter duration and receiver range');
+  assert(/character-level Nen analysis|character.*analysis/i.test(note) && /does \*\*not\*\* canonically classify|does not canonically classify/i.test(note), 'source note must separate Gateaume/trap theories from confirmed classification');
+  assert(/Barrier type/i.test(note) && /Land-mine type/i.test(note) && /two or three locations/i.test(note), 'source note must preserve general prepared-trap exposition');
+  assert(/roughly \*\*two hours\*\*|roughly two hours/i.test(note) && /one kilometer/i.test(note) && /does \*\*not\*\* account for altitude|does not account for altitude/i.test(note), 'source note must preserve Biohazard tracking specifics');
   assert(/does not prove Morena personally operates|does not.*Morena.*personally operates/i.test(note.replaceAll('**', '')), 'source note must preserve Morena-operator uncertainty');
-  assert(/laundry-filled room/i.test(note) && /endpoint/i.test(note), 'source note must stop at the laundry-room endpoint');
+  assert(/endpoint.*laundry|Chapter 398 endpoint.*laundry/i.test(note), 'source note must stop at the laundry-filled room');
 
-  console.log(`Chapter 398 boundary audit passed: ${events398.length} canonical Chapter 398 events preserve the tested front-door teleport trigger, barrier/land-mine theory boundary, Biohazard transmitter mechanics, temporary Hinrigh–Nobunaga cooperation, self-restoring hideout uncertainty, and laundry-room endpoint.`);
+  console.log(`Chapter 398 boundary audit passed: ${dedicatedEventIds.length} dedicated canonical events plus ${projected398.length} maintained-research projections preserve the tested front-door teleport trigger, barrier/land-mine theory boundary, Biohazard transmitter mechanics, temporary Hinrigh–Nobunaga cooperation, self-restoring hideout uncertainty, and laundry-room endpoint.`);
 } finally {
   await vite.close();
 }
