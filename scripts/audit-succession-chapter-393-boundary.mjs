@@ -18,7 +18,7 @@ try {
   const numbers = maintained.maintainedSuccessionChapterNumbers;
   const index392 = numbers.indexOf(392);
   assert(index392 >= 0 && numbers[index392 + 1] === 393, 'maintained publication chain must place Chapter 393 directly after Chapter 392');
-  assert(numbers[numbers.indexOf(393) + 1] === 394 && numbers[numbers.indexOf(394) + 1] === 395 && numbers[numbers.indexOf(395) + 1] === 400, 'Chapter 393 must hand directly through Chapters 394 and 395 before the pre-existing Chapter 400 maintained packet');
+  assert(numbers[numbers.indexOf(393) + 1] === 394 && numbers[numbers.indexOf(394) + 1] === 395 && numbers[numbers.indexOf(395) + 1] === 396 && numbers[numbers.indexOf(396) + 1] === 400, 'Chapter 393 must hand directly through Chapters 394, 395, and 396 before the pre-existing Chapter 400 maintained packet');
 
   const chapter393 = chapterModule.succession393ChapterResearch?.[0];
   assert(chapter393?.number === 393, 'dedicated Chapter 393 research must load');
