@@ -17,7 +17,7 @@ try {
 
   const numbers = maintained.maintainedSuccessionChapterNumbers;
   const index399 = numbers.indexOf(399);
-  assert(index399 >= 0 && numbers[index399 + 1] === 400 && numbers[index399 + 2] === 406, 'maintained publication chain must place modernized Chapter 400 directly after 399 and before the pre-existing 406 packet');
+  assert(index399 >= 0 && numbers[index399 + 1] === 400 && numbers[index399 + 2] === 401 && numbers[index399 + 3] === 406, 'maintained publication chain must place modernized Chapter 400 directly after 399, then Chapter 401, before the pre-existing 406 packet');
 
   const chapter400 = chapterModule.succession400ChapterResearch?.[0];
   assert(chapter400?.number === 400, 'modernized Chapter 400 research must load');
