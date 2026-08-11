@@ -79,3 +79,5 @@ export const succession406ChapterResearch = freeze([freeze({
   officialReaderUrl: null,
   source: source406,
 })]);
+
+export const succession406ChapterFocus = freeze({ 406: succession406ChapterResearch[0].focus });
