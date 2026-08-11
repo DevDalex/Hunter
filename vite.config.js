@@ -154,6 +154,12 @@ export default defineConfig({
             // Skill Hunter preparation. Keep its exact state and Nen leaves in a
             // dedicated lazy data island without pulling Through405 forward.
             { name: 'succession-chapter-406-route-lynch-regalia', test: /src\/data\/(?:succession(?:406Research(?:Boundary|Events)?|ArchiveThrough406|DossierThrough406)|succession\/(?:abilityFoundation406Expansion|eventFoundation406Expansion|relationshipFoundation406Expansion|locationFoundation406Expansion|organizationState406Corrections|characterState406Corrections|nenSystemFoundation406Corrections))\.js$/ },
+            // Chapter 407 bridges the funeral-security disappearance into the
+            // Tier 2 Borksen/Morena recruitment scene and carries a dense but
+            // mechanics-bounded negotiation-game packet. Keep research, frozen
+            // snapshots, event/relationship leaves, and exact character/org
+            // states together without promoting the protocol into a Nen ability.
+            { name: 'succession-chapter-407-borksen-negotiation-setup', test: /src\/data\/(?:succession(?:407Research|ArchiveThrough407|DossierThrough407)|succession\/(?:eventFoundation407Expansion|relationshipFoundation407Expansion|organizationState407Corrections|characterState407Corrections))\.js$/ },
           ],
         },
       },
