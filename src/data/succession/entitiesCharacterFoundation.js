@@ -22,7 +22,6 @@ import { characterState403LegacySplits } from './characterState403LegacySplits.j
 import { characterState403CorrectionProfiles } from './characterState403Corrections.js';
 import { characterState404LegacySplits } from './characterState404LegacySplits.js';
 import { characterState404CorrectionProfiles } from './characterState404Corrections.js';
-import { characterState405LegacySplits } from './characterState405LegacySplits.js';
 import { characterState405CorrectionProfiles } from './characterState405Corrections.js';
 import { characterStatusKnowledge } from './characterStatusKnowledge.js';
 
@@ -50,7 +49,6 @@ const characterIds = new Set([
   ...Object.keys(characterState403CorrectionProfiles),
   ...Object.keys(characterState404LegacySplits),
   ...Object.keys(characterState404CorrectionProfiles),
-  ...Object.keys(characterState405LegacySplits),
   ...Object.keys(characterState405CorrectionProfiles),
 ]);
 
@@ -88,7 +86,6 @@ const mergeCharacterRecords = (characterId) => {
     characterState403CorrectionProfiles,
     characterState404LegacySplits,
     characterState404CorrectionProfiles,
-    characterState405LegacySplits,
     characterState405CorrectionProfiles,
   ]) {
     for (const record of layer[characterId] || []) {
