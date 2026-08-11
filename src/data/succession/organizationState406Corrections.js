@@ -54,6 +54,6 @@ export const organizationState406Corrections = freeze({
     objectiveStates: ['Maintain the concealed base and ongoing Contagion operation.', 'Respond to increasing Troupe and established-mafia pressure.'],
     pressure: ['Nobunaga turns back specifically to investigate the waste-route theory.', 'The hidden transmitter has reverted to its original device inside the base.', 'Phinks and Feitan continue through Tajao’s route toward Tier 2.', 'The chapter does not reveal the outcome of the prior funeral-search assignment.'],
     relatedEventIds: ['event:chapter406-heilly-waste-contractor-killing-pipeline-theory', 'event:chapter406-nobunaga-turns-back-to-investigate', 'event:chapter406-biohazard-transmitter-reverts'],
-    certainty: 'hideout/transmitter facts confirmed / subcontractor operation remains Troupe theory',
+    certainty: 'subcontractor operation remains Troupe theory / hideout and transmitter facts confirmed',
   })]),
 });
