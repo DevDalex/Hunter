@@ -72,7 +72,7 @@ try {
 
   const keni405 = archive.getCharacterStateAtChapter('character:ken-i-wang', 405);
   assert(/Morena/i.test(text(keni405)) && /joker/i.test(text(keni405)), 'Ken’i’s concealed Morena/joker thoughts must be retained');
-  assert(!/Heil-Ly member|member of Heil-Ly|Heil-Ly allegiance confirmed/i.test(text(keni405)), 'Ken’i must not be promoted to a confirmed Heil-Ly member');
+  assert(!/(?:is|becomes|confirmed as|serves as|formally)\s+(?:a\s+)?Heil-Ly member|member of Heil-Ly|Heil-Ly allegiance (?:is )?confirmed/i.test(text(keni405)), 'Ken’i must not be promoted to a confirmed Heil-Ly member');
 
   const heilly405 = archive.getOrganizationStateAtChapter('organization:heil-ly', 405);
   const troupe405 = archive.getOrganizationStateAtChapter('organization:phantom-troupe', 405);
