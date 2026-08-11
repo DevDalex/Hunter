@@ -37,6 +37,7 @@ import { eventFoundation401Expansion } from './eventFoundation401Expansion.js';
 import { eventFoundation402Expansion } from './eventFoundation402Expansion.js';
 import { eventFoundation403Expansion } from './eventFoundation403Expansion.js';
 import { eventFoundation404Expansion } from './eventFoundation404Expansion.js';
+import { eventFoundation405Expansion } from './eventFoundation405Expansion.js';
 
 const ARCHIVE_DATE = '2026-08-11';
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -81,6 +82,7 @@ const eventExpansions = Object.freeze([
   ...eventFoundation402Expansion,
   ...eventFoundation403Expansion,
   ...eventFoundation404Expansion,
+  ...eventFoundation405Expansion,
 ]);
 
 const events = Object.freeze(uniqueById([
@@ -96,36 +98,18 @@ const chapters = Object.freeze(foundationData.chapters.map((chapter) => {
 
   const appearanceRecords = new Map((chapter.appearanceRecords || []).map((appearance) => [appearance.characterId, appearance]));
   for (const participantId of linkedEvents.flatMap((event) => event.participantIds || [])) {
-    if (!appearanceRecords.has(participantId)) {
-      appearanceRecords.set(participantId, Object.freeze({ characterId: participantId, role: 'event participant' }));
-    }
+    if (!appearanceRecords.has(participantId)) appearanceRecords.set(participantId, Object.freeze({ characterId: participantId, role: 'event participant' }));
   }
 
   return Object.freeze({
     ...chapter,
     appearanceRecords: Object.freeze([...appearanceRecords.values()]),
-    eventIds: Object.freeze(unique([
-      ...(chapter.eventIds || []),
-      ...linkedEvents.map((event) => event.id),
-    ])),
-    locationIds: Object.freeze(unique([
-      ...(chapter.locationIds || []),
-      ...linkedEvents.flatMap((event) => event.locationIds || []),
-    ])),
-    abilityIds: Object.freeze(unique([
-      ...(chapter.abilityIds || []),
-      ...linkedEvents.flatMap((event) => event.abilityIds || []),
-    ])),
-    organizationIds: Object.freeze(unique([
-      ...(chapter.organizationIds || []),
-      ...linkedEvents.flatMap((event) => event.organizationIds || []),
-    ])),
+    eventIds: Object.freeze(unique([...(chapter.eventIds || []), ...linkedEvents.map((event) => event.id)])),
+    locationIds: Object.freeze(unique([...(chapter.locationIds || []), ...linkedEvents.flatMap((event) => event.locationIds || [])])),
+    abilityIds: Object.freeze(unique([...(chapter.abilityIds || []), ...linkedEvents.flatMap((event) => event.abilityIds || [])])),
+    organizationIds: Object.freeze(unique([...(chapter.organizationIds || []), ...linkedEvents.flatMap((event) => event.organizationIds || [])])),
     updatedAt: ARCHIVE_DATE,
   });
 }));
 
-export const successionArchiveData = Object.freeze({
-  ...foundationData,
-  events,
-  chapters,
-});
+export const successionArchiveData = Object.freeze({ ...foundationData, events, chapters });
