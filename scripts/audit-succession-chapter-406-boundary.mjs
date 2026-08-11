@@ -45,8 +45,10 @@ try {
 
   const contractorTheory = archive.getEntityById('event:chapter406-heilly-waste-contractor-killing-pipeline-theory');
   const heilly406 = archive.getOrganizationStateAtChapter('organization:heil-ly', 406);
+  const heilly406Explicit = archive.getOrganizationStateTimeline('organization:heil-ly').find((record) => record.id === 'organization-state:heil-ly:406');
   assert(/theory|does not demonstrate|not.*confirmed/i.test(text(contractorTheory)), 'Heil-Ly waste-contractor pipeline must remain a theory');
-  assert(/theory/i.test(text(heilly406)) && !/confirmed.*subcontractor|operates.*subcontractor.*confirmed/i.test(text(heilly406)), 'Heil-Ly organization state must not promote the contractor theory to fact');
+  assert(heilly406Explicit && /theory|theoriz|no direct proof|unconfirmed/i.test(text(heilly406Explicit)), 'explicit Heil-Ly Chapter 406 state must preserve the subcontractor operation as theory rather than fact');
+  assert(heilly406 && !/confirmed.*subcontractor|operates.*subcontractor.*confirmed/i.test(text(heilly406)), 'selected Heil-Ly organization state must not promote the contractor theory to fact');
 
   const lsdf406 = archive.getAbilityKnowledgeAtChapter('ability:yokotani-battle-of-wits-lsdf', 406);
   assert(/Nobunaga/i.test(text(lsdf406)) && /counteractive|defense/i.test(text(lsdf406)), 'Chapter 406 must retain Nobunaga’s LSDF operational recap');
