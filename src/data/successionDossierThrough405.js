@@ -12,6 +12,18 @@ export * from './successionDossierThrough404.js';
 const freeze = (value) => Object.freeze(value);
 const source405 = 'https://hunterxhunter.fandom.com/wiki/Chapter_405';
 
+const mysteryChapter = (record) => {
+  const idMatch = String(record?.id || '').match(/^(\d{3})-/);
+  const sourceMatch = String(record?.source || '').match(/Chapter_(\d+)/);
+  const chapter = Number(idMatch?.[1] || sourceMatch?.[1]);
+  return Number.isFinite(chapter) ? chapter : null;
+};
+
+const baseMysteriesThrough405 = freeze((base.successionMysteries || []).filter((record) => {
+  const chapter = mysteryChapter(record);
+  return chapter === null || chapter <= 405;
+}));
+
 const metamorphorsen405 = freeze({
   ability: 'Battle Cantabile: Metamorphorsen · Chapter 405 identity-operation update',
   user: 'Bonolenov', owner: 'Bonolenov',
@@ -97,7 +109,7 @@ const asLegacyRelationship = (record) => {
 
 export const successionRelationships = freeze([...(base.successionRelationships || []), ...succession405RelationshipRecords].map(asLegacyRelationship));
 export const bodyStateLedger = base.bodyStateLedger;
-export const successionMysteries = freeze([...(base.successionMysteries || []), ...succession405Mysteries]);
+export const successionMysteries = freeze([...baseMysteriesThrough405, ...succession405Mysteries]);
 export const successionResolvedQuestions = freeze([...(base.successionResolvedQuestions || []), ...succession405ResolvedQuestions]);
 export const dossierSources = freeze({ ...base.dossierSources, chapter405: source405, sourcePolicy405: succession405SourcePolicy });
 
