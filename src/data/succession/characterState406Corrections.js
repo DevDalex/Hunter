@@ -94,6 +94,9 @@ export const characterState406CorrectionProfiles = freeze({
   })]),
   'character:zakuro-custard': freeze([state({
     characterId: 'character:zakuro-custard',
+    bodyStateCode: 'living',
+    identityStateCode: 'self',
+    consciousnessStateCode: 'active',
     operationalState: 'Learns that Lynch is dead, reconstructs her abnormal post-encounter behavior and “definitely Hisoka” wording with Hinrigh, accepts that the culprit may have deliberately narrowed Xi-Yu’s thinking, and commits to avenging Lynch without acting on guesswork.',
     protectionState: 'Xi-Yu operative working beside Hinrigh in the funeral crowd.',
     threatLevel: 'high personal revenge and misinformation exposure',
