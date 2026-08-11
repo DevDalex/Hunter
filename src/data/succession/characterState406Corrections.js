@@ -108,7 +108,7 @@ export const characterState406CorrectionProfiles = freeze({
   })]),
   'character:chrollo-lucilfer': freeze([state({
     characterId: 'character:chrollo-lucilfer',
-    operationalState: 'Searches the Tier 3 funeral crowd with a phone ability from Skill Hunter, considers changing location or loosening conditions, weighs the risk of entering Tier 1 before he is ready for Hisoka, targets Kakin’s three sacred treasures, and states that a national-treasure-level theft is the extra prerequisite needed before the normal conditions for stealing and storing the unidentified ability he wants. He also says the Spider has an alternative that will let its idea continue if he dies.',
+    operationalState: 'Searches the Tier 3 funeral crowd with a phone ability from Skill Hunter, considers changing location or loosening conditions, weighs the risk of entering Tier 1 before he is ready for Hisoka, targets Kakin’s three sacred treasures—the Seed Urn, Lotus Anchorite, and Sword of Good Omens—and states that a national-treasure-level theft is the extra prerequisite needed before the normal conditions for stealing and storing the unidentified ability he wants. He also says the Spider has an alternative that will let its idea continue if he dies.',
     protectionState: 'Phantom Troupe leader moving independently in a large public crowd; no direct contact with Hisoka occurs.',
     threatLevel: 'extreme',
     nenKnowledge: 'Uses Love Dial 6700 - Disgusting Telephone through Skill Hunter. Treats the regalia as the likely Nen core of the succession system and Tier 1 as their likely storage area, but those systemic/location claims remain his theories. The extra national-treasure theft prerequisite for his planned Skill Hunter evolution is his direct explanation.',
