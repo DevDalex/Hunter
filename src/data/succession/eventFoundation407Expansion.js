@@ -16,7 +16,7 @@ const locationIds = (record) => freeze([
 
 const organizationIds = (record) => freeze([
   ...(record.tracks?.includes('heil-ly') || record.tracks?.includes('morena') || record.tracks?.includes('negotiation-game') ? ['organization:heil-ly'] : []),
-  ...(record.tracks?.includes('tserriednich') || record.tracks?.includes('soldiers') ? ['organization:kakin-royal-army'] : []),
+  ...(record.tracks?.includes('tserriednich') || record.tracks?.includes('soldiers') ? ['organization:kakin-military'] : []),
 ]);
 
 const criticalIds = new Set([
