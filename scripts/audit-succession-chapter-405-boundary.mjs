@@ -42,7 +42,7 @@ try {
   assert(/false-Hisoka decoy|decoy plan/i.test(text(bonolenov405)) && bonolenov405?.locationId === 'location:black-whale:tier-1:casino:restroom', 'Bonolenov must own the false-Hisoka decoy reveal and switch to the casino restroom');
   assert(lynch393?.life === 'alive', 'Chapter 393 must remain frozen with Lynch alive after the apparent-Hisoka encounter');
   assert(lynch405?.life === 'dead' && /Bonolenov/i.test(text(lynch405)), 'Lynch’s death must first resolve at the Chapter 405 state boundary');
-  assert(zakuro405?.life === 'alive' && /deceiv/i.test(text(zakuro405)), 'Zakuro must remain alive while the Bonolenov disguise deception is revealed');
+  assert(zakuro405?.life === 'alive' && /manipulat|disguise|sent toward/i.test(text(zakuro405)), 'Zakuro must remain alive while the Bonolenov disguise deception is revealed');
 
   const metamorph377 = archive.getAbilityKnowledgeAtChapter('ability:battle-cantabile-metamorphorsen', 377);
   const metamorph405 = archive.getAbilityKnowledgeAtChapter('ability:battle-cantabile-metamorphorsen', 405);
