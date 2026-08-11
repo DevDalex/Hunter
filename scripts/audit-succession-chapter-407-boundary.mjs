@@ -53,7 +53,7 @@ try {
   const morena407 = archive.getCharacterStateAtChapter('character:morena-prudo', 407);
   const otocin407 = archive.getCharacterStateAtChapter('character:otocin', 407);
   const momolly407 = archive.getCharacterStateAtChapter('character:momolly', 407);
-  assert(/unrestrained/i.test(text(borksen407)) && /six enemies/i.test(text(borksen407)) && /weapon/i.test(text(borksen407)), 'Borksen state must preserve the unrestrained/disarmed/six-enemy room audit');
+  assert(/unrestrained|not physically restrained|not restrained/i.test(text(borksen407)) && /six enemies/i.test(text(borksen407)) && /weapon/i.test(text(borksen407)), 'Borksen state must preserve the unrestrained/disarmed/six-enemy room audit');
   assert(/capture.*unresolved|mechanism.*unresolved|does not identify|unknown power/i.test(text(borksen407)) && !/Sodom.*confirmed|confirmed.*Sodom/i.test(text(borksen407)), 'Borksen state must not identify the abductor or promote earlier Sodom planning to proof');
   assert(/five child|five.*card|all five|Yes|Return|Joker|X/i.test(text(morena407)) || /negotiation game/i.test(text(morena407)), 'Morena state must preserve the Chapter 407 negotiation setup');
   assert(/speculat|no evidence|unknown|does not know/i.test(text(otocin407)), 'Otocin state must preserve his theory-only knowledge boundary');
