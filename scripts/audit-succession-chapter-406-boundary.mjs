@@ -18,7 +18,7 @@ try {
 
   const numbers = maintained.maintainedSuccessionChapterNumbers;
   const index405 = numbers.indexOf(405);
-  assert(index405 >= 0 && numbers[index405 + 1] === 406 && numbers[index405 + 2] === 408, 'maintained publication chain must be 405 → 406 → 408 while Chapter 407 remains absent from maintained research');
+  assert(index405 >= 0 && numbers[index405 + 1] === 406 && numbers[index405 + 2] === 407 && numbers[index405 + 3] === 408, 'maintained publication chain must be 405 → 406 → 407 → 408 while Chapter 406 itself remains bounded before Chapter 407 content');
 
   const chapter406 = chapterModule.succession406ChapterResearch?.[0];
   assert(chapter406?.number === 406, 'Chapter 406 maintained research must load');
@@ -40,7 +40,7 @@ try {
   assert(waste && heillyProcessing && waste.id !== heillyProcessing.id, 'waste/sewage plant and Heil-Ly processing area must remain separate canonical locations');
   assert(/between Tiers 4 and 5|intertier/i.test(text(waste)) && /distinct/i.test(text(waste)), 'waste-processing location must preserve its inter-tier and non-Heil-Ly-processing distinction');
   assert(!frozen405Archive.publicationBoundary406, 'frozen Through405 archive must remain unaware of the Chapter 406 publication boundary');
-  assert(activeArchive.publicationBoundary406?.chapter === 406, 'active archive must advance to Through406');
+  assert(activeArchive.publicationBoundary406?.chapter === 406, 'active archive must retain the Through406 boundary while advancing through later chapters');
   assert(!frozenRoute || /unresolved|unrevealed|threshold/i.test(text(frozenRoute)), 'Through405 route record must remain frozen at the unrevealed-door boundary');
 
   const contractorTheory = archive.getEntityById('event:chapter406-heilly-waste-contractor-killing-pipeline-theory');
