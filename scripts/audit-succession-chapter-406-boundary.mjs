@@ -69,10 +69,12 @@ try {
 
   const loveDial = archive.getEntityById('ability:love-dial-6700-disgusting-telephone');
   const loveDialKnowledge = archive.getAbilityKnowledgeAtChapter('ability:love-dial-6700-disgusting-telephone', 406);
+  const loveDialText = text(loveDialKnowledge);
+  const inventedDailyQuota = /\b(?:allows?|has|gets?|limited to|remaining)\s+(?:exactly\s+)?\d+\s+calls?\b|\b(?:exactly\s+)?\d+\s+calls?\s+(?:per|a)\s+day\b/i.test(loveDialText);
   assert(loveDial?.name === 'Love Dial 6700 - Disgusting Telephone', 'supplied translated phone-ability label must be retained');
-  assert(/6.*20 digit|6–20 digit/i.test(text(loveDialKnowledge)), 'Love Dial knowledge must retain the translated 6–20 digit number rule');
-  assert(/McGait Narumi/i.test(text(loveDialKnowledge)) && /unresolved|unknown/i.test(text(loveDialKnowledge)), 'McGait Narumi text must remain unresolved rather than becoming an invented original owner');
-  assert(/finite|limited/i.test(text(loveDialKnowledge)) && !/exact.*(?:[0-9]+).*calls/i.test(text(loveDialKnowledge)), 'daily calls must be finite without inventing an exact count');
+  assert(/6.*20 digit|6–20 digit/i.test(loveDialText), 'Love Dial knowledge must retain the translated 6–20 digit number rule');
+  assert(/McGait Narumi/i.test(loveDialText) && /unresolved|unknown/i.test(loveDialText), 'McGait Narumi text must remain unresolved rather than becoming an invented original owner');
+  assert(/finite|limited/i.test(loveDialText) && !inventedDailyQuota, 'daily calls must be finite without inventing an exact count');
 
   const chrollo406 = archive.getCharacterStateAtChapter('character:chrollo-lucilfer', 406);
   assert(/Seed Urn/i.test(text(chrollo406)) && /Lotus Anchorite/i.test(text(chrollo406)) && /Sword of Good Omens/i.test(text(chrollo406)), 'Chrollo state must identify all three sacred treasures');
