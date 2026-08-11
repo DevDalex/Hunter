@@ -1,7 +1,7 @@
 const freeze = (value) => Object.freeze(value);
 const sourceIds = freeze(['source:chapter-407']);
 
-const state = ({ characterId, operationalState, protectionState, threatLevel, nenKnowledge, allegianceState, locationId = null, openQuestions = [], certainty = 'confirmed', life = 'alive', bodyState = 'living body', consciousnessState = 'active in own body', bodyStateCode = 'living', identityStateCode = 'self', consciousnessStateCode = 'active', loyaltyStateCode = null }) => freeze({
+const state = ({ characterId, operationalState, protectionState, threatLevel, nenKnowledge, allegianceState, locationId = null, openQuestions = [], certainty = 'confirmed', life = 'alive', bodyState = 'living body', consciousnessState = 'active in own body', bodyStateCode = 'living', identityStateCode = 'self', consciousnessStateCode = 'active' }) => freeze({
   id: `character-state:${characterId.replace('character:', '')}:407`,
   characterId,
   chapterRange: freeze({ start: 407, end: 407 }),
@@ -20,7 +20,6 @@ const state = ({ characterId, operationalState, protectionState, threatLevel, ne
   bodyStateCode,
   identityStateCode,
   consciousnessStateCode,
-  ...(loyaltyStateCode ? { loyaltyStateCode } : {}),
 });
 
 export const characterState407CorrectionProfiles = freeze({
@@ -31,7 +30,6 @@ export const characterState407CorrectionProfiles = freeze({
     threatLevel: 'extreme coercive-captivity and recruitment exposure',
     nenKnowledge: 'Borksen recognizes Nen as a possible explanation for her unexplained memory gap but does not identify an ability, user, category, trigger, or method. The negotiation game is not promoted into an unsupplied Nen ability.',
     allegianceState: 'Tserriednich-aligned soldier; no Heil-Ly alliance has been accepted at the Chapter 407 boundary.',
-    loyaltyStateCode: 'tserriednich-soldier',
     locationId: 'location:black-whale:tier-2:heil-ly-hideout',
     openQuestions: ['Who abducted Borksen and how?', 'Why specifically does Morena want Borksen?', 'What final response will end the negotiation game?'],
     certainty: 'captivity, room observations and negotiation actions confirmed / capture mechanism and Nen involvement unresolved',
@@ -43,7 +41,6 @@ export const characterState407CorrectionProfiles = freeze({
     threatLevel: 'high strategic exposure within controlled Heil-Ly territory',
     nenKnowledge: 'Morena promises that the Power card can explain her ability truthfully, but Chapter 407 does not provide that substantive explanation. No anti-cheating Nen enforcement is supplied.',
     allegianceState: 'Heil-Ly leader conducting active recruitment.',
-    loyaltyStateCode: 'heil-ly-leader',
     locationId: 'location:black-whale:tier-2:heil-ly-hideout',
     openQuestions: ['What is Morena’s specific purpose for recruiting Borksen?', 'What will she reveal under Power?', 'What are the final Yes and No consequences?'],
   })]),
@@ -54,7 +51,6 @@ export const characterState407CorrectionProfiles = freeze({
     threatLevel: 'high funeral-security and missing-comrade exposure',
     nenKnowledge: 'Aware enough of Nen to propose a control/hypnosis-like mechanism, but has no evidence that such an ability caused Borksen’s disappearance.',
     allegianceState: 'Tserriednich-aligned soldier and Borksen friend.',
-    loyaltyStateCode: 'tserriednich-soldier',
     locationId: 'location:black-whale:tier-3:funeral-procession-crowd',
     openQuestions: ['Where is Borksen?', 'Was Heil-Ly involved, and if so what is its motive?'],
     certainty: 'missing-person observations confirmed / Nen and assassination theories speculative',
@@ -66,7 +62,6 @@ export const characterState407CorrectionProfiles = freeze({
     threatLevel: 'high funeral-security and missing-comrade exposure',
     nenKnowledge: 'No new personal Nen ability or confirmed capture mechanism is supplied.',
     allegianceState: 'Tserriednich-aligned soldier and Borksen friend.',
-    loyaltyStateCode: 'tserriednich-soldier',
     locationId: 'location:black-whale:tier-3:funeral-procession-crowd',
     openQuestions: ['How was Borksen taken without a visible struggle?', 'What response should the group choose after security duty?'],
     certainty: 'timing and discussion confirmed / proposed capture methods hypothetical',
