@@ -24,6 +24,7 @@ import { relationshipFoundation401Expansion } from './relationshipFoundation401E
 import { relationshipFoundation402Expansion } from './relationshipFoundation402Expansion.js';
 import { relationshipFoundation403Expansion } from './relationshipFoundation403Expansion.js';
 import { relationshipFoundation404Expansion } from './relationshipFoundation404Expansion.js';
+import { relationshipFoundation405Expansion } from './relationshipFoundation405Expansion.js';
 
 const ARCHIVE_DATE = '2026-08-11';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
@@ -49,18 +50,9 @@ for (const [legacyId, canonicalId] of Object.entries(legacyRelationshipAliases))
 }
 
 const relationshipEnrichment = Object.freeze({
-  'relationship:kurapika-oito': Object.freeze({
-    basis: 'Oito’s bodyguard contract and their shared command of Room 1014’s survival strategy.',
-    operationalState: 'Active employer, strategist, and political-partner relationship.',
-    strength: 'command-critical', certainty: 'confirmed',
-    relatedEventIds: Object.freeze(['event:room-1014-opening-crisis', 'event:oito-little-eye-reconnaissance', 'event:lower-prince-alliance-formation']), evidenceNotes: Object.freeze([]),
-  }),
-  'relationship:kurapika-woble': Object.freeze({
-    basis: 'Kurapika’s contracted bodyguard duty and explicit commitment to the infant prince’s survival.', operationalState: 'Active protection, deterrence, diplomacy, and Nen-instruction strategy.', strength: 'existential', certainty: 'confirmed', relatedEventIds: Object.freeze(['event:room-1014-opening-crisis', 'event:vincent-room-1014-attack', 'event:lower-prince-alliance-formation']), evidenceNotes: Object.freeze([]),
-  }),
-  'relationship:morena-heil-ly': Object.freeze({
-    basis: 'Morena’s leadership of the Contagion community and breakaway Heil-Ly campaign.', operationalState: 'Active command, recruitment, leveling, and ideological control.', strength: 'institutional', certainty: 'confirmed', relatedEventIds: Object.freeze(['event:heil-ly-contagion-activation', 'event:borksen-recruitment-game']), evidenceNotes: Object.freeze([]),
-  }),
+  'relationship:kurapika-oito': Object.freeze({ basis: 'Oito’s bodyguard contract and their shared command of Room 1014’s survival strategy.', operationalState: 'Active employer, strategist, and political-partner relationship.', strength: 'command-critical', certainty: 'confirmed', relatedEventIds: Object.freeze(['event:room-1014-opening-crisis', 'event:oito-little-eye-reconnaissance', 'event:lower-prince-alliance-formation']), evidenceNotes: Object.freeze([]) }),
+  'relationship:kurapika-woble': Object.freeze({ basis: 'Kurapika’s contracted bodyguard duty and explicit commitment to the infant prince’s survival.', operationalState: 'Active protection, deterrence, diplomacy, and Nen-instruction strategy.', strength: 'existential', certainty: 'confirmed', relatedEventIds: Object.freeze(['event:room-1014-opening-crisis', 'event:vincent-room-1014-attack', 'event:lower-prince-alliance-formation']), evidenceNotes: Object.freeze([]) }),
+  'relationship:morena-heil-ly': Object.freeze({ basis: 'Morena’s leadership of the Contagion community and breakaway Heil-Ly campaign.', operationalState: 'Active command, recruitment, leveling, and ideological control.', strength: 'institutional', certainty: 'confirmed', relatedEventIds: Object.freeze(['event:heil-ly-contagion-activation', 'event:borksen-recruitment-game']), evidenceNotes: Object.freeze([]) }),
 });
 
 const normalizeRelationship = (relationship) => {
@@ -108,6 +100,7 @@ const relationships = Object.freeze(uniqueById([
   ...relationshipFoundation402Expansion,
   ...relationshipFoundation403Expansion,
   ...relationshipFoundation404Expansion,
+  ...relationshipFoundation405Expansion,
 ]).map(normalizeRelationship));
 
 export const successionArchiveData = Object.freeze({ ...assignmentFoundationData, relationships });
