@@ -2,7 +2,7 @@
 
 ## Source boundary
 
-The modern Chapter 406 packet uses the current user-supplied Hunterpedia-style synopsis provided on 2026-08-11 as its sole substantive Chapter 406 story source. The supplied packet does not provide a chapter title or Japanese title, so neither is invented or backfilled from the older Chapter 406 catalog. No Chapter 407+ scene is imported to complete a Chapter 406 uncertainty.
+The modern Chapter 406 packet uses the current user-supplied Hunterpedia-style synopsis provided on 2026-08-11 as its sole substantive Chapter 406 story source. **No Chapter 406 title or Japanese title was supplied in the current packet.** Neither is invented or backfilled from the older Chapter 406 catalog. No Chapter 407+ scene is imported to complete a Chapter 406 uncertainty.
 
 Chapter 406 continues directly from Chapter 405's Tajao-route cliffhanger and from the funeral timing established by the maintained Chapter 404–405 boundary. The supplied synopsis shows Halkenburg's funeral procession beginning on Tier 3. The archive therefore places the present sequence on **Voyage Day 12, Thursday, during the funeral-procession period**, without inventing an exact minute.
 
