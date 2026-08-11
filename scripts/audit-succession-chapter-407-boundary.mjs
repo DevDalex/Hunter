@@ -66,7 +66,7 @@ try {
   assert(parentKeys.length === 7 && ['Aim', 'Power', 'Question A', 'Question B', 'Yes?', 'No?', 'Deal'].every((key) => parentKeys.includes(key)), 'negotiation game must preserve all seven parent cards');
   assert(/Borksen.*decides|Borksen.*select/i.test(text(game.procedure)), 'game procedure must preserve Borksen’s accepted face-down-card selection condition');
   assert(/game begins|no.*card.*selected|no.*card.*played/i.test(game.stoppingPoint || ''), 'Chapter 407 game must stop before the first Chapter 408 selection');
-  assert(/promise.*not to cheat|promises.*not to cheat/i.test(game.antiCheatingBoundary || '') && /No Nen-enforced|no.*Nen-enforced|not.*Nen/i.test(game.antiCheatingBoundary || ''), 'no-cheating promise must not become an invented Nen enforcement rule');
+  assert(/promis\w*.*not cheat/i.test(game.antiCheatingBoundary || '') && /No Nen-enforced|no.*Nen-enforced|not.*Nen/i.test(game.antiCheatingBoundary || ''), 'no-cheating promise must not become an invented Nen enforcement rule');
 
   const eventText = text(chapterModule.succession407TimelineEvents);
   assert(!/Specialist classification|Contagion mechanics|Special Martial Law/i.test(eventText), 'Chapter 407 events must not import Chapter 408 revelations or martial-law interruption');
