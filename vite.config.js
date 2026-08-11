@@ -148,6 +148,12 @@ export default defineConfig({
             // with Morena's Dogman/Sodom funeral-search operation. Keep these
             // exact identity, lower-tier, and Nen leaves in one lazy data island.
             { name: 'succession-chapter-405-hisoka-bonolenov-heilly', test: /src\/data\/(?:succession(?:405Research|ArchiveThrough405|DossierThrough405)|succession\/(?:abilityFoundation405Expansion|eventFoundation405Expansion|relationshipFoundation405Expansion|locationFoundation405Expansion|organizationState405Corrections|characterState405Corrections|nenSystemFoundation405Corrections))\.js$/ },
+            // Chapter 406 resolves the outer-route cliffhanger, separates the
+            // waste-processing infrastructure from Heil-Ly's internal processing
+            // area, recovers Lynch's body, and adds Chrollo's Love Dial/regalia/
+            // Skill Hunter preparation. Keep its exact state and Nen leaves in a
+            // dedicated lazy data island without pulling Through405 forward.
+            { name: 'succession-chapter-406-route-lynch-regalia', test: /src\/data\/(?:succession(?:406Research(?:Boundary|Events)?|ArchiveThrough406|DossierThrough406)|succession\/(?:abilityFoundation406Expansion|eventFoundation406Expansion|relationshipFoundation406Expansion|locationFoundation406Expansion|organizationState406Corrections|characterState406Corrections|nenSystemFoundation406Corrections))\.js$/ },
           ],
         },
       },

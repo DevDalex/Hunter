@@ -1,1 +1,1 @@
-export * from './successionDossierThrough405.js';
+export * from './successionDossierThrough406.js';

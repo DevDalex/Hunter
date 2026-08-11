@@ -38,6 +38,7 @@ import { eventFoundation402Expansion } from './eventFoundation402Expansion.js';
 import { eventFoundation403Expansion } from './eventFoundation403Expansion.js';
 import { eventFoundation404Expansion } from './eventFoundation404Expansion.js';
 import { eventFoundation405Expansion } from './eventFoundation405Expansion.js';
+import { eventFoundation406Expansion } from './eventFoundation406Expansion.js';
 
 const ARCHIVE_DATE = '2026-08-11';
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -83,6 +84,7 @@ const eventExpansions = Object.freeze([
   ...eventFoundation403Expansion,
   ...eventFoundation404Expansion,
   ...eventFoundation405Expansion,
+  ...eventFoundation406Expansion,
 ]);
 
 const events = Object.freeze(uniqueById([
