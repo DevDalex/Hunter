@@ -1,14 +1,6 @@
 import { successionArchiveData as foundationData } from './entitiesEventFoundation.js';
-import {
-  locationFoundationExpansion,
-  locationHistoryExpansion,
-} from './locationFoundationExpansion.js';
-import {
-  isLegacyJusticeLocation386,
-  locationFoundation386Corrections,
-  remapJusticeLocation386,
-  remapJusticeLocationId386,
-} from './locationFoundation386Corrections.js';
+import { locationFoundationExpansion, locationHistoryExpansion } from './locationFoundationExpansion.js';
+import { isLegacyJusticeLocation386, locationFoundation386Corrections, remapJusticeLocation386, remapJusticeLocationId386 } from './locationFoundation386Corrections.js';
 import { locationFoundation395Expansion } from './locationFoundation395Expansion.js';
 import { locationFoundation396Expansion } from './locationFoundation396Expansion.js';
 import { locationFoundation397Expansion } from './locationFoundation397Expansion.js';
@@ -19,6 +11,7 @@ import { locationFoundation401Expansion } from './locationFoundation401Expansion
 import { locationFoundation402Expansion } from './locationFoundation402Expansion.js';
 import { locationFoundation403Expansion } from './locationFoundation403Expansion.js';
 import { locationFoundation404Expansion } from './locationFoundation404Expansion.js';
+import { locationFoundation405Expansion } from './locationFoundation405Expansion.js';
 
 const ARCHIVE_DATE = '2026-08-11';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
@@ -39,6 +32,7 @@ const locations = Object.freeze(uniqueById([
   ...locationFoundation402Expansion,
   ...locationFoundation403Expansion,
   ...locationFoundation404Expansion,
+  ...locationFoundation405Expansion,
 ]));
 
 const locationHistory = Object.freeze(uniqueById([
@@ -67,30 +61,14 @@ for (const record of locationHistory) {
 }
 
 const characters = Object.freeze(foundationData.characters.map((character) => {
-  const activeRecords = (historiesByCharacter.get(character.id) || [])
-    .filter((record) => includesChapter(record.chapterRange, latestChapter))
-    .sort((left, right) => right.chapterRange.start - left.chapterRange.start);
+  const activeRecords = (historiesByCharacter.get(character.id) || []).filter((record) => includesChapter(record.chapterRange, latestChapter)).sort((left, right) => right.chapterRange.start - left.chapterRange.start);
   const currentRecord = activeRecords[0];
   if (!currentRecord) return character;
-
   return Object.freeze({
     ...character,
-    locationState: Object.freeze({
-      locationId: currentRecord.locationId,
-      asOfChapter: latestChapter,
-      certainty: currentRecord.certainty,
-      state: currentRecord.state,
-      historyRecordId: currentRecord.id,
-    }),
+    locationState: Object.freeze({ locationId: currentRecord.locationId, asOfChapter: latestChapter, certainty: currentRecord.certainty, state: currentRecord.state, historyRecordId: currentRecord.id }),
     updatedAt: ARCHIVE_DATE,
   });
 }));
 
-export const successionArchiveData = Object.freeze({
-  ...foundationData,
-  characters,
-  locations,
-  locationHistory,
-  events,
-  chapters,
-});
+export const successionArchiveData = Object.freeze({ ...foundationData, characters, locations, locationHistory, events, chapters });

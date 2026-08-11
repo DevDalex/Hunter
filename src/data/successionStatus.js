@@ -32,7 +32,7 @@ export const deathLedger = [
   ['Shikaku', 'Day 9', '389', 'His possessed body died near Luzurus’s quarters.', 'Room 1007 area'],
   ['Padaille', 'Day 10', '391', 'Killed during Xi-Yu’s confrontation with Heil-Ly members.', 'Lower tiers'],
   ['Misha Hao', 'Before the voyage', '392', 'Death circumstances are unknown; her post-mortem Nen continues disposing of people killed by Xi-Yu members.', 'Unknown'],
-  ['Lynch Fullbokko', 'Day 10 / revealed Day 12', '405', 'Killed by Bonolenov after her ability exposed his false-Hisoka disguise; her body is recovered later.', 'Tier 3'],
+  ['Lynch Fullbokko', 'Day 10 / revealed Day 12', '405', 'Killed by Bonolenov after her ability exposed his false-Hisoka disguise; Chapter 405 does not supply the exact killing method or establish when her body is found.', 'Tier 3'],
   ['Luini', 'Day 10', '393', 'Killed by Nobunaga after attempting to recruit the Troupe.', 'Lower tiers'],
   ['Kortopi', 'Pre-voyage', '357', 'Killed by Hisoka after the Heavens Arena death match.', 'Heavens Arena area'],
   ['Shalnark', 'Pre-voyage', '357', 'Killed by Hisoka after the Heavens Arena death match.', 'Heavens Arena area'],

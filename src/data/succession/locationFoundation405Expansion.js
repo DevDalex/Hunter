@@ -1,0 +1,62 @@
+const freeze = (value) => Object.freeze(value);
+const sourceId = 'source:chapter-405';
+
+const location = ({ id, slug, name, summary, locationType = 'facility', parentId, ancestorIds, deck = null, accessLevel = 'controlled', zoneRole, certainty = 'confirmed' }) => freeze({
+  id,
+  entityType: 'location',
+  slug,
+  name,
+  aliases: freeze([]),
+  summary,
+  sourceIds: freeze([sourceId]),
+  publicationStatus: 'published',
+  canonLevel: 'canon',
+  createdAt: '2026-08-11',
+  updatedAt: '2026-08-11',
+  locationType,
+  parentId,
+  ancestorIds: freeze(ancestorIds),
+  deck,
+  accessLevel,
+  zoneRole,
+  certainty,
+});
+
+export const locationFoundation405Expansion = freeze([
+  location({
+    id: 'location:black-whale:tier-1:casino:restroom',
+    slug: 'tier-1-casino-restroom',
+    name: 'Tier 1 VIP Casino Restroom',
+    summary: 'A nearby restroom inside the Tier 1 casino complex where Bonolenov leaves the false-Hisoka disguise and transforms into Owl after spotting the real Hisoka. The exact room dimensions and adjacency beyond being nearby are not inferred.',
+    locationType: 'room',
+    parentId: 'location:black-whale:tier-1:casino',
+    ancestorIds: ['location:black-whale', 'location:black-whale:tier-1', 'location:black-whale:tier-1:casino'],
+    deck: 1,
+    accessLevel: 'vip-public',
+    zoneRole: 'casino-support-space',
+  }),
+  location({
+    id: 'location:black-whale:tier-2:heil-ly-hideout:processing-area',
+    slug: 'heil-ly-tier-2-processing-area',
+    name: 'Heil-Ly Processing Area',
+    summary: 'An internal area of the confirmed Tier 2 Heil-Ly hidden base where Chapter 405 shows piles of bodies and Tevelares, Daemon, and Quorolle preparing to level further and hunt mafia members. Exact dimensions, machinery, disposal flow, and adjacency remain unresolved.',
+    locationType: 'facility',
+    parentId: 'location:black-whale:tier-2:heil-ly-hideout',
+    ancestorIds: ['location:black-whale', 'location:black-whale:tier-2', 'location:black-whale:tier-2:heil-ly-hideout'],
+    deck: 2,
+    accessLevel: 'heil-ly-controlled',
+    zoneRole: 'contagion-leveling-and-body-processing',
+  }),
+  location({
+    id: 'location:black-whale:tier-5:cha-r-route',
+    slug: 'cha-r-tier-5-dark-route',
+    name: 'Cha-R Tier 5 Internal Route',
+    summary: 'A long, dark Cha-R-controlled passage used by Tajao to lead Nobunaga, Phinks, and Feitan toward an unrevealed next area. Chapter 405 ends as Tajao opens a door and warns that conditions beyond it will be rough; the destination and physical topology are deliberately unresolved.',
+    locationType: 'corridor',
+    parentId: 'location:black-whale:tier-5',
+    ancestorIds: ['location:black-whale', 'location:black-whale:tier-5'],
+    deck: 5,
+    accessLevel: 'mafia-controlled',
+    zoneRole: 'restricted-mafia-transit',
+  }),
+]);

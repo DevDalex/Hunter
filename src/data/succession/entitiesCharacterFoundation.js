@@ -22,6 +22,7 @@ import { characterState403LegacySplits } from './characterState403LegacySplits.j
 import { characterState403CorrectionProfiles } from './characterState403Corrections.js';
 import { characterState404LegacySplits } from './characterState404LegacySplits.js';
 import { characterState404CorrectionProfiles } from './characterState404Corrections.js';
+import { characterState405CorrectionProfiles } from './characterState405Corrections.js';
 import { characterStatusKnowledge } from './characterStatusKnowledge.js';
 
 const characterIds = new Set([
@@ -48,26 +49,14 @@ const characterIds = new Set([
   ...Object.keys(characterState403CorrectionProfiles),
   ...Object.keys(characterState404LegacySplits),
   ...Object.keys(characterState404CorrectionProfiles),
+  ...Object.keys(characterState405CorrectionProfiles),
 ]);
 
-const retiredStateIds = new Set([
-  'character-state:chrollo-lucilfer:379',
-]);
+const retiredStateIds = new Set(['character-state:chrollo-lucilfer:379']);
 
 const normalizeStateRecord = (record) => {
-  if (record.id === 'character-state:borksen:408') {
-    return Object.freeze({
-      ...record,
-      chapterRange: Object.freeze({ ...record.chapterRange, end: 409 }),
-    });
-  }
-  if (record.id === 'character-state:kurapika:358') {
-    return Object.freeze({
-      ...record,
-      chapterRange: Object.freeze({ ...record.chapterRange, end: 399 }),
-      sourceIds: Object.freeze((record.sourceIds || []).filter((sourceId) => sourceId !== 'source:chapter-400')),
-    });
-  }
+  if (record.id === 'character-state:borksen:408') return Object.freeze({ ...record, chapterRange: Object.freeze({ ...record.chapterRange, end: 409 }) });
+  if (record.id === 'character-state:kurapika:358') return Object.freeze({ ...record, chapterRange: Object.freeze({ ...record.chapterRange, end: 399 }), sourceIds: Object.freeze((record.sourceIds || []).filter((sourceId) => sourceId !== 'source:chapter-400')) });
   return record;
 };
 
@@ -97,22 +86,16 @@ const mergeCharacterRecords = (characterId) => {
     characterState403CorrectionProfiles,
     characterState404LegacySplits,
     characterState404CorrectionProfiles,
+    characterState405CorrectionProfiles,
   ]) {
     for (const record of layer[characterId] || []) {
       if (retiredStateIds.has(record.id)) continue;
       records.set(record.id, normalizeStateRecord(record));
     }
   }
-  return Object.freeze([...records.values()]
-    .sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id)));
+  return Object.freeze([...records.values()].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id)));
 };
 
-const mergedCharacterStateProfiles = Object.freeze(Object.fromEntries(
-  [...characterIds].map((characterId) => [characterId, mergeCharacterRecords(characterId)]),
-));
+const mergedCharacterStateProfiles = Object.freeze(Object.fromEntries([...characterIds].map((characterId) => [characterId, mergeCharacterRecords(characterId)])));
 
-export const successionArchiveData = Object.freeze({
-  ...relationshipFoundationData,
-  characterStateProfiles: mergedCharacterStateProfiles,
-  characterStatusKnowledge,
-});
+export const successionArchiveData = Object.freeze({ ...relationshipFoundationData, characterStateProfiles: mergedCharacterStateProfiles, characterStatusKnowledge });
