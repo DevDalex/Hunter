@@ -143,6 +143,11 @@ export default defineConfig({
             // Halkenburg's original-body death, and the class/funeral setup.
             // Keep the exact states and continuity splits in one lazy island.
             { name: 'succession-chapter-404-coins-mind-swap-death', test: /src\/data\/(?:succession(?:404Research|ArchiveThrough404|DossierThrough404)|succession\/(?:eventFoundation404Expansion|relationshipFoundation404Expansion|locationFoundation404Expansion|organizationState404(?:Corrections|LegacySplits)|characterState404(?:Corrections|LegacySplits)|nenSystemFoundation404Corrections))\.js$/ },
+            // Chapter 405 resolves the real/fake Hisoka identity split, expands
+            // Bonolenov and Lynch mechanics, and joins the Troupe/mafia route
+            // with Morena's Dogman/Sodom funeral-search operation. Keep these
+            // exact identity, lower-tier, and Nen leaves in one lazy data island.
+            { name: 'succession-chapter-405-hisoka-bonolenov-heilly', test: /src\/data\/(?:succession(?:405Research|ArchiveThrough405|DossierThrough405)|succession\/(?:abilityFoundation405Expansion|eventFoundation405Expansion|relationshipFoundation405Expansion|locationFoundation405Expansion|organizationState405Corrections|characterState405Corrections|nenSystemFoundation405Corrections))\.js$/ },
           ],
         },
       },
