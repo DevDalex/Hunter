@@ -125,7 +125,7 @@ export const eventFoundation405Expansion = freeze(succession405TimelineEvents.ma
       storyPeriod: record.day === 10 ? 'Voyage Day 10 · retrospective sequence first explained in Chapter 405' : 'Voyage Day 12 · present-day Black Whale sequence before the announced funeral procession',
       certainty: record.day === 10 ? 'retrospective-relative-order-confirmed' : 'chapter-presentation-order-confirmed',
     }),
-    participantIds: freeze((record.people || []).map(characterId)),
+    participantIds: freeze((record.people || []).filter((name) => name !== 'Owl').map(characterId)),
     organizationIds: freeze(organizations[record.id] || []),
     locationIds: freeze(locations[record.id] || []),
     abilityIds: abilityIds(record),
