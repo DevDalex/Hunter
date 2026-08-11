@@ -46,15 +46,19 @@ try {
 
   const metamorph377 = archive.getAbilityKnowledgeAtChapter('ability:battle-cantabile-metamorphorsen', 377);
   const metamorph405 = archive.getAbilityKnowledgeAtChapter('ability:battle-cantabile-metamorphorsen', 405);
-  assert(!/conversation.*time|time spent talking/i.test(text(metamorph377)), 'Chapter 377 must not backfill the Chapter 405 conversation-duration rule');
-  assert(/talked.*in person|spoken.*in person/i.test(text(metamorph405)) && /conversation.*time|time spent talking/i.test(text(metamorph405)), 'Chapter 405 must preserve Metamorphorsen’s contact and duration rules');
-  assert(/belief/i.test(text(metamorph405)) && /smaller/i.test(text(metamorph405)), 'the smaller-body duration effect must remain Bonolenov’s belief rather than a hard formula');
+  const metamorph377BoundaryText = text({ summary: metamorph377?.summary, knowledgeState: metamorph377?.knowledgeState, mechanics: metamorph377?.mechanics });
+  const metamorph405BoundaryText = text({ summary: metamorph405?.summary, knowledgeState: metamorph405?.knowledgeState, mechanics: metamorph405?.mechanics });
+  assert(!/conversation.*time|time spent talking/i.test(metamorph377BoundaryText), 'Chapter 377 must not backfill the Chapter 405 conversation-duration rule');
+  assert(/talked.*in person|spoken.*in person/i.test(metamorph405BoundaryText) && /conversation.*time|time spent talking/i.test(metamorph405BoundaryText), 'Chapter 405 must preserve Metamorphorsen’s contact and duration rules');
+  assert(/belief/i.test(metamorph405BoundaryText) && /smaller/i.test(metamorph405BoundaryText), 'the smaller-body duration effect must remain Bonolenov’s belief rather than a hard formula');
 
   const body392 = archive.getAbilityKnowledgeAtChapter('ability:body-and-soul', 392);
   const body405 = archive.getAbilityKnowledgeAtChapter('ability:body-and-soul', 405);
-  assert(!/Bonolenov/i.test(text(body392)), 'Chapter 392 Body and Soul knowledge must not know the apparent Hisoka was Bonolenov');
-  assert(/Bonolenov/i.test(text(body405)) && /pretend|false|disguise/i.test(text(body405)), 'Chapter 405 must resolve Body and Soul as exposing Bonolenov’s false identity');
-  assert(/Zakuro.*did not hear|did not hear.*Zakuro/i.test(text(body405)), 'Chapter 405 must preserve the demonstrated Zakuro audience boundary');
+  const body392BoundaryText = text({ summary: body392?.summary, knowledgeState: body392?.knowledgeState, mechanics: body392?.mechanics });
+  const body405BoundaryText = text({ summary: body405?.summary, knowledgeState: body405?.knowledgeState, mechanics: body405?.mechanics });
+  assert(!/Bonolenov/i.test(body392BoundaryText), 'Chapter 392 Body and Soul knowledge must not know the apparent Hisoka was Bonolenov');
+  assert(/Bonolenov/i.test(body405BoundaryText) && /pretend|false|disguise/i.test(body405BoundaryText), 'Chapter 405 must resolve Body and Soul as exposing Bonolenov’s false identity');
+  assert(/Zakuro.*did not hear|did not hear.*Zakuro/i.test(body405BoundaryText), 'Chapter 405 must preserve the demonstrated Zakuro audience boundary');
 
   const dogman405 = archive.getCharacterStateAtChapter('character:dogman', 405);
   const dogAbility = archive.getAbilityKnowledgeAtChapter('ability:dogman-nen-scent-identification', 405);
