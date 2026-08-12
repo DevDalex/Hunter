@@ -55,9 +55,18 @@ try {
 
   const report = getInformationConsistencyReport();
   assert(report.version === 'phase-3-v1', 'the information consistency report must identify the preserved Phase 3 model');
+  const impossibleStateDetail = (report.impossibleStates || []).map((record) => {
+    const state = getCanonicalCharacterState(record.characterId, report.chapter);
+    const sourceRecords = successionArchiveData.characterStateProfiles?.[record.characterId] || [];
+    const covering = sourceRecords.filter((candidate) => {
+      const end = candidate.chapterRange?.end ?? Number.POSITIVE_INFINITY;
+      return report.chapter >= candidate.chapterRange?.start && report.chapter <= end;
+    });
+    return `${record.characterId}: ${(record.reasons || []).join(', ')} | canonical=${JSON.stringify({ id: state?.id, chapterRange: state?.chapterRange, life: state?.life, bodyState: state?.bodyState, bodyStateCode: state?.bodyStateCode, identityStateCode: state?.identityStateCode, consciousnessState: state?.consciousnessState, consciousnessStateCode: state?.consciousnessStateCode, loyaltyStateCode: state?.loyaltyStateCode, derived: state?.derived, sourceIds: state?.sourceIds })} | covering=${JSON.stringify(covering.map((candidate) => ({ id: candidate.id, chapterRange: candidate.chapterRange, life: candidate.life, bodyState: candidate.bodyState, consciousnessState: candidate.consciousnessState, sourceIds: candidate.sourceIds })))} | entityStatus=${JSON.stringify(getEntitiesByType('character').find((character) => character.id === record.characterId)?.status || null)}`;
+  });
   const hardErrorDetail = [
     ...(report.validation?.errors || []),
-    ...(report.impossibleStates || []).map((record) => `${record.characterId}: ${(record.reasons || []).join(', ')}`),
+    ...impossibleStateDetail,
     ...(report.crossLinkErrors || []),
   ].join(' · ');
   assert(report.hardErrorCount === 0, `the consistency report contains ${report.hardErrorCount} hard error(s)${hardErrorDetail ? `: ${hardErrorDetail}` : ''}`);
