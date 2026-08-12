@@ -16,18 +16,8 @@ const assert = (condition, message) => {
 };
 
 const expectedRoyalSections = Object.freeze([
-  'identity',
-  'successionStatus',
-  'household',
-  'officialAuthority',
-  'operationalLoyalty',
-  'embodiedState',
-  'location',
-  'assignments',
-  'relationships',
-  'nenAndGuardian',
-  'evidence',
-  'openQuestions',
+  'identity', 'successionStatus', 'household', 'officialAuthority', 'operationalLoyalty', 'embodiedState',
+  'location', 'assignments', 'relationships', 'nenAndGuardian', 'evidence', 'openQuestions',
 ]);
 
 const [shellSource, panelSource, panelCss, dataEntry, phase4Layer, consistencyLayer] = await Promise.all([
@@ -55,15 +45,9 @@ const vite = await createServer({ appType: 'custom', logLevel: 'error', server: 
 try {
   const archive = await vite.ssrLoadModule('/src/data/succession/successionData.js');
   const {
-    getAliasResolution,
-    getCanonicalCharacterState,
-    getCharacterAuthorityProfile,
-    getCharacterLoyaltyProfile,
-    getEntitiesByType,
-    getInformationConsistencyReport,
-    getRoyalDossierConsistencyProfile,
-    successionArchiveData,
-    successionArchiveValidation,
+    getAliasResolution, getCanonicalCharacterState, getCharacterAuthorityProfile, getCharacterLoyaltyProfile,
+    getEntitiesByType, getInformationConsistencyReport, getRoyalDossierConsistencyProfile,
+    successionArchiveData, successionArchiveValidation,
   } = archive;
 
   assert(successionArchiveData.informationConsistencyVersion === 'phase-3-v1', 'the normalized Phase 3 data layer must remain the active predecessor');
@@ -71,7 +55,12 @@ try {
 
   const report = getInformationConsistencyReport();
   assert(report.version === 'phase-3-v1', 'the information consistency report must identify the preserved Phase 3 model');
-  assert(report.hardErrorCount === 0, `the consistency report contains ${report.hardErrorCount} hard error(s)`);
+  const hardErrorDetail = [
+    ...(report.validation?.errors || []),
+    ...(report.impossibleStates || []).map((record) => `${record.characterId}: ${(record.reasons || []).join(', ')}`),
+    ...(report.crossLinkErrors || []),
+  ].join(' · ');
+  assert(report.hardErrorCount === 0, `the consistency report contains ${report.hardErrorCount} hard error(s)${hardErrorDetail ? `: ${hardErrorDetail}` : ''}`);
   assert(report.aliasCollisions.length === 0, `ambiguous aliases remain: ${report.aliasCollisions.map((record) => record.key).join(', ')}`);
   assert(report.impossibleStates.length === 0, `impossible character state tuples remain: ${report.impossibleStates.map((record) => record.characterId).join(', ')}`);
   assert(report.crossLinkErrors.length === 0, `broken information cross-links remain: ${report.crossLinkErrors.join(', ')}`);
@@ -117,9 +106,7 @@ try {
     const profile = getRoyalDossierConsistencyProfile(royal.id);
     assert(profile, `${royal.id} must expose a royal consistency profile`);
     assert(profile.completeness.total === expectedRoyalSections.length, `${royal.id} must expose all ${expectedRoyalSections.length} dossier sections`);
-    for (const section of expectedRoyalSections) {
-      assert(Object.hasOwn(profile.sections, section), `${royal.id} is missing the ${section} dossier section`);
-    }
+    for (const section of expectedRoyalSections) assert(Object.hasOwn(profile.sections, section), `${royal.id} is missing the ${section} dossier section`);
     assert(profile.sections.officialAuthority.value !== profile.sections.operationalLoyalty.value, `${royal.id} must not conflate authority and loyalty records`);
   }
 
