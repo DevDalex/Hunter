@@ -1,0 +1,62 @@
+const freeze = (value) => Object.freeze(value);
+const sourceIds = freeze(['source:chapter-409']);
+
+const state = ({ characterId, operationalState, protectionState, threatLevel, nenKnowledge, allegianceState, locationId = null, openQuestions = [], certainty = 'confirmed', end = 409, life = 'alive', bodyState = 'living body', consciousnessState = 'active in own body', bodyStateCode = 'living', identityStateCode = 'self', consciousnessStateCode = 'active', loyaltyStateCode = null }) => freeze({
+  id: `character-state:${characterId.replace('character:', '')}:409`,
+  characterId,
+  chapterRange: freeze({ start: 409, end }),
+  life,
+  bodyState,
+  consciousnessState,
+  operationalState,
+  protectionState,
+  threatLevel,
+  nenKnowledge,
+  allegianceState,
+  locationId,
+  openQuestions: freeze(openQuestions),
+  certainty,
+  sourceIds,
+  bodyStateCode,
+  identityStateCode,
+  consciousnessStateCode,
+  ...(loyaltyStateCode ? { loyaltyStateCode } : {}),
+});
+
+export const characterState409CorrectionProfiles = freeze({
+  'character:borksen': freeze([state({
+    characterId: 'character:borksen',
+    operationalState: 'Borksen continues Morena’s recruitment game during Special Martial Law, selects Deal, completes Morena’s requested kiss to recover X, verifies No and Return, redraws X, uses Question A to map the hideout and Heil-Ly organization, survives the final No-versus-Return reveal with Return, and deliberately exchanges Return for Yes. She explicitly confirms the Yes choice is intentional.',
+    protectionState: 'Still physically inside Heil-Ly-controlled hidden space during martial law. Borksen’s protection comes from the negotiated game procedure, her card-verification checks, and information-gathering rather than outside military support.',
+    threatLevel: 'extreme coercive recruitment and martial-law crossfire/custody risk; final No would be lethal from Borksen’s strategic understanding, while the full consequences of intentional Yes remain outside the Chapter 409 boundary',
+    nenKnowledge: 'Borksen learns Morena’s three joining conditions: final Yes, infection through Morena’s kiss, and presence at a Morena/Heil-Ly murder. The kiss occurs and Borksen later restores Yes, but the murder-presence condition is not shown. No Chapter 409 scene gives Borksen a Nen ability, level, or completed awakening.',
+    allegianceState: 'Borksen’s Kakin military background remains her established allegiance. She does not retract her Chapter 408 rejection of Morena’s destruction goal, and intentional Yes is not treated as ideological conversion or completed Heil-Ly membership because the third joining condition is not shown.',
+    loyaltyStateCode: 'kakin-military',
+    locationId: 'location:black-whale:intertier-2-3:heil-ly-hideout',
+    openQuestions: ['Why does Borksen intentionally choose Yes?', 'What happens when the restored Yes is processed?', 'Will the murder-presence joining condition ever be fulfilled?', 'What ability does Morena want Borksen to develop?'],
+    certainty: 'Deal, kiss, card checks, Question A answers, final Return and intentional Yes confirmed / motive, awakening, full membership, and Chapter 410 consequences unresolved',
+  })]),
+  'character:morena-prudo': freeze([state({
+    characterId: 'character:morena-prudo',
+    operationalState: 'Morena keeps the recruitment game running through Special Martial Law, explains Deal and the three joining conditions, completes the kiss condition with Borksen, returns X, tolerates Borksen’s card-integrity check, answers Question A, confirms the inter-tier hideout, five entrances, twenty-one current Heil-Ly members and partial Nen-type breakdown, refuses four times to change her goal, accepts the final Return result, and is surprised when Borksen restores Yes.',
+    protectionState: 'Operating inside the hidden inter-tier Heil-Ly base with subordinate support and apparent confidence that the game can continue despite Special Martial Law.',
+    threatLevel: 'high strategic exposure under shipwide martial law; exact hideout compromise risk remains unresolved',
+    nenKnowledge: 'Morena states that full joining requires Yes, infection through her kiss, and presence at a Heil-Ly murder in any order. She identifies herself as the only Specialist among twenty-one current Heil-Ly members, confirms at least one Enhancer, and says she does not know all twenty other abilities.',
+    allegianceState: 'Active Heil-Ly leader whose destruction goal remains unchanged after Borksen asks four times whether she will reconsider it.',
+    loyaltyStateCode: 'heil-ly-leader',
+    locationId: 'location:black-whale:intertier-2-3:heil-ly-hideout',
+    openQuestions: ['Why was Special Martial Law declared?', 'What specific ability does Morena want Borksen to develop?', 'How will Morena interpret and process Borksen’s intentional Yes in Chapter 410?'],
+    certainty: 'Question A answers and game actions confirmed / exact hidden-base construction history and later Yes consequences unresolved',
+  })]),
+  'character:orarge': freeze([state({
+    characterId: 'character:orarge',
+    operationalState: 'Orarge continues as the game’s procedural card handler. He reaches to shuffle after X is returned, pauses when Borksen demands an integrity check, then shuffles X/No/Return and later displays and shuffles the final No/Return pair.',
+    protectionState: 'Inside the inter-tier Heil-Ly hideout under Morena’s command while Special Martial Law is active.',
+    threatLevel: 'martial-law exposure inside hidden Heil-Ly territory',
+    nenKnowledge: 'No new personal Nen ability or category is supplied for Orarge in Chapter 409.',
+    allegianceState: 'Heil-Ly member participating in Morena’s recruitment procedure.',
+    loyaltyStateCode: 'heil-ly-member',
+    locationId: 'location:black-whale:intertier-2-3:heil-ly-hideout',
+    openQuestions: ['No Chapter 409 question about Orarge’s own Nen ability is resolved.'],
+  })]),
+});
