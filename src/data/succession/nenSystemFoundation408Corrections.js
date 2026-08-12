@@ -1,0 +1,117 @@
+const freeze = (value) => Object.freeze(value);
+const chapterSourceId = (number) => `source:chapter-${number}`;
+
+const knowledge = ({ id, abilityName, knowledgeState, summary, activation, conditions = [], limitations = [], costs = [], targets = [], range = 'unknown', duration = 'unknown', knownUses = [], certainty = 'confirmed', sources = [408], chapterRange = { start: 408, end: 408 } }) => freeze({
+  id,
+  abilityName,
+  chapterRange: freeze(chapterRange),
+  knowledgeState,
+  certainty,
+  summary,
+  mechanics: freeze({ activation, conditions: freeze(conditions), limitations: freeze(limitations), costs: freeze(costs), targets: freeze(targets), range, duration, knownUses: freeze(knownUses) }),
+  sourceIds: freeze(sources.map(chapterSourceId)),
+});
+
+export const abilityKnowledge408Overrides = freeze({
+  'ability:contagion': freeze([knowledge({
+    id: 'ability-knowledge:contagion:408',
+    abilityName: 'Contagion',
+    knowledgeState: 'Morena’s mother/child support model, accelerated awakening, Specialist recruitment logic and negotiation-risk explanation disclosed / Borksen not initiated',
+    summary: 'Morena tells Borksen that her ability can awaken compatible recruits without the ordinary long training path, treats Morena as a dealer or mother supporting up to twenty-two child players, lets progressed children eventually become parents, and supports individualized ability development according to a child’s goals, attributes, personality, and state of mind. Morena also links genuine negotiation-failure risk and severe rejection consequences to stronger ability support and team unity.',
+    activation: 'Chapter 408 explains the recruitment/development framework but does not show Borksen being initiated, kissed, awakened, assigned points, or granted an ability. Previously maintained Contagion initiation and point rules remain historical knowledge from earlier chapters.',
+    conditions: [
+      'Morena says supported children share the larger goal with her community.',
+      'Morena describes a maximum of twenty-two child players under her mother/dealer role.',
+      'Children gain points and can eventually become parents who create additional children.',
+      'Morena says she considers the recruit’s goals, attributes, personality, and state of mind while supporting personal ability development.',
+      'Morena identifies Borksen as an unawakened Specialist and says a specific Specialist role is strategically valuable, while withholding the requested ability under Yes?.',
+      'Morena describes the negotiation’s genuine failure risk as part of the vow/limitation structure that strengthens support and team unity.',
+    ],
+    limitations: [
+      'Chapter 408 does not initiate or awaken Borksen.',
+      'The specific ability Morena wants Borksen to develop is withheld.',
+      'The unnamed Heil-Ly Enhancer who detects categories by smell is not identified and is not converted into a new named ability owner.',
+      'The unnamed Heavens Arena Floor Master is not identified.',
+      'No exact numerical power multiplier for the negotiation vow is supplied.',
+      'Morena’s roughly 1-in-3000 Specialist estimate is explicitly presented as her possibly imperfect research, not an omniscient population statistic.',
+    ],
+    costs: ['Morena describes genuine recruitment-failure risk and severe final-rejection consequences as meaningful limitations in the system.'],
+    targets: ['compatible recruits sharing the larger goal; Borksen is the current recruitment target but remains uninitiated'],
+    range: 'recruitment and community range not fully restated in Chapter 408',
+    duration: 'ongoing community system; no Chapter 408 termination rule supplied',
+    knownUses: [
+      'Chapter 408: Morena explains the mother/dealer model, twenty-two child capacity, individualized development support, accelerated awakening, Specialist recruitment logic, and vow/limitation risk rationale to Borksen.',
+    ],
+    sources: [378, 391, 393, 394, 408],
+    certainty: 'system disclosures confirmed as Morena’s explanation / Borksen awakening and desired future ability unresolved',
+  })]),
+});
+
+export const nenSystemProfile408Corrections = freeze({
+  'nen-system:contagion-progression': freeze({
+    id: 'nen-system:contagion-progression',
+    name: 'Contagion Progression System',
+    summary: 'Morena’s community converts killing into levels and personal Nen development while Chapter 408 adds her dealer/mother model: up to twenty-two child players who share the larger goal can receive accelerated awakening and individualized ability-development support, and sufficiently progressed children can eventually found further child networks.',
+    category: 'progression',
+    chapterRange: freeze({ start: 378, end: null }),
+    rules: freeze([
+      'Morena initiates recruits by kissing them on the lips, as established in Chapter 378.',
+      'The Chapter 378 community contains twenty-three people including Morena, corresponding to Morena plus up to twenty-two children.',
+      'Civilian kills are worth 1 level, Nen-user kills 10 levels, and prince kills 50 levels, as established in the earlier Contagion rules.',
+      'At level 20 an infected member gains a Nen ability; Chapter 394 demonstrates a level-21 transition and Water Divination after the threshold.',
+      'At level 100 an infected member can start a new infected community, providing the earlier explicit threshold behind Chapter 408’s statement that children can become parents.',
+      'Chapter 408 says Morena can accelerate Nen awakening for compatible recruits rather than requiring the ordinary long training path.',
+      'Chapter 408 says Morena listens to each child’s goals and considers attributes, personality, and state of mind while supporting personal ability development.',
+      'Chapter 408 frames Morena as dealer/mother to up to twenty-two child players who share the larger goal.',
+      'Chapter 408 says accepting genuine negotiation-failure risk strengthens the support produced by Morena’s ability and the unity of the resulting team.',
+    ]),
+    costs: freeze([
+      'Progression is explicitly tied to killing people.',
+      'Morena describes genuine negotiation-failure and rejection risk as part of the vow/limitation structure that strengthens the community system.',
+    ]),
+    risks: freeze([
+      'Rapid distributed Nen growth',
+      'Unknown personal abilities after the development threshold',
+      'Community replication after level 100',
+      'Recruits can face lethal consequences if negotiation ends in irrevocable rejection rather than membership or a valid void result',
+    ]),
+    openQuestions: freeze([
+      'How much direct control does Morena retain over initiated members?',
+      'What exact Specialist ability does Morena want Borksen to develop?',
+      'How do successor communities relate to Morena’s original community?',
+      'What precise Nen enforcement, if any, exists behind each negotiation consequence beyond Morena’s stated vow/limitation explanation?',
+    ]),
+    abilityIds: freeze(['ability:contagion']),
+    guardianBeastIds: freeze([]),
+    characterIds: freeze(['character:morena-prudo', 'character:borksen']),
+    organizationIds: freeze(['organization:heil-ly']),
+    locationIds: freeze(['location:black-whale:tier-2:heil-ly-hideout']),
+    sourceIds: freeze(['source:chapter-378', 'source:chapter-391', 'source:chapter-393', 'source:chapter-394', 'source:chapter-408']),
+    certainty: 'confirmed system framework with Chapter 408 speaker-bounded explanation / Borksen remains uninitiated at this boundary',
+  }),
+  'nen-system:contracts-vows-and-conditions': freeze({
+    id: 'nen-system:contracts-vows-and-conditions',
+    name: 'Contracts, Vows, and Conditional Power',
+    summary: 'The arc repeatedly turns explicit restrictions, negotiated terms, loyalty requirements, and self-imposed costs into power and enforcement. Chapter 408 adds Morena’s explanation that a recruitment game with a genuine void route and severe rejection risk strengthens her support system because the failure risk is real.',
+    category: 'contract',
+    chapterRange: freeze({ start: 369, end: null }),
+    rules: freeze([
+      'A stronger or more meaningful restriction can increase the reliability or force of an ability.',
+      'Terms may bind or structure the behavior of multiple participants rather than only the user.',
+      'Political agreements and Nen enforcement must be distinguished even when they operate together.',
+      'Unpublished breach consequences remain unknown rather than being inferred as automatic death.',
+      'In Chapter 408, Morena says the X route has value precisely because accepting negotiation failure is dangerous to her objective.',
+      'Morena says the recruit side also accepts severe risk, and that this mutual exposure strengthens her ability’s support and resulting team unity.',
+    ]),
+    costs: freeze(['Loss of freedom after accepting some terms', 'Ability-specific penalties or risks tied to activation, breach, or failure conditions', 'Chapter 408 recruitment can carry severe final-rejection consequences']),
+    risks: freeze(['Incomplete understanding before agreement', 'Hidden asymmetry between participants', 'Mistaking a stated negotiation consequence for a universally automatic Nen punishment']),
+    openQuestions: freeze(['What precise breach penalty governs Moonlight Act?', 'Which restrictions in the succession ritual were accepted by Nasubi’s generation?', 'How exactly does Morena’s negotiation risk modify Contagion support, beyond the qualitative explanation given in Chapter 408?']),
+    abilityIds: freeze(['ability:moonlight-act', 'ability:emperor-time', 'ability:stealth-dolphin', 'ability:contagion']),
+    guardianBeastIds: freeze([]),
+    characterIds: freeze(['character:morena-prudo', 'character:borksen']),
+    organizationIds: freeze(['organization:heil-ly']),
+    locationIds: freeze(['location:black-whale:tier-2:heil-ly-hideout']),
+    sourceIds: freeze(['source:chapter-369', 'source:chapter-401', 'source:chapter-402', 'source:chapter-408']),
+    certainty: 'general vow/condition principle confirmed / ability-specific enforcement remains bounded to supplied rules',
+  }),
+});
