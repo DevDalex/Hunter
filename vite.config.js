@@ -172,6 +172,13 @@ export default defineConfig({
             // Return-to-Yes decision. Keep research, frozen snapshots, spatial,
             // event/relationship/state, and Contagion leaves in one lazy island.
             { name: 'succession-chapter-409-intertier-deal-final-yes', test: /src\/data\/(?:succession(?:409Research|ArchiveThrough409|DossierThrough409)|succession\/(?:eventFoundation409Expansion|relationshipFoundation409Expansion|locationFoundation409Expansion|organizationState409Corrections|characterState409Corrections|nenSystemFoundation409Corrections))\.js$/ },
+            // Chapter 410 resolves Borksen's restored Yes into the game's
+            // anti-cheating Manipulation, explicit Level 0 progression and
+            // installed-game telemetry, while Room 3101 becomes a military
+            // Case S and Benjamin opens the Justice Bureau consolidation front.
+            // Keep the modern research, frozen snapshots and direct state/Nen
+            // leaves together so this dense chapter remains a lazy data island.
+            { name: 'succession-chapter-410-level0-case-s-benjamin', test: /src\/data\/(?:succession(?:410Research|ArchiveThrough410|DossierThrough410)|succession\/(?:eventFoundation410Expansion|relationshipFoundation410Expansion|organizationState410Corrections|characterState410(?:Corrections|LegacyClosures)|nenSystemFoundation410Corrections))\.js$/ },
           ],
         },
       },
