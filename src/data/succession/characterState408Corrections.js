@@ -1,0 +1,63 @@
+const freeze = (value) => Object.freeze(value);
+const sourceIds = freeze(['source:chapter-408']);
+
+const state = ({ characterId, operationalState, protectionState, threatLevel, nenKnowledge, allegianceState, locationId = null, openQuestions = [], certainty = 'confirmed', end = 408, life = 'alive', bodyState = 'living body', consciousnessState = 'active in own body', bodyStateCode = 'living', identityStateCode = 'self', consciousnessStateCode = 'active', loyaltyStateCode = null }) => freeze({
+  id: `character-state:${characterId.replace('character:', '')}:408`,
+  characterId,
+  chapterRange: freeze({ start: 408, end }),
+  life,
+  bodyState,
+  consciousnessState,
+  operationalState,
+  protectionState,
+  threatLevel,
+  nenKnowledge,
+  allegianceState,
+  locationId,
+  openQuestions: freeze(openQuestions),
+  certainty,
+  sourceIds,
+  bodyStateCode,
+  identityStateCode,
+  consciousnessStateCode,
+  ...(loyaltyStateCode ? { loyaltyStateCode } : {}),
+});
+
+export const characterState408CorrectionProfiles = freeze({
+  'character:borksen': freeze([state({
+    characterId: 'character:borksen',
+    end: 409,
+    operationalState: 'Borksen remains inside the Tier 2 Heil-Ly negotiation room and actively plays Morena’s recruitment game. She selects Aim, Power / Ability, and No?, gathers extensive information about Morena’s history and Nen system, rejects Morena’s murder/destruction goals internally, and reveals Joker, Yes, then X. No and Return remain when Special Martial Law interrupts the game.',
+    protectionState: 'Still isolated from her Kakin military support network inside Heil-Ly-controlled space; her remaining agency is the negotiated card-selection procedure and her information-gathering strategy.',
+    threatLevel: 'extreme coercive recruitment / final-No death-equivalent risk from Borksen’s current strategic perspective',
+    nenKnowledge: 'Borksen begins with only a broad recent understanding of Nen. During Chapter 408 she learns Morena’s explanation of training and awakening, Contagion-style child development, Specialization, and vows/limitations. Morena identifies Borksen as an unawakened Specialist based on an unnamed Enhancer’s detection claim; Borksen does not awaken Nen in Chapter 408.',
+    allegianceState: 'Kakin military background and personal attachment to Kakin remain intact. Borksen sympathizes with Morena’s suffering but rejects murder and the destruction of Kakin and has not accepted Heil-Ly membership.',
+    loyaltyStateCode: 'kakin-military',
+    locationId: 'location:black-whale:tier-2:heil-ly-hideout',
+    openQuestions: ['Will No or Return determine Borksen’s final response?', 'What specific Specialist ability does Morena want Borksen to develop?', 'How will Special Martial Law affect the interrupted game?'],
+    certainty: 'card sequence, internal ideological rejection and Tier 2 negotiation state confirmed / Specialist classification recorded as Morena’s disclosed assessment / no Chapter 409 outcome imported',
+  })]),
+  'character:morena-prudo': freeze([state({
+    characterId: 'character:morena-prudo',
+    operationalState: 'Morena conducts the Chapter 408 negotiation, states her Kakin-destruction and humanity-destruction goals, says she is a Carnival Orphan rather than the original royal Morena Prudo, recounts the flesh institution and recurring Carne Levare batches, explains her recruitment ability and Specialization, defines No versus X through vows and limitations, and is interrupted by the Special Martial Law announcement.',
+    protectionState: 'Operating inside the Tier 2 Heil-Ly hideout with subordinate support and control of the recruitment setting, but accepting genuine negotiation-failure risk as part of the system she describes.',
+    threatLevel: 'high strategic exposure inside controlled Heil-Ly territory / shipwide martial-law interruption begins at chapter endpoint',
+    nenKnowledge: 'Morena identifies herself as a Specialist and explains a mother/dealer system supporting up to twenty-two child players, individualized Nen development, accelerated awakening, community replication, and a vow/limitation risk structure. She withholds the exact ability she wants Borksen to develop.',
+    allegianceState: 'Heil-Ly leader pursuing a shared larger goal of killing people while describing Kakin’s destruction as her personal smaller goal.',
+    loyaltyStateCode: 'heil-ly-leader',
+    locationId: 'location:black-whale:tier-2:heil-ly-hideout',
+    openQuestions: ['What was the current Morena’s birth name?', 'What ability does she want Borksen to develop?', 'What caused Special Martial Law?'],
+    certainty: 'present negotiation actions confirmed / autobiography, rarity estimate and category-detection account speaker-bounded to Morena where supplied that way',
+  })]),
+  'character:orarge': freeze([state({
+    characterId: 'character:orarge',
+    operationalState: 'Orarge serves the negotiation procedure by collecting, Hindu-shuffling, and laying out Borksen’s response cards before the Joker and later Yes selections. He does not provide the substantive Aim, Ability, or No? answers.',
+    protectionState: 'Inside the Heil-Ly negotiation room under Morena’s command structure.',
+    threatLevel: 'martial-law exposure begins at the Chapter 408 endpoint',
+    nenKnowledge: 'No new personal Nen ability or category is supplied through Orarge’s card-handling role in Chapter 408.',
+    allegianceState: 'Heil-Ly member participating in Morena’s recruitment procedure.',
+    loyaltyStateCode: 'heil-ly-member',
+    locationId: 'location:black-whale:tier-2:heil-ly-hideout',
+    openQuestions: ['No Chapter 408 question about Orarge’s own ability is resolved.'],
+  })]),
+});
