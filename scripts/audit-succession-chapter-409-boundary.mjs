@@ -27,13 +27,13 @@ try {
   assert(chapter409.chronology?.presentDay === true && chapter409.chronology?.spansDays?.[0] === 12, 'Chapter 409 must remain on Voyage Day 12 as the immediate Chapter 408 continuation');
   assert(chapter409.chronology?.exactClockTime === null, 'Chapter 409 must not invent a new exact clock time');
   assert(/intentionally.*Yes|Yes.*intentional/i.test(chapter409.chronology?.stoppingPoint || ''), 'Chapter 409 must stop at Borksen’s intentional Yes choice');
-  assert(chapterModule.succession409TimelineEvents.length === 38, 'maintained research must preserve all 38 Chapter 409 beats');
+  assert(chapterModule.succession409TimelineEvents.length === 41, 'maintained research must preserve all 41 Chapter 409 beats');
 
   const events409 = archive.getEntitiesByType('event').filter((event) => event.chapterRange?.start === 409 && event.chapterRange?.end === 409);
   const projected409 = events409.filter((event) => event.maintainedResearch === true);
   const dedicated409 = events409.filter((event) => String(event.id || '').startsWith('event:chapter409-') && !event.maintainedResearch);
-  assert(projected409.length === 38, 'story intelligence must project all 38 maintained Chapter 409 beats');
-  assert(dedicated409.length === 38, 'Chapter 409 must expose 38 dedicated canonical events');
+  assert(projected409.length === 41, 'story intelligence must project all 41 maintained Chapter 409 beats');
+  assert(dedicated409.length === 41, 'Chapter 409 must expose 41 dedicated canonical events');
 
   assert(!frozen408Archive.publicationBoundary409, 'frozen Through408 archive must remain unaware of the Chapter 409 publication boundary');
   assert(activeArchive.publicationBoundary409?.chapter === 409, 'active archive must advance to Through409');
@@ -94,7 +94,7 @@ try {
   assert(!/marked-card tactic|tiny indentations|automatic anti-cheating|manipulative component|installed game|Level 0|formally become Level 1|Squad 3|Case S|Room 3101.*vanish|Benjamin.*9\.5/i.test(eventText), 'Chapter 409 events must not import known Chapter 410 game-system, anti-cheating, level, Room 3101, or Benjamin revelations');
 
   const publicTimeline409 = timeline.successionDays.flatMap((day) => day.events).filter((event) => event.chapter === 409 && event.maintainedResearch);
-  assert(publicTimeline409.length === 38, 'public timeline must expose all 38 maintained Chapter 409 beats');
+  assert(publicTimeline409.length === 41, 'public timeline must expose all 41 maintained Chapter 409 beats');
 
   assert((dossier.guardAssignmentGroups || []).some((group) => /Chapter 409/.test(group.group || '')), 'active dossier must include the Chapter 409 modernization group');
   assert(!(frozen408Dossier.guardAssignmentGroups || []).some((group) => /Chapter 409/.test(group.group || '')), 'frozen Through408 dossier must remain unaware of the Chapter 409 group');
