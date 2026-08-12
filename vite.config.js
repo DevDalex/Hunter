@@ -166,6 +166,12 @@ export default defineConfig({
             // interruption. Isolate the research, frozen snapshots, canonical
             // event/relationship/state leaves, and Nen corrections as one data island.
             { name: 'succession-chapter-408-morena-borksen-contagion', test: /src\/data\/(?:succession(?:408Research|ArchiveThrough408|DossierThrough408)|succession\/(?:eventFoundation408Expansion|relationshipFoundation408Expansion|organizationState408Corrections|characterState408Corrections|nenSystemFoundation408Corrections))\.js$/ },
+            // Chapter 409 continues the recruitment game through Special Martial Law,
+            // Deal's three joining conditions, the five-entrance inter-tier hideout,
+            // twenty-one-member Heil-Ly/Nen intelligence, and Borksen's final
+            // Return-to-Yes decision. Keep research, frozen snapshots, spatial,
+            // event/relationship/state, and Contagion leaves in one lazy island.
+            { name: 'succession-chapter-409-intertier-deal-final-yes', test: /src\/data\/(?:succession(?:409Research|ArchiveThrough409|DossierThrough409)|succession\/(?:eventFoundation409Expansion|relationshipFoundation409Expansion|locationFoundation409Expansion|organizationState409Corrections|characterState409Corrections|nenSystemFoundation409Corrections))\.js$/ },
           ],
         },
       },
