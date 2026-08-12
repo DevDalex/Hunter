@@ -6,7 +6,7 @@ import { createEventKnowledgeSelectors } from './eventKnowledgeSelectors.js';
 import { createHighValueIntelligenceSelectors } from './highValueIntelligenceSelectors.js';
 import { buildSuccessionIndexes } from './indexesFinal.js';
 import { createSuccessionSelectors } from './selectors.js';
-import { createCharacterStateSelectors } from './characterStateSelectors.js';
+import { createCharacterStateSelectors } from './characterStateSelectorsStructuredFallback.js';
 import { createInformationConsistencySelectors } from './informationConsistency.js';
 import { createOrganizationStateSelectors } from './organizationStateSelectors.js';
 import { createPeopleInstitutionClosure } from './peopleInstitutionClosure.js';
