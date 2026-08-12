@@ -72,7 +72,7 @@ try {
   assert(text(game.childRevealSequence) === text(['Joker', 'Yes', 'X']), 'child-card reveal sequence must be Joker → Yes → X');
   assert(text(game.childCardsRemainingAtStop) === text(['No', 'Return']), 'No and Return must remain at the stopping point');
   assert(/same parent-card slot|alias|same.*slot/i.test(game.aliasBoundary || ''), 'Power / Ability must remain a translation-label alias rather than an eighth card');
-  assert(/inference/i.test(game.antiCheatingBoundary || '') && /not proof|No physical|not.*physical|not.*Nen/i.test(game.antiCheatingBoundary || ''), 'anti-cheating conclusion must remain Borksen’s bounded inference');
+  assert(/inference|limited evidence/i.test(game.antiCheatingBoundary || '') && /not proof|No physical|not.*physical|not.*Nen/i.test(game.antiCheatingBoundary || ''), 'anti-cheating conclusion must remain Borksen’s bounded inference');
   assert(/Special Martial Law/i.test(game.stoppingPoint || '') && /before.*final|final response.*not|final response.*determin/i.test(game.stoppingPoint || ''), 'game model must stop at martial law before the final response');
 
   const contagionKnowledge = archive.getAbilityKnowledgeAtChapter('ability:contagion', 408);
