@@ -23,7 +23,6 @@ export const successionChapterResearch = freeze([
 ].sort((left, right) => left.number - right.number));
 
 const asLegacyRelationship = (record) => {
-  if (record.from && record.to && record.chapters) return record;
   const [subjectFrom = '', subjectTo = ''] = String(record.subject || '').split(/\s*(?:↔|→)\s*/, 2);
   return freeze({
     ...record,
