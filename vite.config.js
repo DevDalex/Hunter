@@ -160,6 +160,12 @@ export default defineConfig({
             // snapshots, event/relationship leaves, and exact character/org
             // states together without promoting the protocol into a Nen ability.
             { name: 'succession-chapter-407-borksen-negotiation-setup', test: /src\/data\/(?:succession(?:407Research|ArchiveThrough407|DossierThrough407)|succession\/(?:eventFoundation407Expansion|relationshipFoundation407Expansion|organizationState407Corrections|characterState407Corrections))\.js$/ },
+            // Chapter 408 opens the game itself: Morena's Carnival Orphan identity,
+            // Kakin-destruction framework, Contagion mother/child model, Borksen's
+            // Specialist classification, No/X vow logic, and the martial-law
+            // interruption. Isolate the research, frozen snapshots, canonical
+            // event/relationship/state leaves, and Nen corrections as one data island.
+            { name: 'succession-chapter-408-morena-borksen-contagion', test: /src\/data\/(?:succession(?:408Research|ArchiveThrough408|DossierThrough408)|succession\/(?:eventFoundation408Expansion|relationshipFoundation408Expansion|organizationState408Corrections|characterState408Corrections|nenSystemFoundation408Corrections))\.js$/ },
           ],
         },
       },
