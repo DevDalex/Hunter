@@ -15,3 +15,7 @@ The **sole substantive story source** for this Chapter 411 modernization is the 
 ## Canonical event density
 
 The maintained packet uses **26 chapter-bounded events**. Smaller conversational facts remain inside event details, character states, relationship records, and Nen/research findings rather than being inflated into separate micro-events.
+
+## Integration closure
+
+Chapter 411 is expected to expose **26 dedicated canonical events plus 26 maintained-research projections**. Its maintained research record carries complete chronology, appearance, location, relationship, assignment, Nen, and source coverage metadata so the story-intelligence graph and public timeline both project the full curated sequence. The dedicated Chapter 411 boundary audit protects this 26+26 contract together with the identity, theory-attribution, endpoint, and Chapter 412+ spoiler boundaries above.
