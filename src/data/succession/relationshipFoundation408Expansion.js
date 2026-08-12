@@ -1,0 +1,75 @@
+const freeze = (value) => Object.freeze(value);
+const sourceId = 'source:chapter-408';
+
+const relationship = ({ slug, name, summary, sourceEntityId, targetEntityId, subtype, direction = 'directed', sentiment = 'mixed', status = 'active', basis, operationalState, strength = 'high-operational', certainty = 'confirmed', relatedEventIds = [], evidenceNotes = [] }) => freeze({
+  id: `relationship:${slug}`,
+  entityType: 'relationship',
+  slug,
+  name,
+  aliases: freeze([]),
+  summary,
+  sourceIds: freeze([sourceId]),
+  publicationStatus: 'published',
+  canonLevel: 'canon',
+  createdAt: '2026-08-12',
+  updatedAt: '2026-08-12',
+  sourceEntityId,
+  targetEntityId,
+  relationshipType: 'professional',
+  subtype,
+  direction,
+  sentiment,
+  status,
+  chapterRange: freeze({ start: 408, end: 408 }),
+  basis,
+  operationalState,
+  strength,
+  certainty,
+  relatedEventIds: freeze(relatedEventIds),
+  evidenceNotes: freeze(evidenceNotes),
+  legacyIds: freeze([]),
+});
+
+export const relationshipFoundation408Expansion = freeze([
+  relationship({
+    slug: 'morena-borksen-ch408-specialist-recruitment-disclosure',
+    name: 'Morena Deepens Borksen’s Recruitment Through Specialist and Contagion Disclosures',
+    summary: 'Morena explains her anti-Kakin and anti-humanity goals, Carnival Orphan history, Contagion recruitment structure, and her claim that Borksen is an unawakened Specialist, while withholding the exact ability and team role she wants Borksen to develop.',
+    sourceEntityId: 'character:morena-prudo',
+    targetEntityId: 'character:borksen',
+    subtype: 'coercive-specialist-recruitment',
+    basis: 'Morena’s Aim, Power / Ability, and No? answers during the Chapter 408 negotiation game.',
+    operationalState: 'Recruitment remains active but unresolved when Special Martial Law interrupts the game; Borksen has not joined Heil-Ly or awakened Nen.',
+    relatedEventIds: [
+      'event:chapter408-morena-states-kakin-humanity-destruction-goals',
+      'event:chapter408-borksen-specialist-unnamed-enhancer-detector',
+      'event:chapter408-contagion-mother-twenty-two-children',
+      'event:chapter408-morena-specialist-desired-borksen-ability-withheld',
+      'event:chapter408-special-martial-law-declared',
+    ],
+    evidenceNotes: [
+      'The unnamed category-detection Enhancer is not identified in the supplied synopsis.',
+      'The specific ability Morena wants Borksen to develop remains withheld for Yes?.',
+    ],
+  }),
+  relationship({
+    slug: 'borksen-morena-ch408-informed-ideological-rejection',
+    name: 'Borksen Uses Morena’s Disclosures to Form an Informed Ideological Rejection',
+    summary: 'Borksen listens to Morena’s history with sympathy, probes the recruitment system, analyzes card behavior and anti-cheating signals, but internally rejects murder and the destruction of Kakin and resolves to escape rather than adopt Morena’s larger goal.',
+    sourceEntityId: 'character:borksen',
+    targetEntityId: 'character:morena-prudo',
+    subtype: 'guarded-adversarial-negotiation',
+    basis: 'Borksen’s explicit internal reaction to Morena’s biography, stated goals, Nen explanation, and No/X rules.',
+    operationalState: 'Borksen remains a coerced negotiating party, not a Heil-Ly ally. Joker, Yes, and X have been removed; No and Return remain when martial law interrupts play.',
+    relatedEventIds: [
+      'event:chapter408-borksen-rejects-murder-destruction-resolves-escape',
+      'event:chapter408-borksen-bounds-anti-cheating-inference',
+      'event:chapter408-x-third-response-no-return-remain',
+      'event:chapter408-special-martial-law-declared',
+    ],
+    evidenceNotes: [
+      'Borksen’s disappointment-based anti-cheating read is explicitly bounded as her inference, not proof that cheating is impossible.',
+      'Her sympathy for Morena does not become ideological agreement or voluntary recruitment.',
+    ],
+  }),
+]);
