@@ -4,3 +4,38 @@
  * when a refinement surface is part of the active route chunk.
  */
 @import './SuccessionReleaseDesktop.css';
+
+/*
+ * The Research inspector contains long canonical record labels. Native select
+ * intrinsic sizing must not widen the archive workspace beyond its grid track.
+ */
+@media (min-width: 1024px) {
+  .succession-workspace-refinement,
+  .succession-refinement-panel.is-research,
+  .succession-refinement-panel.is-research .succession-refinement-header,
+  .succession-refinement-panel.is-research .succession-refinement-controls,
+  .succession-refinement-panel.is-research .succession-refinement-metrics,
+  .succession-refinement-panel.is-research .succession-refinement-columns,
+  .succession-refinement-panel.is-research .succession-refinement-columns > section {
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .succession-refinement-panel.is-research .succession-refinement-controls > label {
+    flex: 1 1 320px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .succession-refinement-panel.is-research .succession-refinement-controls select {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .succession-refinement-panel.is-research .succession-refinement-ledger > li,
+  .succession-refinement-panel.is-research .succession-refinement-ledger > li > div {
+    min-width: 0;
+  }
+}
