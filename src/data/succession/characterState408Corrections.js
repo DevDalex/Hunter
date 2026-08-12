@@ -26,7 +26,6 @@ const state = ({ characterId, operationalState, protectionState, threatLevel, ne
 export const characterState408CorrectionProfiles = freeze({
   'character:borksen': freeze([state({
     characterId: 'character:borksen',
-    end: 409,
     operationalState: 'Borksen remains inside the Tier 2 Heil-Ly negotiation room and actively plays Morena’s recruitment game. She selects Aim, Power / Ability, and No?, gathers extensive information about Morena’s history and Nen system, rejects Morena’s murder/destruction goals internally, and reveals Joker, Yes, then X. No and Return remain when Special Martial Law interrupts the game.',
     protectionState: 'Still isolated from her Kakin military support network inside Heil-Ly-controlled space; her remaining agency is the negotiated card-selection procedure and her information-gathering strategy.',
     threatLevel: 'extreme coercive recruitment / final-No death-equivalent risk from Borksen’s current strategic perspective',
