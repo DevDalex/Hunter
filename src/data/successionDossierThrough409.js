@@ -43,13 +43,8 @@ const relationshipMap = new Map((base.successionRelationships || []).map((record
 for (const record of succession409RelationshipRecords) relationshipMap.set(record.id, asLegacyRelationship(record));
 export const successionRelationships = freeze([...relationshipMap.values()].map(asLegacyRelationship));
 
-const retiredMysteryIds = new Set([
-  'chapter408-final-response-after-martial-law',
-  'chapter408-desired-borksen-specialist-ability',
-  'chapter408-martial-law-cause',
-]);
 export const successionMysteries = freeze([
-  ...(base.successionMysteries || []).filter((record) => !retiredMysteryIds.has(record.id)),
+  ...(base.successionMysteries || []),
   ...succession409Mysteries,
 ]);
 export const successionResolvedQuestions = freeze([...(base.successionResolvedQuestions || []), ...succession409ResolvedQuestions]);
