@@ -102,7 +102,7 @@ try {
   assert(chapterModule.succession409Mysteries.every((record) => activeMysteryIds.has(record.id)), 'active dossier must expose every modern Chapter 409 mystery');
   assert(dossier.negotiationGameChapter409Research?.stoppingPoint === game.stoppingPoint, 'active dossier must expose the Chapter 409 negotiation-game progress model');
   assert(/tier3|kneel/i.test(text(dossier.martialLawChapter409Research)) && /gunfire|shot/i.test(text(dossier.martialLawChapter409Research)), 'active dossier must expose Chapter 409 martial-law orders');
-  assert(/Between Tiers 2 and 3/i.test(text(dossier.hideoutChapter409Research)) && /five/i.test(text(dossier.hideoutChapter409Research)), 'active dossier must expose Chapter 409 hideout findings');
+  assert(/Between Tiers 2 and 3/i.test(dossier.hideoutChapter409Research?.confirmedLocation || '') && dossier.hideoutChapter409Research?.entranceCount === 5, 'active dossier must expose Chapter 409 hideout findings');
   assert(/murder/i.test(text(dossier.nenChapter409Research)) && /kiss/i.test(text(dossier.nenChapter409Research)), 'active dossier must expose Chapter 409 Nen joining conditions');
 
   const relationshipIds = new Set(archive.getEntitiesByType('relationship').filter((record) => record.chapterRange?.start === 409).map((record) => record.id));
