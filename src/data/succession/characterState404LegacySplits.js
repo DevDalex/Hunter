@@ -4,14 +4,14 @@ export const characterState404LegacySplits = freeze({
   'character:benjamin-hui-guo-rou': freeze([freeze({
     id: 'character-state:benjamin-hui-guo-rou:405',
     characterId: 'character:benjamin-hui-guo-rou',
-    chapterRange: freeze({ start: 405, end: null }),
+    chapterRange: freeze({ start: 405, end: 409 }),
     life: 'alive', bodyState: 'living body', consciousnessState: 'active in own body',
-    operationalState: 'After the exact Chapter 404 funeral authorization and Balsamilco-identity deception boundary, the imported First Prince command continuity resumes while Chapters 405+ await their own modernization.',
+    operationalState: 'After the exact Chapter 404 funeral authorization and Balsamilco-identity deception boundary, the imported First Prince command continuity resumes through Chapter 409, before Chapter 410 receives its own exact martial-law and Justice Bureau state.',
     protectionState: 'Protected by the strongest formal military command network among the princes.',
     threatLevel: 'existential', nenKnowledge: 'experienced Nen user and beneficiary of Benjamin Baton',
     allegianceState: 'First Prince household and Benjamin Private Army command structure.',
     locationId: 'location:black-whale:tier-1:room-1001',
-    openQuestions: freeze(['Later Benjamin developments remain subject to their own chapter evidence until modernized.']),
+    openQuestions: freeze(['Chapter 410 supersedes this legacy continuity record with an exact chapter-bounded state.']),
     certainty: 'confirmed', sourceIds: freeze(['source:chapter-404', 'source:chapter-413']),
   })]),
   'character:balsamilco-might': freeze([freeze({
