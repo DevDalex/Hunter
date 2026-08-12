@@ -16,7 +16,6 @@ const locationIds = (record) => freeze([
 
 const organizationIds = (record) => freeze([
   ...(record.tracks?.includes('heil-ly') || record.tracks?.includes('contagion') ? ['organization:heil-ly'] : []),
-  ...(record.tracks?.includes('kakin-military') ? ['organization:kakin-royal-army'] : []),
 ]);
 
 const abilityIds = (record) => freeze([
