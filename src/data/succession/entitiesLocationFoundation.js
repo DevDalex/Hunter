@@ -13,8 +13,9 @@ import { locationFoundation403Expansion } from './locationFoundation403Expansion
 import { locationFoundation404Expansion } from './locationFoundation404Expansion.js';
 import { locationFoundation405Expansion } from './locationFoundation405Expansion.js';
 import { locationFoundation406Expansion } from './locationFoundation406Expansion.js';
+import { locationFoundation409Expansion } from './locationFoundation409Expansion.js';
 
-const ARCHIVE_DATE = '2026-08-11';
+const ARCHIVE_DATE = '2026-08-12';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const includesChapter = (range, chapter) => chapter >= range.start && chapter <= (range.end ?? Number.POSITIVE_INFINITY);
 const remapLocationIds = (values = []) => Object.freeze([...new Set(values.map(remapJusticeLocationId386).filter(Boolean))]);
@@ -35,6 +36,7 @@ const locations = Object.freeze(uniqueById([
   ...locationFoundation404Expansion,
   ...locationFoundation405Expansion,
   ...locationFoundation406Expansion,
+  ...locationFoundation409Expansion,
 ]));
 
 const locationHistory = Object.freeze(uniqueById([
