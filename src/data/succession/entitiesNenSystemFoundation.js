@@ -23,6 +23,7 @@ import { abilityKnowledge404Overrides, guardianBeastState404Corrections, guardia
 import { abilityKnowledge405Overrides } from './nenSystemFoundation405Corrections.js';
 import { abilityKnowledge406Overrides } from './nenSystemFoundation406Corrections.js';
 import { abilityKnowledge408Overrides, nenSystemProfile408Corrections } from './nenSystemFoundation408Corrections.js';
+import { abilityKnowledge409Overrides, nenSystemProfile409Corrections } from './nenSystemFoundation409Corrections.js';
 
 const ARCHIVE_DATE = '2026-08-12';
 const unique = (values) => [...new Set(values.filter(Boolean))];
@@ -67,9 +68,9 @@ const correctedGuardianBeastStateProfiles = Object.freeze(Object.fromEntries([..
   return [beastId, Object.freeze([...records.values()].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id)))];
 })));
 
-const correctedNenSystemProfiles = Object.freeze({ ...nenSystemProfiles, ...nenSystemProfile378Corrections, ...nenSystemProfile389Corrections, ...nenSystemProfile398Corrections, ...nenSystemProfile408Corrections });
+const correctedNenSystemProfiles = Object.freeze({ ...nenSystemProfiles, ...nenSystemProfile378Corrections, ...nenSystemProfile389Corrections, ...nenSystemProfile398Corrections, ...nenSystemProfile408Corrections, ...nenSystemProfile409Corrections });
 const inheritedAbilityKnowledgeOverrides = organizationFoundationData.abilityKnowledgeOverrides || {};
-const knowledgeLayers = [abilityKnowledge385Overrides, abilityKnowledge386Overrides, abilityKnowledge387Overrides, abilityKnowledge389Overrides, abilityKnowledge390Overrides, abilityKnowledge391Overrides, abilityKnowledge392Overrides, abilityKnowledge393Overrides, abilityKnowledge394Overrides, abilityKnowledge398Overrides, abilityKnowledge399Overrides, abilityKnowledge400Overrides, abilityKnowledge401Overrides, abilityKnowledge402Overrides, abilityKnowledge403Overrides, abilityKnowledge404Overrides, abilityKnowledge405Overrides, abilityKnowledge406Overrides, abilityKnowledge408Overrides];
+const knowledgeLayers = [abilityKnowledge385Overrides, abilityKnowledge386Overrides, abilityKnowledge387Overrides, abilityKnowledge389Overrides, abilityKnowledge390Overrides, abilityKnowledge391Overrides, abilityKnowledge392Overrides, abilityKnowledge393Overrides, abilityKnowledge394Overrides, abilityKnowledge398Overrides, abilityKnowledge399Overrides, abilityKnowledge400Overrides, abilityKnowledge401Overrides, abilityKnowledge402Overrides, abilityKnowledge403Overrides, abilityKnowledge404Overrides, abilityKnowledge405Overrides, abilityKnowledge406Overrides, abilityKnowledge408Overrides, abilityKnowledge409Overrides];
 const abilityKnowledgeOverrideKeys = new Set([...Object.keys(inheritedAbilityKnowledgeOverrides), ...knowledgeLayers.flatMap((layer) => Object.keys(layer))]);
 const correctedAbilityKnowledgeOverrides = Object.freeze(Object.fromEntries([...abilityKnowledgeOverrideKeys].map((abilityId) => [abilityId, Object.freeze([...(inheritedAbilityKnowledgeOverrides[abilityId] || []), ...knowledgeLayers.flatMap((layer) => layer[abilityId] || [])])])));
 
