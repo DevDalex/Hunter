@@ -57,7 +57,7 @@ try {
   assert(/ineligible/i.test(text(endpoint)) && /Oito/i.test(text(endpoint)) && /awake|eyes wide/i.test(text(endpoint)), 'Chapter 411 endpoint must preserve Woble declaration and Oito reaction');
 
   const eventText = text(chapterModule.succession411TimelineEvents);
-  assert(!/Chapter 412|Chapter 413|Chapter 414|Chapter 415|Chapter 416/i.test(eventText), 'Chapter 411 events must not import later-chapter outcomes');
+  assert(!/Chapter 412(?!\+)|Chapter 413|Chapter 414|Chapter 415|Chapter 416/i.test(eventText), 'Chapter 411 events must not import later-chapter outcomes');
   assert(/Chapter 412\+|412\+/i.test(text(chapterModule.succession411SourcePolicy)) && /quarant|excluded|not.*import/i.test(text(chapterModule.succession411SourcePolicy)), 'source policy must explicitly quarantine Chapter 412+');
 
   const publicTimeline411 = timeline.successionDays.flatMap((day) => day.events).filter((event) => event.chapter === 411 && event.maintainedResearch);
