@@ -26,6 +26,7 @@ import { characterState405CorrectionProfiles } from './characterState405Correcti
 import { characterState406CorrectionProfiles } from './characterState406Corrections.js';
 import { characterState407CorrectionProfiles } from './characterState407Corrections.js';
 import { characterState408CorrectionProfiles } from './characterState408Corrections.js';
+import { characterState409CorrectionProfiles } from './characterState409Corrections.js';
 import { characterStatusKnowledge } from './characterStatusKnowledge.js';
 
 const characterIds = new Set([
@@ -56,12 +57,12 @@ const characterIds = new Set([
   ...Object.keys(characterState406CorrectionProfiles),
   ...Object.keys(characterState407CorrectionProfiles),
   ...Object.keys(characterState408CorrectionProfiles),
+  ...Object.keys(characterState409CorrectionProfiles),
 ]);
 
 const retiredStateIds = new Set(['character-state:chrollo-lucilfer:379']);
 
 const normalizeStateRecord = (record) => {
-  if (record.id === 'character-state:borksen:408') return Object.freeze({ ...record, chapterRange: Object.freeze({ ...record.chapterRange, end: 409 }) });
   if (record.id === 'character-state:kurapika:358') return Object.freeze({ ...record, chapterRange: Object.freeze({ ...record.chapterRange, end: 399 }), sourceIds: Object.freeze((record.sourceIds || []).filter((sourceId) => sourceId !== 'source:chapter-400')) });
   return record;
 };
@@ -96,6 +97,7 @@ const mergeCharacterRecords = (characterId) => {
     characterState406CorrectionProfiles,
     characterState407CorrectionProfiles,
     characterState408CorrectionProfiles,
+    characterState409CorrectionProfiles,
   ]) {
     for (const record of layer[characterId] || []) {
       if (retiredStateIds.has(record.id)) continue;
