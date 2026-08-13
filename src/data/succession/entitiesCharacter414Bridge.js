@@ -1,4 +1,5 @@
 import { successionArchiveData as base } from './entitiesCharacterFoundation.js';
+import { characterState414CorrectionProfiles } from './characterState414Corrections.js';
 
 const freeze = (value) => Object.freeze(value);
 const chiyamasi = freeze({
@@ -29,4 +30,14 @@ const characters = freeze([
   chiyamasi,
 ].sort((left, right) => left.name.localeCompare(right.name)));
 
-export const successionArchiveData = freeze({ ...base, characters });
+const stateKeys = new Set([
+  ...Object.keys(base.characterStateProfiles || {}),
+  ...Object.keys(characterState414CorrectionProfiles),
+]);
+const characterStateProfiles = freeze(Object.fromEntries([...stateKeys].map((characterId) => {
+  const records = new Map((base.characterStateProfiles?.[characterId] || []).map((record) => [record.id, record]));
+  for (const record of characterState414CorrectionProfiles[characterId] || []) records.set(record.id, record);
+  return [characterId, freeze([...records.values()].sort((left, right) => left.chapterRange.start - right.chapterRange.start || left.id.localeCompare(right.id)))];
+})));
+
+export const successionArchiveData = freeze({ ...base, characters, characterStateProfiles });
