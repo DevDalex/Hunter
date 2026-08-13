@@ -8,7 +8,7 @@ The sole substantive Chapter 414 story source for this maintained modernization 
 
 ## Strict Chapter 414 boundary
 
-The maintained packet contains **54 chapter-bounded events**. It begins with Rice and Bharate on duty outside Room 1007 and Kanjidol already acting inside Luzurus’s servants’ quarters. It ends when Oito reveals the off-record Yamato postal relay through a maternal-side relative. No Chapter 415+ consequence is imported.
+The maintained packet contains **55 chapter-bounded events**. It begins with Rice and Bharate on duty outside Room 1007 and Kanjidol already acting inside Luzurus’s servants’ quarters. It ends when Oito reveals the off-record Yamato postal relay through a maternal-side relative. No Chapter 415+ consequence is imported.
 
 ### Room 1007
 
