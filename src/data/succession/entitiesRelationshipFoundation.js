@@ -31,8 +31,9 @@ import { relationshipFoundation408Expansion } from './relationshipFoundation408E
 import { relationshipFoundation409Expansion } from './relationshipFoundation409Expansion.js';
 import { relationshipFoundation410Expansion } from './relationshipFoundation410Expansion.js';
 import { relationshipFoundation411Expansion } from './relationshipFoundation411Expansion.js';
+import { relationshipFoundation412Expansion } from './relationshipFoundation412Expansion.js';
 
-const ARCHIVE_DATE = '2026-08-12';
+const ARCHIVE_DATE = '2026-08-13';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 
 const legacyRelationshipAliases = Object.freeze({
@@ -113,6 +114,7 @@ const relationships = Object.freeze(uniqueById([
   ...relationshipFoundation409Expansion,
   ...relationshipFoundation410Expansion,
   ...relationshipFoundation411Expansion,
+  ...relationshipFoundation412Expansion,
 ]).map(normalizeRelationship));
 
 export const successionArchiveData = Object.freeze({ ...assignmentFoundationData, relationships });
