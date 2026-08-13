@@ -65,15 +65,10 @@ import { succession409ChapterResearch } from './succession409Research.js';
 import { succession410ChapterResearch } from './succession410Research.js';
 import { succession411ChapterResearch } from './succession411Research.js';
 import { succession412ChapterResearch } from './succession412Research.js';
+import { succession413ChapterResearch } from './succession413Research.js';
 import { succession414415ChapterResearch } from './succession414415Research.js';
 import { succession416ChapterResearch } from './succession416Research.js';
 
-// Shimanu is fully preserved in the Chapter 412 story packet, but the canonical
-// entity graph does not yet maintain a dedicated Shimanu character node. Keep
-// her out of the chapter appearance projection rather than fabricating one.
-// The underlying packet contains 37 curated beats because the explicit
-// forty-eight-hours-before-Martial-Law presentation jump is retained as a
-// chronology beat in its own right.
 const succession412MaintainedChapterResearch = Object.freeze(succession412ChapterResearch.map((record) => Object.freeze({
   ...record,
   characters: Object.freeze((record.characters || []).filter((name) => name !== 'Shimanu')),
@@ -85,75 +80,24 @@ const succession412MaintainedChapterResearch = Object.freeze(succession412Chapte
 })));
 
 export const maintainedSuccessionChapterResearch = Object.freeze([
-  ...succession340ChapterResearch,
-  ...succession341ChapterResearch,
-  ...succession342ChapterResearch,
-  ...succession343ChapterResearch,
-  ...succession344ChapterResearch,
-  ...succession345ChapterResearch,
-  ...succession346ChapterResearch,
-  ...succession347ChapterResearch,
-  ...succession348ChapterResearch,
-  ...succession349ChapterResearch,
-  ...succession350ChapterResearch,
-  ...succession351357ChapterResearch,
-  ...succession358ChapterResearch,
-  ...succession359ChapterResearch,
-  ...succession360ChapterResearch,
-  ...succession361ChapterResearch,
-  ...succession362ChapterResearch,
-  ...succession363ChapterResearch,
-  ...succession364ChapterResearch,
-  ...succession365ChapterResearch,
-  ...succession366ChapterResearch,
-  ...succession367ChapterResearch,
-  ...succession368ChapterResearch,
-  ...succession369ChapterResearch,
-  ...succession370ChapterResearch,
-  ...succession371ChapterResearch,
-  ...succession372ChapterResearch,
-  ...succession373ChapterResearch,
-  ...succession374ChapterResearch,
-  ...succession375ChapterResearch,
-  ...succession376ChapterResearch,
-  ...succession377ChapterResearch,
-  ...succession378ChapterResearch,
-  ...succession379ChapterResearch,
-  ...succession380ChapterResearch,
-  ...succession381ChapterResearch,
-  ...succession382ChapterResearch,
-  ...succession383ChapterResearch,
-  ...succession384ChapterResearch,
-  ...succession385ChapterResearch,
-  ...succession386ChapterResearch,
-  ...succession387ChapterResearch,
-  ...succession388ChapterResearch,
-  ...succession389ChapterResearch,
-  ...succession390ChapterResearch,
-  ...succession391ChapterResearch,
-  ...succession392ChapterResearch,
-  ...succession393ChapterResearch,
-  ...succession394ChapterResearch,
-  ...succession395ChapterResearch,
-  ...succession396ChapterResearch,
-  ...succession397ChapterResearch,
-  ...succession398ChapterResearch,
-  ...succession399ChapterResearch,
-  ...succession400ChapterResearch,
-  ...succession401ChapterResearch,
-  ...succession402ChapterResearch,
-  ...succession403ChapterResearch,
-  ...succession404ChapterResearch,
-  ...succession405ChapterResearch,
-  ...succession406ChapterResearch,
-  ...succession407ChapterResearch,
-  ...succession408ChapterResearch,
-  ...succession409ChapterResearch,
-  ...succession410ChapterResearch,
-  ...succession411ChapterResearch,
-  ...succession412MaintainedChapterResearch,
-  ...succession414415ChapterResearch,
-  ...succession416ChapterResearch,
+  ...succession340ChapterResearch, ...succession341ChapterResearch, ...succession342ChapterResearch, ...succession343ChapterResearch,
+  ...succession344ChapterResearch, ...succession345ChapterResearch, ...succession346ChapterResearch, ...succession347ChapterResearch,
+  ...succession348ChapterResearch, ...succession349ChapterResearch, ...succession350ChapterResearch, ...succession351357ChapterResearch,
+  ...succession358ChapterResearch, ...succession359ChapterResearch, ...succession360ChapterResearch, ...succession361ChapterResearch,
+  ...succession362ChapterResearch, ...succession363ChapterResearch, ...succession364ChapterResearch, ...succession365ChapterResearch,
+  ...succession366ChapterResearch, ...succession367ChapterResearch, ...succession368ChapterResearch, ...succession369ChapterResearch,
+  ...succession370ChapterResearch, ...succession371ChapterResearch, ...succession372ChapterResearch, ...succession373ChapterResearch,
+  ...succession374ChapterResearch, ...succession375ChapterResearch, ...succession376ChapterResearch, ...succession377ChapterResearch,
+  ...succession378ChapterResearch, ...succession379ChapterResearch, ...succession380ChapterResearch, ...succession381ChapterResearch,
+  ...succession382ChapterResearch, ...succession383ChapterResearch, ...succession384ChapterResearch, ...succession385ChapterResearch,
+  ...succession386ChapterResearch, ...succession387ChapterResearch, ...succession388ChapterResearch, ...succession389ChapterResearch,
+  ...succession390ChapterResearch, ...succession391ChapterResearch, ...succession392ChapterResearch, ...succession393ChapterResearch,
+  ...succession394ChapterResearch, ...succession395ChapterResearch, ...succession396ChapterResearch, ...succession397ChapterResearch,
+  ...succession398ChapterResearch, ...succession399ChapterResearch, ...succession400ChapterResearch, ...succession401ChapterResearch,
+  ...succession402ChapterResearch, ...succession403ChapterResearch, ...succession404ChapterResearch, ...succession405ChapterResearch,
+  ...succession406ChapterResearch, ...succession407ChapterResearch, ...succession408ChapterResearch, ...succession409ChapterResearch,
+  ...succession410ChapterResearch, ...succession411ChapterResearch, ...succession412MaintainedChapterResearch,
+  ...succession413ChapterResearch, ...succession414415ChapterResearch, ...succession416ChapterResearch,
 ].sort((left, right) => left.number - right.number));
 
 export const maintainedSuccessionChapterNumbers = Object.freeze(maintainedSuccessionChapterResearch.map((record) => record.number));
