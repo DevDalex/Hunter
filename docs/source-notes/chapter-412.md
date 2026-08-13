@@ -15,4 +15,4 @@ The **sole substantive story source** for this Chapter 412 modernization is the 
 
 ## Canonical event density
 
-The maintained packet uses **36 chapter-bounded events** plus **36 maintained-research projections** once wired into the entity graph. Smaller dialogue beats stay inside event details, character states, relationships, and Nen findings rather than being inflated into micro-events.
+The maintained packet uses **37 chapter-bounded events** plus **37 maintained-research projections** once wired into the entity graph. The explicit forty-eight-hours-before-Martial-Law presentation transition is retained as a chronology beat; smaller dialogue facts remain inside event details, character states, relationships, and Nen findings rather than being inflated into additional micro-events.
