@@ -44,8 +44,9 @@ import { eventFoundation408Expansion } from './eventFoundation408Expansion.js';
 import { eventFoundation409Expansion } from './eventFoundation409Expansion.js';
 import { eventFoundation410Expansion } from './eventFoundation410Expansion.js';
 import { eventFoundation411Expansion } from './eventFoundation411Expansion.js';
+import { eventFoundation412Expansion } from './eventFoundation412Expansion.js';
 
-const ARCHIVE_DATE = '2026-08-12';
+const ARCHIVE_DATE = '2026-08-13';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const includesChapter = (range, chapter) => chapter >= range.start && chapter <= (range.end ?? range.start);
@@ -95,6 +96,7 @@ const eventExpansions = Object.freeze([
   ...eventFoundation409Expansion,
   ...eventFoundation410Expansion,
   ...eventFoundation411Expansion,
+  ...eventFoundation412Expansion,
 ]);
 
 const events = Object.freeze(uniqueById([
