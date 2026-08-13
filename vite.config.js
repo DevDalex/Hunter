@@ -179,6 +179,13 @@ export default defineConfig({
             // Keep the modern research, frozen snapshots and direct state/Nen
             // leaves together so this dense chapter remains a lazy data island.
             { name: 'succession-chapter-410-level0-case-s-benjamin', test: /src\/data\/(?:succession(?:410Research|ArchiveThrough410|DossierThrough410)|succession\/(?:eventFoundation410Expansion|relationshipFoundation410Expansion|organizationState410Corrections|characterState410(?:Corrections|LegacyClosures)|nenSystemFoundation410Corrections))\.js$/ },
+            // Chapter 412 resolves the Woble-identity basis behind Kurapika's
+            // ineligibility claim, demonstrates calibrated Dowsing Chain use,
+            // records Slakka's non-return, and opens Cleapatro's 1,047-lawsuit
+            // document visit to Beyond. Keep the direct chapter research and
+            // entity/Nen leaves together without dragging the Through412 overlay
+            // chain into this performance island.
+            { name: 'succession-chapter-412-woble-identity-beyond-documents', test: /src\/data\/(?:succession412Research|succession\/(?:eventFoundation412Expansion|relationshipFoundation412Expansion|characterState412Corrections|nenSystemFoundation412Corrections))\.js$/ },
           ],
         },
       },
