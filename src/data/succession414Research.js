@@ -148,7 +148,7 @@ export const succession414ChapterResearch = freeze([freeze({
   locations: freeze(['Black Whale · Tier 1 · Room 1007 entrance', 'Black Whale · Tier 1 · Room 1007', 'Black Whale · Tier 1 · Room 1007 servants’ quarters', 'Black Whale · Tier 1 · Room 1009 entrance', 'Black Whale · Tier 1 · Room 1014 master bedroom', 'Yamato postal contingency']),
   threadLabels: freeze(['Luzurus household', 'Benjamin', 'Special Martial Law', 'Kurapika & Woble', 'Beyond curse', 'Nen development', 'Hunter Association']),
   confidence: freeze(['user-supplied synopsis is sole substantive Chapter 414 story source', 'daughter Woble location unresolved', 'aboard infant preserved as unnamed nephew and boy', 'three confrontation/breach outcomes unresolved', '415+ consequences excluded']),
-  status: 'Strict maintained Chapter 414 packet: 54 chapter-bounded beats, Room 1007 confrontation, Room 1009 Nen-operation setup, Woble identity and curse uncertainty, trusted-friends/Yamato endpoint, and Chapter 415+ spoiler firewall',
+  status: 'Strict maintained Chapter 414 packet: 55 chapter-bounded beats, Room 1007 confrontation, Room 1009 Nen-operation setup, Woble identity and curse uncertainty, trusted-friends/Yamato endpoint, and Chapter 415+ spoiler firewall',
   coverage: freeze({ identity: true, publication: true, summary: true, sceneSummary: true, chronology: true, appearances: true, locations: true, relationships: true, assignments: true, nen: true, source: true }),
   lastReviewed: '2026-08-13',
   titleStatus: 'retained-existing-maintained-metadata',
