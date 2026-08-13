@@ -4,6 +4,7 @@ import { createServer } from 'vite';
 const assert = (condition, message) => { if (!condition) throw new Error(`Chapter 412 boundary audit failed: ${message}`); };
 const text = (value) => JSON.stringify(value || null);
 const sourceNote = fs.readFileSync('docs/source-notes/chapter-412.md', 'utf8').replace(/\*\*/g, '');
+const expected412EventCount = 37;
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {
@@ -23,14 +24,14 @@ try {
   const chapter412 = chapterModule.succession412ChapterResearch?.[0];
   assert(chapter412?.number === 412, 'Chapter 412 maintained research must load');
   assert(chapter412.chronology?.presentationOrderNonLinear === true && /10:00 a\.m\./i.test(chapter412.chronology?.exactClockTime || ''), 'Chapter 412 must preserve non-linear chronology and 10:00 a.m. class return');
-  assert(chapterModule.succession412TimelineEvents.length === 36, 'maintained research must preserve the curated 36-event Chapter 412 sequence');
+  assert(chapterModule.succession412TimelineEvents.length === expected412EventCount, `maintained research must preserve the curated ${expected412EventCount}-event Chapter 412 sequence`);
   assert(chapter412.coverage?.identity === true && chapter412.coverage?.relationships === true && chapter412.coverage?.nen === true, 'Chapter 412 maintained research must advertise full integration coverage');
 
   const events412 = archive.getEntitiesByType('event').filter((event) => event.chapterRange?.start === 412 && event.chapterRange?.end === 412);
   const projected412 = events412.filter((event) => event.maintainedResearch === true);
   const dedicated412 = events412.filter((event) => String(event.id || '').startsWith('event:chapter412-') && !event.maintainedResearch);
-  assert(projected412.length === 36, 'story intelligence must project all 36 maintained Chapter 412 beats');
-  assert(dedicated412.length === 36, 'Chapter 412 must expose 36 dedicated canonical events');
+  assert(projected412.length === expected412EventCount, `story intelligence must project all ${expected412EventCount} maintained Chapter 412 beats`);
+  assert(dedicated412.length === expected412EventCount, `Chapter 412 must expose ${expected412EventCount} dedicated canonical events`);
 
   assert(!frozen411Archive.publicationBoundary412, 'frozen Through411 archive must remain unaware of Chapter 412');
   assert(activeArchive.publicationBoundary412?.chapter === 412 && activeArchive.publicationBoundary412?.nonLinear === true, 'active archive must advance to Through412 with non-linear chronology');
@@ -72,7 +73,7 @@ try {
   assert(!/proper name.*(?:is|=)|named nephew/i.test(eventText), 'events must not invent a proper name for Oito’s nephew');
 
   const publicTimeline412 = timeline.successionDays.flatMap((day) => day.events).filter((event) => event.chapter === 412 && event.maintainedResearch);
-  assert(publicTimeline412.length === 36, 'public timeline must expose all 36 maintained Chapter 412 beats');
+  assert(publicTimeline412.length === expected412EventCount, `public timeline must expose all ${expected412EventCount} maintained Chapter 412 beats`);
 
   assert((dossier.guardAssignmentGroups || []).some((group) => /Chapter 412/.test(group.group || '')), 'active dossier must include the Chapter 412 modernization group');
   assert(!(frozen411Dossier.guardAssignmentGroups || []).some((group) => /Chapter 412/.test(group.group || '')), 'frozen Through411 dossier must remain unaware of Chapter 412 group');
@@ -88,6 +89,7 @@ try {
   assert(/forty-eight hours|48 hours/i.test(sourceNote) && /five hours/i.test(sourceNote), 'source note must preserve both chronology anchors');
   assert(/younger sister’s son|younger sister's son/i.test(sourceNote) && /daughter Woble/i.test(sourceNote) && /unnamed/i.test(sourceNote), 'source note must preserve unnamed-nephew identity boundary');
   assert(/omniscient/i.test(sourceNote) && /1,047/i.test(sourceNote) && /thrown out/i.test(sourceNote), 'source note must preserve Dowsing limitation and Beyond lawsuit result');
+  assert(new RegExp(`\\*\\*${expected412EventCount} chapter-bounded events\\*\\*|${expected412EventCount} chapter-bounded events`, 'i').test(sourceNote), 'source note must document the actual curated event count');
   assert(/Chapter 413\+/i.test(sourceNote), 'source note must preserve Chapter 413+ firewall');
 
   console.log(`Chapter 412 boundary audit passed: ${dedicated412.length} dedicated events plus ${projected412.length} maintained projections preserve the non-linear five-hour/forty-eight-hour chronology, Woble-nephew identity correction, calibrated Dowsing Chain verification, Slakka-only dropout, Kurapika strategic reset, 1,047 dismissed Beyond lawsuits, and Chapter 413+ spoiler firewall.`);
