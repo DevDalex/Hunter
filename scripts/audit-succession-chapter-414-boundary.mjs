@@ -24,13 +24,13 @@ try {
   assert(chapter414?.title === 'Friends', 'retained Chapter 414 title must be Friends');
   assert(chapter414?.voyageDay === 'Voyage Day 12', 'Chapter 414 must remain on Voyage Day 12');
   assert(chapter414?.chronology?.exactClockTime === null, 'Chapter 414 must not invent a new exact clock minute');
-  assert(chapterModule.succession414TimelineEvents.length === 54, 'maintained research must preserve 54 curated Chapter 414 beats');
+  assert(chapterModule.succession414TimelineEvents.length === 55, 'maintained research must preserve 55 curated Chapter 414 beats');
 
   const events414 = archive.getEntitiesByType('event').filter((event) => event.chapterRange?.start === 414 && event.chapterRange?.end === 414);
   const projected414 = events414.filter((event) => event.maintainedResearch === true);
   const dedicated414 = events414.filter((event) => String(event.id || '').startsWith('event:chapter414-') && !event.maintainedResearch);
-  assert(projected414.length === 54, 'story intelligence must project all 54 maintained beats');
-  assert(dedicated414.length === 54, 'canonical graph must expose all 54 dedicated events');
+  assert(projected414.length === 55, 'story intelligence must project all 55 maintained beats');
+  assert(dedicated414.length === 55, 'canonical graph must expose all 55 dedicated events');
 
   assert(!frozen413Archive.publicationBoundary414, 'frozen Through413 archive must remain unaware of Chapter 414');
   assert(activeArchive.publicationBoundary414?.chapter === 414, 'active archive must advance to Through414');
@@ -82,11 +82,11 @@ try {
   assert(!laterOnly.test(researchText), 'Chapter 414 maintained events must not import Chapter 415+ outcomes');
 
   const publicTimeline414 = timeline.successionDays.flatMap((day) => day.events).filter((event) => event.chapter === 414 && event.maintainedResearch);
-  assert(publicTimeline414.length === 54, 'public timeline must expose all 54 maintained Chapter 414 beats');
+  assert(publicTimeline414.length === 55, 'public timeline must expose all 55 maintained Chapter 414 beats');
   assert(dossier.chapter414Research?.[0]?.number === 414, 'active dossier must expose strict Chapter 414 research');
   assert((dossier.successionChapterResearch || []).filter((record) => record.number === 414).length === 1, 'active dossier must expose Chapter 414 exactly once');
 
-  assert(/sole substantive Chapter 414 story source/i.test(sourceNote) && /54 chapter-bounded events/i.test(sourceNote), 'source note must preserve source policy and event density');
+  assert(/sole substantive Chapter 414 story source/i.test(sourceNote) && /55 chapter-bounded events/i.test(sourceNote), 'source note must preserve source policy and event density');
   assert(/Yamato/i.test(sourceNote) && /strict Chapter 414 endpoint/i.test(sourceNote), 'source note must preserve Yamato stopping point');
   assert(/Prince/i.test(sourceNote) && /wording provenance|wording|semantic referent/i.test(sourceNote), 'source note must preserve the translation correction as wording provenance only');
 
