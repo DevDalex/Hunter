@@ -1,0 +1,33 @@
+const freeze = (value) => Object.freeze(value);
+
+export const abilityFoundation413Expansion = freeze([
+  freeze({
+    id: 'ability:combo-master',
+    entityType: 'ability',
+    slug: 'combo-master',
+    name: 'Combo Master',
+    aliases: freeze([]),
+    summary: 'Furykov’s Nen ability is named in Chapter 413; the supplied synopsis does not preserve its mechanics.',
+    sourceIds: freeze(['source:chapter-413']),
+    publicationStatus: 'published',
+    canonLevel: 'canon',
+    createdAt: '2026-08-13',
+    updatedAt: '2026-08-13',
+    ownerIds: freeze(['character:furykov']),
+    classification: freeze({ nenTypes: freeze(['unknown']), certainty: 'confirmed' }),
+    category: 'ability / mechanics unresolved',
+    activation: 'Not specified in the supplied Chapter 413 synopsis.',
+    conditions: freeze([]),
+    limitations: freeze(['Mechanics are intentionally not reconstructed from later chapters or outside material.']),
+    costs: freeze([]),
+    targets: freeze(['unknown']),
+    range: 'unknown',
+    duration: 'unknown',
+    status: 'introduced',
+    knownUses: freeze([]),
+    firstChapter: 413,
+    latestChapter: 413,
+    sourceChapterNumbers: freeze([413]),
+    researchStatus: 'name-and-owner confirmed / mechanics unresolved',
+  }),
+]);
