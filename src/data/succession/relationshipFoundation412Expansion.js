@@ -40,7 +40,7 @@ export const relationshipFoundation412Expansion = freeze([
     slug: 'cleapatro-beyond-ch412-dismissed-lawsuits-document-review',
     name: 'Cleapatro Brings Beyond 1,047 Dismissed Lawsuits',
     summary: 'Cleapatro arrives with Justice Bureau records, corrects Beyond’s lawsuit count to 1,047, says all were dismissed, and continues arguing while Kanzai and Saiyu screen the material.',
-    sourceEntityId: 'character:cleapatro', targetEntityId: 'character:beyond-netero', subtype: 'legal-administrative-document-confrontation', sentiment: 'adversarial',
+    sourceEntityId: 'character:cleapatro', targetEntityId: 'character:beyond-netero', subtype: 'legal-administrative-document-confrontation',
     basis: 'The Tier 1 detention-cell document visit.',
     operationalState: 'Legal/document exchange remains active at the Chapter 412 stopping point; no later document result is imported.',
     relatedEventIds: ['event:chapter412-cleapatro-visits-beyond-cell-with-documents','event:chapter412-beyond-lawsuit-count-1047-all-dismissed','event:chapter412-saiyu-randomizes-documents-as-cleapatro-beyond-bicker'],
