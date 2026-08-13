@@ -64,6 +64,7 @@ import { succession408ChapterResearch } from './succession408Research.js';
 import { succession409ChapterResearch } from './succession409Research.js';
 import { succession410ChapterResearch } from './succession410Research.js';
 import { succession411ChapterResearch } from './succession411Research.js';
+import { succession412ChapterResearch } from './succession412Research.js';
 import { succession414415ChapterResearch } from './succession414415Research.js';
 import { succession416ChapterResearch } from './succession416Research.js';
 
@@ -134,6 +135,7 @@ export const maintainedSuccessionChapterResearch = Object.freeze([
   ...succession409ChapterResearch,
   ...succession410ChapterResearch,
   ...succession411ChapterResearch,
+  ...succession412ChapterResearch,
   ...succession414415ChapterResearch,
   ...succession416ChapterResearch,
 ].sort((left, right) => left.number - right.number));
