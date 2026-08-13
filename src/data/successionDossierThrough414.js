@@ -7,7 +7,7 @@ import {
   succession414RelationshipRecords,
   succession414ResolvedQuestions,
   succession414SourcePolicy,
-} from './succession414Research.js';
+} from './succession414415Research.js';
 
 export * from './successionDossierThrough413.js';
 
