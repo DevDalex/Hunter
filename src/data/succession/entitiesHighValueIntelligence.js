@@ -22,14 +22,8 @@ const mergeRecordMap = (baseMap = {}, additionMap = {}) => freeze(Object.fromEnt
   }),
 ));
 
-/* A consumed or deployed artifact remains part of the chapter-bounded archive
-   after its physical state changes. The Guardian Spirit Beast eggs manifest by
-   Chapter 359, but their historical record and custody chain remain queryable. */
 const objects = freeze(phase4Objects.map((record) => record.id === 'object:guardian-spirit-beast-eggs'
-  ? freeze({
-    ...record,
-    chapterRange: freeze({ start: record.chapterRange.start, end: null }),
-  })
+  ? freeze({ ...record, chapterRange: freeze({ start: record.chapterRange.start, end: null }) })
   : record));
 
 const protocolRecords = freeze([
@@ -37,34 +31,81 @@ const protocolRecords = freeze([
   ...highValueIntelligence384Protocols,
 ]);
 
-/* Keep canonical ability entities singular while allowing their latest metadata
-   to point readers toward chapter-bounded knowledge layers. */
-const abilities = freeze((phase4PredecessorData.abilities || []).map((record) => record.id === 'ability:secret-window'
-  ? freeze({
+const abilities = freeze((phase4PredecessorData.abilities || []).map((record) => {
+  if (record.id === 'ability:secret-window') return freeze({
     ...record,
     latestChapter: Math.max(Number(record.latestChapter || 0), 413),
     latestKnowledgeNote: 'Chapter 413 adds pre-death visual knowledge through the dedicated ability-knowledge history.',
     updatedAt: '2026-08-13',
-  })
-  : record));
+  });
+  if (record.id === 'ability:muteking') return freeze({
+    ...record,
+    classification: freeze({ nenTypes: freeze(['unknown']), certainty: 'confirmed' }),
+    firstChapter: 414,
+    latestChapter: 414,
+    status: 'introduced',
+    researchStatus: 'activation and accumulating protection confirmed / complete mechanics unresolved',
+    updatedAt: '2026-08-13',
+  });
+  return record;
+}));
 
 const chiyamasi = chapter414CharacterData.characters.find((record) => record.id === 'character:chiyamasi');
 const characters = freeze(uniqueById([
   ...(phase4PredecessorData.characters || []),
   ...(chiyamasi ? [chiyamasi] : []),
 ]));
-const characterStateProfiles = mergeRecordMap(phase4PredecessorData.characterStateProfiles, characterState414CorrectionProfiles);
+
+const normalizedState414 = freeze(Object.fromEntries(Object.entries(characterState414CorrectionProfiles).map(([characterId, records]) => [
+  characterId,
+  freeze(records.map((record) => freeze({ ...record, loyaltyStateCode: record.loyaltyStateCode || 'operative' }))),
+])));
+const characterStateProfiles = mergeRecordMap(phase4PredecessorData.characterStateProfiles, normalizedState414);
 const abilityKnowledgeOverrides = mergeRecordMap(phase4PredecessorData.abilityKnowledgeOverrides, abilityKnowledge414Overrides);
 
-/* Phase 4 promotes previously scattered intelligence into the canonical graph
-   without replacing Phase 3's normalized people and state contracts. Chapter 414
-   adds one newly maintained person node plus chapter-specific state/knowledge. */
+const relationship414Ids = new Set([
+  'relationship:luzurus-ridge-ch414-delay-kanjidol',
+  'relationship:ridge-kanjidol-ch414-unresolved-confrontation',
+  'relationship:chiyamasi-yushohi-ch414-muteking-support',
+  'relationship:bill-kurapika-ch414-beyond-planning',
+  'relationship:oito-kurapika-ch414-yamato-trust',
+]);
+const relationship414Shape = Object.freeze({
+  'relationship:luzurus-ridge-ch414-delay-kanjidol': ['professional', 'protective-command-delay', 'allied', 'active-cooperation'],
+  'relationship:ridge-kanjidol-ch414-unresolved-confrontation': ['hostile', 'unresolved-confrontation', 'hostile', 'unresolved'],
+  'relationship:chiyamasi-yushohi-ch414-muteking-support': ['professional', 'operational-support', 'allied', 'active-cooperation'],
+  'relationship:bill-kurapika-ch414-beyond-planning': ['professional', 'strategic-planning', 'allied', 'active-cooperation'],
+  'relationship:oito-kurapika-ch414-yamato-trust': ['professional', 'trust-and-contingency-cooperation', 'allied', 'active-cooperation'],
+});
+const relationships = freeze((phase4PredecessorData.relationships || []).map((record) => {
+  if (!relationship414Ids.has(record.id)) return record;
+  const [relationshipType, subtype, sentiment, status] = relationship414Shape[record.id];
+  return freeze({
+    ...record,
+    sourceEntityId: record.sourceEntityId || record.fromId,
+    targetEntityId: record.targetEntityId || record.toId,
+    relationshipType,
+    subtype,
+    direction: record.direction || 'directed',
+    sentiment,
+    status,
+    basis: record.basis || record.summary,
+    operationalState: record.operationalState || record.summary,
+    strength: record.strength || 'operational',
+    certainty: 'confirmed',
+    relatedEventIds: freeze(record.relatedEventIds || []),
+    evidenceNotes: freeze(record.evidenceNotes || record.evidence || []),
+    legacyIds: freeze(record.legacyIds || []),
+  });
+}));
+
 export const successionArchiveData = freeze({
   ...phase4PredecessorData,
   characters,
   characterStateProfiles,
   abilities,
   abilityKnowledgeOverrides,
+  relationships,
   knowledgeRecords: phase4KnowledgeRecords,
   protocolRecords,
   objects,
