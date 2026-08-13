@@ -30,6 +30,7 @@ import { characterState409CorrectionProfiles } from './characterState409Correcti
 import { characterState410LegacyClosures } from './characterState410LegacyClosures.js';
 import { characterState410CorrectionProfiles } from './characterState410Corrections.js';
 import { characterState411CorrectionProfiles } from './characterState411Corrections.js';
+import { characterState412CorrectionProfiles } from './characterState412Corrections.js';
 import { characterStatusKnowledge } from './characterStatusKnowledge.js';
 
 const characterIds = new Set([
@@ -64,6 +65,7 @@ const characterIds = new Set([
   ...Object.keys(characterState410LegacyClosures),
   ...Object.keys(characterState410CorrectionProfiles),
   ...Object.keys(characterState411CorrectionProfiles),
+  ...Object.keys(characterState412CorrectionProfiles),
 ]);
 
 const retiredStateIds = new Set(['character-state:chrollo-lucilfer:379']);
@@ -107,6 +109,7 @@ const mergeCharacterRecords = (characterId) => {
     characterState410LegacyClosures,
     characterState410CorrectionProfiles,
     characterState411CorrectionProfiles,
+    characterState412CorrectionProfiles,
   ]) {
     for (const record of layer[characterId] || []) {
       if (retiredStateIds.has(record.id)) continue;
