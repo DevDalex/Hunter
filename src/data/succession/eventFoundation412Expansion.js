@@ -4,6 +4,7 @@ const freeze = (value) => Object.freeze(value);
 const sourceId = 'source:chapter-412';
 const slugify = (value = '') => String(value).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 const characterId = (name) => `character:${slugify(name)}`;
+const unsupportedParticipantLinks = new Set(['Shimanu']);
 const tier = (number) => `location:black-whale:tier-${number}`;
 
 const locationIds = (record) => {
@@ -44,7 +45,7 @@ export const eventFoundation412Expansion = freeze(succession412TimelineEvents.ma
     importance: criticalIds.has(record.id) ? 'critical' : 'major',
     chapterRange: freeze({ start: 412, end: 412 }),
     chronology: freeze({ sequence: index + 1, day: 'Voyage Day 12 / forty-eight-hour flashback', timeOfDay: record.time || null, storyPeriod: 'Voyage Day 12 · five hours before Special Martial Law / forty-eight-hour flashback / 10:00 a.m. return / Beyond detention coda', certainty: 'chapter-presentation-order-confirmed-nonlinear-clock' }),
-    participantIds: freeze((record.people || []).map(characterId)),
+    participantIds: freeze((record.people || []).filter((name) => !unsupportedParticipantLinks.has(name)).map(characterId)),
     organizationIds: freeze([]),
     locationIds: locationIds(record),
     abilityIds: freeze([]),
