@@ -71,9 +71,17 @@ import { succession416ChapterResearch } from './succession416Research.js';
 // Shimanu is fully preserved in the Chapter 412 story packet, but the canonical
 // entity graph does not yet maintain a dedicated Shimanu character node. Keep
 // her out of the chapter appearance projection rather than fabricating one.
+// The underlying packet contains 37 curated beats because the explicit
+// forty-eight-hours-before-Martial-Law presentation jump is retained as a
+// chronology beat in its own right.
 const succession412MaintainedChapterResearch = Object.freeze(succession412ChapterResearch.map((record) => Object.freeze({
   ...record,
   characters: Object.freeze((record.characters || []).filter((name) => name !== 'Shimanu')),
+  confidence: Object.freeze([
+    '37 chapter-bounded canonical beats are taken only from the supplied synopsis, including the explicit forty-eight-hours-before-Martial-Law chronology transition.',
+    'The unnamed nephew remains unnamed; Oito’s verified testimony is separated from later ritual/legal consequences; Dowsing Chain is not treated as omniscient; no Chapter 413+ outcome is imported.',
+  ]),
+  status: 'Strict maintained Chapter 412 packet: 37 chapter-bounded beats, Woble/nephew identity correction, calibrated Oito chain verification, Slakka dropout, Kurapika strategic reset, Beyond legal-document visit, and Chapter 413+ spoiler firewall',
 })));
 
 export const maintainedSuccessionChapterResearch = Object.freeze([
