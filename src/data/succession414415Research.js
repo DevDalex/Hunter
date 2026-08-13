@@ -1,7 +1,7 @@
 import * as base from './succession414415ResearchBase.js';
 import {
   succession414ChapterFocus,
-  succession414ChapterResearch,
+  succession414ChapterResearch as rawSuccession414ChapterResearch,
   succession414Mysteries,
   succession414NenFindings,
   succession414RelationshipRecords,
@@ -13,7 +13,6 @@ import {
 export * from './succession414415ResearchBase.js';
 export {
   succession414ChapterFocus,
-  succession414ChapterResearch,
   succession414Mysteries,
   succession414NenFindings,
   succession414RelationshipRecords,
@@ -24,6 +23,10 @@ export {
 
 const freeze = (value) => Object.freeze(value);
 const chapter415 = base.succession414415ChapterResearch.find((record) => record.number === 415);
+export const succession414ChapterResearch = freeze(rawSuccession414ChapterResearch.map((record) => freeze({
+  ...record,
+  status: String(record.status || '').replace('54 chapter-bounded beats', '55 chapter-bounded beats'),
+})));
 
 export const succession414415SourcePolicy = freeze({
   reviewedAt: '2026-08-13',
