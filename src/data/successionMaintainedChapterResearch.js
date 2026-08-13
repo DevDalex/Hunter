@@ -68,6 +68,14 @@ import { succession412ChapterResearch } from './succession412Research.js';
 import { succession414415ChapterResearch } from './succession414415Research.js';
 import { succession416ChapterResearch } from './succession416Research.js';
 
+// Shimanu is fully preserved in the Chapter 412 story packet, but the canonical
+// entity graph does not yet maintain a dedicated Shimanu character node. Keep
+// her out of the chapter appearance projection rather than fabricating one.
+const succession412MaintainedChapterResearch = Object.freeze(succession412ChapterResearch.map((record) => Object.freeze({
+  ...record,
+  characters: Object.freeze((record.characters || []).filter((name) => name !== 'Shimanu')),
+})));
+
 export const maintainedSuccessionChapterResearch = Object.freeze([
   ...succession340ChapterResearch,
   ...succession341ChapterResearch,
@@ -135,7 +143,7 @@ export const maintainedSuccessionChapterResearch = Object.freeze([
   ...succession409ChapterResearch,
   ...succession410ChapterResearch,
   ...succession411ChapterResearch,
-  ...succession412ChapterResearch,
+  ...succession412MaintainedChapterResearch,
   ...succession414415ChapterResearch,
   ...succession416ChapterResearch,
 ].sort((left, right) => left.number - right.number));
