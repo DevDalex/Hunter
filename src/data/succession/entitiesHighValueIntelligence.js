@@ -24,10 +24,22 @@ const protocolRecords = Object.freeze([
   ...highValueIntelligence384Protocols,
 ]);
 
+/* Keep the canonical ability entity singular while allowing its latest metadata
+   to point readers toward the chapter-bounded knowledge layer. */
+const abilities = Object.freeze((phase4PredecessorData.abilities || []).map((record) => record.id === 'ability:secret-window'
+  ? Object.freeze({
+    ...record,
+    latestChapter: Math.max(Number(record.latestChapter || 0), 413),
+    latestKnowledgeNote: 'Chapter 413 adds pre-death visual knowledge through the dedicated ability-knowledge history.',
+    updatedAt: '2026-08-13',
+  })
+  : record));
+
 /* Phase 4 promotes previously scattered intelligence into the canonical graph
    without replacing Phase 3's normalized people and state contracts. */
 export const successionArchiveData = Object.freeze({
   ...phase4PredecessorData,
+  abilities,
   knowledgeRecords: phase4KnowledgeRecords,
   protocolRecords,
   objects,
