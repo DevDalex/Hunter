@@ -15,6 +15,7 @@ import {
 import { preloadRoute, routeModuleLoaders } from './lib/routePreload';
 
 const SuccessionArchiveApp = lazy(routeModuleLoaders.successionArchive);
+const PreSuccessionChapterRecord = lazy(() => import('./components/PreSuccessionChapterRecord'));
 
 function readSpoilerLimit() {
   const stored = readStoredNumber('hxh-spoiler-limit', ARCHIVE_BOUNDARY);
@@ -51,7 +52,9 @@ export default function App() {
     ? integratedReferenceMode === 'nen'
       ? 'Nen and ability encyclopedia'
       : successionPage.title
-    : 'Page not found';
+    : activeView === 'series'
+      ? `Chapter ${routeParams.chapter || 339} · Pre-Succession record`
+      : 'Page not found';
 
   const applyRoute = (next) => {
     setActiveView(next.view);
@@ -170,6 +173,15 @@ export default function App() {
               />
             </Suspense>
           )
+        )}
+
+        {activeView === 'series' && routeTarget === 'chapters' && (
+          <Suspense fallback={<RouteLoading label="pre-Succession chapter record" />}>
+            <PreSuccessionChapterRecord
+              routeParams={routeParams}
+              onNavigate={navigate}
+            />
+          </Suspense>
         )}
 
         {activeView === 'not-found' && (
