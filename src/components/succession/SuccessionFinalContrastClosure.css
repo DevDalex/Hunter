@@ -28,4 +28,13 @@
     -webkit-text-fill-color: #f2f6f4 !important;
     opacity: 1 !important;
   }
+
+  /* The selected chapter card uses the dark blue active surface. Mobile
+     compatibility rules were leaking document ink into its summary text. */
+  body .succession-archive[data-archive-route="chapters"]
+    .succession-chapter-command__card.is-selected > div > :is(span, p) {
+    color: #f2f6f4 !important;
+    -webkit-text-fill-color: #f2f6f4 !important;
+    opacity: 1 !important;
+  }
 }
