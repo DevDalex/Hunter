@@ -3,6 +3,7 @@ import { access, mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } from '../src/data/successionChapterAvailability.generated.js';
+import { LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER } from '../src/data/latestChapterMetadata.js';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
@@ -10,7 +11,7 @@ const output = path.resolve(root, process.env.SUCCESSION_ARCHIVE_QA_OUTPUT || '.
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
 const results = [];
 const failures = [];
-const expectedChapterCount = LATEST_AUTHORIZED_SUCCESSION_CHAPTER - 340 + 1;
+const expectedChapterCount = LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER - 340 + 1;
 const mime = {
   '.css': 'text/css; charset=utf-8', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.json': 'application/json; charset=utf-8',
@@ -180,18 +181,18 @@ try {
     if (await militaryOrganizations.locator('.succession-organization-grid > article').count() < 10) throw new Error('Canonical organization directory is unexpectedly sparse after Military redirect');
   });
 
-  await record(`Beast and chapter workspaces are complete through Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}`, desktop, async () => {
+  await record(`Beast and chapter workspaces are complete through Chapter ${LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER}`, desktop, async () => {
     const beasts = await openWorkspace(desktop, base, 'guardian-spirit-beasts', '.succession-gsb-command__grid > .succession-gsb-command-card');
     if (await beasts.count() !== 15) throw new Error(`Guardian Spirit Beast count is ${await beasts.count()}, expected 15`);
     const chapters = await openWorkspace(desktop, base, 'chapter-records', '.succession-chapter-command__grid > .succession-chapter-command__card');
     if (await chapters.count() !== expectedChapterCount) throw new Error(`Chapter record count is ${await chapters.count()}, expected ${expectedChapterCount}`);
-    const latest = chapters.filter({ hasText: String(LATEST_AUTHORIZED_SUCCESSION_CHAPTER) }).first();
-    if (!await latest.count()) throw new Error(`Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER} research record is missing`);
+    const latest = chapters.filter({ hasText: String(LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER) }).first();
+    if (!await latest.count()) throw new Error(`Chapter ${LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER} research record is missing`);
   });
 
   await record('Research glossary and retired media route use final canonical workspaces', desktop, async () => {
     const sources = await openWorkspace(desktop, base, 'research', '.succession-evidence-source-catalogue article');
-    if (await sources.count() < 75) throw new Error(`Research source catalogue is incomplete: ${await sources.count()}`);
+    if (await sources.count() < 75) throw new Error(`Research source catalogue is incomplete: ${await sources.count()} sources`);
     const glossary = await openWorkspace(desktop, base, 'glossary', '.succession-glossary-canonical__grid > article');
     if (await glossary.count() < 20) throw new Error(`Glossary is incomplete: ${await glossary.count()} terms`);
     const mediaResearch = await openWorkspace(desktop, base, 'media', '.succession-evidence-workspace');
