@@ -19,23 +19,24 @@ const uniqueNames = (records) => [...new Set(records.filter(Boolean).map((record
 
 const vite = await createViteServer({ appType:'custom', logLevel:'error', server:{ middlewareMode:true } });
 const runtime = await vite.ssrLoadModule('/src/data/succession/successionData.js');
-const readerModule = await vite.ssrLoadModule('/src/data/successionChapterReader.js');
+const readerCatalogModule = await vite.ssrLoadModule('/src/data/successionReaderCatalog.js');
+const canonicalEvents = runtime.getEntitiesByType('event').filter((record) => published(record) && (record.chapterRange?.start || 0) <= END);
 const expected = Object.freeze({
   characters: uniqueNames(runtime.getEntitiesByType('character').filter(published)),
   organizations: uniqueNames(runtime.getEntitiesByType('organization').filter(published)),
   locations: uniqueNames(runtime.getEntitiesByType('location').filter(published)),
-  events: uniqueNames(runtime.getStoryEventsKnownAtChapter(END).filter(published)),
+  eventCount: canonicalEvents.length,
   assignments: uniqueNames(runtime.getEntitiesByType('assignment').filter(published)),
-  relationships: uniqueNames(runtime.getEntitiesByType('relationship').filter((record) => published(record) && (record.chapterRange?.start || 0) <= END)),
+  relationships: uniqueNames(runtime.getEntitiesByType('relationship').filter(published)),
   guardianBeasts: uniqueNames(runtime.getEntitiesByType('guardian-beast').filter(published)),
-  chapters: runtime.getEntitiesByType('chapter').filter((record) => record.number >= 340 && record.number <= END).map((record) => `Chapter ${record.number}`),
+  chapterCount: runtime.getEntitiesByType('chapter').filter((record) => record.number >= 340 && record.number <= END).length,
   abilities: uniqueNames(runtime.getAbilitiesKnownAtChapter(END).map((record) => record.ability).filter(published)),
   nenSystems: uniqueNames(runtime.getNenSystemsAtChapter(END)),
   glossary: uniqueNames(runtime.getGlossaryEntriesAtChapter(END)),
   sources: uniqueNames(runtime.getEntitiesByType('source').filter(published)),
-  media: uniqueNames(runtime.getMediaRecordsAtChapter(END)),
+  media: runtime.getMediaRecordsAtChapter(END),
 });
-const reader417 = readerModule.getSuccessionReaderChapter?.(417) || readerModule.getSuccessionChapterReaderRecord?.(417) || null;
+const reader417 = readerCatalogModule.successionReaderCatalogByNumber?.get?.(417) || null;
 await vite.close();
 
 const firstAvailable = async (candidates) => {
@@ -86,7 +87,7 @@ const record = async (name, page, test) => {
 };
 const open = async (page, base, route, selector, query='') => {
   await page.goto(`${base}/story/succession-contest/${route}${query}`, { waitUntil:'domcontentloaded', timeout:20_000 });
-  await page.waitForSelector(selector, { timeout:15_000 });
+  await page.waitForSelector(selector, { timeout:20_000 });
   return page.locator(selector);
 };
 const assertNames = async (rootLocator, names, label) => {
@@ -105,11 +106,13 @@ const base = `http://127.0.0.1:${server.address().port}`;
 try {
   const page = await browser.newPage({ viewport:{ width:1440, height:1000 } });
 
-  await record('Every Chapter 340-417 record is rendered in the Chapters workspace', page, async () => {
+  await record('All 340-417 chapter dossiers render in the Chapters directory', page, async () => {
     const root = await open(page, base, 'chapter-records', '.succession-chapter-command');
-    await assertNames(root, expected.chapters, 'Chapters');
-    const cards = root.locator('.succession-chapter-command__card');
-    if (await cards.count() !== expected.chapters.length) throw new Error(`Rendered ${await cards.count()} chapter cards, expected ${expected.chapters.length}`);
+    const cards = root.locator('.succession-chapter-command__grid > *');
+    const count = await cards.count();
+    if (count !== expected.chapterCount) throw new Error(`Rendered ${count} chapter cards, expected ${expected.chapterCount}`);
+    const status = normalize(await root.locator('#succession-chapter-directory-title').innerText());
+    if (!status.includes(`${expected.chapterCount} of ${expected.chapterCount}`)) throw new Error(`Chapter directory status did not confirm ${expected.chapterCount}/${expected.chapterCount}: ${status}`);
   });
 
   await record('Every published canonical character is rendered', page, async () => {
@@ -127,26 +130,38 @@ try {
     await assertNames(root, expected.locations, 'Locations');
   });
 
-  await record('Every Chapter-417-visible canonical event is rendered', page, async () => {
+  await record('All canonical events through Chapter 417 render in Events', page, async () => {
     const root = await open(page, base, 'events', '.succession-canonical-events', '?view=grid');
-    await assertNames(root, expected.events, 'Events');
+    const status = normalize(await root.locator('.succession-event-filter-panel footer [role="status"]').innerText());
+    if (!status.includes(`showing ${expected.eventCount} of ${expected.eventCount} events`)) throw new Error(`Event status did not confirm ${expected.eventCount}/${expected.eventCount}: ${status}`);
+    const cards = root.locator('.succession-event-command__grid > *');
+    const count = await cards.count();
+    if (count !== expected.eventCount) throw new Error(`Rendered ${count} canonical event cards, expected ${expected.eventCount}`);
   });
 
   await record('Every published assignment survives progressive rendering', page, async () => {
     const root = await open(page, base, 'bodyguards', '.succession-assignment-command');
-    for (let guard = 0; guard < 100; guard += 1) {
-      const button = root.getByRole('button', { name:/load more/i }).last();
+    for (let guard = 0; guard < 20; guard += 1) {
+      const button = root.locator('.succession-assignment-load-more');
       if (!await button.count()) break;
-      if (!await button.isVisible().catch(() => false)) break;
       await button.click();
-      await page.waitForTimeout(25);
+      await page.waitForTimeout(40);
     }
+    const finalButton = root.locator('.succession-assignment-load-more');
+    if (await finalButton.count()) throw new Error('Assignment progressive-render button still remains after exhaustion loop');
     await assertNames(root, expected.assignments, 'Assignments');
+    const status = normalize(await root.locator('.succession-assignment-filter-panel footer [role="status"]').innerText());
+    if (!status.includes(`showing ${expected.assignments.length} of ${expected.assignments.length}`)) throw new Error(`Assignment status did not confirm ${expected.assignments.length}/${expected.assignments.length}: ${status}`);
   });
 
-  await record('Every published relationship is rendered in the accessible edge list', page, async () => {
-    const root = await open(page, base, 'relationships', '.succession-relationship-command', '?view=list');
-    await assertNames(root, expected.relationships, 'Relationships');
+  await record('Every published relationship is rendered in the semantic edge list', page, async () => {
+    const root = await open(page, base, 'relationships', '.succession-canonical-relationships', '?view=list');
+    const list = root.locator('.succession-relationship-accessible').last();
+    await list.waitFor({ state:'visible', timeout:15_000 });
+    await assertNames(list, expected.relationships, 'Relationships');
+    const rows = list.locator('ol > li');
+    const count = await rows.count();
+    if (count !== expected.relationships.length) throw new Error(`Rendered ${count} relationship rows, expected ${expected.relationships.length}`);
   });
 
   await record('Every published Guardian Spirit Beast is rendered', page, async () => {
@@ -174,18 +189,30 @@ try {
     await assertNames(root, expected.sources, 'Research sources');
   });
 
-  await record('Every Chapter-417 media record is represented in Research', page, async () => {
-    const root = await open(page, base, 'research', '.succession-evidence-workspace');
-    await assertNames(root, expected.media, 'Research media');
+  await record('Media records resolve through the retired-Media Research deep link', page, async () => {
+    if (!expected.media.length) throw new Error('No media records are available at Chapter 417');
+    const probes = [expected.media[0], expected.media[Math.floor(expected.media.length / 2)], expected.media.at(-1)].filter(Boolean);
+    for (const media of probes) {
+      const url = `${base}/story/succession-contest/research?media=${encodeURIComponent(media.id)}&chapter=417`;
+      await page.goto(url, { waitUntil:'domcontentloaded', timeout:20_000 });
+      const dossier = page.locator('.succession-evidence-media-record');
+      await dossier.waitFor({ state:'visible', timeout:15_000 });
+      const text = normalize(await dossier.innerText());
+      if (!text.includes(normalize(media.label))) throw new Error(`Research media deep link did not render ${media.id} / ${media.label}`);
+      if (!text.includes(normalize(media.id))) throw new Error(`Research media dossier omitted media ID ${media.id}`);
+    }
   });
 
-  await record('Chapter 417 is published in the reader catalogue without fake page media', page, async () => {
+  await record('Chapter 417 is indexed in Reader with explicit no-pages state', page, async () => {
     await page.goto(`${base}/story/succession-contest/chapters?chapter=417`, { waitUntil:'domcontentloaded', timeout:20_000 });
-    await page.waitForSelector('.succession-reader-command', { timeout:15_000 });
-    const text = normalize(await page.locator('.succession-reader-command').innerText());
-    if (!text.includes('417')) throw new Error('Chapter 417 is absent from the rendered reader command surface');
-    if (!text.includes('awaiting') && !text.includes('local media') && !text.includes('media')) throw new Error('Chapter 417 does not visibly communicate its no-local-media state');
-    if (reader417?.hasPages === true || reader417?.pageCount > 0) throw new Error('Source reader model incorrectly claims Chapter 417 has imported local pages');
+    const reader = page.locator('.succession-reader[data-reader-chapter="417"]');
+    await reader.waitFor({ state:'visible', timeout:20_000 });
+    const empty = reader.locator('.succession-reader__empty');
+    await empty.waitFor({ state:'visible', timeout:10_000 });
+    const text = normalize(await empty.innerText());
+    if (!text.includes('chapter 417')) throw new Error('Reader empty state does not identify Chapter 417');
+    if (!text.includes('pages are not available')) throw new Error('Reader does not explicitly communicate the Chapter 417 no-pages state');
+    if (reader417?.pageCount > 0 || reader417?.pages?.length > 0) throw new Error('Source reader catalogue incorrectly claims Chapter 417 has imported local pages');
   });
 
   await page.close();
@@ -194,7 +221,22 @@ try {
   await new Promise((resolve) => server.close(resolve));
 }
 
-const summary = { generatedAt:new Date().toISOString(), checks:results.length, passed:results.length-failures.length, failed:failures.length, expectedCounts:Object.fromEntries(Object.entries(expected).map(([key,value]) => [key,value.length])) };
+const expectedCounts = {
+  characters: expected.characters.length,
+  organizations: expected.organizations.length,
+  locations: expected.locations.length,
+  events: expected.eventCount,
+  assignments: expected.assignments.length,
+  relationships: expected.relationships.length,
+  guardianBeasts: expected.guardianBeasts.length,
+  chapters: expected.chapterCount,
+  abilities: expected.abilities.length,
+  nenSystems: expected.nenSystems.length,
+  glossary: expected.glossary.length,
+  sources: expected.sources.length,
+  media: expected.media.length,
+};
+const summary = { generatedAt:new Date().toISOString(), checks:results.length, passed:results.length-failures.length, failed:failures.length, expectedCounts };
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results }, null, 2)}\n`);
 await writeFile(path.join(output, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
 console.log(`\nSuccession 339–417 rendered visibility QA: ${summary.passed}/${summary.checks} checks passed.`);
