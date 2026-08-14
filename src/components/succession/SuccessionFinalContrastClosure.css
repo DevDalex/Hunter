@@ -12,6 +12,15 @@
   color: #edf1eb;
 }
 
+/* The skip link must expose its ring on plain focus as well as :focus-visible.
+   WebKit mobile accepts programmatic focus without matching :focus-visible, so
+   leaving the ring to the shared selector made the revealed skip link ringless. */
+.succession-archive .succession-archive__skip-link:focus {
+  outline: 3px solid var(--succession-border-focus);
+  outline-offset: 3px;
+  box-shadow: var(--succession-shadow-focus);
+}
+
 @media (max-width: 860px) {
   .succession-archive[data-archive-route="guardian-spirit-beasts"]
     .succession-gsb-command__controls button.is-active {
