@@ -19,6 +19,11 @@ try {
   assert(research?.number === 414 && research?.title === 'Friends', 'strict Chapter 414 Friends record must load');
   assert(research?.voyageDay === 'Voyage Day 12' && research?.chronology?.exactClockTime === null, 'Voyage Day 12 must not gain an invented clock minute');
   assert(chapter.succession414TimelineEvents.length === 55, 'research must contain 55 curated beats');
+  assert(research?.characters?.includes('Shimanu'), 'Chapter 414 character appearance index must include Shimanu');
+
+  const shimanuResearchIds = new Set(['414-room1014-planning-group', '414-shimanu-boy-discovery', '414-shimanu-duty-future-treatment']);
+  const shimanuResearchEvents = chapter.succession414TimelineEvents.filter((event) => shimanuResearchIds.has(event.id));
+  assert(shimanuResearchEvents.length === 3 && shimanuResearchEvents.every((event) => event.people?.includes('Shimanu')), 'all three Chapter 414 Shimanu beats must preserve participant indexing');
 
   const numbers = maintained.maintainedSuccessionChapterNumbers;
   const index410 = numbers.indexOf(410);
@@ -29,6 +34,12 @@ try {
   const dedicated = events.filter((event) => String(event.id || '').startsWith('event:chapter414-') && !event.maintainedResearch);
   assert(projected.length === 55, 'all 55 maintained beats must project into story intelligence');
   assert(dedicated.length === 55, 'all 55 dedicated Chapter 414 events must exist');
+
+  const shimanuCanonicalIds = new Set(['event:chapter414-room1014-planning-group', 'event:chapter414-shimanu-boy-discovery', 'event:chapter414-shimanu-duty-future-treatment']);
+  const shimanuCanonicalEvents = dedicated.filter((event) => shimanuCanonicalIds.has(event.id));
+  assert(archive.getEntityById('character:shimano'), 'canonical Shimano/Shimanu entity must resolve');
+  assert(shimanuCanonicalEvents.length === 3 && shimanuCanonicalEvents.every((event) => event.participantIds?.includes('character:shimano')), 'canonical Shimanu events must point to character:shimano');
+  assert(shimanuCanonicalEvents.every((event) => !event.participantIds?.includes('character:shimanu')), 'no duplicate character:shimanu id may be created');
 
   assert(!frozen413.publicationBoundary414, 'Through413 must stay frozen');
   assert(activeArchive.publicationBoundary414?.chapter === 414 && /Yamato/i.test(text(activeArchive.publicationBoundary414)), 'active archive must advance through the Yamato endpoint');
@@ -69,7 +80,7 @@ try {
   const laterOnly = /14:15|13:50|coded postcards|Tubeppa.*relocat|Luzurus.*missing|Marayam.*isolated|Oito.*confin|365-day|700-day/i;
   assert(!laterOnly.test(researchText), 'Chapter 415+ outcomes must stay outside the 414 event packet');
 
-  console.log(`Chapter 414 boundary audit passed: ${dedicated.length} dedicated events plus ${projected.length} maintained projections preserve Room 1007/1009 uncertainty, bounded Nen knowledge, Woble identity and curse-search logic, trusted-friends/Yamato endpoint, and the Chapter 415+ firewall.`);
+  console.log(`Chapter 414 boundary audit passed: ${dedicated.length} dedicated events plus ${projected.length} maintained projections preserve Room 1007/1009 uncertainty, bounded Nen knowledge, Shimanu appearance indexing, Woble identity and curse-search logic, trusted-friends/Yamato endpoint, and the Chapter 415+ firewall.`);
 } finally {
   await vite.close();
 }
