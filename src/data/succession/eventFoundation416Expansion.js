@@ -21,7 +21,7 @@ const abilityIds = (record) => {
   const value = `${record.id || ''} ${record.title || ''} ${record.detail || ''} ${(record.tracks || []).join(' ')}`;
   const ids = [];
   if (/Hell Fruit|hell-fruit|Dust in the Wind/i.test(value)) ids.push('ability:dust-in-the-wind-hell-fruit');
-  if (/counteractive|resurrection ability/i.test(value)) ids.push('ability:cat-s-name');
+  if (/counteractive|resurrection ability/i.test(value)) ids.push('ability:cats-name');
   if (/Parallel Future|parallel-future/i.test(value)) ids.push('ability:parallel-future');
   return freeze([...new Set(ids)]);
 };
