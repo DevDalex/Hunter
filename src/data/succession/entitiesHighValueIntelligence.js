@@ -8,11 +8,14 @@ import {
   phase4ProtocolRecords,
 } from './highValueIntelligenceFoundation.js';
 import { highValueIntelligence384Protocols } from './highValueIntelligence384Expansion.js';
-import { successionArchiveData as chapter415CharacterData } from './entitiesCharacter415Bridge.js';
+import { successionArchiveData as chapter416CharacterData } from './entitiesCharacter416Bridge.js';
+import { abilityFoundation416Expansion } from './abilityFoundation416Expansion.js';
 import { characterState414CorrectionProfiles } from './characterState414Corrections.js';
 import { characterState415CorrectionProfiles } from './characterState415Corrections.js';
+import { characterState416CorrectionProfiles } from './characterState416Corrections.js';
 import { abilityKnowledge414Overrides } from './nenSystemFoundation414Corrections.js';
 import { abilityKnowledge415Overrides } from './nenSystemFoundation415Corrections.js';
+import { abilityKnowledge416Overrides } from './nenSystemFoundation416Corrections.js';
 
 const freeze = (value) => Object.freeze(value);
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
@@ -46,54 +49,69 @@ const protocolRecords = freeze([
   ...highValueIntelligence384Protocols,
 ]);
 
-const abilities = freeze((phase4PredecessorData.abilities || []).map((record) => {
-  if (record.id === 'ability:secret-window') return freeze({
-    ...record,
-    latestChapter: Math.max(Number(record.latestChapter || 0), 413),
-    latestKnowledgeNote: 'Chapter 413 adds pre-death visual knowledge through the dedicated ability-knowledge history.',
-    updatedAt: '2026-08-13',
-  });
-  if (record.id === 'ability:muteking') return freeze({
-    ...record,
-    classification: freeze({ nenTypes: freeze(['unknown']), certainty: 'confirmed' }),
-    firstChapter: 414,
-    latestChapter: 414,
-    status: 'introduced',
-    researchStatus: 'activation and accumulating protection confirmed / complete mechanics unresolved',
-    updatedAt: '2026-08-13',
-  });
-  if (record.id === 'ability:combo-master') return freeze({
-    ...record,
-    latestChapter: 415,
-    status: 'demonstrated',
-    researchStatus: 'Chapter 415 conjured interface and curse-analysis functions demonstrated / complete mechanics unresolved',
-    latestKnowledgeNote: 'Chapter 415 demonstrates curse detection, linked-cursee silhouette, investigation functions, and curse-specific 365-day deciphering plus approximately 700-day antidote-development estimates.',
-    updatedAt: '2026-08-14',
-  });
-  return record;
-}));
+const hellFruit = abilityFoundation416Expansion.find((record) => record.id === 'ability:dust-in-the-wind-hell-fruit');
+const abilities = freeze(uniqueById([
+  ...(phase4PredecessorData.abilities || []).map((record) => {
+    if (record.id === 'ability:secret-window') return freeze({
+      ...record,
+      latestChapter: Math.max(Number(record.latestChapter || 0), 413),
+      latestKnowledgeNote: 'Chapter 413 adds pre-death visual knowledge through the dedicated ability-knowledge history.',
+      updatedAt: '2026-08-13',
+    });
+    if (record.id === 'ability:muteking') return freeze({
+      ...record,
+      classification: freeze({ nenTypes: freeze(['unknown']), certainty: 'confirmed' }),
+      firstChapter: 414,
+      latestChapter: 414,
+      status: 'introduced',
+      researchStatus: 'activation and accumulating protection confirmed / complete mechanics unresolved',
+      updatedAt: '2026-08-13',
+    });
+    if (record.id === 'ability:combo-master') return freeze({
+      ...record,
+      latestChapter: 415,
+      status: 'demonstrated',
+      researchStatus: 'Chapter 415 conjured interface and curse-analysis functions demonstrated / complete mechanics unresolved',
+      latestKnowledgeNote: 'Chapter 415 demonstrates curse detection, linked-cursee silhouette, investigation functions, and curse-specific 365-day deciphering plus approximately 700-day antidote-development estimates.',
+      updatedAt: '2026-08-14',
+    });
+    if (record.id === 'ability:cats-name') return freeze({
+      ...record,
+      latestChapter: 416,
+      researchStatus: 'core counteractive revival mechanics confirmed / disease and indirect-killer edge conditions unresolved through Chapter 416',
+      latestKnowledgeNote: 'Chapter 416 confirms Benjamin deliberately avoids directly killing Camilla and probes unresolved disease/indirect-killer edge cases before infecting her with TSK-17.',
+      updatedAt: '2026-08-14',
+    });
+    return record;
+  }),
+  ...(hellFruit ? [hellFruit] : []),
+]));
 
-const chiyamasi = chapter415CharacterData.characters.find((record) => record.id === 'character:chiyamasi');
-const saquelle = chapter415CharacterData.characters.find((record) => record.id === 'character:saquelle');
+const chiyamasi = chapter416CharacterData.characters.find((record) => record.id === 'character:chiyamasi');
+const saquelle = chapter416CharacterData.characters.find((record) => record.id === 'character:saquelle');
+const mozbe = chapter416CharacterData.characters.find((record) => record.id === 'character:mozbe');
 const characters = freeze(uniqueById([
   ...(phase4PredecessorData.characters || []),
   ...(chiyamasi ? [chiyamasi] : []),
   ...(saquelle ? [saquelle] : []),
+  ...(mozbe ? [mozbe] : []),
 ]));
 
-const normalizedState414 = freeze(Object.fromEntries(Object.entries(characterState414CorrectionProfiles).map(([characterId, records]) => [
+const normalizeStates = (profiles) => freeze(Object.fromEntries(Object.entries(profiles).map(([characterId, records]) => [
   characterId,
   freeze(records.map((record) => freeze({ ...record, loyaltyStateCode: record.loyaltyStateCode || 'operative' }))),
 ])));
-const normalizedState415 = freeze(Object.fromEntries(Object.entries(characterState415CorrectionProfiles).map(([characterId, records]) => [
-  characterId,
-  freeze(records.map((record) => freeze({ ...record, loyaltyStateCode: record.loyaltyStateCode || 'operative' }))),
-])));
+const normalizedState414 = normalizeStates(characterState414CorrectionProfiles);
+const normalizedState415 = normalizeStates(characterState415CorrectionProfiles);
+const normalizedState416 = normalizeStates(characterState416CorrectionProfiles);
 const characterStateProfiles414 = mergeRecordMap(phase4PredecessorData.characterStateProfiles, normalizedState414);
 const characterStateProfiles414Closed = closeSupersededStateRanges(characterStateProfiles414, normalizedState415, 415);
-const characterStateProfiles = mergeRecordMap(characterStateProfiles414Closed, normalizedState415);
+const characterStateProfiles415 = mergeRecordMap(characterStateProfiles414Closed, normalizedState415);
+const characterStateProfiles415Closed = closeSupersededStateRanges(characterStateProfiles415, normalizedState416, 416);
+const characterStateProfiles = mergeRecordMap(characterStateProfiles415Closed, normalizedState416);
 const abilityKnowledgeOverrides414 = mergeRecordMap(phase4PredecessorData.abilityKnowledgeOverrides, abilityKnowledge414Overrides);
-const abilityKnowledgeOverrides = mergeRecordMap(abilityKnowledgeOverrides414, abilityKnowledge415Overrides);
+const abilityKnowledgeOverrides415 = mergeRecordMap(abilityKnowledgeOverrides414, abilityKnowledge415Overrides);
+const abilityKnowledgeOverrides = mergeRecordMap(abilityKnowledgeOverrides415, abilityKnowledge416Overrides);
 
 const relationshipShape = Object.freeze({
   'relationship:luzurus-ridge-ch414-delay-kanjidol': ['professional', 'protective-command-delay', 'allied', 'active-cooperation'],
@@ -109,6 +127,14 @@ const relationshipShape = Object.freeze({
   'relationship:seiko-fugetsu-ch415-protective-order': ['family', 'protective-confinement-instruction', 'allied', 'active'],
   'relationship:biscuit-vergei-ch415-hold-space': ['professional', 'defensive-coordination', 'allied', 'active-cooperation'],
   'relationship:babimyna-oito-ch415-confinement': ['command', 'legal-custody-notice', 'neutral', 'active'],
+  'relationship:benjamin-camilla-ch416-armed-confrontation': ['hostile', 'armed-royal-confrontation', 'hostile', 'active'],
+  'relationship:moswana-benjamin-ch416-hell-fruit': ['hostile', 'post-mortem-assassination-curse', 'hostile', 'activated'],
+  'relationship:camilla-moswana-ch416-ten-year-plan': ['alliance', 'curse-operation-cooperation', 'allied', 'completed'],
+  'relationship:benjamin-furykov-ch416-assault-command': ['command', 'martial-law-assault-command', 'allied', 'active'],
+  'relationship:benjamin-butch-ch416-assault-command': ['command', 'martial-law-assault-command', 'allied', 'active'],
+  'relationship:tserriednich-salkov-ch416-staged-death': ['command', 'secret-staged-death-contingency', 'allied', 'unresolved'],
+  'relationship:benjamin-danjin-ch416-questioning-order': ['command', 'custody-and-questioning-order', 'hostile', 'active'],
+  'relationship:benjamin-tserriednich-ch416-shooting': ['hostile', 'room-1004-shooting', 'hostile', 'unresolved'],
 });
 const relationshipIds = new Set(Object.keys(relationshipShape));
 const relationships = freeze((phase4PredecessorData.relationships || []).map((record) => {
