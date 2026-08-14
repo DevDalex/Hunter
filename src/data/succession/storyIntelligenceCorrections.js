@@ -29,10 +29,10 @@ const deathmatchOutcomeThread = Object.freeze({
 });
 
 const currentReleasePhase = Object.freeze({
-  id: 'story-phase:current-releases-414-416',
+  id: 'story-phase:current-releases-414-417',
   name: 'Current releases under martial law',
-  summary: 'Chapters 414–416 move from Room 1014’s Woble crisis and Beyond-curse analysis into active Special Martial Law, royal confinement and relocation, Benjamin’s emergency campaign, Camilla’s countermeasures, and the armed breach of Tserriednich’s quarters.',
-  chapterRange: Object.freeze({ start: 414, end: 416 }),
+  summary: 'Chapters 414–417 move from Room 1014’s Woble crisis and Beyond-curse analysis into active Special Martial Law, royal confinement and relocation, Benjamin’s emergency campaign, the Camilla and Tserriednich confrontations, Justice consolidation, TSK-17 operations, Gypsy Life’s reveal, and Benjamin’s planned confrontation with Unma at the current publication ceiling.',
+  chapterRange: Object.freeze({ start: 414, end: 417 }),
   laneIds: Object.freeze([
     'story-lane:royal-succession',
     'story-lane:woble-defense',
@@ -48,6 +48,9 @@ const currentReleasePhase = Object.freeze({
     'character:oito-hui-guo-rou',
     'character:woble-hui-guo-rou',
     'character:kurapika',
+    'character:balsamilco-might',
+    'character:unma-hui-guo-rou',
+    'character:halkenburg-hui-guo-rou',
   ]),
   organizationIds: Object.freeze([
     'organization:kakin-royal-family',
@@ -57,6 +60,8 @@ const currentReleasePhase = Object.freeze({
   locationIds: Object.freeze([
     'location:black-whale:tier-1',
     'location:black-whale:tier-1:room-1014',
+    'location:black-whale:tier-1:room-1001',
+    'location:black-whale:tier-1:room-1004',
   ]),
   threadIds: Object.freeze([
     'story-thread:succession-completion-condition',
@@ -69,6 +74,7 @@ const currentReleasePhase = Object.freeze({
     'source:chapter-414',
     'source:chapter-415',
     'source:chapter-416',
+    'source:chapter-417',
   ]),
   status: 'documented',
 });
