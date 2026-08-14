@@ -134,14 +134,17 @@ jobs:
       - name: Audit production performance budgets
         run: npm run audit:performance
 
-      - name: Install Chromium, Firefox, and WebKit
-        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
 
       - name: Run complete Chromium release matrix
         shell: bash
         run: |
           set -o pipefail
           npm run qa:succession-final-release 2>&1 | tee batch5-final-release.log
+
+      - name: Install Firefox and WebKit
+        run: npx playwright install --with-deps firefox webkit
 
       - name: Run Firefox and WebKit regression matrix
         shell: bash
