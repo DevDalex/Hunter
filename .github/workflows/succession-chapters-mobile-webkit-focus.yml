@@ -1,0 +1,94 @@
+name: Succession Chapters Mobile WebKit Focus
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/succession-chapters-mobile-webkit-focus.yml'
+      - 'src/components/succession/SuccessionFinalContrastClosure.css'
+      - 'src/components/succession/SuccessionArchiveShellRedesign.css'
+      - 'src/components/succession/SuccessionArchiveShell.jsx'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: succession-chapters-mobile-webkit-focus-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mobile_chapters_webkit_focus:
+    name: Mobile Chapters WebKit focus gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out focused presentation source
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            index.html
+            package.json
+            package-lock.json
+            vite.config.js
+            succession-phase-2-presentation-consistency.css
+            src
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build presentation bundle
+        run: npx vite build
+
+      - name: Install WebKit
+        run: npx playwright install --with-deps webkit
+
+      - name: Verify mobile Chapters skip-link focus ring
+        shell: bash
+        run: |
+          set -o pipefail
+          npx vite preview --host 127.0.0.1 --port 4173 > /tmp/hunter-vite-preview.log 2>&1 &
+          PREVIEW_PID=$!
+          trap 'kill $PREVIEW_PID 2>/dev/null || true' EXIT
+          for attempt in {1..30}; do
+            if curl --silent --fail http://127.0.0.1:4173/ >/dev/null; then break; fi
+            sleep 1
+          done
+          node --input-type=module <<'NODE'
+          import { webkit } from 'playwright';
+          const browser = await webkit.launch({ headless: true });
+          try {
+            const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+            const page = await context.newPage();
+            await page.goto('http://127.0.0.1:4173/#/succession/chapters', { waitUntil: 'domcontentloaded', timeout: 25_000 });
+            await page.waitForSelector('main', { timeout: 12_000 });
+            await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 10_000 }).catch(() => {});
+            await page.waitForTimeout(420);
+            const control = page.locator('main :is(button, a[href], input, select, summary)').first();
+            if (!await control.count()) throw new Error('No first interactive control found');
+            const label = ((await control.getAttribute('aria-label')) || (await control.textContent()) || '').trim();
+            await control.focus();
+            const focus = await control.evaluate((node) => {
+              const style = getComputedStyle(node);
+              return {
+                outlineStyle: style.outlineStyle,
+                outlineWidth: Number.parseFloat(style.outlineWidth),
+                outlineColor: style.outlineColor,
+                transform: style.transform,
+              };
+            });
+            console.log('WebKit mobile first control:', JSON.stringify({ label, ...focus }));
+            if (focus.outlineStyle === 'none' || focus.outlineWidth < 2) {
+              throw new Error(`WebKit mobile Chapters first control has no visible focus outline: ${JSON.stringify({ label, ...focus })}`);
+            }
+          } finally {
+            await browser.close();
+          }
+          NODE
