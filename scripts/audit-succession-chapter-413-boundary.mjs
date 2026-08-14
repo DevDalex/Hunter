@@ -31,7 +31,7 @@ try {
   assert(dedicated413.length === 58, 'canonical graph must expose all 58 dedicated events');
 
   assert(!frozen412Archive.publicationBoundary413, 'frozen Through412 archive must remain unaware of Chapter 413');
-  assert(activeArchive.publicationBoundary413?.chapter === 413, 'active archive must advance to Through413');
+  assert(activeArchive.publicationBoundary413?.chapter === 413, 'active archive must retain the Through413 boundary inside later publication layers');
   assert(/2:00 p\.m\./i.test(text(activeArchive.publicationBoundary413)) && /2:15 p\.m\./i.test(text(activeArchive.publicationBoundary413)), 'active boundary must distinguish preparation from scheduled declaration');
 
   const halkenburg = archive.getCharacterStateAtChapter('character:halkenburg-hui-guo-rou', 413);
@@ -43,9 +43,11 @@ try {
 
   const combo = archive.getEntityById('ability:combo-master');
   assert(combo?.name === 'Combo Master' && /Furykov/i.test(text(combo.ownerIds)), 'Combo Master must exist with Furykov ownership');
-  assert(/mechanics intentionally unresolved|mechanics.*unresolved/i.test(text(combo)) && !/guaranteed|automatic victory/i.test(text(combo)), 'Combo Master must not invent mechanics');
+  const combo413 = archive.getAbilityKnowledgeAtChapter('ability:combo-master', 413);
+  assert(/mechanics unavailable|does not infer|unknown/i.test(text(combo413)) && !/guaranteed|automatic victory/i.test(text(combo413)), 'Combo Master Chapter 413 knowledge must remain name/owner only even though later chapters expand the live ability entity');
   const secretWindow = archive.getEntityById('ability:secret-window');
-  assert(secretWindow?.latestChapter === 413 && /pre-death visual|before death|prior visual/i.test(text(secretWindow)), 'Secret Window must include the Chapter 413 inherited knowledge expansion');
+  const secretWindow413 = archive.getAbilityKnowledgeAtChapter('ability:secret-window', 413);
+  assert(secretWindow?.latestChapter >= 413 && /pre-death visual|before death|prior visual|what Musse had seen/i.test(text(secretWindow413)), 'Secret Window must preserve the Chapter 413 inherited knowledge expansion while allowing later chapter knowledge');
 
   const nasubiEdge = archive.getEntityById('relationship:nasubi-halkenburg-ch413-soul-eligibility');
   const furykovEdge = archive.getEntityById('relationship:furykov-benjamin-ch413-coercion-restored-trust');
@@ -66,7 +68,7 @@ try {
   const laterOnly = /Luzurus.*countermeasure|postcard|Tubeppa.*relocat|Oito.*confinement/i;
   assert(!laterOnly.test(researchText), 'Chapter 413 maintained events must not import later-only outcomes');
 
-  console.log(`Chapter 413 boundary audit passed: ${dedicated413.length} dedicated events plus ${projected413.length} maintained projections preserve the burial-status evidence, transferred-consciousness boundary, Furykov disclosures, name-only Combo Master record, Secret Window expansion, timed pre-declaration operation, and Chapter 414+ firewall.`);
+  console.log(`Chapter 413 boundary audit passed: ${dedicated413.length} dedicated events plus ${projected413.length} maintained projections preserve the burial-status evidence, transferred-consciousness boundary, Furykov disclosures, historical Combo Master and Secret Window knowledge, timed pre-declaration operation, and Chapter 414+ firewall.`);
 } finally {
   await vite.close();
 }
