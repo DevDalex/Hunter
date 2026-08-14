@@ -112,8 +112,15 @@ for (const token of [
   'npm run audit:performance',
   'npm run qa:succession-final-release',
   'npm run qa:succession-cross-browser',
-  'playwright install --with-deps chromium firefox webkit',
+  'playwright install --with-deps chromium',
+  'playwright install --with-deps firefox webkit',
 ]) assert(workflow.includes(token), `final workflow is missing ${token}`);
+assert(
+  workflow.indexOf('playwright install --with-deps chromium') < workflow.indexOf('npm run qa:succession-final-release')
+    && workflow.indexOf('npm run qa:succession-final-release') < workflow.indexOf('playwright install --with-deps firefox webkit')
+    && workflow.indexOf('playwright install --with-deps firefox webkit') < workflow.indexOf('npm run qa:succession-cross-browser'),
+  'browser installation must fail fast through Chromium before the Firefox/WebKit regression stage',
+);
 
 for (const token of [
   'audit:succession-batch-5-final',
@@ -128,4 +135,4 @@ for (const heading of ['Data and evidence boundaries', 'Media constraints', 'Com
   assert(debtDocs.includes(heading), `non-critical debt record is missing ${heading}`);
 }
 
-console.log('Succession Batch 5 final audit passed: interaction states, keyboard tabs, route focus, live announcements, reduced motion, forced colors, containment, image stability, legacy cleanup, canonical release routes, performance, cross-browser QA, final audit, and debt documentation are registered.');
+console.log('Succession Batch 5 final audit passed: interaction states, keyboard tabs, route focus, live announcements, reduced motion, forced colors, containment, image stability, legacy cleanup, canonical release routes, performance, staged cross-browser QA, final audit, and debt documentation are registered.');
