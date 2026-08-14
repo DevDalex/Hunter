@@ -115,7 +115,10 @@ try {
       if (entity.publicationStatus === 'hidden') { warn(`entities:${entityType}`, entity.id, 'INTENTIONALLY-HIDDEN', 'Explicitly hidden publication record.'); continue; }
       if (entity.publicationStatus === 'draft') { warn(`entities:${entityType}`, entity.id, 'DRAFT-NOT-PUBLISHED', 'Explicit draft record.'); continue; }
       if (!runtime.getEntityById(entity.id)) { fail(`entities:${entityType}`, entity.id, 'ORPHANED', 'Collection record does not resolve by canonical ID.'); continue; }
-      if (!activeRouteIds.has(routeId) || !inventoryRouteIds.has(routeId)) { fail(`entities:${entityType}`, entity.id, 'DEAD-ROUTE', `Owning route ${routeId} is not released.'); continue; }
+      if (!activeRouteIds.has(routeId) || !inventoryRouteIds.has(routeId)) {
+        fail(`entities:${entityType}`, entity.id, 'DEAD-ROUTE', `Owning route ${routeId} is not released.`);
+        continue;
+      }
       if (entityType === 'location-history') {
         const history = runtime.getLocationHistoryForCharacter(entity.characterId);
         history.some((item) => item.id === entity.id)
