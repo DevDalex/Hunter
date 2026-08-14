@@ -1,6 +1,7 @@
 import {
   referenceAliases,
   referencePrimary,
+  seriesRoutes,
   successionAliases,
   successionArchivePathToTarget,
   successionArchiveRetiredTargets,
@@ -121,6 +122,14 @@ export function normalizeDestination(view, target = '', params = {}) {
     });
   }
 
+  if (view === 'series') {
+    const nextTarget = target || 'chapters';
+    if (!seriesRoutes.includes(nextTarget)) return attempted(`/series/${nextTarget}`);
+    const chapter = Number(params.chapter || 339);
+    if (!Number.isFinite(chapter) || chapter < 1 || chapter > 339) return attempted(`/series/${nextTarget}?chapter=${params.chapter || ''}`);
+    return { view: 'series', target: nextTarget, params: { ...(params || {}), chapter } };
+  }
+
   if (view === 'home' && !target) return { view: 'succession', target: 'archive', params: {} };
   if (!views.has(view)) return attempted(`/${view || target || ''}`);
   return { view, target, params: { ...(params || {}) } };
@@ -139,6 +148,10 @@ export function routeToCleanPath(view, target = '', params = {}, hash = '') {
     if (normalized.target === 'archive') return cleanUrl('/', normalized.params, hash);
     const successionPath = successionArchiveTargetToPath.get(normalized.target) || normalized.target;
     return cleanUrl(`/story/succession-contest/${successionPath}`, normalized.params, hash);
+  }
+
+  if (normalized.view === 'series') {
+    return cleanUrl(`/series/${normalized.target || 'chapters'}`, normalized.params, hash);
   }
 
   if (normalized.view === 'reference') {
@@ -169,6 +182,7 @@ export function parseLegacyHashRoute(hash = '') {
   if (candidate === 'series' && target === 'succession-contest') {
     return normalizeDestination('succession', 'archive', params);
   }
+  if (candidate === 'series') return normalizeDestination('series', target || 'chapters', params);
 
   return attempted(`#/${path}`);
 }
@@ -193,6 +207,10 @@ export function parseCleanRoute(pathname = '/', search = '') {
 
   if (parts[0] === 'reference' && parts.length <= 2) {
     return normalizeDestination('reference', parts[1] || '', params);
+  }
+
+  if (parts[0] === 'series' && parts.length <= 2) {
+    return normalizeDestination('series', parts[1] || 'chapters', params);
   }
 
   if (parts[0] === 'story' && parts[1] === 'succession-contest') {
