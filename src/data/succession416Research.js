@@ -1,237 +1,143 @@
 const freeze = (value) => Object.freeze(value);
-const source = 'https://hunterxhunter.fandom.com/wiki/Chapter_416';
-const unique = (values) => [...new Set(values.filter(Boolean))];
+const source416 = 'https://hunterxhunter.fandom.com/wiki/Chapter_416';
 
 export const succession416SourcePolicy = freeze({
-  reviewedAt: '2026-08-05',
-  soleSource: freeze({
-    label: 'Hunterpedia Chapter 416',
-    url: source,
-    basis: 'User-supplied Hunterpedia page text',
-  }),
-  excluded: freeze(['All other websites and external cross-checks']),
+  reviewedAt: '2026-08-14',
+  soleSubstantiveSource: freeze({ label: 'User-supplied Chapter 416 synopsis', basis: 'The synopsis supplied directly in chat is the sole substantive Chapter 416 story source for this modernization.', referenceUrl: source416 }),
+  retainedMetadata: freeze(['Existing maintained Chapter 416 title metadata may be retained without importing additional story claims.']),
+  chronologyRule: 'Keep Chapter 416 on Voyage Day 12 after the Special Martial Law declaration, while preserving Tserriednich and Salkov’s explicitly recalled shortly-earlier exchange as an embedded flashback. Do not invent exact clock times.',
+  inferenceRule: 'Benjamin’s internal deadline, Camilla’s survival calculation, Benjamin’s counteractive-ability hypotheticals, and Salkov’s deductions about Tserriednich remain speaker-bounded where they are plans, questions, calculations, or inferences rather than independent mechanics.',
+  unnamedPeopleRule: 'The second servant killed in Camilla’s room and the unnamed kneeling Room 1004 personnel remain unnamed; do not fabricate canonical character nodes.',
+  stoppingPoint: 'Benjamin shoots Tserriednich and the shot sends him across Room 1004’s master bedroom. Tserriednich’s immediate condition, staged-death result, TSK-17 progression, Moswana-curse outcome, and all later developments are unresolved at this boundary.',
+  spoilerFirewall: 'Chapter 417+ is quarantined from the strict Chapter 416 packet.',
 });
 
-const timelineEvent = ({
-  id,
-  title,
-  detail,
-  location,
-  tracks,
-  confidence = 'Confirmed in the supplied Hunterpedia synopsis',
-}) => freeze({
-  id,
-  time: 'After the Special Martial Law declaration',
-  title,
-  detail,
-  tier: location,
-  location,
-  tracks: freeze(tracks),
+const rawEvents = [
+  ["416-martial-law-shipwide","After declaration · Voyage Day 12","Special Martial Law is enforced shipwide","Speakers blare the declaration of Special Martial Law while soldiers herd civilians across the Black Whale’s tiers.","Black Whale · shipwide","special-martial-law,military,ship",[],""],
+  ["416-benjamin-team-to-camilla","After declaration · Voyage Day 12","Benjamin leads an armed team toward Camilla","In Tier 1’s VVIP area, Benjamin leads Furykov and Butch, all armed, toward Camilla’s residence.","Black Whale · Tier 1 · VVIP area","benjamin,furykov,butch,military",["Benjamin Hui Guo Rou", "Furykov", "Butch"],""],
+  ["416-benjamin-ten-hour-limit","After declaration · Voyage Day 12","Benjamin tracks a ten-hour incapacitation deadline","Benjamin reminds himself that ten hours remain before he is incapacitated and that he must win the Succession Contest before then.","Black Whale · Tier 1 · VVIP area","benjamin,deadline,succession-contest",["Benjamin Hui Guo Rou"],"Benjamin’s internal timeline; the cause and later outcome are not extended beyond Chapter 416."],
+  ["416-camilla-guards-draw","After declaration · Voyage Day 12","Mozbe and Taler confront Benjamin’s team","Camilla’s guards Mozbe and Taler come into view; both sides draw firearms and aim at one another.","Black Whale · Tier 1 · Camilla residence exterior","camilla,mozbe,taler,benjamin",["Benjamin Hui Guo Rou", "Furykov", "Butch", "Mozbe", "Taler"],""],
+  ["416-camilla-guards-stand-down","After declaration · Voyage Day 12","Camilla’s guards open the door","Seeing themselves heavily outclassed, Camilla’s side backs down and complies with Benjamin’s order to open the residence.","Black Whale · Tier 1 · Camilla residence exterior","camilla,benjamin,military",["Benjamin Hui Guo Rou", "Mozbe", "Taler"],""],
+  ["416-benjamin-enters-camilla-room","After declaration · Voyage Day 12","Benjamin enters Camilla’s room","Benjamin enters and finds Camilla being massaged by Fukataki and another servant.","Black Whale · Tier 1 · Camilla residence","benjamin,camilla,fukataki",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou", "Fukataki"],"The second servant remains unnamed in the supplied synopsis."],
+  ["416-benjamin-orders-camilla-still","After declaration · Voyage Day 12","Benjamin orders Camilla to remain still","The servants step aside; Benjamin tells Camilla not to move and to listen to him.","Black Whale · Tier 1 · Camilla residence","benjamin,camilla",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou", "Fukataki"],""],
+  ["416-camilla-shoots-benjamin","After declaration · Voyage Day 12","Camilla opens fire on Benjamin","Camilla ignores Benjamin, sits up suddenly, and shoots at him.","Black Whale · Tier 1 · Camilla residence","camilla,benjamin,firearms",["Camilla Hui Guo Rou", "Benjamin Hui Guo Rou"],""],
+  ["416-benjamin-ken-deflects-bullets","After declaration · Voyage Day 12","Benjamin’s Ken stops Camilla’s bullets","Camilla’s bullets bounce off Benjamin’s Ken.","Black Whale · Tier 1 · Camilla residence","benjamin,camilla,ken,nen",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou"],""],
+  ["416-benjamin-kills-servants","After declaration · Voyage Day 12","Benjamin kills Camilla’s two servants","Benjamin immediately shoots both servants, killing Fukataki and the unnamed attendant.","Black Whale · Tier 1 · Camilla residence","benjamin,camilla,fukataki,death",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou", "Fukataki"],"The second servant is unnamed and is not promoted to a fabricated character node."],
+  ["416-benjamin-knows-counteractive-ability","After declaration · Voyage Day 12","Benjamin states he knows Camilla’s death-triggered counter","While reloading and approaching Camilla, Benjamin says he knows her counteractive ability activates when she is killed.","Black Whale · Tier 1 · Camilla residence","benjamin,camilla,counteractive-ability,nen",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou"],"Benjamin’s stated knowledge is confirmed; this event does not re-specify every mechanic."],
+  ["416-camilla-starvation-taunt","After declaration · Voyage Day 12","Camilla taunts Benjamin over refusing to kill her","Camilla calls Benjamin pathetic and mocks the idea that he can only win by imprisoning her and letting her starve.","Black Whale · Tier 1 · Camilla residence","camilla,benjamin",["Camilla Hui Guo Rou", "Benjamin Hui Guo Rou"],""],
+  ["416-camilla-curse-challenge","After declaration · Voyage Day 12","Camilla challenges Benjamin to outlast his curse","Camilla asks whether she will starve first or Benjamin will die from a curse.","Black Whale · Tier 1 · Camilla residence","camilla,benjamin,curse",["Camilla Hui Guo Rou", "Benjamin Hui Guo Rou"],"Camilla speaks as if Benjamin is cursed; later events in this chapter visibly confirm Moswana’s curse strike."],
+  ["416-moswana-staggers-in","After declaration · Voyage Day 12","Moswana approaches Benjamin while mortally wounded","Moswana staggers into view and walks toward Benjamin, locking eyes with him while ignoring Furykov and Butch’s rifles.","Black Whale · Tier 1 · Camilla residence","moswana,benjamin,curse",["Moswana", "Benjamin Hui Guo Rou", "Furykov", "Butch"],""],
+  ["416-moswana-removes-knife","After declaration · Voyage Day 12","Moswana removes a knife from her throat","Moswana pulls a knife from her throat and blood gushes from the wound.","Black Whale · Tier 1 · Camilla residence","moswana,curse,death",["Moswana", "Benjamin Hui Guo Rou"],""],
+  ["416-moswana-dies","After declaration · Voyage Day 12","Moswana collapses and dies","Moswana delivers a final sarcastic remark to Benjamin, collapses, and dies.","Black Whale · Tier 1 · Camilla residence","moswana,benjamin,death",["Moswana", "Benjamin Hui Guo Rou"],""],
+  ["416-hell-fruit-activates","After declaration · Voyage Day 12","Dust in the Wind: Hell Fruit activates","Moswana’s death activates Dust in the Wind: Hell Fruit.","Black Whale · Tier 1 · Camilla residence","moswana,hell-fruit,post-mortem-nen,curse",["Moswana", "Benjamin Hui Guo Rou"],""],
+  ["416-hell-fruit-hand-strikes","After declaration · Voyage Day 12","Hell Fruit’s ghostly hand strikes Benjamin","A ghostly hand with hollow faces at its fingertips bursts from Moswana’s corpse, rushes Benjamin, and slams into him.","Black Whale · Tier 1 · Camilla residence","moswana,benjamin,hell-fruit,curse",["Moswana", "Benjamin Hui Guo Rou"],""],
+  ["416-benjamin-curse-mark","After declaration · Voyage Day 12","The curse visibly spreads across Benjamin","Benjamin’s body turns dark and face-like markings appear in his pupils as the curse spreads across him.","Black Whale · Tier 1 · Camilla residence","benjamin,curse,hell-fruit",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou"],"Visible effects are confirmed; the final lethal timing/effect is not resolved here."],
+  ["416-camilla-declares-curse-complete","After declaration · Voyage Day 12","Camilla declares the ten-year curse plan complete","Camilla tells Benjamin the curse is complete and says their ten-year plan has come to fruition.","Black Whale · Tier 1 · Camilla residence","camilla,benjamin,moswana,curse",["Camilla Hui Guo Rou", "Benjamin Hui Guo Rou", "Moswana"],"Camilla’s statement identifies the operation as a ten-year plan."],
+  ["416-camilla-metabolism-calculation","After declaration · Voyage Day 12","Camilla calculates how long she can survive confinement","Camilla calculates that slowing her metabolism could let her survive without food or water until the contest ends.","Black Whale · Tier 1 · Camilla residence","camilla,survival,metabolism",["Camilla Hui Guo Rou"],"Camilla’s calculation/plan, not an independently demonstrated duration."],
+  ["416-camilla-orders-benjamin-out","After declaration · Voyage Day 12","Camilla tells Benjamin to leave","Believing the matter settled, Camilla tells Benjamin to leave if he will not shoot her.","Black Whale · Tier 1 · Camilla residence","camilla,benjamin",["Camilla Hui Guo Rou", "Benjamin Hui Guo Rou"],""],
+  ["416-benjamin-disease-hypothetical","After declaration · Voyage Day 12","Benjamin introduces an incurable-disease hypothetical","Benjamin asks what would happen if Camilla were infected by an incurable disease.","Black Whale · Tier 1 · Camilla residence","benjamin,camilla,disease",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou"],""],
+  ["416-benjamin-killer-aura-question","After declaration · Voyage Day 12","Benjamin questions who Camilla’s counter could target","Benjamin asks whether he or the disease would count as Camilla’s killer and whether the disease would have enough aura to resurrect her.","Black Whale · Tier 1 · Camilla residence","benjamin,camilla,disease,counteractive-ability",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou"],"Benjamin is probing an unresolved interaction, not stating settled mechanics."],
+  ["416-benjamin-shared-disease-question","After declaration · Voyage Day 12","Benjamin asks about dying first from the same disease","Benjamin asks what would happen if he carried the same disease but died before Camilla.","Black Whale · Tier 1 · Camilla residence","benjamin,camilla,disease",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou"],"Hypothetical posed by Benjamin."],
+  ["416-benjamin-infects-camilla-tsk17","After declaration · Voyage Day 12","Benjamin silently infects Camilla with TSK-17","While Camilla listens, Benjamin infects her with TSK-17 without announcing the act.","Black Whale · Tier 1 · Camilla residence","benjamin,camilla,tsk-17,disease",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou"],"The infection is confirmed; later disease progression and counteractive-ability interaction are 417+ / unresolved."],
+  ["416-benjamin-final-counter-question","After declaration · Voyage Day 12","Benjamin asks who Camilla’s ability could kill to resurrect her","With Moswana’s curse still visible in his eyes, Benjamin asks who Camilla’s counteractive ability could kill in order to resurrect her.","Black Whale · Tier 1 · Camilla residence","benjamin,camilla,curse,counteractive-ability",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou"],"Question posed; no answer/outcome is supplied."],
+  ["416-benjamin-leaves-camilla","After declaration · Voyage Day 12","Benjamin leaves Camilla after infecting her","Benjamin departs, says he is not afraid of death, and asks Camilla whether she is.","Black Whale · Tier 1 · Camilla residence","benjamin,camilla",["Benjamin Hui Guo Rou", "Camilla Hui Guo Rou"],""],
+  ["416-team-heads-room1004","After declaration · Voyage Day 12","Benjamin’s team heads for Room 1004","Benjamin, Furykov, and Butch proceed toward Room 1004 to confront Tserriednich.","Black Whale · Tier 1 · corridor to Room 1004","benjamin,furykov,butch,tserriednich",["Benjamin Hui Guo Rou", "Furykov", "Butch", "Tserriednich Hui Guo Rou"],""],
+  ["416-furykov-butch-room1004-report","After declaration · Voyage Day 12","Furykov and Butch report twenty people in Room 1004","Furykov and Butch report that Tserriednich is in Room 1004 among twenty people, but that distinguishing individuals is nearly impossible.","Black Whale · Tier 1 · outside Room 1004","furykov,butch,tserriednich,room1004",["Furykov", "Butch", "Tserriednich Hui Guo Rou"],""],
+  ["416-benjamin-room1004-protocol","After declaration · Voyage Day 12","Benjamin orders lethal protocol but reserves Tserriednich for himself","Benjamin tells Furykov and Butch to follow protocol and shoot whenever or whoever necessary, but to leave Tserriednich to him.","Black Whale · Tier 1 · outside Room 1004","benjamin,furykov,butch,command",["Benjamin Hui Guo Rou", "Furykov", "Butch", "Tserriednich Hui Guo Rou"],""],
+  ["416-tserriednich-zetsu-continues","After declaration · Voyage Day 12","Tserriednich continues flawless Zetsu through the announcements","Inside the master bedroom, Tserriednich continues Zetsu practice and ignores the repeated Special Martial Law announcements.","Black Whale · Tier 1 · Room 1004 master bedroom","tserriednich,zetsu,nen",["Tserriednich Hui Guo Rou", "Salkov"],""],
+  ["416-salkov-nerves-of-steel","After declaration · Voyage Day 12","Salkov marvels at Tserriednich’s composure","Salkov observes that Tserriednich’s Zetsu remains flawless despite the emergency and regards his composure as extraordinary.","Black Whale · Tier 1 · Room 1004 master bedroom","salkov,tserriednich,zetsu",["Salkov", "Tserriednich Hui Guo Rou"],"Salkov’s assessment."],
+  ["416-salkov-recalls-gun","Earlier, shortly before breach · Voyage Day 12","Salkov notices Tserriednich’s gun and recalls their earlier exchange","Salkov’s eyes fall on the gun tucked into Tserriednich’s pants, prompting him to replay their conversation from shortly earlier.","Black Whale · Tier 1 · Room 1004 master bedroom","salkov,tserriednich,flashback",["Salkov", "Tserriednich Hui Guo Rou"],""],
+  ["416-tserriednich-asks-salkov-gun","Earlier, shortly before breach · Voyage Day 12","Tserriednich asks Salkov for his gun","In the recalled exchange, Tserriednich reaches out and tells Salkov to hand over his gun.","Black Whale · Tier 1 · Room 1004 master bedroom","tserriednich,salkov,firearms",["Tserriednich Hui Guo Rou", "Salkov"],""],
+  ["416-tserriednich-avoids-benjamin-question","Earlier, shortly before breach · Voyage Day 12","Tserriednich avoids saying whether he will use the gun on Benjamin","Tserriednich does not answer Salkov’s question about whether he plans to use the gun on Benjamin and instead says he needs Salkov to do something.","Black Whale · Tier 1 · Room 1004 master bedroom","tserriednich,salkov,benjamin",["Tserriednich Hui Guo Rou", "Salkov", "Benjamin Hui Guo Rou"],""],
+  ["416-tserriednich-feign-death-plan","Earlier, shortly before breach · Voyage Day 12","Tserriednich reveals a plan to feign his death","Tserriednich tells Salkov that he intends to fake his own death.","Black Whale · Tier 1 · Room 1004 master bedroom","tserriednich,salkov,plan",["Tserriednich Hui Guo Rou", "Salkov"],""],
+  ["416-tserriednich-body-securing-order","Earlier, shortly before breach · Voyage Day 12","Tserriednich orders Salkov to secure his body unseen","Tserriednich instructs Salkov to secure his body immediately and prevent anyone else from seeing it.","Black Whale · Tier 1 · Room 1004 master bedroom","tserriednich,salkov,plan",["Tserriednich Hui Guo Rou", "Salkov"],""],
+  ["416-tserriednich-report-order","Earlier, shortly before breach · Voyage Day 12","Tserriednich orders Salkov to report exactly what he sees","Tserriednich tells Salkov to give others an exact report of what Salkov witnesses.","Black Whale · Tier 1 · Room 1004 master bedroom","tserriednich,salkov,plan",["Tserriednich Hui Guo Rou", "Salkov"],""],
+  ["416-tserriednich-secrecy-order","Earlier, shortly before breach · Voyage Day 12","Tserriednich orders Salkov to conceal his ability","Tserriednich instructs Salkov to keep his ability secret from everyone else.","Black Whale · Tier 1 · Room 1004 master bedroom","tserriednich,salkov,secrecy,nen",["Tserriednich Hui Guo Rou", "Salkov"],""],
+  ["416-salkov-connects-theta-clues","After declaration · Voyage Day 12","Salkov connects Theta’s experience to Tserriednich’s Zetsu fixation","With Benjamin approaching, Salkov links Theta’s inability to sense being caught in Tserriednich’s ability with Tserriednich’s fixation on faster Zetsu activation.","Black Whale · Tier 1 · Room 1004 master bedroom","salkov,theta,tserriednich,zetsu",["Salkov", "Theta", "Tserriednich Hui Guo Rou"],"Salkov inference chain."],
+  ["416-salkov-zetsu-trigger-inference","After declaration · Voyage Day 12","Salkov infers Zetsu triggers Tserriednich’s ability","Salkov concludes that entering Zetsu activates Tserriednich’s ability and suspects the ability has already begun.","Black Whale · Tier 1 · Room 1004 master bedroom","salkov,tserriednich,zetsu,parallel-future",["Salkov", "Tserriednich Hui Guo Rou", "Theta"],"Salkov’s inference, not independently confirmed mechanics in this scene."],
+  ["416-salkov-confidence-assessment","After declaration · Voyage Day 12","Salkov reads Tserriednich’s calm as extreme confidence","Salkov interprets Tserriednich’s willingness to face Benjamin with an unfinished technique as both insanity and extraordinary confidence.","Black Whale · Tier 1 · Room 1004 master bedroom","salkov,tserriednich,benjamin",["Salkov", "Tserriednich Hui Guo Rou", "Benjamin Hui Guo Rou"],"Salkov assessment."],
+  ["416-salkov-analyze-for-theta","After declaration · Voyage Day 12","Salkov prepares to analyze the ability for Theta","Salkov resolves to use the confrontation as a chance to study Tserriednich’s ability for Theta’s sake.","Black Whale · Tier 1 · Room 1004 master bedroom","salkov,theta,tserriednich,nen",["Salkov", "Theta", "Tserriednich Hui Guo Rou"],""],
+  ["416-butch-door-report","After declaration · Voyage Day 12","Butch reports Room 1004 is locked and silent","Outside Room 1004, Butch reports that the door remains locked and nobody is responding.","Black Whale · Tier 1 · outside Room 1004","butch,benjamin,room1004",["Butch", "Benjamin Hui Guo Rou", "Furykov"],""],
+  ["416-benjamin-kicks-door","After declaration · Voyage Day 12","Benjamin kicks in Room 1004’s door","Benjamin orders Butch to stand back, then kicks in the locked door and sends debris into the entrance hall.","Black Whale · Tier 1 · Room 1004 entrance","benjamin,butch,room1004",["Benjamin Hui Guo Rou", "Butch", "Furykov"],""],
+  ["416-benjamin-entry-fire-order","After declaration · Voyage Day 12","Benjamin orders his team to fire on movement behind him","Benjamin tells Furykov and Butch to stay behind his lead and shoot anyone who moves behind him on sight.","Black Whale · Tier 1 · Room 1004 entrance","benjamin,furykov,butch,command",["Benjamin Hui Guo Rou", "Furykov", "Butch"],""],
+  ["416-trio-enters-living-quarters","After declaration · Voyage Day 12","Benjamin’s trio enters Room 1004","Benjamin, Furykov, and Butch move into the living quarters with their guns drawn.","Black Whale · Tier 1 · Room 1004 living quarters","benjamin,furykov,butch,tserriednich",["Benjamin Hui Guo Rou", "Furykov", "Butch"],""],
+  ["416-tserriednich-men-kneel","After declaration · Voyage Day 12","Tserriednich’s men kneel facing the walls","The trio finds Tserriednich’s personnel kneeling and facing the walls.","Black Whale · Tier 1 · Room 1004 living quarters","tserriednich,guards,room1004",["Benjamin Hui Guo Rou", "Furykov", "Butch"],"The individual kneeling personnel are not all named in the supplied synopsis."],
+  ["416-benjamin-notes-calm-faces","After declaration · Voyage Day 12","Benjamin notes the kneeling men’s composure","Benjamin observes their resolute expressions and that they calmly avoid eye contact with him.","Black Whale · Tier 1 · Room 1004 living quarters","benjamin,tserriednich,guards",["Benjamin Hui Guo Rou"],"Benjamin observation."],
+  ["416-benjamin-notices-danjin-aura","After declaration · Voyage Day 12","Danjin’s aura catches Benjamin’s attention","Benjamin notices Danjin’s aura among the kneeling personnel.","Black Whale · Tier 1 · Room 1004 living quarters","benjamin,danjin,aura",["Benjamin Hui Guo Rou", "Danjin"],""],
+  ["416-danjin-room1014-confirmation","After declaration · Voyage Day 12","Danjin confirms he studied in Room 1014","Benjamin asks whether Danjin was a Room 1014 student, and Danjin confirms that he was.","Black Whale · Tier 1 · Room 1004 living quarters","benjamin,danjin,room1014",["Benjamin Hui Guo Rou", "Danjin"],""],
+  ["416-danjin-questioning-order","After declaration · Voyage Day 12","Benjamin orders Danjin taken for questioning","Benjamin tells Butch to take Danjin to the central Ministry of Justice for questioning.","Black Whale · Tier 1 · Room 1004 living quarters","benjamin,butch,danjin,justice",["Benjamin Hui Guo Rou", "Butch", "Danjin"],""],
+  ["416-benjamin-kurapika-instructor-thought","After declaration · Voyage Day 12","Benjamin considers recruiting Kurapika as an army instructor","After identifying Danjin as a Room 1014 student, Benjamin considers recruiting Kurapika to teach his army.","Black Whale · Tier 1 · Room 1004 living quarters","benjamin,kurapika,nen-training",["Benjamin Hui Guo Rou", "Kurapika", "Danjin"],"Benjamin’s internal consideration; no recruitment occurs in Chapter 416."],
+  ["416-benjamin-approaches-master-bedroom","After declaration · Voyage Day 12","Benjamin reaches Room 1004’s master bedroom","Benjamin finishes crossing the living quarters and approaches the master bedroom.","Black Whale · Tier 1 · Room 1004 master bedroom","benjamin,tserriednich,salkov",["Benjamin Hui Guo Rou", "Tserriednich Hui Guo Rou", "Salkov"],""],
+  ["416-salkov-kneels-tserriednich-zetsu","After declaration · Voyage Day 12","Salkov kneels while Tserriednich remains in Zetsu","Salkov kneels facing Benjamin with his hands raised while Tserriednich stands with his eyes shut in Zetsu.","Black Whale · Tier 1 · Room 1004 master bedroom","salkov,tserriednich,benjamin,zetsu",["Salkov", "Tserriednich Hui Guo Rou", "Benjamin Hui Guo Rou"],""],
+  ["416-benjamin-surprised-tserriednich-nen","After declaration · Voyage Day 12","Benjamin reacts to Tserriednich using Nen","Benjamin remarks on his surprise that Tserriednich can use Nen.","Black Whale · Tier 1 · Room 1004 master bedroom","benjamin,tserriednich,nen",["Benjamin Hui Guo Rou", "Tserriednich Hui Guo Rou"],""],
+  ["416-tserriednich-spar-challenge","After declaration · Voyage Day 12","Tserriednich begins challenging Benjamin to spar","Tserriednich asks Benjamin whether they should spar.","Black Whale · Tier 1 · Room 1004 master bedroom","tserriednich,benjamin",["Tserriednich Hui Guo Rou", "Benjamin Hui Guo Rou"],""],
+  ["416-benjamin-shoots-tserriednich","After declaration · Voyage Day 12","Benjamin shoots Tserriednich before he can finish","Benjamin fires his blaster before Tserriednich can finish speaking.","Black Whale · Tier 1 · Room 1004 master bedroom","benjamin,tserriednich,firearms",["Benjamin Hui Guo Rou", "Tserriednich Hui Guo Rou", "Salkov"],""],
+  ["416-tserriednich-thrown-unresolved","After declaration · Voyage Day 12","Tserriednich is blasted across the room","The shot sends Tserriednich flying across the master bedroom. The supplied Chapter 416 synopsis ends without resolving his immediate condition or the result of his staged-death plan.","Black Whale · Tier 1 · Room 1004 master bedroom","tserriednich,benjamin,unresolved",["Tserriednich Hui Guo Rou", "Benjamin Hui Guo Rou", "Salkov"],"Hard Chapter 416 stopping point; no 417+ outcome is imported."],
+];
+
+export const succession416TimelineEvents = freeze(rawEvents.map(([id,time,title,detail,location,tracks,people,confidence]) => freeze({
+  id, time, title, detail, location, tier: location,
+  tracks: freeze(tracks.split(',').filter(Boolean)),
+  people: freeze(people),
   chapter: 416,
-  confidence,
-  source,
-});
+  confidence: confidence || 'Confirmed from the supplied Chapter 416 synopsis.',
+  source: source416,
+})));
 
-export const succession416TimelineEvents = freeze([
-  timelineEvent({
-    id: 'day-12-416-martial-law-enforcement',
-    title: 'Special Martial Law is enforced across the Black Whale',
-    detail: 'Shipwide speakers announce Special Martial Law while soldiers herd civilians across the tiers. Benjamin personally leads an armed team through Tier 1 under a self-stated ten-hour limit before incapacitation.',
-    location: 'Black Whale 1 · shipwide tiers and Tier 1 VVIP area',
-    tracks: ['benjamin', 'justice', 'ship', 'ritual'],
-  }),
-  timelineEvent({
-    id: 'day-12-416-camilla-room-assault',
-    title: 'Benjamin enters Camilla’s residence',
-    detail: 'Camilla’s guards stand down after being outmatched. Camilla shoots Benjamin, but the bullets fail against his Ken. Benjamin responds by killing Fukataki and another servant, while refusing to kill Camilla because he understands that her counteractive ability activates upon her death.',
-    location: 'Tier 1 · Camilla’s residence',
-    tracks: ['benjamin', 'camilla', 'nen', 'ritual'],
-  }),
-  timelineEvent({
-    id: 'day-12-416-moswana-curse',
-    title: 'Moswana completes the ten-year curse plan',
-    detail: 'Moswana removes a knife from her throat and dies, activating Dust in the Wind: Hell Fruit. A post-mortem curse strikes Benjamin, darkens his body, and produces a face-like mark in his pupils. Camilla declares the curse complete and describes the plan as ten years in the making.',
-    location: 'Tier 1 · Camilla’s residence',
-    tracks: ['benjamin', 'camilla', 'nen', 'curse'],
-  }),
-  timelineEvent({
-    id: 'day-12-416-camilla-infected',
-    title: 'Benjamin infects Camilla with TSK-17',
-    detail: 'Benjamin tests the logic of Camilla’s resurrection ability against death by disease and against his own possible earlier death. While speaking, he silently infects Camilla with TSK-17, then leaves after asking whether she fears death.',
-    location: 'Tier 1 · Camilla’s residence',
-    tracks: ['benjamin', 'camilla', 'nen', 'disease'],
-    confidence: 'The infection is confirmed; the eventual interaction with Camilla’s ability is unresolved',
-  }),
-  timelineEvent({
-    id: 'day-12-416-tserriednich-death-plan',
-    title: 'Tserriednich prepares a staged-death contingency',
-    detail: 'Inside Room 1004, Tserriednich maintains flawless Zetsu despite the martial-law announcements. A recent instruction is recalled in which he took Salkov’s gun and ordered Salkov to secure his body, report exactly what he observed, and keep Tserriednich’s ability secret as part of a plan to feign death.',
-    location: 'Tier 1 · Room 1004 master bedroom',
-    tracks: ['tserriednich', 'nen', 'benjamin'],
-  }),
-  timelineEvent({
-    id: 'day-12-416-salkov-deduction',
-    title: 'Salkov connects Zetsu to Tserriednich’s ability',
-    detail: 'Salkov links Theta’s prior experience, Tserriednich’s focus on accelerating Zetsu, and his calm response to Benjamin’s approach. He infers that entering Zetsu activates the ability and prepares to study it for Theta’s sake.',
-    location: 'Tier 1 · Room 1004 master bedroom',
-    tracks: ['tserriednich', 'salkov', 'theta', 'nen'],
-    confidence: 'Salkov’s inference, not an independently confirmed mechanics statement',
-  }),
-  timelineEvent({
-    id: 'day-12-416-room-1004-breach',
-    title: 'Benjamin breaches Room 1004',
-    detail: 'Benjamin kicks in the locked door and enters with Furykov and Butch. Tserriednich’s personnel kneel calmly facing the walls. Benjamin identifies Danjin as a Room 1014 student, orders him taken to the central Ministry of Justice for questioning, and considers recruiting Kurapika to instruct his army.',
-    location: 'Tier 1 · Room 1004 living quarters',
-    tracks: ['benjamin', 'tserriednich', 'kurapika', 'justice'],
-  }),
-  timelineEvent({
-    id: 'day-12-416-tserriednich-shot',
-    title: 'Benjamin shoots Tserriednich',
-    detail: 'Benjamin reaches the master bedroom, observes Tserriednich standing in Zetsu, and fires before Tserriednich can finish proposing a spar. Tserriednich is thrown across the room; the supplied synopsis does not resolve his condition afterward.',
-    location: 'Tier 1 · Room 1004 master bedroom',
-    tracks: ['benjamin', 'tserriednich', 'nen'],
-    confidence: 'The shooting is confirmed; the immediate outcome remains unresolved',
-  }),
-]);
+const focus = 'Special Martial Law becomes direct armed confrontation on Tier 1: Benjamin enters Camilla’s residence under a ten-hour incapacitation deadline, survives her gunfire with Ken, kills her servants, is struck by Moswana’s post-mortem Hell Fruit curse, infects Camilla with TSK-17, then breaches Room 1004 and shoots Tserriednich during the latter’s Zetsu-based staged-death plan.';
 
-const focus = 'Special Martial Law becomes an armed royal purge as Benjamin, operating under a ten-hour limit, confronts Camilla, receives Moswana’s post-mortem curse, infects Camilla with TSK-17, and then breaches Room 1004 and shoots Tserriednich during his Zetsu-based staged-death plan.';
-
-export const succession416ChapterResearch = freeze([
-  freeze({
-    number: 416,
-    title: 'Proclamation',
-    japaneseTitle: '発令',
-    phase: 'Current releases',
-    voyageDay: 'Voyage Day 12',
-    lanes: freeze([
-      'Royal contest',
-      'Benjamin emergency campaign',
-      'Nen curses and counteractive abilities',
-      'Tserriednich training',
-      'Justice and military control',
-    ]),
-    focus,
-    events: succession416TimelineEvents,
-    prelude: freeze([]),
-    locations: freeze([
-      'Black Whale 1 · shipwide tiers',
-      'Tier 1 · VVIP area',
-      'Tier 1 · Camilla’s residence',
-      'Tier 1 · Room 1004 living quarters',
-      'Tier 1 · Room 1004 master bedroom',
-      'Central Ministry of Justice',
-    ]),
-    threadLabels: freeze([
-      'Benjamin',
-      'Camilla',
-      'Tserriednich',
-      'Nen development',
-      'Justice & military',
-      'Ship operations',
-    ]),
-    confidence: freeze([
-      'All chapter details derive only from the user-supplied Hunterpedia Chapter 416 text',
-      'Benjamin’s ten-hour limit is presented as his own remaining timeline before incapacitation',
-      'Salkov’s conclusion that Zetsu activates Tserriednich’s ability remains an inference',
-      'The supplied synopsis does not resolve Tserriednich’s condition after the gunshot',
-      'The eventual interaction between TSK-17 and Camilla’s resurrection ability remains unresolved',
-    ]),
-    status: 'Maintained chapter summary and chronology sourced only to Hunterpedia Chapter 416',
-    coverage: freeze({
-      identity: true,
-      publication: false,
-      summary: true,
-      sceneSummary: true,
-      chronology: true,
-      appearances: true,
-      locations: true,
-      relationships: true,
-      assignments: true,
-      nen: true,
-      source: true,
-    }),
-    lastReviewed: 'August 5, 2026',
-    releaseDate: null,
-    titleStatus: 'verified-from-user-supplied-hunterpedia',
-    officialReaderUrl: null,
-    source,
-    crossChecks: freeze([succession416SourcePolicy.soleSource]),
-  }),
-]);
+export const succession416ChapterResearch = freeze([freeze({
+  number: 416,
+  title: 'Proclamation',
+  japaneseTitle: '発令',
+  phase: 'Current releases',
+  voyageDay: 'Voyage Day 12',
+  lanes: freeze(['Royal contest','Benjamin emergency campaign','Nen curses and counteractive abilities','Tserriednich training','Justice and military control']),
+  focus,
+  events: succession416TimelineEvents,
+  prelude: freeze([]),
+  locations: freeze(['Black Whale · shipwide','Black Whale · Tier 1 · VVIP area','Black Whale · Tier 1 · Camilla residence','Black Whale · Tier 1 · Room 1004 entrance','Black Whale · Tier 1 · Room 1004 living quarters','Black Whale · Tier 1 · Room 1004 master bedroom','Central Ministry of Justice']),
+  characters: freeze(['Benjamin Hui Guo Rou','Furykov','Butch','Mozbe','Taler','Camilla Hui Guo Rou','Fukataki','Moswana','Tserriednich Hui Guo Rou','Salkov','Theta','Danjin','Kurapika']),
+  threadLabels: freeze(['Benjamin','Camilla','Moswana','Tserriednich','Nen development','Justice & military','Ship operations']),
+  confidence: freeze([
+    '60 chapter-bounded canonical beats are taken only from the supplied Chapter 416 synopsis.',
+    'Benjamin’s ten-hour limit is preserved as his own internal remaining timeline before incapacitation.',
+    'Dust in the Wind: Hell Fruit activation and the visible curse strike are confirmed; its final effect on Benjamin is not imported from later chapters.',
+    'TSK-17 infection of Camilla is confirmed; disease progression and its interaction with Camilla’s resurrection ability remain unresolved.',
+    'Salkov’s conclusion that Zetsu activates Tserriednich’s ability remains an inference at this boundary.',
+    'Tserriednich is shot and thrown across the room; his immediate condition and staged-death result remain unresolved.',
+    'Chapter 417+ information is excluded.',
+  ]),
+  status: 'Strict maintained Chapter 416 packet: 60 chapter-bounded beats, Moswana Hell Fruit curse strike, Camilla TSK-17 infection, Room 1004 breach, Tserriednich shooting cliff-edge, and Chapter 417+ spoiler firewall',
+  coverage: freeze({ identity:true, publication:false, summary:true, sceneSummary:true, chronology:true, appearances:true, locations:true, relationships:true, assignments:true, nen:true, source:true }),
+  lastReviewed: 'August 14, 2026',
+  releaseDate: null,
+  titleStatus: 'retained-existing-metadata',
+  officialReaderUrl: null,
+  source: source416,
+  crossChecks: freeze([succession416SourcePolicy.soleSubstantiveSource]),
+})]);
 
 export const succession416ChapterFocus = freeze({ 416: focus });
 
-export const patchSuccession416PrinceDossier = (record) => {
-  if (record.order === 1) {
-    return freeze({
-      ...record,
-      room: 'Tier 1 · active martial-law assault route',
-      strategy: 'Uses Special Martial Law to personally confront rival princes, while applying military force, Nen defense, interrogation, and TSK-17 under a ten-hour deadline before incapacitation.',
-      pressure: freeze(unique([
-        ...(record.pressure || []),
-        'Ten hours remaining before incapacitation',
-        'Moswana’s completed post-mortem curse',
-        'Need to finish the succession contest before the deadline',
-      ])),
-      statusDetail: 'Cursed by Moswana’s Dust in the Wind: Hell Fruit, still operational, and advancing through Tier 1 after infecting Camilla and shooting Tserriednich.',
-      source,
-    });
-  }
-  if (record.order === 2) {
-    return freeze({
-      ...record,
-      room: 'Tier 1 · Camilla’s residence',
-      status: 'alive; infected with TSK-17',
-      strategy: 'Relies on her counteractive resurrection ability, Moswana’s completed curse plan, and her ability to slow her metabolism while challenging Benjamin to outlast her.',
-      pressure: freeze(unique([
-        ...(record.pressure || []),
-        'TSK-17 infection',
-        'Unresolved resurrection interaction with disease',
-        'Benjamin’s ten-hour deadline',
-      ])),
-      statusDetail: 'Remains alive in her residence after Moswana curses Benjamin, but Benjamin silently infects her with TSK-17 and leaves the outcome unresolved.',
-      source,
-    });
-  }
-  if (record.order === 4) {
-    return freeze({
-      ...record,
-      room: 'Tier 1 · Room 1004 master bedroom',
-      status: 'shot; immediate condition unresolved',
-      strategy: 'Maintains Zetsu and prepares a staged-death contingency, ordering Salkov to secure his body, report exactly what he witnesses, and conceal the ability’s mechanics.',
-      pressure: freeze(unique([
-        ...(record.pressure || []),
-        'Benjamin’s armed breach of Room 1004',
-        'Unfinished Zetsu-based technique',
-        'Gunshot from Benjamin',
-      ])),
-      statusDetail: 'Shot by Benjamin while standing in Zetsu; the supplied Chapter 416 synopsis ends without confirming his immediate condition.',
-      source,
-    });
-  }
-  return record;
-};
+export const succession416NenFindings = freeze([
+  freeze({ subject:'Benjamin · Ken', finding:'Camilla’s bullets visibly bounce off Benjamin while he is using Ken.', status:'confirmed', source:source416 }),
+  freeze({ subject:'Dust in the Wind: Hell Fruit', finding:'Moswana’s death activates a post-mortem curse manifested as a ghostly hand that strikes Benjamin and produces visible darkening and face-like pupil marks.', status:'confirmed activation / final outcome unresolved', source:source416 }),
+  freeze({ subject:'Camilla counteractive resurrection ability', finding:'Benjamin explicitly avoids killing Camilla and probes whether death by disease would provide a valid killer/aura source. The disease interaction is not resolved.', status:'known ability / Chapter 416 interaction unresolved', source:source416 }),
+  freeze({ subject:'TSK-17', finding:'Benjamin silently infects Camilla with TSK-17.', status:'infection confirmed / progression unresolved', source:source416 }),
+  freeze({ subject:'Tserriednich · Zetsu-linked ability', finding:'Tserriednich maintains flawless Zetsu; Salkov infers Zetsu is the activation trigger and suspects the ability is already active.', status:'Salkov inference / not promoted to omniscient mechanics', source:source416 }),
+]);
 
 export const succession416Mysteries = freeze([
-  freeze({
-    question: 'How will TSK-17 interact with Camilla’s resurrection ability?',
-    evidence: 'Benjamin infects Camilla after explicitly questioning whether death by disease would provide a valid killer and enough aura for her counteractive resurrection.',
-    status: 'open',
-    lastChapter: '416',
-    source,
-  }),
-  freeze({
-    question: 'What is Tserriednich’s condition after Benjamin shoots him?',
-    evidence: 'Tserriednich is blasted across the master bedroom during a staged-death plan, but the supplied synopsis ends before confirming whether the plan or ability altered the outcome.',
-    status: 'open',
-    lastChapter: '416',
-    source,
-  }),
-  freeze({
-    question: 'What final effect will Moswana’s curse have on Benjamin?',
-    evidence: 'Dust in the Wind: Hell Fruit visibly strikes Benjamin and Camilla declares the curse complete, while Benjamin remains active under his existing ten-hour deadline.',
-    status: 'developing',
-    lastChapter: '416',
-    source,
-  }),
+  freeze({ question:'What final effect will Moswana’s curse have on Benjamin?', evidence:'Hell Fruit visibly strikes Benjamin and Camilla declares the curse complete, but Chapter 416 ends while Benjamin remains operational.', status:'open', lastChapter:'416', source:source416 }),
+  freeze({ question:'How will TSK-17 interact with Camilla’s counteractive resurrection ability?', evidence:'Benjamin infects Camilla only after probing who would count as her killer and what aura source could resurrect her.', status:'open', lastChapter:'416', source:source416 }),
+  freeze({ question:'What is Tserriednich’s immediate condition after Benjamin shoots him?', evidence:'The shot sends Tserriednich across the master bedroom and the synopsis stops there.', status:'open', lastChapter:'416', source:source416 }),
+  freeze({ question:'Does Tserriednich’s staged-death plan succeed?', evidence:'Tserriednich instructed Salkov to secure his body, report what he saw, and conceal the ability before Benjamin’s breach; no result is shown.', status:'open', lastChapter:'416', source:source416 }),
+]);
+
+export const succession416ResolvedQuestions = freeze([
+  freeze({ question:'Does Moswana activate her prepared curse on Benjamin?', answer:'Yes. She dies in Benjamin’s presence and Dust in the Wind: Hell Fruit strikes him.', chapter:416, source:source416 }),
+  freeze({ question:'Does Benjamin directly kill Camilla in their confrontation?', answer:'No. He explicitly avoids triggering her death-counter and instead infects her with TSK-17.', chapter:416, source:source416 }),
+  freeze({ question:'Does Benjamin breach Room 1004?', answer:'Yes. He kicks in the locked door and enters with Furykov and Butch.', chapter:416, source:source416 }),
+  freeze({ question:'Does Benjamin shoot Tserriednich?', answer:'Yes. He fires before Tserriednich can finish proposing a spar.', chapter:416, source:source416 }),
 ]);
