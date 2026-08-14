@@ -3,8 +3,9 @@ import { access, mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } from '../src/data/successionChapterAvailability.generated.js';
+import { LATEST_PUBLISHED_CHAPTER } from '../src/data/latestChapterMetadata.js';
 
-const SUCCESSION_READER_END = Math.max(414, LATEST_AUTHORIZED_SUCCESSION_CHAPTER);
+const SUCCESSION_READER_END = Math.max(414, LATEST_PUBLISHED_CHAPTER, LATEST_AUTHORIZED_SUCCESSION_CHAPTER);
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
 const output = path.resolve(root, process.env.SUCCESSION_READER_ENHANCEMENTS_QA_OUTPUT || '.succession-reader-enhancements-qa');
