@@ -5,6 +5,7 @@ import {
   referencePages,
   routeManifest,
   routeManifestStats,
+  seriesRoutes,
   successionReleaseRoutes,
 } from '../src/data/routeManifest.js';
 
@@ -48,14 +49,17 @@ for (const filename of jsxFiles) {
 assert(!jsxSyntaxFailures.length, `Oxc rejected ${jsxSyntaxFailures.length} JSX source file(s): ${jsxSyntaxFailures.join(' | ')}`);
 
 const routeKeys = routeManifest.map((route) => `${route.view}/${route.target}`);
+const seriesManifestRoutes = routeManifest.filter((route) => route.view === 'series');
 assert(routeManifest.length === routeManifestStats.screens, 'route manifest statistics must match the rendered route matrix');
 assert(new Set(routeKeys).size === routeKeys.length, 'the focused route matrix must not contain duplicate destinations');
 assert(referencePages.map((page) => page.id).join(',') === 'nen', 'only the general Nen Encyclopedia may remain as a general reference page');
 assert(routeManifestStats.reference === 1, 'the focused site must expose exactly one general reference screen');
 assert(routeManifestStats.successionReleaseScreens === successionReleaseRoutes.length + 1, 'Succession release-screen statistics must include archive home plus every curated route');
 assert(successionReleaseRoutes.length >= 15 && successionReleaseRoutes.every(Boolean), 'the curated Succession release matrix is incomplete');
-assert(routeManifest.every((route) => route.view === 'succession' || route.view === 'reference'), 'a retired top-level view returned to the public route matrix');
-assert(!routeManifest.some((route) => route.view === 'timeline' || route.view === 'series' || route.view === 'home'), 'Home, Story, or global Timeline returned to the route matrix');
+assert(routeManifest.every((route) => route.view === 'succession' || route.view === 'reference' || route.view === 'series'), 'an unsupported top-level view returned to the public route matrix');
+assert(seriesRoutes.length === 1 && seriesRoutes[0] === 'chapters', 'the only permitted restored Series route is the read-only chapters bridge');
+assert(seriesManifestRoutes.length === 1 && seriesManifestRoutes[0].target === 'chapters', 'the public route matrix must expose exactly one read-only Series chapter bridge');
+assert(!routeManifest.some((route) => route.view === 'timeline' || route.view === 'home'), 'Home or global Timeline returned to the route matrix');
 
 for (const retired of [
   'SiteHome',
@@ -70,10 +74,13 @@ for (const retired of [
 
 assert(app.includes('SuccessionArchiveApp'), 'the Succession archive is not mounted');
 assert(app.includes('SuccessionIntegratedReferences'), 'the retained integrated reference host is not mounted');
+assert(app.includes('PreSuccessionChapterRecord'), 'the read-only pre-Succession chapter bridge is not mounted');
 assert(integratedReferences.includes('NenEncyclopedia'), 'the retained general Nen Encyclopedia is not mounted by the integrated reference host');
 assert(!integratedReferences.includes('WorldAtlas'), 'the retired World Atlas returned to the integrated reference host');
 assert(router.includes("if (!parts.length || pathnameClean === '/index.html')"), 'the root route guard is missing');
 assert(router.includes("view: 'succession', target: 'archive'"), 'the root route must resolve to the Succession archive');
+assert(router.includes("if (view === 'series')"), 'the read-only pre-Succession series route guard is missing');
+assert(router.includes("return cleanUrl(`/series/${normalized.target || 'chapters'}`"), 'the pre-Succession chapter bridge clean URL is missing');
 assert(router.includes("['nen', { target: 'nen' }]") && !router.includes("['world', { target: 'atlas' }]") , 'the retained /nen route or retired /world boundary is incorrect');
 assert(
   header.includes("label: 'Succession Archive'")
@@ -89,4 +96,4 @@ assert(familyTree.includes('RoyalFamilyGuardTree'), 'the Succession royal family
 assert(blackWhale.includes('Black Whale passenger manifest'), 'the Succession Black Whale workspace lost its manifest');
 assert(packageJson.includes('"build"') && packageJson.includes('"audit:succession-runtime"'), 'the focused build contract is incomplete');
 
-console.log(`Layout audit passed: ${routeManifest.length} focused routes, ${successionReleaseRoutes.length} curated Succession screens, one retained integrated reference, valid JSX, responsive containment, and no retired public workspaces.`);
+console.log(`Layout audit passed: ${routeManifest.length} focused routes, ${successionReleaseRoutes.length} curated Succession screens, one retained integrated reference, one read-only pre-Succession chapter bridge, valid JSX, responsive containment, and no retired public workspaces.`);
