@@ -1,1 +1,1 @@
-export { abilityFoundation414Expansion as nenSystemAbilityExpansion } from './abilityFoundation414Expansion.js';
+export { abilityFoundation415Expansion as nenSystemAbilityExpansion } from './abilityFoundation415Expansion.js';
