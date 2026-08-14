@@ -137,6 +137,37 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
+      - name: Probe mobile Chapters contrast
+        shell: bash
+        env:
+          ACCESSIBILITY_QA_ROUTE: succession/chapters
+          ACCESSIBILITY_QA_VIEWPORT: mobile
+          ACCESSIBILITY_QA_OUTPUT: .batch5-chapters-a11y
+          PLAYWRIGHT_CORE_PATH: playwright
+        run: |
+          set -o pipefail
+          export CHROMIUM_PATH="$(node -e "import('playwright').then(({ chromium }) => console.log(chromium.executablePath()))")"
+          npm run qa:accessibility
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const report = JSON.parse(await readFile('.batch5-chapters-a11y/report.json', 'utf8'));
+          const warnings = report.routes.flatMap((route) => route.contrastWarnings || []);
+          const nodes = warnings.flatMap((warning) => warning.nodes.map((node) => ({
+            id: warning.id,
+            impact: warning.impact,
+            target: node.target,
+            html: node.html,
+            failureSummary: node.failureSummary,
+          })));
+          if (nodes.length) {
+            console.error('Mobile Chapters contrast targets:');
+            for (const node of nodes) console.error(JSON.stringify(node));
+            process.exitCode = 1;
+          } else {
+            console.log('Mobile Chapters contrast probe passed: 0 axe color-contrast nodes.');
+          }
+          NODE
+
       - name: Run complete Chromium release matrix
         shell: bash
         run: |
@@ -160,6 +191,7 @@ jobs:
           path: |
             batch5-final-release.log
             batch5-cross-browser.log
+            .batch5-chapters-a11y
             .succession-final-qa
             .succession-cross-browser-qa
           include-hidden-files: true
