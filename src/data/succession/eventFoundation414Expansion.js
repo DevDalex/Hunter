@@ -3,7 +3,8 @@ import { succession414TimelineEvents } from '../succession414Research.js';
 const freeze = (value) => Object.freeze(value);
 const sourceId = 'source:chapter-414';
 const slugify = (value = '') => String(value).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-const characterId = (name) => `character:${slugify(name)}`;
+const characterAliases = freeze({ Shimanu: 'character:shimano' });
+const characterId = (name) => characterAliases[name] || `character:${slugify(name)}`;
 const ship = 'location:black-whale';
 const tier1 = `${ship}:tier-1`;
 
