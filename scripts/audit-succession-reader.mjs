@@ -12,6 +12,7 @@ const vite = await createServer({ appType: 'custom', logLevel: 'error', server: 
 
 try {
   const availability = await vite.ssrLoadModule('/src/data/successionChapterAvailability.generated.js');
+  const latest = await vite.ssrLoadModule('/src/data/latestChapterMetadata.js');
   const manifest = await vite.ssrLoadModule('/src/data/successionChapterReader.js');
   const catalogue = await vite.ssrLoadModule('/src/data/successionReaderCatalog.js');
   const routes = await vite.ssrLoadModule('/src/data/succession/archiveRoutes.js');
@@ -19,14 +20,20 @@ try {
   const expectedTotal = manifest.SUCCESSION_READER_END - manifest.SUCCESSION_READER_START + 1;
   assert(manifest.SUCCESSION_READER_START === 338, 'reader chapter start must remain Chapter 338');
   assert(
-    manifest.SUCCESSION_READER_END === Math.max(414, availability.LATEST_AUTHORIZED_SUCCESSION_CHAPTER),
-    'reader end must follow the generated imported-chapter boundary',
+    manifest.SUCCESSION_READER_END === Math.max(414, latest.LATEST_PUBLISHED_CHAPTER, availability.LATEST_AUTHORIZED_SUCCESSION_CHAPTER),
+    'reader end must follow the latest published chapter while preserving the separate local-media authorization boundary',
   );
   assert(manifest.successionChapterReaderRecords.length === expectedTotal, 'reader manifest must remain sequential and complete');
   assert(catalogue.successionReaderCatalog.length === expectedTotal, 'enriched reader catalogue must cover the manifest');
   assert(catalogue.successionReaderPhaseGroups.length >= 10, 'reader requires comprehensive phase grouping');
   assert(catalogue.successionReaderCatalog.every((record, index) => record.chapter === manifest.SUCCESSION_READER_START + index), 'reader catalogue must remain sequential');
   assert(routes.successionArchiveRouteById.get('reader')?.path === 'reader', 'Reader must remain a canonical Succession route');
+
+  const latestRecord = manifest.successionChapterReaderByNumber.get(latest.LATEST_PUBLISHED_CHAPTER);
+  assert(latestRecord?.chapter === latest.LATEST_PUBLISHED_CHAPTER, 'latest published chapter must have a reader record even before local page media is imported');
+  if (latest.LATEST_PUBLISHED_CHAPTER > availability.LATEST_AUTHORIZED_SUCCESSION_CHAPTER) {
+    assert(latestRecord.pageCount === 0 && latestRecord.mediaStatus === 'awaiting-local-media', 'published chapters beyond the media authorization boundary must be represented honestly as awaiting local media');
+  }
 
   const [reader, storage, panel, enhancements, readerRoute, entry, router, css, polishCss, routeCss, qa] = await Promise.all([
     read('src/components/SuccessionChapterReader.jsx'),
@@ -106,7 +113,7 @@ try {
     'Mobile reader is contained',
   ]) assert(qa.includes(check), `browser QA is missing ${check}`);
 
-  console.log(`Succession reader audit passed: ${catalogue.successionReaderCatalog.length} chapters through ${manifest.SUCCESSION_READER_END}, canonical focused routing, three reading modes, progress, bookmarks, direct commands, chapter-record bridging, and responsive design verified.`);
+  console.log(`Succession reader audit passed: ${catalogue.successionReaderCatalog.length} chapter records through published Chapter ${manifest.SUCCESSION_READER_END}, local media through Chapter ${availability.LATEST_AUTHORIZED_SUCCESSION_CHAPTER}, canonical focused routing, three reading modes, progress, bookmarks, direct commands, chapter-record bridging, and responsive design verified.`);
 } finally {
   await vite.close();
 }

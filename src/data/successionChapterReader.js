@@ -4,7 +4,7 @@ import {
 } from './successionChapterAvailability.generated.js';
 import { authorizedSuccessionChapterMedia } from './successionChapterMedia.generated.js';
 import { chapterTitles } from './chapterTitles.js';
-import { getChapterCatalogueTitle, getLatestChapterMetadata } from './latestChapterMetadata.js';
+import { getChapterCatalogueTitle, getLatestChapterMetadata, LATEST_PUBLISHED_CHAPTER } from './latestChapterMetadata.js';
 import { successionChapterResearchByNumber } from './succession/successionResearch.js';
 
 export const SUCCESSION_READER_START = 338;
@@ -14,13 +14,14 @@ const importedSuccessionChapterNumbers = Object.keys(authorizedSuccessionChapter
 
 export const SUCCESSION_READER_END = Math.max(
   414,
+  LATEST_PUBLISHED_CHAPTER,
   LATEST_AUTHORIZED_SUCCESSION_CHAPTER,
   ...authorizedSuccessionChapterNumbers,
   ...importedSuccessionChapterNumbers,
 );
 
 // Page records are generated from local media by scripts/import-succession-chapter.mjs.
-// Each record provides page, local src, width, and height fields in reading order.
+// Published chapters can still appear as awaiting-local-media records before page images are imported.
 export { authorizedSuccessionChapterMedia };
 
 export const successionChapterReaderRecords = Object.freeze(

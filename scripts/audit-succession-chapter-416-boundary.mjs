@@ -46,12 +46,11 @@ try {
   assert(dedicated.length===60,'all 60 dedicated Chapter 416 canonical events must exist');
 
   const hellFruit = archive.getEntityById('ability:dust-in-the-wind-hell-fruit');
-  assert(hellFruit?.latestChapter===416 && /Moswana/i.test(text(hellFruit)) && /ghostly hand/i.test(text(hellFruit)),'Hell Fruit canonical ability must load with Chapter 416 manifestation');
-  assert(/final.*unresolved|outcome unresolved/i.test(text(hellFruit)),'Hell Fruit final effect must remain unresolved');
+  assert(hellFruit?.firstChapter===416 && hellFruit?.latestChapter>=416 && /Moswana/i.test(text(hellFruit)) && /ghostly hand/i.test(text(hellFruit)),'Hell Fruit canonical ability must retain its Chapter 416 manifestation while allowing later knowledge');
   const hellKnowledge = archive.getAbilityKnowledgeAtChapter('ability:dust-in-the-wind-hell-fruit',416);
-  assert(/post-mortem curse activation/i.test(text(hellKnowledge)) && /final.*unresolved/i.test(text(hellKnowledge)),'Hell Fruit Chapter 416 knowledge record must resolve');
+  assert(/post-mortem curse activation/i.test(text(hellKnowledge)) && /final.*unresolved/i.test(text(hellKnowledge)),'Hell Fruit Chapter 416 knowledge record must preserve the unresolved final effect');
   const catsKnowledge = archive.getAbilityKnowledgeAtChapter('ability:cats-name',416);
-  assert(/disease/i.test(text(catsKnowledge)) && /does not resolve/i.test(text(catsKnowledge)),'Cat’s Name disease edge case must remain unresolved');
+  assert(/disease/i.test(text(catsKnowledge)) && /does not resolve/i.test(text(catsKnowledge)),'Cat’s Name disease edge case must remain unresolved at Chapter 416');
   const futureKnowledge = archive.getAbilityKnowledgeAtChapter('ability:parallel-future',416);
   assert(/Salkov/i.test(text(futureKnowledge)) && /infer/i.test(text(futureKnowledge)),'Parallel Future record must preserve Salkov inference rather than omniscient mechanics');
 
@@ -67,8 +66,8 @@ try {
   assert(relationshipIds.every((id)=>archive.getEntityById(id)),'all eight Chapter 416 canonical relationships must resolve');
 
   assert(!frozen415.publicationBoundary416,'Through415 archive must remain frozen and unaware of Chapter 416');
-  assert(activeArchive.publicationBoundary416?.chapter===416,'active archive must advance to Through416');
-  assert(/blasted across the room|shot/i.test(text(activeArchive.publicationBoundary416)) && /unresolved/i.test(text(activeArchive.publicationBoundary416)),'active boundary must stop on the unresolved Tserriednich gunshot cliff-edge');
+  assert(activeArchive.publicationBoundary416?.chapter===416,'active archive must retain the Through416 publication boundary inside the later active layer');
+  assert(/blasted across the room|shot/i.test(text(activeArchive.publicationBoundary416)) && /unresolved/i.test(text(activeArchive.publicationBoundary416)),'Chapter 416 boundary must stop on the unresolved Tserriednich gunshot cliff-edge');
   assert((dossier.successionChapterResearch || []).filter((record)=>record.number===416).length===1,'active dossier must expose Chapter 416 exactly once');
   assert(dossier.chapter416Research?.[0]?.number===416,'active dossier must expose strict Chapter 416 research');
 
@@ -81,7 +80,7 @@ try {
   const laterOnly = /Chapter 417.*confirms|after the Chapter 416 shot.*survives|TSK-17.*kills Camilla|Hell Fruit.*kills Benjamin/i;
   assert(!laterOnly.test(timelineText),'Chapter 417+ outcomes must stay outside the strict 416 event packet');
 
-  console.log(`Chapter 416 boundary audit passed: ${dedicated.length} dedicated events plus ${projected.length} maintained projections preserve Hell Fruit, TSK-17 uncertainty, Room 1004, nine character snapshots, eight relationships, and the Chapter 417+ firewall.`);
+  console.log(`Chapter 416 boundary audit passed: ${dedicated.length} dedicated events plus ${projected.length} maintained projections preserve historical Hell Fruit knowledge, TSK-17 uncertainty, Room 1004, nine character snapshots, eight relationships, and the Chapter 417+ firewall.`);
 } finally {
   await vite.close();
 }

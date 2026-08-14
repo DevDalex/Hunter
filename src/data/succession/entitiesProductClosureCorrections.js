@@ -1,9 +1,10 @@
 import { successionArchiveData as productFoundationData } from './entitiesProductClosureFoundation.js';
 import { applySuccession414415ArchiveCorrections } from '../succession414415Research.js';
+import { LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER } from '../latestChapterMetadata.js';
 
 const PENDING_PHASE_ID = 'story-phase:pending-current-release';
 const PRE_CURRENT_RELEASE_PHASE_ID = 'story-phase:martial-law-funeral-and-recruitment';
-const CURRENT_RELEASE_PHASE_ID = 'story-phase:current-releases-414-416';
+const CURRENT_RELEASE_PHASE_ID = 'story-phase:current-releases-414-417';
 const PENDING_STORY_STATUS = 'Reader media indexed; detailed research pending verified chapter documentation';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 
@@ -25,8 +26,11 @@ const chapterCurrencyData = applySuccession414415ArchiveCorrections(Object.freez
   ...productFoundationData,
   glossaryEntries,
 }));
-const latestImportedChapter = chapterCurrencyData.chapters.at(-1)?.number || 415;
-const detailedResearchBoundary = chapterCurrencyData.currentResearchBoundary?.detailedThrough || 415;
+const latestImportedChapter = chapterCurrencyData.chapters.at(-1)?.number || LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER;
+const detailedResearchBoundary = Math.max(
+  chapterCurrencyData.currentResearchBoundary?.detailedThrough || 0,
+  LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
+);
 const pendingChapters = chapterCurrencyData.chapters.filter((chapter) => chapter.number > detailedResearchBoundary);
 const pendingPhase = pendingChapters.length && pendingPhaseTemplate
   ? Object.freeze({
@@ -141,6 +145,10 @@ const normalizeStoryPhaseStatus = (chapter) => {
 
 export const successionArchiveData = Object.freeze({
   ...chapterCurrencyData,
+  currentResearchBoundary: Object.freeze({
+    ...(chapterCurrencyData.currentResearchBoundary || {}),
+    detailedThrough: detailedResearchBoundary,
+  }),
   characters: Object.freeze(chapterCurrencyData.characters.map(normalizeCharacterBoundary)),
   chapters: Object.freeze(chapterCurrencyData.chapters.map(normalizeStoryPhaseStatus)),
   storyPhaseProfiles: restoredStoryPhaseProfiles,

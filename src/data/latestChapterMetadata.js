@@ -35,10 +35,22 @@ export const latestChapterMetadata = Object.freeze({
     sourceUrl: 'https://hunterxhunter.fandom.com/wiki/Chapter_416',
     officialReaderUrl: null,
   }),
+  417: Object.freeze({
+    number: 417,
+    title: null,
+    japaneseTitle: null,
+    alternateTitles: Object.freeze([]),
+    releaseDate: null,
+    titleStatus: 'official-title-not-supplied',
+    detailStatus: 'maintained-research',
+    researchReviewedAt: 'August 14, 2026',
+    sourceUrl: 'https://hunterxhunter.fandom.com/wiki/Chapter_417',
+    officialReaderUrl: null,
+  }),
 });
 
 export const LATEST_PUBLISHED_CHAPTER = Math.max(...Object.keys(latestChapterMetadata).map(Number));
-export const LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER = 416;
+export const LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER = 417;
 
 export const getLatestChapterMetadata = (number) => latestChapterMetadata[Number(number)] || null;
 
