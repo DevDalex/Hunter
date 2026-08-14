@@ -9,6 +9,7 @@ export const publicationBoundary417 = freeze({
   day:'Voyage Day 12 · Special Martial Law endgame operations',
   time:'No exact Chapter 417 clock time is supplied. Scene order continues directly from the Chapter 416 Room 1004 shooting.',
   nonLinear:false,
+  boundaryStatus:'current publication ceiling',
   summary:'Benjamin brutalizes the apparent Tserriednich body while Salkov questions whether the scene is real, expands military headquarters into Justice, orders Salkov and Danjin detained, covertly exposes Tubeppa and Tyson to TSK-17 in Room 1001, reactivates Balsamilco and Coventoba after Gyo inspection of his own afflicted state, distributes Halkenburg/Zhang Lei investigations, reviews prince-by-prince elimination plans, reveals Gypsy Life: Bohemian Rhapsody, and ends by deciding to confront Unma and force a choice between her life and Halkenburg’s.',
   room1004:freeze({
     apparentOutcome:'Benjamin shoots, stomps, and crushes the apparent Tserriednich body and internally treats him as dead.',
