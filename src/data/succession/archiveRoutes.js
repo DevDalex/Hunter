@@ -47,7 +47,7 @@ export const successionArchiveRoutes = Object.freeze([
 
   route('events', 'events', 'Events', 'Records', 'Event archive', 'Operations organized by chapter range, participants, location, causes, consequences, and chapter-bounded knowledge state.', 'active'),
   route('relationships', 'relationships', 'Relationships', 'Records', 'Relationship archive', 'Typed family, professional, protective, political, allied, deceptive, command, and hostile links.', 'active'),
-  route('chapters', 'chapter-records', 'Chapters', 'Records', 'Canonical chapter dossiers', 'Every Chapter 340 through the latest imported reader release placed inside its story phase, active lanes, events, causal links, state changes, unresolved threads, evidence, and reader bridge.', 'active'),
+  route('chapters', 'chapter-records', 'Chapters', 'Records', 'Canonical chapter dossiers', 'Every Chapter 340 through the current published research boundary placed inside its story phase, active lanes, events, causal links, state changes, unresolved threads, evidence, and reader bridge. Local page-media availability is tracked separately.', 'active'),
 
   route('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, provenance, evidence types, confidence, coverage, unresolved claims, media provenance, and explicit research gaps.', 'active'),
   route('glossary', 'glossary', 'Glossary', 'Library', 'Canonical Succession glossary', 'Chapter-bounded definitions, synonyms, certainty, canonical graph connections, and evidence for ritual, Nen, legal, political, location, status, and archive vocabulary.', 'active'),
