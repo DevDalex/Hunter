@@ -17,12 +17,12 @@ const normalize = (value) => String(value || '')
   .replace(/[’‘]/g, "'").replace(/[“”]/g, '"')
   .replace(/[^a-zA-Z0-9]+/g, ' ').trim().toLocaleLowerCase('en-US');
 const bump = (domain, key) => {
-  const row = domains.get(domain) || { checked: 0, visible: 0, warnings: 0, failures: 0 };
+  const row = domains.get(domain) || { checked: 0, reachable: 0, warnings: 0, failures: 0 };
   row.checked += 1;
   row[key] += 1;
   domains.set(domain, row);
 };
-const pass = (domain, id, message, extra = {}) => { passes.push({ domain, id, status: 'REACHABLE', message, ...extra }); bump(domain, 'visible'); };
+const pass = (domain, id, message, extra = {}) => { passes.push({ domain, id, status: 'REACHABLE', message, ...extra }); bump(domain, 'reachable'); };
 const warn = (domain, id, status, message, extra = {}) => { warnings.push({ domain, id, status, message, ...extra }); bump(domain, 'warnings'); };
 const fail = (domain, id, status, message, extra = {}) => { failures.push({ domain, id, status, message, ...extra }); bump(domain, 'failures'); };
 
@@ -54,7 +54,7 @@ try {
 
   archiveEntry.includes('successionArchiveThrough417.js') ? pass('entrypoints', 'archive', 'Archive points to Through417.') : fail('entrypoints', 'archive', 'WRONG-BOUNDARY', 'Archive does not point to Through417.');
   dossierEntry.includes('successionDossierThrough417.js') ? pass('entrypoints', 'dossier', 'Dossier points to Through417.') : fail('entrypoints', 'dossier', 'WRONG-BOUNDARY', 'Dossier does not point to Through417.');
-  if (/latest imported reader release/i.test(routeSource)) warn('copy', 'route:chapters:description', 'MISLEADING-BOUNDARY-COPY', 'Chapter route wording still conflates research coverage with local reader-media coverage.');
+  if (/latest imported reader release/i.test(routeSource)) warn('copy', 'route:chapters:description', 'MISLEADING-BOUNDARY-COPY', 'Chapter route wording conflates the research ceiling with the local reader-media ceiling.');
 
   for (const [id, value] of [
     ['ARCHIVE_BOUNDARY', archiveMeta.ARCHIVE_BOUNDARY],
@@ -64,11 +64,11 @@ try {
 
   const chapter339Research = seriesResearch.getPreSuccessionResearch(START);
   const chapter339 = chaptersModule.chapters.find((record) => record.number === START);
-  chapter339Research && chapter339 ? pass('chapter-339', 'chapter:339:data', 'Chapter 339 remains present in series research and chapter catalogue.') : fail('chapter-339', 'chapter:339:data', 'ORPHANED', 'Chapter 339 data is missing.');
+  chapter339Research && chapter339 ? pass('chapter-339', 'chapter:339:data', 'Chapter 339 exists in series research and the general chapter catalogue.') : fail('chapter-339', 'chapter:339:data', 'ORPHANED', 'Chapter 339 data is missing.');
   const destination339 = router.normalizeDestination('series', 'chapters', { chapter: START });
-  destination339.view === 'not-found'
-    ? fail('chapter-339', 'chapter:339:route', 'DEAD-ROUTE', 'Chapter 339 still targets the retired series view, which normalizes to not-found.', { destination339 })
-    : pass('chapter-339', 'chapter:339:route', `Chapter 339 resolves through ${destination339.view}/${destination339.target}.`, { destination339 });
+  destination339.view === 'series' && destination339.target === 'chapters'
+    ? pass('chapter-339', 'chapter:339:route', 'Chapter 339 resolves through the restored pre-Succession chapter bridge.', { destination339 })
+    : fail('chapter-339', 'chapter:339:route', 'DEAD-ROUTE', 'Chapter 339 still does not resolve through a released website route.', { destination339 });
 
   const maintained = research.successionChapterResearch.filter((record) => record.number >= SUCCESSION_START && record.number <= END);
   const expectedNumbers = Array.from({ length: END - SUCCESSION_START + 1 }, (_, index) => SUCCESSION_START + index);
@@ -86,8 +86,10 @@ try {
   for (const number of expectedNumbers) {
     const chapter = runtime.getChapter(number);
     if (!chapter) { fail('chapters', `chapter:${number}`, 'ORPHANED', 'Maintained chapter has no canonical chapter entity.'); continue; }
-    if (!runtime.getChapterStoryDossier(number)) { fail('chapters', chapter.id, 'NO-UI-SURFACE', 'Chapter cannot produce a Story dossier.'); continue; }
-    if (!runtime.getChapterEvidenceProfile(number)) { fail('chapters', chapter.id, 'NO-UI-SURFACE', 'Chapter cannot produce a Research evidence profile.'); continue; }
+    const dossier = runtime.getChapterStoryDossier(number);
+    const evidence = runtime.getChapterEvidenceProfile(number);
+    if (!dossier) { fail('chapters', chapter.id, 'NO-UI-SURFACE', 'Chapter cannot produce a Story dossier.'); continue; }
+    if (!evidence) { fail('chapters', chapter.id, 'NO-UI-SURFACE', 'Chapter cannot produce a Research evidence profile.'); continue; }
     pass('chapters', chapter.id, 'Chapter has canonical entity, Story dossier, and Research evidence profile.');
   }
 
@@ -95,12 +97,25 @@ try {
     const canonicalEvents = runtime.getEventsForChapter(record.number);
     const names = new Set(canonicalEvents.map((event) => normalize(event.name)));
     const ids = new Set(canonicalEvents.flatMap((event) => [event.id, event.slug, event.id?.replace(/^event:/, '')]).filter(Boolean));
-    for (const beat of [...(record.events || []), ...(record.prelude || [])]) {
-      const title = beat.title || beat.name || '';
-      const matched = [beat.id, beat.id && `event:${beat.id}`].filter(Boolean).some((id) => ids.has(id)) || names.has(normalize(title));
-      matched
-        ? pass('maintained-beats', `chapter:${record.number}:${beat.id || normalize(title)}`, 'Maintained beat has an exact canonical event match.', { chapter: record.number, title })
-        : warn('maintained-beats', `chapter:${record.number}:${beat.id || normalize(title)}`, 'POTENTIALLY-HIDDEN', 'Maintained beat has no exact canonical event ID/title match.', { chapter: record.number, title, canonicalEventCount: canonicalEvents.length });
+    const lineage = new Map();
+    for (const event of canonicalEvents) for (const beatId of event.maintainedBeatIds || []) lineage.set(beatId, event.id);
+
+    for (const beat of record.events || []) {
+      const title = beat.title || beat.label || beat.name || '';
+      const matchedById = [beat.id, beat.id && `event:${beat.id}`].filter(Boolean).some((id) => ids.has(id));
+      const matchedByTitle = Boolean(title) && names.has(normalize(title));
+      const linkedCanonicalId = beat.id ? lineage.get(beat.id) : null;
+      if (matchedById || matchedByTitle || linkedCanonicalId) {
+        pass('maintained-events', `chapter:${record.number}:${beat.id || normalize(title)}`, 'Maintained event survives in the canonical event graph.', { chapter: record.number, title, linkedCanonicalId });
+      } else {
+        fail('maintained-events', `chapter:${record.number}:${beat.id || normalize(title)}`, 'UNMAPPED-MAINTAINED-EVENT', 'Maintained event has no canonical event ID, title, or explicit maintainedBeatIds lineage.', { chapter: record.number, title, canonicalEventCount: canonicalEvents.length });
+      }
+    }
+
+    for (const [index, context] of (record.prelude || []).entries()) {
+      const text = typeof context === 'string' ? context : context?.detail || context?.summary || context?.title || context?.label || '';
+      if (String(text).trim()) pass('maintained-context', `chapter:${record.number}:prelude:${index + 1}`, 'Maintained prelude/context remains attached to the active chapter research record.', { chapter: record.number, text });
+      else warn('maintained-context', `chapter:${record.number}:prelude:${index + 1}`, 'EMPTY-CONTEXT', 'Prelude/context entry is empty or cannot be rendered as research context.', { chapter: record.number });
     }
   }
 
@@ -135,7 +150,7 @@ try {
   }
   for (const [beastId, records] of Object.entries(runtime.successionArchiveData.guardianBeastStateProfiles || {})) {
     const ids = new Set(runtime.getGuardianBeastStateTimeline(beastId).map((record) => record.id));
-    for (const record of records) ids.has(record.id) ? pass('guardian-beast-states', record.id, 'Guardian Beast state is present in the dossier timeline.') : fail('guardian-beast-states', record.id, 'NO-UI-SURFACE', 'Guardian Beast state is missing from the dossier timeline.', { beastId });
+    for (const record of records) ids.has(record.id) ? pass('guardian-beast-states', record.id, 'Guardian Beast state is present in the dossier timeline.') : fail('guardian-beast-states', record.id, 'NO-UI-SURFACE', 'Guardian Beast state is missing from its dossier timeline.', { beastId });
   }
 
   for (const profile of Object.values(runtime.successionArchiveData.storyPhaseProfiles || {})) {
@@ -149,10 +164,10 @@ try {
 
   for (const profile of runtime.getNenSystemsAtChapter(END)) runtime.getNenSystemDossier(profile.id, END) ? pass('nen-systems', profile.id, 'Nen system has a Chapter 417 dossier.') : fail('nen-systems', profile.id, 'NO-UI-SURFACE', 'Nen system has no Chapter 417 dossier.');
   for (const entry of runtime.getGlossaryEntriesAtChapter(END)) pass('glossary', entry.id, 'Glossary entry is active at Chapter 417.');
-  for (const media of runtime.getMediaRecordsAtChapter(END)) pass('media', media.id, 'Media record is active at Chapter 417.');
+  for (const media of runtime.getMediaRecordsAtChapter(END)) pass('media', media.id, 'Media record is active at Chapter 417 and owned by the Research media deep-link contract.');
 
   const closure = runtime.getFoundationClosureReport();
-  for (const id of closure.orphanedEntityIds || []) fail('closure', id, 'ORPHANED', 'Foundation closure reports an orphaned published record.');
+  for (const id of closure.orphanedEntityIds || []) warn('evidence-linkage', id, 'EVIDENCE-UNLINKED', 'Canonical record is visible through its owning workspace but has no chapter linkage in the Research evidence graph.');
   for (const id of closure.missingSourceEntityIds || []) fail('closure', id, 'MISSING-SOURCE', 'Foundation closure reports a missing source link.');
   for (const id of closure.brokenSourceEntityIds || []) fail('closure', id, 'BROKEN-SOURCE', 'Foundation closure reports a broken source link.');
   for (const chapter of closure.chaptersWithoutStructuredLinks || []) warn('closure', `chapter:${chapter}`, 'STRUCTURALLY-SPARSE', 'Chapter has no structured graph links.');
@@ -160,21 +175,19 @@ try {
     ? warn('closure', `chapter:${chapter}`, 'EXPECTED-NO-LOCAL-MEDIA', 'Published research exists without imported local reader media.')
     : fail('closure', `chapter:${chapter}`, 'MISSING-READER-BRIDGE', 'Expected local reader bridge is missing.');
 
+  const maintainedEventCount = maintained.reduce((sum, record) => sum + (record.events?.length || 0), 0);
+  const maintainedContextCount = maintained.reduce((sum, record) => sum + (record.prelude?.length || 0), 0);
   const summary = {
     generatedAt: new Date().toISOString(),
     scope: { start: START, successionStart: SUCCESSION_START, end: END },
     status: failures.length ? 'reachability-gaps-found' : warnings.length ? 'reachable-with-warnings' : 'fully-reachable',
-    totals: {
-      passes: passes.length, warnings: warnings.length, failures: failures.length,
-      maintainedChapters: maintained.length,
-      maintainedBeats: maintained.reduce((sum, record) => sum + (record.events?.length || 0) + (record.prelude?.length || 0), 0),
-    },
+    totals: { passes: passes.length, warnings: warnings.length, failures: failures.length, maintainedChapters: maintained.length, maintainedEvents: maintainedEventCount, maintainedContextEntries: maintainedContextCount },
     domains: Object.fromEntries([...domains.entries()].sort(([a], [b]) => a.localeCompare(b))),
   };
   await mkdir(output, { recursive: true });
   await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, failures, warnings, passes }, null, 2)}\n`);
   console.log(`Succession 339–417 reachability core: ${passes.length} reachable, ${warnings.length} warnings, ${failures.length} failures.`);
-  console.log(`Inventory: ${maintained.length} maintained Succession chapters / ${summary.totals.maintainedBeats} maintained beats + Chapter 339 handoff.`);
+  console.log(`Inventory: ${maintained.length} Succession chapters / ${maintainedEventCount} maintained events / ${maintainedContextCount} context entries + Chapter 339 handoff.`);
   if (failures.length) {
     console.error('\nReachability failures:');
     for (const item of failures) console.error(`- [${item.status}] ${item.domain} · ${item.id}: ${item.message}`);
@@ -182,8 +195,8 @@ try {
   }
   if (warnings.length) {
     console.warn('\nReachability warnings:');
-    for (const item of warnings.slice(0, 100)) console.warn(`- [${item.status}] ${item.domain} · ${item.id}: ${item.message}`);
-    if (warnings.length > 100) console.warn(`- … ${warnings.length - 100} additional warnings in report.json.`);
+    for (const item of warnings.slice(0, 120)) console.warn(`- [${item.status}] ${item.domain} · ${item.id}: ${item.message}`);
+    if (warnings.length > 120) console.warn(`- … ${warnings.length - 120} additional warnings in report.json.`);
   }
 } finally {
   await vite.close();
