@@ -1,11 +1,11 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import SuccessionArchiveShell from './SuccessionArchiveShell';
-import SuccessionWorkspaceRefinementDeck from './SuccessionWorkspaceRefinementDeck';
 import './SuccessionArchiveSearch.css';
 
 const PrincesWorkspace = lazy(() => import('./SuccessionArchiveWorkspaces').then((module) => ({ default: module.PrincesWorkspace })));
 const FamilyTree = lazy(() => import('../FamilyTreeDeferred'));
 const BlackWhaleGuide = lazy(() => import('../BlackWhaleGuideDeferred'));
+const SuccessionWorkspaceRefinementDeck = lazy(() => import('./SuccessionWorkspaceRefinementDeck'));
 
 function LightWorkspaceLoading({ label }) {
   return <div className="route-loading succession-route-loading" role="status" aria-live="polite">Opening {label}…</div>;
@@ -51,12 +51,14 @@ export default function SuccessionArchiveLightRoute({
     onOpenSearch={onOpenSearch}
     onIntent={onIntent}
   >
-    {blackWhale && desktopRefinementSurface && <SuccessionWorkspaceRefinementDeck
-      routeId="black-whale"
-      routeParams={routeParams}
-      spoilerLimit={spoilerLimit}
-      onNavigate={onNavigate}
-    />}
+    {blackWhale && desktopRefinementSurface && <Suspense fallback={<LightWorkspaceLoading label="Black Whale refinement" />}>
+      <SuccessionWorkspaceRefinementDeck
+        routeId="black-whale"
+        routeParams={routeParams}
+        spoilerLimit={spoilerLimit}
+        onNavigate={onNavigate}
+      />
+    </Suspense>}
 
     {blackWhale && <Suspense fallback={<LightWorkspaceLoading label="Black Whale atlas" />}>
       <BlackWhaleGuide
