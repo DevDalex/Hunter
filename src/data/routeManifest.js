@@ -28,9 +28,9 @@ export {
   sitemapSuccessionRoutes,
 } from './routeRegistry.js';
 
-export const viewIds = ['succession', 'reference'];
+export const viewIds = ['succession', 'reference', 'series'];
 export const views = new Set(viewIds);
-export const seriesRoutes = [];
+export const seriesRoutes = ['chapters'];
 
 // Compatibility metadata for older navigation consumers. Canonical route behavior,
 // release status, aliases, and sitemap/search policy live in routeRegistry.js.
@@ -111,6 +111,7 @@ export const successionReleaseRoutes = releasedSuccessionRoutes;
 export const routeManifest = Object.freeze([
   ...releasedSuccessionRoutes.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
   ...referencePages.map((route) => ({ view: 'reference', target: route.id, label: route.title })),
+  { view: 'series', target: 'chapters', label: 'Pre-Succession chapter record' },
 ]);
 
 export const routeManifestStats = Object.freeze({
@@ -118,5 +119,6 @@ export const routeManifestStats = Object.freeze({
   succession: canonicalSuccessionRoutes.length,
   successionReleaseScreens: releasedSuccessionRoutes.length + 1,
   reference: referencePages.length,
+  series: seriesRoutes.length,
   aliases: Object.keys(referenceAliases).length + Object.keys(legacyRouteRedirects).length,
 });
