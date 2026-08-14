@@ -3,6 +3,7 @@ import { access, mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } from '../src/data/successionChapterAvailability.generated.js';
+import { LATEST_PUBLISHED_CHAPTER } from '../src/data/latestChapterMetadata.js';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
@@ -10,8 +11,9 @@ const output = path.resolve(root, process.env.SUCCESSION_READER_QA_OUTPUT || '.s
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
 const results = [];
 const failures = [];
-const LATEST_CHAPTER = Math.max(414, LATEST_AUTHORIZED_SUCCESSION_CHAPTER);
+const LATEST_CHAPTER = Math.max(414, LATEST_PUBLISHED_CHAPTER, LATEST_AUTHORIZED_SUCCESSION_CHAPTER);
 const EXPECTED_CHAPTER_TOTAL = LATEST_CHAPTER - 338 + 1;
+const EXPECTED_MEDIA_TOTAL = LATEST_AUTHORIZED_SUCCESSION_CHAPTER - 338 + 1;
 
 const mime = {
   '.css': 'text/css; charset=utf-8', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -129,6 +131,9 @@ try {
     const summary = (await desktop.locator('.succession-reader__chapter-summary').innerText()).replace(/\s+/g, ' ').toLocaleLowerCase();
     if (!summary.includes(`${EXPECTED_CHAPTER_TOTAL} indexed`)) {
       throw new Error(`Chapter drawer summary does not report ${EXPECTED_CHAPTER_TOTAL} indexed chapters: ${summary}`);
+    }
+    if (!summary.includes(`${EXPECTED_MEDIA_TOTAL} with pages`)) {
+      throw new Error(`Chapter drawer summary does not report ${EXPECTED_MEDIA_TOTAL} chapters with local pages: ${summary}`);
     }
 
     const groups = desktop.locator('.succession-reader__chapter-groups');
