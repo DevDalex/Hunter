@@ -1,9 +1,10 @@
 import { chapterTitles } from './chapterTitles.js';
-import { authorizedSuccessionChapterNumbers } from './successionChapterAvailability.generated.js';
+import { getChapterCatalogueTitle } from './latestChapterMetadata.js';
+import { maintainedSuccessionChapterNumbers } from './successionMaintainedChapterResearch.js';
 
 const freeze = (value) => Object.freeze(value);
 
-const successionChapterNumbers = authorizedSuccessionChapterNumbers
+const successionChapterNumbers = maintainedSuccessionChapterNumbers
   .filter((number) => number >= 340)
   .sort((left, right) => left - right);
 
@@ -19,6 +20,6 @@ export const successionHomeRecentChapters = freeze(
   successionChapterNumbers.slice(-4).reverse().map((number) => freeze({
     id: `chapter:${number}`,
     number,
-    title: chapterTitles[number - 1] || null,
+    title: getChapterCatalogueTitle(number, chapterTitles),
   })),
 );
