@@ -1,7 +1,7 @@
 const freeze = (value) => Object.freeze(value);
 const characterId = (name) => `character:${String(name).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
 const chapterSourceId = (number) => `source:chapter-${number}`;
-const event = ({ slug, name, summary, category, sequence, day, chronologyNote, participants = [], abilities = [], causes = [], outcomes = [], stateChanges = [], openQuestions = [], importance = 'major' }) => freeze({
+const event = ({ slug, name, summary, category, sequence, day, chronologyNote, participants = [], abilities = [], causes = [], outcomes = [], stateChanges = [], openQuestions = [], importance = 'major', maintainedBeatIds = [] }) => freeze({
   id: `event:${slug}`,
   entityType: 'event',
   slug,
@@ -9,10 +9,11 @@ const event = ({ slug, name, summary, category, sequence, day, chronologyNote, p
   aliases: freeze([]),
   summary,
   sourceIds: freeze([chapterSourceId(387)]),
+  maintainedBeatIds: freeze([...maintainedBeatIds]),
   publicationStatus: 'published',
   canonLevel: 'canon',
   createdAt: '2026-08-09',
-  updatedAt: '2026-08-09',
+  updatedAt: '2026-08-14',
   category,
   importance,
   chapterRange: freeze({ start: 387, end: 387 }),
@@ -32,6 +33,7 @@ const event = ({ slug, name, summary, category, sequence, day, chronologyNote, p
 export const eventFoundation387Expansion = freeze([
   event({
     slug: 'tserriednich-first-ten-second-future-vision',
+    maintainedBeatIds: ['387-first-ten-second-future-vision'],
     name: 'Tserriednich Identifies a Ten-second Future Vision',
     summary: 'In a Chapter 387 flashback beginning 25 minutes before the Sunday banquet, Tserriednich fully enters Zetsu with his eyes closed, sees an overhead future scene, then recognizes its ten-second lead when Theta repeats the forecast dialogue.',
     category: 'nen-ability-discovery',
@@ -45,6 +47,7 @@ export const eventFoundation387Expansion = freeze([
   }),
   event({
     slug: 'tserriednich-continuous-future-divergence-test',
+    maintainedBeatIds: ['387-continuous-future-divergence-test'],
     name: 'Tserriednich Demonstrates Continuous Viewing and Forecast Divergence',
     summary: 'Tserriednich maintains the eyes-closed Zetsu state beyond the initial ten seconds, perceives current sensory information while watching the future sequence, and changes his real action while Theta continues responding to the forecast version of him.',
     category: 'nen-mechanics-experiment',
@@ -60,6 +63,7 @@ export const eventFoundation387Expansion = freeze([
   }),
   event({
     slug: 'tserriednich-theta-assassination-divergence-dodge',
+    maintainedBeatIds: ['387-theta-assassination-parallel-future-dodge'],
     name: 'Tserriednich Evades Theta’s Shot through Parallel Future Divergence',
     summary: 'After seeing future Theta draw a gun, Tserriednich moves his actual body away from the predicted standing position while Theta still perceives the forecast version. She fires at that perceived position and he survives.',
     category: 'assassination-attempt',
@@ -75,6 +79,7 @@ export const eventFoundation387Expansion = freeze([
   }),
   event({
     slug: 'tserriednich-melody-landscape-external-nen',
+    maintainedBeatIds: ['387-melody-landscape-recognized-as-external-nen'],
     name: 'Tserriednich Recognizes the Concert Landscape as External Nen',
     summary: 'Immediately after the shot, Tserriednich experiences the beautiful landscape associated with Melody’s banquet performance, briefly considers whether it is his own ability, then recognizes that it belongs to someone else and later orders an invitation to Melody.',
     category: 'nen-effect-overlap',
@@ -87,6 +92,7 @@ export const eventFoundation387Expansion = freeze([
   }),
   event({
     slug: 'tserriednich-parallel-future-self-analysis',
+    maintainedBeatIds: ['387-parallel-future-self-analysis'],
     name: 'Tserriednich Formalizes Parallel Future’s Working Model',
     summary: 'After surviving the assassination attempt, Tserriednich postpones confronting Theta and summarizes the ability: eyes-closed Zetsu produces a ten-second-ahead vision, and maintaining the state lets him keep watching the future while living through the sequence shown ten seconds earlier.',
     category: 'nen-mechanics-analysis',
@@ -101,6 +107,7 @@ export const eventFoundation387Expansion = freeze([
   }),
   event({
     slug: 'tserriednich-day9-subsecond-eye-cycle-target',
+    maintainedBeatIds: ['387-day9-subsecond-eye-cycle-target'],
     name: 'Tserriednich Refines the Sparring Target to a Sub-second Eye Cycle',
     summary: 'On the next day, Tserriednich tells Salkov they will spar once he can close and then reopen his eyes in less than one second. The threshold remains a training objective, not a completed feat.',
     category: 'nen-training',
