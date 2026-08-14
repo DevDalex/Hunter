@@ -6,6 +6,7 @@ on:
     paths:
       - 'src/**'
       - 'scripts/audit-succession-339-417-visibility.mjs'
+      - 'scripts/audit-succession-339-417-visibility-fast.mjs'
       - 'scripts/succession-339-417-visibility-qa.mjs'
       - 'package.json'
       - '.github/workflows/succession-visibility-audit.yml'
