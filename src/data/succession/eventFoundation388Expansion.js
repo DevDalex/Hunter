@@ -1,9 +1,9 @@
 const freeze = (value) => Object.freeze(value);
 const characterId = (name) => `character:${String(name).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
 const chapterSourceId = (number) => `source:chapter-${number}`;
-const event = ({ slug, name, summary, category, sequence, day = 9, timeOfDay = null, certainty = 'explicit-day-no-clock-time', participants = [], locations = [], abilities = [], causes = [], outcomes = [], stateChanges = [], openQuestions = [], importance = 'major' }) => freeze({
+const event = ({ slug, name, summary, category, sequence, day = 9, timeOfDay = null, certainty = 'explicit-day-no-clock-time', participants = [], locations = [], abilities = [], causes = [], outcomes = [], stateChanges = [], openQuestions = [], importance = 'major', maintainedBeatIds = [] }) => freeze({
   id: `event:${slug}`, entityType: 'event', slug, name, aliases: freeze([]), summary,
-  sourceIds: freeze([chapterSourceId(388)]), publicationStatus: 'published', canonLevel: 'canon', createdAt: '2026-08-09', updatedAt: '2026-08-09',
+  sourceIds: freeze([chapterSourceId(388)]), maintainedBeatIds: freeze([...maintainedBeatIds]), publicationStatus: 'published', canonLevel: 'canon', createdAt: '2026-08-09', updatedAt: '2026-08-14',
   category, importance, chapterRange: freeze({ start: 388, end: 388 }), chronology: freeze({ sequence, day, timeOfDay, certainty }),
   participantIds: freeze(participants.map(characterId)), organizationIds: freeze([]), locationIds: freeze(locations), abilityIds: freeze(abilities.map((value) => `ability:${value}`)),
   causes: freeze(causes), outcomes: freeze(outcomes), consequenceEventIds: freeze([]), status: 'completed', stateChanges: freeze(stateChanges), openQuestions: freeze(openQuestions),
@@ -12,6 +12,7 @@ const event = ({ slug, name, summary, category, sequence, day = 9, timeOfDay = n
 export const eventFoundation388Expansion = freeze([
   event({
     slug: 'room-1014-awakened-students-and-gag-order',
+    maintainedBeatIds: ['388-ladiolus-awakening-exit'],
     name: 'Room 1014 Nen Class Produces Four Awakened Students',
     summary: 'Kurapika’s private testing and semi-coercive awakening procedure produces four newly awakened students that day: Ladiolus, Maor, Yuri, and Satobi. Kurapika also imposes a gag order on individual results until everyone has completed the test.',
     category: 'nen-training', importance: 'critical', sequence: 1,
@@ -23,6 +24,7 @@ export const eventFoundation388Expansion = freeze([
   }),
   event({
     slug: 'bill-growth-ability-demonstration',
+    maintainedBeatIds: ['388-maor-bill-growth-demonstration'],
     name: 'Bill Demonstrates His Unnamed Growth Ability',
     summary: 'Bill surrounds a water-and-seed glass with his hands; the water overflows and the seed sprouts. Kurapika identifies Bill as an Enhancer and says his ability causes growth in its target.',
     category: 'nen-ability-demonstration', importance: 'critical', sequence: 2,
@@ -33,6 +35,7 @@ export const eventFoundation388Expansion = freeze([
   }),
   event({
     slug: 'stealth-dolphin-growth-loan-awakening',
+    maintainedBeatIds: ['388-maor-semi-coercive-awakening', '388-yuri-stealth-dolphin-loan'],
     name: 'Stealth Dolphin Loans Bill’s Growth Ability for Nen Awakening',
     summary: 'Kurapika borrows Bill’s growth ability and lends it to students as a semi-coercive Nen-awakening method. Yuri is explicitly shown receiving the borrowed ability through Stealth Dolphin and is told that the aura and ability are borrowed rather than her own.',
     category: 'nen-ability-transfer', importance: 'critical', sequence: 3,
@@ -44,6 +47,7 @@ export const eventFoundation388Expansion = freeze([
   }),
   event({
     slug: 'bill-woble-assignment-resolve-reveal',
+    maintainedBeatIds: ['388-kurapika-bill-resolve-conversation'],
     name: 'Bill Explains His Choice to Guard Woble and His Decision to Stay',
     summary: 'Bill says Beyond stationed him aboard the Black Whale but that he personally chose Woble’s guard assignment, initially expecting little combat around an infant. Vincent’s attack and Kurapika’s exchanges with Oito helped turn his earlier urge to run into resolve to face the danger.',
     category: 'character-motive', sequence: 4,
@@ -53,6 +57,7 @@ export const eventFoundation388Expansion = freeze([
   }),
   event({
     slug: 'tubeppa-authorizes-woble-alliance-negotiation',
+    maintainedBeatIds: ['388-tubeppa-authorizes-alliance-negotiation'],
     name: 'Tubeppa Authorizes Continued Negotiations with Woble’s Camp',
     summary: 'Maor and Longhi report that Kurapika’s Nen training worked and that Woble’s camp is most strongly allied with Zhang Lei. Tubeppa tells them to continue negotiating an alliance and permits more of her guards to attend future Nen classes.',
     category: 'royal-alliance-negotiation', importance: 'critical', sequence: 5,
@@ -72,6 +77,7 @@ export const eventFoundation388Expansion = freeze([
   }),
   event({
     slug: 'fourth-halkenburg-thread-aura-rumbling',
+    maintainedBeatIds: ['388-fourth-aura-rumbling'],
     name: 'The Fourth Aura Rumbling Occurs at 11:30 a.m. on Voyage Day 10',
     summary: 'Kurapika, Bill, and Oito feel the fourth recurrence of the powerful aura rumbling at 11:30 a.m. on Voyage Day 10, and the intervals between occurrences are becoming shorter.',
     category: 'nen-disturbance', importance: 'critical', sequence: 7, day: 10, timeOfDay: '11:30', certainty: 'exact-day-and-clock-time',
