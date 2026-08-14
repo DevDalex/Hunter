@@ -8,7 +8,7 @@ import {
   phase4ProtocolRecords,
 } from './highValueIntelligenceFoundation.js';
 import { highValueIntelligence384Protocols } from './highValueIntelligence384Expansion.js';
-import { successionArchiveData as chapter414CharacterData } from './entitiesCharacter414Bridge.js';
+import { successionArchiveData as chapter415CharacterData } from './entitiesCharacter415Bridge.js';
 import { characterState414CorrectionProfiles } from './characterState414Corrections.js';
 import { characterState415CorrectionProfiles } from './characterState415Corrections.js';
 import { abilityKnowledge414Overrides } from './nenSystemFoundation414Corrections.js';
@@ -21,6 +21,19 @@ const mergeRecordMap = (baseMap = {}, additionMap = {}) => freeze(Object.fromEnt
     const records = new Map((baseMap[key] || []).map((record) => [record.id, record]));
     for (const addition of additionMap[key] || []) records.set(addition.id, addition);
     return [key, freeze([...records.values()].sort((left, right) => (left.chapterRange?.start || 0) - (right.chapterRange?.start || 0) || left.id.localeCompare(right.id)))];
+  }),
+));
+const closeSupersededStateRanges = (baseMap = {}, additionMap = {}, nextChapter) => freeze(Object.fromEntries(
+  Object.entries(baseMap).map(([characterId, records]) => {
+    if (!(additionMap[characterId] || []).length) return [characterId, records];
+    return [characterId, freeze(records.map((record) => {
+      const start = Number(record.chapterRange?.start || 0);
+      const end = record.chapterRange?.end;
+      if (start < nextChapter && (end === null || end === undefined || Number(end) >= nextChapter)) {
+        return freeze({ ...record, chapterRange: freeze({ ...record.chapterRange, end: nextChapter - 1 }) });
+      }
+      return record;
+    }))];
   }),
 ));
 
@@ -60,10 +73,12 @@ const abilities = freeze((phase4PredecessorData.abilities || []).map((record) =>
   return record;
 }));
 
-const chiyamasi = chapter414CharacterData.characters.find((record) => record.id === 'character:chiyamasi');
+const chiyamasi = chapter415CharacterData.characters.find((record) => record.id === 'character:chiyamasi');
+const saquelle = chapter415CharacterData.characters.find((record) => record.id === 'character:saquelle');
 const characters = freeze(uniqueById([
   ...(phase4PredecessorData.characters || []),
   ...(chiyamasi ? [chiyamasi] : []),
+  ...(saquelle ? [saquelle] : []),
 ]));
 
 const normalizedState414 = freeze(Object.fromEntries(Object.entries(characterState414CorrectionProfiles).map(([characterId, records]) => [
@@ -75,7 +90,8 @@ const normalizedState415 = freeze(Object.fromEntries(Object.entries(characterSta
   freeze(records.map((record) => freeze({ ...record, loyaltyStateCode: record.loyaltyStateCode || 'operative' }))),
 ])));
 const characterStateProfiles414 = mergeRecordMap(phase4PredecessorData.characterStateProfiles, normalizedState414);
-const characterStateProfiles = mergeRecordMap(characterStateProfiles414, normalizedState415);
+const characterStateProfiles414Closed = closeSupersededStateRanges(characterStateProfiles414, normalizedState415, 415);
+const characterStateProfiles = mergeRecordMap(characterStateProfiles414Closed, normalizedState415);
 const abilityKnowledgeOverrides414 = mergeRecordMap(phase4PredecessorData.abilityKnowledgeOverrides, abilityKnowledge414Overrides);
 const abilityKnowledgeOverrides = mergeRecordMap(abilityKnowledgeOverrides414, abilityKnowledge415Overrides);
 
@@ -88,11 +104,11 @@ const relationshipShape = Object.freeze({
   'relationship:furykov-beyond-ch415-curse-interrogation': ['hostile', 'curse-interrogation', 'hostile', 'unresolved'],
   'relationship:oito-kurapika-ch415-coded-contact': ['professional', 'coded-contact-operation', 'allied', 'active-cooperation'],
   'relationship:kurapika-babimyna-ch415-postcard-handoff': ['professional', 'controlled-mail-handoff', 'neutral', 'active-cooperation'],
-  'relationship:rihan-tubeppa-ch415-relocation-order': ['authority', 'coercive-relocation-order', 'hostile', 'active'],
+  'relationship:rihan-tubeppa-ch415-relocation-order': ['command', 'coercive-relocation-order', 'hostile', 'active'],
   'relationship:ridge-kanjidol-ch415-custody-state': ['hostile', 'post-confrontation-custody', 'hostile', 'unresolved'],
   'relationship:seiko-fugetsu-ch415-protective-order': ['family', 'protective-confinement-instruction', 'allied', 'active'],
   'relationship:biscuit-vergei-ch415-hold-space': ['professional', 'defensive-coordination', 'allied', 'active-cooperation'],
-  'relationship:babimyna-oito-ch415-confinement': ['authority', 'legal-custody-notice', 'neutral', 'active'],
+  'relationship:babimyna-oito-ch415-confinement': ['command', 'legal-custody-notice', 'neutral', 'active'],
 });
 const relationshipIds = new Set(Object.keys(relationshipShape));
 const relationships = freeze((phase4PredecessorData.relationships || []).map((record) => {
