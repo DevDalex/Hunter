@@ -196,7 +196,10 @@ const transformCss = (source, file) => {
   css = stripUnsupportedMedia(css, file);
   css = stripMobileSelectors(css, file);
   css = removeMobileDeclarations(css, file);
-  return css.replace(/\n{4,}/g, '\n\n\n');
+  return css
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{4,}/g, '\n\n\n')
+    .replace(/\n+$/g, '\n');
 };
 
 const transformKnownRuntime = (source, rel) => {
