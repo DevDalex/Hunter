@@ -1,4 +1,4 @@
-name: Desktop-only purge preview
+name: Desktop-only purge apply
 
 on:
   push:
@@ -13,15 +13,15 @@ on:
       - 'package-lock.json'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: desktop-only-purge-preview-${{ github.ref }}
+  group: desktop-only-purge-apply-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  preview:
-    name: Preview repository-wide desktop-only purge
+  apply:
+    name: Apply repository-wide desktop-only purge
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -34,22 +34,12 @@ jobs:
           node-version: '22'
           cache: npm
 
-      - name: Generate desktop-only purge patch
+      - name: Generate desktop-only purge
         run: |
           node scripts/desktop-only-purge.mjs
           git diff --stat
           git diff --binary > desktop-only-purge.patch
           git diff --check
-          node --input-type=module <<'NODE'
-          import { readFile } from 'node:fs/promises';
-          const report = JSON.parse(await readFile('.desktop-only-purge-report.json', 'utf8'));
-          console.log('\nResponsive/mobile-named CSS files:');
-          console.log(report.responsiveNamedFiles.join('\n') || '(none)');
-          console.log('\nRemaining suspicious CSS references:');
-          for (const row of report.suspiciousCssReferences) console.log(`${row.file}:${row.line} ${row.text}`);
-          console.log('\nRemaining suspicious runtime references (first 200):');
-          for (const row of report.suspiciousRuntimeReferences.slice(0, 200)) console.log(`${row.file}:${row.line} ${row.text}`);
-          NODE
 
       - name: Install dependencies
         run: npm ci
@@ -60,11 +50,25 @@ jobs:
       - name: Verify transformed production bundle
         run: npx vite build
 
-      - name: Upload purge preview
+      - name: Commit verified desktop-only source purge
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add src public
+          if git diff --cached --quiet; then
+            echo 'No generated desktop-only source changes remain.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Purge narrow-screen and touch presentation'
+          git push origin HEAD:succession-339-417-visibility-audit
+
+      - name: Upload purge diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: desktop-only-purge-preview
+          name: desktop-only-purge-diagnostics
           path: |
             desktop-only-purge.patch
             .desktop-only-purge-report.json
