@@ -1,0 +1,88 @@
+name: Succession 339-417 Visibility Audit
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'scripts/audit-succession-339-417-reachability-core.mjs'
+      - 'scripts/audit-succession-339-417-visibility.mjs'
+      - 'scripts/audit-succession-339-417-visibility-fast.mjs'
+      - 'scripts/succession-339-417-visibility-qa.mjs'
+      - 'package.json'
+      - '.github/workflows/succession-visibility-audit.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: succession-visibility-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  static-visibility:
+    name: Exact data-to-website reachability
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit Chapter 339-417 reachability
+        run: npm run audit:succession-visibility
+
+      - name: Upload exact visibility ledger
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-339-417-visibility-ledger
+          path: .succession-339-417-visibility-audit
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14
+
+  rendered-visibility:
+    name: Rendered website visibility
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build website runtime
+        run: npx vite build
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Verify rendered Chapter 339-417 visibility
+        run: node scripts/succession-339-417-visibility-qa.mjs
+
+      - name: Upload rendered visibility report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: succession-339-417-rendered-visibility
+          path: .succession-339-417-visibility-qa
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 14

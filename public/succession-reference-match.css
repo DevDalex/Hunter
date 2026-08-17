@@ -1223,10 +1223,6 @@ body.succession-architecture-mode {
 .succession-architecture-board .succession-architecture__document-footer span:nth-child(2) { text-align: center !important; }
 .succession-architecture-board .succession-architecture__document-footer span:nth-child(3) { text-align: right !important; }
 
-.succession-architecture-board .succession-archive__mobile-bar {
-  display: none !important;
-}
-
 @media (max-width: 1280px) {
   .succession-architecture-board .succession-architecture__sheet {
     grid-template-columns: 184px minmax(0,1fr) !important;
@@ -1249,126 +1245,6 @@ body.succession-architecture-mode {
   }
 }
 
-@media (max-width: 1040px) {
-  .succession-architecture-board .succession-archive__mobile-bar {
-    display: flex !important;
-    position: sticky !important;
-    top: 0 !important;
-    z-index: 100 !important;
-  }
-  .succession-architecture-board .succession-architecture__sheet {
-    display: block !important;
-    min-height: 0 !important;
-  }
-  .succession-architecture-board .succession-architecture__masthead {
-    display: grid !important;
-    grid-template-columns: 1fr 220px !important;
-    min-height: 116px !important;
-  }
-  .succession-architecture-board .succession-architecture__identity {
-    display: none !important;
-  }
-  .succession-architecture-board .succession-architecture__title h1 {
-    font-size: clamp(38px,7vw,58px) !important;
-  }
-  .succession-architecture-board .succession-architecture__title p {
-    letter-spacing: .2em !important;
-  }
-  .succession-architecture-board .succession-architecture__primary-grid {
-    display: grid !important;
-    grid-template-columns: minmax(0,1fr) 235px !important;
-  }
-  .succession-architecture-board .succession-architecture__left-column {
-    display: none !important;
-  }
-  .succession-architecture-board .succession-architecture__lower-grid {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 12px !important;
-    padding: 0 12px 12px !important;
-  }
-  .succession-architecture-board .succession-architecture__lower-grid > div:first-child {
-    padding-right: 0 !important;
-  }
-  .succession-architecture-board .succession-architecture__document-footer {
-    margin: 0 !important;
-  }
-}
-
-@media (max-width: 760px) {
-  .succession-architecture-board .succession-architecture__masthead {
-    display: block !important;
-  }
-  .succession-architecture-board .succession-architecture__document-meta {
-    display: none !important;
-  }
-  .succession-architecture-board .succession-architecture__title {
-    min-height: 110px !important;
-    padding: 18px 12px !important;
-  }
-  .succession-architecture-board .succession-architecture__title h1 {
-    font-size: clamp(35px,11vw,52px) !important;
-    white-space: normal !important;
-    text-align: center !important;
-  }
-  .succession-architecture-board .succession-architecture__title p::before,
-  .succession-architecture-board .succession-architecture__title p::after {
-    display: none !important;
-  }
-  .succession-architecture-board .succession-architecture__primary-grid {
-    display: block !important;
-  }
-  .succession-architecture-board .succession-architecture__modules {
-    grid-template-columns: 1fr !important;
-    grid-template-rows: auto !important;
-  }
-  .succession-architecture-board .succession-architecture__library {
-    padding: 0 12px 12px !important;
-  }
-  .succession-architecture-board .succession-architecture__library-map {
-    min-height: 130px !important;
-  }
-  .succession-architecture-board .succession-architecture__contracts {
-    grid-template-columns: 38px 1fr !important;
-    height: auto !important;
-    min-height: 205px !important;
-  }
-  .succession-architecture-board .succession-architecture__integrity-seal {
-    display: none !important;
-  }
-  .succession-architecture-board .succession-architecture__footer-specs {
-    grid-template-columns: 1fr !important;
-    height: auto !important;
-  }
-  .succession-architecture-board .succession-architecture__footer-specs > section {
-    border-right: 0 !important;
-    border-bottom: 1px solid #d9d2c4 !important;
-  }
-  .succession-architecture-board .succession-architecture__skeleton-block {
-    height: auto !important;
-    min-height: 360px !important;
-  }
-  .succession-architecture-board .succession-architecture__skeleton-body {
-    grid-template-columns: 36px minmax(0,1fr) !important;
-  }
-  .succession-architecture-board .succession-architecture__skeleton-body > aside {
-    display: none !important;
-  }
-  .succession-architecture-board .succession-architecture__skeleton-body > main > section,
-  .succession-architecture-board .succession-architecture__skeleton-body > main > footer {
-    grid-template-columns: 1fr !important;
-  }
-  .succession-architecture-board .succession-architecture__document-footer {
-    grid-template-columns: 1fr !important;
-    gap: 5px !important;
-    min-height: 80px !important;
-    padding: 12px !important;
-    text-align: center !important;
-  }
-  .succession-architecture-board .succession-architecture__document-footer span {
-    text-align: center !important;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .succession-architecture-board *,

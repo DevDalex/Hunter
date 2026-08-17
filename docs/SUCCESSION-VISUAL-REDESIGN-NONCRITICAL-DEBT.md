@@ -17,8 +17,9 @@ This record separates acceptable remaining constraints from release-blocking def
 ## Compatibility constraints
 
 - Import-only compatibility entries may remain where removing a stable stylesheet path would create unnecessary component churn. They must contain no competing declarations.
-- The final Chromium matrix covers every curated Succession release route. Firefox and WebKit cover representative high-complexity routes at desktop and mobile sizes rather than duplicating the entire Chromium screenshot matrix.
-- Intentional wide structures—relationship matrices, timeline swimlanes, the ship atlas, and advanced tables—may remain horizontally navigable on narrow screens only when an ordinary semantic list or card alternative is present.
+- The final Chromium matrix covers every curated Succession release route at the supported desktop viewport. Firefox and WebKit cover representative high-complexity routes at the same desktop contract rather than duplicating the entire Chromium screenshot matrix.
+- Intentional wide structures such as relationship matrices, timeline swimlanes, the ship atlas, and advanced tables may remain horizontally navigable inside labelled and keyboard-focusable desktop regions.
+- Narrow-screen, phone, tablet, touch-specific, safe-area, drawer-navigation, and alternate responsive presentation are not compatibility targets.
 
 ## Integration status
 
@@ -29,7 +30,8 @@ This record separates acceptable remaining constraints from release-blocking def
 ## Maintenance guidance
 
 - New Succession visual work should use semantic design tokens instead of adding raw route colors.
-- New repeated records should preserve the 11px readability floor and 44px touch target contract.
+- New repeated records should preserve the 11px readability floor.
 - New graphs and maps require a complete textual equivalent.
 - New motion requires a reduced-motion equivalent.
 - New dense result sets should use containment, pagination, or virtualization rather than unbounded initial rendering.
+- Do not add narrow-width breakpoints, alternate mobile navigation, touch-only behavior, coarse-pointer branches, or phone/tablet QA back into the supported product contract.

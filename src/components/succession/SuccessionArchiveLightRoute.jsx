@@ -51,7 +51,7 @@ export default function SuccessionArchiveLightRoute({
     onOpenSearch={onOpenSearch}
     onIntent={onIntent}
   >
-    {blackWhale && desktopRefinementSurface && <Suspense fallback={null}>
+    {blackWhale && desktopRefinementSurface && <Suspense fallback={<LightWorkspaceLoading label="Black Whale refinement" />}>
       <SuccessionWorkspaceRefinementDeck
         routeId="black-whale"
         routeParams={routeParams}

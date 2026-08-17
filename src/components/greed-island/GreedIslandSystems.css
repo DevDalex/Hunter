@@ -390,53 +390,6 @@
   background: rgba(242, 210, 142, .09);
 }
 
-@media (max-width: 900px) {
-  .gi-systems__metrics,
-  .gi-systems__filters,
-  .gi-systems__map-layout,
-  .gi-systems-quest-layout,
-  .gi-systems-player__controls,
-  .gi-systems-player__record,
-  .gi-systems-gm__layout,
-  .gi-systems-location-card dl,
-  .gi-systems-quest-record dl,
-  .gi-systems-player__record dl,
-  .gi-systems-gm__record dl {
-    grid-template-columns: 1fr;
-  }
-
-  .gi-systems {
-    border-radius: 1.35rem;
-    padding: 1rem;
-  }
-
-  .gi-systems-map {
-    min-height: 35rem;
-  }
-
-  .gi-systems-map button {
-    min-width: 6.6rem;
-    max-width: 8.2rem;
-    padding: .45rem .55rem;
-  }
-
-  .gi-systems-quest-list,
-  .gi-systems-gm__console {
-    max-height: 22rem;
-  }
-}
-
-@media (max-width: 520px) {
-  .gi-systems-map {
-    min-height: 39rem;
-  }
-
-  .gi-systems-map button {
-    min-width: 5.8rem;
-    max-width: 7rem;
-    font-size: .78rem;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .gi-systems *,

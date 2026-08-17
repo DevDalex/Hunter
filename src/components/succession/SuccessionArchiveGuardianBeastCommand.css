@@ -33,15 +33,6 @@
 .succession-gsb-command select { min-height: 44px; }
 
 /* Batch 5 route-owned Guardian Beast contrast closure. */
-@media (max-width: 560px) {
-  .succession-archive .succession-gsb-command-card .succession-gsb-command-card__visual > span {
-    color: var(--succession-text-on-paper);
-  }
-}
+
 
 /* Batch 5 final Guardian Beast contrast specificity. */
-@media (max-width: 560px) {
-  .succession-gsb-command-card.succession-gsb-command-card .succession-gsb-command-card__visual > span {
-    color: var(--succession-text-on-paper);
-  }
-}

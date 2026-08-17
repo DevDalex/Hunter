@@ -379,46 +379,6 @@
   .archive-number-band dl > div:nth-child(n+4) { padding-top: 24px; border-top: 1px solid rgba(255,255,255,.09); }
 }
 
-@media (max-width: 860px) {
-  .archive-landing__hero-person { width: 58vw; opacity: .58; }
-  .archive-landing__hero-copy { padding-top: 76px; }
-  .archive-storyline header,
-  .archive-number-band header { display: block; }
-  .archive-storyline header h2,
-  .archive-number-band header h2 { margin-top: 8px; text-align: left; }
-  .archive-final-grid { grid-template-columns: 1fr; }
-  .archive-featured-exhibit > div { width: min(78%, 560px); }
-}
-
-@media (max-width: 640px) {
-  .archive-landing__hero { min-height: 690px; }
-  .archive-landing__hero-person { width: 76vw; }
-  .archive-landing__hero-person--left { left: -32vw; }
-  .archive-landing__hero-person--right { right: -34vw; }
-  .archive-landing__hero-copy { width: min(calc(100% - 28px), 760px); padding: 82px 0 54px; }
-  .archive-landing__hero-copy h1 { font-size: clamp(50px, 16vw, 72px); }
-  .archive-landing__hero-copy > p { font-size: 15px; }
-  .archive-landing__hero-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 20px; }
-  .archive-landing__hero-stats > div:nth-child(2) { border-right: 0; }
-  .archive-landing__hero-actions { width: 100%; }
-  .archive-landing__hero-actions button { width: 100%; }
-  .archive-landing__body { width: min(calc(100% - 28px), 1480px); padding-top: 48px; }
-  .archive-gateways__grid,
-  .archive-preview-grid { grid-template-columns: 1fr; }
-  .archive-gateway { min-height: 420px; }
-  .archive-storyline,
-  .archive-number-band,
-  .archive-desk-links { padding: 22px; }
-  .archive-storyline__rail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .archive-preview { min-height: 0; }
-  .archive-number-band dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .archive-number-band dl > div,
-  .archive-number-band dl > div:first-child,
-  .archive-number-band dl > div:last-child { border-right: 0; padding: 17px 8px; }
-  .archive-number-band dl > div:nth-child(n+3) { border-top: 1px solid rgba(255,255,255,.09); }
-  .archive-featured-exhibit > div { width: auto; min-height: 470px; justify-content: end; padding: 28px; }
-  .archive-featured-exhibit::after { background: linear-gradient(180deg, rgba(5,8,10,.2), rgba(5,8,10,.95) 64%); }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .archive-gateway,

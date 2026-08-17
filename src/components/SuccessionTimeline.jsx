@@ -172,7 +172,7 @@ export default function SuccessionTimeline({ spoilerLimit = Number.MAX_SAFE_INTE
       </section>
 
       <p className="sr-only" aria-live="polite">{filteredEvents.length} timeline events shown.</p>
-      <HorizontalScrollHint>The concurrent-lane view preserves its shared day axis on smaller screens. A complete lane-by-lane mobile list appears directly below it.</HorizontalScrollHint>
+      <HorizontalScrollHint>The concurrent-lane view preserves its shared day axis. Scroll the labelled lane region horizontally when the full chronology exceeds the workspace width.</HorizontalScrollHint>
 
       {selectedEvent && <aside className="timeline-command-voyage__selected" aria-label="Selected timeline signal">
         <div><span>Selected signal · Day {selectedEvent.day} · Ch. {selectedEvent.chapter}</span><h3>{selectedEvent.title}</h3><p>{selectedEvent.detail}</p></div>
@@ -214,13 +214,6 @@ export default function SuccessionTimeline({ spoilerLimit = Number.MAX_SAFE_INTE
               })}
             </section>)}
           </div>
-        </div>
-        <div className="timeline-command-voyage__mobile-lanes" aria-label="Concurrent story lanes as mobile lists">
-          {timelineTracks.filter((track) => track.id !== 'all' && (activeTrack === 'all' || activeTrack === track.id)).map((track) => {
-            const events = filteredEvents.filter((event) => event.tracks.includes(track.id));
-            if (!events.length) return null;
-            return <details key={track.id}><summary><span>{track.label}</span><b>{events.length}</b></summary><div>{events.map((event) => eventButton(event, true))}</div></details>;
-          })}
         </div>
       </>}
 

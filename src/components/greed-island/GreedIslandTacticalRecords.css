@@ -161,18 +161,6 @@
 .gi-tactical-counters h4 { margin: 0 0 .35rem; }
 .gi-tactical-record a { color: #ffe0a5; }
 
-@media (max-width: 900px) {
-  .gi-tactical__metrics,
-  .gi-tactical__tabs,
-  .gi-tactical__filters,
-  .gi-tactical-steps,
-  .gi-tactical-bomber__layout,
-  .gi-battle-grid,
-  .gi-tactical-record dl { grid-template-columns: 1fr; }
-  .gi-tactical { border-radius: 1.35rem; padding: 1rem; }
-  .gi-dodgeball-court { display: grid; gap: .55rem; min-height: auto; padding: .75rem; }
-  .gi-dodgeball-court button { position: static; width: 100%; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .gi-tactical *,

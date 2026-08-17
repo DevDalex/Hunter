@@ -249,17 +249,3 @@
 .ca-source-summary span { color: rgba(241,236,226,.68); font-size: 11px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
 .ca-source-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
 .ca-source-grid a { justify-content: space-between; }
-
-@media (max-width: 1100px) {
-  .ca-hero, .ca-two-column, .ca-toolbar { grid-template-columns: 1fr; }
-  .ca-hero__facts, .ca-source-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 720px) {
-  .ca-hero__portraits { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto; }
-  .ca-hero__portraits figure, .ca-hero__portraits figure.is-primary, .ca-hero__portraits figure.is-king { grid-column: span 1; grid-row: span 1; min-height: 160px; }
-  .ca-hero__facts, .ca-source-summary { grid-template-columns: 1fr; }
-  .ca-local-nav { position: static; }
-  .ca-character-grid article { grid-template-columns: 1fr; }
-  .ca-conflict-ledger dl { grid-template-columns: 1fr; }
-}

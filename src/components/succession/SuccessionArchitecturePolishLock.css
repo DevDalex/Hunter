@@ -14,8 +14,6 @@
 }
 
 .succession-architecture-board :where(a, button, [tabindex="0"]) {
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
 }
 
 .succession-architecture-board :where(a, button) {

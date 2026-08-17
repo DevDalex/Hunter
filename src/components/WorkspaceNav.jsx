@@ -16,12 +16,6 @@ export default function WorkspaceNav({ items, activeId, onSelect, onIntent, labe
           </button>
         ))}
       </div>
-      <label className="workspace-nav__mobile">
-        <span>Section</span>
-        <select value={activeId} onChange={(event) => { onIntent?.(event.target.value); onSelect(event.target.value); }} aria-label={label}>
-          {items.map((item) => <option value={item.id} key={item.id}>{item.label}</option>)}
-        </select>
-      </label>
     </nav>
   );
 }

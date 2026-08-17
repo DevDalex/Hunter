@@ -202,27 +202,6 @@
   text-decoration-line: none !important;
 }
 
-@media (max-width: 1080px) {
-  .succession-archive .deep-dossier--embedded .ability-ledger {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 680px) {
-  .succession-archive .deep-dossier--embedded .lesson-ledger > article,
-  .succession-archive .deep-dossier--embedded .ability-ledger > a {
-    padding: 16px !important;
-    border-radius: 14px !important;
-  }
-
-  .succession-archive .deep-dossier--embedded .ability-ledger {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .succession-archive .deep-dossier--embedded .ability-ledger > a {
-    min-height: 0;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .succession-archive .deep-dossier--embedded .ability-ledger > a {
@@ -238,25 +217,3 @@
 /* Batch 5 final legacy contrast exceptions.
    The shell loads this compatibility layer after route styles, so these narrow
    declarations neutralize older broad !important rules without changing layout. */
-@media (max-width: 560px) {
-  .succession-archive #succession-timeline .timeline-day-rail button em,
-  .succession-archive #succession-timeline .timeline-day .timeline-day__number span {
-    color: white !important;
-  }
-
-  .succession-archive .succession-queen-status-strip > div > dt {
-    color: black !important;
-  }
-
-  .succession-archive #black-whale .ship-location-inspector__snapshot > div > dt {
-    color: white !important;
-  }
-
-  .succession-archive #black-whale .ship-manifest table thead th {
-    color: black !important;
-  }
-
-  .succession-archive .succession-gsb-command-card .succession-gsb-command-card__visual > span {
-    color: black !important;
-  }
-}

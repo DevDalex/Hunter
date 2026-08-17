@@ -350,24 +350,6 @@
   padding: .9rem;
 }
 
-@media (max-width: 900px) {
-  .gi-completion__metrics,
-  .gi-completion__tabs,
-  .gi-completion__filters,
-  .gi-completion-quiz__board,
-  .gi-completion-selectors,
-  .gi-completion-timeline,
-  .gi-completion-route__choices,
-  .gi-completion-adaptation__grid,
-  .gi-completion-release__grid {
-    grid-template-columns: 1fr;
-  }
-
-  .gi-completion {
-    border-radius: 1.35rem;
-    padding: 1rem;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .gi-completion *,

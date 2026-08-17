@@ -352,29 +352,3 @@
   background: #eceeea;
   box-shadow: none;
 }
-
-@media (max-width: 960px) {
-  .succession-royal-command {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-royal-orbit {
-    max-width: 520px;
-    margin-inline: auto;
-  }
-
-  .succession-royal-status-strip {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 680px) {
-  .succession-royal-status-strip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .succession-prince-card {
-    grid-template-columns: 118px minmax(0, 1fr);
-    min-height: 320px;
-  }
-}

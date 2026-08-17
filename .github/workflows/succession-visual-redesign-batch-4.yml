@@ -127,7 +127,7 @@ jobs:
         env:
           VISUAL_QA_ROUTE: succession/events
           VISUAL_QA_OUTPUT: .visual-qa/succession-events
-          VISUAL_QA_SCREENSHOTS: all
+          VISUAL_QA_SCREENSHOTS: failures
         shell: bash
         run: |
           set -o pipefail

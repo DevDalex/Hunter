@@ -126,16 +126,6 @@
   cursor: pointer;
 }
 
-@media(max-width:620px) {
-  .succession-search-complete__groups article {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-  .succession-search-complete__groups article > button {
-    grid-column: 1 / -1;
-    justify-content: center;
-    width: 100%;
-  }
-}
 
 @media(prefers-reduced-motion:reduce) {
   .succession-search-complete * {

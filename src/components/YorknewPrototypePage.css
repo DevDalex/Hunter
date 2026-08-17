@@ -423,17 +423,3 @@
   .yn-fortune-matrix,
   .yn-source-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
-@media (max-width: 820px) {
-  .yn-hero__portraits { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
-  .yn-hero__portraits figure.is-primary,
-  .yn-hero__portraits figure:not(.is-primary) { grid-column: span 1; grid-row: auto; min-height: 260px; }
-  .yn-hero__facts,
-  .yn-faction-grid,
-  .yn-object-ledger,
-  .yn-two-column { grid-template-columns: 1fr; }
-  .yn-local-nav { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .yn-chain-inspector { grid-template-columns: 1fr; }
-  .yn-chronology li,
-  .yn-conflict-ledger article { grid-template-columns: 1fr; }
-}

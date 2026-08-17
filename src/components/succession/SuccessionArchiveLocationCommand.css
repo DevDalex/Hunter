@@ -390,92 +390,6 @@
   color: var(--location-paper-ink);
 }
 
-@media (max-width: 1120px) {
-  .succession-canonical-locations__hero {
-    grid-template-columns: minmax(0, 1fr) minmax(230px, .55fr);
-  }
-
-  .succession-location-dossier > header {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .succession-location-dossier > header dl {
-    grid-column: 1 / -1;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 780px) {
-  .succession-canonical-locations__hero,
-  .succession-location-dossier > header {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-canonical-locations__hero dl,
-  .succession-location-dossier > header dl {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .succession-location-directory,
-  .succession-location-filter-panel__fields {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-location-history article {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .succession-location-history article > span,
-  .succession-location-history article button {
-    grid-column: 1 / -1;
-  }
-}
-
-@media (max-width: 560px) {
-  .succession-canonical-locations__hero,
-  .succession-location-filter-panel,
-  .succession-location-dossier,
-  .succession-location-snapshot,
-  .succession-location-children,
-  .succession-location-occupants,
-  .succession-location-history,
-  .succession-location-sources,
-  .succession-location-activity-grid > section {
-    padding: 18px;
-    border-radius: 18px;
-  }
-
-  .succession-canonical-locations__hero dl,
-  .succession-location-dossier > header dl {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-location-card {
-    grid-template-columns: 42px minmax(0, 1fr);
-    min-height: 0;
-    padding: 16px;
-  }
-
-  .succession-location-card dl {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-location-filter-panel > footer {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .succession-location-filter-panel > footer button,
-  .succession-location-history article button {
-    width: 100%;
-  }
-}
-
-@media (hover: none) {
-  .succession-location-card:hover {
-    transform: none;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .succession-canonical-locations *,
@@ -488,9 +402,3 @@
 }
 
 /* Batch 5 route-owned location contrast closure. */
-@media (max-width: 560px) {
-  .succession-archive .succession-location-filter-panel > header > div > span,
-  .succession-archive .succession-location-filter-panel > header > b {
-    color: var(--succession-text-on-paper);
-  }
-}

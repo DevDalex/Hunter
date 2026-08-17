@@ -19,6 +19,6 @@
 .succession-release-candidate__external article{display:grid;gap:.25rem}
 .succession-release-candidate__external article b{font-size:.86rem}
 .succession-release-candidate__external article small{font-size:11px;color:var(--archive-muted,#706860)}
-@media(max-width:1000px){.succession-release-candidate__inventory,.succession-release-candidate__external>div{grid-template-columns:repeat(2,minmax(0,1fr))}.succession-release-candidate__batches{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.succession-release-candidate>header{align-items:flex-start;flex-wrap:wrap}.succession-release-candidate>header>b{margin-left:0}.succession-release-candidate__inventory,.succession-release-candidate__batches,.succession-release-candidate__external>div{grid-template-columns:1fr}}
+
+
 @media(prefers-reduced-motion:reduce){.succession-release-candidate *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

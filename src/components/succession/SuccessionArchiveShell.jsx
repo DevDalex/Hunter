@@ -1,16 +1,14 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef } from 'react';
 import {
   ArrowLeft,
   BookOpen,
   ChevronRight,
   FileSearch,
   Library,
-  Menu,
   Orbit,
   Search,
   Ship,
   Users,
-  X,
 } from 'lucide-react';
 import { ARCHIVE_BOUNDARY } from '../../data/archiveMeta';
 import { routeToHref } from '../../lib/appRouter';
@@ -38,8 +36,6 @@ const iconByHub = {
   research: FileSearch,
   glossary: Library,
 };
-
-const focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 const tabRouteParams = (hub, tab, routeParams = {}) => {
   const shared = {};
@@ -118,17 +114,12 @@ export default function SuccessionArchiveShell({
   onIntent,
   children,
 }) {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const drawerRef = useRef(null);
-  const menuButtonRef = useRef(null);
   const contentRef = useRef(null);
   const previousRouteRef = useRef(null);
   const route = getSuccessionArchiveRoute(activeId);
   const activeHub = getSuccessionArchiveHub(route.id);
   const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
   const showCharacterConsistency = needsCharacterConsistency(route.id, routeParams);
-
-  useEffect(() => setDrawerOpen(false), [activeId, routeParams]);
 
   useEffect(() => {
     if (route.id === 'archive') onNavigate('story', {});
@@ -141,35 +132,6 @@ export default function SuccessionArchiveShell({
     const frame = window.requestAnimationFrame(() => contentRef.current?.focus({ preventScroll: true }));
     return () => window.cancelAnimationFrame(frame);
   }, [activeId, route.id]);
-
-  useEffect(() => {
-    if (!drawerOpen) return undefined;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    const timer = window.setTimeout(() => drawerRef.current?.querySelector(focusableSelector)?.focus(), 20);
-    const restoreMenuFocus = () => window.setTimeout(() => menuButtonRef.current?.focus(), 0);
-    const handleKey = (event) => {
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        setDrawerOpen(false);
-        restoreMenuFocus();
-        return;
-      }
-      if (event.key !== 'Tab' || !drawerRef.current) return;
-      const focusable = [...drawerRef.current.querySelectorAll(focusableSelector)].filter((node) => node.getClientRects().length);
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
-    };
-    document.addEventListener('keydown', handleKey);
-    return () => {
-      window.clearTimeout(timer);
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener('keydown', handleKey);
-    };
-  }, [drawerOpen]);
 
   const showCommandHome = route.id === 'story' && Object.keys(routeParams || {}).length === 0;
   if (showCommandHome) return <SuccessionCommandHome
@@ -186,12 +148,6 @@ export default function SuccessionArchiveShell({
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
     <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{route.label} workspace loaded. Reading boundary Chapter {spoilerLimit}. Active hub: {activeHub.label}.</span>
 
-    <div className="succession-archive__mobile-bar">
-      <button ref={menuButtonRef} type="button" onClick={() => setDrawerOpen(true)} aria-expanded={drawerOpen} aria-controls="succession-mobile-navigation"><Menu size={19} aria-hidden="true" /> Archive</button>
-      <span>{activeHub.label}</span>
-      <button type="button" onClick={onOpenSearch} aria-label="Search Succession Contest Archive"><Search size={18} aria-hidden="true" /></button>
-    </div>
-
     <div className="succession-archive__status-strip" aria-label="Black Whale archive context">
       <span><Ship size={14} aria-hidden="true" /><strong>Black Whale 1</strong></span>
       <span><b>Desk</b> {activeHub.label}</span>
@@ -199,7 +155,7 @@ export default function SuccessionArchiveShell({
       <span><b>Evidence</b> Canon separated</span>
     </div>
 
-    <div className="succession-archive__layout" aria-hidden={drawerOpen ? 'true' : undefined}>
+    <div className="succession-archive__layout">
       <aside className="succession-archive__sidebar">
         <div className="succession-archive__sidebar-inner">
           <div className="succession-archive__brand">
@@ -287,12 +243,5 @@ export default function SuccessionArchiveShell({
         </div>
       </div>
     </div>
-
-    {drawerOpen && <div className="succession-drawer" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setDrawerOpen(false); }}>
-      <aside ref={drawerRef} role="dialog" aria-modal="true" aria-label="Succession Archive navigation">
-        <header><div><span>Black Whale 1</span><strong>Succession Intelligence</strong></div><button type="button" onClick={() => { setDrawerOpen(false); window.setTimeout(() => menuButtonRef.current?.focus(), 0); }} aria-label="Close archive navigation"><X size={20} aria-hidden="true" /></button></header>
-        <ArchiveNavigation id="succession-mobile-navigation" activeHubId={activeHub.id} onNavigate={navigate} onIntent={onIntent} />
-      </aside>
-    </div>}
   </article>;
 }

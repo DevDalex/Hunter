@@ -295,27 +295,3 @@
   .succession-nen-command-pipeline li:nth-child(3) > svg:last-child,
   .succession-nen-command-pipeline li:last-child > svg:last-child { display: none; }
 }
-
-@media (max-width: 780px) {
-  .succession-nen-command-dossier__hero { grid-template-columns: 1fr; }
-  .succession-nen-command-dossier__visual,
-  .succession-nen-command-dossier__system-sigil { width: min(100%, 280px); min-height: 160px; justify-self: center; }
-  .succession-nen-command-dossier__hero dl { grid-column: auto; grid-template-columns: 1fr 1fr; }
-  .succession-nen-command-pipeline > ol { grid-template-columns: 1fr 1fr; }
-  .succession-nen-command-pipeline li:nth-child(even) > svg:last-child,
-  .succession-nen-command-pipeline li:last-child > svg:last-child { display: none; }
-  .succession-nen-command-mechanic-grid,
-  .succession-nen-command-system-architecture > div,
-  .succession-nen-command-section > div { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 560px) {
-  .succession-nen-command-dossier__hero,
-  .succession-nen-command-pipeline,
-  .succession-nen-command-system-architecture,
-  .succession-nen-command-section { padding: 20px; border-radius: 20px; }
-  .succession-nen-command-dossier__hero dl { grid-template-columns: 1fr; }
-  .succession-nen-command-pipeline > ol { grid-template-columns: 1fr; }
-  .succession-nen-command-pipeline li { min-height: 0; }
-  .succession-nen-command-pipeline li > svg:last-child { display: none; }
-}

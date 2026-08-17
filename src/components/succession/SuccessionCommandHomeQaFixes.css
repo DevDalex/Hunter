@@ -26,21 +26,3 @@
 .succession-command-home__updates header button {
   min-height: 44px;
 }
-
-@media (max-width: 860px) {
-  .succession-command-home__rail nav a {
-    min-width: 44px;
-    min-height: 44px;
-  }
-}
-
-@media (max-width: 620px) {
-  .succession-command-home__ship-stage {
-    left: 0;
-    right: 0;
-  }
-
-  .succession-command-home__portal-visual {
-    left: 48%;
-  }
-}

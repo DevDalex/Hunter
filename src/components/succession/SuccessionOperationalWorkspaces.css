@@ -410,29 +410,3 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
-
-@media (max-width: 1080px) {
-  .succession-entity-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 860px) {
-  .succession-story-workspace {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-entity-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 620px) {
-  .succession-entity-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-entity-grid > article {
-    min-height: 210px;
-  }
-}

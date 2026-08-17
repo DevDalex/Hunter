@@ -237,31 +237,3 @@
 }
 
 /* Mobile browser checks use WCAG contrast against the rendered command surface. */
-@media (max-width: 860px) {
-  .succession-archive .succession-page-header {
-    background:
-      linear-gradient(120deg, rgba(112, 38, 48, .32), transparent 56%),
-      #111a20 !important;
-  }
-
-  .succession-archive .succession-page-header :where(h1, h2, h3, strong, b, dd) {
-    color: #f7faf8 !important;
-  }
-
-  .succession-archive .succession-page-header :where(p, span, dt, small) {
-    color: #dbe3e0 !important;
-  }
-
-  .succession-archive .succession-page-header__copy > span {
-    color: #f0d794 !important;
-  }
-
-  .succession-archive .succession-breadcrumbs,
-  .succession-archive .succession-return-path {
-    overflow: hidden;
-  }
-
-  .succession-archive .succession-breadcrumbs ol {
-    min-width: 0;
-  }
-}

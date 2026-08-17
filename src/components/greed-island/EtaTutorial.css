@@ -591,61 +591,6 @@
 .gi-eta-course__controls a { color: #29382d; border-color: #8d754d; background: #eee3c6; }
 .gi-eta-course__controls button.is-primary { color: #fff; background: #2a4432; }
 
-@media (max-width: 1050px) {
-  .gi-eta-course__layout { grid-template-columns: 1fr; }
-  .gi-eta-course__chapters { position: static; max-height: none; overflow-x: auto; }
-  .gi-eta-course__chapters ol { grid-template-columns: repeat(12, minmax(145px, 1fr)); width: max-content; }
-  .gi-rule-demo--slots,
-  .gi-rule-demo--spell { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .gi-rule-demo--slots > p { grid-column: 1 / -1; }
-  .gi-rule-demo--spell > small { grid-column: 1 / -1; }
-}
-
-@media (max-width: 760px) {
-  .gi-eta-course__lesson > .gi-eta-course__eta,
-  .gi-eta-course__lesson > .gi-eta-course__dialogue { display: flex; }
-  .gi-eta-course__eta { width: 150px; height: 150px; margin: 1rem auto 0; }
-  .gi-eta-course__dialogue { width: 100%; min-height: auto; padding: 1.2rem; }
-  .gi-rule-demo--ring,
-  .gi-rule-demo--book,
-  .gi-rule-demo--binder,
-  .gi-rule-demo--anatomy,
-  .gi-rule-demo--slots,
-  .gi-rule-demo--ranks,
-  .gi-rule-demo--limits,
-  .gi-rule-demo--gain,
-  .gi-rule-demo--spell,
-  .gi-rule-demo--protection { grid-template-columns: 1fr; }
-  .gi-rule-demo--binder > button,
-  .gi-rule-demo--limits > button,
-  .gi-limit-result,
-  .gi-rule-demo--spell > small,
-  .gi-rule-demo--protection > p { grid-column: auto; }
-  .gi-rule-stat { min-height: 110px; }
-  .gi-anatomy-list,
-  .gi-rank-readout dl,
-  .gi-completion-sequence,
-  .gi-review-grid { grid-template-columns: 1fr; }
-  .gi-spell-card { grid-row: auto; }
-  .gi-attack-flow { grid-column: auto; grid-template-columns: 1fr auto 1fr; }
-  .gi-eta-course__controls { flex-direction: column; }
-  .gi-eta-course__controls > div { width: 100%; }
-  .gi-eta-course__controls button,
-  .gi-eta-course__controls a { flex: 1; }
-}
-
-@media (max-width: 460px) {
-  .gi-eta-course__practice { padding-inline: .72rem; }
-  .gi-eta-course__chapters ol { grid-template-columns: repeat(12, minmax(125px, 1fr)); }
-  .gi-anatomy-visual { width: 235px; }
-  .gi-anatomy-visual .gi-card { min-height: 320px; }
-  .gi-anatomy-visual .gi-card__media,
-  .gi-anatomy-visual .gi-card__fallback { min-height: 312px; }
-  .gi-rule-actions,
-  .gi-eta-course__controls > div { display: grid; grid-template-columns: 1fr; }
-  .gi-eta-course__controls button,
-  .gi-eta-course__controls a { width: 100%; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .gi-eta-course__progress > i span,

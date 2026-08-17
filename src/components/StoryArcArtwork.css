@@ -27,16 +27,3 @@
 .story-directory-card:focus-visible .story-arc-artwork {
   filter: saturate(.92) brightness(.78) contrast(.98);
 }
-
-@media (max-width: 820px) {
-  .arc-page__hero--artwork .arc-page__hero-art figure.is-arc-artwork {
-    inset: 0;
-    width: 100%;
-  }
-
-  .arc-page__hero--artwork .arc-page__hero-shade {
-    background:
-      linear-gradient(180deg, rgba(32, 30, 29, .34), rgba(32, 30, 29, .72) 45%, rgba(32, 30, 29, .97) 82%),
-      linear-gradient(90deg, rgba(32, 30, 29, .62), rgba(32, 30, 29, .18));
-  }
-}

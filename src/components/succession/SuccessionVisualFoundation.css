@@ -461,8 +461,7 @@
   animation: succession-foundation-loading 1.35s ease-in-out infinite;
 }
 
-.succession-drawer > aside,
-.succession-archive__mobile-bar {
+.succession-drawer > aside{
   border-color: var(--succession-border-default);
   background: rgba(9, 11, 15, 0.97);
   color: var(--succession-text);
@@ -474,63 +473,6 @@
   50% { opacity: 1; transform: scaleX(1); transform-origin: left; }
 }
 
-@media (max-width: 1100px) {
-  .succession-archive {
-    --succession-sidebar-width: 244px;
-  }
-
-  .succession-page-header h1 {
-    max-width: 24ch;
-  }
-}
-
-@media (max-width: 860px) {
-  .succession-archive__layout {
-    display: block;
-  }
-
-  .succession-page-header {
-    border-radius: var(--succession-radius-lg);
-  }
-
-  .succession-page-header__actions,
-  .succession-page-header__meta {
-    width: 100%;
-  }
-
-  .succession-button,
-  .succession-entity-link,
-  .succession-tabs > button,
-  .succession-archive :where(input, select, textarea) {
-    min-height: 44px;
-  }
-}
-
-@media (max-width: 560px) {
-  .succession-archive {
-    --succession-space-8: 24px;
-    --succession-space-10: 32px;
-    --succession-space-12: 40px;
-  }
-
-  .succession-page-header {
-    padding: var(--succession-space-5);
-  }
-
-  .succession-page-header h1 {
-    font-size: clamp(1.75rem, 10vw, 2.7rem);
-  }
-
-  .succession-tabs {
-    overflow-x: auto;
-    scroll-snap-type: x proximity;
-  }
-
-  .succession-tabs > button {
-    flex: 0 0 auto;
-    scroll-snap-align: start;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .succession-archive *,

@@ -3,9 +3,7 @@
   pointer-events: none;
 }
 
-.succession-integrated-reference .workspace-nav__desktop button,
-.succession-integrated-reference .workspace-nav__mobile,
-.succession-integrated-reference .workspace-nav__mobile select {
+.succession-integrated-reference .workspace-nav__desktop button{
   pointer-events: auto;
 }
 

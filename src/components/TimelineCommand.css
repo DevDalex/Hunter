@@ -543,7 +543,6 @@
 .timeline-swimlane__cell.has-events { background: color-mix(in srgb, var(--timeline-gold) 5%, var(--timeline-surface)); }
 .timeline-swimlane__cell .timeline-record { grid-template-columns: 1fr; gap: 5px; padding: 10px; border: 1px solid var(--timeline-line); border-radius: 9px; }
 .timeline-swimlane__cell .timeline-record__source { justify-self: start; }
-.timeline-command-voyage__mobile-lanes { display: none; }
 
 .timeline-thread-view,
 .timeline-chapter-view,
@@ -600,125 +599,6 @@
   .timeline-command-voyage__selected > div:last-child { grid-column: 1 / -1; grid-template-columns: repeat(2, 1fr); }
 }
 
-@media (max-width: 900px) {
-  .timeline-command { width: min(100% - 28px, 1480px); }
-  .timeline-command__hero { grid-template-columns: 1fr; }
-  .timeline-command__signal { width: min(100%, 340px); min-height: 290px; justify-self: center; }
-  .timeline-command__metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .timeline-command__metrics > div:nth-child(2) { border-right: 0; }
-  .timeline-command__metrics > div:nth-child(-n+2) { border-bottom: 1px solid color-mix(in srgb, var(--timeline-paper-ink) 14%, transparent); }
-  .timeline-command__navigation > header,
-  .timeline-command__scope-deck { align-items: stretch; flex-direction: column; }
-  .timeline-command__scope-deck label { width: 100%; }
-  .timeline-command__ledger > header { grid-template-columns: 1fr; }
-  .timeline-command-voyage__hero { grid-template-columns: 1fr; }
-  .timeline-command-voyage__boundary { width: min(100%, 300px); }
-  .timeline-command-voyage__metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .timeline-command-voyage__metrics > div:nth-child(3) { border-right: 0; }
-  .timeline-command-voyage__metrics > div:nth-child(-n+3) { border-bottom: 1px solid color-mix(in srgb, var(--timeline-paper-ink) 13%, transparent); }
-  .timeline-command-voyage__method { grid-template-columns: 1fr; }
-  .timeline-command-voyage__filter-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .timeline-command-voyage__filter-grid label:first-child { grid-column: 1 / -1; }
-  .timeline-command-voyage__filter-grid label:nth-last-child(-n+2) { grid-column: auto; }
-  .timeline-command-voyage__selected { grid-template-columns: 1fr; }
-  .timeline-command-voyage__selected > div:last-child { grid-column: auto; grid-template-columns: repeat(2, 1fr); }
-  .timeline-workbench { grid-template-columns: 1fr; }
-  .timeline-inspector { position: static; }
-  .timeline-thread-view,
-  .timeline-chapter-view,
-  .timeline-location-view { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 720px) {
-  .timeline-command__hero { padding: 28px 22px; border-radius: 24px; }
-  .timeline-command__hero h1 { font-size: clamp(44px, 14vw, 72px); }
-  .timeline-command__metrics { grid-template-columns: 1fr; }
-  .timeline-command__metrics > div,
-  .timeline-command__metrics > div:nth-child(2) { border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--timeline-paper-ink) 14%, transparent); }
-  .timeline-command__metrics > div:last-child { border-bottom: 0; }
-  .timeline-command__navigation { padding: 18px; }
-  .timeline-command__navigation > header { display: grid; }
-  .timeline-command__arc-grid { grid-template-columns: 1fr; }
-  .timeline-command__ledger { padding: 22px 16px; }
-  .timeline-command__ledger > ol > li { grid-template-columns: 1fr; }
-  .timeline-command__ledger article header { flex-direction: column; }
-  .timeline-command__ledger article dl { grid-template-columns: 1fr; }
-  .timeline-command-voyage__hero { padding: 25px 20px; }
-  .timeline-command-voyage__metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .timeline-command-voyage__metrics > div,
-  .timeline-command-voyage__metrics > div:nth-child(3) { border-right: 1px solid color-mix(in srgb, var(--timeline-paper-ink) 13%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--timeline-paper-ink) 13%, transparent); }
-  .timeline-command-voyage__metrics > div:nth-child(even) { border-right: 0; }
-  .timeline-command-voyage__metrics > div:last-child { grid-column: 1 / -1; border-right: 0; border-bottom: 0; }
-  .timeline-command-voyage__prelude > summary { grid-template-columns: 1fr auto; }
-  .timeline-command-voyage__prelude > summary > span { grid-column: 1 / -1; }
-  .timeline-prelude__steps > details > summary { grid-template-columns: 38px minmax(0, 1fr); }
-  .timeline-prelude__steps > details > summary > strong { grid-column: 2; }
-  .timeline-prelude__steps details > div { padding-left: 66px; }
-  .timeline-command-voyage__controls > header,
-  .timeline-command-voyage__controls > footer { align-items: stretch; flex-direction: column; }
-  .timeline-view-switcher { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .timeline-view-switcher button:last-child { grid-column: 1 / -1; }
-  .timeline-command-voyage__filter-grid { grid-template-columns: 1fr; }
-  .timeline-command-voyage__filter-grid label:first-child { grid-column: auto; }
-  .timeline-density { display: grid; grid-template-columns: auto repeat(3, minmax(0, 1fr)); }
-  .timeline-command-voyage__selected > div:last-child { grid-template-columns: 1fr; }
-  .timeline-day > header { grid-template-columns: auto minmax(0, 1fr); }
-  .timeline-day > header > em { grid-column: 1 / -1; }
-  .timeline-record,
-  .timeline-record.is-compact { grid-template-columns: minmax(82px, .25fr) minmax(0, 1fr); }
-  .timeline-record__source { grid-column: 2; }
-  .timeline-swimlanes { max-height: 62vh; }
-  .timeline-command-voyage__mobile-lanes { display: grid; gap: 8px; }
-  .timeline-command-voyage__mobile-lanes details { overflow: hidden; border: 1px solid color-mix(in srgb, var(--timeline-paper-ink) 17%, transparent); border-radius: 13px; background: var(--timeline-paper-muted); color: var(--timeline-paper-ink); }
-  .timeline-command-voyage__mobile-lanes summary { display: flex; align-items: center; justify-content: space-between; padding: 13px 15px; list-style: none; }
-  .timeline-command-voyage__mobile-lanes summary::-webkit-details-marker { display: none; }
-  .timeline-command-voyage__mobile-lanes summary span { font-family: var(--succession-font-display, var(--serif)); font-size: 18px; font-weight: 850; }
-  .timeline-command-voyage__mobile-lanes summary b { display: grid; place-items: center; min-width: 28px; height: 28px; border-radius: 50%; background: var(--timeline-crimson); color: var(--timeline-paper); }
-  .timeline-command-voyage__mobile-lanes details > div { display: grid; gap: 1px; background: color-mix(in srgb, var(--timeline-paper-ink) 13%, transparent); }
-  .timeline-command-voyage__mobile-lanes .timeline-record { background: var(--timeline-paper); color: var(--timeline-paper-ink); }
-  .timeline-analysis > div > div { grid-template-columns: repeat(6, minmax(0, 1fr)); }
-}
-
-@media (max-width: 560px) {
-  .timeline-command { width: min(100% - 20px, 1480px); margin-bottom: 64px; }
-  .timeline-command__hero-actions { display: grid; grid-template-columns: 1fr; }
-  .timeline-command__signal { min-height: 250px; }
-  .timeline-command__scope-deck nav { display: grid; grid-template-columns: 1fr; }
-  .timeline-command__scope-deck nav button { width: 100%; }
-  .timeline-command__arc-grid article { min-height: 0; padding: 21px; }
-  .timeline-command__arc-grid dl { grid-template-columns: 1fr; }
-  .timeline-command-voyage__metrics { grid-template-columns: 1fr; }
-  .timeline-command-voyage__metrics > div,
-  .timeline-command-voyage__metrics > div:nth-child(even),
-  .timeline-command-voyage__metrics > div:nth-child(3),
-  .timeline-command-voyage__metrics > div:last-child { grid-column: auto; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--timeline-paper-ink) 13%, transparent); }
-  .timeline-command-voyage__metrics > div:last-child { border-bottom: 0; }
-  .timeline-confidence-legend,
-  .timeline-source-note__links { display: grid; grid-template-columns: 1fr 1fr; }
-  .timeline-command-voyage__controls { padding: 18px; }
-  .timeline-view-switcher { grid-template-columns: 1fr; }
-  .timeline-view-switcher button:last-child { grid-column: auto; }
-  .timeline-density { grid-template-columns: 1fr; }
-  .timeline-day > header { grid-template-columns: 1fr; }
-  .timeline-day__number { justify-self: start; }
-  .timeline-day > header > em { grid-column: auto; }
-  .timeline-record,
-  .timeline-record.is-compact { grid-template-columns: 1fr; gap: 6px; }
-  .timeline-record__source { grid-column: auto; }
-  .timeline-prelude__steps > details > summary { grid-template-columns: 1fr; }
-  .timeline-prelude__steps > details > summary > strong { grid-column: auto; }
-  .timeline-prelude__steps details > div { padding: 0 15px 16px; }
-  .timeline-thread-view > article > header,
-  .timeline-location-view > article > header { align-items: flex-start; flex-wrap: wrap; }
-  .timeline-location-view header button { width: 100%; margin-left: 0; }
-  .timeline-analysis > div > div { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-
-@media (hover: none) {
-  .timeline-command button:hover,
-  .timeline-command a:hover,
-  .timeline-record:hover { transform: none; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .timeline-command *,
@@ -727,23 +607,6 @@
 }
 
 /* Batch 5 route-owned timeline contrast closure. */
-@media (max-width: 560px) {
-  .succession-archive .timeline-command-voyage .timeline-day-rail button > em {
-    color: white;
-  }
 
-  .succession-archive .timeline-command-voyage .timeline-day > header .timeline-day__number > span {
-    color: var(--succession-text-strong);
-  }
-}
 
 /* Batch 5 final timeline contrast specificity. */
-@media (max-width: 560px) {
-  #succession-timeline.timeline-command-voyage .timeline-day-rail button em {
-    color: var(--timeline-paper);
-  }
-
-  #succession-timeline.timeline-command-voyage .timeline-day .timeline-day__number span {
-    color: var(--timeline-ink);
-  }
-}

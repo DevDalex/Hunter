@@ -144,19 +144,3 @@
 .succession-coverage-report__domains dd { text-align: right; }
 .succession-coverage-report > footer { display: flex; align-items: center; gap: 7px; padding: 9px 12px; border-top: 1px solid var(--succession-border, #756c5f); }
 .succession-coverage-report > footer button { margin-left: auto; }
-
-@media (max-width: 900px) {
-  .succession-currency-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-coverage-report > header { grid-template-columns: auto minmax(0, 1fr); }
-  .succession-coverage-report > header > dl { grid-column: 1 / -1; flex-wrap: wrap; }
-  .succession-coverage-report__domains { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 620px) {
-  .succession-currency-strip,
-  .succession-currency-strip.is-compact,
-  .succession-record-coverage,
-  .succession-coverage-report__domains { grid-template-columns: 1fr; }
-  .succession-coverage-report__warning { grid-template-columns: auto minmax(0, 1fr); }
-  .succession-coverage-report__warning button { grid-column: 1 / -1; }
-}

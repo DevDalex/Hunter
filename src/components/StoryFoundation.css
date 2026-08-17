@@ -358,14 +358,3 @@
   .story-timeline-rail a { border-right: 1px solid rgba(207,198,184,.72); }
   .story-hub-foundation__timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-
-@media (max-width: 720px) {
-  .story-hub-foundation__hero,
-  .story-foundation-note,
-  .story-arc-foundation__top,
-  .zoldyck-bridge { grid-template-columns: 1fr; }
-  .story-hub-foundation__timeline,
-  .story-arc-foundation__facts,
-  .story-timeline-rail ol { grid-template-columns: 1fr; }
-  .story-hub-foundation__hero aside { border-left: 0; border-top: 1px solid rgba(238,233,223,.18); padding: 18px 0 0; }
-}

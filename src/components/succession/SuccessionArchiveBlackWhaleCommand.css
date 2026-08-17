@@ -449,64 +449,6 @@
   color: var(--ship-paper-ink);
 }
 
-@media (max-width: 1120px) {
-  .interactive-ship-atlas { grid-template-columns: minmax(0, 1fr) minmax(300px, .55fr); }
-  .ship-visual-tour > div { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
-@media (max-width: 860px) {
-  .black-whale-section--atlas > .section-heading,
-  .interactive-ship-atlas { grid-template-columns: 1fr; }
-  .ship-location-inspector { position: static; }
-  .ship-visual-tour > header,
-  .royal-room-plan--editorial > header,
-  .room-index__heading { align-items: stretch; flex-direction: column; }
-  .ship-visual-tour > div,
-  .room-grid,
-  .ship-movement-map__routes { grid-template-columns: 1fr 1fr; }
-  .ship-fact-ribbon { grid-template-columns: 1fr 1fr; }
-  .ship-fact-ribbon > div:nth-child(2) { border-right: 0; }
-  .ship-fact-ribbon > div:nth-child(-n+2) { border-bottom: 1px solid color-mix(in srgb, var(--ship-paper-ink) 13%, transparent); }
-}
-
-@media (max-width: 780px) {
-  .interactive-ship-map__toolbar { align-items: stretch; flex-direction: column; }
-}
-
-@media (max-width: 560px) {
-  .black-whale-section--atlas > .section-heading,
-  .ship-source-banner,
-  .ship-visual-tour,
-  .royal-room-plan--editorial,
-  .ship-movement-map,
-  .ship-manifest,
-  .room-index { padding: 18px; border-radius: 18px; }
-  .ship-source-banner { grid-template-columns: 1fr; }
-  .ship-source-banner__actions,
-  .room-index__actions,
-  .ship-location-inspector__actions { align-items: stretch; flex-direction: column; }
-  .ship-source-banner__actions button,
-  .ship-source-banner__actions a,
-  .room-index__actions button,
-  .room-index__actions label,
-  .ship-location-inspector__actions button,
-  .ship-location-inspector__actions a { width: 100%; }
-  .ship-location-inspector dl,
-  .ship-visual-tour > div,
-  .room-grid,
-  .ship-movement-map__routes,
-  .ship-fact-ribbon,
-  .room-card dl { grid-template-columns: 1fr; }
-  .ship-fact-ribbon > div,
-  .ship-fact-ribbon > div:nth-child(2) { border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--ship-paper-ink) 13%, transparent); }
-  .ship-fact-ribbon > div:last-child { border-bottom: 0; }
-  .room-index__more,
-  .ship-access-note { align-items: stretch; flex-direction: column; }
-}
-
-@media (hover: none) {
-  .ship-hotspot__tooltip { display: none; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .black-whale-section--atlas *,

@@ -3,16 +3,16 @@ import path from 'node:path';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
-const assert = (condition, message) => {
-  if (!condition) throw new Error(`Readability audit failed: ${message}`);
-};
+const assert = (condition, message) => { if (!condition) throw new Error(`Readability audit failed: ${message}`); };
 
 const css = await read('src/styles.css');
-const explicitFontSizes = [...css.matchAll(/font-size:\s*([0-9.]+)px/g)]
-  .map((match) => Number(match[1]));
-const shorthandFontSizes = [...css.matchAll(/font:\s*([^;]+)/g)]
-  .flatMap(([, value]) => [...value.matchAll(/([0-9.]+)px/g)].map((match) => Number(match[1])));
+const explicitFontSizes = [...css.matchAll(/font-size:\s*([0-9.]+)px/g)].map((match) => Number(match[1]));
+const shorthandFontSizes = [...css.matchAll(/font:\s*([^;]+)/g)].flatMap(([, value]) => [...value.matchAll(/([0-9.]+)px/g)].map((match) => Number(match[1])));
 const fontSizes = [...explicitFontSizes, ...shorthandFontSizes];
+const unsupportedMaxWidths = [...css.matchAll(/@media[^\n{]*max-width\s*:\s*([0-9.]+)\s*(px|em|rem)/gi)].filter((match) => {
+  const px = match[2].toLowerCase() === 'px' ? Number(match[1]) : Number(match[1]) * 16;
+  return Number.isFinite(px) && px < 1180;
+});
 
 const guidedViews = [
   'src/components/FamilyTree.jsx',
@@ -24,32 +24,15 @@ const guidedViews = [
 const guidedText = await Promise.all(guidedViews.map(read));
 
 assert(fontSizes.length > 250, 'the explicit typography inventory unexpectedly shrank');
-assert(
-  fontSizes.every((size) => Number.isFinite(size) && size > 0),
-  'explicit pixel type declarations must be positive numeric values',
-);
-assert(
-  css.includes('body { margin: 0; min-width: 320px;') && css.includes('line-height: 1.62'),
-  'the base reading measure is missing',
-);
-assert(css.includes('--touch-target: 44px'), 'the 44px touch-target contract is missing');
+assert(fontSizes.every((size) => Number.isFinite(size) && size > 0), 'explicit pixel type declarations must be positive numeric values');
+assert(css.includes('min-width: 1180px') && css.includes('line-height: 1.62'), 'the desktop base reading measure is missing');
+assert(!css.includes('--touch-target'), 'desktop-only styles must not restore the touch-target token');
+assert(!css.includes('touch-action:'), 'desktop-only styles must not restore touch-action rules');
+assert(!css.includes('-webkit-tap-highlight-color'), 'desktop-only styles must not restore tap-highlight rules');
+assert(!unsupportedMaxWidths.length, `unsupported narrow-width media rules remain: ${unsupportedMaxWidths.map((match) => match[0]).join(' | ')}`);
 assert(css.includes('--content-sticky-top:'), 'the shared sticky-stack offset is missing');
-assert(css.includes('.horizontal-scroll-hint'), 'the mobile horizontal-scroll cue is missing');
-assert(
-  css.includes('@media (max-width: 1100px)')
-    && css.includes('@media (max-width: 900px)')
-    && css.includes('@media (max-width: 640px)')
-    && css.includes('@media (max-width: 420px)'),
-  'desktop, tablet, phone, and narrow-phone boundaries are required',
-);
-assert(
-  /main button, main input, main select, main textarea, \.site-footer button \{ min-width: var\(--touch-target\)(?: !important)?; min-height: var\(--touch-target\)(?: !important)?; \}/.test(css),
-  'touch layouts must enlarge interactive targets',
-);
-assert(
-  guidedText.every((text) => text.includes('<HorizontalScrollHint')),
-  'every retained wide research view must expose a mobile scroll cue',
-);
+assert(css.includes('.horizontal-scroll-hint'), 'the labelled horizontal-overflow cue is missing');
+assert(guidedText.every((text) => text.includes('<HorizontalScrollHint')), 'every retained wide research view must expose its horizontal-overflow cue');
 
 const smallestDeclaredSize = Math.min(...fontSizes);
-console.log(`Readability audit passed: ${fontSizes.length} explicit type declarations inventoried (smallest ${smallestDeclaredSize}px); ${guidedViews.length} retained scroll-guided research views; base reading measure and 44px touch contract retained.`);
+console.log(`Readability audit passed: ${fontSizes.length} explicit type declarations inventoried (smallest ${smallestDeclaredSize}px); ${guidedViews.length} retained desktop scroll-guided research views; 1180px minimum reading surface enforced with no narrow-width or touch-device contract.`);

@@ -24,10 +24,3 @@
   letter-spacing: .07em;
   text-transform: uppercase;
 }
-
-@media(max-width:520px) {
-  .succession-product-links > button,
-  .succession-product-links > .succession-entity-link {
-    width: 100%;
-  }
-}

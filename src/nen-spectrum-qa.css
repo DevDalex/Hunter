@@ -69,9 +69,3 @@
     grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
   }
 }
-
-@media (max-width: 840px) {
-  .nen-category-view.nen-category-view--visual.nen-type-atlas .nen-type-inspector {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}

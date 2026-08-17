@@ -600,23 +600,3 @@
 
 .succession-product-prev-next small { color: #66757b; font-family: var(--mono); font-size: 7px; text-transform: uppercase; }
 .succession-product-prev-next b { display: block; margin-top: 3px; font-size: 11px; }
-
-@media (max-width: 1100px) {
-  .succession-evidence-source-catalogue > div:last-child,
-  .succession-glossary-canonical__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-evidence-chapter__score dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 760px) {
-  .succession-evidence-hero,
-  .succession-product-hero { grid-template-columns: 1fr; }
-  .succession-foundation-closure > dl,
-  .succession-evidence-linked-groups,
-  .succession-evidence-gap-grid { grid-template-columns: 1fr; }
-  .succession-evidence-chapter__score { grid-template-columns: 1fr; }
-  .succession-evidence-source-catalogue > div:last-child,
-  .succession-glossary-canonical__grid { grid-template-columns: 1fr; }
-  .succession-evidence-gap-controls { align-items: stretch; flex-direction: column; }
-  .succession-product-dossier > header { grid-template-columns: 1fr; }
-  .succession-product-prev-next { grid-template-columns: 1fr; }
-}

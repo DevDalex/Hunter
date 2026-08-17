@@ -34,6 +34,6 @@
 .succession-character-lifetime p{margin:0}
 .succession-character-lifetime article>small{font-size:11px;color:var(--succession-muted,#aab3c2)}
 .succession-character-lifetime article>button{display:flex;align-items:center;justify-content:space-between;gap:8px;border:0;background:transparent;color:inherit;padding:6px 0 0;cursor:pointer;font-size:11px;text-align:left}
-@media(max-width:900px){.succession-character-filters{grid-template-columns:1fr 1fr}.succession-character-filters label:first-child{grid-column:1/-1}.succession-character-history-summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.succession-character-filters,.succession-character-role-board__grid,.succession-character-role-board__lists,.succession-character-history-summary{grid-template-columns:1fr}.succession-character-filters label:first-child{grid-column:auto}.succession-character-lifetime>div{grid-template-columns:1fr}}
+
+
 @media(prefers-reduced-motion:reduce){.succession-character-role-board *,.succession-character-lifetime *,.succession-character-history-summary *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}

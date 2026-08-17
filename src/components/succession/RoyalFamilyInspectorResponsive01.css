@@ -41,4 +41,3 @@
 .royal-map__dossier-no-route { flex: 0 0 auto !important; color: #a59b8c !important; }
 .royal-map__dossier-resize-cue { position: absolute; right: 2px; bottom: 2px; transform: rotate(45deg); color: #806823; opacity: .75; pointer-events: none; }
 .royal-map__inspector.is-preview .royal-map__dossier-resize-cue { display: none; }
-

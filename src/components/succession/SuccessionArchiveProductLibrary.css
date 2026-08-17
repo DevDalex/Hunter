@@ -269,32 +269,6 @@
   display: block;
 }
 
-@media(max-width:760px) {
-  .succession-product-hero,
-  .succession-media-dossier__visual {
-    grid-template-columns: 1fr;
-  }
-  .succession-product-hero dl {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .succession-product-prev-next {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media(max-width:520px) {
-  .succession-product-hero dl {
-    grid-template-columns: 1fr;
-  }
-  .succession-product-tools > div {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-  .succession-product-tools > div button {
-    flex: 0 0 auto;
-  }
-}
 
 @media(prefers-reduced-motion:reduce) {
   .succession-product-workspace *,
