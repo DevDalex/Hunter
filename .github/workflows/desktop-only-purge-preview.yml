@@ -39,6 +39,16 @@ jobs:
           git diff --stat
           git diff --binary > desktop-only-purge.patch
           git diff --check
+          node --input-type=module <<'NODE'
+          import { readFile } from 'node:fs/promises';
+          const report = JSON.parse(await readFile('.desktop-only-purge-report.json', 'utf8'));
+          console.log('\nResponsive/mobile-named CSS files:');
+          console.log(report.responsiveNamedFiles.join('\n') || '(none)');
+          console.log('\nRemaining suspicious CSS references:');
+          for (const row of report.suspiciousCssReferences) console.log(`${row.file}:${row.line} ${row.text}`);
+          console.log('\nRemaining suspicious runtime references (first 200):');
+          for (const row of report.suspiciousRuntimeReferences.slice(0, 200)) console.log(`${row.file}:${row.line} ${row.text}`);
+          NODE
 
       - name: Install dependencies
         run: npm ci
