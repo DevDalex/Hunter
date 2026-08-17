@@ -32,7 +32,6 @@ for (const token of [
   '<FamilyTree spoilerLimit={spoilerLimit}',
   "onNavigate('princes', entity ? { entity: entity.id } : {})",
 ]) assert(app.includes(token), `dedicated royal routing or direct hierarchy contract is missing ${token}`);
-
 assert(!app.includes('succession-royal-hierarchy-intro'), 'retired Royal Family intro chrome must remain absent');
 
 for (const token of [
@@ -73,10 +72,11 @@ for (const [css, name, selectors] of [
   [institutionCss, 'institution', ['.succession-institution-command__hero', '.succession-institution-control-deck', '.succession-institution-grid', '.succession-institution-comparison', '.succession-institution-dossier__hero']],
 ]) {
   for (const selector of selectors) assert(css.includes(selector), `${name} CSS is missing ${selector}`);
-  for (const breakpoint of ['@media (max-width: 1100px)', '@media (max-width: 760px)', '@media (max-width: 560px)']) assert(css.includes(breakpoint), `${name} CSS is missing ${breakpoint}`);
-  assert(css.includes('@media (hover: none)'), `${name} touch behavior is required`);
+  assert(!css.includes('@media (max-width:'), `${name} desktop CSS must not carry narrow-width breakpoint layouts`);
+  assert(!css.includes('@media (hover: none)'), `${name} desktop CSS must not carry no-hover device behavior`);
+  assert(!css.includes('(pointer: coarse)'), `${name} desktop CSS must not carry coarse-pointer behavior`);
+  assert(!css.includes('touch-action:'), `${name} desktop CSS must not carry touch-action rules`);
   assert(css.includes('@media (prefers-reduced-motion: reduce)'), `${name} reduced-motion behavior is required`);
-  assert(css.includes('min-height: 44px'), `${name} controls must retain 44px targets`);
   assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(css), `${name} CSS must not introduce raw hex colors`);
   assert(!css.includes('!important'), `${name} CSS must not depend on !important`);
 }
@@ -90,4 +90,4 @@ assert(workflow.includes('VISUAL_QA_ROUTE: succession/organizations'), 'visual w
 assert(!workflow.includes('VISUAL_QA_ROUTE: succession/queens'), 'retired Queens compatibility route must not remain a release-blocking visual QA target');
 for (const hour of ['Hour 32', 'Hour 33', 'Hour 34', 'Hour 35', 'Hour 36']) assert(docs.includes(hour), `design record must document ${hour}`);
 
-console.log('Succession Batch 3 closure audit passed: queen household implementation is retained behind the canonical Princes compatibility target, Royal Family hierarchy, institution directory, comparison matrix, dossiers, responsive behavior, touch targets, and reduced motion are registered.');
+console.log('Succession Batch 3 closure audit passed: queen household implementation is retained behind the canonical Princes compatibility target, with desktop Royal Family hierarchy, institution directory, comparison matrix, dossiers, and reduced motion registered.');
