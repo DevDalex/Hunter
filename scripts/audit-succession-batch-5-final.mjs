@@ -45,8 +45,11 @@ for (const token of [
   'role="region"',
   'aria-label={`${route.label} workspace content`}',
   'focus({ preventScroll: true })',
-  'restoreMenuFocus',
 ]) assert(shell.includes(token), `archive shell is missing ${token}`);
+
+assert(!shell.includes('succession-archive__mobile-bar'), 'desktop-only archive shell must not restore a narrow-screen command bar');
+assert(!shell.includes('succession-drawer'), 'desktop-only archive shell must not restore drawer navigation');
+assert(!shell.includes('succession-mobile-navigation'), 'desktop-only archive shell must not restore alternate narrow-screen navigation');
 
 for (const token of [
   'useRef',
@@ -68,17 +71,23 @@ for (const token of [
 
 for (const token of [
   '--succession-motion-instant',
-  'touch-action: manipulation',
   'content-visibility: auto',
   'contain-intrinsic-size',
   'scrollbar-gutter: stable',
   '@media (hover: hover) and (pointer: fine)',
-  '@media (hover: none), (pointer: coarse)',
   '@media (prefers-reduced-motion: reduce)',
   '@media (prefers-contrast: more)',
   '@media (forced-colors: active)',
   '@media print',
-]) assert(finalStyles.includes(token), `final interaction layer is missing ${token}`);
+]) assert(finalStyles.includes(token), `final desktop interaction layer is missing ${token}`);
+
+assert(!finalStyles.includes('touch-action:'), 'desktop-only interaction layer must not carry touch-action rules');
+assert(!finalStyles.includes('-webkit-tap-highlight-color'), 'desktop-only interaction layer must not carry tap-highlight rules');
+assert(!finalStyles.includes('(pointer: coarse)'), 'desktop-only interaction layer must not carry coarse-pointer behavior');
+assert(!finalStyles.includes('(hover: none)'), 'desktop-only interaction layer must not carry no-hover device behavior');
+assert(!finalStyles.includes('@media (max-width:'), 'desktop-only interaction layer must not carry narrow-width responsive branches');
+assert(!finalStyles.includes('succession-drawer'), 'desktop-only interaction layer must not carry drawer selectors');
+assert(!finalStyles.includes('succession-archive__mobile-bar'), 'desktop-only interaction layer must not carry narrow-screen bar selectors');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(finalStyles), 'final interaction CSS must not introduce raw hex colors');
 assert(!finalStyles.includes('!important'), 'final interaction CSS must not depend on !important');
 assert(searchStyles.includes("@import './SuccessionArchiveFinalPolish.css';"), 'final interaction layer must load through the Succession style chain');
@@ -115,11 +124,13 @@ for (const token of [
   'playwright install --with-deps chromium',
   'playwright install --with-deps firefox webkit',
 ]) assert(workflow.includes(token), `final workflow is missing ${token}`);
+assert(!workflow.includes('ACCESSIBILITY_QA_VIEWPORT: mobile'), 'Batch 5 workflow must not restore a phone viewport probe');
+assert(!workflow.includes('Probe mobile'), 'Batch 5 workflow must not restore a mobile-only probe');
 assert(
   workflow.indexOf('playwright install --with-deps chromium') < workflow.indexOf('npm run qa:succession-final-release')
     && workflow.indexOf('npm run qa:succession-final-release') < workflow.indexOf('playwright install --with-deps firefox webkit')
     && workflow.indexOf('playwright install --with-deps firefox webkit') < workflow.indexOf('npm run qa:succession-cross-browser'),
-  'browser installation must fail fast through Chromium before the Firefox/WebKit regression stage',
+  'browser installation must fail fast through desktop Chromium before the desktop Firefox/WebKit regression stage',
 );
 
 for (const token of [
@@ -135,4 +146,4 @@ for (const heading of ['Data and evidence boundaries', 'Media constraints', 'Com
   assert(debtDocs.includes(heading), `non-critical debt record is missing ${heading}`);
 }
 
-console.log('Succession Batch 5 final audit passed: interaction states, keyboard tabs, route focus, live announcements, reduced motion, forced colors, containment, image stability, legacy cleanup, canonical release routes, performance, staged cross-browser QA, final audit, and debt documentation are registered.');
+console.log('Succession Batch 5 final audit passed: desktop-only interaction states, keyboard tabs, route focus, live announcements, reduced motion, forced colors, containment, image stability, legacy cleanup, canonical release routes, performance, staged desktop cross-browser QA, final audit, and debt documentation are registered.');
