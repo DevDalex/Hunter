@@ -5,7 +5,8 @@ on:
     branches:
       - succession-339-417-visibility-audit
     paths:
-      - 'scripts/desktop-only-purge.mjs'
+      - 'scripts/**'
+      - 'docs/**'
       - '.github/workflows/desktop-only-purge-preview.yml'
       - 'src/**'
       - 'package.json'
