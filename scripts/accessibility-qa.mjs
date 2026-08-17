@@ -23,7 +23,7 @@ const routes = routeManifest.map((route) => ({ ...route, path: routePath(route) 
   .filter((route) => !selectedRoute || route.path === selectedRoute.replace(/^#?\/?/, ''));
 const mime = {
   '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
-  '.jpeg': 'image/jpeg', '.jpg': 'image/jpg', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml',
+  '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml',
   '.webp': 'image/webp', '.zip': 'application/zip',
 };
 
