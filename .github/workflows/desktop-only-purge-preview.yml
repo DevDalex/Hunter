@@ -36,6 +36,7 @@ jobs:
 
       - name: Generate desktop-only purge
         run: |
+          node scripts/desktop-only-runtime-cleanup.mjs
           node scripts/desktop-only-purge.mjs
           git diff --stat
           git diff --binary > desktop-only-purge.patch
