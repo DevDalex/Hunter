@@ -52,9 +52,7 @@ for (const requiredSelector of [
 ]) assert(breadcrumbCss.includes(requiredSelector), `breadcrumb CSS is missing ${requiredSelector}`);
 
 assert(breadcrumbCss.includes('overflow-x: auto'), 'long breadcrumb trails must remain horizontally reachable');
-assert(breadcrumbCss.includes('min-height: 44px'), 'mobile breadcrumb and return controls must retain 44px targets');
-assert(breadcrumbCss.includes('@media (max-width: 720px)'), 'breadcrumb context must stack before narrow mobile widths');
-assert(breadcrumbCss.includes('@media (max-width: 560px)'), 'breadcrumb controls must provide a dedicated mobile layout');
+assert(!breadcrumbCss.includes('@media (max-width:'), 'desktop-only breadcrumb context must not carry narrow-width breakpoint layouts');
 assert(breadcrumbCss.includes('@media (prefers-reduced-motion: reduce)'), 'return-path motion must respect reduced-motion preferences');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(breadcrumbCss), 'breadcrumb redesign must not introduce raw hex colors');
 assert(!breadcrumbCss.includes('!important'), 'breadcrumb redesign must not depend on !important overrides');
@@ -67,4 +65,4 @@ assert(workflow.includes('scripts/audit-succession-breadcrumb-redesign.mjs'), 'w
 assert(docs.includes('### Hour 17 — Breadcrumbs and return paths'), 'design record must document Hour 17');
 assert(docs.includes('Return-path contract'), 'design record must explain the return-path behavior');
 
-console.log('Succession breadcrumb redesign audit passed with consolidated hub hierarchy and direct Story return.');
+console.log('Succession desktop breadcrumb redesign audit passed with consolidated hub hierarchy and direct Story return.');
