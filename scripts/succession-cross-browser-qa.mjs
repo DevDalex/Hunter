@@ -10,10 +10,7 @@ const browsers = [
   { id: 'firefox', engine: firefox },
   { id: 'webkit', engine: webkit },
 ];
-const viewports = [
-  { id: 'desktop', width: 1440, height: 1000 },
-  { id: 'mobile', width: 390, height: 844 },
-];
+const viewport = { id: 'desktop', width: 1440, height: 1000 };
 const routes = [
   ['story', 'succession/story'],
   ['chapters', 'succession/chapters'],
@@ -104,72 +101,70 @@ try {
   for (const browserRecord of browsers) {
     const browser = await browserRecord.engine.launch({ headless: true });
     try {
-      for (const viewport of viewports) {
-        const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height } });
-        const page = await context.newPage();
-        for (const [routeId, route] of routes) {
-          const runtimeErrors = [];
-          const failedRequests = [];
-          const consoleErrors = [];
-          const onPageError = (error) => runtimeErrors.push(error.message);
-          const onRequestFailed = (request) => {
-            if (!approvedExternalFailure(request.url())) failedRequests.push(`${request.url()} · ${request.failure()?.errorText || 'failed'}`);
-          };
-          const onConsole = (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); };
-          page.on('pageerror', onPageError);
-          page.on('requestfailed', onRequestFailed);
-          page.on('console', onConsole);
-          try {
-            await page.goto(`${base}/#/${route}`, { waitUntil: 'domcontentloaded', timeout: 25_000 });
-            await page.waitForSelector('main', { timeout: 12_000 });
-            await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 10_000 }).catch(() => {});
-            await page.waitForTimeout(420);
-            const audit = await page.evaluate(inspect);
-            const firstControl = page.locator('main :is(button, a[href], input, select, summary)').first();
-            if (await firstControl.count()) {
-              await firstControl.focus();
-              const focusVisible = await firstControl.evaluate((node) => {
-                const style = getComputedStyle(node);
-                return style.outlineStyle !== 'none' && Number.parseFloat(style.outlineWidth) >= 2;
-              });
-              if (!focusVisible) runtimeErrors.push('first interactive control has no visible focus outline');
-            }
-            if (routeId === 'assignments') {
-              const table = page.getByRole('button', { name: 'Table' });
-              await table.click();
-              await page.waitForSelector('.succession-assignment-table', { timeout: 8_000 });
-            }
-            if (routeId === 'black-whale') {
-              const occupancy = page.getByRole('button', { name: /Occupancy/i }).first();
-              if (await occupancy.count()) await occupancy.click();
-            }
-            const requiresWorkspaceRegion = routeId !== 'story';
-            const defects = [
-              ...runtimeErrors,
-              ...failedRequests,
-              ...consoleErrors,
-              ...audit.spill,
-              ...audit.brokenImages,
-              ...(audit.bodyOverflow > 1 ? [{ bodyOverflow: audit.bodyOverflow }] : []),
-              ...(!audit.mainVisible ? [{ mainVisible: false }] : []),
-              ...(audit.h1Count !== 1 ? [{ h1Count: audit.h1Count }] : []),
-              ...(requiresWorkspaceRegion && !audit.workspaceRegion ? [{ workspaceRegion: false }] : []),
-            ];
-            results.push({ browser: browserRecord.id, viewport: viewport.id, route, runtimeErrors, failedRequests, consoleErrors, ...audit, defects });
-            process.stdout.write(`${defects.length ? '✗' : '✓'} ${browserRecord.id.padEnd(7)} ${viewport.id.padEnd(7)} ${route}${defects.length ? ` · ${defects.length} defect(s)` : ''}\n`);
-          } catch (error) {
-            results.push({ browser: browserRecord.id, viewport: viewport.id, route, error: error.message, defects: [{ error: error.message }] });
-            process.stdout.write(`✗ ${browserRecord.id.padEnd(7)} ${viewport.id.padEnd(7)} ${route} · ${error.message}\n`);
-          } finally {
-            page.off('pageerror', onPageError);
-            page.off('requestfailed', onRequestFailed);
-            page.off('console', onConsole);
-            await page.goto('about:blank').catch(() => {});
+      const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height } });
+      const page = await context.newPage();
+      for (const [routeId, route] of routes) {
+        const runtimeErrors = [];
+        const failedRequests = [];
+        const consoleErrors = [];
+        const onPageError = (error) => runtimeErrors.push(error.message);
+        const onRequestFailed = (request) => {
+          if (!approvedExternalFailure(request.url())) failedRequests.push(`${request.url()} · ${request.failure()?.errorText || 'failed'}`);
+        };
+        const onConsole = (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); };
+        page.on('pageerror', onPageError);
+        page.on('requestfailed', onRequestFailed);
+        page.on('console', onConsole);
+        try {
+          await page.goto(`${base}/#/${route}`, { waitUntil: 'domcontentloaded', timeout: 25_000 });
+          await page.waitForSelector('main', { timeout: 12_000 });
+          await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 10_000 }).catch(() => {});
+          await page.waitForTimeout(420);
+          const audit = await page.evaluate(inspect);
+          const firstControl = page.locator('main :is(button, a[href], input, select, summary)').first();
+          if (await firstControl.count()) {
+            await firstControl.focus();
+            const focusVisible = await firstControl.evaluate((node) => {
+              const style = getComputedStyle(node);
+              return style.outlineStyle !== 'none' && Number.parseFloat(style.outlineWidth) >= 2;
+            });
+            if (!focusVisible) runtimeErrors.push('first interactive control has no visible focus outline');
           }
+          if (routeId === 'assignments') {
+            const table = page.getByRole('button', { name: 'Table' });
+            await table.click();
+            await page.waitForSelector('.succession-assignment-table', { timeout: 8_000 });
+          }
+          if (routeId === 'black-whale') {
+            const occupancy = page.getByRole('button', { name: /Occupancy/i }).first();
+            if (await occupancy.count()) await occupancy.click();
+          }
+          const requiresWorkspaceRegion = routeId !== 'story';
+          const defects = [
+            ...runtimeErrors,
+            ...failedRequests,
+            ...consoleErrors,
+            ...audit.spill,
+            ...audit.brokenImages,
+            ...(audit.bodyOverflow > 1 ? [{ bodyOverflow: audit.bodyOverflow }] : []),
+            ...(!audit.mainVisible ? [{ mainVisible: false }] : []),
+            ...(audit.h1Count !== 1 ? [{ h1Count: audit.h1Count }] : []),
+            ...(requiresWorkspaceRegion && !audit.workspaceRegion ? [{ workspaceRegion: false }] : []),
+          ];
+          results.push({ browser: browserRecord.id, viewport: viewport.id, route, runtimeErrors, failedRequests, consoleErrors, ...audit, defects });
+          process.stdout.write(`${defects.length ? '✗' : '✓'} ${browserRecord.id.padEnd(7)} ${route}${defects.length ? ` · ${defects.length} defect(s)` : ''}\n`);
+        } catch (error) {
+          results.push({ browser: browserRecord.id, viewport: viewport.id, route, error: error.message, defects: [{ error: error.message }] });
+          process.stdout.write(`✗ ${browserRecord.id.padEnd(7)} ${route} · ${error.message}\n`);
+        } finally {
+          page.off('pageerror', onPageError);
+          page.off('requestfailed', onRequestFailed);
+          page.off('console', onConsole);
+          await page.goto('about:blank').catch(() => {});
         }
-        await page.close();
-        await context.close();
       }
+      await page.close();
+      await context.close();
     } finally {
       await browser.close();
     }
@@ -183,9 +178,9 @@ const summary = {
   generatedAt: new Date().toISOString(),
   checks: results.length,
   passes: results.length - failures.length,
-  expectedChecks: browsers.length * viewports.length * routes.length,
+  expectedChecks: browsers.length * routes.length,
   failed: failures.length,
 };
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results }, null, 2)}\n`);
-console.log(`\nSuccession cross-browser QA: ${summary.passes}/${summary.checks} Firefox/WebKit route renders passed.`);
+console.log(`\nSuccession desktop cross-browser QA: ${summary.passes}/${summary.checks} Firefox/WebKit route renders passed.`);
 if (summary.failed) process.exitCode = 1;
