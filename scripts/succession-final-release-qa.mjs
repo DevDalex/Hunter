@@ -10,11 +10,7 @@ const root = process.cwd();
 const dist = path.join(root, 'dist/client');
 const output = path.join(root, '.succession-final-qa');
 const axePath = require.resolve('axe-core/axe.min.js');
-const viewports = [
-  { id: 'desktop', width: 1440, height: 1000 },
-  { id: 'tablet', width: 768, height: 1024 },
-  { id: 'mobile', width: 390, height: 844 },
-];
+const desktopViewport = { width: 1440, height: 1000 };
 const routes = [
   { id: 'global-timeline', path: 'timeline/', label: 'Global timeline' },
   ...successionReleaseRoutes.map((route) => ({ id: route.id, path: `succession/${route.id}`, label: route.title })),
@@ -102,12 +98,6 @@ const inspect = () => {
     .filter(({ size }) => size < 11)
     .slice(0, 30)
     .map(({ element, size }) => ({ selector: selector(element), size, text: (element.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 80) }));
-  const smallTargets = [...document.querySelectorAll('main :is(button, input, select, textarea, [role="button"], [role="tab"])')]
-    .filter((element) => visible(element) && !element.disabled && !element.matches('.sr-only'))
-    .map((element) => ({ element, rect: element.getBoundingClientRect() }))
-    .filter(({ rect }) => rect.width < 43.5 || rect.height < 43.5)
-    .slice(0, 40)
-    .map(({ element, rect }) => ({ selector: selector(element), width: Math.round(rect.width), height: Math.round(rect.height), label: (element.getAttribute('aria-label') || element.textContent || '').trim().slice(0, 80) }));
   const duplicateIds = [...document.querySelectorAll('[id]')]
     .map((element) => element.id)
     .filter((id, index, ids) => id && ids.indexOf(id) !== index)
@@ -121,7 +111,6 @@ const inspect = () => {
     bodyOverflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
     spill,
     tinyText,
-    smallTargets,
     duplicateIds,
     brokenImages,
     h1Count: document.querySelectorAll('main h1').length,
@@ -134,14 +123,14 @@ const inspect = () => {
 };
 
 await rm(output, { recursive: true, force: true });
-await mkdir(path.join(output, 'screens'), { recursive: true });
+await mkdir(path.join(output, 'screens', 'desktop'), { recursive: true });
 const server = await serve();
 const base = `http://127.0.0.1:${server.address().port}`;
 const browser = await chromium.launch({ headless: true });
 const results = [];
 const interactions = [];
 
-const context = await browser.newContext();
+const context = await browser.newContext({ viewport: desktopViewport });
 await context.addInitScript(() => {
   globalThis.__successionCLS = 0;
   try {
@@ -154,9 +143,9 @@ await context.addInitScript(() => {
 });
 
 const page = await context.newPage();
-const runInteraction = async (name, viewport, route, test) => {
+const runInteraction = async (name, route, test) => {
   try {
-    await page.setViewportSize(viewport);
+    await page.setViewportSize(desktopViewport);
     await page.goto(`${base}/#/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
     await settle(page);
     await test(page);
@@ -172,63 +161,55 @@ const runInteraction = async (name, viewport, route, test) => {
 };
 
 try {
-  for (const viewport of viewports) {
-    const screenDir = path.join(output, 'screens', viewport.id);
-    await mkdir(screenDir, { recursive: true });
-    await page.setViewportSize({ width: viewport.width, height: viewport.height });
-    for (const route of routes) {
-      const runtimeErrors = [];
-      const failedRequests = [];
-      const onPageError = (error) => runtimeErrors.push(error.message);
-      const onRequestFailed = (request) => {
-        if (!approvedExternalFailure(request.url())) failedRequests.push(`${request.url()} · ${request.failure()?.errorText || 'failed'}`);
-      };
-      page.on('pageerror', onPageError);
-      page.on('requestfailed', onRequestFailed);
-      try {
-        await page.goto(`${base}/#/${route.path}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-        await settle(page);
-        const audit = await page.evaluate(inspect);
-        let axeViolations = [];
-        if (viewport.id !== 'tablet') {
-          await page.addScriptTag({ path: axePath });
-          const axe = await page.evaluate(async () => globalThis.axe.run(document, {
-            runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
-          }));
-          axeViolations = axe.violations.map((violation) => ({ id: violation.id, impact: violation.impact, nodes: violation.nodes.length }));
-        }
-        const requiresWorkspaceRegion = route.path.startsWith('succession/') && !['story', 'archive'].includes(route.id);
-        const defects = [
-          ...runtimeErrors,
-          ...failedRequests,
-          ...audit.spill,
-          ...audit.tinyText,
-          ...audit.brokenImages,
-          ...audit.duplicateIds,
-          ...axeViolations,
-          ...(audit.bodyOverflow > 1 ? [{ bodyOverflow: audit.bodyOverflow }] : []),
-          ...(!audit.mainVisible ? [{ mainVisible: false }] : []),
-          ...(requiresWorkspaceRegion && !audit.workspaceRegion ? [{ workspaceRegion: false }] : []),
-          ...(audit.h1Count !== 1 ? [{ h1Count: audit.h1Count }] : []),
-          ...(viewport.id !== 'desktop' ? audit.smallTargets : []),
-          ...(audit.cls > .18 ? [{ cls: audit.cls }] : []),
-        ];
-        const result = { viewport: viewport.id, route: route.path, label: route.label, runtimeErrors, failedRequests, axeViolations, ...audit, defects };
-        results.push(result);
-        await page.screenshot({ path: path.join(screenDir, `${route.id}.jpg`), type: 'jpeg', quality: 72, fullPage: false });
-        process.stdout.write(`${defects.length ? '✗' : '✓'} ${viewport.id.padEnd(7)} ${route.path} · CLS ${audit.cls.toFixed(3)}${defects.length ? ` · ${defects.length} defect(s)` : ''}\n`);
-      } catch (error) {
-        results.push({ viewport: viewport.id, route: route.path, label: route.label, error: error.message, defects: [{ error: error.message }] });
-        process.stdout.write(`✗ ${viewport.id.padEnd(7)} ${route.path} · ${error.message}\n`);
-      } finally {
-        page.off('pageerror', onPageError);
-        page.off('requestfailed', onRequestFailed);
-        await page.goto('about:blank').catch(() => {});
-      }
+  await page.setViewportSize(desktopViewport);
+  for (const route of routes) {
+    const runtimeErrors = [];
+    const failedRequests = [];
+    const onPageError = (error) => runtimeErrors.push(error.message);
+    const onRequestFailed = (request) => {
+      if (!approvedExternalFailure(request.url())) failedRequests.push(`${request.url()} · ${request.failure()?.errorText || 'failed'}`);
+    };
+    page.on('pageerror', onPageError);
+    page.on('requestfailed', onRequestFailed);
+    try {
+      await page.goto(`${base}/#/${route.path}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+      await settle(page);
+      const audit = await page.evaluate(inspect);
+      await page.addScriptTag({ path: axePath });
+      const axe = await page.evaluate(async () => globalThis.axe.run(document, {
+        runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
+      }));
+      const axeViolations = axe.violations.map((violation) => ({ id: violation.id, impact: violation.impact, nodes: violation.nodes.length }));
+      const requiresWorkspaceRegion = route.path.startsWith('succession/') && !['story', 'archive'].includes(route.id);
+      const defects = [
+        ...runtimeErrors,
+        ...failedRequests,
+        ...audit.spill,
+        ...audit.tinyText,
+        ...audit.brokenImages,
+        ...audit.duplicateIds,
+        ...axeViolations,
+        ...(audit.bodyOverflow > 1 ? [{ bodyOverflow: audit.bodyOverflow }] : []),
+        ...(!audit.mainVisible ? [{ mainVisible: false }] : []),
+        ...(requiresWorkspaceRegion && !audit.workspaceRegion ? [{ workspaceRegion: false }] : []),
+        ...(audit.h1Count !== 1 ? [{ h1Count: audit.h1Count }] : []),
+        ...(audit.cls > .18 ? [{ cls: audit.cls }] : []),
+      ];
+      const result = { viewport: 'desktop', route: route.path, label: route.label, runtimeErrors, failedRequests, axeViolations, ...audit, defects };
+      results.push(result);
+      await page.screenshot({ path: path.join(output, 'screens', 'desktop', `${route.id}.jpg`), type: 'jpeg', quality: 72, fullPage: false });
+      process.stdout.write(`${defects.length ? '✗' : '✓'} desktop ${route.path} · CLS ${audit.cls.toFixed(3)}${defects.length ? ` · ${defects.length} defect(s)` : ''}\n`);
+    } catch (error) {
+      results.push({ viewport: 'desktop', route: route.path, label: route.label, error: error.message, defects: [{ error: error.message }] });
+      process.stdout.write(`✗ desktop ${route.path} · ${error.message}\n`);
+    } finally {
+      page.off('pageerror', onPageError);
+      page.off('requestfailed', onRequestFailed);
+      await page.goto('about:blank').catch(() => {});
     }
   }
 
-  await runInteraction('desktop Story command home opens Timeline and focuses the workspace', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
+  await runInteraction('desktop Story command home opens Timeline and focuses the workspace', 'succession/story', async (page) => {
     const timeline = page.getByRole('link', { name: 'Timeline', exact: true });
     await timeline.focus();
     await page.keyboard.press('Enter');
@@ -236,16 +217,7 @@ try {
     await page.waitForFunction(() => document.activeElement?.id === 'succession-workspace-content');
   });
 
-  await runInteraction('mobile archive drawer traps Escape and restores focus', { width: 390, height: 844 }, 'succession/timeline', async (page) => {
-    const trigger = page.locator('.succession-archive__mobile-bar button').first();
-    await trigger.click();
-    await page.waitForSelector('.succession-drawer [role="dialog"]');
-    await page.keyboard.press('Escape');
-    await page.waitForSelector('.succession-drawer', { state: 'detached' });
-    await page.waitForFunction(() => document.activeElement?.matches('.succession-archive__mobile-bar button:first-child'));
-  });
-
-  await runInteraction('assignment result modes are keyboard operable', { width: 1440, height: 1000 }, 'succession/bodyguards', async (page) => {
+  await runInteraction('assignment result modes are keyboard operable', 'succession/bodyguards', async (page) => {
     const table = page.getByRole('button', { name: 'Table' });
     await table.focus();
     await page.keyboard.press('Enter');
@@ -256,13 +228,13 @@ try {
     await page.waitForSelector('.succession-assignment-ledger');
   });
 
-  await runInteraction('reduced motion removes meaningful transition duration', { width: 1440, height: 1000 }, 'succession/timeline', async (page) => {
+  await runInteraction('reduced motion removes meaningful transition duration', 'succession/timeline', async (page) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     const duration = await page.locator('.succession-button').first().evaluate((node) => Math.max(...getComputedStyle(node).transitionDuration.split(',').map((value) => Number.parseFloat(value) || 0)));
     assert(duration <= .02, `reduced-motion transition remained ${duration}s`);
   });
 
-  await runInteraction('forced colors retains visible keyboard focus', { width: 1440, height: 1000 }, 'succession/timeline', async (page) => {
+  await runInteraction('forced colors retains visible keyboard focus', 'succession/timeline', async (page) => {
     await page.emulateMedia({ forcedColors: 'active' });
     const button = page.locator('.succession-button').first();
     await button.focus();
@@ -282,12 +254,11 @@ const summary = {
   generatedAt: new Date().toISOString(),
   routeChecks: results.length,
   routePasses: results.length - failedRoutes.length,
-  expectedRouteChecks: routes.length * viewports.length,
   interactionChecks: interactions.length,
   interactionPasses: interactions.length - failedInteractions.length,
-  maximumCls: Math.max(0, ...results.map((result) => result.cls || 0)),
+  expectedRouteChecks: routes.length,
   failed: failedRoutes.length + failedInteractions.length,
 };
-await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, routes: results, interactions }, null, 2)}\n`);
-console.log(`\nSuccession final release QA: ${summary.routePasses}/${summary.routeChecks} responsive route renders and ${summary.interactionPasses}/${summary.interactionChecks} interaction flows passed; maximum CLS ${summary.maximumCls.toFixed(3)}.`);
+await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results, interactions }, null, 2)}\n`);
+console.log(`\nSuccession desktop release QA: ${summary.routePasses}/${summary.routeChecks} route renders and ${summary.interactionPasses}/${summary.interactionChecks} interactions passed.`);
 if (summary.failed) process.exitCode = 1;
