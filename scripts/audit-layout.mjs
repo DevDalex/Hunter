@@ -15,7 +15,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Layout audit failed: ${message}`);
 };
 
-const [app, css, router, header, integratedReferences, familyTree, blackWhale, packageJson] = await Promise.all([
+const [app, css, router, header, integratedReferences, familyTree, blackWhale, packageJson, shellCss] = await Promise.all([
   read('src/App.jsx'),
   read('src/styles.css'),
   read('src/lib/appRouter.js'),
@@ -24,6 +24,7 @@ const [app, css, router, header, integratedReferences, familyTree, blackWhale, p
   read('src/components/FamilyTree.jsx'),
   read('src/components/BlackWhaleGuide.jsx'),
   read('package.json'),
+  read('src/components/succession/SuccessionArchiveShellRedesign.css'),
 ]);
 
 const collectJsxFiles = async (directory) => {
@@ -89,11 +90,13 @@ assert(
   'the focused primary navigation is incomplete or the retired World Atlas returned',
 );
 assert(!header.includes("label: 'Characters'") && !header.includes("label: 'Fights'") && !header.includes("label: 'Story'"), 'retired navigation returned');
+assert(!header.includes('mobile-menu-button') && !header.includes('menuOpen'), 'narrow-screen header navigation returned');
 
 assert(css.includes('--content: 1240px') && css.includes('--wide: 1540px'), 'editorial content and visual-wide measures are missing');
-assert(css.includes('@media (max-width: 900px)') && css.includes('@media (max-width: 640px)'), 'tablet and phone boundaries are required');
+assert(shellCss.includes('min-width: 1180px'), 'desktop-only shell minimum width is missing');
+assert(!shellCss.includes('@media (max-width:'), 'narrow-width shell breakpoints returned');
 assert(familyTree.includes('RoyalFamilyGuardTree'), 'the Succession royal family visualization is not mounted');
 assert(blackWhale.includes('Black Whale passenger manifest'), 'the Succession Black Whale workspace lost its manifest');
 assert(packageJson.includes('"build"') && packageJson.includes('"audit:succession-runtime"'), 'the focused build contract is incomplete');
 
-console.log(`Layout audit passed: ${routeManifest.length} focused routes, ${successionReleaseRoutes.length} curated Succession screens, one retained integrated reference, one read-only pre-Succession chapter bridge, valid JSX, responsive containment, and no retired public workspaces.`);
+console.log(`Layout audit passed: ${routeManifest.length} focused routes, ${successionReleaseRoutes.length} curated Succession screens, one retained integrated reference, one read-only pre-Succession chapter bridge, valid JSX, a desktop-only 1180px shell floor, and no retired public workspaces.`);
