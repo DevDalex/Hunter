@@ -11,7 +11,6 @@
 
 .succession-archive[data-archive-route="reader"] .succession-archive__status-strip,
 .succession-archive[data-archive-route="reader"] .succession-archive__sidebar,
-.succession-archive[data-archive-route="reader"] .succession-archive__mobile-bar,
 .succession-archive[data-archive-route="reader"] .succession-route-context,
 .succession-archive[data-archive-route="reader"] .succession-page-header {
   display: none;
@@ -269,24 +268,6 @@
   color: #182329;
 }
 
-@media (max-width: 760px) {
-  .succession-reader-command .succession-reader__topbar {
-    min-height: 54px;
-  }
-
-  .succession-reader-command .succession-reader__identity small,
-  .succession-reader-command .succession-reader__topbar-progress {
-    display: none;
-  }
-
-  .succession-reader-command .succession-reader__canvas {
-    min-height: calc(100vh - 108px);
-  }
-
-  .succession-reader-command .succession-reader__bottombar {
-    min-height: 54px;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .succession-reader-command .succession-reader__page-skeleton {

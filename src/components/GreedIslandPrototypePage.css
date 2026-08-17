@@ -228,17 +228,3 @@
 .gi-state-list { display: grid; gap: 10px; }
 .gi-two-column { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(20px, 3vw, 34px); }
 .gi-source-grid { display: flex; flex-wrap: wrap; gap: 10px; }
-
-@media (max-width: 980px) {
-  .gi-hero, .gi-card-toolbar, .gi-two-column { grid-template-columns: 1fr; }
-  .gi-hero__facts, .gi-card-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .gi-local-nav { position: static; }
-}
-
-@media (max-width: 640px) {
-  .gi-hero { padding: 24px; }
-  .gi-hero__portraits { grid-template-columns: 1fr; grid-template-rows: none; }
-  .gi-hero__portraits figure, .gi-hero__portraits figure.is-primary { grid-column: auto; grid-row: auto; }
-  .gi-hero__facts, .gi-card-stats, .gi-conflict-ledger dl { grid-template-columns: 1fr; }
-  .gi-card-grid { max-height: none; }
-}

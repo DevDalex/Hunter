@@ -10,7 +10,7 @@
   --home-dim: #6d746e;
   --home-accent: #91d32e;
   width: 100%;
-  min-height: 100svh;
+  min-height: 100vh;
   display: grid;
   grid-template-columns: 220px minmax(0, 1fr);
   color: var(--home-text);
@@ -44,7 +44,7 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  height: 100svh;
+  height: 100vh;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -196,7 +196,7 @@
 /* Main composition */
 .succession-command-home__main {
   min-width: 0;
-  height: 100svh;
+  height: 100vh;
   min-height: 0;
   overflow: hidden;
   display: grid;
@@ -904,97 +904,6 @@
   .succession-command-home__updates a small { display: none; }
 }
 
-@media (max-width: 1120px) {
-  .succession-command-home__main {
-    height: auto;
-    min-height: 100svh;
-    overflow: visible;
-    grid-template-rows: 500px auto auto;
-  }
-  .succession-command-home__portals { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-command-home__portal { min-height: 210px; }
-  .succession-command-home__portal:last-child { grid-column: 1 / -1; }
-  .succession-command-home__lower-grid { grid-template-columns: 1fr 1fr; }
-  .succession-command-home__quote { min-height: 180px; grid-column: 1 / -1; }
-  .succession-command-home__ship-stage { inset: 0 5% -2% 2%; }
-}
-
-@media (max-width: 860px) {
-  .succession-command-home { display: block; }
-  .succession-command-home__rail {
-    position: relative;
-    width: 100%;
-    height: auto;
-    border-right: 0;
-    border-bottom: 1px solid var(--home-line);
-  }
-  .succession-command-home__identity {
-    min-height: 126px;
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto auto;
-    column-gap: .9rem;
-  }
-  .succession-command-home__identity-mark {
-    grid-row: 1 / 4;
-    width: 64px;
-    height: 58px;
-    margin: 0;
-  }
-  .succession-command-home__identity-mark > b { font-size: 3rem; }
-  .succession-command-home__identity strong,
-  .succession-command-home__identity small { justify-self: start; }
-  .succession-command-home__rail nav {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    padding: .5rem;
-  }
-  .succession-command-home__rail nav a {
-    min-width: 44px;
-    min-height: 48px;
-    grid-template-columns: 18px 1fr;
-    padding: 0 .65rem;
-    font-size: .54rem;
-  }
-  .succession-command-home__rail nav a > i { display: none; }
-  .succession-command-home__rail-divider { display: none; }
-  .succession-command-home__rail footer { display: none; }
-  .succession-command-home__main {
-    grid-template-rows: 520px auto auto;
-    gap: 12px;
-    padding: 12px;
-  }
-  .succession-command-home__search { right: 12px; top: 12px; }
-  .succession-command-home__voyage { right: 12px; top: 72px; width: 204px; }
-  .succession-command-home__telemetry { left: 18px; top: 43%; }
-  .succession-command-home__portals { grid-template-columns: 1fr; }
-  .succession-command-home__portal,
-  .succession-command-home__portal:last-child { min-height: 220px; grid-column: auto; }
-  .succession-command-home__portal-copy { max-width: 64%; }
-  .succession-command-home__lower-grid { grid-template-columns: 1fr; }
-  .succession-command-home__quote { grid-column: auto; min-height: 190px; }
-}
-
-@media (max-width: 620px) {
-  .succession-command-home__rail nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-command-home__main { grid-template-rows: 500px auto auto; }
-  .succession-command-home__hero { min-height: 500px; }
-  .succession-command-home__ship-stage { inset: 22% -12% 2% -12%; }
-  .succession-command-home__ship-stage img { object-position: center 62%; }
-  .succession-command-home__telemetry { display: none; }
-  .succession-command-home__voyage { top: 78px; left: 12px; right: 12px; width: auto; }
-  .succession-command-home__voyage dl { display: grid; grid-template-columns: 1fr 1fr; }
-  .succession-command-home__voyage dl div { min-height: 58px; }
-  .succession-command-home__voyage dl div:last-child { grid-column: 1 / -1; }
-  .succession-command-home__portal { min-height: 232px; padding: 1.35rem 1.15rem; }
-  .succession-command-home__portal-copy { max-width: 74%; }
-  .succession-command-home__portal-visual { inset-left: 48%; opacity: .52; }
-  .succession-command-home__quick > div { grid-template-columns: repeat(3, minmax(0, 1fr)); height: auto; }
-  .succession-command-home__quick a { min-height: 98px; border-bottom: 1px solid var(--home-line); }
-  .succession-command-home__quick a:nth-child(3) { border-right: 0; }
-  .succession-command-home__updates a { min-height: 44px; }
-  .succession-command-home__quote { grid-template-columns: 42% 1fr; }
-  .succession-command-home__quote blockquote { font-size: .72rem; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .succession-command-home *,

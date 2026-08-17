@@ -292,80 +292,6 @@
   .arc-visual-workbench { grid-template-columns: minmax(0, 1.25fr) 310px; }
 }
 
-@media (max-width: 900px) {
-  .simple-home__masthead { grid-template-columns: 1fr; }
-  .simple-home__masthead h1 { font-size: clamp(60px, 15vw, 102px); }
-  .simple-home__eras { grid-template-columns: 1fr; }
-  .simple-home__eras > button { min-height: 350px; grid-template-columns: minmax(140px, .6fr) 1.4fr; }
-  .simple-home__tools > div { grid-template-columns: repeat(2, 1fr); }
-  .simple-home__tools button:nth-child(2) { border-right: 0; }
-  .nen-principle-workbench > header, .nen-technique-view > header, .ship-visual-tour > header, .arc-visual-archive > header { grid-template-columns: 1fr; }
-  .nen-principle-workbench__layout { grid-template-columns: 1fr; }
-  .nen-principle-map { min-height: 680px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.14); }
-  .nen-principle-inspector { grid-template-columns: repeat(2, 1fr); grid-template-rows: none; }
-  .nen-principle-inspector__foundation { border-right: 1px solid rgba(255,255,255,.14); border-bottom: 0; }
-  .nen-category-hex { min-height: 500px; }
-  .nen-technique-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .prince-record { grid-template-columns: 1fr; }
-  .prince-beast-composite { min-height: 540px; }
-  .royal-system-layers, .fight-pressure-board { grid-template-columns: 1fr; }
-  .ship-visual-tour > div { grid-auto-columns: minmax(210px, 42%); }
-  .arc-essential-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .arc-visual-workbench { grid-template-columns: 1fr; }
-  .arc-visual-stage { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.17); }
-  .arc-visual-rail { display: grid; grid-auto-flow: column; grid-auto-columns: 250px; overflow-x: auto; overflow-y: hidden; }
-  .arc-visual-rail button { border-right: 1px solid rgba(255,255,255,.14); }
-  .election-rescue-route > div { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 620px) {
-  .simple-home { padding-top: 30px; }
-  .simple-home__masthead { gap: 27px; }
-  .simple-home__masthead h1 { font-size: clamp(52px, 18vw, 76px); line-height: .83; }
-  .simple-home__eras > button { min-height: 0; grid-template-columns: 1fr; }
-  .simple-home__eras figure { height: 210px; }
-  .simple-home__eras > button > div { min-height: 260px; }
-  .simple-home__tools > div { grid-template-columns: 1fr; }
-  .simple-home__tools button { border-right: 0; border-bottom: 1px solid var(--line); }
-  .simple-home__tools button:last-child { border-bottom: 0; }
-  .nen-principle-workbench { margin-inline: calc(var(--gutter) * -.35); }
-  .nen-principle-map { min-height: 560px; }
-  .nen-principle-map > img, .nen-principle-map__ring { inset: 24%; }
-  .nen-principle-node { width: 105px; min-height: 58px; grid-template-columns: 27px 1fr; gap: 5px; padding: 7px; }
-  .nen-principle-node i { width: 27px; height: 27px; font-size: 15px; }
-  .nen-principle-node strong { font-size: 14px; }
-  .nen-principle-node small { font-size: 7px; }
-  .nen-principle-node.is-top { top: 17%; }
-  .nen-principle-node.is-right { right: 18%; }
-  .nen-principle-node.is-bottom { bottom: 17%; }
-  .nen-principle-node.is-left { left: 18%; }
-  .nen-advanced-node { width: 70px; min-height: 42px; padding: 5px; }
-  .nen-advanced-node strong { font-size: 12px; }
-  .nen-advanced-node small { display: none; }
-  .nen-principle-inspector { grid-template-columns: 1fr; }
-  .nen-principle-inspector__foundation { border-right: 0; border-bottom: 1px solid rgba(255,255,255,.14); }
-  .nen-category-hex { min-height: 420px; }
-  .nen-category-hex__nodes button { min-width: 82px; padding: 5px; }
-  .nen-category-hex__nodes button strong { font-size: 10px; }
-  .nen-category-hex__nodes button small { display: none; }
-  .nen-technique-gallery { grid-template-columns: 1fr; }
-  .prince-selector { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .prince-selector button { min-height: 174px; }
-  .prince-beast-composite { min-height: 450px; }
-  .prince-guard-orbit { padding: 20px 12px; }
-  .prince-guard-orbit__field { aspect-ratio: 1 / 1.15; }
-  .prince-guard-orbit__field::before { inset: 12% 8%; }
-  .prince-guard-orbit__field::after { inset: 25% 24%; }
-  .prince-guard-orbit__person .succession-person-orb { width: 44px; height: 44px; }
-  .prince-guard-orbit__person span:last-child { max-width: 72px; font-size: 7px; }
-  .ship-visual-tour > div { grid-auto-columns: 78%; }
-  .arc-essential-grid { grid-template-columns: 1fr; }
-  .arc-visual-stage { grid-template-rows: 310px auto; }
-  .arc-visual-stage figure { min-height: 310px; }
-  .election-round-ledger li span { grid-template-columns: 1fr; gap: 5px; }
-  .election-rescue-route > div, .fight-aftermath-gallery { grid-template-columns: 1fr; }
-  .fight-chapter-stage__visual { min-height: 360px !important; }
-}
 
 /* 2026-07 full visual repair: resilient media, corrected markup selectors, and responsive layouts */
 .safe-image-placeholder {
@@ -510,36 +436,7 @@
 .chapter-research-ledger > button > div { display: flex; flex-wrap: wrap; gap: 4px; }
 .chapter-research-ledger > button small { border-radius: 99px; padding: 3px 6px; background: var(--paper-deep); }
 
-@media (max-width: 1050px) {
-  .arc-phase-visual-strip { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .connection-atlas-overview, .relationship-network { grid-template-columns: 1fr; }
-  .connection-atlas-lanes { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .relationship-network__spokes { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .beast-grid, .chapter-research-ledger { grid-template-columns: repeat(2,minmax(0,1fr)); }
-  .nen-principle-workbench__layout { grid-template-columns: 1fr; }
-  .nen-principle-map { min-height: 620px; border-right: 0; border-bottom: 1px solid rgba(255,255,255,.14); }
-}
-@media (max-width: 720px) {
-  .exam-phase-detail__visual { min-height: 270px; }
-  .tower-match-ledger article { grid-template-columns: 34px minmax(0,1fr); }
-  .tower-match-ledger__portraits { grid-column: 2; justify-content: start; }
-  .final-bracket li { grid-template-columns: 30px minmax(0,1fr) auto; }
-  .final-bracket li > p { grid-column: 2/-1; }
-  .final-bracket__match > span { grid-template-columns: 34px minmax(0,1fr); }
-  .final-bracket__match .source-portrait { width: 34px; height: 42px; }
-  .arc-phase-visual-strip, .record-visual-strip, .beast-grid, .chapter-research-ledger, .relationship-ledger { grid-template-columns: 1fr; }
-  .chimera-stages li { grid-template-columns: 96px 34px minmax(0,1fr); }
-  .chimera-stages li > figure { width: 96px; }
-  .connection-atlas-lanes, .relationship-network__spokes { grid-template-columns: 1fr; }
-  .connection-atlas-toolbar, .relationship-map__toolbar, .relationship-focus-control, .beast-rules { grid-template-columns: 1fr; }
-  .connection-atlas-members { grid-template-columns: 1fr; }
-  .beast-rules > ul { grid-template-columns: 1fr; }
-  .chapter-dossier__toolbar { grid-template-columns: 1fr; }
-  .nen-principle-map { min-height: auto; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; padding: 16px; }
-  .nen-principle-map > img, .nen-principle-map__ring, .nen-principle-map__center { display: none; }
-  .nen-principle-node, .nen-advanced-node { position: static; width: auto; min-height: 60px; transform: none !important; }
-  .nen-advanced-node { opacity: .6; }
-}
+
 .nen-concept-visual { min-height: 150px; display: grid; place-items: center; align-content: center; gap: 7px; overflow: hidden; position: relative; margin: 0; background: radial-gradient(circle at 50% 45%, rgba(212,183,96,.28), transparent 25%), linear-gradient(145deg,#111914,#27372f); color: #fff; text-align: center; }
 .nen-concept-visual::before, .nen-concept-visual::after { content: ''; position: absolute; border: 2px solid rgba(212,183,96,.55); border-radius: 50%; }
 .nen-concept-visual::before { width: 88px; height: 88px; }

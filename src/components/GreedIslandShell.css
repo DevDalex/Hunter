@@ -198,46 +198,10 @@
   animation: gi-app-spin .7s linear infinite;
 }
 
-.gi-app__mobile-menu {
-  display: none;
-}
-
 @keyframes gi-app-spin {
   to { transform: rotate(360deg); }
 }
 
-@media (max-width: 860px) {
-  .gi-app__layout {
-    display: block;
-  }
-
-  .gi-app__mobile-menu {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-  }
-
-  .gi-app__nav {
-    position: fixed;
-    top: 58px;
-    left: 0;
-    z-index: 50;
-    width: min(310px, 86vw);
-    height: calc(100vh - 58px);
-    transform: translateX(-105%);
-    transition: transform 180ms ease;
-    box-shadow: 20px 0 50px rgba(0, 0, 0, .2);
-  }
-
-  .gi-app__nav.is-open {
-    transform: translateX(0);
-  }
-
-  .gi-app__module-head {
-    align-items: start;
-    flex-direction: column;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .gi-app__nav {

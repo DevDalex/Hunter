@@ -1,13 +1,4 @@
-/*
- * Succession final desktop release sheet.
- *
- * This file consolidates the Phase 3 information-consistency panel, Phase 4
- * Research workbench visibility, and Phase 5 workspace-refinement presentation.
- * The final refinement surface remains desktop/laptop-only. Existing smaller
- * viewport workspaces are preserved without new tablet or mobile rules.
- */
 
-.succession-information-consistency,
 .succession-archive .succession-intelligence-workbench,
 .succession-workspace-refinement {
   display: none;

@@ -78,20 +78,6 @@
 .story-directory__policy svg { color: #8e2635; }
 .story-directory__policy p { margin: 0; font-size: 13px; }
 
-@media (max-width: 1100px) {
-  .story-directory__arcs > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 720px) {
-  .story-directory { width: min(calc(100% - 28px), 1480px); padding-top: 58px; }
-  .story-directory__arcs > header,
-  .story-directory__utilities > header { display: block; }
-  .story-directory__arcs > header h2,
-  .story-directory__utilities > header h2 { margin-top: 7px; }
-  .story-directory__arcs > div,
-  .story-directory__utilities > div { grid-template-columns: 1fr; }
-  .story-directory-card { min-height: 450px; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .story-directory-card,

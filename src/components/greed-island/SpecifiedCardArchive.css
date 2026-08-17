@@ -459,69 +459,6 @@
   line-height: 1.5;
 }
 
-@media (max-width: 1050px) {
-  .gi-card-archive__filters {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .gi-card-archive__search {
-    grid-column: 1 / -1;
-  }
-
-  .gi-card-archive__layout {
-    grid-template-columns: 1fr;
-  }
-
-  .gi-card-archive__results {
-    position: static;
-  }
-
-  .gi-card-archive__results > div {
-    max-height: 320px;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 720px) {
-  .gi-card-archive__metrics,
-  .gi-card-archive__hero dl {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .gi-card-archive__filters {
-    grid-template-columns: 1fr;
-  }
-
-  .gi-card-archive__search {
-    grid-column: auto;
-  }
-
-  .gi-card-archive__results > div {
-    grid-template-columns: 1fr;
-  }
-
-  .gi-card-archive__hero,
-  .gi-card-archive__evidence {
-    grid-template-columns: 1fr;
-  }
-
-  .gi-card-archive__hero {
-    text-align: left;
-  }
-
-  .gi-card-archive__evidence section {
-    border-right: 0;
-    border-bottom: 1px solid #b9a57d;
-  }
-
-  .gi-card-archive__evidence section:last-child {
-    border-bottom: 0;
-  }
-
-  .gi-card-archive__related > div {
-    grid-template-columns: 1fr;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .gi-card-archive *,

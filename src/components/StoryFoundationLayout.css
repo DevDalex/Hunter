@@ -152,36 +152,3 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
-
-@media (max-width: 900px) {
-  .story-route-strip {
-    grid-template-columns: 1fr;
-  }
-
-  .story-route-strip > header {
-    display: flex;
-    justify-content: space-between;
-    gap: 18px;
-    align-items: center;
-    border-right: 0;
-    border-bottom: 1px solid var(--story-line);
-  }
-
-  .story-foundation--wide .page-intro {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 720px) {
-  .story-foundation--wide {
-    width: min(calc(100% - 28px), 1660px);
-  }
-
-  .story-route-strip__scroller a {
-    flex-basis: 132px;
-  }
-
-  .story-foundation--wide .story-hub-foundation__timeline {
-    grid-template-columns: 1fr;
-  }
-}

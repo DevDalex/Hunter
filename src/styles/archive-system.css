@@ -240,18 +240,3 @@ button.archive-card {
   display: grid;
   gap: 10px;
 }
-
-@media (max-width: 860px) {
-  .archive-section__header {
-    align-items: start;
-    flex-direction: column;
-  }
-
-  .archive-section__actions {
-    justify-content: flex-start;
-  }
-
-  .archive-ui-home-grid {
-    grid-template-columns: 1fr;
-  }
-}

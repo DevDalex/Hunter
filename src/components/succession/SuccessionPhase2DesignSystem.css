@@ -400,24 +400,6 @@ body.succession-architecture-mode .site-header {
   background: repeating-linear-gradient(45deg, #f7f7f4 0 5px, #dededa 5px 7px) !important;
 }
 
-/* Mobile shell follows the same document language. */
-.succession-archive__mobile-bar {
-  border-bottom: 1px solid #111 !important;
-  background: #fbfbf8 !important;
-  color: #111 !important;
-  box-shadow: none !important;
-}
-
-.succession-archive__mobile-bar :where(button, span, svg) {
-  color: #111 !important;
-}
-
-.succession-archive__mobile-bar button {
-  border: 1px solid #111 !important;
-  border-radius: 0 !important;
-  background: #fff !important;
-}
-
 .succession-drawer {
   background: rgba(17, 17, 17, .58) !important;
   backdrop-filter: none !important;
@@ -482,7 +464,7 @@ body.succession-architecture-mode .site-header {
     inset: 0 !important;
     display: grid !important;
     width: 100vw !important;
-    height: 100dvh !important;
+    height: 100vh !important;
     min-height: 0 !important;
     place-items: center !important;
     overflow: hidden !important;
@@ -492,7 +474,7 @@ body.succession-architecture-mode .site-header {
     .succession-architecture-board {
       --phase2-board-fit: min(
         calc((100vw - 2px) / var(--phase2-board-width)),
-        calc((100dvh - 2px) / var(--phase2-board-height))
+        calc((100vh - 2px) / var(--phase2-board-height))
       );
     }
   }
@@ -516,12 +498,12 @@ body.succession-architecture-mode .site-header {
   }
 
   .succession-architecture-board {
-    min-height: 100dvh !important;
+    min-height: 100vh !important;
     overflow: visible !important;
   }
 
   .succession-architecture__sheet {
-    min-height: 100dvh !important;
+    min-height: 100vh !important;
   }
 }
 

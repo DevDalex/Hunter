@@ -31,7 +31,7 @@ body:has(.nen-map-only) main,
   inset: 0;
   width: 100vw !important;
   max-width: none !important;
-  height: 100svh !important;
+  height: 100vh !important;
   min-height: 0 !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -51,7 +51,7 @@ body:has(.nen-map-only) .nen-map-only,
   inset: 0 !important;
   width: 100vw !important;
   max-width: none !important;
-  height: 100svh !important;
+  height: 100vh !important;
   min-height: 0 !important;
   margin: 0 !important;
   padding: 0 !important;

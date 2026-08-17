@@ -303,15 +303,3 @@
   color: #1b2a32;
   font-family: var(--sans);
 }
-
-@media (max-width: 760px) {
-  .succession-nen-command__hero {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-nen-command__core {
-    width: min(100%, 340px);
-    min-height: 240px;
-    margin-inline: auto;
-  }
-}

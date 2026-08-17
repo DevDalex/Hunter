@@ -605,26 +605,3 @@
   font-size: 9px;
   text-transform: uppercase;
 }
-
-@media (max-width: 1100px) {
-  .succession-archive .timeline-command__arc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-archive .timeline-workbench { grid-template-columns: 1fr; }
-  .succession-archive .timeline-inspector { position: static; }
-  .succession-archive .timeline-command-voyage__selected { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 760px) {
-  .succession-archive .timeline-command__hero,
-  .succession-archive .timeline-command-voyage__hero { grid-template-columns: 1fr; }
-  .succession-archive .timeline-command__metrics,
-  .succession-archive .timeline-command-voyage__metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-archive .timeline-command__arc-grid,
-  .succession-archive .timeline-thread-view,
-  .succession-archive .timeline-chapter-view,
-  .succession-archive .timeline-location-view { grid-template-columns: 1fr; }
-  .succession-archive .timeline-command-voyage__method { grid-template-columns: 1fr; }
-  .succession-archive .timeline-day > header { grid-template-columns: 52px minmax(0, 1fr); }
-  .succession-archive .timeline-day > header > em { display: none; }
-  .succession-archive .timeline-record { grid-template-columns: 58px minmax(0, 1fr); }
-  .succession-archive .timeline-record__source { display: none; }
-}

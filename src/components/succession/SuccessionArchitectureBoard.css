@@ -54,10 +54,6 @@ body.succession-architecture-mode .site-header {
   outline: none;
 }
 
-.succession-architecture-board .succession-archive__mobile-bar {
-  display: none;
-}
-
 .succession-architecture__sheet {
   position: relative;
   width: min(100%, 1660px);
@@ -760,91 +756,6 @@ body.succession-architecture-mode .site-header {
   .succession-architecture__lower-grid { grid-template-columns: minmax(380px, .72fr) minmax(570px, 1.28fr); gap: 12px; }
 }
 
-@media (max-width: 1100px) {
-  body.succession-architecture-mode .site-header { display: flex; }
-  .succession-architecture-board { padding: 0; background: var(--architecture-paper); }
-  .succession-architecture-board .succession-archive__mobile-bar {
-    position: sticky;
-    z-index: 20;
-    top: 0;
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    min-height: 54px;
-    border-bottom: 2px solid #111;
-    color: #fff;
-    background: #111;
-  }
-  .succession-architecture-board .succession-archive__mobile-bar button { min-width: 48px; min-height: 48px; border: 0; color: #fff; background: transparent; }
-  .succession-architecture-board .succession-archive__mobile-bar button:first-child { display: inline-flex; align-items: center; gap: 7px; padding-inline: 12px; }
-  .succession-architecture-board .succession-archive__mobile-bar > span { text-align: center; font-family: Georgia, "Times New Roman", serif; font-size: 17px; }
-  .succession-architecture__sheet { width: 100%; min-height: auto; padding: 10px 12px; border: 0; box-shadow: none; }
-  .succession-architecture__sheet::before,
-  .succession-architecture__sheet::after,
-  .succession-architecture__corner { display: none; }
-  .succession-architecture__masthead { grid-template-columns: 1fr auto; min-height: auto; padding: 12px 0 18px; }
-  .succession-architecture__identity { grid-column: 1; }
-  .succession-architecture__title { grid-column: 1 / -1; grid-row: 2; order: 3; padding-top: 14px; border-top: 1px solid var(--architecture-line-soft); }
-  .succession-architecture__title h1 { font-size: clamp(42px, 9vw, 70px); }
-  .succession-architecture__document-meta { grid-column: 2; padding-left: 12px; }
-  .succession-architecture__document-meta .succession-architecture__stamp { display: none; }
-  .succession-architecture__primary-grid { grid-template-columns: 1fr; }
-  .succession-architecture__left-column { display: none; }
-  .succession-architecture__modules { grid-template-columns: 1fr; }
-  .succession-architecture__library { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding-top: 0; }
-  .succession-architecture__library > h2 { grid-column: 1 / -1; }
-  .succession-architecture__library > a { margin-top: 0; }
-  .succession-architecture__library-map { display: none; }
-  .succession-architecture__lower-grid { grid-template-columns: 1fr; }
-  .succession-architecture__skeleton-block { min-height: 330px; }
-  .succession-architecture__document-footer { padding-bottom: 12px; }
-  .succession-drawer .succession-architecture__navigation { border: 0; }
-  .succession-drawer .succession-architecture__navigation h2 { color: #fff; border-color: rgba(255,255,255,.25); }
-  .succession-drawer .succession-architecture__navigation a { color: #fff; border-color: rgba(255,255,255,.18); }
-  .succession-drawer .succession-architecture__navigation a span { border-color: rgba(255,255,255,.18); }
-}
-
-@media (max-width: 680px) {
-  .succession-architecture__sheet { padding: 8px; }
-  .succession-architecture__masthead { display: block; }
-  .succession-architecture__identity { min-height: 50px; }
-  .succession-architecture__document-meta { display: none; }
-  .succession-architecture__title { margin-top: 12px; padding-top: 14px; }
-  .succession-architecture__title h1 { font-size: clamp(40px, 14vw, 58px); line-height: .92; }
-  .succession-architecture__title p { gap: 8px; font-size: 11px; letter-spacing: .12em; }
-  .succession-architecture__title p::before,
-  .succession-architecture__title p::after { width: 15px; }
-  .succession-architecture__module > header { grid-template-columns: 39px minmax(0, 1fr); }
-  .succession-architecture__module header > i { display: none; }
-  .succession-architecture__module header h2 { font-size: 23px; }
-  .succession-architecture__view-grid,
-  .succession-architecture__view-grid.is-five { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-architecture__view-cell { min-height: 190px; border-bottom: 1px solid var(--architecture-line-soft); }
-  .succession-architecture__view-cell:nth-child(2n) { border-right: 0; }
-  .succession-architecture__view-grid.is-five .succession-architecture__view-cell:last-child { grid-column: 1 / -1; border-bottom: 0; }
-  .succession-architecture__split-grid { grid-template-columns: 1fr; }
-  .succession-architecture__split-grid > a { border-right: 0; border-bottom: 1px solid var(--architecture-line-soft); }
-  .succession-architecture__split-grid > a:last-child { border-bottom: 0; }
-  .succession-architecture__library { grid-template-columns: 1fr; }
-  .succession-architecture__contracts { grid-template-columns: 50px minmax(0, 1fr); padding: 12px; }
-  .succession-architecture__contracts ul { grid-template-columns: 1fr; gap: 8px; }
-  .succession-architecture__integrity-seal { display: none; }
-  .succession-architecture__footer-specs { grid-template-columns: 1fr; }
-  .succession-architecture__footer-specs > section { border-right: 0; border-bottom: 1px solid var(--architecture-line-soft); }
-  .succession-architecture__footer-specs > section:last-child { border-bottom: 0; }
-  .succession-architecture__skeleton-block { display: block; padding: 6px; overflow: hidden; }
-  .succession-architecture__callouts { display: none; }
-  .succession-architecture__skeleton-body { grid-template-columns: 37px minmax(0, 1fr); }
-  .succession-architecture__skeleton-body > aside { display: none; }
-  .succession-architecture__skeleton-body > main > section { grid-template-columns: 1fr; }
-  .succession-architecture__skeleton-body > main > section > .succession-architecture__map-sketch { display: none; }
-  .succession-architecture__skeleton-body > main > footer { grid-template-columns: 1fr; }
-  .succession-architecture__skeleton-body > main > footer > .succession-architecture__map-sketch { display: none; }
-  .succession-architecture__page-skeleton > header strong { font-size: 15px; }
-  .succession-architecture__page-skeleton > header button { min-width: 44px; width: 44px; gap: 0; overflow: hidden; font-size: 0; }
-  .succession-architecture__skeleton-tabs { justify-content: space-between; gap: 5px; }
-  .succession-architecture__document-footer { flex-wrap: wrap; justify-content: center; font-size: 9px; text-align: center; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .succession-architecture-board *,

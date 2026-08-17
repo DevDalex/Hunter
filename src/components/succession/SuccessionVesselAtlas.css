@@ -325,13 +325,3 @@
   border-color: #52768a;
   background: #dce4e6;
 }
-
-@media (max-width: 760px) {
-  .black-whale-intelligence__hero {
-    grid-template-columns: 1fr;
-  }
-
-  .ship-temporal-command > footer {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}

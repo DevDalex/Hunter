@@ -25,7 +25,6 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  touch-action: none;
   cursor: grab;
   outline: none;
   background: var(--paper);
@@ -330,11 +329,6 @@
 .nen-pipe-controls button:focus-visible { outline: none; background: var(--ink); color: #fff; }
 .nen-pipe-controls output { min-width: 62px; padding: 0 10px; font-size: 11px; font-weight: 900; text-align: center; }
 
-@media (max-width: 720px) {
-  .nen-pipe-controls { left: 10px; bottom: 10px; }
-  .nen-pipe-controls button { width: 44px; height: 44px; }
-  .nen-pipe-controls output { min-width: 54px; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .nen-pipe-connectors path,

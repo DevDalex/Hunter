@@ -8,7 +8,6 @@
   position: relative;
   overflow: hidden;
   background: var(--paper);
-  touch-action: auto;
   cursor: grab;
   user-select: none;
   -webkit-user-select: none;
@@ -34,7 +33,6 @@
     var(--paper);
   background-size: 24px 24px, 24px 24px, auto, auto;
   transform-origin: 0 0;
-  touch-action: none;
   will-change: transform;
 }
 
@@ -193,7 +191,6 @@
   background: rgba(23, 23, 21, .94);
   color: #f5efe2;
   box-shadow: 4px 6px 18px rgba(0, 0, 0, .24);
-  touch-action: manipulation;
 }
 
 .royal-map__controls button {
@@ -238,7 +235,6 @@ html:has(.succession-royal-hierarchy-workspace) .royal-map__inspector {
   border-radius: 4px;
   box-shadow: 6px 8px 22px rgba(0, 0, 0, .28);
   overscroll-behavior: contain;
-  touch-action: pan-y;
   user-select: text;
   -webkit-user-select: text;
 }
@@ -283,56 +279,6 @@ html:has(.succession-royal-hierarchy-workspace) .royal-map__inspector {
   padding: 5px 8px;
 }
 
-@media (max-width: 760px) {
-  .royal-map__controls {
-    right: 8px;
-    bottom: 8px;
-    grid-template-columns: repeat(4, 34px) auto;
-  }
-
-  .royal-map__controls button {
-    width: 34px;
-    height: 34px;
-  }
-
-  html:has(.succession-royal-hierarchy-workspace) .royal-map__inspector {
-    position: absolute;
-    inset: 8px 8px auto auto;
-    display: grid;
-    width: min(270px, calc(100% - 16px));
-    max-height: min(46dvh, 420px);
-  }
-}
-
-@media (max-width: 430px) {
-  .royal-map__controls {
-    grid-template-columns: repeat(4, 32px);
-  }
-
-  .royal-map__controls button {
-    width: 32px;
-    height: 34px;
-  }
-
-  .royal-map__controls output {
-    grid-column: 1 / -1;
-    min-height: 22px;
-    padding-top: 4px;
-    border-top: 1px solid #4d4840;
-  }
-
-  html:has(.succession-royal-hierarchy-workspace) .royal-map__inspector {
-    top: 6px;
-    right: 6px;
-    width: calc(100% - 12px);
-  }
-}
-
-@media (hover: none) {
-  .royal-map__viewport {
-    cursor: default;
-  }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .royal-map__canvas,

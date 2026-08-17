@@ -29,7 +29,7 @@ body.succession-architecture-mode .site-header {
   inset: 0 !important;
   display: block !important;
   width: 100vw !important;
-  height: 100dvh !important;
+  height: 100vh !important;
   min-width: 0 !important;
   min-height: 0 !important;
   max-width: none !important;
@@ -38,10 +38,6 @@ body.succession-architecture-mode .site-header {
   padding: 0 !important;
   overflow: hidden !important;
   background: #fbfbf8 !important;
-}
-
-.succession-architecture-board .succession-archive__mobile-bar {
-  display: none !important;
 }
 
 .succession-architecture-board > .succession-archive__content {
