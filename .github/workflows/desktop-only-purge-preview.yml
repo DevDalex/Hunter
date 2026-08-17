@@ -1,0 +1,62 @@
+name: Desktop-only purge preview
+
+on:
+  push:
+    branches:
+      - succession-339-417-visibility-audit
+    paths:
+      - 'scripts/desktop-only-purge.mjs'
+      - '.github/workflows/desktop-only-purge-preview.yml'
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-only-purge-preview-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    name: Preview repository-wide desktop-only purge
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Generate desktop-only purge patch
+        run: |
+          node scripts/desktop-only-purge.mjs
+          git diff --check
+          git diff --stat
+          git diff --binary > desktop-only-purge.patch
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify transformed CSS contracts
+        run: npm run audit:css
+
+      - name: Verify transformed production bundle
+        run: npx vite build
+
+      - name: Upload purge preview
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-only-purge-preview
+          path: |
+            desktop-only-purge.patch
+            .desktop-only-purge-report.json
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7
