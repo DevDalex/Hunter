@@ -7,6 +7,7 @@ const report = {
   generatedAt: new Date().toISOString(),
   desktopFloor,
   changedFiles: [],
+  changedRuntimeFiles: [],
   removedMediaBlocks: [],
   removedSelectors: [],
   removedDeclarations: [],
@@ -198,6 +199,21 @@ const transformCss = (source, file) => {
   return css.replace(/\n{4,}/g, '\n\n\n');
 };
 
+const transformKnownRuntime = (source, rel) => {
+  let out = source;
+  if (rel === 'src/components/InteractiveWorldMap.jsx') {
+    out = out
+      .replace('Check, ChevronDown, ChevronUp, Clipboard,', 'Check, Clipboard,')
+      .replace('function MapInspector({ location, expanded, onToggle, onCenter, onOpenBlackWhale, onOpenEncyclopedia, onOpenTimeline }) {', 'function MapInspector({ location, onCenter, onOpenBlackWhale, onOpenEncyclopedia, onOpenTimeline }) {')
+      .replace('    <aside className={`world-map-inspector${expanded ? \' is-expanded\' : \'\'}`} aria-live="polite">\n      <button type="button" className="world-map-inspector__mobile-toggle" onClick={onToggle} aria-expanded={expanded}>\n        <span><small>Selected place</small><strong>{location.name}</strong></span>{expanded ? <ChevronDown size={18} /> : <ChevronUp size={18} />}\n      </button>', '    <aside className="world-map-inspector" aria-live="polite">')
+      .replace('  const [inspectorExpanded, setInspectorExpanded] = useState(false);\n', '')
+      .replace('    setInspectorExpanded(true);\n', '')
+      .replace('    setInspectorExpanded(false);\n', '')
+      .replace('        <MapInspector location={selected} expanded={inspectorExpanded} onToggle={() => setInspectorExpanded((value) => !value)} onCenter={centerLocation} onOpenBlackWhale={onOpenBlackWhale} onOpenEncyclopedia={onOpenEncyclopedia} onOpenTimeline={onOpenTimeline} />', '        <MapInspector location={selected} onCenter={centerLocation} onOpenBlackWhale={onOpenBlackWhale} onOpenEncyclopedia={onOpenEncyclopedia} onOpenTimeline={onOpenTimeline} />');
+  }
+  return out;
+};
+
 const files = await walk(root);
 const cssFiles = files.filter((file) => file.endsWith('.css'));
 const runtimeFiles = files.filter((file) => /\.(?:js|jsx|mjs|ts|tsx)$/.test(file));
@@ -210,6 +226,17 @@ for (const file of cssFiles) {
   if (transformed !== source) {
     await writeFile(file, transformed);
     report.changedFiles.push(rel);
+  }
+}
+
+for (const file of runtimeFiles) {
+  const rel = relative(file);
+  if (rel === 'scripts/desktop-only-purge.mjs') continue;
+  const source = await readFile(file, 'utf8');
+  const transformed = transformKnownRuntime(source, rel);
+  if (transformed !== source) {
+    await writeFile(file, transformed);
+    report.changedRuntimeFiles.push(rel);
   }
 }
 
@@ -238,7 +265,7 @@ for (const file of cssFiles) {
 }
 
 await writeFile('.desktop-only-purge-report.json', `${JSON.stringify(report, null, 2)}\n`);
-console.log(`Desktop-only purge preview changed ${report.changedFiles.length} CSS file(s).`);
+console.log(`Desktop-only purge preview changed ${report.changedFiles.length} CSS file(s) and ${report.changedRuntimeFiles.length} runtime file(s).`);
 console.log(`Removed ${report.removedMediaBlocks.length} unsupported media block(s), ${report.removedSelectors.length} mobile selector(s), and ${report.removedDeclarations.reduce((sum, item) => sum + item.count, 0)} mobile declaration(s).`);
 console.log(`Remaining suspicious runtime references: ${report.suspiciousRuntimeReferences.length}.`);
 console.log(`Remaining suspicious CSS references: ${report.suspiciousCssReferences.length}.`);
