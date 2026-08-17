@@ -1,4 +1,4 @@
-/* Final accessibility and mobile closure for the Succession redesign. */
+/* Final desktop accessibility closure for the Succession redesign. */
 
 /* The archive contract keeps compact interface text at 11px or larger. */
 .succession-archive :where(
@@ -129,101 +129,6 @@
   min-height: 28px;
 }
 
-/* Mobile workspace closure. */
-@media (max-width: 860px) {
-  .succession-archive:not([data-archive-route="reader"]) {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  .succession-archive__status-strip {
-    position: static;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .succession-archive__status-strip > span {
-    min-height: 38px;
-    white-space: normal;
-  }
-
-  .succession-archive__mobile-bar {
-    top: var(--header-height);
-    padding-top: max(8px, env(safe-area-inset-top));
-  }
-
-  .succession-drawer > aside {
-    padding-bottom: max(22px, env(safe-area-inset-bottom));
-  }
-
-  .succession-archive__content {
-    overflow-wrap: anywhere;
-  }
-
-  .succession-page-header__actions,
-  .succession-product-tools,
-  .succession-assignment-result-command,
-  .timeline-command__scope-deck {
-    align-items: stretch;
-  }
-
-  .succession-page-header__actions > *,
-  .succession-product-tools > *,
-  .succession-assignment-result-command > *,
-  .timeline-command__scope-deck > * {
-    min-width: 0;
-  }
-
-  .succession-relationship-network__canvas {
-    overflow: auto;
-    overscroll-behavior: contain;
-    touch-action: pan-x pan-y;
-  }
-
-  .succession-relationship-network__node {
-    min-height: 56px;
-  }
-
-  .succession-reader-command .succession-reader__topbar,
-  .succession-reader-command .succession-reader__bottombar {
-    padding-inline: max(8px, env(safe-area-inset-left)) max(8px, env(safe-area-inset-right));
-  }
-
-  .succession-reader-command .succession-reader__bottombar {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-}
-
-@media (max-width: 560px) {
-  .succession-archive__status-strip {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-archive__status-strip > span {
-    border-right: 0;
-    border-bottom: 1px solid rgba(206, 216, 219, .12);
-  }
-
-  .succession-page-header__meta,
-  .succession-canonical-relationships__hero > dl,
-  .timeline-command__metrics,
-  .timeline-command-voyage__metrics,
-  .succession-product-hero > dl,
-  .succession-evidence-hero > dl {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .succession-assignment-filter-panel__fields,
-  .succession-event-filter-panel__fields,
-  .succession-relationship-filter-panel__fields,
-  .timeline-command-voyage__filter-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-reader-command .succession-reader__topbar-actions .succession-reader__select,
-  .succession-reader-command .succession-reader__zoom {
-    display: none;
-  }
-}
-
 @media (prefers-contrast: more) {
   .succession-archive {
     --succession-line-dark: rgba(255, 255, 255, .34);
@@ -259,7 +164,6 @@
 @media print {
   .view-succession .site-header,
   .succession-archive__sidebar,
-  .succession-archive__mobile-bar,
   .succession-archive__status-strip,
   .succession-page-header__actions,
   .succession-reader__topbar,
