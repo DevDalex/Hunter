@@ -1,49 +1,11 @@
-/* Last release-matrix corrections discovered by browser QA. */
+/* Last release-matrix corrections discovered by desktop browser QA. */
 
 /* Reserve the full command surface while the route-owned workspace chunk loads.
-   Without this reservation the first uncached command-home navigation shifts the
-   global footer by almost a viewport on mobile, while repeat navigations appear
-   stable only because the chunk is already cached. */
+   This prevents first-load layout shift before the desktop workspace is ready. */
 .succession-route-loading {
-  min-height: 100svh;
+  min-height: 100vh;
   display: grid;
   place-items: center;
   background: #020403;
   color: #edf1eb;
-}
-
-/* The skip link must expose its ring on plain focus as well as :focus-visible.
-   WebKit mobile accepts programmatic focus without matching :focus-visible, so
-   leaving the ring to the shared selector made the revealed skip link ringless. */
-.succession-archive .succession-archive__skip-link:focus {
-  outline: 3px solid var(--succession-border-focus);
-  outline-offset: 3px;
-  box-shadow: var(--succession-shadow-focus);
-}
-
-@media (max-width: 860px) {
-  .succession-archive[data-archive-route="guardian-spirit-beasts"]
-    .succession-gsb-command__controls button.is-active {
-    color: var(--succession-surface-paper-raised) !important;
-    -webkit-text-fill-color: var(--succession-surface-paper-raised) !important;
-    opacity: 1 !important;
-  }
-
-  /* Pending chapter cards are dark command surfaces. The status tag is an
-     <em> sibling, so it was missed by the earlier descendant contrast closure. */
-  body .succession-archive[data-archive-route="chapters"]
-    .succession-chapter-command__card.is-pending > em {
-    color: #f2f6f4 !important;
-    -webkit-text-fill-color: #f2f6f4 !important;
-    opacity: 1 !important;
-  }
-
-  /* The selected chapter card uses the dark blue active surface. Mobile
-     compatibility rules were leaking document ink into its summary text. */
-  body .succession-archive[data-archive-route="chapters"]
-    .succession-chapter-command__card.is-selected > div > :is(span, p) {
-    color: #f2f6f4 !important;
-    -webkit-text-fill-color: #f2f6f4 !important;
-    opacity: 1 !important;
-  }
 }
