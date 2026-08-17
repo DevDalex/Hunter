@@ -25,11 +25,12 @@ for (const token of [
   'successionArchiveHubs.filter',
   "aria-current={active ? 'page' : undefined}",
   'succession-desktop-navigation',
-  'succession-mobile-navigation',
   'function SuccessionHubTabs',
   'className="succession-hub-tabs"',
   'data-archive-hub={activeHub.id}',
-]) assert(shell.includes(token), `consolidated navigation contract is missing ${token}`);
+]) assert(shell.includes(token), `consolidated desktop navigation contract is missing ${token}`);
+assert(!shell.includes('succession-mobile-navigation'), 'alternate narrow-screen navigation returned');
+assert(!shell.includes('succession-drawer'), 'drawer navigation returned');
 
 for (const token of [
   'className="succession-tabs"',
@@ -65,12 +66,9 @@ for (const selector of [
   '.succession-hub-tabs a.is-active',
 ]) assert(releasePatch.includes(selector), `consolidated hub CSS is missing ${selector}`);
 
-assert(completionCss.includes('@media (max-width: 1100px)'), 'desktop-to-tablet responsive closure is required');
-assert(completionCss.includes('@media (max-width: 860px)'), 'archive shell mobile breakpoint is required');
-assert(completionCss.includes('@media (max-width: 620px)'), 'compact mobile breakpoint is required');
+assert(!completionCss.includes('@media (max-width:'), 'Batch 2 desktop-only completion CSS must not carry narrow-width breakpoints');
+assert(!releasePatch.includes('@media (max-width:'), 'desktop-only release patch must not carry narrow-width breakpoints');
 assert(completionCss.includes('@media (prefers-reduced-motion: reduce)'), 'reduced-motion closure is required');
-assert(completionCss.includes('min-height: 44px'), 'interactive mobile controls must retain 44px targets');
-assert(releasePatch.includes('min-height: 44px'), 'consolidated hub controls must retain 44px targets');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(completionCss), 'Batch 2 completion CSS must not introduce raw hex colors');
 assert(!completionCss.includes('!important'), 'Batch 2 completion CSS must not depend on !important');
 
@@ -83,4 +81,4 @@ for (const hour of ['Hour 18', 'Hour 19', 'Hour 20', 'Hour 21', 'Hour 22', 'Hour
 }
 assert(docs.includes('Batch 2 closure gate'), 'design record must include the Batch 2 closure gate');
 
-console.log('Succession Batch 2 completion audit passed: consolidated hub navigation, keyboard-complete record tabs, chapter controls, search, and responsive closure are registered.');
+console.log('Succession Batch 2 completion audit passed: consolidated desktop hub navigation, keyboard-complete record tabs, chapter controls, search, and desktop-only closure are registered.');
