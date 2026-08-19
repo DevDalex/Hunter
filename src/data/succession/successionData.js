@@ -4,6 +4,7 @@ import { successionArchiveData as storyFoundationLineage } from './entitiesStory
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
 import { createEventKnowledgeSelectors } from './eventKnowledgeSelectors.js';
 import { createHighValueIntelligenceSelectors } from './highValueIntelligenceSelectors.js';
+import { createContentDepthStrategicSelectors } from './contentDepthStrategicSelectors.js';
 import { buildSuccessionIndexes } from './indexesFinal.js';
 import { createSuccessionSelectors } from './selectors.js';
 import { createCharacterStateSelectors } from './characterStateSelectorsStructuredFallback.js';
@@ -54,6 +55,14 @@ export const successionHighValueIntelligence = createHighValueIntelligenceSelect
   nenSystems: successionNenSystems,
   eventKnowledge: successionEventKnowledge,
   informationConsistency: successionInformationConsistency,
+});
+export const successionContentDepth = createContentDepthStrategicSelectors({
+  data: successionArchiveData,
+  archive: successionArchive,
+  informationConsistency: successionInformationConsistency,
+  highValueIntelligence: successionHighValueIntelligence,
+  nenSystems: successionNenSystems,
+  storyIntelligence: successionStoryIntelligence,
 });
 export const successionProductClosure = createProductClosureSelectors({
   data: successionArchiveData,
@@ -240,6 +249,37 @@ export const {
   getEditorialChangeLog,
   getIntelligenceWorkbenchSummary,
 } = successionHighValueIntelligence;
+
+export const {
+  getPrinceCampaignBoard,
+  getQueenIntelligenceBoard,
+  getKnowledgeWarfareMatrix,
+  getCurseRegistry,
+  getBodyIdentityConsciousnessExplorer,
+  getThreatAssassinationMatrix,
+  getMartialLawCommandBoard,
+  getHeilLyContagionDashboard,
+  getRoyalHouseholdMatrix,
+  getCharacterCampaignDossier,
+  getChapterWhatChanged,
+  getSuccessionRulesEngine,
+  getNenTrainingTracker,
+  getAbilityTransferInheritanceLedger,
+  getMafiaWarCommandCenter,
+  getTroupeHisokaTracker,
+  getKurapikaMissionLedger,
+  getLifeStatusLedger,
+  getDeceptionLedger,
+  getOrdersSurveillanceCustodyLedger,
+  getAllianceBetrayalLedger,
+  getActiveCountdowns,
+  getUnresolvedLedgers,
+  getLeverageBoard,
+  getFactionResourceBoard,
+  getReaderVsInUniverseKnowledge,
+  getConsequenceChains,
+  getContentDepthSummary,
+} = successionContentDepth;
 
 export const {
   getChapterDeltaBrief,
