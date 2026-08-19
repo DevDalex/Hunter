@@ -1,5 +1,3 @@
-await import('./desktop-contract-ci-runtime.mjs');
-
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { assertReleasedSuccessionRoutes } from './lib/release-route-contracts.mjs';
