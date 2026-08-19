@@ -1,0 +1,46 @@
+.royal-map__dossier-footer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 7px 9px;
+  border-top: 1px solid #48433c;
+  background: #201e1a;
+}
+
+.royal-map__dossier-footer > span:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+  color: #938a7d;
+  font-size: 11px;
+  line-height: 1.25;
+}
+
+.royal-map .royal-map__inspector-open {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 34px;
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid #8b6c25;
+  border-radius: 4px;
+  background: #2d281e;
+  color: #ffe2a0;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.royal-map .royal-map__inspector-open:hover,
+.royal-map .royal-map__inspector-open:focus-visible { background: #3a311e; border-color: #d3a63e; }
+.royal-map__dossier-no-route { flex: 0 0 auto !important; color: #a59b8c !important; }
+.royal-map__dossier-resize-cue { position: absolute; right: 2px; bottom: 2px; transform: rotate(45deg); color: #806823; opacity: .75; pointer-events: none; }
+.royal-map__inspector.is-preview .royal-map__dossier-resize-cue { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .royal-map .royal-map__inspector { scroll-behavior: auto; }
+}
