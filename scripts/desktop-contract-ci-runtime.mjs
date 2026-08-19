@@ -13,6 +13,7 @@ try {
 if (!alreadyRepaired) {
   await import('./desktop-contract-ci-repair.mjs');
   await import('./timeline-intelligence-readability-fix.mjs');
+  await import('./royal-inspector-desktop-cleanup.mjs');
   await import('./desktop-contract-ci-bundle.mjs');
   await writeFile(sentinel, 'validated desktop contract repair\n');
 }
