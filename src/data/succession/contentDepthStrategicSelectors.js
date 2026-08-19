@@ -198,7 +198,7 @@ export const createContentDepthStrategicSelectors = ({ data, archive, informatio
     if (!org) return null;
     const memberRows = archive.getOrganizationMembers(orgId).filter(Boolean);
     const memberIds = new Set(memberRows.map((record) => record.characterId || record.id));
-    return Object.freeze({ organization: compact(org), leaderIds: freeze(org.leaderIds || []), memberIds: freeze([...memberIds]), abilityIds: freeze(abilities.filter((record) => (record.ownerIds || []).some((id) => memberIds.has(id)) && nenSystems.getAbilityKnowledgeAtChapter(record.id, chapter)?.known).map((record) => record.id)), eventIds: freeze(events.filter((record) => inRange(record.chapterRange, chapter) && (record.organizationIds || []).includes(orgId)).map((record) => record.id) });
+    return Object.freeze({ organization: compact(org), leaderIds: freeze(org.leaderIds || []), memberIds: freeze([...memberIds]), abilityIds: freeze(abilities.filter((record) => (record.ownerIds || []).some((id) => memberIds.has(id)) && nenSystems.getAbilityKnowledgeAtChapter(record.id, chapter)?.known).map((record) => record.id)), eventIds: freeze(events.filter((record) => inRange(record.chapterRange, chapter) && (record.organizationIds || []).includes(orgId)).map((record) => record.id)) });
   };
 
   const getMafiaWarCommandCenter = (chapter = latest) => freeze(['organization:xi-yu', 'organization:cha-r', 'organization:heil-ly'].map((id) => factionSnapshot(id, clamp(chapter))).filter(Boolean));
