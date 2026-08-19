@@ -23,11 +23,11 @@ import {
   timelineNenDevelopments,
   timelinePreludeRecords,
   timelinePrinceProfiles,
-  timelineQuestions,
   timelineVoyageDays,
   timingConfidenceForEvent,
 } from '../data/successionTimelineIntelligence';
 import { strictTimelineNenForEvent } from '../data/successionTimelineIntelligenceView';
+import { timelineQuestionLedger } from '../data/successionTimelineQuestions';
 import './TimelineIntelligencePanels.css';
 
 const archiveRoot = '/story/succession-contest';
@@ -101,8 +101,8 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
   }), [allVisibleEvents, depth]);
 
   const questions = useMemo(() => {
-    const open = timelineQuestions.open.map((item) => ({ ...item, questionState: 'open' }));
-    const resolved = timelineQuestions.resolved.map((item) => ({ ...item, questionState: 'resolved' }));
+    const open = timelineQuestionLedger.open.map((item) => ({ ...item, questionState: 'open' }));
+    const resolved = timelineQuestionLedger.resolved.map((item) => ({ ...item, questionState: 'resolved' }));
     const source = questionScope === 'all' ? [...open, ...resolved] : questionScope === 'resolved' ? resolved : open;
     return source
       .filter((item) => chapterWithinBoundary(item.chapter, spoilerLimit))
