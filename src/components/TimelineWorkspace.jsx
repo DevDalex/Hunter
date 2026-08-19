@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CalendarDays, Search, ShieldCheck } from 'lucide-react';
 import SuccessionTimeline from './SuccessionTimeline';
+import TimelineIntelligencePanels from './TimelineIntelligencePanels';
 import './TimelineWorkspace.css';
 
 export default function TimelineWorkspace({
@@ -60,6 +61,11 @@ export default function TimelineWorkspace({
           )}
         </label>
       </div>
+
+      <TimelineIntelligencePanels
+        spoilerLimit={spoilerLimit}
+        onOpenLocation={onOpenLocation}
+      />
 
       <div className="timeline-workspace__events">
         <SuccessionTimeline
