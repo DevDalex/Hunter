@@ -176,7 +176,11 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'Persist validated desktop-only presentation cleanup'
-          git push origin HEAD:${GITHUB_HEAD_REF}
+          VALIDATED_COMMIT=$(git rev-parse HEAD)
+          git fetch origin "${GITHUB_HEAD_REF}"
+          git checkout -B "${GITHUB_HEAD_REF}" "origin/${GITHUB_HEAD_REF}"
+          git cherry-pick "${VALIDATED_COMMIT}"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"
 
       - name: Publish Batch 5 final diagnostics
         if: always()
