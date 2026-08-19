@@ -30,6 +30,7 @@ import OrganizationsWorkspace from './SuccessionArchiveOrganizationWorkspace';
 import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';
 import StoryIntelligenceWorkspace from './SuccessionArchiveStoryIntelligenceWorkspace';
 import SuccessionIntelligenceWorkbench from './SuccessionIntelligenceWorkbench';
+import SuccessionMysteryCaseWorkbench from './SuccessionMysteryCaseWorkbench';
 import SuccessionWorkspaceRefinementDeck from './SuccessionWorkspaceRefinementDeck';
 import { DomainEntityDetail } from './SuccessionArchiveExtendedWorkspaces';
 import {
@@ -211,7 +212,8 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {showRouteWorkspace && route.id === 'relationships' && <RelationshipsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'chapters' && <ChapterStoryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'research' && <>
-      <SuccessionIntelligenceWorkbench routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />
+      <SuccessionMysteryCaseWorkbench routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />
+      {routeParams.mode !== 'cases' && <SuccessionIntelligenceWorkbench routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
       <ArchiveCoverageReport boundary={spoilerLimit} onNavigate={navigate} compact />
       <EvidenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />
     </>}
