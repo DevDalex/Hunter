@@ -6,6 +6,7 @@ import {
   getSuccessionMysteryCaseSummary,
 } from '../../data/succession/successionMysteryCases';
 import SuccessionContentDepthWorkbench from './SuccessionContentDepthWorkbench';
+import SuccessionEvidenceTranslationWorkbench from './SuccessionEvidenceTranslationWorkbench';
 import './SuccessionIntelligenceWorkbench.css';
 
 const labelize = (value) => String(value || 'unknown').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -39,7 +40,8 @@ function CaseDetail({ record, onNavigate }) {
 
 export default function SuccessionMysteryCaseWorkbench({ routeParams = {}, spoilerLimit = 417, onNavigate }) {
   const depthActive = routeParams.mode === 'cases' && routeParams.workspace === 'depth';
-  const active = routeParams.mode === 'cases' && !depthActive;
+  const evidenceActive = routeParams.mode === 'cases' && routeParams.workspace === 'evidence';
+  const active = routeParams.mode === 'cases' && !depthActive && !evidenceActive;
   const summary = getSuccessionMysteryCaseSummary(spoilerLimit);
   const selected = active && routeParams.case ? getSuccessionMysteryCase(routeParams.case) : null;
   const [query, setQuery] = useState('');
@@ -57,9 +59,11 @@ export default function SuccessionMysteryCaseWorkbench({ routeParams = {}, spoil
   };
 
   if (depthActive) return <SuccessionContentDepthWorkbench routeParams={{ ...routeParams, mode: 'depth' }} spoilerLimit={spoilerLimit} onNavigate={depthNavigate} />;
+  if (evidenceActive) return <SuccessionEvidenceTranslationWorkbench routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={onNavigate} />;
 
   if (!active) return <>
     <SuccessionContentDepthWorkbench routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={depthNavigate} />
+    <SuccessionEvidenceTranslationWorkbench routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={onNavigate} />
     <section className="succession-intelligence-workbench">
       <div className="succession-intelligence-workbench__hero">
         <div><span><ShieldQuestion size={14} aria-hidden="true" /> Content Depth · Case files</span><h2>Open mysteries with arguments, not just question labels.</h2><p>Each case separates established facts, unknowns, competing explanations, supporting evidence, counterevidence, related systems, and the Chapter {spoilerLimit} boundary.</p></div>
