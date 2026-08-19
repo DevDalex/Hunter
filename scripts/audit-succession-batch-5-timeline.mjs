@@ -72,7 +72,8 @@ for (const token of ['successionDossierThrough417.js','successionMysteries','suc
 const princeCount = (intelligenceData.match(/order:\s*\d+,\s*name:/g) || []).length;
 assert(princeCount === 14, `timeline intelligence must register all 14 princes; found ${princeCount}`);
 for (let day = 1; day <= 12; day += 1) assert(intelligenceData.includes(`day: ${day},`), `timeline end-of-day synthesis is missing Voyage Day ${day}`);
-for (const chapter of [340, 358, 385, 401, 409, 416, 417]) assert(intelligenceData.includes(String(chapter)), `timeline intelligence data is missing expected chapter signal ${chapter}`);
+for (const chapter of [385, 401, 409, 416, 417]) assert(intelligenceData.includes(String(chapter)), `timeline intelligence data is missing expected chapter signal ${chapter}`);
+assert(intelligence.includes('Chapter 340 → Ch. {spoilerLimit}') && intelligence.includes('Pre-voyage · Chapters 340–358'), 'pre-voyage Chapters 340–358 must remain visibly integrated through derived prelude data');
 
 for (const selector of ['.timeline-command__hero','.timeline-command__signal','.timeline-command-voyage__hero','.timeline-command-voyage__filter-grid','.timeline-command-voyage__selected','.timeline-day-rail','.timeline-workbench','.timeline-swimlanes','.timeline-thread-view','.timeline-chapter-view','.timeline-location-view']) assert(styles.includes(selector), `timeline visual system is missing ${selector}`);
 for (const selector of ['.timeline-intelligence','.timeline-intelligence__causality','.timeline-intelligence__day-change','.timeline-intelligence__princes','.timeline-intelligence__questions','.timeline-intelligence__nen-grid','.timeline-intelligence__deadlines']) assert(intelligenceStyles.includes(selector), `timeline intelligence visual system is missing ${selector}`);
