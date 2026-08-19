@@ -32,7 +32,7 @@ on:
       - '.github/workflows/succession-visual-redesign-batch-5.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: succession-visual-redesign-batch-5-${{ github.ref }}
@@ -151,36 +151,6 @@ jobs:
         run: |
           set -o pipefail
           npm run qa:succession-cross-browser 2>&1 | tee batch5-cross-browser.log
-
-      - name: Persist validated desktop repair
-        if: github.event_name == 'pull_request' && github.head_ref == 'agent/timeline-content-intelligence'
-        shell: bash
-        run: |
-          set -euo pipefail
-          git checkout -- scripts/succession-final-release-qa.mjs
-          rm -f .desktop-contract-repaired
-          node --input-type=module <<'NODE' > /tmp/desktop-repair-paths
-          import { readFile } from 'node:fs/promises';
-          const bundle = JSON.parse(await readFile('desktop-contract-repair.json', 'utf8'));
-          for (const entry of bundle.files) {
-            if (entry.path !== 'scripts/succession-final-release-qa.mjs') console.log(entry.path);
-          }
-          NODE
-          while IFS= read -r target; do
-            git add -A -- "$target"
-          done < /tmp/desktop-repair-paths
-          if git diff --cached --quiet; then
-            echo 'Validated desktop repair is already persisted.'
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Persist validated desktop-only presentation cleanup'
-          VALIDATED_COMMIT=$(git rev-parse HEAD)
-          git fetch origin "${GITHUB_HEAD_REF}"
-          git checkout -B "${GITHUB_HEAD_REF}" "origin/${GITHUB_HEAD_REF}"
-          git cherry-pick "${VALIDATED_COMMIT}"
-          git push origin "HEAD:${GITHUB_HEAD_REF}"
 
       - name: Publish Batch 5 final diagnostics
         if: always()
