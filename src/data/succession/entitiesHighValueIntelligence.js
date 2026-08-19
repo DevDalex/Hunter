@@ -7,6 +7,14 @@ import {
   phase4PredecessorData,
   phase4ProtocolRecords,
 } from './highValueIntelligenceFoundation.js';
+import {
+  contentDepthDocuments417,
+  contentDepthEditorialEntries417,
+  contentDepthEvidenceItems417,
+  contentDepthKnowledgeRecords417,
+  contentDepthObjects417,
+  contentDepthProtocolRecords417,
+} from './contentDepth417Expansion.js';
 import { highValueIntelligence384Protocols } from './highValueIntelligence384Expansion.js';
 import { successionArchiveData as chapter416CharacterData } from './entitiesCharacter416Bridge.js';
 import { abilityFoundation417Expansion } from './abilityFoundation417Expansion.js';
@@ -42,14 +50,37 @@ const closeSupersededStateRanges = (baseMap = {}, additionMap = {}, nextChapter)
   }),
 ));
 
-const objects = freeze(phase4Objects.map((record) => record.id === 'object:guardian-spirit-beast-eggs'
-  ? freeze({ ...record, chapterRange: freeze({ start: record.chapterRange.start, end: null }) })
-  : record));
-
-const protocolRecords = freeze([
+const knowledgeRecords = freeze(uniqueById([
+  ...phase4KnowledgeRecords,
+  ...contentDepthKnowledgeRecords417,
+]));
+const objects = freeze(uniqueById([
+  ...phase4Objects.map((record) => record.id === 'object:guardian-spirit-beast-eggs'
+    ? freeze({ ...record, chapterRange: freeze({ start: record.chapterRange.start, end: null }) })
+    : record),
+  ...contentDepthObjects417,
+]));
+const documents = freeze(uniqueById([
+  ...phase4Documents,
+  ...contentDepthDocuments417,
+]));
+const evidenceItems = freeze(uniqueById([
+  ...phase4EvidenceItems,
+  ...contentDepthEvidenceItems417,
+]));
+const protocolRecords = freeze(uniqueById([
   ...phase4ProtocolRecords.filter((record) => !highValueIntelligence384Protocols.some((addition) => addition.id === record.id)),
   ...highValueIntelligence384Protocols,
-]);
+  ...contentDepthProtocolRecords417,
+]));
+const editorialChangeLog = freeze({
+  ...phase4EditorialChangeLog,
+  version: 'content-depth-417-v1',
+  entries: freeze(uniqueById([
+    ...(phase4EditorialChangeLog.entries || []),
+    ...contentDepthEditorialEntries417,
+  ])),
+});
 
 const hellFruit = abilityFoundation417Expansion.find((record) => record.id === 'ability:dust-in-the-wind-hell-fruit');
 const gypsyLife = abilityFoundation417Expansion.find((record) => record.id === 'ability:gypsy-life-bohemian-rhapsody');
@@ -191,11 +222,12 @@ export const successionArchiveData = freeze({
   abilities,
   abilityKnowledgeOverrides,
   relationships,
-  knowledgeRecords: phase4KnowledgeRecords,
+  knowledgeRecords,
   protocolRecords,
   objects,
-  documents: phase4Documents,
-  evidenceItems: phase4EvidenceItems,
-  editorialChangeLog: phase4EditorialChangeLog,
+  documents,
+  evidenceItems,
+  editorialChangeLog,
   highValueIntelligenceVersion: 'phase-4-v1',
+  contentDepthVersion: 'content-depth-417-v1',
 });
