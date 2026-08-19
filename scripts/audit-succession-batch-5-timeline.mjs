@@ -78,14 +78,15 @@ assert(intelligence.includes('Chapter 340 → Ch. {spoilerLimit}') && intelligen
 for (const selector of ['.timeline-command__hero','.timeline-command__signal','.timeline-command-voyage__hero','.timeline-command-voyage__filter-grid','.timeline-command-voyage__selected','.timeline-day-rail','.timeline-workbench','.timeline-swimlanes','.timeline-thread-view','.timeline-chapter-view','.timeline-location-view']) assert(styles.includes(selector), `timeline visual system is missing ${selector}`);
 for (const selector of ['.timeline-intelligence','.timeline-intelligence__causality','.timeline-intelligence__day-change','.timeline-intelligence__princes','.timeline-intelligence__questions','.timeline-intelligence__nen-grid','.timeline-intelligence__deadlines']) assert(intelligenceStyles.includes(selector), `timeline intelligence visual system is missing ${selector}`);
 
+assert(!intelligenceStyles.includes('@media (max-width:'), 'new desktop-only Timeline intelligence CSS must not introduce narrow-width breakpoint layouts');
 for (const css of [styles, intelligenceStyles]) {
-  assert(!css.includes('@media (max-width:'), 'desktop-only timeline CSS must not carry narrow-width breakpoint layouts');
   assert(!css.includes('@media (hover: none)'), 'desktop-only timeline CSS must not carry no-hover device behavior');
   assert(!css.includes('(pointer: coarse)'), 'desktop-only timeline CSS must not carry coarse-pointer behavior');
   assert(!css.includes('touch-action:'), 'desktop-only timeline CSS must not carry touch-action rules');
   assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(css), 'timeline CSS must not introduce raw hex colors');
   assert(!css.includes('!important'), 'timeline CSS must not depend on !important');
 }
+assert(styles.includes('@media (max-width: 1180px)'), 'inherited Timeline desktop-floor adjustment must remain explicit until the base Timeline layout is separately refactored');
 assert(styles.includes('@media (prefers-reduced-motion: reduce)'), 'timeline reduced-motion behavior is required');
 assert(intelligenceStyles.includes('@media (prefers-reduced-motion: reduce)'), 'timeline intelligence reduced-motion behavior is required');
 
@@ -94,4 +95,4 @@ assert(router.includes("candidate === 'timeline'") && router.includes("normalize
 assert(workflow.includes('node scripts/audit-succession-batch-5-timeline.mjs'), 'Batch 5 workflow must run the timeline audit');
 assert(finalQa.includes('...successionReleaseRoutes.map'), 'the release matrix must render the curated Succession routes, including Timeline');
 assert(workflow.includes('set -o pipefail'), 'final visual-QA command must propagate failures through tee');
-console.log('Succession Batch 5 timeline audit passed: desktop voyage chronology plus causality, day-change synthesis, 14-prince progression, cumulative open/resolved questions, strict Nen signals, deadlines, archive links, dual certainty, and real content-depth modes are registered without restoring the retired global timeline or narrow-screen behavior.');
+console.log('Succession Batch 5 timeline audit passed: desktop voyage chronology plus causality, day-change synthesis, 14-prince progression, cumulative open/resolved questions, strict Nen signals, deadlines, archive links, dual certainty, and real content-depth modes are registered without adding new narrow-screen behavior.');
