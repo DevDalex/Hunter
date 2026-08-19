@@ -353,7 +353,6 @@ body:has(.story-utility-shell--succession-reader) #main-content > .story-utility
   top: max(74px, calc(0px + 64px));
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-reader__topbar,
   .succession-reader__bottombar {

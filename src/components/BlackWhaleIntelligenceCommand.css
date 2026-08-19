@@ -454,12 +454,6 @@
 .black-whale-intelligence .room-index__progress { color: var(--ship-intel-paper-muted-ink); }
 .black-whale-intelligence .room-card dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-@media (max-width: 1180px) {
-  .black-whale-intelligence__hero { grid-template-columns: minmax(0, 1fr) 270px; }
-  .ship-temporal-ledger ol { grid-template-columns: 1fr; }
-}
-
-
 @media (prefers-reduced-motion: reduce) {
   .black-whale-intelligence *,
   .black-whale-intelligence *::before,
@@ -467,6 +461,5 @@
 }
 
 /* Batch 5 route-owned Black Whale contrast closure. */
-
 
 /* Batch 5 final Black Whale contrast specificity. */

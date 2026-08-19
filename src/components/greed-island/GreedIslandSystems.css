@@ -390,7 +390,6 @@
   background: rgba(242, 210, 142, .09);
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .gi-systems *,
   .gi-systems *::before,

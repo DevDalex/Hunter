@@ -6,10 +6,7 @@
 @import './RoyalFamilyInspectorNetwork02.css';
 @import './RoyalFamilyInspectorNetwork03.css';
 @import './RoyalFamilyInspectorNetwork04.css';
-@import './RoyalFamilyInspectorResponsive01.css';
-@import './RoyalFamilyInspectorResponsive02.css';
-@import './RoyalFamilyInspectorResponsive03.css';
-@import './RoyalFamilyInspectorResponsive04.css';
+@import './RoyalFamilyInspectorDesktop.css';
 
 /* Route-owned baseline kept here for build-audit ownership and late cascade safety. */
 .royal-map .royal-map__inspector,

@@ -401,17 +401,6 @@
 .succession-nen-command__interpretation h3 { color: var(--nen-paper-ink); }
 .succession-nen-command__interpretation p { color: var(--nen-paper-muted-ink); }
 
-@media (max-width: 1180px) {
-  .succession-nen-command__hero { grid-template-columns: minmax(0, 1fr) minmax(225px, .5fr); }
-  .succession-nen-command__metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .succession-nen-command__metrics > div:nth-child(3) { border-right: 0; }
-  .succession-nen-command__metrics > div:nth-child(-n+3) { border-bottom: 1px solid color-mix(in srgb, var(--nen-paper-ink) 14%, transparent); }
-  .succession-nen-command__filters { grid-template-columns: minmax(250px, 1.3fr) repeat(3, minmax(150px, .7fr)); }
-  .succession-nen-command__ability-grid,
-  .succession-nen-command__system-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-
 @media (prefers-reduced-motion: reduce) {
   .succession-nen-command *,
   .succession-nen-command *::before,

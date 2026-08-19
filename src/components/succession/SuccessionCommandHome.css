@@ -904,7 +904,6 @@
   .succession-command-home__updates a small { display: none; }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-command-home *,
   .succession-command-home *::before,

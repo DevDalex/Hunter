@@ -335,22 +335,6 @@
 .succession-relationship-empty { grid-column: 1 / -1; display: grid; justify-items: center; gap: 8px; padding: 48px 20px; border: 1px dashed var(--relationship-line); border-radius: 18px; color: var(--relationship-muted); text-align: center; }
 .succession-relationship-empty button { border-color: var(--relationship-line); background: var(--relationship-raised); color: var(--relationship-ink); }
 
-@media (max-width: 1180px) {
-  .succession-canonical-relationships__hero { grid-template-columns: minmax(0, 1fr) 260px; }
-  .succession-relationship-filter-panel__fields { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .succession-relationship-connectivity > div { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .succession-relationship-network__canvas { min-height: 590px; }
-  .succession-relationship-accessible li { grid-template-columns: minmax(160px, .8fr) minmax(220px, 1fr) minmax(160px, .8fr); }
-  .succession-relationship-accessible li > button:last-child { grid-column: 1 / -1; }
-  .succession-relationship-node-snapshot > header,
-  .succession-relationship-dossier > header { grid-template-columns: auto minmax(0, 1fr); }
-  .succession-relationship-node-snapshot > header > .entity-visual,
-  .succession-relationship-dossier > header > .entity-visual { display: none; }
-  .succession-relationship-node-snapshot > header dl,
-  .succession-relationship-dossier > header dl { grid-column: 1 / -1; }
-}
-
-
 @media (prefers-reduced-motion: reduce) {
   .succession-canonical-relationships *,
   .succession-canonical-relationships *::before,

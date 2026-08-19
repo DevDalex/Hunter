@@ -261,7 +261,6 @@
 .v0-next-page p { max-width: 760px; margin: 5px 0 0; color: #655b52; }
 .v0-next-page button { min-height: 48px; display: inline-flex; gap: 9px; align-items: center; border: 1px solid var(--v0-forest-dark); padding: 0 18px; background: var(--v0-forest-dark); color: #fff; cursor: pointer; font-size: 12px; font-weight: 850; }
 
-
 @media (prefers-reduced-motion: reduce) {
   .volume-zero-page * { scroll-behavior: auto; }
 }

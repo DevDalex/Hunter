@@ -591,7 +591,6 @@
 .gi-eta-course__controls a { color: #29382d; border-color: #8d754d; background: #eee3c6; }
 .gi-eta-course__controls button.is-primary { color: #fff; background: #2a4432; }
 
-
 @media (prefers-reduced-motion: reduce) {
   .gi-eta-course__progress > i span,
   .gi-rule-book,

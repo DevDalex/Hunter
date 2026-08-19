@@ -253,16 +253,6 @@
 .he-next-page p { margin: 0; color: var(--he-muted); font-size: 16px; }
 .he-next-page button { min-height: 50px; display: inline-flex; gap: 9px; align-items: center; border: 1px solid var(--he-green-dark); padding: 0 20px; background: var(--he-green-dark); color: #fff; cursor: pointer; font-weight: 850; }
 
-@media (max-width: 1180px) {
-  .he-funnel__layout,
-  .he-badge-matrix { grid-template-columns: 1fr; }
-  .he-badge-matrix aside { position: static; }
-  .he-phase__events { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .he-phase__body { grid-template-columns: 1fr; }
-  .he-badge-matrix__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
-
 @media (prefers-reduced-motion: reduce) {
   .hunter-exam-page * { scroll-behavior: auto !important; }
 }

@@ -287,11 +287,3 @@
   color: var(--nen-crimson);
   font-weight: 800;
 }
-
-@media (max-width: 1180px) {
-  .succession-nen-command-dossier__hero { grid-template-columns: minmax(140px, .3fr) minmax(0, 1fr); }
-  .succession-nen-command-dossier__hero dl { grid-column: 1 / -1; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .succession-nen-command-pipeline > ol { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .succession-nen-command-pipeline li:nth-child(3) > svg:last-child,
-  .succession-nen-command-pipeline li:last-child > svg:last-child { display: none; }
-}

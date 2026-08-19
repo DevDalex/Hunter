@@ -473,7 +473,6 @@
   50% { opacity: 1; transform: scaleX(1); transform-origin: left; }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-archive *,
   .succession-archive *::before,

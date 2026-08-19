@@ -455,9 +455,3 @@
 .archive-landing button:focus-visible {
   outline-color: #d2b16d;
 }
-
-@media (max-width: 1180px) {
-  .archive-number-band dl > div:nth-child(n+4) {
-    border-top-color: var(--home-line);
-  }
-}

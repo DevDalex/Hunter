@@ -589,17 +589,6 @@
 .timeline-command-voyage__empty p { color: var(--timeline-muted); }
 .timeline-command-voyage__empty button { border-radius: 9px; }
 
-@media (max-width: 1180px) {
-  .timeline-command__hero { grid-template-columns: minmax(0, 1fr) 250px; }
-  .timeline-command__arc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .timeline-command__ledger article dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .timeline-command-voyage__filter-grid { grid-template-columns: minmax(230px, 1.2fr) repeat(3, minmax(140px, .7fr)); }
-  .timeline-command-voyage__filter-grid label:nth-last-child(-n+2) { grid-column: span 2; }
-  .timeline-command-voyage__selected { grid-template-columns: minmax(0, 1fr) minmax(280px, .65fr); }
-  .timeline-command-voyage__selected > div:last-child { grid-column: 1 / -1; grid-template-columns: repeat(2, 1fr); }
-}
-
-
 @media (prefers-reduced-motion: reduce) {
   .timeline-command *,
   .timeline-command *::before,
@@ -607,6 +596,5 @@
 }
 
 /* Batch 5 route-owned timeline contrast closure. */
-
 
 /* Batch 5 final timeline contrast specificity. */

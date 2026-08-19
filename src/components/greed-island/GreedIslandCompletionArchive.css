@@ -350,7 +350,6 @@
   padding: .9rem;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .gi-completion *,
   .gi-completion *::before,

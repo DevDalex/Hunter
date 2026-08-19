@@ -78,7 +78,6 @@
 .story-directory__policy svg { color: #8e2635; }
 .story-directory__policy p { margin: 0; font-size: 13px; }
 
-
 @media (prefers-reduced-motion: reduce) {
   .story-directory-card,
   .story-directory-card figure img { transition: none; }

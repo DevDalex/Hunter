@@ -819,7 +819,6 @@
   }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-queen-command *,
   .succession-queen-command-dossier *,
@@ -831,6 +830,5 @@
 }
 
 /* Batch 5 route-owned queen contrast closure. */
-
 
 /* Batch 5 final queen contrast specificity. */

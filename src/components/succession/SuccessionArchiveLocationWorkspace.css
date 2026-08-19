@@ -602,7 +602,6 @@
   margin-top: 14px;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-location-card {
     transition: none;

@@ -101,7 +101,7 @@ try {
     '.succession-reader__pages.is-spread',
     '.succession-reader__chapter-groups',
   ]) assert(css.includes(selector), `reader design is missing ${selector}`);
-  assert(css.includes('@media (max-width: 620px)') && css.includes('@media (prefers-reduced-motion: reduce)'), 'reader requires mobile and reduced-motion layers');
+  assert(!/@media\s*\([^)]*max-width:/i.test(css) && css.includes('@media (prefers-reduced-motion: reduce)'), 'reader requires desktop-only and reduced-motion layers');
   assert(polishCss.includes('.succession-reader__panel-enhancement') && polishCss.includes('.succession-reader__command-syntax'), 'reader enhancements require route-owned styling');
 
   for (const check of [
@@ -110,10 +110,9 @@ try {
     'modes fit direction',
     'Bookmarks persist',
     'Keyboard chapter navigation',
-    'Mobile reader is contained',
   ]) assert(qa.includes(check), `browser QA is missing ${check}`);
 
-  console.log(`Succession reader audit passed: ${catalogue.successionReaderCatalog.length} chapter records through published Chapter ${manifest.SUCCESSION_READER_END}, local media through Chapter ${availability.LATEST_AUTHORIZED_SUCCESSION_CHAPTER}, canonical focused routing, three reading modes, progress, bookmarks, direct commands, chapter-record bridging, and responsive design verified.`);
+  console.log(`Succession reader audit passed: ${catalogue.successionReaderCatalog.length} chapter records through published Chapter ${manifest.SUCCESSION_READER_END}, local media through Chapter ${availability.LATEST_AUTHORIZED_SUCCESSION_CHAPTER}, canonical focused routing, three reading modes, progress, bookmarks, direct commands, chapter-record bridging, and desktop design verified.`);
 } finally {
   await vite.close();
 }

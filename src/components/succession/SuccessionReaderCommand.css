@@ -268,7 +268,6 @@
   color: #182329;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-reader-command .succession-reader__page-skeleton {
     background: #11191d;

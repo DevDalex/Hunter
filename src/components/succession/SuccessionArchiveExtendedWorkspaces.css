@@ -753,7 +753,6 @@
 .is-exceptional { color: #bca8ff; }
 .is-active { color: #9ed7b1; }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-character-ledger > button,
   .succession-hunter-missions button,

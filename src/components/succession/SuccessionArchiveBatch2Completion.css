@@ -594,7 +594,6 @@
   color: var(--succession-text-subtle);
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-archive-nav a,
   .succession-search-complete__groups article {

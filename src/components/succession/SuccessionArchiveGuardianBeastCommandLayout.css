@@ -268,7 +268,6 @@
 .succession-gsb-command__boundary h3 { color: var(--gsb-paper-ink); }
 .succession-gsb-command__boundary p { color: var(--gsb-paper-muted-ink); }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-gsb-command *,
   .succession-gsb-command *::before,

@@ -73,7 +73,7 @@ assert(storyWorkspace.includes('The arc as phases, parallel plotlines, causal tu
 assert(storyWorkspace.includes('phasePresentation') && storyWorkspace.includes('laneDossiers'), 'Story workspace must render bounded phase and lane copy');
 assert(chapterWorkspace.includes('Every chapter placed inside phase, plotline, causality, and unresolved-story context'), 'Chapter workspace must expose canonical chapter dossiers');
 assert(chapterWorkspace.includes('requestedAllowed') && chapterWorkspace.includes('boundedSelectedNumber'), 'chapter deep links must clamp to the spoiler boundary');
-assert(storyStyles.includes('@media(max-width:720px)') && chapterStyles.includes('@media(max-width:720px)'), 'both Batch 4 workspaces must include mobile layouts');
+assert(!/@media\s*\([^)]*max-width:/i.test(storyStyles) && !/@media\s*\([^)]*max-width:/i.test(chapterStyles), 'Batch 4 story workspaces must remain desktop-only');
 assert(storyStyles.includes('@media(prefers-reduced-motion:reduce)') && chapterStyles.includes('@media(prefers-reduced-motion:reduce)'), 'both Batch 4 workspaces must honor reduced motion');
 assert(routes.includes('latest imported reader release'), 'route registry must follow imported chapter availability');
 

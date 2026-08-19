@@ -385,7 +385,6 @@
   color: var(--succession-muted, #aab3c2);
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-organization-workspace *,
   .succession-organization-dossier * {

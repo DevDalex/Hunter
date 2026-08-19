@@ -146,9 +146,3 @@
 .story-foundation--wide .story-hub-foundation__hero {
   grid-template-columns: minmax(0, 1fr) minmax(280px, .34fr);
 }
-
-@media (max-width: 1180px) {
-  .story-foundation--wide .story-hub-foundation__timeline {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}

@@ -30,7 +30,7 @@ assert(workspace.includes('Chapter evidence snapshot'), 'workspace must render c
 assert(workspace.includes('Inspect non-critical coverage debt'), 'workspace must render the gap ledger');
 assert(workspace.includes('Search maintained chapter and reference records'), 'workspace must retain source navigation');
 assert(styles.includes('.succession-foundation-closure'), 'styles must own foundation closure presentation');
-assert(styles.includes('@media (max-width:720px)'), 'workspace must include responsive handling');
+assert(!/@media\s*\([^)]*max-width:/i.test(styles), 'foundation workspace must remain desktop-only');
 assert(styles.includes('@media (prefers-reduced-motion:reduce)'), 'workspace must include reduced-motion handling');
 assert(packageJson.includes('audit:succession-foundation'), 'package scripts must expose the closure audit');
 

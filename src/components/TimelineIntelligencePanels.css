@@ -281,7 +281,7 @@
   background: color-mix(in srgb, var(--timeline-raised) 72%, transparent);
 }
 .timeline-intelligence__causality > div { display: grid; gap: 4px; }
-.timeline-intelligence__causality > div > span { color: var(--timeline-gold); font-size: 10px; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
+.timeline-intelligence__causality > div > span { color: var(--timeline-gold); font-size: 11px; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
 .timeline-intelligence__causality p { font-size: 12px; line-height: 1.45; }
 .timeline-intelligence__causality > svg { color: var(--timeline-muted); }
 
@@ -336,7 +336,7 @@
   color: var(--timeline-ink);
   text-decoration: none;
 }
-.timeline-intelligence__princes > article > div > a span { color: var(--timeline-muted); font-size: 10px; }
+.timeline-intelligence__princes > article > div > a span { color: var(--timeline-muted); font-size: 11px; }
 .timeline-intelligence__princes > article > div > a strong { font-size: 12px; line-height: 1.35; }
 
 .timeline-intelligence__question-switch { display: flex; align-items: center; gap: 8px; }

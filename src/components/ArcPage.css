@@ -246,16 +246,6 @@
 .arc-page--election .arc-page__hero { background: #35404e; }
 .arc-page--succession .arc-page__hero { background: #423843; }
 
-@media (max-width: 1180px) {
-  .arc-character-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .arc-faction-grid,
-  .arc-location-grid,
-  .arc-object-grid,
-  .arc-theme-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .arc-source-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-
 @media (prefers-reduced-motion: reduce) {
   .arc-page { scroll-behavior: auto; }
 }

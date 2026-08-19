@@ -1388,26 +1388,6 @@
   from { opacity: 0; transform: translateY(12px) scale(.98); }
 }
 
-@media (max-width: 1180px) {
-  .succession-reader__topbar {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-
-  .succession-reader__topbar-progress {
-    display: none;
-  }
-
-  .succession-reader__select:last-of-type,
-  .succession-reader__zoom {
-    display: none;
-  }
-
-  .succession-reader__bottombar {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-  }
-}
-
-
 @media (prefers-reduced-motion: reduce) {
   .succession-reader *,
   .succession-reader *::before,

@@ -756,7 +756,6 @@ body.succession-architecture-mode .site-header {
   .succession-architecture__lower-grid { grid-template-columns: minmax(380px, .72fr) minmax(570px, 1.28fr); gap: 12px; }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-architecture-board *,
   .succession-architecture-board *::before,

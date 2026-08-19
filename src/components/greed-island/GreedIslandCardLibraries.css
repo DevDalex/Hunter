@@ -846,7 +846,6 @@ button.gi-library-book__card:focus-visible {
   line-height: 1.5;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .gi-card-libraries *,
   .gi-card-libraries *::before,

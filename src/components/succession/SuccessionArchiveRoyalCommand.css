@@ -867,7 +867,6 @@
   color: var(--royal-ink);
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-prince-card,
   .succession-prince-card__visual img {

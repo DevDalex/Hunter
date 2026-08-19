@@ -45,14 +45,12 @@ for (const selector of [
   '.succession-archive-nav a.is-active',
   '.succession-hub-tabs',
   '.succession-page-header',
-  '.succession-archive__mobile-bar',
-  '.succession-drawer',
 ]) assert(phase2.includes(selector), `missing shared Phase 2 surface: ${selector}`);
 
 for (const viewportContract of [
   'html:has(.succession-architecture-board)',
   'width: 100vw !important',
-  'height: 100dvh !important',
+  'height: 100vh !important',
   'overflow: hidden !important',
   '--architecture-layout-width',
   '--architecture-layout-height',
@@ -102,9 +100,8 @@ for (const workspaceSelector of [
   '.black-whale-intelligence',
 ]) assert(!phase2.includes(workspaceSelector), `Phase 2 improperly redesigns a Phase 3 workspace: ${workspaceSelector}`);
 
-assert(shell.includes('succession-archive__layout'), 'canonical shared shell is missing');
-assert(shell.includes('succession-archive__mobile-bar'), 'canonical mobile shell is missing');
-assert(shell.includes('succession-drawer'), 'canonical modal navigation drawer is missing');
+assert(shell.includes('succession-archive__layout') && shell.includes('succession-archive__sidebar'), 'canonical desktop shell is missing');
+assert(!shell.includes('succession-archive__mobile-bar') && !shell.includes('succession-drawer'), 'retired mobile shell must stay removed');
 
 for (const [name, css] of [['Phase 2', phase2], ['viewport fill', viewportCss]]) {
   const opening = (css.match(/\{/g) || []).length;
@@ -112,4 +109,4 @@ for (const [name, css] of [['Phase 2', phase2], ['viewport fill', viewportCss]])
   assert(opening === closing, `${name} CSS has unbalanced blocks (${opening} opening, ${closing} closing)`);
 }
 
-console.log('Succession Phase 2 design-system audit passed: monochrome tokens, shared shell, edge-to-edge viewport fill, zero-scroll geometry, runtime resizing, semantic states, and Phase 3 workspace boundaries are protected.');
+console.log('Succession Phase 2 design-system audit passed: monochrome tokens, desktop shared shell, edge-to-edge viewport fill, zero-scroll geometry, runtime resizing, semantic states, and Phase 3 workspace boundaries are protected.');

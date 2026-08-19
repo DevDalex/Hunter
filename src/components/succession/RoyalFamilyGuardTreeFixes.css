@@ -86,7 +86,6 @@
   padding: 1px 6px;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .royal-map__prince-node,
   .royal-map__connectors path { transition: none; }

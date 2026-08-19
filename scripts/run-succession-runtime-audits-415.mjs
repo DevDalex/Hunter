@@ -5,5 +5,5 @@ import './audit-succession-chapter-415-boundary.mjs';
 if (process.exitCode) {
   console.error('\nSuccession runtime audit sweep failed including Chapter 415.');
 } else {
-  console.log('\nSuccession runtime audit sweep passed: 72/72 audits.');
+  console.log('\nSuccession runtime audit sweep passed through Chapter 415.');
 }
