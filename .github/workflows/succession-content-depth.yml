@@ -1,0 +1,43 @@
+name: Succession Content Depth
+
+on:
+  pull_request:
+    paths:
+      - 'src/data/succession/**'
+      - 'src/components/succession/**'
+      - 'scripts/audit-succession-content-depth-p0.mjs'
+      - '.github/workflows/succession-content-depth.yml'
+  push:
+    branches:
+      - 'agent/succession-content-depth'
+    paths:
+      - 'src/data/succession/**'
+      - 'src/components/succession/**'
+      - 'scripts/audit-succession-content-depth-p0.mjs'
+      - '.github/workflows/succession-content-depth.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  content-depth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit Succession content depth P0
+        run: node scripts/audit-succession-content-depth-p0.mjs
+
+      - name: Production build
+        run: npm run build
