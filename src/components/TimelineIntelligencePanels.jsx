@@ -21,13 +21,13 @@ import {
   timelineDeadlines,
   timelineImportance,
   timelineNenDevelopments,
-  timelineNenForEvent,
   timelinePreludeRecords,
   timelinePrinceProfiles,
   timelineQuestions,
   timelineVoyageDays,
   timingConfidenceForEvent,
 } from '../data/successionTimelineIntelligence';
+import { strictTimelineNenForEvent } from '../data/successionTimelineIntelligenceView';
 import './TimelineIntelligencePanels.css';
 
 const archiveRoot = '/story/succession-contest';
@@ -98,8 +98,12 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
   }), [allVisibleEvents, depth]);
 
   const questions = useMemo(() => {
-    const source = questionScope === 'resolved' ? timelineQuestions.resolved : timelineQuestions.open;
-    return source.filter((item) => chapterWithinBoundary(item.chapter, spoilerLimit));
+    const open = timelineQuestions.open.map((item) => ({ ...item, questionState: 'open' }));
+    const resolved = timelineQuestions.resolved.map((item) => ({ ...item, questionState: 'resolved' }));
+    const source = questionScope === 'all' ? [...open, ...resolved] : questionScope === 'resolved' ? resolved : open;
+    return source
+      .filter((item) => chapterWithinBoundary(item.chapter, spoilerLimit))
+      .sort((left, right) => Number(left.chapter) - Number(right.chapter));
   }, [questionScope, spoilerLimit]);
 
   const visibleNen = useMemo(() => timelineNenDevelopments.filter((item) => chapterWithinBoundary(item.chapter, spoilerLimit)), [spoilerLimit]);
@@ -121,7 +125,7 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
 
   const renderEvent = (event, key) => {
     const causality = timelineCausalityForEvent(event);
-    const nen = timelineNenForEvent(event);
+    const nen = strictTimelineNenForEvent(event);
     const timing = timingConfidenceForEvent(event);
     const evidence = evidenceConfidenceForEvent(event);
     return <article className={`timeline-intelligence-event timeline-intelligence-event--${event.importance || 'standard'}`} key={key || event.id}>
@@ -217,18 +221,21 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
     </details>
 
     <details className="timeline-intelligence__section" open>
-      <summary><span>Questions</span><strong>Open ↔ resolved</strong></summary>
+      <summary><span>Questions</span><strong>Open ↔ resolved ↔ all</strong></summary>
       <div className="timeline-intelligence__section-body">
         <div className="timeline-intelligence__question-switch" aria-label="Question status">
-          {['open', 'resolved'].map((item) => <button type="button" key={item} className={questionScope === item ? 'is-active' : ''} aria-pressed={questionScope === item} onClick={() => setQuestionScope(item)}>{item}</button>)}
+          {['open', 'resolved', 'all'].map((item) => <button type="button" key={item} className={questionScope === item ? 'is-active' : ''} aria-pressed={questionScope === item} onClick={() => setQuestionScope(item)}>{item}</button>)}
           <span>{questions.length} visible through Ch. {spoilerLimit}</span>
         </div>
-        <div className="timeline-intelligence__questions">{questions.map((item, index) => <article key={`${questionScope}-${item.chapter}-${index}`}>
-          <header><HelpCircle size={15} aria-hidden="true" /><span>{questionScope === 'resolved' ? 'Resolved' : 'Open'} · Ch. {item.chapter}</span></header>
-          <h3>{item.question}</h3>
-          <p>{questionScope === 'resolved' ? item.answer : item.evidence}</p>
-          <footer><a href={chapterHref(item.chapter)}>Chapter record</a><a href={item.source} target="_blank" rel="noreferrer">Source</a></footer>
-        </article>)}</div>
+        <div className="timeline-intelligence__questions">{questions.map((item, index) => {
+          const state = item.questionState || questionScope;
+          return <article key={`${state}-${item.chapter}-${index}`}>
+            <header><HelpCircle size={15} aria-hidden="true" /><span>{state === 'resolved' ? 'Resolved' : 'Open'} · Ch. {item.chapter}</span></header>
+            <h3>{item.question}</h3>
+            <p>{state === 'resolved' ? item.answer : item.evidence}</p>
+            <footer><a href={chapterHref(item.chapter)}>Chapter record</a><a href={item.source} target="_blank" rel="noreferrer">Source</a></footer>
+          </article>;
+        })}</div>
       </div>
     </details>
 
