@@ -42,5 +42,8 @@ jobs:
       - name: Audit strategic content depth
         run: node scripts/audit-succession-content-depth-strategic.mjs
 
+      - name: Audit reading depth and evidence integrity
+        run: node scripts/audit-succession-content-depth-reading.mjs
+
       - name: Production build
         run: npm run build
