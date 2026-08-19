@@ -75,14 +75,17 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
     .filter((period) => includeForDepth(period.importance, depth)), [depth, spoilerLimit]);
 
   const visibleDays = useMemo(() => timelineVoyageDays
-    .map((day) => ({
-      ...day,
-      events: day.events
+    .map((day) => {
+      const boundaryEvents = day.events
         .filter((event) => chapterWithinBoundary(event.chapter, spoilerLimit))
-        .map((event) => ({ ...event, importance: timelineImportance(event) }))
-        .filter((event) => includeForDepth(event.importance, depth)),
-    }))
-    .filter((day) => day.events.length), [depth, spoilerLimit]);
+        .map((event) => ({ ...event, importance: timelineImportance(event) }));
+      return {
+        ...day,
+        boundaryEventCount: boundaryEvents.length,
+        events: boundaryEvents.filter((event) => includeForDepth(event.importance, depth)),
+      };
+    })
+    .filter((day) => day.boundaryEventCount > 0), [depth, spoilerLimit]);
 
   const allVisibleEvents = useMemo(() => timelineVoyageDays.flatMap((day) => day.events
     .filter((event) => chapterWithinBoundary(event.chapter, spoilerLimit))
@@ -194,7 +197,9 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
             const changes = timelineDayChanges.find((item) => item.day === day.day);
             return <section className="timeline-intelligence-day" key={day.day}>
               <header><div><span>{day.date} · Chapters {day.chapterRange}</span><h3>Voyage Day {day.day}: {day.headline}</h3><p>{day.summary}</p></div><strong>{day.events.length} {depth} events</strong></header>
-              <div className="timeline-intelligence-day__events">{day.events.map((event) => renderEvent(event, `${day.day}-${event.id}`))}</div>
+              {day.events.length
+                ? <div className="timeline-intelligence-day__events">{day.events.map((event) => renderEvent(event, `${day.day}-${event.id}`))}</div>
+                : <p className="timeline-intelligence-day__depth-empty">No {depth} events are promoted on this day. The end-of-day synthesis remains visible so the chronology does not lose the day.</p>}
               {changes && <aside className="timeline-intelligence__day-change" aria-label={`What changed on Voyage Day ${day.day}`}>
                 <header><span>End-of-day synthesis</span><h4>What changed?</h4><p>{changes.headline}</p></header>
                 <div><section><h5>Major developments</h5><ul>{changes.developments.map((item) => <li key={item}>{item}</li>)}</ul></section><section><h5>Nen / mechanics</h5><ul>{changes.nen.map((item) => <li key={item}>{item}</li>)}</ul></section><section><h5>Carried forward</h5><ul>{changes.carry.map((item) => <li key={item}>{item}</li>)}</ul></section></div>
