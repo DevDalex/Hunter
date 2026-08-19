@@ -5,7 +5,7 @@ on:
     paths:
       - 'src/data/succession/**'
       - 'src/components/succession/**'
-      - 'scripts/audit-succession-content-depth-p0.mjs'
+      - 'scripts/audit-succession-content-depth-*.mjs'
       - '.github/workflows/succession-content-depth.yml'
   push:
     branches:
@@ -13,7 +13,7 @@ on:
     paths:
       - 'src/data/succession/**'
       - 'src/components/succession/**'
-      - 'scripts/audit-succession-content-depth-p0.mjs'
+      - 'scripts/audit-succession-content-depth-*.mjs'
       - '.github/workflows/succession-content-depth.yml'
 
 permissions:
@@ -38,6 +38,9 @@ jobs:
 
       - name: Audit Succession content depth P0
         run: node scripts/audit-succession-content-depth-p0.mjs
+
+      - name: Audit strategic content depth
+        run: node scripts/audit-succession-content-depth-strategic.mjs
 
       - name: Production build
         run: npm run build
