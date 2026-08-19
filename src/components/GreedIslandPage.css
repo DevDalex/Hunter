@@ -226,7 +226,6 @@ button.gi-card:active { cursor: grabbing; }
 
 .greed-island-page :focus-visible { outline: 3px solid #f5cc61; outline-offset: 3px; }
 
-
 @media (prefers-reduced-motion: reduce) {
   .gi-hero__binder,
   .gi-progress > i span,

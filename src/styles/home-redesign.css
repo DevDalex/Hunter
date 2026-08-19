@@ -369,17 +369,6 @@
 
 .archive-landing button:focus-visible { outline: 2px solid #e5c273; outline-offset: 3px; }
 
-@media (max-width: 1180px) {
-  .archive-gateways__grid,
-  .archive-preview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .archive-storyline__rail { grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 24px; }
-  .archive-storyline__rail::before { display: none; }
-  .archive-number-band dl { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 28px; }
-  .archive-number-band dl > div:nth-child(3) { border-right: 0; }
-  .archive-number-band dl > div:nth-child(n+4) { padding-top: 24px; border-top: 1px solid rgba(255,255,255,.09); }
-}
-
-
 @media (prefers-reduced-motion: reduce) {
   .archive-gateway,
   .archive-gateway figure img,

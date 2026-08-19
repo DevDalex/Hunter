@@ -1,11 +1,5 @@
-/*
- * Route-owned loader for the desktop-only Phase 2 presentation contract.
- * The public sheet remains independently cacheable and is loaded only when the
- * Succession application is entered.
- */
-@import url('/succession-phase-2-presentation-consistency.css');
-
-@media (min-width: 1024px) {
+/* Route-owned desktop-only Phase 2 presentation contract. */
+@media (min-width: 1180px) {
   /* Queen metric cells sit inside dark household cards. Keep their paper
      surfaces and labels readable instead of inheriting the card's white ink. */
   body .succession-archive[data-archive-route="queens"]

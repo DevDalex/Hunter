@@ -482,7 +482,6 @@
   gap: 9px;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-gsb-command-dossier *,
   .succession-gsb-command-dossier *::before,

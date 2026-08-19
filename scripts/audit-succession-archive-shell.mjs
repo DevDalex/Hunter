@@ -101,8 +101,7 @@ const [
 ]);
 
 assert(app.includes('SuccessionArchiveApp') && !app.includes('successionPanels'), 'App must mount the dedicated archive application instead of the grouped panel layout');
-assert(shell.includes('succession-archive__sidebar') && shell.includes('succession-drawer'), 'desktop sidebar and mobile drawer must both exist');
-assert(shell.includes('focusableSelector') && shell.includes("event.key === 'Escape'"), 'mobile navigation must manage keyboard focus and Escape');
+assert(shell.includes('succession-archive__sidebar') && !shell.includes('succession-drawer') && !shell.includes('succession-archive__mobile-bar'), 'desktop sidebar must exist without retired mobile navigation');
 assert(shell.includes('SpoilerControl') && shell.includes('ARCHIVE_BOUNDARY'), 'shell must retain a generated reading boundary and global search entry point');
 assert(shell.includes('successionArchiveHubs') && shell.includes('successionArchiveHubGroups') && shell.includes('getSuccessionArchiveHub'), 'shell must derive navigation from the consolidated hub registry');
 assert(shell.includes('function SuccessionHubTabs') && shell.includes('className="succession-hub-tabs"'), 'hub-local tab navigation is missing');
@@ -152,10 +151,10 @@ assert(entry.includes('../../styles/succession-archive.css') && entry.includes('
 assert(!main.includes('./styles/succession-archive.css'), 'the scoped archive stylesheet must not alter the locked global CSS import order');
 assert(contrast.includes('font-size: 11px !important'), 'archive readability overrides must preserve the 11px text floor');
 assert(catalogue.includes('.succession-entity-visual') && catalogue.includes('data-has-visual'), 'catalogue design must provide portrait and fallback visual frames');
-assert(searchCss.includes('.succession-search-complete__groups') && searchCss.includes('@media(max-width:620px)'), 'global search requires grouped and mobile design');
+assert(searchCss.includes('.succession-search-complete__groups') && !/@media\s*\([^)]*max-width:/i.test(searchCss), 'global search requires grouped desktop design without narrow-screen breakpoints');
 assert(releasePatch.includes('.succession-hub-tabs') && releasePatch.includes('min-height: 44px'), 'consolidated hub tabs require responsive styling and accessible targets');
-for (const selector of ['.succession-archive__layout', '.succession-archive__sidebar', '.succession-page-header', '.succession-entity-link', '.succession-state', '.succession-drawer']) assert(css.includes(selector), `design layer is missing ${selector}`);
-assert(css.includes('@media (max-width: 860px)') && css.includes('@media (prefers-reduced-motion: reduce)'), 'responsive and reduced-motion rules are required');
+for (const selector of ['.succession-archive__layout', '.succession-archive__sidebar', '.succession-page-header', '.succession-entity-link', '.succession-state']) assert(css.includes(selector), `design layer is missing ${selector}`);
+assert(!/@media\s*\([^)]*max-width:/i.test(css) && css.includes('@media (prefers-reduced-motion: reduce)'), 'desktop-only shell must avoid narrow-width rules and retain reduced motion');
 assert(css.includes(':focus-visible'), 'accessible focus styling is required');
 assert(packageJson.includes('"audit:succession-shell"') && packageJson.includes('"qa:succession-shell"'), 'package scripts must expose archive shell checks');
 

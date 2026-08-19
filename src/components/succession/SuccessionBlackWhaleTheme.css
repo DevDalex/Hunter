@@ -627,7 +627,6 @@
   color: #eef2ef;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-archive *,
   .succession-archive *::before,

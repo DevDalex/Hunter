@@ -1245,7 +1245,6 @@ body.succession-architecture-mode {
   }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-architecture-board *,
   .succession-architecture-board *::before,

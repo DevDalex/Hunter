@@ -866,7 +866,6 @@
   color: var(--event-ink);
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-event-command *,
   .succession-event-command *::before,

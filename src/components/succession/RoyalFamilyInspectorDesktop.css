@@ -1,4 +1,3 @@
-
 .royal-map__dossier-footer {
   position: relative;
   display: flex;
@@ -14,7 +13,7 @@
   min-width: 0;
   flex: 1 1 auto;
   color: #938a7d;
-  font-size: 8px;
+  font-size: 11px;
   line-height: 1.25;
 }
 
@@ -31,7 +30,7 @@
   border-radius: 4px;
   background: #2d281e;
   color: #ffe2a0;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   white-space: nowrap;
 }
@@ -41,3 +40,7 @@
 .royal-map__dossier-no-route { flex: 0 0 auto !important; color: #a59b8c !important; }
 .royal-map__dossier-resize-cue { position: absolute; right: 2px; bottom: 2px; transform: rotate(45deg); color: #806823; opacity: .75; pointer-events: none; }
 .royal-map__inspector.is-preview .royal-map__dossier-resize-cue { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .royal-map .royal-map__inspector { scroll-behavior: auto; }
+}

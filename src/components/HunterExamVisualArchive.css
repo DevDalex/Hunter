@@ -210,24 +210,6 @@
 .hev-gallery .hev-visual > .safe-image-placeholder { height: 100%; min-height: 0; }
 .hev-gallery .hev-visual.is-wide { grid-column: span 2; }
 
-@media (max-width: 1180px) {
-  .hev-location-layout { grid-template-columns: 1fr; }
-  .hev-location-focus { position: static; display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, .8fr); }
-  .hev-location-focus .hev-visual,
-  .hev-location-focus .hev-visual > img,
-  .hev-location-focus .hev-visual > .safe-image-placeholder { min-height: 100%; }
-  .hev-portrait-grid,
-  .hev-host-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .hev-early-applicants > div,
-  .hev-prisoners,
-  .hev-object-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .hev-network { grid-template-columns: 1fr; }
-  .hev-network > i { transform: rotate(90deg); }
-  .hev-network-node { width: min(100%, 620px); justify-self: center; }
-  .hev-conflict-grid { grid-template-columns: 1fr; }
-}
-
-
 @media (prefers-reduced-motion: reduce) {
   .hev-visual > img { transition: none; }
   .hev-visual:hover > img { transform: none; }

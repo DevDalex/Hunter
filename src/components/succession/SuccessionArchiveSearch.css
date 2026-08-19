@@ -126,7 +126,6 @@
   cursor: pointer;
 }
 
-
 @media(prefers-reduced-motion:reduce) {
   .succession-search-complete * {
     scroll-behavior: auto !important;

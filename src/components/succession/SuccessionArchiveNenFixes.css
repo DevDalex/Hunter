@@ -202,7 +202,6 @@
   text-decoration-line: none !important;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-archive .deep-dossier--embedded .ability-ledger > a {
     transition: none;

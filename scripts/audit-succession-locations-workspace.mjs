@@ -40,7 +40,7 @@ assert(workspace.includes('Abilities active through linked events'), 'workspace 
 assert(workspace.includes('SourceReference'), 'workspace must display location evidence');
 assert(styles.includes('.succession-location-breadcrumbs'), 'styles must own location hierarchy breadcrumbs');
 assert(styles.includes('.succession-location-history'), 'styles must own occupancy history presentation');
-assert(styles.includes('@media (max-width: 900px)'), 'workspace must include responsive layout handling');
+assert(!/@media\s*\([^)]*max-width:/i.test(styles), 'location workspace must remain desktop-only');
 assert(styles.includes('@media (prefers-reduced-motion: reduce)'), 'workspace must include reduced-motion handling');
 
 const vite = await createServer({
@@ -95,7 +95,7 @@ try {
   assert(chapter405?.locationIds?.includes('location:black-whale:tier-1:casino'), 'Chapter 405 must inherit Hisoka’s casino sighting location');
   assert(searchSuccessionArchive('succession ritual boundary').some(({ entity }) => entity.id === 'location:black-whale:ritual-boundary'), 'global search must resolve the ritual boundary');
 
-  console.log(`Succession location workspace audit passed: ${locations.length} locations and ${histories.length} movement records support hierarchy, snapshots, occupancy, assignments, events, abilities, evidence, and responsive presentation.`);
+  console.log(`Succession location workspace audit passed: ${locations.length} locations and ${histories.length} movement records support hierarchy, snapshots, occupancy, assignments, events, abilities, evidence, and desktop presentation.`);
 } finally {
   await vite.close();
 }

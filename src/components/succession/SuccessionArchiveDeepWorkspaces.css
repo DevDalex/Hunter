@@ -958,7 +958,6 @@
 .succession-chapter-record > footer { padding-top: 4px; }
 .succession-chapter-record > footer button:disabled { opacity: .4; cursor: default; }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-queen-card,
   .succession-beast-grid > button {

@@ -219,33 +219,6 @@ try {
   });
 
   await desktop.close();
-
-  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce', isMobile: true });
-  await record('Mobile reader is contained and uses accessible sheets', mobile, async () => {
-    await openReader(mobile, base, `chapter=${LATEST_CHAPTER}&page=1&mode=page`);
-    await closeReaderPanel(mobile);
-    const state = await mobile.evaluate(() => ({
-      overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-      readerWidth: document.querySelector('.succession-reader')?.getBoundingClientRect().width || 0,
-      reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-      arcPage: Boolean(document.querySelector('.arc-page')),
-      archiveShell: Boolean(document.querySelector('.succession-archive')),
-    }));
-    if (state.arcPage) throw new Error('Mobile reader is wrapped by the legacy story page');
-    if (!state.archiveShell) throw new Error('Mobile reader is not integrated into the canonical archive shell');
-    if (state.overflow > 1) throw new Error(`Reader overflowed mobile viewport by ${state.overflow}px`);
-    if (state.readerWidth > 390.5) throw new Error(`Reader exceeds mobile width: ${state.readerWidth}`);
-    if (!state.reducedMotion) throw new Error('Reduced-motion emulation was not active');
-
-    await mobile.keyboard.press('c');
-    await mobile.waitForSelector('.succession-reader-panel--left [role="dialog"]');
-    const sheet = mobile.locator('.succession-reader-panel--left > section');
-    if ((await sheet.boundingBox()).width > 390.5) throw new Error('Mobile chapter sheet exceeds the viewport');
-    const firstInput = mobile.locator('.succession-reader__chapter-tools input');
-    if (!await firstInput.evaluate((node) => node === document.activeElement)) throw new Error('Chapter search did not receive initial panel focus');
-    await closeReaderPanel(mobile);
-  });
-  await mobile.close();
 } finally {
   await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));

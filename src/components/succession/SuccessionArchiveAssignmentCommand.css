@@ -906,20 +906,6 @@
 .succession-assignment-personnel b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .succession-assignment-snapshot-board > p { padding: 0 20px 18px; color: var(--assignment-paper-muted-ink); font-size: 12px; }
 
-@media (max-width: 1180px) {
-  .succession-assignment-command__metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .succession-assignment-command__metrics > div:nth-child(3) { border-right: 0; }
-  .succession-assignment-command__metrics > div:nth-child(-n+3) { border-bottom: 1px solid color-mix(in srgb, var(--assignment-paper-ink) 14%, transparent); }
-  .succession-assignment-type-board > div { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .succession-assignment-result-command { grid-template-columns: 1fr 1fr; }
-  .succession-assignment-result-command nav:last-child { grid-column: 1 / -1; }
-  .succession-assignment-dossier > header,
-  .succession-assignment-character-snapshot > header { grid-template-columns: auto minmax(0, 1fr) minmax(240px, .55fr); }
-  .succession-assignment-dossier > header > button,
-  .succession-assignment-character-snapshot > header > button { grid-column: 1 / -1; justify-self: start; }
-}
-
-
 @media (hover: hover) {
   .succession-assignment-card:hover,
   .succession-assignment-card:focus-visible {
@@ -935,7 +921,6 @@
     border-color: var(--assignment-crimson);
   }
 }
-
 
 @media (prefers-reduced-motion: reduce) {
   .succession-assignment-command *,

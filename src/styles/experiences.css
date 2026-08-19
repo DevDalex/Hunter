@@ -283,16 +283,6 @@
 .fight-aftermath-gallery figure > img { width: 100%; height: 230px; object-fit: contain; background: #1e231f; }
 .fight-aftermath-gallery figcaption { min-height: 65px; padding: 11px; color: var(--ink-soft); font-size: 10px; }
 
-@media (max-width: 1180px) {
-  .simple-home__eras > button { grid-template-columns: 145px 1fr; }
-  .nen-principle-workbench__layout { grid-template-columns: minmax(500px, 1fr) 340px; }
-  .prince-selector { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .prince-guard-orbit { grid-template-columns: 1fr; }
-  .prince-guard-orbit header { max-width: 720px; }
-  .arc-visual-workbench { grid-template-columns: minmax(0, 1.25fr) 310px; }
-}
-
-
 /* 2026-07 full visual repair: resilient media, corrected markup selectors, and responsive layouts */
 .safe-image-placeholder {
   width: 100%; min-height: 120px; display: grid; place-items: center; align-content: center; gap: 4px;
@@ -435,7 +425,6 @@
 .chapter-research-ledger > button p { font-size: 11px; }
 .chapter-research-ledger > button > div { display: flex; flex-wrap: wrap; gap: 4px; }
 .chapter-research-ledger > button small { border-radius: 99px; padding: 3px 6px; background: var(--paper-deep); }
-
 
 .nen-concept-visual { min-height: 150px; display: grid; place-items: center; align-content: center; gap: 7px; overflow: hidden; position: relative; margin: 0; background: radial-gradient(circle at 50% 45%, rgba(212,183,96,.28), transparent 25%), linear-gradient(145deg,#111914,#27372f); color: #fff; text-align: center; }
 .nen-concept-visual::before, .nen-concept-visual::after { content: ''; position: absolute; border: 2px solid rgba(212,183,96,.55); border-radius: 50%; }

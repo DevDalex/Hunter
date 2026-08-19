@@ -761,7 +761,6 @@ button.gi-binder-card:focus-visible {
   box-shadow: inset 0 0 24px rgba(0,0,0,.34);
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .gi-binder-section *,
   .gi-binder-section *::before,

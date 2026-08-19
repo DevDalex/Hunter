@@ -35,5 +35,4 @@
 .succession-character-lifetime article>small{font-size:11px;color:var(--succession-muted,#aab3c2)}
 .succession-character-lifetime article>button{display:flex;align-items:center;justify-content:space-between;gap:8px;border:0;background:transparent;color:inherit;padding:6px 0 0;cursor:pointer;font-size:11px;text-align:left}
 
-
 @media(prefers-reduced-motion:reduce){.succession-character-role-board *,.succession-character-lifetime *,.succession-character-history-summary *{scroll-behavior:auto!important;transition:none!important;animation:none!important}}

@@ -8,24 +8,23 @@ const root = process.cwd();
 const dist = path.join(root, 'dist/client');
 const output = path.resolve(root, process.env.VISUAL_QA_OUTPUT || '.visual-qa');
 const screenshotMode = process.env.VISUAL_QA_SCREENSHOTS || 'failures';
-const strictTouch = process.env.VISUAL_QA_STRICT_TOUCH !== '0';
-const selectedViewport = process.env.VISUAL_QA_VIEWPORT || 'all';
+const requestedViewport = process.env.VISUAL_QA_VIEWPORT || 'desktop';
 const selectedRoute = process.env.VISUAL_QA_ROUTE || '';
 const playwrightSpecifier = process.env.PLAYWRIGHT_CORE_PATH || 'playwright-core';
 const executablePath = process.env.CHROMIUM_PATH;
+const desktop = Object.freeze({ id: 'desktop', width: 1440, height: 1000 });
 const approvedExternalMediaHosts = new Set(['hunterxhunter.fandom.com', 'static.wikia.nocookie.net']);
 
-const viewports = [
-  { id: 'desktop', width: 1440, height: 1000 },
-  { id: 'tablet', width: 768, height: 1024 },
-  { id: 'mobile', width: 390, height: 844 },
-].filter((item) => selectedViewport === 'all' || item.id === selectedViewport);
+if (requestedViewport !== 'desktop') {
+  throw new Error(`Visual QA supports the desktop contract only. Received “${requestedViewport}”.`);
+}
 
 const routePath = ({ view, target }) => {
   if (view === 'home') return 'home/';
   if (view === 'series') return target ? `series/${target}` : 'series/';
   return `${view}/${target}`;
 };
+
 const routes = routeManifest.map((route, index) => ({
   ...route,
   path: routePath(route),
@@ -33,6 +32,13 @@ const routes = routeManifest.map((route, index) => ({
 })).filter((route) => !selectedRoute || route.path === selectedRoute.replace(/^#?\/?/, ''));
 
 if (!routes.length) throw new Error(`No visual-QA route matched “${selectedRoute}”.`);
+
+const mime = {
+  '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8',
+  '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.js': 'text/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml',
+  '.webp': 'image/webp', '.zip': 'application/zip',
+};
 
 const isApprovedExternalMediaRequest = (request) => {
   if (request.resourceType() !== 'image') return false;
@@ -44,18 +50,11 @@ const isApprovedExternalMediaRequest = (request) => {
   }
 };
 
-const mime = {
-  '.css': 'text/css; charset=utf-8', '.gif': 'image/gif', '.html': 'text/html; charset=utf-8',
-  '.jpeg': 'image/jpeg', '.jpg': 'image/jpeg', '.js': 'text/javascript; charset=utf-8',
-  '.json': 'application/json; charset=utf-8', '.png': 'image/png', '.svg': 'image/svg+xml',
-  '.webp': 'image/webp', '.zip': 'application/zip',
-};
-
 const resolvePlaywright = async () => {
   try {
     return await import(playwrightSpecifier.startsWith('/') ? pathToFileURL(playwrightSpecifier).href : playwrightSpecifier);
   } catch (error) {
-    throw new Error(`Visual QA requires playwright-core. Install it temporarily with "npm install --no-save playwright-core @sparticuz/chromium", or set PLAYWRIGHT_CORE_PATH. (${error.message})`);
+    throw new Error(`Visual QA requires Playwright. Set PLAYWRIGHT_CORE_PATH when using a nonstandard install. (${error.message})`);
   }
 };
 
@@ -71,9 +70,14 @@ const resolveBrowser = async () => {
         ? ['C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe']
         : ['/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser'];
     for (const candidate of candidates) {
-      try { await access(candidate); return { executablePath: candidate, args: [] }; } catch { /* try the next browser */ }
+      try {
+        await access(candidate);
+        return { executablePath: candidate, args: [] };
+      } catch {
+        // Try the next desktop Chromium candidate.
+      }
     }
-    throw new Error('No Chromium executable was found. Set CHROMIUM_PATH or install @sparticuz/chromium temporarily.');
+    throw new Error('No Chromium executable was found. Set CHROMIUM_PATH.');
   }
 };
 
@@ -84,7 +88,11 @@ const serve = async () => {
       const pathname = decodeURIComponent(new URL(request.url, 'http://127.0.0.1').pathname);
       let filename = path.join(dist, pathname === '/' ? 'index.html' : pathname);
       if (!filename.startsWith(dist)) throw new Error('Invalid path');
-      try { if ((await stat(filename)).isDirectory()) filename = path.join(dist, 'index.html'); } catch { filename = path.join(dist, 'index.html'); }
+      try {
+        if ((await stat(filename)).isDirectory()) filename = path.join(dist, 'index.html');
+      } catch {
+        filename = path.join(dist, 'index.html');
+      }
       response.setHeader('content-type', mime[path.extname(filename).toLowerCase()] || 'application/octet-stream');
       response.end(await readFile(filename));
     } catch (error) {
@@ -116,12 +124,13 @@ const inspectPage = () => {
     return false;
   };
   const insideDeclaredScaledWorld = (element) => Boolean(element.closest('[data-qa-pan-zoom-canvas="true"] [data-qa-scaled-canvas="true"]'));
-  const isScaledWorldNode = (element) => insideDeclaredScaledWorld(element) && element.matches('.nen-pipe-node, .nen-placement-marker');
   const bodyOverflow = Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth;
   const scaledCanvasSpillExemptions = [...document.querySelectorAll('main *')]
     .filter((element) => visible(element) && insideDeclaredScaledWorld(element))
-    .filter((element) => { const rect = element.getBoundingClientRect(); return rect.left < -1 || rect.right > innerWidth + 1; })
-    .length;
+    .filter((element) => {
+      const rect = element.getBoundingClientRect();
+      return rect.left < -1 || rect.right > innerWidth + 1;
+    }).length;
   const spill = [...document.querySelectorAll('main *')]
     .filter((element) => visible(element) && !element.matches('.sr-only, .sr-only *'))
     .filter((element) => !insideDeclaredScaledWorld(element))
@@ -174,18 +183,6 @@ const inspectPage = () => {
       text: (element.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 80),
       size,
     }));
-  const scaledCanvasSmallTargetExemptions = [...document.querySelectorAll('button, input, select, textarea, [role="button"]')]
-    .filter((element) => visible(element) && !element.disabled && isScaledWorldNode(element))
-    .map((element) => element.getBoundingClientRect())
-    .filter((rect) => rect.width < 43.5 || rect.height < 43.5)
-    .length;
-  const smallTargets = [...document.querySelectorAll('button, input, select, textarea, [role="button"]')]
-    .filter((element) => visible(element) && !element.disabled && !element.matches('.sr-only, .skip-link:not(:focus)'))
-    .filter((element) => !isScaledWorldNode(element))
-    .map((element) => ({ element, rect: element.getBoundingClientRect() }))
-    .filter(({ rect }) => rect.width < 43.5 || rect.height < 43.5)
-    .slice(0, 40)
-    .map(({ element, rect }) => ({ selector: selector(element), width: Math.round(rect.width), height: Math.round(rect.height), label: (element.getAttribute('aria-label') || element.textContent || '').trim().slice(0, 80) }));
   const deathMarks = [...document.querySelectorAll('.death-mark')].filter(visible).length;
   const statusLabels = [...document.querySelectorAll('[class*="deceased"], [data-status="deceased"]')].filter(visible).length;
   return {
@@ -198,9 +195,7 @@ const inspectPage = () => {
     emptyFrames,
     mediaTextOverlaps,
     tinyText,
-    smallTargets,
     scaledCanvasSpillExemptions,
-    scaledCanvasSmallTargetExemptions,
     deathMarks,
     statusLabels,
   };
@@ -219,7 +214,10 @@ const settlePage = async (page) => {
     }
     window.scrollTo(0, 0);
     await Promise.race([
-      Promise.all([...document.images].map((image) => image.complete ? null : new Promise((resolve) => { image.addEventListener('load', resolve, { once: true }); image.addEventListener('error', resolve, { once: true }); }))),
+      Promise.all([...document.images].map((image) => image.complete ? null : new Promise((resolve) => {
+        image.addEventListener('load', resolve, { once: true });
+        image.addEventListener('error', resolve, { once: true });
+      }))),
       new Promise((resolve) => setTimeout(resolve, 2_500)),
     ]);
   });
@@ -230,91 +228,80 @@ await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 const { chromium } = await resolvePlaywright();
 const browserConfig = await resolveBrowser();
-const browserLaunchOptions = {
+const browser = await chromium.launch({
   headless: true,
   executablePath: browserConfig.executablePath,
   args: [...browserConfig.args, '--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--no-zygote'],
-};
+});
+const page = await browser.newPage({ viewport: { width: desktop.width, height: desktop.height } });
 const server = await serve();
 const base = `http://127.0.0.1:${server.address().port}`;
 const report = [];
-let browser;
-let page;
-let checksInBrowser = 0;
-
-const renewBrowser = async (viewport) => {
-  if (browser) await browser.close().catch(() => {});
-  browser = await chromium.launch(browserLaunchOptions);
-  page = await browser.newPage({ viewport: { width: viewport.width, height: viewport.height } });
-  checksInBrowser = 0;
-};
 
 try {
-  for (const viewport of viewports) {
-    const screenDir = path.join(output, 'screens', viewport.id);
-    await mkdir(screenDir, { recursive: true });
-    for (const route of routes) {
-      if (!page || checksInBrowser >= 5) await renewBrowser(viewport);
-      else await page.setViewportSize({ width: viewport.width, height: viewport.height });
-      const runtimeErrors = [];
-      const failedRequests = [];
-      const approvedExternalMediaFailures = [];
-      const onPageError = (error) => runtimeErrors.push(error.message);
-      const onRequestFailed = (request) => {
-        const record = `${request.url()} · ${request.failure()?.errorText || 'failed'}`;
-        if (isApprovedExternalMediaRequest(request)) approvedExternalMediaFailures.push(record);
-        else failedRequests.push(record);
-      };
-      page.on('pageerror', onPageError);
-      page.on('requestfailed', onRequestFailed);
-      try {
-        await page.goto(`${base}/#/${route.path}`, { waitUntil: 'domcontentloaded', timeout: 15_000 });
-        await settlePage(page);
-        const audit = await page.evaluate(inspectPage);
-        const defects = runtimeErrors.length + failedRequests.length + audit.spill.length + audit.brokenImages.length + audit.pendingImages.length + audit.emptyFrames.length + audit.mediaTextOverlaps.length + audit.tinyText.length + (audit.bodyOverflow > 1 ? 1 : 0) + (strictTouch && viewport.id !== 'desktop' ? audit.smallTargets.length : 0);
-        const row = { viewport: viewport.id, route: route.path, label: route.label, runtimeErrors, failedRequests, approvedExternalMediaFailures, ...audit, defects };
-        report.push(row);
-        if (screenshotMode === 'all' || (screenshotMode === 'failures' && defects)) {
-          await page.screenshot({ path: path.join(screenDir, `${route.file}.png`), fullPage: true });
-        }
-        process.stdout.write(`${defects ? '✗' : '✓'} ${viewport.id.padEnd(7)} ${route.path}\n`);
-      } catch (error) {
-        report.push({ viewport: viewport.id, route: route.path, label: route.label, runtimeErrors: [...runtimeErrors, error.message], failedRequests, approvedExternalMediaFailures, defects: 1 });
-        await page.screenshot({ path: path.join(screenDir, `${route.file}-fatal.png`), fullPage: true }).catch(() => {});
-        process.stdout.write(`✗ ${viewport.id.padEnd(7)} ${route.path} · ${error.message}\n`);
-      } finally {
-        page.off('pageerror', onPageError);
-        page.off('requestfailed', onRequestFailed);
-        await page.goto('about:blank').catch(() => {});
-        checksInBrowser += 1;
+  for (const route of routes) {
+    const runtimeErrors = [];
+    const failedRequests = [];
+    const approvedExternalMediaFailures = [];
+    const onPageError = (error) => runtimeErrors.push(error.message);
+    const onRequestFailed = (request) => {
+      const record = `${request.url()} · ${request.failure()?.errorText || 'failed'}`;
+      if (isApprovedExternalMediaRequest(request)) approvedExternalMediaFailures.push(record);
+      else failedRequests.push(record);
+    };
+    page.on('pageerror', onPageError);
+    page.on('requestfailed', onRequestFailed);
+    try {
+      await page.goto(`${base}/#/${route.path}`, { waitUntil: 'domcontentloaded', timeout: 15_000 });
+      await settlePage(page);
+      const audit = await page.evaluate(inspectPage);
+      const defects = runtimeErrors.length
+        + failedRequests.length
+        + audit.spill.length
+        + audit.brokenImages.length
+        + audit.pendingImages.length
+        + audit.emptyFrames.length
+        + audit.mediaTextOverlaps.length
+        + audit.tinyText.length
+        + (audit.bodyOverflow > 1 ? 1 : 0);
+      const row = { viewport: desktop.id, route: route.path, label: route.label, runtimeErrors, failedRequests, approvedExternalMediaFailures, ...audit, defects };
+      report.push(row);
+      if (screenshotMode === 'all' || (screenshotMode === 'failures' && defects)) {
+        const screenDir = path.join(output, 'screens', desktop.id);
+        await mkdir(screenDir, { recursive: true });
+        await page.screenshot({ path: path.join(screenDir, `${route.file}.png`), fullPage: true });
       }
+      process.stdout.write(`${defects ? '✗' : '✓'} ${desktop.id.padEnd(7)} ${route.path}\n`);
+    } catch (error) {
+      report.push({ viewport: desktop.id, route: route.path, label: route.label, runtimeErrors: [...runtimeErrors, error.message], failedRequests, approvedExternalMediaFailures, defects: 1 });
+      process.stdout.write(`✗ ${desktop.id.padEnd(7)} ${route.path} · ${error.message}\n`);
+    } finally {
+      page.off('pageerror', onPageError);
+      page.off('requestfailed', onRequestFailed);
+      await page.goto('about:blank').catch(() => {});
     }
   }
 } finally {
-  if (browser) await browser.close().catch(() => {});
+  await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));
 }
 
 const failures = report.filter((row) => row.defects);
 const approvedExternalMediaFailureCount = report.reduce((total, row) => total + (row.approvedExternalMediaFailures?.length || 0), 0);
-const scaledCanvasSmallTargetExemptionCount = report.reduce((total, row) => total + (row.scaledCanvasSmallTargetExemptions || 0), 0);
-const scaledCanvasSpillExemptionCount = report.reduce((total, row) => total + (row.scaledCanvasSpillExemptions || 0), 0);
+const scaledCanvasSpillExemptions = report.reduce((total, row) => total + (row.scaledCanvasSpillExemptions || 0), 0);
 const summary = {
   generatedAt: new Date().toISOString(),
   routes: routes.length,
-  viewports: viewports.map(({ id, width, height }) => ({ id, width, height })),
+  viewports: [desktop],
   checks: report.length,
   passed: report.length - failures.length,
   failed: failures.length,
   approvedExternalMediaFailureCount,
-  scaledCanvasSmallTargetExemptionCount,
-  scaledCanvasSpillExemptionCount,
-  strictTouch,
+  scaledCanvasSpillExemptions,
+  report,
 };
-await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results: report }, null, 2)}\n`);
-await writeFile(path.join(output, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
-console.log(`\nVisual QA: ${summary.passed}/${summary.checks} route/viewport renders passed. Approved external media availability events: ${approvedExternalMediaFailureCount}. Scaled-canvas exemptions: ${scaledCanvasSmallTargetExemptionCount} touch targets, ${scaledCanvasSpillExemptionCount} clipped spill records. Report: ${path.relative(root, path.join(output, 'report.json'))}`);
-if (failures.length) {
-  for (const failure of failures) console.error(`- ${failure.viewport} ${failure.route}: ${failure.defects} defect signal(s)`);
-  process.exitCode = 1;
-}
+await writeFile(path.join(output, 'report.json'), `${JSON.stringify(summary, null, 2)}\n`);
+
+console.log(`\nVisual QA: ${summary.passed}/${summary.checks} desktop route render(s) passed. Approved external media availability events: ${approvedExternalMediaFailureCount}. Scaled-canvas spill exemptions: ${scaledCanvasSpillExemptions}. Report: ${path.relative(root, path.join(output, 'report.json'))}`);
+for (const failure of failures) console.error(`- ${failure.route}: ${failure.defects} defect signal(s)`);
+if (failures.length) process.exitCode = 1;

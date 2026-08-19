@@ -202,7 +202,6 @@
   to { transform: rotate(360deg); }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .gi-app__nav {
     transition: none;

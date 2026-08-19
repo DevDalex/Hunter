@@ -59,9 +59,9 @@ assert(glossaryWorkspace.includes('getGlossaryEntriesAtChapter') && glossaryWork
 assert(glossaryWorkspace.includes('SourceReference') && glossaryWorkspace.includes('EntityLink') && glossaryWorkspace.includes('relatedRecords'), 'Glossary dossiers must expose evidence and graph connections');
 assert(mediaWorkspace.includes('getMediaRecordsAtChapter') && mediaWorkspace.includes('getMediaRecord'), 'maintained media selectors must remain available even without a standalone public route');
 assert(mediaWorkspace.includes('record.alt') && mediaWorkspace.includes('provenanceUrl'), 'maintained media records must retain alt text and provenance');
-assert(productStyles.includes('@media(max-width:520px)') && productStyles.includes('@media(prefers-reduced-motion:reduce)'), 'product workspaces must include mobile and reduced-motion handling');
-assert(productLinkStyles.includes('.succession-product-links > button') && productLinkStyles.includes('font-size: 11px'), 'extended graph links must have mobile-safe styles');
-assert(searchStyles.includes('@media(max-width:620px)') && searchStyles.includes('font-size: 11px'), 'grouped search must include mobile handling and the readability floor');
+assert(!/@media\s*\([^)]*max-width:/i.test(productStyles) && productStyles.includes('@media(prefers-reduced-motion:reduce)'), 'product workspaces must remain desktop-only and retain reduced motion');
+assert(productLinkStyles.includes('.succession-product-links > button') && productLinkStyles.includes('font-size: 11px'), 'extended graph links must retain readable desktop styles');
+assert(!/@media\s*\([^)]*max-width:/i.test(searchStyles) && searchStyles.includes('font-size: 11px'), 'grouped search must remain desktop-only and retain the readability floor');
 assert(browserQa.includes('Grouped search explains glossary and media matches'), 'browser QA must retain grouped search and media-result coverage');
 assert(browserQa.includes('Retired Succession routes resolve to maintained workspaces'), 'browser QA must verify every retired route reaches a maintained destination');
 assert(!browserQa.includes('Media library exposes alt text provenance and canonical subjects'), 'browser QA must not reopen the removed standalone Media page');

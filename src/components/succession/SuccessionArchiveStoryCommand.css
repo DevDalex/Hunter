@@ -1060,7 +1060,6 @@
   cursor: pointer;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-story-command *,
   .succession-story-command *::before,

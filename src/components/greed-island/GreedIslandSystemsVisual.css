@@ -466,7 +466,6 @@
   border-radius: 1rem 1rem 0 0;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .gi-systems-map button,
   .gi-systems-locations__grid > button,

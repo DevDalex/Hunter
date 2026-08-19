@@ -43,7 +43,7 @@ assert(selectors.includes('outcomes: mature ?') && selectors.includes('stateChan
 assert(selectors.includes('consequenceEventIds') && selectors.includes('predecessorEventIds'), 'event graph links must be chapter-bounded');
 assert(styles.includes('.succession-event-causality'), 'styles must own the causal presentation');
 assert(styles.includes('.succession-event-chain'), 'styles must own predecessor and consequence navigation');
-assert(styles.includes('@media (max-width: 820px)'), 'workspace must include responsive layout handling');
+assert(!/@media\s*\([^)]*max-width:/i.test(styles), 'event workspace must remain desktop-only');
 assert(styles.includes('@media (prefers-reduced-motion: reduce)'), 'workspace must include reduced-motion handling');
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
@@ -89,7 +89,7 @@ try {
   assert(events394.some((event) => event.id === 'event:room-3101-breach' && !event.mature), 'Chapter 394 directory must use the bounded Room 3101 projection');
   assert(!events394.some((event) => event.canonicalChapterRange.start > 394), 'event directory must not include future events');
 
-  console.log(`Succession event workspace audit passed: ${events.length} canonical events, chapter-bounded summaries, outcomes, state changes, linked entities, evidence, causality, filters, and responsive presentation are wired.`);
+  console.log(`Succession event workspace audit passed: ${events.length} canonical events, chapter-bounded summaries, outcomes, state changes, linked entities, evidence, causality, filters, and desktop presentation are wired.`);
 } finally {
   await vite.close();
 }

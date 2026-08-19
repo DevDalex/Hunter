@@ -269,7 +269,6 @@
   display: block;
 }
 
-
 @media(prefers-reduced-motion:reduce) {
   .succession-product-workspace *,
   .succession-product-dossier * {

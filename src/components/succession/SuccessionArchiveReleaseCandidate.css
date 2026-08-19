@@ -20,5 +20,4 @@
 .succession-release-candidate__external article b{font-size:.86rem}
 .succession-release-candidate__external article small{font-size:11px;color:var(--archive-muted,#706860)}
 
-
 @media(prefers-reduced-motion:reduce){.succession-release-candidate *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

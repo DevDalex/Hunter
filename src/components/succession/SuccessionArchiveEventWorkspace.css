@@ -685,7 +685,6 @@
   font-weight: 900;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-canonical-event-timeline > button,
   .succession-event-entity-chip {

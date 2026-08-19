@@ -270,18 +270,7 @@
 
 @keyframes succession-spin { to { transform: rotate(360deg); } }
 
-@media (max-width: 1180px) {
-  .succession-archive__layout { grid-template-columns: 248px minmax(0, 1fr); }
-  .succession-home-grid,
-  .succession-entity-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-route-matrix { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-page-header { grid-template-columns: 1fr; }
-  .succession-page-header__actions { justify-content: flex-start; }
-}
-
-
 @keyframes succession-drawer-in { from { transform: translateX(-100%); } to { transform: translateX(0); } }
-
 
 @media (prefers-reduced-motion: reduce) {
   .succession-archive *,

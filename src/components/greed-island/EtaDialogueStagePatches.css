@@ -30,7 +30,6 @@
   font-size: .75rem;
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .gi-eta-scene__expression {
     display: none;

@@ -390,7 +390,6 @@
   color: var(--location-paper-ink);
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .succession-canonical-locations *,
   .succession-canonical-locations *::before,

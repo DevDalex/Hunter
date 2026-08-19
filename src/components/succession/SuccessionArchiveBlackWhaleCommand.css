@@ -449,7 +449,6 @@
   color: var(--ship-paper-ink);
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .black-whale-section--atlas *,
   .black-whale-section--atlas *::before,

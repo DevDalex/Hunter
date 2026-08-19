@@ -220,7 +220,6 @@
   49%, 100% { opacity: 0; }
 }
 
-
 @media (prefers-reduced-motion: reduce) {
   .gi-eta-scene__scanlines,
   .gi-eta-scene__floor-glow,
