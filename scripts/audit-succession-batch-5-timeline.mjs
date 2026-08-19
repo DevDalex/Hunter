@@ -6,7 +6,7 @@ const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
 const assert = (condition, message) => { if (!condition) throw new Error(`Succession Batch 5 timeline audit failed: ${message}`); };
 
-const [workspace, voyage, styles, workflow, finalQa, router, intelligence, intelligenceData, intelligenceStyles] = await Promise.all([
+const [workspace, voyage, styles, workflow, finalQa, router, intelligence, intelligenceData, intelligenceStyles, intelligenceView, questionLedger] = await Promise.all([
   read('src/components/TimelineWorkspace.jsx'),
   read('src/components/SuccessionTimeline.jsx'),
   read('src/components/TimelineCommand.css'),
@@ -16,6 +16,8 @@ const [workspace, voyage, styles, workflow, finalQa, router, intelligence, intel
   read('src/components/TimelineIntelligencePanels.jsx'),
   read('src/data/successionTimelineIntelligence.js'),
   read('src/components/TimelineIntelligencePanels.css'),
+  read('src/data/successionTimelineIntelligenceView.js'),
+  read('src/data/successionTimelineQuestions.js'),
 ]);
 
 for (const token of ['timeline-command--voyage-only','Succession voyage chronology','The voyage as a chapter-bounded operational ledger','without opening the retired global chronology','SuccessionTimeline','TimelineIntelligencePanels','onOpenLocation',"scope: 'events'"]) assert(workspace.includes(token), `voyage-only timeline wrapper is missing ${token}`);
@@ -32,7 +34,8 @@ for (const token of [
   'What happened, why it mattered, and what it changed.',
   'Integrated chronology',
   'All fourteen princes',
-  'Open ↔ resolved',
+  'Open ↔ resolved ↔ all',
+  "['open', 'resolved', 'all']",
   'Nen developments',
   'Active deadlines & countdowns',
   "['major', 'standard', 'complete']",
@@ -46,6 +49,8 @@ for (const token of [
   'What changed?',
   'People',
   'Continue through the archive',
+  'timelineQuestionLedger',
+  'strictTimelineNenForEvent',
 ]) assert(intelligence.includes(token), `timeline intelligence UI is missing ${token}`);
 
 for (const token of [
@@ -54,16 +59,15 @@ for (const token of [
   'timelineDayChanges',
   'timelineDeadlines',
   'timelineNenDevelopments',
-  'timelineQuestions',
   'timelineImportance',
   'timingConfidenceForEvent',
   'evidenceConfidenceForEvent',
   'peopleForTimelineEvent',
   'timelinePreludeRecords',
-  'succession385Mysteries',
-  'succession416Mysteries',
-  'succession417Mysteries',
 ]) assert(intelligenceData.includes(token), `timeline intelligence data is missing ${token}`);
+
+for (const token of ['strictTimelineNenForEvent','developmentMatchers','Gypsy Life: Bohemian Rhapsody mechanics are revealed','Dust in the Wind: Hell Fruit activates']) assert(intelligenceView.includes(token), `strict Nen timeline matching is missing ${token}`);
+for (const token of ['successionDossierThrough417.js','successionMysteries','successionResolvedQuestions','timelineQuestionLedger','open:','resolved:']) assert(questionLedger.includes(token), `cumulative Timeline question ledger is missing ${token}`);
 
 const princeCount = (intelligenceData.match(/order:\s*\d+,\s*name:/g) || []).length;
 assert(princeCount === 14, `timeline intelligence must register all 14 princes; found ${princeCount}`);
@@ -89,4 +93,4 @@ assert(router.includes("candidate === 'timeline'") && router.includes("normalize
 assert(workflow.includes('node scripts/audit-succession-batch-5-timeline.mjs'), 'Batch 5 workflow must run the timeline audit');
 assert(finalQa.includes('...successionReleaseRoutes.map'), 'the release matrix must render the curated Succession routes, including Timeline');
 assert(workflow.includes('set -o pipefail'), 'final visual-QA command must propagate failures through tee');
-console.log('Succession Batch 5 timeline audit passed: desktop voyage chronology plus causality, day-change synthesis, 14-prince progression, questions, Nen developments, deadlines, archive links, dual certainty, and real content-depth modes are registered without restoring the retired global timeline or narrow-screen behavior.');
+console.log('Succession Batch 5 timeline audit passed: desktop voyage chronology plus causality, day-change synthesis, 14-prince progression, cumulative open/resolved questions, strict Nen signals, deadlines, archive links, dual certainty, and real content-depth modes are registered without restoring the retired global timeline or narrow-screen behavior.');
