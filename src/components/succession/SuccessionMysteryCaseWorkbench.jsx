@@ -5,6 +5,7 @@ import {
   getSuccessionMysteryCasesAtChapter,
   getSuccessionMysteryCaseSummary,
 } from '../../data/succession/successionMysteryCases';
+import SuccessionContentDepthWorkbench from './SuccessionContentDepthWorkbench';
 import './SuccessionIntelligenceWorkbench.css';
 
 const labelize = (value) => String(value || 'unknown').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -37,7 +38,8 @@ function CaseDetail({ record, onNavigate }) {
 }
 
 export default function SuccessionMysteryCaseWorkbench({ routeParams = {}, spoilerLimit = 417, onNavigate }) {
-  const active = routeParams.mode === 'cases';
+  const depthActive = routeParams.mode === 'cases' && routeParams.workspace === 'depth';
+  const active = routeParams.mode === 'cases' && !depthActive;
   const summary = getSuccessionMysteryCaseSummary(spoilerLimit);
   const selected = active && routeParams.case ? getSuccessionMysteryCase(routeParams.case) : null;
   const [query, setQuery] = useState('');
@@ -46,14 +48,26 @@ export default function SuccessionMysteryCaseWorkbench({ routeParams = {}, spoil
     if (!needle) return true;
     return `${record.title} ${record.question} ${record.summary} ${record.category} ${record.knownFacts.join(' ')} ${record.unknowns.join(' ')}`.toLocaleLowerCase().includes(needle);
   }), [query, spoilerLimit]);
+  const depthNavigate = (target, params = {}) => {
+    if (target === 'research' && params.mode === 'depth') {
+      onNavigate('research', { ...params, mode: 'cases', workspace: 'depth' });
+      return;
+    }
+    onNavigate(target, params);
+  };
 
-  if (!active) return <section className="succession-intelligence-workbench">
-    <div className="succession-intelligence-workbench__hero">
-      <div><span><ShieldQuestion size={14} aria-hidden="true" /> Content Depth · Case files</span><h2>Open mysteries with arguments, not just question labels.</h2><p>Each case separates established facts, unknowns, competing explanations, supporting evidence, counterevidence, related systems, and the Chapter {spoilerLimit} boundary.</p></div>
-      <dl><div><dt>Cases</dt><dd>{summary.total}</dd></div><div><dt>Open</dt><dd>{summary.open}</dd></div><div><dt>Categories</dt><dd>{summary.categories.length}</dd></div></dl>
-    </div>
-    <div className="succession-intelligence-workbench__body"><section className="succession-intelligence-overview"><header><span>Investigation layer</span><h3>Turn unresolved threads into evidence-bounded case files.</h3><p>The ledger never upgrades a candidate explanation into canon merely because it is plausible.</p></header><div><article><ShieldQuestion size={22} aria-hidden="true" /><span>Chapter-bounded</span><h4>Mystery case files</h4><p>Inspect Tserriednich’s Room 1004 reality problem, Benjamin’s countdown, Gypsy Life, the succession ritual, Silent Majority, curse networks, and more.</p><button type="button" onClick={() => onNavigate('research', { mode: 'cases' })}>Open case files <ArrowRight size={13} aria-hidden="true" /></button></article></div></section></div>
-  </section>;
+  if (depthActive) return <SuccessionContentDepthWorkbench routeParams={{ ...routeParams, mode: 'depth' }} spoilerLimit={spoilerLimit} onNavigate={depthNavigate} />;
+
+  if (!active) return <>
+    <SuccessionContentDepthWorkbench routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={depthNavigate} />
+    <section className="succession-intelligence-workbench">
+      <div className="succession-intelligence-workbench__hero">
+        <div><span><ShieldQuestion size={14} aria-hidden="true" /> Content Depth · Case files</span><h2>Open mysteries with arguments, not just question labels.</h2><p>Each case separates established facts, unknowns, competing explanations, supporting evidence, counterevidence, related systems, and the Chapter {spoilerLimit} boundary.</p></div>
+        <dl><div><dt>Cases</dt><dd>{summary.total}</dd></div><div><dt>Open</dt><dd>{summary.open}</dd></div><div><dt>Categories</dt><dd>{summary.categories.length}</dd></div></dl>
+      </div>
+      <div className="succession-intelligence-workbench__body"><section className="succession-intelligence-overview"><header><span>Investigation layer</span><h3>Turn unresolved threads into evidence-bounded case files.</h3><p>The ledger never upgrades a candidate explanation into canon merely because it is plausible.</p></header><div><article><ShieldQuestion size={22} aria-hidden="true" /><span>Chapter-bounded</span><h4>Mystery case files</h4><p>Inspect Tserriednich’s Room 1004 reality problem, Benjamin’s countdown, Gypsy Life, the succession ritual, Silent Majority, curse networks, and more.</p><button type="button" onClick={() => onNavigate('research', { mode: 'cases' })}>Open case files <ArrowRight size={13} aria-hidden="true" /></button></article></div></section></div>
+    </section>
+  </>;
 
   return <section className="succession-intelligence-workbench">
     <div className="succession-intelligence-workbench__hero">
