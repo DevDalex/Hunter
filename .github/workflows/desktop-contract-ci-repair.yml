@@ -1,0 +1,55 @@
+name: Desktop contract CI repair
+
+on:
+  push:
+    branches:
+      - agent/timeline-content-intelligence
+    paths:
+      - scripts/desktop-contract-ci-repair.mjs
+      - .github/workflows/desktop-contract-ci-repair.yml
+
+permissions:
+  contents: write
+
+jobs:
+  repair-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+        with:
+          ref: agent/timeline-content-intelligence
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Apply desktop contract repair
+        run: node scripts/desktop-contract-ci-repair.mjs
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify Succession runtime audits
+        run: npm run audit:succession-runtime
+
+      - name: Verify production build
+        run: npx vite build
+
+      - name: Check diff integrity
+        run: git diff --check
+
+      - name: Commit repaired contracts
+        run: |
+          if git diff --quiet; then
+            echo "No repair diff to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Finish desktop-only Succession contracts"
+          git push origin HEAD:agent/timeline-content-intelligence
