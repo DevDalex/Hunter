@@ -29,7 +29,8 @@ export const createContentDepthStrategicSelectors = ({ data, archive, informatio
   const abilitiesFor = (id, chapter) => abilities.filter((record) => (record.ownerIds || []).includes(id) && nenSystems.getAbilityKnowledgeAtChapter(record.id, chapter)?.known);
   const assignmentsFor = (id, chapter) => activeAssignments(chapter).filter((record) => [record.personId, record.subjectEntityId, record.principalEntityId, record.allegianceEntityId, record.reportingEntityId].includes(id));
   const relationshipsFor = (id, chapter) => activeRelationships(chapter).filter((record) => [record.sourceEntityId, record.targetEntityId].includes(id));
-  const threadsFor = (id, chapter) => (storyIntelligence.getStoryThreadsAtChapter(chapter) || []).filter((record) => (record.entityIds || []).includes(id));
+  const threadProfilesAt = (chapter) => (storyIntelligence.getStoryThreadsAtChapter(chapter) || []).map((record) => record?.profile || record).filter(Boolean);
+  const threadsFor = (id, chapter) => threadProfilesAt(chapter).filter((record) => (record.entityIds || []).includes(id));
   const lastAppearance = (id, chapter) => maxChapter(archive.getAppearancesForCharacter(id).filter((record) => Number(record.chapter) <= chapter).map((record) => record.chapter));
 
   const campaignRow = (character, chapter) => {
@@ -207,7 +208,7 @@ export const createContentDepthStrategicSelectors = ({ data, archive, informatio
     const boundary = clamp(chapter);
     const troupe = factionSnapshot('organization:phantom-troupe', boundary);
     const hisoka = archive.getEntityById('character:hisoka-morow');
-    return Object.freeze({ chapter: boundary, troupe, hisoka: compact(hisoka), hisokaLocationId: hisoka ? locationAt(hisoka.id, boundary) : null, threadIds: freeze((storyIntelligence.getStoryThreadsAtChapter(boundary) || []).filter((record) => /hisoka|troupe|chrollo|treasure/i.test(words(record.name, record.question))).map((record) => record.id)) });
+    return Object.freeze({ chapter: boundary, troupe, hisoka: compact(hisoka), hisokaLocationId: hisoka ? locationAt(hisoka.id, boundary) : null, threadIds: freeze(threadProfilesAt(boundary).filter((record) => /hisoka|troupe|chrollo|treasure/i.test(words(record.name, record.question))).map((record) => record.id)) });
   };
 
   const getKurapikaMissionLedger = (chapter = latest) => {
@@ -236,7 +237,7 @@ export const createContentDepthStrategicSelectors = ({ data, archive, informatio
   const getActiveCountdowns = (chapter = latest) => {
     const boundary = clamp(chapter);
     const pattern = /countdown|deadline|half a day|hour|days?|window|expires?|timing|before/i;
-    const threadIds = (storyIntelligence.getStoryThreadsAtChapter(boundary) || []).filter((record) => pattern.test(words(record.name, record.question, record.evidenceState))).map((record) => record.id);
+    const threadIds = threadProfilesAt(boundary).filter((record) => pattern.test(words(record.name, record.question, record.evidenceState))).map((record) => record.id);
     const mysteryCaseIds = successionMysteryCases.filter((record) => record.firstChapter <= boundary && pattern.test(words(record.title, record.question, record.summary, record.knownFacts, record.unknowns))).map((record) => record.id);
     return Object.freeze({ threadIds: freeze(threadIds), mysteryCaseIds: freeze(mysteryCaseIds) });
   };
