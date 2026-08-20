@@ -29,7 +29,7 @@ try {
   assert(artifacts.some((row) => row.id === 'object:tsk-17') && artifacts.some((row) => row.id === 'document:first-unit-reactivation-order-417') && artifacts.some((row) => row.id === 'evidence-item:unma-halkenburg-publication-endpoint'), 'P0 Objects / Documents / Evidence are not closed through Chapter 417');
   assert(editorial.entries?.some((row) => row.id === 'change:content-depth-417-p0'), 'P0 editorial/revision history lacks the current content-depth entry');
   assert(mysteries.successionMysteryCases.length >= 19 && mysteries.successionMysteryCases.every((row) => Array.isArray(row.candidates) && Array.isArray(row.knownFacts) && Array.isArray(row.unknowns) && Array.isArray(row.resolutionHistory)), 'P0 mystery case-file model is incomplete');
-  for (const id of ['story-thread:benjamin-layered-countdown', 'story-thread:room-1004-reality', 'story-thread:tubeppa-tyson-tsk17', 'story-thread:gypsy-life-transfer', 'story-thread:unma-halkenburg-endpoint']) {
+  for (const id of ['story-thread:benjamin-layered-countdown', 'story-thread:tserriednich-room1004-reality', 'story-thread:tubeppa-tyson-tsk17', 'story-thread:gypsy-life-host-transfer', 'story-thread:benjamin-unma-confrontation']) {
     assert(storyThreads.some((row) => (row.profile || row).id === id), `P0 Story Intelligence is missing ${id}`);
   }
   assert(princes.length === 14, 'P0 all-14-princes campaign board is incomplete');
