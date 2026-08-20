@@ -13,7 +13,6 @@ import {
 } from './successionData.js';
 
 const freeze = (value = []) => Object.freeze(Array.isArray(value) ? [...value] : value);
-const unique = (values = []) => [...new Set(values.filter(Boolean))];
 const clamp = (chapter) => Math.min(417, Math.max(340, Number(chapter) || 417));
 const text = (...values) => values.flat(Infinity).filter(Boolean).join(' ').toLocaleLowerCase();
 const chapterOf = (record) => Number(record?.canonicalChapterRange?.start ?? record?.chapterRange?.start ?? record?.chapter ?? NaN);
@@ -36,7 +35,7 @@ export const getSetupPayoffIndex = (chapter = 417) => {
       setupChapter,
       payoffChapter,
       chapterGap: payoffChapter - setupChapter,
-      causalType: link.causalType || link.linkType || link.relationshipType || link.type || 'causal-link',
+      causalType: link.causalType || link.linkType || link.relationshipType || link.relation || link.type || 'causal-link',
       evidenceState: link.evidenceState || link.certainty || link.canonLevel || 'confirmed',
       sourceIds: freeze(link.sourceIds || []),
       note: 'Cross-chapter setup/payoff candidate derived only from an explicit maintained causal link; authorial intent is not inferred.',
@@ -84,7 +83,7 @@ export const getForeshadowingTracker = (chapter = 417) => {
 
 export const getPromisesContractsTracker = (chapter = 417) => {
   const boundary = clamp(chapter);
-  const pattern = /promise|contract|agreement|deal|treaty|truce|terms|condition|vow|pledge|oath|commitment|cooperat/;
+  const pattern = /promise|contract|agreement|deal|treaty|truce|terms|vow|pledge|oath|commitment|cooperat/;
   const protocols = freeze(getProtocolRecordsAtChapter(boundary).filter((record) => pattern.test(text(record.name, record.summary, record.domain, record.ruleStatement, record.trigger, record.authority))).map((record) => Object.freeze({
     id: record.id,
     sourceType: 'protocol',
