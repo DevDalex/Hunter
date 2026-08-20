@@ -13,7 +13,7 @@ export const sourceImportsDefault = (source, localName, modulePath) => {
 };
 
 export const sourceRendersRouteWith = (source, routeId, componentName) => new RegExp(
-  `route\\.id\\s*===\\s*['"]${escapeRegExp(routeId)}['"][\\s\\S]{0,320}<${escapeRegExp(componentName)}\\b`,
+  `route\\.id\\s*===\\s*['"]${escapeRegExp(routeId)}['"](?:(?!route\\.id\\s*===)[\\s\\S])*?<${escapeRegExp(componentName)}\\b`,
 ).test(source);
 
 export const declarationIncludesLiteral = (source, declarationName, literal) => {
