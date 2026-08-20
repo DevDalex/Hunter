@@ -63,7 +63,8 @@ try {
   for (let maintained = 340; maintained <= 417; maintained += 1) {
     const change = archive.getChapterWhatChanged(maintained);
     assert(change?.chapter === maintained, `P1 What Changed? is missing Chapter ${maintained}`);
-    assert(change.previousChapter === maintained - 1, `P1 What Changed? Chapter ${maintained} is not compared with Chapter ${maintained - 1}`);
+    const expectedPrevious = maintained === 340 ? 340 : maintained - 1;
+    assert(change.previousChapter === expectedPrevious, `P1 What Changed? Chapter ${maintained} has the wrong strategic comparison boundary`);
   }
 
   // P2 · Faction, spatial, and evidence depth.
