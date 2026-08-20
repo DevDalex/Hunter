@@ -45,5 +45,8 @@ jobs:
       - name: Audit reading depth and evidence integrity
         run: node scripts/audit-succession-content-depth-reading.mjs
 
+      - name: Audit analytical finishing layer
+        run: node scripts/audit-succession-content-depth-finishing.mjs
+
       - name: Production build
         run: npm run build
