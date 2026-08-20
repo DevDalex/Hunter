@@ -30,6 +30,8 @@ import OrganizationsWorkspace from './SuccessionArchiveOrganizationWorkspace';
 import RelationshipsWorkspace from './SuccessionArchiveRelationshipWorkspace';
 import StoryIntelligenceWorkspace from './SuccessionArchiveStoryIntelligenceWorkspace';
 import SuccessionIntelligenceWorkbench from './SuccessionIntelligenceWorkbench';
+import SuccessionMysteryCaseWorkbench from './SuccessionMysteryCaseWorkbench';
+import SuccessionReadingDepthWorkspace from './SuccessionReadingDepthWorkspace';
 import SuccessionWorkspaceRefinementDeck from './SuccessionWorkspaceRefinementDeck';
 import { DomainEntityDetail } from './SuccessionArchiveExtendedWorkspaces';
 import {
@@ -160,6 +162,7 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
   const treeView = route.id === 'princes' && routeParams.view === 'tree';
   const preserved = ['black-whale', 'timeline'].includes(route.id);
   const dedicated = new Set(['story', 'princes', 'queens', 'bodyguards', 'nen', 'guardian-spirit-beasts', 'events', 'relationships', 'chapters', 'characters', 'organizations', 'locations', 'research', 'glossary']);
+  const readingDepthActive = ['story', 'chapters'].includes(route.id) && ['quick', 'deep', 'evidence'].includes(routeParams.depth);
   const requestedPrinceOrder = Number(routeParams.prince);
   const requestedChapterNumber = Number(routeParams.chapter);
   const selectedEntity = routeParams.entity
@@ -190,8 +193,9 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
       <RecordCurrencyStrip entity={selectedEntity} boundary={coverageBoundary} />
       <RecordCoverageSections entity={selectedEntity} boundary={coverageBoundary} />
     </section>}
-    <SuccessionWorkspaceRefinementDeck routeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />
-    {route.id === 'story' && <StoryIntelligenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
+    {!readingDepthActive && <SuccessionWorkspaceRefinementDeck routeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
+    {['story', 'chapters'].includes(route.id) && <SuccessionReadingDepthWorkspace routeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
+    {route.id === 'story' && !readingDepthActive && <StoryIntelligenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {route.id === 'search' && <SearchWorkspace onNavigate={navigate} spoilerLimit={spoilerLimit} />}
     {treeView && <FamilyTreeWorkspace spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showCharacterDossier && <CharactersWorkspace routeParams={{ ...routeParams, entity: selectedEntity.id }} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
@@ -209,9 +213,10 @@ export default function SuccessionArchiveApp({ routeTarget, routeParams, spoiler
     {showRouteWorkspace && route.id === 'guardian-spirit-beasts' && <GuardianBeastsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'events' && <EventsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'relationships' && <RelationshipsWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
-    {showRouteWorkspace && route.id === 'chapters' && <ChapterStoryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
+    {showRouteWorkspace && route.id === 'chapters' && !readingDepthActive && <ChapterStoryWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
     {showRouteWorkspace && route.id === 'research' && <>
-      <SuccessionIntelligenceWorkbench routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />
+      <SuccessionMysteryCaseWorkbench routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />
+      {routeParams.mode !== 'cases' && <SuccessionIntelligenceWorkbench routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />}
       <ArchiveCoverageReport boundary={spoilerLimit} onNavigate={navigate} compact />
       <EvidenceWorkspace routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={navigate} />
     </>}

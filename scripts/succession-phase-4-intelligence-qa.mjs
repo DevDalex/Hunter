@@ -52,7 +52,8 @@ const cases = Object.freeze([
 ]);
 
 const inspect = (page) => page.evaluate(() => {
-  const workbench = document.querySelector('.succession-intelligence-workbench');
+  const workbench = [...document.querySelectorAll('.succession-intelligence-workbench')]
+    .find((candidate) => candidate.querySelectorAll('.succession-intelligence-tabs button').length === 7);
   if (!workbench) return { exists: false };
   const rect = workbench.getBoundingClientRect();
   const style = getComputedStyle(workbench);
@@ -103,8 +104,11 @@ try {
     page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
     try {
       await page.goto(`${base}${record.path}`, { waitUntil: 'domcontentloaded', timeout: 30_000 });
-      await page.waitForSelector('.succession-intelligence-workbench', { state: 'visible', timeout: 20_000 });
-      const view = page.locator(record.selector).first();
+      await page.waitForFunction(() => [...document.querySelectorAll('.succession-intelligence-workbench')]
+        .some((candidate) => candidate.querySelectorAll('.succession-intelligence-tabs button').length === 7), null, { timeout: 20_000 });
+      const workbench = page.locator('.succession-intelligence-workbench').filter({ has: page.locator('.succession-intelligence-tabs button') }).last();
+      await workbench.waitFor({ state: 'visible', timeout: 20_000 });
+      const view = workbench.locator(record.selector).first();
       await view.waitFor({ state: 'visible', timeout: 20_000 });
       await view.getByText(record.text, { exact: false }).first().waitFor({ state: 'visible', timeout: 10_000 });
       const state = await inspect(page);

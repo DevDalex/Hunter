@@ -4,11 +4,16 @@ import {
   storyPhaseProfiles,
   storyThreadProfiles,
 } from './storyIntelligenceFoundation.js';
+import {
+  contentDepthCurrentPhaseThreadIds417,
+  contentDepthStoryThreads417,
+} from './contentDepthStory417.js';
 
 const threadId = 'story-thread:hisoka-chrollo-deathmatch-outcome';
 const legacyJusticeId = 'location:black-whale:tier-1:justice-bureau';
 const correctedJusticeId = 'location:black-whale:tier-2:justice-bureau';
 const addUnique = (values, value) => Object.freeze([...new Set([...(values || []), value])]);
+const addUniqueMany = (values, additions = []) => Object.freeze([...new Set([...(values || []), ...additions])]);
 const remapJusticeLocations = (values = []) => Object.freeze(values.map((value) => value === legacyJusticeId ? correctedJusticeId : value));
 
 const deathmatchOutcomeThread = Object.freeze({
@@ -69,6 +74,7 @@ const currentReleasePhase = Object.freeze({
     'story-thread:tserriednich-future-growth',
     'story-thread:martial-law-end-state',
     'story-thread:sarahell-curse-operation',
+    ...contentDepthCurrentPhaseThreadIds417,
   ]),
   sourceIds: Object.freeze([
     'source:chapter-414',
@@ -82,16 +88,23 @@ const currentReleasePhase = Object.freeze({
 export const correctedStoryThreadProfiles = Object.freeze({
   ...storyThreadProfiles,
   [threadId]: deathmatchOutcomeThread,
+  ...contentDepthStoryThreads417,
 });
 
 export const correctedStoryLaneProfiles = Object.freeze(Object.fromEntries(
-  Object.entries(storyLaneProfiles).map(([id, profile]) => [id, Object.freeze({
-    ...profile,
-    locationIds: remapJusticeLocations(profile.locationIds),
-    threadIds: deathmatchOutcomeThread.laneIds.includes(id)
+  Object.entries(storyLaneProfiles).map(([id, profile]) => {
+    const depthThreadIds = Object.values(contentDepthStoryThreads417)
+      .filter((thread) => thread.laneIds.includes(id))
+      .map((thread) => thread.id);
+    const withDeathmatch = deathmatchOutcomeThread.laneIds.includes(id)
       ? addUnique(profile.threadIds, threadId)
-      : profile.threadIds,
-  })]),
+      : profile.threadIds;
+    return [id, Object.freeze({
+      ...profile,
+      locationIds: remapJusticeLocations(profile.locationIds),
+      threadIds: addUniqueMany(withDeathmatch, depthThreadIds),
+    })];
+  }),
 ));
 
 const correctedBasePhases = Object.fromEntries(

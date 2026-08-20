@@ -21,7 +21,7 @@ assert(dataSource.includes("from './entitiesHighValueIntelligence.js'"), 'the pu
 assert(dataSource.includes('createHighValueIntelligenceSelectors'), 'the public data entry must create Phase 4 selectors');
 assert(appSource.includes("EvidenceWorkspace from './SuccessionArchiveEvidenceWorkspace'"), 'Research must preserve the canonical evidence workspace');
 assert(appSource.includes("SuccessionIntelligenceWorkbench from './SuccessionIntelligenceWorkbench'"), 'Research must import the Phase 4 workbench');
-assert(appSource.includes('<SuccessionIntelligenceWorkbench') && appSource.includes('<EvidenceWorkspace'), 'Research must render the workbench directly above the evidence desk');
+assert(appSource.includes('<SuccessionIntelligenceWorkbench') && appSource.includes('<EvidenceWorkspace'), 'Research must preserve both the workbench and evidence desk');
 assert(primitivesSource.includes("['knowledge-record', 'protocol', 'object', 'document', 'evidence-item'].includes(entity.entityType)) return 'research'"), 'shared graph links must route every Phase 4 entity type into Research');
 for (const mode of ['overview', 'diff', 'knowledge', 'protocols', 'artifacts', 'compare', 'changes']) {
   assert(workbenchSource.includes(`'${mode}'`), `the ${mode} workbench mode is missing`);
@@ -55,14 +55,14 @@ try {
     successionArchiveValidation,
   } = archive;
 
-  assert(successionArchiveData.highValueIntelligenceVersion === 'phase-4-v1', 'the active data layer must identify Phase 4');
+  assert(successionArchiveData.highValueIntelligenceVersion === 'phase-4-v1', 'the active data layer must retain the Phase 4 compatibility identifier');
   assert(successionArchiveValidation.valid, `canonical validation failed: ${successionArchiveValidation.errors.join(' · ')}`);
-  assert(successionArchiveValidation.stats.knowledgeRecords === 8, 'exactly eight initial knowledge records are required');
-  assert(successionArchiveValidation.stats.protocols === 10, 'exactly ten current protocol records are required after the Chapter 384 mafia-procedure addition');
-  assert(successionArchiveValidation.stats.objects === 10, 'exactly ten first-class objects are required');
-  assert(successionArchiveValidation.stats.documents === 3, 'exactly three first-class documents are required');
-  assert(successionArchiveValidation.stats.evidenceItems === 6, 'exactly six first-class evidence items are required');
-  assert(successionArchiveValidation.stats.editorialChanges === 4, 'exactly four published editorial entries are required');
+  assert(successionArchiveValidation.stats.knowledgeRecords >= 8, 'the original eight knowledge records must not be lost');
+  assert(successionArchiveValidation.stats.protocols >= 10, 'the original ten protocol records must not be lost');
+  assert(successionArchiveValidation.stats.objects >= 10, 'the original ten first-class objects must not be lost');
+  assert(successionArchiveValidation.stats.documents >= 3, 'the original three first-class documents must not be lost');
+  assert(successionArchiveValidation.stats.evidenceItems >= 6, 'the original six first-class evidence items must not be lost');
+  assert(successionArchiveValidation.stats.editorialChanges >= 4, 'the original four editorial entries must not be lost');
 
   for (const type of ['knowledge-record', 'protocol', 'object', 'document', 'evidence-item']) {
     const records = getEntitiesByType(type);
@@ -78,18 +78,22 @@ try {
   assert(diff.summary.changed + diff.summary.added + diff.summary.removed > 0, 'Chapter 403 to 404 must produce a non-empty state delta');
   assert(diff.records.some((record) => record.entity.id === 'character:halkenburg-hui-guo-rou'), 'the Chapter 403 to 404 diff must include Halkenburg');
 
-  const knowledge = getKnowledgeMatrix(410);
-  assert(knowledge.records.length === 8, 'the Chapter 410 knowledge matrix must expose all initial records');
-  assert(knowledge.records.some((record) => record.id === 'knowledge-record:special-martial-law' && record.currentKnowledgeState === 'public'), 'martial-law knowledge must become public by Chapter 410');
+  const knowledge410 = getKnowledgeMatrix(410);
+  assert(knowledge410.records.length === 7, 'the corrected Chapter 410 knowledge snapshot must expose seven pre-declaration records');
+  assert(!knowledge410.records.some((record) => record.id === 'knowledge-record:special-martial-law'), 'formal Special Martial Law must not leak before its corrected Chapter 415 declaration boundary');
+  const knowledge415 = getKnowledgeMatrix(415);
+  assert(knowledge415.records.some((record) => record.id === 'knowledge-record:special-martial-law' && record.currentKnowledgeState === 'public'), 'formal Special Martial Law must become public at Chapter 415');
   assert(getKnowledgeRecordsAtChapter(400).every((record) => record.chapterRange.start <= 400), 'knowledge records must respect the chapter boundary');
 
-  const protocols = getProtocolRecordsAtChapter(410);
-  assert(new Set(protocols.map((record) => record.domain)).size >= 5, 'protocol records must preserve distinct legal, ritual, military, judicial, Nen, and operational domains');
-  assert(protocols.some((record) => record.id === 'protocol:succession-withdrawal-and-survivor-rule' && record.protocolStatus === 'disputed'), 'the withdrawal rule must remain explicitly disputed');
-  assert(protocols.some((record) => record.id === 'protocol:kakin-mafia-hit-raid-settlement' && record.domain === 'operational-rule'), 'the Chapter 384 Kakin mafia settlement procedure must remain indexed as an operational protocol');
+  const protocols410 = getProtocolRecordsAtChapter(410);
+  assert(protocols410.length === 9, 'the corrected Chapter 410 protocol snapshot must exclude the not-yet-declared Special Martial Law order');
+  assert(new Set(protocols410.map((record) => record.domain)).size >= 5, 'protocol records must preserve distinct legal, ritual, military, judicial, Nen, and operational domains');
+  assert(protocols410.some((record) => record.id === 'protocol:succession-withdrawal-and-survivor-rule' && record.protocolStatus === 'disputed'), 'the withdrawal rule must remain explicitly disputed');
+  assert(protocols410.some((record) => record.id === 'protocol:kakin-mafia-hit-raid-settlement' && record.domain === 'operational-rule'), 'the Chapter 384 Kakin mafia settlement procedure must remain indexed as an operational protocol');
+  assert(getProtocolRecordsAtChapter(415).some((record) => record.id === 'protocol:special-martial-law-order'), 'the Special Martial Law protocol must activate at Chapter 415');
 
   const artifacts = getArtifactsAtChapter(410);
-  assert(artifacts.length === 19, 'all Phase 4 objects, documents, and evidence must be available by Chapter 410');
+  assert(artifacts.length === 19, 'all original Phase 4 objects, documents, and evidence must remain available by Chapter 410');
   assert(getArtifactRecord('object:seed-urn')?.name === 'Seed Urn', 'Seed Urn object lookup failed');
   assert(getEvidenceForArtifact('object:tsk-17', 410).some((record) => record.id === 'evidence-item:tsk-17-operation-chain'), 'TSK-17 evidence chain is disconnected');
 
@@ -100,18 +104,21 @@ try {
   assert(!invalidComparison.valid, 'mixed entity types must not compare');
 
   const changes = getEditorialChangeLog();
-  assert(changes.entries.length === 4, 'editorial history is incomplete');
-  assert(changes.entries.every((entry) => entry.commit && entry.status === 'merged'), 'published editorial entries must point to merged commits');
+  const originalChangeIds = new Set(['change:portal-rollback', 'change:phase-1-visual-repair', 'change:phase-2-presentation', 'change:phase-3-information']);
+  const originalChanges = changes.entries.filter((entry) => originalChangeIds.has(entry.id));
+  assert(originalChanges.length === 4, 'the original Phase 4 editorial history is incomplete');
+  assert(originalChanges.every((entry) => entry.commit && entry.status === 'merged'), 'original published editorial entries must still point to merged commits');
 
   const summary = getIntelligenceWorkbenchSummary(410);
-  assert(summary.knowledgeRecords === 8 && summary.protocolRecords === 10 && summary.editorialEntries === 4, 'workbench summary counts are incorrect');
+  assert(summary.knowledgeRecords === 7 && summary.protocolRecords === 9, 'the corrected Chapter 410 workbench snapshot counts are incorrect');
+  assert(summary.editorialEntries === changes.entries.length, 'the workbench editorial count must track the expandable editorial ledger');
 
   const seedSearch = searchArchiveProduct('Seed Urn', { chapter: 410, limit: 20 });
   assert(seedSearch.some((result) => result.id === 'object:seed-urn' && result.route === 'research' && result.params.mode === 'artifacts'), 'global search must route the Seed Urn object into the Research artifact view');
   const knowledgeSearch = searchArchiveProduct('curse child network', { chapter: 410, limit: 20 });
   assert(knowledgeSearch.some((result) => result.id === 'knowledge-record:beyond-curse-child-network'), 'global search must index Knowledge & Secrecy records');
 
-  console.log('Succession Phase 4 high-value intelligence audit passed: global chapter diffs, Knowledge & Secrecy, ten protocol records including the Chapter 384 mafia procedure, first-class artifacts/evidence, same-type comparisons, editorial history, search routing, shared graph routing, and direct Research integration verified.');
+  console.log('Succession Phase 4 high-value intelligence audit passed: expandable intelligence preserves the original chapter-diff, Knowledge & Secrecy, protocol, artifact/evidence, comparison, editorial-history, search-routing, and shared-graph contracts while respecting the corrected Chapter 415 Special Martial Law boundary.');
 } finally {
   await vite.close();
 }
