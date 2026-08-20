@@ -60,7 +60,11 @@ try {
   assert(p1.rules.records.length > 0, 'P1 Succession Rules Engine is empty');
   assert(Array.isArray(p1.training.eventIds) && Array.isArray(p1.training.participants), 'P1 Nen training tracker is unavailable');
   assert(p1.transfers.length > 0, 'P1 ability transfer/inheritance ledger is empty');
-  for (let maintained = 340; maintained <= 417; maintained += 1) assert(archive.getChapterWhatChanged(maintained)?.chapter === maintained, `P1 What Changed? is missing Chapter ${maintained}`);
+  for (let maintained = 340; maintained <= 417; maintained += 1) {
+    const change = archive.getChapterWhatChanged(maintained);
+    assert(change?.chapter === maintained, `P1 What Changed? is missing Chapter ${maintained}`);
+    assert(change.previousChapter === maintained - 1, `P1 What Changed? Chapter ${maintained} is not compared with Chapter ${maintained - 1}`);
+  }
 
   // P2 · Faction, spatial, and evidence depth.
   const spatial = finishing.getSpatialEvidenceIntelligence(chapter);
