@@ -139,7 +139,7 @@ function CompareMode({ routeParams, spoilerLimit, onNavigate }) {
 
 function ChangesMode() {
   const log = getEditorialChangeLog();
-  return <section className="succession-intelligence-changes" aria-labelledby="phase-4-changes-title"><header><span>Archive maintenance, not story chronology</span><h3 id="phase-4-changes-title">Editorial change log</h3><p>This ledger records merged archive work separately from canonical events aboard the Black Whale.</p></header><ol>{log.entries.map((entry) => <li key={entry.id}><div><CheckCircle2 size={17} aria-hidden="true" /><span>{entry.date}</span><b>{labelize(entry.phase)}</b></div><h4>{labelize(entry.changeType)}</h4><p>{entry.summary}</p><small>{entry.affectedDomains.map(labelize).join(' · ')}</small><code>{entry.commit.slice(0, 8)}</code></li>)}</ol></section>;
+  return <section className="succession-intelligence-changes" aria-labelledby="phase-4-changes-title"><header><span>Archive maintenance, not story chronology</span><h3 id="phase-4-changes-title">Editorial change log</h3><p>This ledger records merged archive work separately from canonical events aboard the Black Whale.</p></header><ol>{log.entries.map((entry) => <li key={entry.id}><div><CheckCircle2 size={17} aria-hidden="true" /><span>{entry.date}</span><b>{labelize(entry.phase)}</b></div><h4>{labelize(entry.changeType)}</h4><p>{entry.summary}</p><small>{entry.affectedDomains.map(labelize).join(' · ')}</small><code>{entry.commit ? entry.commit.slice(0, 8) : labelize(entry.status || 'uncommitted')}</code></li>)}</ol></section>;
 }
 
 export default function SuccessionIntelligenceWorkbench({ routeParams = {}, spoilerLimit = 414, onNavigate }) {
