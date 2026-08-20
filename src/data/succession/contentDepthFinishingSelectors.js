@@ -55,8 +55,9 @@ export const getForeshadowingTracker = (chapter = 417) => {
     const profile = dossier?.profile || dossier;
     const opened = Number(profile?.chapterRange?.start);
     if (!profile || !Number.isFinite(opened) || opened >= boundary) return [];
-    const resolution = Number(profile.resolutionChapter);
-    const resolved = Number.isFinite(resolution) && resolution <= boundary;
+    const hasResolution = profile.resolutionChapter !== null && profile.resolutionChapter !== undefined;
+    const resolution = hasResolution ? Number(profile.resolutionChapter) : Number.NaN;
+    const resolved = hasResolution && Number.isFinite(resolution) && resolution <= boundary;
     return [Object.freeze({
       id: profile.id,
       name: profile.name,
@@ -76,8 +77,8 @@ export const getForeshadowingTracker = (chapter = 417) => {
   return Object.freeze({
     chapter: boundary,
     signals,
-    resolved: freeze(signals.filter((row) => row.resolutionChapter)),
-    open: freeze(signals.filter((row) => !row.resolutionChapter)),
+    resolved: freeze(signals.filter((row) => row.resolutionChapter !== null)),
+    open: freeze(signals.filter((row) => row.resolutionChapter === null)),
   });
 };
 
