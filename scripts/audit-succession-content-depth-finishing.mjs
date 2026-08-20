@@ -53,7 +53,7 @@ try {
     const change = archive.getChapterWhatChanged(maintained);
     assert(change?.chapter === maintained, `What Changed? is missing Chapter ${maintained}`);
     assert(change.summary && Array.isArray(change.records), `What Changed? Chapter ${maintained} has an invalid diff shape`);
-    assert(change.previousChapter === (maintained === 340 ? 340 : maintained - 1), `What Changed? Chapter ${maintained} has the wrong comparison boundary`);
+    assert(change.previousChapter === maintained - 1, `What Changed? Chapter ${maintained} has the wrong comparison boundary`);
     chapterChanges.push(change);
   }
   assert(chapterChanges.length === 78, `expected 78 maintained Chapter 340–417 change briefs, found ${chapterChanges.length}`);
