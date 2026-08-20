@@ -56,7 +56,7 @@ try {
   assert(Array.isArray(training.eventIds) && Array.isArray(training.participants), 'Nen training tracker shape is invalid');
   assert(transfers.length > 0, 'ability transfer/inheritance ledger is empty');
   assert(mafia.length === 3, 'mafia command center must expose Xi-Yu, Cha-R, and Heil-Ly');
-  assert(troupe.organization?.id === 'organization:phantom-troupe', 'Troupe tracker lost Phantom Troupe ownership');
+  assert(troupe.troupe?.organization?.id === 'organization:phantom-troupe', 'Troupe tracker lost Phantom Troupe ownership');
   assert(kurapika.dossier?.character?.id === 'character:kurapika', 'Kurapika mission ledger lost its campaign dossier');
   assert(kurapika.missions.length === 6, 'Kurapika mission ledger must retain six explicit mission dimensions');
   assert(life.length > 100, 'life-state ledger must cover the broad character catalogue');
