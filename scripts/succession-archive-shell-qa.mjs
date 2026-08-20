@@ -233,17 +233,11 @@ try {
   });
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
-  await record('Mobile archive uses an intentional keyboard-safe drawer', mobile, async () => {
+  await record('Desktop-only archive omits retired mobile drawer controls', mobile, async () => {
     await mobile.goto(`${base}/story/succession-contest/locations`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await mobile.waitForSelector('.succession-archive__mobile-bar', { timeout: 15_000 });
-    const trigger = mobile.getByRole('button', { name: 'Archive', exact: true });
-    await trigger.click();
-    await mobile.waitForSelector('.succession-drawer [role="dialog"]', { timeout: 10_000 });
-    if (await trigger.getAttribute('aria-expanded') !== 'true') throw new Error('Mobile archive button did not expose expanded state');
-    const drawerLabels = await mobile.locator('#succession-mobile-navigation a span').allInnerTexts();
-    if (drawerLabels.length !== 7) throw new Error(`Mobile drawer exposes ${drawerLabels.length} top-level links instead of 7`);
-    await mobile.keyboard.press('Escape');
-    await mobile.waitForSelector('.succession-drawer', { state: 'detached', timeout: 10_000 });
+    await mobile.waitForSelector('.succession-archive[data-archive-route="locations"]', { timeout: 15_000 });
+    const retiredControls = mobile.locator('.succession-archive__mobile-bar, .succession-drawer, #succession-mobile-navigation');
+    if (await retiredControls.count()) throw new Error(`Desktop-only archive exposed ${await retiredControls.count()} retired mobile navigation control(s)`);
   });
 
   await record('Mobile dedicated workspaces remain inside the viewport', mobile, async () => {
