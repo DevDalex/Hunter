@@ -174,8 +174,6 @@ export default function SuccessionArchiveShell({
 
     <div className="succession-archive__status-strip" aria-label="Black Whale archive context">
       <span><Ship size={14} aria-hidden="true" /><strong>Black Whale 1</strong></span>
-      <span><b>Desk</b> {activeHub.label}</span>
-      <span><b>Boundary</b> Chapter {spoilerLimit}</span>
       <span><b>Evidence</b> Canon separated</span>
     </div>
 
@@ -247,11 +245,7 @@ export default function SuccessionArchiveShell({
             title={activeHub.title}
             description={activeHub.description}
             actions={headerActions}
-            meta={[
-              { label: 'View', value: route.label },
-              { label: 'Reading boundary', value: `Chapter ${spoilerLimit}` },
-              { label: 'Evidence mode', value: 'Canon separated' },
-            ]}
+            meta={[{ label: 'View', value: route.label }]}
           />}
           <div
             ref={contentRef}
