@@ -26,6 +26,7 @@ try {
   const training = archive.getNenTrainingTracker(chapter);
   const interactions = refinement.getAbilityInteractionMatrix(chapter, { limit: 80 });
   const comparison = refinement.getBlackWhaleSnapshotComparison(416, 417);
+  const infrastructure = refinement.getShipInfrastructureIndex(chapter);
   const spatial = finishing.getSpatialEvidenceIntelligence(chapter);
 
   assert(princes.length === 14, `prince comparison must retain all 14 princes; found ${princes.length}`);
@@ -39,15 +40,18 @@ try {
   assert(Array.isArray(training.participants), 'Nen training participants are unavailable');
   assert(Array.isArray(interactions.interactions), 'ability interaction matrix is unavailable');
   assert(Array.isArray(comparison.movements), 'Black Whale movement comparison is unavailable');
+  assert(Array.isArray(infrastructure.records) && infrastructure.records.length > 0, 'Black Whale infrastructure index is unavailable');
+  assert(infrastructure.records.every((record) => record.state && 'accessLevel' in record.state && 'zoneRole' in record.state && Array.isArray(record.protocolIds)), 'infrastructure rows lost access / zone / protocol fields');
   assert(Array.isArray(spatial.hotspots) && spatial.hotspots.length > 0, 'spatial hotspots are unavailable');
 
-  const [shell, people, peopleCss, informationCss, systems, systemsCss] = await Promise.all([
+  const [shell, people, peopleCss, informationCss, systems, systemsCss, infrastructureCss] = await Promise.all([
     readFile(path.join(root, 'src/components/succession/SuccessionArchiveShell.jsx'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionPeoplePowerComprehensionPanel.jsx'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionPeoplePowerComprehensionPanel.css'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionInformationWarComprehension.css'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionNenSpatialComprehensionPanel.jsx'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionNenSpatialComprehensionPanel.css'), 'utf8'),
+    readFile(path.join(root, 'src/components/succession/SuccessionSpatialInfrastructureComprehension.css'), 'utf8'),
   ]);
 
   assert(shell.includes("const showPeoplePower = activeHub.id === 'people';"), 'People & Power comprehension is not hub-mounted');
@@ -63,12 +67,15 @@ try {
   assert(people.includes('not combined into a fictional “power level.”'), 'leverage view does not preserve the no-power-score contract');
   assert(people.includes('Showing {rows.length} of {leverage.rows.length} leverage dossiers.'), 'leverage top-N subset is not disclosed');
 
-  for (const token of ['Nen mechanics flows', 'Ability interaction map', 'Nen training progression', 'Black Whale operational state']) assert(systems.includes(token), `Nen/spatial layer is missing ${token}`);
+  for (const token of ['Nen mechanics flows', 'Ability interaction map', 'Nen training progression', 'Black Whale operational state', 'Access & infrastructure layers']) assert(systems.includes(token), `Nen/spatial layer is missing ${token}`);
   assert(systems.includes('directInteractionClaimed'), 'ability interactions do not preserve documented-vs-contextual distinction');
   assert(systems.includes('Not fully published'), 'Nen mechanics flow does not preserve unknown mechanics');
+  assert(systems.includes('getShipInfrastructureIndex') && systems.includes('row.state.accessLevel') && systems.includes('row.state.zoneRole') && systems.includes('row.protocolIds.length'), 'Black Whale access/infrastructure presentation is not wired to maintained fields');
+  assert(systems.includes('does not infer territorial control'), 'Black Whale access layer lacks its anti-inference boundary');
+  assert(systems.includes('Showing {locationLayers.length} of {infrastructure.records.length} location layers'), 'Black Whale location-layer subset is not disclosed');
   assert(systems.includes('Movement list shows') && systems.includes('Hotspot list shows'), 'spatial top-N subsets are not disclosed');
 
-  for (const css of [peopleCss, informationCss, systemsCss]) {
+  for (const css of [peopleCss, informationCss, systemsCss, infrastructureCss]) {
     assert(!/@media\s*\([^)]*max-width:/i.test(css), 'comprehension systems must not introduce mobile/tablet breakpoints');
     assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'comprehension systems must preserve reduced-motion handling');
     const fontSizes = [...css.matchAll(/font-size:\s*(\d+)px/g)].map((match) => Number(match[1]));
@@ -77,7 +84,7 @@ try {
   assert(peopleCss.includes('position: sticky'), 'people comparison matrices do not preserve sticky scan anchors');
   assert(systemsCss.includes('grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);'), 'Nen mechanics flow does not render as a four-stage chain');
 
-  console.log(`Succession systems comprehension audit passed: ${princes.length} princes, ${knowledge.length} knowledge records, ${deception.length} deception routes, ${leverage.rows.length} leverage dossiers, ${transfers.length} transfer records, ${interactions.interactions.length} ability contexts, and ${spatial.hotspots.length} spatial hotspots are wired.`);
+  console.log(`Succession systems comprehension audit passed: ${princes.length} princes, ${knowledge.length} knowledge records, ${deception.length} deception routes, ${leverage.rows.length} leverage dossiers, ${transfers.length} transfer records, ${interactions.interactions.length} ability contexts, ${infrastructure.records.length} infrastructure locations, and ${spatial.hotspots.length} spatial hotspots are wired.`);
 } finally {
   await vite.close();
 }
