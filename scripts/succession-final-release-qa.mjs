@@ -218,11 +218,11 @@ try {
   });
 
   await runInteraction('assignment result modes are keyboard operable', 'succession/bodyguards', async (page) => {
-    const table = page.getByRole('button', { name: 'Table' });
+    const table = page.getByRole('button', { name: 'Table', exact: true });
     await table.focus();
     await page.keyboard.press('Enter');
     await page.waitForSelector('.succession-assignment-table');
-    const ledger = page.getByRole('button', { name: 'Ledger' });
+    const ledger = page.getByRole('button', { name: 'Ledger', exact: true });
     await ledger.focus();
     await page.keyboard.press('Enter');
     await page.waitForSelector('.succession-assignment-ledger');
@@ -259,6 +259,6 @@ const summary = {
   expectedRouteChecks: routes.length,
   failed: failedRoutes.length + failedInteractions.length,
 };
-await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results, interactions }, null, 2)}\n`);
-console.log(`\nSuccession desktop release QA: ${summary.routePasses}/${summary.routeChecks} route renders and ${summary.interactionPasses}/${summary.interactionChecks} interactions passed.`);
+await writeFile(path.join(output, 'results.json'), `${JSON.stringify({ summary, routes: results, interactions }, null, 2)}\n`);
+process.stdout.write(`\nSuccession desktop release QA: ${summary.routePasses}/${summary.routeChecks} route renders and ${summary.interactionPasses}/${summary.interactionChecks} interactions passed.\n`);
 if (summary.failed) process.exitCode = 1;
