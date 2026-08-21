@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'src/data/succession/**'
+      - 'src/data/successionHomeSummary.js'
       - 'src/components/succession/**'
       - 'src/components/succession-reader/**'
       - 'src/components/SuccessionChapterReader.jsx'
@@ -11,12 +12,16 @@ on:
       - 'scripts/audit-succession-comprehension-*.mjs'
       - 'scripts/audit-succession-phase2-ux-closure.mjs'
       - 'scripts/audit-succession-runtime-schema-coverage.mjs'
+      - 'scripts/audit-succession-spoiler-leak-surfaces.mjs'
+      - 'scripts/audit-succession-local-analytics.mjs'
+      - 'scripts/audit-succession-coverage-roadmap.mjs'
       - '.github/workflows/succession-comprehension.yml'
   push:
     branches:
       - 'agent/succession-comprehension-presentation'
     paths:
       - 'src/data/succession/**'
+      - 'src/data/successionHomeSummary.js'
       - 'src/components/succession/**'
       - 'src/components/succession-reader/**'
       - 'src/components/SuccessionChapterReader.jsx'
@@ -24,6 +29,9 @@ on:
       - 'scripts/audit-succession-comprehension-*.mjs'
       - 'scripts/audit-succession-phase2-ux-closure.mjs'
       - 'scripts/audit-succession-runtime-schema-coverage.mjs'
+      - 'scripts/audit-succession-spoiler-leak-surfaces.mjs'
+      - 'scripts/audit-succession-local-analytics.mjs'
+      - 'scripts/audit-succession-coverage-roadmap.mjs'
       - '.github/workflows/succession-comprehension.yml'
 
 permissions:
@@ -75,6 +83,15 @@ jobs:
 
       - name: Audit runtime schema coverage
         run: node scripts/audit-succession-runtime-schema-coverage.mjs
+
+      - name: Audit spoiler surfaces
+        run: node scripts/audit-succession-spoiler-leak-surfaces.mjs
+
+      - name: Audit local analytics privacy contract
+        run: node scripts/audit-succession-local-analytics.mjs
+
+      - name: Audit public coverage roadmap
+        run: node scripts/audit-succession-coverage-roadmap.mjs
 
       - name: Audit information design system
         run: node scripts/audit-succession-comprehension-design-system.mjs
