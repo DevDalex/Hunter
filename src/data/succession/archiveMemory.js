@@ -5,6 +5,8 @@ export const SUCCESSION_ARCHIVE_MEMORY_EVENT = 'hxh-succession-archive-memory';
 export const SUCCESSION_ARCHIVE_MEMORY_VERSION = 1;
 export const SUCCESSION_ARCHIVE_RECENT_LIMIT = 30;
 export const SUCCESSION_ARCHIVE_BOOKMARK_LIMIT = 100;
+export const SUCCESSION_ARCHIVE_BOOKMARK_TAG_LIMIT = 8;
+export const SUCCESSION_ARCHIVE_BOOKMARK_FOLDER_LIMIT = 60;
 export const SUCCESSION_ARCHIVE_COMPARE_LIMIT = 4;
 export const SUCCESSION_ARCHIVE_SEARCH_LIMIT = 20;
 export const SUCCESSION_ARCHIVE_WATCHLIST_LIMIT = 12;
@@ -35,7 +37,9 @@ const scalarParams = (params = {}) => Object.fromEntries(Object.entries(params |
 }));
 const itemKey = (item) => `${item.route}|${item.entityId || ''}|${JSON.stringify(item.params || {})}`;
 const dedupe = (records, keyFor = itemKey) => [...new Map(records.map((record) => [keyFor(record), record])).values()];
-const normalizeTags = (tags) => Object.freeze([...new Set((Array.isArray(tags) ? tags : String(tags || '').split(',')).map((tag) => text(tag, 40)).filter(Boolean))].slice(0, SUCCESSION_ARCHIVE_WATCHLIST_TAG_LIMIT));
+const normalizeTagList = (tags, limit) => Object.freeze([...new Set((Array.isArray(tags) ? tags : String(tags || '').split(',')).map((tag) => text(tag, 40)).filter(Boolean))].slice(0, limit));
+const normalizeTags = (tags) => normalizeTagList(tags, SUCCESSION_ARCHIVE_WATCHLIST_TAG_LIMIT);
+const normalizeBookmarkTags = (tags) => normalizeTagList(tags, SUCCESSION_ARCHIVE_BOOKMARK_TAG_LIMIT);
 const normalizeCitationIds = (ids) => Object.freeze([...new Set((Array.isArray(ids) ? ids : []).map((id) => text(id, 180)).filter(Boolean))].slice(0, SUCCESSION_ARCHIVE_WATCHLIST_CITATION_LIMIT));
 const normalizeWatchlistStatus = (status) => SUCCESSION_ARCHIVE_WATCHLIST_STATUSES.includes(status) ? status : 'active';
 
@@ -50,6 +54,8 @@ export const normalizeArchiveMemoryItem = (value = {}) => {
     entityId,
     label: text(value.label || entityId || route, 180) || route,
     context: text(value.context, 180) || null,
+    folder: text(value.folder, SUCCESSION_ARCHIVE_BOOKMARK_FOLDER_LIMIT) || null,
+    tags: normalizeBookmarkTags(value.tags),
     savedAt: timestamp(value.savedAt) || null,
     visitedAt: timestamp(value.visitedAt) || null,
   });
@@ -118,6 +124,22 @@ export function withToggledArchiveBookmark(state, item, now = new Date()) {
   });
 }
 
+export function withUpdatedArchiveBookmarkMetadata(state, item, metadata = {}) {
+  const current = normalizeSuccessionArchiveMemory(state);
+  const normalized = normalizeArchiveMemoryItem(item);
+  if (!normalized) return current;
+  return normalizeSuccessionArchiveMemory({
+    ...current,
+    bookmarks: current.bookmarks.map((record) => itemKey(record) === itemKey(normalized)
+      ? {
+        ...record,
+        folder: metadata.folder === undefined ? record.folder : text(metadata.folder, SUCCESSION_ARCHIVE_BOOKMARK_FOLDER_LIMIT) || null,
+        tags: metadata.tags === undefined ? record.tags : normalizeBookmarkTags(metadata.tags),
+      }
+      : record),
+  });
+}
+
 export function withSavedArchiveSearch(state, query, chapter = 417, now = new Date()) {
   const current = normalizeSuccessionArchiveMemory(state);
   const normalized = normalizeSearch({ query, chapter, savedAt: nowIso(now) });
@@ -161,6 +183,18 @@ export function withCreatedWatchlist(state, name, now = new Date()) {
 export function withoutWatchlist(state, id) {
   const current = normalizeSuccessionArchiveMemory(state);
   return normalizeSuccessionArchiveMemory({ ...current, watchlists: current.watchlists.filter((record) => record.id !== id) });
+}
+
+export function withRenamedWatchlist(state, watchlistId, name, now = new Date()) {
+  const current = normalizeSuccessionArchiveMemory(state);
+  const safeName = text(name, 120);
+  if (!safeName) return current;
+  return normalizeSuccessionArchiveMemory({
+    ...current,
+    watchlists: current.watchlists.map((watchlist) => watchlist.id === watchlistId
+      ? { ...watchlist, name: safeName, updatedAt: nowIso(now) }
+      : watchlist),
+  });
 }
 
 export function withUpdatedWatchlistNote(state, watchlistId, note, now = new Date()) {
@@ -272,6 +306,10 @@ export function toggleSuccessionArchiveBookmark(item) {
   return writeSuccessionArchiveMemory(withToggledArchiveBookmark(readSuccessionArchiveMemory(), item));
 }
 
+export function updateSuccessionArchiveBookmarkMetadata(item, metadata) {
+  return writeSuccessionArchiveMemory(withUpdatedArchiveBookmarkMetadata(readSuccessionArchiveMemory(), item, metadata));
+}
+
 export function saveSuccessionArchiveSearch(query, chapter) {
   return writeSuccessionArchiveMemory(withSavedArchiveSearch(readSuccessionArchiveMemory(), query, chapter));
 }
@@ -295,6 +333,10 @@ export function createSuccessionWatchlist(name) {
 
 export function deleteSuccessionWatchlist(id) {
   return writeSuccessionArchiveMemory(withoutWatchlist(readSuccessionArchiveMemory(), id));
+}
+
+export function renameSuccessionWatchlist(id, name) {
+  return writeSuccessionArchiveMemory(withRenamedWatchlist(readSuccessionArchiveMemory(), id, name));
 }
 
 export function updateSuccessionWatchlistNote(id, note) {
