@@ -8,24 +8,16 @@ import {
   toggleSuccessionArchiveBookmark,
   toggleSuccessionCompareItem,
 } from '../../data/succession/archiveMemory';
+import { successionSemanticStates } from '../../data/succession/comprehensionDesignSystem';
 import { readBrowserRoute } from '../../lib/appRouter';
 import { readStoredString, writeStoredString } from '../../lib/browserStorage';
+import SuccessionSemanticStateBadge from './SuccessionSemanticStateBadge';
 import './SuccessionComprehensionBar.css';
 
 const EARLIEST_SUCCESSION_CHAPTER = 340;
 const DENSITY_STORAGE_KEY = 'hxh-succession-density-v1';
 const densityModes = Object.freeze(['comfortable', 'compact', 'analyst']);
 const normalizeDensity = (value) => densityModes.includes(value) ? value : 'comfortable';
-
-const semanticLegend = Object.freeze([
-  ['canon', 'Canon'],
-  ['inference', 'Inference'],
-  ['theory', 'Theory'],
-  ['editorial', 'Editorial'],
-  ['translation', 'Translation'],
-  ['changed', 'Changed'],
-  ['unresolved', 'Unresolved'],
-]);
 
 const sameContext = (left, right) => left?.route === right.route
   && (left?.entityId || null) === (right.entityId || null)
@@ -90,7 +82,7 @@ export default function SuccessionComprehensionBar({ spoilerLimit, onSpoilerChan
 
     <details className="succession-comprehension-bar__legend">
       <summary>Meaning</summary>
-      <div>{semanticLegend.map(([state, label]) => <span className={`is-${state}`} key={state}>{label}</span>)}</div>
+      <div>{successionSemanticStates.map((state) => <SuccessionSemanticStateBadge state={state.id} compact key={state.id} />)}</div>
     </details>
   </section>;
 }
