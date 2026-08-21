@@ -24,6 +24,7 @@ import SpoilerControl from '../SpoilerControl';
 import SuccessionCommandHome from './SuccessionCommandHome';
 import SuccessionComprehensionBar from './SuccessionComprehensionBar';
 import SuccessionConsolidatedRouteNotice from './SuccessionConsolidatedRouteNotice';
+import SuccessionCoverageRoadmap from './SuccessionCoverageRoadmap';
 import SuccessionEntityQuickBriefing from './SuccessionEntityQuickBriefing';
 import SuccessionLocalAnalyticsPanel from './SuccessionLocalAnalyticsPanel';
 import SuccessionNowDashboard from './SuccessionNowDashboard';
@@ -179,7 +180,7 @@ export default function SuccessionArchiveShell({
   const showNow = route.id === 'story';
   const showPeoplePower = activeHub.id === 'people';
   const showNenSpatial = ['nen', 'black-whale'].includes(activeHub.id);
-  const showLocalAnalytics = route.id === 'research' && (!routeParams?.mode || routeParams.mode === 'overview');
+  const showResearchOverviewMeta = route.id === 'research' && (!routeParams?.mode || routeParams.mode === 'overview');
 
   return <article className="succession-archive" data-archive-route={route.id} data-archive-hub={activeHub.id}>
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
@@ -273,7 +274,8 @@ export default function SuccessionArchiveShell({
             {showNow && <SuccessionNowDashboard chapter={spoilerLimit} onNavigate={navigate} />}
             {showPeoplePower && <SuccessionPeoplePowerComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
             {showNenSpatial && <SuccessionNenSpatialComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
-            {showLocalAnalytics && <SuccessionLocalAnalyticsPanel />}
+            {showResearchOverviewMeta && <SuccessionCoverageRoadmap chapter={spoilerLimit} onNavigate={navigate} />}
+            {showResearchOverviewMeta && <SuccessionLocalAnalyticsPanel />}
             {showCharacterConsistency && <Suspense fallback={null}>
               <SuccessionInformationConsistencyPanel activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} />
             </Suspense>}
