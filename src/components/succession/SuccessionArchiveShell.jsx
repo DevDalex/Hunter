@@ -32,9 +32,7 @@ import SuccessionPeoplePowerComprehensionPanel from './SuccessionPeoplePowerComp
 import SuccessionNenSpatialComprehensionPanel from './SuccessionNenSpatialComprehensionPanel';
 import SuccessionOnboardingMission from './SuccessionOnboardingMission';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
-import './SuccessionArchiveContrastFixes.css';
-import './SuccessionArchiveDeepContrastFixes.css';
-import './SuccessionArchiveNenFixes.css';
+import './SuccessionArchiveHistoricalLayers.css';
 
 const SuccessionInformationConsistencyPanel = lazy(() => import('./SuccessionInformationConsistencyPanel'));
 
