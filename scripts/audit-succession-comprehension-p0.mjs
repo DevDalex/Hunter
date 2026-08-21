@@ -41,6 +41,7 @@ try {
 
   for (const token of ['SuccessionComprehensionBar', 'SuccessionNowDashboard']) assert(shell.includes(token), `archive shell is not mounting ${token}`);
   assert(shell.includes("const showNow = route.id === 'story';"), 'NOW dashboard is not anchored to the canonical Story workspace');
+  assert(contextCss.includes('.succession-archive__sidebar-context { display: none; }'), 'duplicate sidebar Desk / Boundary context has not been suppressed');
 
   for (const token of [
     'Current-state briefing',
