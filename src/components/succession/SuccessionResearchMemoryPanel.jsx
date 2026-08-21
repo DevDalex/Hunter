@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowDown, ArrowRight, ArrowUp, Bookmark, Clock3, Download, FileText, GitCompareArrows, LibraryBig, Plus, Printer, Save, Search, Tags, Trash2 } from 'lucide-react';
 import { getEntityById, getSourcesForEntity } from '../../data/succession/successionData';
 import {
+  SUCCESSION_ARCHIVE_BOOKMARK_FOLDER_LIMIT,
+  SUCCESSION_ARCHIVE_BOOKMARK_TAG_LIMIT,
   SUCCESSION_ARCHIVE_MEMORY_EVENT,
   SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT,
   SUCCESSION_ARCHIVE_WATCHLIST_STATUSES,
@@ -12,9 +14,11 @@ import {
   moveSuccessionWatchlistItem,
   readSuccessionArchiveMemory,
   removeSuccessionArchiveSearch,
+  renameSuccessionWatchlist,
   toggleSuccessionArchiveBookmark,
   toggleSuccessionWatchlistCitation,
   toggleSuccessionWatchlistItem,
+  updateSuccessionArchiveBookmarkMetadata,
   updateSuccessionWatchlistMetadata,
   updateSuccessionWatchlistNote,
 } from '../../data/succession/archiveMemory';
@@ -28,6 +32,9 @@ const describeItem = (item) => {
     entity,
   };
 };
+
+const memoryItemKey = (item) => `${item.route}|${item.entityId || ''}|${JSON.stringify(item.params || {})}`;
+const normalizeSearchText = (value) => String(value || '').trim().toLocaleLowerCase();
 
 const formatWhen = (value) => {
   const parsed = Date.parse(String(value || ''));
@@ -137,6 +144,12 @@ export default function SuccessionResearchMemoryPanel({ spoilerLimit = 417, onNa
   const [watchlistPick, setWatchlistPick] = useState({});
   const [noteDrafts, setNoteDrafts] = useState({});
   const [tagDrafts, setTagDrafts] = useState({});
+  const [nameDrafts, setNameDrafts] = useState({});
+  const [bookmarkDrafts, setBookmarkDrafts] = useState({});
+  const [bookmarkQuery, setBookmarkQuery] = useState('');
+  const [bookmarkFolder, setBookmarkFolder] = useState('all');
+  const [bookmarkSort, setBookmarkSort] = useState('recent');
+  const [showAllBookmarks, setShowAllBookmarks] = useState(false);
 
   useEffect(() => {
     const refresh = () => setMemory(readSuccessionArchiveMemory());
@@ -148,7 +161,25 @@ export default function SuccessionResearchMemoryPanel({ spoilerLimit = 417, onNa
   const compareTypes = [...new Set(compareRows.map((row) => row.entity?.entityType).filter(Boolean))];
   const compareReady = compareRows.length >= 2 && compareTypes.length === 1;
   const recent = memory.recent.slice(0, 8);
-  const bookmarks = memory.bookmarks.slice(0, 12);
+  const bookmarkFolders = useMemo(() => [...new Set(memory.bookmarks.map((item) => item.folder || 'Unfiled'))].sort((left, right) => left.localeCompare(right)), [memory.bookmarks]);
+  const filteredBookmarks = useMemo(() => {
+    const needle = normalizeSearchText(bookmarkQuery);
+    const rows = memory.bookmarks.filter((item) => {
+      const record = describeItem(item);
+      const folder = item.folder || 'Unfiled';
+      if (bookmarkFolder !== 'all' && folder !== bookmarkFolder) return false;
+      if (!needle) return true;
+      return normalizeSearchText([record.label, record.type, folder, ...(item.tags || [])].join(' ')).includes(needle);
+    });
+    return [...rows].sort((left, right) => {
+      const leftRecord = describeItem(left);
+      const rightRecord = describeItem(right);
+      if (bookmarkSort === 'name') return leftRecord.label.localeCompare(rightRecord.label);
+      if (bookmarkSort === 'folder') return String(left.folder || 'Unfiled').localeCompare(String(right.folder || 'Unfiled')) || leftRecord.label.localeCompare(rightRecord.label);
+      return (Date.parse(right.savedAt || '') || 0) - (Date.parse(left.savedAt || '') || 0);
+    });
+  }, [memory.bookmarks, bookmarkQuery, bookmarkFolder, bookmarkSort]);
+  const bookmarks = showAllBookmarks ? filteredBookmarks : filteredBookmarks.slice(0, 24);
 
   const runCompare = () => {
     if (!compareReady) return;
@@ -177,6 +208,18 @@ export default function SuccessionResearchMemoryPanel({ spoilerLimit = 417, onNa
     updateSuccessionWatchlistMetadata(watchlist.id, { tags });
   };
 
+  const saveWatchlistName = (watchlist) => {
+    const name = nameDrafts[watchlist.id] ?? watchlist.name;
+    if (!name.trim()) return;
+    renameSuccessionWatchlist(watchlist.id, name);
+  };
+
+  const bookmarkDraft = (item) => bookmarkDrafts[memoryItemKey(item)] || { folder: item.folder || '', tags: (item.tags || []).join(', ') };
+  const saveBookmarkMetadata = (item) => {
+    const draft = bookmarkDraft(item);
+    updateSuccessionArchiveBookmarkMetadata(item, { folder: draft.folder, tags: draft.tags });
+  };
+
   return <section className="succession-research-memory" aria-labelledby="succession-research-memory-title">
     <header className="succession-research-memory__hero">
       <span><LibraryBig size={15} aria-hidden="true" /> Research memory · local only</span>
@@ -200,11 +243,23 @@ export default function SuccessionResearchMemoryPanel({ spoilerLimit = 417, onNa
         {memory.recent.length > recent.length && <small className="succession-research-memory__shown">Showing {recent.length} of {memory.recent.length} recent contexts.</small>}
       </section>
 
-      <section>
-        <header><span><Bookmark size={13} aria-hidden="true" /> Saved records</span><h3>Archive bookmarks</h3></header>
-        <ol className="succession-research-memory__items">{bookmarks.map((item) => { const record = describeItem(item); return <li key={`${item.route}:${item.entityId || JSON.stringify(item.params)}`}><div><b>{record.label}</b><small>{record.type.replaceAll('-', ' ')} · {formatWhen(item.savedAt)}</small></div><div className="succession-research-memory__row-actions"><OpenItemButton item={item} onNavigate={onNavigate} /><button type="button" aria-label={`Remove bookmark ${record.label}`} onClick={() => toggleSuccessionArchiveBookmark(item)}><Trash2 size={12} aria-hidden="true" /> Remove</button></div></li>; })}</ol>
-        {!bookmarks.length && <p className="succession-research-memory__empty">Use “Save current” in the chapter context bar to bookmark a workspace or record.</p>}
-        {memory.bookmarks.length > bookmarks.length && <small className="succession-research-memory__shown">Showing {bookmarks.length} of {memory.bookmarks.length} bookmarks.</small>}
+      <section className="is-bookmarks">
+        <header><span><Bookmark size={13} aria-hidden="true" /> Saved records</span><h3>Archive bookmark manager</h3></header>
+        <div className="succession-research-memory__bookmark-controls">
+          <label><span>Search bookmarks</span><input type="search" value={bookmarkQuery} onChange={(event) => { setBookmarkQuery(event.target.value); setShowAllBookmarks(false); }} placeholder="name, type, folder, tag…" /></label>
+          <label><span>Folder</span><select value={bookmarkFolder} onChange={(event) => { setBookmarkFolder(event.target.value); setShowAllBookmarks(false); }}><option value="all">All folders</option>{bookmarkFolders.map((folder) => <option value={folder} key={folder}>{folder}</option>)}</select></label>
+          <label><span>Sort</span><select value={bookmarkSort} onChange={(event) => setBookmarkSort(event.target.value)}><option value="recent">Recently saved</option><option value="name">Name</option><option value="folder">Folder</option></select></label>
+          <output>{filteredBookmarks.length} / {memory.bookmarks.length} matching</output>
+        </div>
+        <ol className="succession-research-memory__items succession-research-memory__bookmark-items">{bookmarks.map((item) => {
+          const record = describeItem(item);
+          const key = memoryItemKey(item);
+          const draft = bookmarkDraft(item);
+          const dirty = draft.folder !== (item.folder || '') || draft.tags !== (item.tags || []).join(', ');
+          return <li key={key}><div className="succession-research-memory__bookmark-copy"><b>{record.label}</b><small>{record.type.replaceAll('-', ' ')} · {formatWhen(item.savedAt)}</small><div className="succession-research-memory__bookmark-meta"><label><span>Folder</span><input value={draft.folder} maxLength={SUCCESSION_ARCHIVE_BOOKMARK_FOLDER_LIMIT} onChange={(event) => setBookmarkDrafts((current) => ({ ...current, [key]: { ...draft, folder: event.target.value } }))} placeholder="Unfiled" /></label><label><span>Tags · max {SUCCESSION_ARCHIVE_BOOKMARK_TAG_LIMIT}</span><input value={draft.tags} onChange={(event) => setBookmarkDrafts((current) => ({ ...current, [key]: { ...draft, tags: event.target.value } }))} placeholder="prince, nen, revisit" /></label><button type="button" disabled={!dirty} onClick={() => saveBookmarkMetadata(item)}><Save size={11} /> Save metadata</button></div></div><div className="succession-research-memory__row-actions"><OpenItemButton item={item} onNavigate={onNavigate} /><button type="button" aria-label={`Remove bookmark ${record.label}`} onClick={() => toggleSuccessionArchiveBookmark(item)}><Trash2 size={12} aria-hidden="true" /> Remove</button></div></li>;
+        })}</ol>
+        {!filteredBookmarks.length && <p className="succession-research-memory__empty">{memory.bookmarks.length ? 'No bookmarks match the current search/folder filters.' : 'Use “Save current” in the chapter context bar to bookmark a workspace or record.'}</p>}
+        {filteredBookmarks.length > bookmarks.length && <div className="succession-research-memory__bookmark-more"><small>Showing {bookmarks.length} of {filteredBookmarks.length} matching bookmarks.</small><button type="button" onClick={() => setShowAllBookmarks(true)}>Show all matching</button></div>}
       </section>
 
       <section className="is-compare">
@@ -222,24 +277,26 @@ export default function SuccessionResearchMemoryPanel({ spoilerLimit = 417, onNa
       </section>
 
       <section className="is-watchlists">
-        <header><span><LibraryBig size={13} aria-hidden="true" /> Research collections</span><h3>Investigations with notes, status, tags, ordering, citations and portable exports</h3></header>
+        <header><span><LibraryBig size={13} aria-hidden="true" /> Research collections</span><h3>Investigations with rename, notes, status, tags, ordering, citations and portable exports</h3></header>
         <form className="succession-research-memory__watchlist-create" onSubmit={createWatchlist}><label><span>New collection</span><input value={watchlistName} onChange={(event) => setWatchlistName(event.target.value)} maxLength="120" placeholder="e.g. Halkenburg investigation" /></label><button type="submit" disabled={!watchlistName.trim()}><Plus size={12} /> Create</button></form>
         <div className="succession-research-memory__watchlists">{memory.watchlists.map((watchlist) => {
           const note = noteDrafts[watchlist.id] ?? watchlist.note ?? '';
           const noteDirty = note !== (watchlist.note || '');
           const tags = tagDrafts[watchlist.id] ?? watchlist.tags.join(', ');
           const tagsDirty = tags !== watchlist.tags.join(', ');
+          const name = nameDrafts[watchlist.id] ?? watchlist.name;
+          const nameDirty = name.trim() && name !== watchlist.name;
           const citations = citationCandidatesForWatchlist(watchlist);
           return <article data-watchlist-id={watchlist.id} data-status={watchlist.status} key={watchlist.id}>
             <header><div><b>{watchlist.name}</b><small>{watchlist.items.length} saved record{watchlist.items.length === 1 ? '' : 's'} · {watchlist.citationIds.length} citations · {formatWhen(watchlist.updatedAt)}</small></div><div className="succession-research-memory__collection-actions"><button type="button" onClick={() => downloadMarkdown(watchlist)}><Download size={12} /> Dossier .md</button><button type="button" onClick={() => downloadCitationBundle(watchlist)}><FileText size={12} /> Citations</button><button type="button" onClick={() => printWatchlist(watchlist.id)}><Printer size={12} /> Print</button><button type="button" onClick={() => deleteSuccessionWatchlist(watchlist.id)}><Trash2 size={12} /> Delete</button></div></header>
-            <div className="succession-research-memory__investigation-meta"><label><span>Status</span><select value={watchlist.status} onChange={(event) => updateSuccessionWatchlistMetadata(watchlist.id, { status: event.target.value })}>{SUCCESSION_ARCHIVE_WATCHLIST_STATUSES.map((status) => <option value={status} key={status}>{status}</option>)}</select></label><label className="is-tags"><span><Tags size={11} aria-hidden="true" /> Tags · max {SUCCESSION_ARCHIVE_WATCHLIST_TAG_LIMIT}</span><input value={tags} onChange={(event) => setTagDrafts((current) => ({ ...current, [watchlist.id]: event.target.value }))} placeholder="ritual, halkenburg, evidence-gap" /><button type="button" disabled={!tagsDirty} onClick={() => saveTags(watchlist)}><Save size={11} /> Save tags</button></label></div>
+            <div className="succession-research-memory__investigation-meta"><label className="is-name"><span>Investigation name</span><input value={name} maxLength="120" onChange={(event) => setNameDrafts((current) => ({ ...current, [watchlist.id]: event.target.value }))} /><button type="button" disabled={!nameDirty} onClick={() => saveWatchlistName(watchlist)}><Save size={11} /> Rename</button></label><label><span>Status</span><select value={watchlist.status} onChange={(event) => updateSuccessionWatchlistMetadata(watchlist.id, { status: event.target.value })}>{SUCCESSION_ARCHIVE_WATCHLIST_STATUSES.map((status) => <option value={status} key={status}>{status}</option>)}</select></label><label className="is-tags"><span><Tags size={11} aria-hidden="true" /> Tags · max {SUCCESSION_ARCHIVE_WATCHLIST_TAG_LIMIT}</span><input value={tags} onChange={(event) => setTagDrafts((current) => ({ ...current, [watchlist.id]: event.target.value }))} placeholder="ritual, halkenburg, evidence-gap" /><button type="button" disabled={!tagsDirty} onClick={() => saveTags(watchlist)}><Save size={11} /> Save tags</button></label></div>
             <label className="succession-research-memory__note"><span>Investigation note / working thesis</span><textarea value={note} maxLength={SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT} onChange={(event) => setNoteDrafts((current) => ({ ...current, [watchlist.id]: event.target.value }))} placeholder="Question, hypothesis, evidence to revisit, contradictions, next checks…" /><small>{note.length} / {SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT} characters · local only</small><button type="button" disabled={!noteDirty} onClick={() => saveNote(watchlist)}><Save size={12} /> Save note</button></label>
             <section className="succession-research-memory__ordered-records"><h4>Ordered evidence / record stack</h4><ol>{watchlist.items.map((item, index) => { const record = describeItem(item); return <li key={`${watchlist.id}:${item.route}:${item.entityId || JSON.stringify(item.params)}`}><span>{index + 1}</span><OpenItemButton item={item} onNavigate={onNavigate} label={record.label} /><div><button type="button" disabled={index === 0} aria-label={`Move ${record.label} up`} onClick={() => moveSuccessionWatchlistItem(watchlist.id, index, 'up')}><ArrowUp size={11} /></button><button type="button" disabled={index === watchlist.items.length - 1} aria-label={`Move ${record.label} down`} onClick={() => moveSuccessionWatchlistItem(watchlist.id, index, 'down')}><ArrowDown size={11} /></button><button type="button" onClick={() => toggleSuccessionWatchlistItem(watchlist.id, item)}><Trash2 size={11} /> Remove</button></div></li>; })}</ol>{!watchlist.items.length && <p className="succession-research-memory__empty">No records in this investigation yet.</p>}</section>
             <details className="succession-research-memory__citations"><summary>Citations · {watchlist.citationIds.length} selected / {citations.length} available</summary><div>{citations.map((source) => <label key={source.id}><input type="checkbox" checked={watchlist.citationIds.includes(source.id)} onChange={() => toggleSuccessionWatchlistCitation(watchlist.id, source.id)} /><span><b>{source.chapter ? `Chapter ${source.chapter}` : source.name || source.id}</b><small>{source.sourceType || 'source'} · {source.note || source.id}</small></span></label>)}</div>{!citations.length && <p className="succession-research-memory__empty">Saved records have no linked source records available for a citation bundle.</p>}</details>
-            {bookmarks.length > 0 && <div className="succession-research-memory__watchlist-add"><select aria-label={`Bookmark to add to ${watchlist.name}`} value={watchlistPick[watchlist.id] || ''} onChange={(event) => setWatchlistPick((current) => ({ ...current, [watchlist.id]: event.target.value }))}><option value="">Choose bookmarked record…</option>{bookmarks.map((item, index) => <option value={index} key={`${watchlist.id}:${item.route}:${item.entityId || index}`}>{describeItem(item).label}</option>)}</select><button type="button" disabled={watchlistPick[watchlist.id] === undefined || watchlistPick[watchlist.id] === ''} onClick={() => { const item = bookmarks[Number(watchlistPick[watchlist.id])]; if (item) toggleSuccessionWatchlistItem(watchlist.id, item); }}>Add</button></div>}
+            {memory.bookmarks.length > 0 && <div className="succession-research-memory__watchlist-add"><select aria-label={`Bookmark to add to ${watchlist.name}`} value={watchlistPick[watchlist.id] || ''} onChange={(event) => setWatchlistPick((current) => ({ ...current, [watchlist.id]: event.target.value }))}><option value="">Choose bookmarked record…</option>{memory.bookmarks.map((item, index) => <option value={index} key={`${watchlist.id}:${item.route}:${item.entityId || index}`}>{describeItem(item).label}</option>)}</select><button type="button" disabled={watchlistPick[watchlist.id] === undefined || watchlistPick[watchlist.id] === ''} onClick={() => { const item = memory.bookmarks[Number(watchlistPick[watchlist.id])]; if (item) toggleSuccessionWatchlistItem(watchlist.id, item); }}>Add</button></div>}
           </article>;
         })}</div>
-        {!memory.watchlists.length && <p className="succession-research-memory__empty">Create an investigation, add records from archive bookmarks, then manage notes, status, tags, ordering and citations or export a dossier.</p>}
+        {!memory.watchlists.length && <p className="succession-research-memory__empty">Create an investigation, add records from archive bookmarks, then manage name, notes, status, tags, ordering and citations or export a dossier.</p>}
       </section>
     </div>
   </section>;
