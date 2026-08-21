@@ -64,17 +64,25 @@ try {
   assert(summary.commitments === commitments.total, 'finishing summary lost commitment count');
   assert(summary.spatialSystems === spatial.summary.systems, 'finishing summary lost spatial-system count');
 
-  const [panelSource, bridgeSource] = await Promise.all([
+  const [panelSource, panelCss, bridgeSource] = await Promise.all([
     readFile(path.join(root, 'src/components/succession/SuccessionAnalyticalFinishingPanel.jsx'), 'utf8'),
+    readFile(path.join(root, 'src/components/succession/SuccessionContentDepthWorkbench.css'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionMysteryCaseWorkbench.jsx'), 'utf8'),
   ]);
   for (const token of ['Setup / payoff index', 'Foreshadowing tracker', 'Promises / contracts tracker', 'Black Whale evidence-led spatial intelligence', 'Faction recent-change summaries', 'Political / Nen / legal / information leverage']) {
     assert(panelSource.includes(token), `released analytical panel is missing ${token}`);
   }
+  assert(panelSource.includes('SetupPayoffTimeline') && panelSource.includes('Setup · Ch.') && panelSource.includes('Consequence / payoff · Ch.'), 'setup/payoff view is not rendered as a two-ended chapter timeline');
+  assert(panelSource.includes('--setup-gap-width') && panelSource.includes('maxGap'), 'setup/payoff chapter gap is not visually encoded proportionally');
+  assert(panelSource.includes('Detailed setup / payoff research table') && panelSource.includes('setup.records.map'), 'complete setup/payoff research table is not preserved below the visual summary');
+  assert(panelSource.includes('Showing {visible.length} of {records.length}'), 'setup/payoff top-N visual subset is not disclosed');
   assert(panelSource.includes('authorial intent') && panelSource.includes('never promoted into predicted payoffs'), 'analytical panel lost inference/foreshadowing safety language');
+  assert(panelCss.includes('.succession-depth-setup-timeline') && panelCss.includes('.succession-depth-setup-gap'), 'setup/payoff mini timeline has no presentation contract');
+  const fontSizes = [...panelCss.matchAll(/font-size:\s*(\d+)px/g)].map((match) => Number(match[1]));
+  assert(fontSizes.every((size) => size >= 11), `content-depth presentation introduced text below the 11px floor: ${fontSizes.filter((size) => size < 11).join(', ')}`);
   assert(bridgeSource.includes('SuccessionAnalyticalFinishingPanel') && bridgeSource.includes('depthActive'), 'Research depth bridge does not mount the analytical finishing layer');
 
-  console.log(`Succession analytical finishing audit passed: ${setup.records.length} cross-chapter setup/payoff links, ${foreshadowing.signals.length} structural story signals, ${commitments.total} commitment records, ${spatial.summary.systems} Black Whale systems, ${factions.length} faction summaries, ${leverage.rows.length} leverage dossiers, and 78/78 maintained What Changed? briefs through Chapter 417.`);
+  console.log(`Succession analytical finishing audit passed: ${setup.records.length} cross-chapter setup/payoff links with mini timelines, ${foreshadowing.signals.length} structural story signals, ${commitments.total} commitment records, ${spatial.summary.systems} Black Whale systems, ${factions.length} faction summaries, ${leverage.rows.length} leverage dossiers, and 78/78 maintained What Changed? briefs through Chapter 417.`);
 } finally {
   await vite.close();
 }
