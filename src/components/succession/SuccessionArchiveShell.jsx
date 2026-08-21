@@ -20,6 +20,8 @@ import {
 } from '../../data/succession/archiveRoutes';
 import SpoilerControl from '../SpoilerControl';
 import SuccessionCommandHome from './SuccessionCommandHome';
+import SuccessionComprehensionBar from './SuccessionComprehensionBar';
+import SuccessionNowDashboard from './SuccessionNowDashboard';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveContrastFixes.css';
 import './SuccessionArchiveDeepContrastFixes.css';
@@ -78,7 +80,7 @@ function ArchiveNavigation({ activeHubId, onNavigate, onIntent, id }) {
             <span>{hub.label}</span>
           </a>;
         })}</div>
-      </section>;
+      </section>
     })}
   </nav>;
 }
@@ -143,6 +145,7 @@ export default function SuccessionArchiveShell({
   const navigate = (target, params = {}) => onNavigate(target, params);
   const headerActions = <button type="button" className="succession-button succession-button--search" onClick={onOpenSearch}><Search size={16} aria-hidden="true" /> Search <kbd>Ctrl K</kbd></button>;
   const onHubRoot = route.id === activeHub.target;
+  const showNow = route.id === 'story';
 
   return <article className="succession-archive" data-archive-route={route.id} data-archive-hub={activeHub.id}>
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
@@ -185,6 +188,8 @@ export default function SuccessionArchiveShell({
 
       <div className="succession-archive__workspace">
         <div className="succession-archive__workspace-frame">
+          <SuccessionComprehensionBar spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} />
+
           <div className="succession-route-context">
             <nav className="succession-breadcrumbs" aria-label="Breadcrumb">
               <ol>
@@ -235,6 +240,7 @@ export default function SuccessionArchiveShell({
             aria-label={`${route.label} workspace content`}
             tabIndex="-1"
           >
+            {showNow && <SuccessionNowDashboard chapter={spoilerLimit} onNavigate={navigate} />}
             {showCharacterConsistency && <Suspense fallback={null}>
               <SuccessionInformationConsistencyPanel activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} />
             </Suspense>}
