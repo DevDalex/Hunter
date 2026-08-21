@@ -26,6 +26,7 @@ import SuccessionEntityQuickBriefing from './SuccessionEntityQuickBriefing';
 import SuccessionNowDashboard from './SuccessionNowDashboard';
 import SuccessionPeoplePowerComprehensionPanel from './SuccessionPeoplePowerComprehensionPanel';
 import SuccessionNenSpatialComprehensionPanel from './SuccessionNenSpatialComprehensionPanel';
+import SuccessionOnboardingMission from './SuccessionOnboardingMission';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveContrastFixes.css';
 import './SuccessionArchiveDeepContrastFixes.css';
@@ -155,11 +156,14 @@ export default function SuccessionArchiveShell({
   }, [activeId, route.id]);
 
   const showCommandHome = route.id === 'story' && Object.keys(routeParams || {}).length === 0;
-  if (showCommandHome) return <SuccessionCommandHome
-    spoilerLimit={spoilerLimit}
-    onNavigate={onNavigate}
-    onOpenSearch={onOpenSearch}
-  />;
+  if (showCommandHome) return <>
+    <SuccessionOnboardingMission onNavigate={onNavigate} />
+    <SuccessionCommandHome
+      spoilerLimit={spoilerLimit}
+      onNavigate={onNavigate}
+      onOpenSearch={onOpenSearch}
+    />
+  </>;
 
   const navigate = (target, params = {}) => onNavigate(target, params);
   const headerActions = <button type="button" className="succession-button succession-button--search" onClick={onOpenSearch}><Search size={16} aria-hidden="true" /> Search <kbd>Ctrl K</kbd></button>;
