@@ -8,9 +8,11 @@ import { getSpatialEvidenceIntelligence } from '../../data/succession/contentDep
 import {
   getAbilityInteractionMatrix,
   getBlackWhaleSnapshotComparison,
+  getShipInfrastructureIndex,
 } from '../../data/succession/workspaceRefinementRuntime';
 import { entityWorkspaceTarget } from './SuccessionArchivePrimitives';
 import './SuccessionNenSpatialComprehensionPanel.css';
+import './SuccessionSpatialInfrastructureComprehension.css';
 
 const labelize = (value) => String(value || 'unknown').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 const asList = (value) => Array.isArray(value) ? value.filter(Boolean) : value ? [value] : [];
@@ -75,8 +77,11 @@ function ShipState({ chapter, onNavigate }) {
   const previous = Math.max(340, chapter - 1);
   const comparison = getBlackWhaleSnapshotComparison(previous, chapter);
   const spatial = getSpatialEvidenceIntelligence(chapter);
+  const infrastructure = getShipInfrastructureIndex(chapter);
   const movements = (comparison.movements || []).slice(0, 8);
   const hotspots = (spatial.hotspots || []).slice(0, 8);
+  const systems = Object.values(infrastructure.systems || {}).sort((left, right) => right.activeEvents - left.activeEvents || right.activeAssignments - left.activeAssignments || left.label.localeCompare(right.label)).slice(0, 8);
+  const locationLayers = [...(infrastructure.records || [])].sort((left, right) => right.operationalLoad - left.operationalLoad || left.location.name.localeCompare(right.location.name)).slice(0, 10);
 
   return <section className="succession-nen-spatial__section is-ship">
     <header><span><Ship size={14} aria-hidden="true" /> Black Whale operational state</span><h3>Movement and hotspot evidence · Ch. {previous} → {chapter}</h3><p>Movement arrows and hotspot load come from maintained location, event, assignment and provenance records—not a fictional danger score.</p></header>
@@ -90,6 +95,13 @@ function ShipState({ chapter, onNavigate }) {
         <span>{row.operationalLoad} load · {row.provenanceCoverage}% evidenced</span>
       </li>)}</ol>{!hotspots.length && <p>No maintained hotspot is published for this boundary.</p>}</section>
     </div>
+    <section className="succession-nen-spatial__infrastructure" aria-labelledby="succession-infrastructure-title">
+      <header><h4 id="succession-infrastructure-title">Access & infrastructure layers</h4><small>{infrastructure.records?.length || 0} maintained Black Whale locations · {infrastructure.systemCount || systems.length} infrastructure systems</small></header>
+      <div className="succession-nen-spatial__infrastructure-systems">{systems.map((system) => <article className="succession-nen-spatial__infrastructure-card" key={system.id}><span>Infrastructure system</span><b>{system.label}</b><dl><div><dt>Locations</dt><dd>{system.locationCount}</dd></div><div><dt>Occupants</dt><dd>{system.occupants}</dd></div><div><dt>Events</dt><dd>{system.activeEvents}</dd></div><div><dt>Assignments</dt><dd>{system.activeAssignments}</dd></div></dl></article>)}</div>
+      <div className="succession-nen-spatial__location-layers">{locationLayers.map((row) => <article className="succession-nen-spatial__location-layer" key={row.location.id}><EntityButton id={row.location.id} onNavigate={onNavigate} /><div><span>{labelize(row.system)}</span><span>{labelize(row.state.accessLevel)}</span><span>{labelize(row.state.zoneRole)}</span></div><small>{row.state.events.length} active events · {row.state.assignments.length} assignments · {row.protocolIds.length} attached protocols</small></article>)}</div>
+      {(infrastructure.records?.length || 0) > locationLayers.length && <small className="succession-nen-spatial__shown">Showing {locationLayers.length} of {infrastructure.records.length} location layers, ordered by maintained operational load.</small>}
+      <p className="succession-information-war__note">Access level, zone role and attached protocols are shown as maintained archive fields. This view does not infer territorial control where the records do not state it.</p>
+    </section>
     <footer><button type="button" onClick={() => onNavigate('black-whale', { chapter })}><Route size={12} /> Open ship atlas</button><button type="button" onClick={() => onNavigate('locations', { chapter })}><MapPinned size={12} /> Location archive</button></footer>
     {(comparison.movements?.length || 0) > movements.length && <small className="succession-nen-spatial__shown">Movement list shows {movements.length} of {comparison.movements.length} records.</small>}
     {(spatial.hotspots?.length || 0) > hotspots.length && <small className="succession-nen-spatial__shown">Hotspot list shows {hotspots.length} of {spatial.hotspots.length} locations.</small>}
