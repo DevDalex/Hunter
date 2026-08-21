@@ -57,5 +57,8 @@ jobs:
       - name: Audit comparison comprehension
         run: node scripts/audit-succession-comprehension-compare.mjs
 
+      - name: Audit information design system
+        run: node scripts/audit-succession-comprehension-design-system.mjs
+
       - name: Production build
         run: npm run build
