@@ -9,6 +9,9 @@ export const SUCCESSION_ARCHIVE_COMPARE_LIMIT = 4;
 export const SUCCESSION_ARCHIVE_SEARCH_LIMIT = 20;
 export const SUCCESSION_ARCHIVE_WATCHLIST_LIMIT = 12;
 export const SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT = 4000;
+export const SUCCESSION_ARCHIVE_WATCHLIST_TAG_LIMIT = 12;
+export const SUCCESSION_ARCHIVE_WATCHLIST_CITATION_LIMIT = 100;
+export const SUCCESSION_ARCHIVE_WATCHLIST_STATUSES = Object.freeze(['active', 'paused', 'resolved']);
 
 export const defaultSuccessionArchiveMemory = Object.freeze({
   version: SUCCESSION_ARCHIVE_MEMORY_VERSION,
@@ -32,6 +35,9 @@ const scalarParams = (params = {}) => Object.fromEntries(Object.entries(params |
 }));
 const itemKey = (item) => `${item.route}|${item.entityId || ''}|${JSON.stringify(item.params || {})}`;
 const dedupe = (records, keyFor = itemKey) => [...new Map(records.map((record) => [keyFor(record), record])).values()];
+const normalizeTags = (tags) => Object.freeze([...new Set((Array.isArray(tags) ? tags : String(tags || '').split(',')).map((tag) => text(tag, 40)).filter(Boolean))].slice(0, SUCCESSION_ARCHIVE_WATCHLIST_TAG_LIMIT));
+const normalizeCitationIds = (ids) => Object.freeze([...new Set((Array.isArray(ids) ? ids : []).map((id) => text(id, 180)).filter(Boolean))].slice(0, SUCCESSION_ARCHIVE_WATCHLIST_CITATION_LIMIT));
+const normalizeWatchlistStatus = (status) => SUCCESSION_ARCHIVE_WATCHLIST_STATUSES.includes(status) ? status : 'active';
 
 export const normalizeArchiveMemoryItem = (value = {}) => {
   const route = text(value.route, 60);
@@ -69,6 +75,9 @@ const normalizeWatchlist = (value = {}) => {
     id,
     name,
     note: text(value.note, SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT),
+    status: normalizeWatchlistStatus(value.status),
+    tags: normalizeTags(value.tags),
+    citationIds: normalizeCitationIds(value.citationIds),
     createdAt: timestamp(value.createdAt) || null,
     updatedAt: timestamp(value.updatedAt) || null,
     items: Object.freeze(dedupe((Array.isArray(value.items) ? value.items : []).map(normalizeArchiveMemoryItem).filter(Boolean)).slice(0, SUCCESSION_ARCHIVE_BOOKMARK_LIMIT)),
@@ -145,7 +154,7 @@ export function withCreatedWatchlist(state, name, now = new Date()) {
   const id = `watchlist:${safeName.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70) || 'research'}:${Date.parse(stamp)}`;
   return normalizeSuccessionArchiveMemory({
     ...current,
-    watchlists: [...current.watchlists, { id, name: safeName, note: '', createdAt: stamp, updatedAt: stamp, items: [] }],
+    watchlists: [...current.watchlists, { id, name: safeName, note: '', status: 'active', tags: [], citationIds: [], createdAt: stamp, updatedAt: stamp, items: [] }],
   });
 }
 
@@ -162,6 +171,57 @@ export function withUpdatedWatchlistNote(state, watchlistId, note, now = new Dat
     watchlists: current.watchlists.map((watchlist) => watchlist.id === watchlistId
       ? { ...watchlist, note: safeNote, updatedAt: nowIso(now) }
       : watchlist),
+  });
+}
+
+export function withUpdatedWatchlistMetadata(state, watchlistId, metadata = {}, now = new Date()) {
+  const current = normalizeSuccessionArchiveMemory(state);
+  return normalizeSuccessionArchiveMemory({
+    ...current,
+    watchlists: current.watchlists.map((watchlist) => watchlist.id === watchlistId
+      ? {
+        ...watchlist,
+        status: metadata.status === undefined ? watchlist.status : normalizeWatchlistStatus(metadata.status),
+        tags: metadata.tags === undefined ? watchlist.tags : normalizeTags(metadata.tags),
+        updatedAt: nowIso(now),
+      }
+      : watchlist),
+  });
+}
+
+export function withToggledWatchlistCitation(state, watchlistId, citationId, now = new Date()) {
+  const current = normalizeSuccessionArchiveMemory(state);
+  const safeId = text(citationId, 180);
+  if (!safeId) return current;
+  return normalizeSuccessionArchiveMemory({
+    ...current,
+    watchlists: current.watchlists.map((watchlist) => {
+      if (watchlist.id !== watchlistId) return watchlist;
+      const exists = watchlist.citationIds.includes(safeId);
+      return {
+        ...watchlist,
+        citationIds: exists ? watchlist.citationIds.filter((id) => id !== safeId) : [...watchlist.citationIds, safeId],
+        updatedAt: nowIso(now),
+      };
+    }),
+  });
+}
+
+export function withMovedWatchlistItem(state, watchlistId, itemIndex, direction, now = new Date()) {
+  const current = normalizeSuccessionArchiveMemory(state);
+  const offset = direction === 'up' ? -1 : direction === 'down' ? 1 : 0;
+  if (!offset) return current;
+  return normalizeSuccessionArchiveMemory({
+    ...current,
+    watchlists: current.watchlists.map((watchlist) => {
+      if (watchlist.id !== watchlistId) return watchlist;
+      const from = Math.max(0, Math.min(watchlist.items.length - 1, Number(itemIndex)));
+      const to = from + offset;
+      if (!Number.isFinite(from) || to < 0 || to >= watchlist.items.length) return watchlist;
+      const items = [...watchlist.items];
+      [items[from], items[to]] = [items[to], items[from]];
+      return { ...watchlist, items, updatedAt: nowIso(now) };
+    }),
   });
 }
 
@@ -239,6 +299,18 @@ export function deleteSuccessionWatchlist(id) {
 
 export function updateSuccessionWatchlistNote(id, note) {
   return writeSuccessionArchiveMemory(withUpdatedWatchlistNote(readSuccessionArchiveMemory(), id, note));
+}
+
+export function updateSuccessionWatchlistMetadata(id, metadata) {
+  return writeSuccessionArchiveMemory(withUpdatedWatchlistMetadata(readSuccessionArchiveMemory(), id, metadata));
+}
+
+export function toggleSuccessionWatchlistCitation(watchlistId, citationId) {
+  return writeSuccessionArchiveMemory(withToggledWatchlistCitation(readSuccessionArchiveMemory(), watchlistId, citationId));
+}
+
+export function moveSuccessionWatchlistItem(watchlistId, itemIndex, direction) {
+  return writeSuccessionArchiveMemory(withMovedWatchlistItem(readSuccessionArchiveMemory(), watchlistId, itemIndex, direction));
 }
 
 export function toggleSuccessionWatchlistItem(watchlistId, item) {
