@@ -34,6 +34,43 @@ const stateSentence = (entity, state, chapter) => {
   return `${entity.name || entity.id} is available at Chapter ${chapter} with ${labelize(state.status || entity.publicationStatus || 'published').toLowerCase()} archive status.`;
 };
 
+const characterStateSignature = (state) => [
+  state?.life,
+  state?.bodyStateCode || state?.body,
+  state?.identityStateCode || state?.identity,
+  state?.consciousnessStateCode || state?.consciousness,
+  state?.locationId,
+].map((value) => String(value ?? '')).join('|');
+
+const getCharacterMiniTimeline = (entity, boundary) => {
+  if (entity?.entityType !== 'character') return [];
+  const points = [];
+  let previousSignature = null;
+  for (let chapter = 340; chapter <= boundary; chapter += 1) {
+    const state = getEntityStateAtChapter(entity, chapter);
+    if (!state) continue;
+    const signature = characterStateSignature(state);
+    if (signature === previousSignature) continue;
+    points.push({ chapter, state });
+    previousSignature = signature;
+  }
+  return points;
+};
+
+function CharacterMiniTimeline({ entity, boundary }) {
+  const points = getCharacterMiniTimeline(entity, boundary);
+  if (!points.length) return null;
+  const visible = points.slice(-10);
+  return <section className="succession-entity-quick__timeline" aria-labelledby={`succession-character-mini-timeline-${entity.id.replace(/[^a-z0-9_-]/gi, '-')}`}>
+    <header><span><Clock3 size={12} aria-hidden="true" /> Character mini timeline</span><h3 id={`succession-character-mini-timeline-${entity.id.replace(/[^a-z0-9_-]/gi, '-')}`}>Maintained state changes through Chapter {boundary}</h3><p>Only published life/body/identity/consciousness/location changes create points; unchanged chapters are intentionally collapsed.</p></header>
+    <ol tabIndex="0" role="region" aria-label={`${entity.name} state-change timeline`}>{visible.map(({ chapter, state }) => {
+      const location = state.locationId ? getEntityById(state.locationId)?.name || state.locationId : 'Location unresolved';
+      return <li key={chapter}><span>Ch. {chapter}</span><b>{labelize(state.life)} · {location}</b><small>{labelize(state.bodyStateCode || state.body || 'body unknown')} · {labelize(state.identityStateCode || state.identity || 'identity unresolved')} · {labelize(state.consciousnessStateCode || state.consciousness || 'consciousness unknown')}</small></li>;
+    })}</ol>
+    {points.length > visible.length && <small className="succession-entity-quick__shown">Showing the latest {visible.length} of {points.length} maintained state-change points.</small>}
+  </section>;
+}
+
 export default function SuccessionEntityQuickBriefing({ entity, chapter = 417, onNavigate }) {
   if (!entity) return null;
   const boundary = Number(chapter) || 417;
@@ -59,6 +96,7 @@ export default function SuccessionEntityQuickBriefing({ entity, chapter = 417, o
       <div><dt><HelpCircle size={12} aria-hidden="true" /> Unknown / unresolved</dt><dd>{unresolved.length}<small>{unresolved.slice(0, 3).map(([key]) => labelize(key)).join(' · ') || 'No generic unresolved state field'}</small></dd></div>
       <div><dt><ArrowRight size={12} aria-hidden="true" /> Connected state</dt><dd>{linkedCount}<small>{arrays.length} maintained list field{arrays.length === 1 ? '' : 's'}</small></dd></div>
     </dl>
+    {entity.entityType === 'character' && <CharacterMiniTimeline entity={entity} boundary={boundary} />}
     <footer><button type="button" onClick={() => onNavigate(destination, { entity: entity.id, chapter: boundary })}>Open canonical dossier <ArrowRight size={12} aria-hidden="true" /></button><button type="button" onClick={() => onNavigate('research', { mode: 'overview' })}>Research context <ArrowRight size={12} aria-hidden="true" /></button></footer>
   </section>;
 }
