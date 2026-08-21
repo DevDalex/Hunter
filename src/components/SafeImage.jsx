@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { mediaDerivativeBySrc } from '../data/mediaDerivatives.generated.js';
 
 const normalizeSubject = (value = '') => value
   .toLowerCase()
@@ -88,6 +89,7 @@ export default function SafeImage({
   }, [eager, sources]);
 
   const activeSrc = sources[sourceIndex] || '';
+  const responsiveMedia = mediaDerivativeBySrc.get(activeSrc) || null;
 
   useEffect(() => {
     const image = imageRef.current;
@@ -128,9 +130,11 @@ export default function SafeImage({
       ref={imageRef}
       className={`safe-image${className ? ` ${className}` : ''}`}
       src={activeSrc}
+      srcSet={responsiveMedia?.srcSet || props.srcSet}
+      sizes={responsiveMedia?.sizes || props.sizes}
       alt={alt}
-      width={media?.width || undefined}
-      height={media?.height || undefined}
+      width={media?.width || responsiveMedia?.width || undefined}
+      height={media?.height || responsiveMedia?.height || undefined}
       loading={eager ? 'eager' : loading}
       decoding="async"
       fetchPriority={priority || (eager ? 'high' : 'auto')}
@@ -138,6 +142,7 @@ export default function SafeImage({
       data-image-loaded={loaded ? 'true' : 'false'}
       data-image-fallback={sourceIndex > 0 ? 'true' : 'false'}
       data-media-storage={activeSrc.startsWith('/media/') ? 'local' : media?.storage || undefined}
+      data-media-responsive={responsiveMedia ? 'true' : 'false'}
       style={{ ...style, ...(media?.focal ? { objectPosition: media.focal } : {}) }}
       onLoad={() => {
         setLoaded(true);
