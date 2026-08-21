@@ -42,5 +42,8 @@ jobs:
       - name: Audit visual story comprehension
         run: node scripts/audit-succession-comprehension-story.mjs
 
+      - name: Audit people, Nen, and spatial comprehension
+        run: node scripts/audit-succession-comprehension-systems.mjs
+
       - name: Production build
         run: npm run build
