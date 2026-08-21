@@ -17,6 +17,7 @@ const semanticLegend = Object.freeze([
   ['canon', 'Canon'],
   ['inference', 'Inference'],
   ['theory', 'Theory'],
+  ['editorial', 'Editorial'],
   ['translation', 'Translation'],
   ['changed', 'Changed'],
   ['unresolved', 'Unresolved'],
