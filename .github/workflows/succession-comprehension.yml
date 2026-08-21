@@ -48,5 +48,8 @@ jobs:
       - name: Audit mystery and research comprehension
         run: node scripts/audit-succession-comprehension-research.mjs
 
+      - name: Audit structured search comprehension
+        run: node scripts/audit-succession-comprehension-search.mjs
+
       - name: Production build
         run: npm run build
