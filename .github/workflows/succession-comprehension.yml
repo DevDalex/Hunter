@@ -5,6 +5,8 @@ on:
     paths:
       - 'src/data/succession/**'
       - 'src/components/succession/**'
+      - 'src/components/succession-reader/**'
+      - 'src/components/SuccessionChapterReader.jsx'
       - 'scripts/audit-succession-comprehension-*.mjs'
       - '.github/workflows/succession-comprehension.yml'
   push:
@@ -13,6 +15,8 @@ on:
     paths:
       - 'src/data/succession/**'
       - 'src/components/succession/**'
+      - 'src/components/succession-reader/**'
+      - 'src/components/SuccessionChapterReader.jsx'
       - 'scripts/audit-succession-comprehension-*.mjs'
       - '.github/workflows/succession-comprehension.yml'
 
@@ -56,6 +60,9 @@ jobs:
 
       - name: Audit comparison comprehension
         run: node scripts/audit-succession-comprehension-compare.mjs
+
+      - name: Audit archive and Reader progress bridge
+        run: node scripts/audit-succession-comprehension-reader-bridge.mjs
 
       - name: Audit information design system
         run: node scripts/audit-succession-comprehension-design-system.mjs
