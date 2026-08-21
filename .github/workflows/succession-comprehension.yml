@@ -51,5 +51,8 @@ jobs:
       - name: Audit structured search comprehension
         run: node scripts/audit-succession-comprehension-search.mjs
 
+      - name: Audit Research Memory comprehension
+        run: node scripts/audit-succession-comprehension-memory.mjs
+
       - name: Production build
         run: npm run build
