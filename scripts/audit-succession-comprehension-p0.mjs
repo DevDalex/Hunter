@@ -61,7 +61,8 @@ try {
   assert(dashboard.includes('Showing {visibleHotspots.length} of {spatial.hotspots.length}'), 'hotspot truncation is not disclosed');
 
   for (const token of ['Viewing state', '60-second brief', 'State transition', 'Compare {previous} → {chapter}', 'Meaning']) assert(contextBar.includes(token), `global chapter context is missing ${token}`);
-  for (const token of ['Canon', 'Inference', 'Theory', 'Translation', 'Changed', 'Unresolved']) assert(contextBar.includes(token), `semantic legend is missing ${token}`);
+  for (const token of ['Canon', 'Inference', 'Theory', 'Editorial', 'Translation', 'Changed', 'Unresolved']) assert(contextBar.includes(token), `semantic legend is missing ${token}`);
+  assert(contextCss.includes('.is-editorial'), 'Editorial semantic state has no distinct presentation treatment');
   assert(contextBar.includes('ARCHIVE_BOUNDARY') && contextBar.includes('onSpoilerChange(previous)') && contextBar.includes('onSpoilerChange(next)'), 'chapter scrub controls are not bound to the archive boundary');
 
   for (const css of [dashboardCss, contextCss]) {
@@ -69,7 +70,7 @@ try {
     assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'comprehension layer must retain reduced-motion handling');
   }
 
-  console.log(`Succession comprehension P0 audit passed: Ch. ${chapter} NOW dashboard, semantic chapter controls, ${change.records.length} delta records, ${dossier.openThreads.length} open threads, ${threats.length} threat signals, ${knowledge.length} knowledge claims, and ${spatial.hotspots.length} spatial hotspots are wired.`);
+  console.log(`Succession comprehension P0 audit passed: Ch. ${chapter} NOW dashboard, complete semantic chapter controls, ${change.records.length} delta records, ${dossier.openThreads.length} open threads, ${threats.length} threat signals, ${knowledge.length} knowledge claims, and ${spatial.hotspots.length} spatial hotspots are wired.`);
 } finally {
   await vite.close();
 }
