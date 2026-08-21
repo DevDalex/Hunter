@@ -1,4 +1,5 @@
-import { ArrowRight, BrainCircuit, FileWarning, HelpCircle, MapPin, SearchCheck, ShieldAlert } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ArrowRight, BookmarkPlus, BrainCircuit, Check, FileWarning, HelpCircle, MapPin, SearchCheck, ShieldAlert } from 'lucide-react';
 import {
   getChapterWhatChanged,
   getCharacterStateAtChapter,
@@ -7,7 +8,9 @@ import {
   getKnowledgeWarfareMatrix,
   getThreatAssassinationMatrix,
 } from '../../data/succession/successionData';
+import { saveSuccessionArchiveSearch } from '../../data/succession/archiveMemory';
 import { getSuccessionMysteryCasesAtChapter } from '../../data/succession/successionMysteryCases';
+import { readBrowserRoute } from '../../lib/appRouter';
 import { entityWorkspaceTarget } from './SuccessionArchivePrimitives';
 import './SuccessionSearchComprehensionPanel.css';
 
@@ -39,6 +42,21 @@ const matchesEntity = (entity, term) => normalize([
 function EntityButton({ entity, onNavigate, children }) {
   if (!entity) return null;
   return <button type="button" className="succession-search-intent__entity" onClick={() => onNavigate(entityWorkspaceTarget(entity), { entity: entity.id })}>{children || entity.name}<ArrowRight size={11} aria-hidden="true" /></button>;
+}
+
+function SaveSearchControl({ query, chapter }) {
+  const [saved, setSaved] = useState(false);
+  useEffect(() => setSaved(false), [query, chapter]);
+  const cleanQuery = String(query || '').trim();
+  if (!cleanQuery) return null;
+  const save = () => {
+    saveSuccessionArchiveSearch(cleanQuery, chapter);
+    setSaved(true);
+  };
+  return <div className="succession-search-intent__save">
+    <span>Keep this question in Research Memory at the current Chapter {chapter} boundary.</span>
+    <button type="button" aria-pressed={saved} onClick={save}>{saved ? <Check size={12} aria-hidden="true" /> : <BookmarkPlus size={12} aria-hidden="true" />}{saved ? 'Saved search' : 'Save search'}</button>
+  </div>;
 }
 
 function TargetingAnswer({ term, chapter, onNavigate }) {
@@ -80,9 +98,19 @@ const examples = [
 ];
 
 export default function SuccessionSearchComprehensionPanel({ query = '', chapter = 417, onQueryChange, onNavigate }) {
+  const [seededRouteQuery, setSeededRouteQuery] = useState(false);
+  useEffect(() => {
+    if (seededRouteQuery) return;
+    setSeededRouteQuery(true);
+    if (query.trim()) return;
+    const route = readBrowserRoute();
+    const requested = route?.target === 'search' ? route.params?.query : '';
+    if (typeof requested === 'string' && requested.trim()) onQueryChange(requested.trim());
+  }, [onQueryChange, query, seededRouteQuery]);
+
   const intent = parseSuccessionSearchIntent(query);
   if (!query.trim()) return <section className="succession-search-intent is-empty" aria-labelledby="succession-search-intent-title"><header><span><SearchCheck size={14} aria-hidden="true" /> Structured questions</span><h2 id="succession-search-intent-title">Ask the graph a direct question</h2><p>These patterns use chapter-bounded canonical selectors; ordinary keyword search still works below.</p></header><div className="succession-search-intent__examples">{examples.map((example) => <button type="button" onClick={() => onQueryChange(example)} key={example}>{example}</button>)}</div></section>;
-  if (!intent) return null;
+  if (!intent) return <SaveSearchControl query={query} chapter={chapter} />;
 
   return <section className="succession-search-intent" aria-label="Structured archive answer">
     {intent.type === 'targeting' && <TargetingAnswer term={intent.term} chapter={chapter} onNavigate={onNavigate} />}
@@ -90,5 +118,6 @@ export default function SuccessionSearchComprehensionPanel({ query = '', chapter
     {intent.type === 'changes' && <ChangesAnswer requestedChapter={intent.chapter} boundary={chapter} onNavigate={onNavigate} />}
     {intent.type === 'location' && <LocationAnswer term={intent.term} chapter={chapter} onNavigate={onNavigate} />}
     {intent.type === 'unresolved' && <UnresolvedAnswer term={intent.term} chapter={chapter} onNavigate={onNavigate} />}
+    <SaveSearchControl query={query} chapter={chapter} />
   </section>;
 }
