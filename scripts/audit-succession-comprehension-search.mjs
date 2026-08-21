@@ -42,28 +42,38 @@ try {
   const tserriednichCases = mysteries.getSuccessionMysteryCasesAtChapter(chapter).filter((record) => record.status !== 'resolved' && normalize(`${record.title} ${record.question}`).includes('tserriednich'));
   assert(tserriednichCases.length > 0, 'Tserriednich unresolved-case direct answer is empty');
 
-  const [app, panel, css] = await Promise.all([
+  const [app, panel, intentCss, searchCss] = await Promise.all([
     readFile(path.join(root, 'src/components/succession/SuccessionArchiveApp.jsx'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionSearchComprehensionPanel.jsx'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionSearchComprehensionPanel.css'), 'utf8'),
+    readFile(path.join(root, 'src/components/succession/SuccessionArchiveSearch.css'), 'utf8'),
   ]);
   assert(app.includes('SuccessionSearchComprehensionPanel') && app.includes('parseSuccessionSearchIntent'), 'structured search is not mounted in the canonical Search workspace');
   assert(app.includes("intent?.type === 'changes' ? String(intent.chapter) : intent?.term || query"), 'structured questions do not feed a simplified term into canonical search');
-  assert(app.includes('!results.length && !intent'), 'structured answers still trigger the generic no-results state');
+  assert(app.includes('!visibleResults.length && !intent'), 'facet-aware search no-results handling is missing');
   for (const token of ['who is targeting Woble', 'who knows about TSK-17', 'what changed in chapter 417', 'where is Kurapika', 'unresolved Tserriednich']) assert(panel.includes(token), `search examples are missing ${token}`);
   assert(panel.includes('getCharacterStateAtChapter') && panel.includes('getThreatAssassinationMatrix') && panel.includes('getKnowledgeWarfareMatrix') && panel.includes('getChapterWhatChanged'), 'structured answers are not derived from canonical chapter-bounded selectors');
   assert(panel.includes('getSuccessionMysteryCasesAtChapter'), 'unresolved-case search is not bounded to published mystery cases');
   assert(panel.includes('saveSuccessionArchiveSearch(cleanQuery, chapter)'), 'Search does not persist the current query and chapter to Research Memory');
   assert(panel.includes("route?.target === 'search' ? route.params?.query : ''"), 'saved searches cannot rehydrate the Search query from route state');
   assert(panel.includes("if (!intent) return <SaveSearchControl"), 'ordinary keyword searches cannot be saved');
-  assert(css.includes('.succession-search-intent__save'), 'saved-search action has no presentation contract');
+  assert(intentCss.includes('.succession-search-intent__save'), 'saved-search action has no presentation contract');
 
-  const fontSizes = [...css.matchAll(/font-size:\s*(\d+)px/g)].map((match) => Number(match[1]));
-  assert(fontSizes.length > 0 && fontSizes.every((size) => size >= 11), `search comprehension introduced text below the 11px floor: ${fontSizes.filter((size) => size < 11).join(', ')}`);
-  assert(!/@media\s*\([^)]*max-width:/i.test(css), 'structured search must not introduce mobile/tablet breakpoints');
-  assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'structured search must preserve reduced-motion handling');
+  for (const token of ['Result facets', 'Filter this result set by canonical domain', 'Search to analysis', 'Build event timeline', 'Inspect latest chapter delta', 'Open Research desk']) assert(app.includes(token), `Search workspace is missing ${token}`);
+  assert(app.includes("const [facet, setFacet] = useState('all')") && app.includes("facet === 'all' ? results : results.filter"), 'domain facets do not filter the visible result set');
+  assert(app.includes('visibleResults.length') && app.includes('results.length'), 'Search does not disclose visible versus total result counts');
+  assert(app.includes("mode: 'compare'") && app.includes("view: 'differences'"), 'Search does not hand compatible matching records to difference-first Compare');
+  assert(app.includes("onNavigate('timeline', { scope: 'events', search: canonicalQuery })"), 'Search does not hand the query to Timeline analysis');
+  assert(searchCss.includes('.succession-search-complete__facets') && searchCss.includes('.succession-search-complete__analysis'), 'Search facet / analysis controls have no presentation contract');
 
-  console.log(`Succession search comprehension audit passed: saved-search round trips plus ${wobleThreats.length} Woble threat signals, ${tskKnowledge.length} TSK-17 knowledge records, ${change.records.length} Chapter 417 deltas, and ${tserriednichCases.length} Tserriednich open cases support direct answers.`);
+  for (const css of [intentCss, searchCss]) {
+    const fontSizes = [...css.matchAll(/font-size:\s*(\d+)px/g)].map((match) => Number(match[1]));
+    assert(fontSizes.length > 0 && fontSizes.every((size) => size >= 11), `search comprehension introduced text below the 11px floor: ${fontSizes.filter((size) => size < 11).join(', ')}`);
+    assert(!/@media\s*\([^)]*max-width:/i.test(css), 'structured search must not introduce mobile/tablet breakpoints');
+    assert(css.includes('prefers-reduced-motion'), 'structured search must preserve reduced-motion handling');
+  }
+
+  console.log(`Succession search comprehension audit passed: saved-search round trips, domain facets, search-to-analysis handoffs, plus ${wobleThreats.length} Woble threat signals, ${tskKnowledge.length} TSK-17 knowledge records, ${change.records.length} Chapter 417 deltas, and ${tserriednichCases.length} Tserriednich open cases support direct answers.`);
 } finally {
   await vite.close();
 }
