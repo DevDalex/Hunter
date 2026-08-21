@@ -17,6 +17,7 @@ try {
 
   const chapter = 417;
   const princes = archive.getPrinceCampaignBoard(chapter);
+  const households = archive.getRoyalHouseholdMatrix(chapter);
   const knowledge = archive.getKnowledgeWarfareMatrix(chapter);
   const readerKnowledge = archive.getReaderVsInUniverseKnowledge(chapter);
   const deception = archive.getDeceptionLedger(chapter);
@@ -30,6 +31,8 @@ try {
   const spatial = finishing.getSpatialEvidenceIntelligence(chapter);
 
   assert(princes.length === 14, `prince comparison must retain all 14 princes; found ${princes.length}`);
+  assert(households.length === 14, `household/reporting-chain view must retain all 14 princes; found ${households.length}`);
+  assert(households.every((row) => row.character?.id && Array.isArray(row.personnelIds) && Array.isArray(row.householdAssignmentIds)), 'household rows lost canonical person/assignment identity');
   assert(knowledge.length > 0, 'knowledge matrix is empty');
   assert(readerKnowledge.length === knowledge.length, 'reader-vs-in-universe knowledge must preserve every maintained knowledge record');
   assert(readerKnowledge.every((record) => record.readerState === 'available-through-selected-boundary'), 'reader visibility boundary state is inconsistent');
@@ -44,11 +47,13 @@ try {
   assert(infrastructure.records.every((record) => record.state && 'accessLevel' in record.state && 'zoneRole' in record.state && Array.isArray(record.protocolIds)), 'infrastructure rows lost access / zone / protocol fields');
   assert(Array.isArray(spatial.hotspots) && spatial.hotspots.length > 0, 'spatial hotspots are unavailable');
 
-  const [shell, people, peopleCss, informationCss, systems, systemsCss, infrastructureCss] = await Promise.all([
+  const [shell, people, peopleCss, informationCss, householdsUi, householdsCss, systems, systemsCss, infrastructureCss] = await Promise.all([
     readFile(path.join(root, 'src/components/succession/SuccessionArchiveShell.jsx'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionPeoplePowerComprehensionPanel.jsx'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionPeoplePowerComprehensionPanel.css'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionInformationWarComprehension.css'), 'utf8'),
+    readFile(path.join(root, 'src/components/succession/SuccessionRoyalHouseholdChains.jsx'), 'utf8'),
+    readFile(path.join(root, 'src/components/succession/SuccessionRoyalHouseholdChains.css'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionNenSpatialComprehensionPanel.jsx'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionNenSpatialComprehensionPanel.css'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionSpatialInfrastructureComprehension.css'), 'utf8'),
@@ -59,6 +64,7 @@ try {
   assert(shell.includes('SuccessionPeoplePowerComprehensionPanel') && shell.includes('SuccessionNenSpatialComprehensionPanel'), 'systems comprehension panels are missing from the archive shell');
 
   for (const token of ['Prince comparison', 'Who knows what?', 'Disclosure & deception', 'Reader visibility is not the same as in-world knowledge', 'Leverage dimensions', 'Body ≠ identity ≠ consciousness']) assert(people.includes(token), `People & Power layer is missing ${token}`);
+  assert(people.includes('SuccessionRoyalHouseholdChains') && people.includes('<SuccessionRoyalHouseholdChains chapter={chapter} onNavigate={onNavigate} />'), 'royal household reporting chains are not mounted in People & Power');
   assert(people.includes('current.length < 4'), 'prince comparison does not cap the scan set at four');
   assert(people.includes("state === 'knows' ? '✓' : state === 'misinformed' ? '!' : '—'"), 'knowledge matrix does not distinguish knows/misinformed/unknown states');
   assert(people.includes('getReaderVsInUniverseKnowledge') && people.includes('getDeceptionLedger'), 'information-war depth is not derived from maintained knowledge/deception selectors');
@@ -66,6 +72,11 @@ try {
   assert(people.includes('Showing {shownDeception.length} of {deception.length} maintained deception routes.'), 'deception top-N subset is not disclosed');
   assert(people.includes('not combined into a fictional “power level.”'), 'leverage view does not preserve the no-power-score contract');
   assert(people.includes('Showing {rows.length} of {leverage.rows.length} leverage dossiers.'), 'leverage top-N subset is not disclosed');
+
+  for (const token of ['Royal household / reporting chains', 'Explicit assignment chains around each prince', 'Reports to', 'Allegiance']) assert(householdsUi.includes(token), `household reporting-chain layer is missing ${token}`);
+  assert(householdsUi.includes('assignment.personId') && householdsUi.includes('assignment.principalEntityId') && householdsUi.includes('assignment.subjectEntityId'), 'household chains are not derived from explicit actor/principal/subject assignment fields');
+  assert(householdsUi.includes('assignment.reportingEntityId') && householdsUi.includes('assignment.allegianceEntityId'), 'household chains lost explicit reporting/allegiance fields');
+  assert(householdsUi.includes('does not infer command hierarchy'), 'household reporting chains lack the anti-inference boundary');
 
   for (const token of ['Nen mechanics flows', 'Ability interaction map', 'Nen training progression', 'Black Whale operational state', 'Access & infrastructure layers']) assert(systems.includes(token), `Nen/spatial layer is missing ${token}`);
   assert(systems.includes('directInteractionClaimed'), 'ability interactions do not preserve documented-vs-contextual distinction');
@@ -78,17 +89,18 @@ try {
   assert(systems.includes("aria-label=\"Black Whale evidence layers\"") && systems.includes('aria-pressed={enabled(id)}'), 'Black Whale layer controls are not exposed as accessible toggles');
   assert(systems.includes('--hotspot-width') && systems.includes('maxHotspotLoad'), 'hotspot operational load is not visually encoded proportionally');
 
-  for (const css of [peopleCss, informationCss, systemsCss, infrastructureCss]) {
+  for (const css of [peopleCss, informationCss, householdsCss, systemsCss, infrastructureCss]) {
     assert(!/@media\s*\([^)]*max-width:/i.test(css), 'comprehension systems must not introduce mobile/tablet breakpoints');
     assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'comprehension systems must preserve reduced-motion handling');
     const fontSizes = [...css.matchAll(/font-size:\s*(\d+)px/g)].map((match) => Number(match[1]));
     assert(fontSizes.every((size) => size >= 11), `comprehension systems introduced text below the 11px floor: ${fontSizes.filter((size) => size < 11).join(', ')}`);
   }
   assert(peopleCss.includes('position: sticky'), 'people comparison matrices do not preserve sticky scan anchors');
+  assert(householdsCss.includes('grid-template-columns: minmax(140px, .9fr)') && householdsCss.includes('border-style: dashed') && householdsCss.includes('border-style: dotted'), 'household chain actor/role/reporting visual grammar is incomplete');
   assert(systemsCss.includes('grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);'), 'Nen mechanics flow does not render as a four-stage chain');
   assert(systemsCss.includes('.succession-nen-spatial__layer-controls') && systemsCss.includes('.succession-nen-spatial__hotspots'), 'Black Whale layer-control or hotspot styling is missing');
 
-  console.log(`Succession systems comprehension audit passed: ${princes.length} princes, ${knowledge.length} knowledge records, ${deception.length} deception routes, ${leverage.rows.length} leverage dossiers, ${transfers.length} transfer records, ${interactions.interactions.length} ability contexts, ${infrastructure.records.length} infrastructure locations, and ${spatial.hotspots.length} spatial hotspots are wired.`);
+  console.log(`Succession systems comprehension audit passed: ${princes.length} princes, ${households.length} household chains, ${knowledge.length} knowledge records, ${deception.length} deception routes, ${leverage.rows.length} leverage dossiers, ${transfers.length} transfer records, ${interactions.interactions.length} ability contexts, ${infrastructure.records.length} infrastructure locations, and ${spatial.hotspots.length} spatial hotspots are wired.`);
 } finally {
   await vite.close();
 }
