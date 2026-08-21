@@ -1,0 +1,11 @@
+/*
+ * Historical compatibility boundary.
+ *
+ * These layers predate the comprehension design system and remain isolated here
+ * so new components do not import or extend them directly. Vite resolves the
+ * imports into the built CSS graph; the shell has one compatibility entrypoint.
+ * New presentation work belongs in component/design-system styles instead.
+ */
+@import './SuccessionArchiveContrastFixes.css';
+@import './SuccessionArchiveDeepContrastFixes.css';
+@import './SuccessionArchiveNenFixes.css';
