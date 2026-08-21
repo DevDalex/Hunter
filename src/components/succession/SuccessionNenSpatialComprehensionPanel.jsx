@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ArrowRight, GitBranch, MapPinned, MoveRight, Orbit, Route, Ship } from 'lucide-react';
 import {
   getAbilityTransferInheritanceLedger,
@@ -73,32 +74,53 @@ function TrainingSignal({ chapter, onNavigate }) {
   </section>;
 }
 
+const shipLayers = Object.freeze([
+  ['movement', 'Movement'],
+  ['hotspots', 'Hotspots'],
+  ['occupants', 'Occupancy'],
+  ['events', 'Events'],
+  ['assignments', 'Assignments'],
+  ['access', 'Access'],
+  ['protocols', 'Protocols'],
+]);
+
 function ShipState({ chapter, onNavigate }) {
   const previous = Math.max(340, chapter - 1);
   const comparison = getBlackWhaleSnapshotComparison(previous, chapter);
   const spatial = getSpatialEvidenceIntelligence(chapter);
   const infrastructure = getShipInfrastructureIndex(chapter);
+  const [layers, setLayers] = useState(() => new Set(shipLayers.map(([id]) => id)));
   const movements = (comparison.movements || []).slice(0, 8);
   const hotspots = (spatial.hotspots || []).slice(0, 8);
   const systems = Object.values(infrastructure.systems || {}).sort((left, right) => right.activeEvents - left.activeEvents || right.activeAssignments - left.activeAssignments || left.label.localeCompare(right.label)).slice(0, 8);
   const locationLayers = [...(infrastructure.records || [])].sort((left, right) => right.operationalLoad - left.operationalLoad || left.location.name.localeCompare(right.location.name)).slice(0, 10);
+  const maxHotspotLoad = Math.max(1, ...hotspots.map((row) => Number(row.operationalLoad) || 0));
+  const enabled = (id) => layers.has(id);
+  const toggleLayer = (id) => setLayers((current) => {
+    const next = new Set(current);
+    if (next.has(id)) next.delete(id); else next.add(id);
+    return next;
+  });
 
   return <section className="succession-nen-spatial__section is-ship">
     <header><span><Ship size={14} aria-hidden="true" /> Black Whale operational state</span><h3>Movement and hotspot evidence · Ch. {previous} → {chapter}</h3><p>Movement arrows and hotspot load come from maintained location, event, assignment and provenance records—not a fictional danger score.</p></header>
+    <nav className="succession-nen-spatial__layer-controls" aria-label="Black Whale evidence layers">{shipLayers.map(([id, label]) => <button type="button" className={enabled(id) ? 'is-active' : ''} aria-pressed={enabled(id)} onClick={() => toggleLayer(id)} key={id}>{label}</button>)}</nav>
     <div className="succession-nen-spatial__ship-grid">
-      <section><h4><MoveRight size={13} aria-hidden="true" /> Character movement</h4><ol>{movements.map((movement) => <li key={`${movement.character.id}:${movement.from?.id}:${movement.to?.id}`}>
+      {enabled('movement') && <section><h4><MoveRight size={13} aria-hidden="true" /> Character movement</h4><ol>{movements.map((movement) => <li key={`${movement.character.id}:${movement.from?.id}:${movement.to?.id}`}>
         <EntityButton id={movement.character.id} onNavigate={onNavigate} />
         <span>{movement.from?.name || 'Unknown'} <MoveRight size={11} aria-hidden="true" /> {movement.to?.name || 'Unknown'}</span>
-      </li>)}</ol>{!movements.length && <p>No maintained movement delta is published between these boundaries.</p>}</section>
-      <section><h4><MapPinned size={13} aria-hidden="true" /> Evidence-led hotspots</h4><ol>{hotspots.map((row) => <li key={row.location.id}>
+      </li>)}</ol>{!movements.length && <p>No maintained movement delta is published between these boundaries.</p>}</section>}
+      {enabled('hotspots') && <section><h4><MapPinned size={13} aria-hidden="true" /> Evidence-led hotspots</h4><ol className="succession-nen-spatial__hotspots">{hotspots.map((row) => <li key={row.location.id}>
         <EntityButton id={row.location.id} onNavigate={onNavigate} />
         <span>{row.operationalLoad} load · {row.provenanceCoverage}% evidenced</span>
-      </li>)}</ol>{!hotspots.length && <p>No maintained hotspot is published for this boundary.</p>}</section>
+        <i aria-hidden="true"><b style={{ '--hotspot-width': `${Math.max(3, Math.round((Number(row.operationalLoad || 0) / maxHotspotLoad) * 100))}%` }} /></i>
+      </li>)}</ol>{!hotspots.length && <p>No maintained hotspot is published for this boundary.</p>}</section>}
+      {!enabled('movement') && !enabled('hotspots') && <section className="succession-nen-spatial__layer-empty"><p>Movement and hotspot summary layers are hidden. Re-enable a layer above to restore the visual comparison.</p></section>}
     </div>
     <section className="succession-nen-spatial__infrastructure" aria-labelledby="succession-infrastructure-title">
       <header><h4 id="succession-infrastructure-title">Access & infrastructure layers</h4><small>{infrastructure.records?.length || 0} maintained Black Whale locations · {infrastructure.systemCount || systems.length} infrastructure systems</small></header>
-      <div className="succession-nen-spatial__infrastructure-systems">{systems.map((system) => <article className="succession-nen-spatial__infrastructure-card" key={system.id}><span>Infrastructure system</span><b>{system.label}</b><dl><div><dt>Locations</dt><dd>{system.locationCount}</dd></div><div><dt>Occupants</dt><dd>{system.occupants}</dd></div><div><dt>Events</dt><dd>{system.activeEvents}</dd></div><div><dt>Assignments</dt><dd>{system.activeAssignments}</dd></div></dl></article>)}</div>
-      <div className="succession-nen-spatial__location-layers">{locationLayers.map((row) => <article className="succession-nen-spatial__location-layer" key={row.location.id}><EntityButton id={row.location.id} onNavigate={onNavigate} /><div><span>{labelize(row.system)}</span><span>{labelize(row.state.accessLevel)}</span><span>{labelize(row.state.zoneRole)}</span></div><small>{row.state.events.length} active events · {row.state.assignments.length} assignments · {row.protocolIds.length} attached protocols</small></article>)}</div>
+      <div className="succession-nen-spatial__infrastructure-systems">{systems.map((system) => <article className="succession-nen-spatial__infrastructure-card" key={system.id}><span>Infrastructure system</span><b>{system.label}</b><dl><div><dt>Locations</dt><dd>{system.locationCount}</dd></div>{enabled('occupants') && <div><dt>Occupants</dt><dd>{system.occupants}</dd></div>}{enabled('events') && <div><dt>Events</dt><dd>{system.activeEvents}</dd></div>}{enabled('assignments') && <div><dt>Assignments</dt><dd>{system.activeAssignments}</dd></div>}</dl></article>)}</div>
+      <div className="succession-nen-spatial__location-layers">{locationLayers.map((row) => <article className="succession-nen-spatial__location-layer" key={row.location.id}><EntityButton id={row.location.id} onNavigate={onNavigate} /><div><span>{labelize(row.system)}</span>{enabled('access') && <><span>{labelize(row.state.accessLevel)}</span><span>{labelize(row.state.zoneRole)}</span></>}{enabled('protocols') && <span>{row.protocolIds.length} protocols</span>}</div><small>{enabled('occupants') ? `${row.state.occupants.length} occupants · ` : ''}{enabled('events') ? `${row.state.events.length} active events · ` : ''}{enabled('assignments') ? `${row.state.assignments.length} assignments · ` : ''}{enabled('protocols') ? `${row.protocolIds.length} attached protocols` : 'Maintained location record'}</small></article>)}</div>
       {(infrastructure.records?.length || 0) > locationLayers.length && <small className="succession-nen-spatial__shown">Showing {locationLayers.length} of {infrastructure.records.length} location layers, ordered by maintained operational load.</small>}
       <p className="succession-information-war__note">Access level, zone role and attached protocols are shown as maintained archive fields. This view does not infer territorial control where the records do not state it.</p>
     </section>
