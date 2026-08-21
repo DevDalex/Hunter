@@ -9,9 +9,13 @@ import {
   toggleSuccessionCompareItem,
 } from '../../data/succession/archiveMemory';
 import { readBrowserRoute } from '../../lib/appRouter';
+import { readStoredString, writeStoredString } from '../../lib/browserStorage';
 import './SuccessionComprehensionBar.css';
 
 const EARLIEST_SUCCESSION_CHAPTER = 340;
+const DENSITY_STORAGE_KEY = 'hxh-succession-density-v1';
+const densityModes = Object.freeze(['comfortable', 'compact', 'analyst']);
+const normalizeDensity = (value) => densityModes.includes(value) ? value : 'comfortable';
 
 const semanticLegend = Object.freeze([
   ['canon', 'Canon'],
@@ -34,6 +38,7 @@ export default function SuccessionComprehensionBar({ spoilerLimit, onSpoilerChan
   const canPrevious = chapter > EARLIEST_SUCCESSION_CHAPTER;
   const canNext = chapter < ARCHIVE_BOUNDARY;
   const [memory, setMemory] = useState(readSuccessionArchiveMemory);
+  const [density, setDensity] = useState(() => normalizeDensity(readStoredString(DENSITY_STORAGE_KEY, 'comfortable')));
   const currentRoute = typeof window === 'undefined' ? { target: 'story', params: {} } : readBrowserRoute();
   const currentItem = {
     route: currentRoute.target,
@@ -55,6 +60,12 @@ export default function SuccessionComprehensionBar({ spoilerLimit, onSpoilerChan
     recordSuccessionArchiveVisit(currentItem);
   }, [currentItem.route, currentItem.entityId, JSON.stringify(currentItem.params)]);
 
+  useEffect(() => {
+    writeStoredString(DENSITY_STORAGE_KEY, density);
+    const archive = document.querySelector('.succession-archive');
+    if (archive) archive.dataset.density = density;
+  }, [density]);
+
   return <section className="succession-comprehension-bar" aria-label="Chapter context and evidence legend">
     <div className="succession-comprehension-bar__chapter">
       <span>Viewing state</span>
@@ -70,6 +81,11 @@ export default function SuccessionComprehensionBar({ spoilerLimit, onSpoilerChan
       <button type="button" onClick={() => onNavigate('research', { mode: 'diff', from: previous, to: chapter })} disabled={previous === chapter}><GitCompareArrows size={13} /> Compare {previous} → {chapter}</button>
       <button type="button" aria-pressed={isBookmarked} onClick={() => toggleSuccessionArchiveBookmark(currentItem)}><Bookmark size={13} /> {isBookmarked ? 'Saved current' : 'Save current'}</button>
       <button type="button" aria-pressed={Boolean(isCompared)} disabled={!currentItem.entityId} title={currentItem.entityId ? undefined : 'Open a canonical entity record to add it to the compare tray.'} onClick={() => toggleSuccessionCompareItem(currentItem)}><GitCompareArrows size={13} /> {isCompared ? 'In compare tray' : 'Compare current'}</button>
+    </div>
+
+    <div className="succession-comprehension-bar__density" role="group" aria-label="Information density">
+      <span>Density</span>
+      {densityModes.map((mode) => <button type="button" className={density === mode ? 'is-active' : ''} aria-pressed={density === mode} onClick={() => setDensity(mode)} key={mode}>{mode}</button>)}
     </div>
 
     <details className="succession-comprehension-bar__legend">
