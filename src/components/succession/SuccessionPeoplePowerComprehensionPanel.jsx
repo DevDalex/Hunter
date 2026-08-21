@@ -11,6 +11,7 @@ import {
 } from '../../data/succession/successionData';
 import { getExplicitLeverageViews } from '../../data/succession/contentDepthFinishingSelectors';
 import { entityWorkspaceTarget } from './SuccessionArchivePrimitives';
+import SuccessionOperationsConflictLens from './SuccessionOperationsConflictLens';
 import SuccessionRoyalHouseholdChains from './SuccessionRoyalHouseholdChains';
 import './SuccessionPeoplePowerComprehensionPanel.css';
 import './SuccessionInformationWarComprehension.css';
@@ -129,6 +130,7 @@ export default function SuccessionPeoplePowerComprehensionPanel({ chapter = 417,
     <div className="succession-people-power__layout">
       <PrinceCompare chapter={chapter} onNavigate={onNavigate} />
       <SuccessionRoyalHouseholdChains chapter={chapter} onNavigate={onNavigate} />
+      <SuccessionOperationsConflictLens chapter={chapter} onNavigate={onNavigate} />
       <KnowledgeMatrix chapter={chapter} />
       <InformationWarDepth chapter={chapter} onNavigate={onNavigate} />
       <LeverageBoard chapter={chapter} onNavigate={onNavigate} />
