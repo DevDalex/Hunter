@@ -1,4 +1,4 @@
-import { readStoredJson, removeStoredValue, writeStoredJson } from '../../lib/browserStorage.js';
+import { readStoredJson, writeStoredJson } from '../../lib/browserStorage.js';
 import { successionArchiveRouteIds } from './archiveRoutes.js';
 
 export const SUCCESSION_LOCAL_ANALYTICS_KEY = 'hxh-succession-local-analytics-v1';
@@ -66,7 +66,5 @@ export function setSuccessionLocalAnalyticsEnabled(enabled) {
 
 export function resetSuccessionLocalAnalytics() {
   const current = readSuccessionLocalAnalytics();
-  removeStoredValue(SUCCESSION_LOCAL_ANALYTICS_KEY);
-  emitChange();
-  return Object.freeze({ ...defaultSuccessionLocalAnalytics, enabled: current.enabled });
+  return writeSuccessionLocalAnalytics({ ...defaultSuccessionLocalAnalytics, enabled: current.enabled });
 }
