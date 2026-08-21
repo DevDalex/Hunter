@@ -1,4 +1,4 @@
-import { lazy, Suspense, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { ArrowRight, BookOpen, Database, Images, Search, Users } from 'lucide-react';
 import { ArchiveCard, ArchiveSection, EvidenceBadge, StatusPill } from '../ArchiveUI';
 import {
@@ -115,15 +115,54 @@ function DirectoryWorkspace({ routeId, routeParams, onNavigate }) {
   return <section className="succession-directory" aria-labelledby="succession-directory-title"><header><div><span>Canonical directory</span><h2 id="succession-directory-title">{visible.length} of {entities.length} records</h2><p><Users size={13} aria-hidden="true" /> Deduplicated named records <i>·</i> <Images size={13} aria-hidden="true" /> {pictured} available visuals</p></div><div className="succession-directory__tools"><label><Search size={16} aria-hidden="true" /><span className="sr-only">Filter current workspace</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Filter this workspace…" />{query && <button type="button" onClick={() => setQuery('')}>Clear</button>}</label></div></header><div className="succession-entity-grid">{visible.map((entity) => <article key={entity.id}><EntityVisual entity={entity} /><div><EntityBadge entity={entity} compact /><StatusPill tone="neutral">{entity.status?.life || entity.canonLevel || 'canon'}</StatusPill></div><h3>{entity.name || entity.id}</h3><p>{entity.summary || 'Canonical record available.'}</p><footer><code>{entity.id}</code><EntityLink entity={entity} onNavigate={onNavigate}>Open record</EntityLink></footer></article>)}</div>{!visible.length && <ArchiveState kind="empty" title="No matching records" description="Clear the workspace filter or search the complete archive." />}</section>;
 }
 
+const searchGroupKey = (domain) => domain.startsWith('story-') ? 'story-intelligence' : domain;
 const searchGroupLabel = (domain) => domain.startsWith('story-') ? 'Story Intelligence' : domain === 'glossary' ? 'Glossary' : domain.replaceAll('-', ' ');
+const comparisonSearchTypes = new Set(['character', 'organization', 'ability', 'guardian-beast', 'location', 'event', 'assignment', 'relationship', 'knowledge-record', 'protocol', 'object', 'document', 'evidence-item']);
 
 function SearchWorkspace({ onNavigate, spoilerLimit }) {
   const [query, setQuery] = useState('');
+  const [facet, setFacet] = useState('all');
   const intent = useMemo(() => parseSuccessionSearchIntent(query), [query]);
   const canonicalQuery = intent?.type === 'changes' ? String(intent.chapter) : intent?.term || query;
   const results = useMemo(() => canonicalQuery.trim() ? searchArchiveProduct(canonicalQuery, { limit: 60, chapter: spoilerLimit }) : [], [canonicalQuery, spoilerLimit]);
-  const groups = useMemo(() => { const map = new Map(); for (const result of results) { const key = result.domain.startsWith('story-') ? 'story-intelligence' : result.domain; const current = map.get(key) || []; current.push(result); map.set(key, current); } return [...map.entries()]; }, [results]);
-  return <section className="succession-search-workspace succession-search-complete" aria-labelledby="succession-search-title"><label><Search size={20} aria-hidden="true" /><span className="sr-only">Search canonical Succession Archive</span><input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Name, alias, mechanic, condition, thread, term…" /></label><p role="status" aria-live="polite">{query ? intent ? `Structured answer with ${results.length} related canonical result${results.length === 1 ? '' : 's'} through Chapter ${spoilerLimit}` : `${results.length} result${results.length === 1 ? '' : 's'} through Chapter ${spoilerLimit}` : `Search every canonical domain available through Chapter ${spoilerLimit}.`}</p><SuccessionSearchComprehensionPanel query={query} chapter={spoilerLimit} onQueryChange={setQuery} onNavigate={onNavigate} /><div className="succession-search-complete__groups">{groups.map(([domain, records]) => <section key={domain} aria-labelledby={`search-group-${domain}`}><header><h2 id={`search-group-${domain}`}>{searchGroupLabel(domain)}</h2><span>{records.length}</span></header><div>{records.map((result) => <article key={result.id}>{result.entity ? <EntityVisual entity={result.entity} compact /> : result.resultType === 'glossary' ? <BookOpen size={22} aria-hidden="true" /> : <Search size={22} aria-hidden="true" />}<div><span>{result.domain.replaceAll('-', ' ')}</span><h3>{result.label}</h3><p>{result.summary}</p><small>{result.matchReason}</small></div><button type="button" onClick={() => onNavigate(result.route, result.params)}>Open <ArrowRight size={13} aria-hidden="true" /></button></article>)}</div></section>)}</div>{query && !results.length && !intent && <ArchiveState kind="empty" title="No canonical match inside this chapter boundary" description="Try an alias, synonym, organization, location, ability mechanic, unresolved question, or glossary term already documented by the selected chapter." />}</section>;
+  const facetRows = useMemo(() => {
+    const counts = new Map();
+    for (const result of results) {
+      const key = searchGroupKey(result.domain);
+      counts.set(key, (counts.get(key) || 0) + 1);
+    }
+    return [...counts.entries()].sort((left, right) => right[1] - left[1] || searchGroupLabel(left[0]).localeCompare(searchGroupLabel(right[0])));
+  }, [results]);
+  useEffect(() => {
+    if (facet !== 'all' && !facetRows.some(([domain]) => domain === facet)) setFacet('all');
+  }, [facet, facetRows]);
+  const visibleResults = useMemo(() => facet === 'all' ? results : results.filter((result) => searchGroupKey(result.domain) === facet), [facet, results]);
+  const groups = useMemo(() => { const map = new Map(); for (const result of visibleResults) { const key = searchGroupKey(result.domain); const current = map.get(key) || []; current.push(result); map.set(key, current); } return [...map.entries()]; }, [visibleResults]);
+  const comparable = useMemo(() => {
+    const byType = new Map();
+    for (const result of visibleResults) {
+      const entity = result.entity;
+      if (!entity || !comparisonSearchTypes.has(entity.entityType)) continue;
+      const current = byType.get(entity.entityType) || [];
+      if (!current.some((record) => record.id === entity.id)) current.push(entity);
+      byType.set(entity.entityType, current);
+    }
+    return [...byType.entries()].filter(([, records]) => records.length >= 2).sort((left, right) => right[1].length - left[1].length)[0] || null;
+  }, [visibleResults]);
+  const compareType = comparable?.[0] || null;
+  const compareRecords = comparable?.[1]?.slice(0, 4) || [];
+  return <section className="succession-search-workspace succession-search-complete" aria-labelledby="succession-search-title">
+    <label><Search size={20} aria-hidden="true" /><span className="sr-only">Search canonical Succession Archive</span><input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Name, alias, mechanic, condition, thread, term…" /></label>
+    <p role="status" aria-live="polite">{query ? intent ? `Structured answer with ${visibleResults.length} of ${results.length} related canonical result${results.length === 1 ? '' : 's'} through Chapter ${spoilerLimit}` : `${visibleResults.length} of ${results.length} result${results.length === 1 ? '' : 's'} through Chapter ${spoilerLimit}` : `Search every canonical domain available through Chapter ${spoilerLimit}.`}</p>
+    <SuccessionSearchComprehensionPanel query={query} chapter={spoilerLimit} onQueryChange={setQuery} onNavigate={onNavigate} />
+    {!!results.length && <section className="succession-search-complete__facets" aria-labelledby="succession-search-facets-title">
+      <header><div><span>Result facets</span><h2 id="succession-search-facets-title">Filter this result set by canonical domain</h2></div><b>{visibleResults.length} / {results.length} visible</b></header>
+      <nav aria-label="Search result domains"><button type="button" className={facet === 'all' ? 'is-active' : ''} aria-pressed={facet === 'all'} onClick={() => setFacet('all')}>All <span>{results.length}</span></button>{facetRows.map(([domain, count]) => <button type="button" className={facet === domain ? 'is-active' : ''} aria-pressed={facet === domain} onClick={() => setFacet(domain)} key={domain}>{searchGroupLabel(domain)} <span>{count}</span></button>)}</nav>
+      <footer className="succession-search-complete__analysis"><span>Search to analysis</span>{compareRecords.length >= 2 && <button type="button" onClick={() => onNavigate('research', { mode: 'compare', type: compareType, compare: compareRecords.map((record) => record.id).join(','), view: 'differences' })}>Compare {compareRecords.length} matching {searchGroupLabel(compareType)} records</button>}<button type="button" onClick={() => onNavigate('timeline', { scope: 'events', search: canonicalQuery })}>Build event timeline</button><button type="button" onClick={() => onNavigate('research', { mode: 'diff', from: Math.max(340, spoilerLimit - 1), to: spoilerLimit })}>Inspect latest chapter delta</button><button type="button" onClick={() => onNavigate('research', { mode: 'overview' })}>Open Research desk</button></footer>
+    </section>}
+    <div className="succession-search-complete__groups">{groups.map(([domain, records]) => <section key={domain} aria-labelledby={`search-group-${domain}`}><header><h2 id={`search-group-${domain}`}>{searchGroupLabel(domain)}</h2><span>{records.length}</span></header><div>{records.map((result) => <article key={result.id}>{result.entity ? <EntityVisual entity={result.entity} compact /> : result.resultType === 'glossary' ? <BookOpen size={22} aria-hidden="true" /> : <Search size={22} aria-hidden="true" />}<div><span>{result.domain.replaceAll('-', ' ')}</span><h3>{result.label}</h3><p>{result.summary}</p><small>{result.matchReason}</small></div><button type="button" onClick={() => onNavigate(result.route, result.params)}>Open <ArrowRight size={13} aria-hidden="true" /></button></article>)}</div></section>)}</div>
+    {query && !visibleResults.length && !intent && <ArchiveState kind="empty" title={results.length ? 'No results in this facet' : 'No canonical match inside this chapter boundary'} description={results.length ? 'Choose All or another canonical domain facet to restore matching records.' : 'Try an alias, synonym, organization, location, ability mechanic, unresolved question, or glossary term already documented by the selected chapter.'} />}
+  </section>;
 }
 
 function FamilyTreeWorkspace({ spoilerLimit, onNavigate }) {
