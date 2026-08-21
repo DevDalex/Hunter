@@ -3,8 +3,10 @@ import {
   getActiveCountdowns,
   getChapterStoryDossier,
   getEntityById,
+  getKnowledgeWarfareMatrix,
 } from '../../data/succession/successionData';
 import './SuccessionStoryComprehensionPanel.css';
+import './SuccessionDisclosureTimeline.css';
 
 const FIRST_SUCCESSION_CHAPTER = 340;
 const compactRange = (chapter) => Array.from({ length: Math.min(4, chapter - FIRST_SUCCESSION_CHAPTER + 1) }, (_, index) => chapter - (Math.min(4, chapter - FIRST_SUCCESSION_CHAPTER + 1) - index - 1));
@@ -114,6 +116,25 @@ function PressureBoard({ chapter, dossier, onNavigate }) {
   </section>;
 }
 
+function DisclosureTimeline({ chapter }) {
+  const records = getKnowledgeWarfareMatrix(chapter);
+  const published = records
+    .filter((record) => Number.isFinite(Number(record.publicAtChapter)) && Number(record.publicAtChapter) <= chapter)
+    .sort((left, right) => Number(left.publicAtChapter) - Number(right.publicAtChapter) || left.name.localeCompare(right.name));
+  const visible = published.slice(-12);
+  const nonPublic = records.filter((record) => !Number.isFinite(Number(record.publicAtChapter)) || Number(record.publicAtChapter) > chapter);
+  const latestPublicChapter = published.length ? Math.max(...published.map((record) => Number(record.publicAtChapter))) : null;
+
+  return <section className="succession-story-comprehension__section succession-story-comprehension__disclosure">
+    <header><span><Network size={14} aria-hidden="true" /> Disclosure timeline</span><h3>When did maintained knowledge become public?</h3><p>Only records with an explicit public chapter receive a timeline position. Secret or otherwise non-public knowledge stays off the timeline rather than receiving an inferred reveal date.</p></header>
+    <div className="succession-disclosure-summary"><div><span>Knowledge records</span><b>{records.length}</b><small>reader-visible through Ch. {chapter}</small></div><div><span>Explicit public chapter</span><b>{published.length}</b><small>maintained disclosure points</small></div><div><span>Still non-public</span><b>{nonPublic.length}</b><small>no public date inferred</small></div></div>
+    <ol className="succession-disclosure-timeline">{visible.map((record) => <li key={record.id}><span>Ch. {record.publicAtChapter}</span><h4>{record.name}</h4><small>{labelize(record.state)} · {labelize(record.secrecy)}</small><p>Known by: {record.knowerLabels.join(' · ') || 'No published knower labels'}</p></li>)}</ol>
+    {!visible.length && <p className="succession-disclosure-timeline__note">No knowledge record has an explicit public chapter at this boundary.</p>}
+    {published.length > visible.length && <p className="succession-disclosure-timeline__note">Showing the latest {visible.length} of {published.length} explicit public-disclosure records. Earlier records remain in Knowledge & Secrecy.</p>}
+    <p className="succession-disclosure-timeline__note">Latest explicit public-disclosure chapter: {latestPublicChapter || 'none published'}. A character learning something privately is not treated as public disclosure.</p>
+  </section>;
+}
+
 export default function SuccessionStoryComprehensionPanel({ chapter = 417, onNavigate }) {
   const dossier = getChapterStoryDossier(chapter);
   if (!dossier) return null;
@@ -121,13 +142,14 @@ export default function SuccessionStoryComprehensionPanel({ chapter = 417, onNav
     <header className="succession-story-comprehension__hero">
       <span>Visual story comprehension</span>
       <h2 id="succession-story-comprehension-title">See the arc before opening the full record graph</h2>
-      <p>Chapter briefing, lane activity, causal structure, and unresolved pressure are derived from the same canonical Story Intelligence data.</p>
+      <p>Chapter briefing, lane activity, causal structure, unresolved pressure, and explicit disclosure timing are derived from the same canonical Story Intelligence data.</p>
     </header>
     <div className="succession-story-comprehension__layout">
       <ChapterBriefing chapter={chapter} dossier={dossier} onNavigate={onNavigate} />
       <LaneMatrix chapter={chapter} onNavigate={onNavigate} />
       <CausalBoard dossier={dossier} onNavigate={onNavigate} />
       <PressureBoard chapter={chapter} dossier={dossier} onNavigate={onNavigate} />
+      <DisclosureTimeline chapter={chapter} />
     </div>
   </section>;
 }
