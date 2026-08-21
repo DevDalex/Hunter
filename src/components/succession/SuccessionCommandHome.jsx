@@ -19,8 +19,8 @@ import {
   ARCHIVE_REVIEW_DATE,
 } from '../../data/archiveMeta';
 import {
+  getSuccessionHomeRecentChapters,
   successionHomeCounts,
-  successionHomeRecentChapters,
 } from '../../data/successionHomeSummary';
 import { routeToHref } from '../../lib/appRouter';
 import './SuccessionCommandHome.css';
@@ -96,7 +96,7 @@ function QuickAccessItem({ label, count, icon: Icon, target, params = {}, onNavi
 const chapterLabel = (chapter) => chapter.title || chapter.name || `Chapter ${chapter.number}`;
 
 export default function SuccessionCommandHome({ spoilerLimit, onNavigate, onOpenSearch }) {
-  const recentChapters = successionHomeRecentChapters;
+  const recentChapters = getSuccessionHomeRecentChapters(spoilerLimit);
 
   const openSuccession = (event) => {
     event.preventDefault();
@@ -211,7 +211,7 @@ export default function SuccessionCommandHome({ spoilerLimit, onNavigate, onOpen
         >
           <div className="succession-command-home__reader-visual">
             <BookOpen size={94} strokeWidth={0.65} />
-            <span>340</span><span>416</span>
+            <span>340</span><span>{spoilerLimit}</span>
           </div>
         </PortalCard>
       </section>
