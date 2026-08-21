@@ -8,6 +8,7 @@ export const SUCCESSION_ARCHIVE_BOOKMARK_LIMIT = 100;
 export const SUCCESSION_ARCHIVE_COMPARE_LIMIT = 4;
 export const SUCCESSION_ARCHIVE_SEARCH_LIMIT = 20;
 export const SUCCESSION_ARCHIVE_WATCHLIST_LIMIT = 12;
+export const SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT = 4000;
 
 export const defaultSuccessionArchiveMemory = Object.freeze({
   version: SUCCESSION_ARCHIVE_MEMORY_VERSION,
@@ -67,6 +68,7 @@ const normalizeWatchlist = (value = {}) => {
   return Object.freeze({
     id,
     name,
+    note: text(value.note, SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT),
     createdAt: timestamp(value.createdAt) || null,
     updatedAt: timestamp(value.updatedAt) || null,
     items: Object.freeze(dedupe((Array.isArray(value.items) ? value.items : []).map(normalizeArchiveMemoryItem).filter(Boolean)).slice(0, SUCCESSION_ARCHIVE_BOOKMARK_LIMIT)),
@@ -143,13 +145,24 @@ export function withCreatedWatchlist(state, name, now = new Date()) {
   const id = `watchlist:${safeName.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 70) || 'research'}:${Date.parse(stamp)}`;
   return normalizeSuccessionArchiveMemory({
     ...current,
-    watchlists: [...current.watchlists, { id, name: safeName, createdAt: stamp, updatedAt: stamp, items: [] }],
+    watchlists: [...current.watchlists, { id, name: safeName, note: '', createdAt: stamp, updatedAt: stamp, items: [] }],
   });
 }
 
 export function withoutWatchlist(state, id) {
   const current = normalizeSuccessionArchiveMemory(state);
   return normalizeSuccessionArchiveMemory({ ...current, watchlists: current.watchlists.filter((record) => record.id !== id) });
+}
+
+export function withUpdatedWatchlistNote(state, watchlistId, note, now = new Date()) {
+  const current = normalizeSuccessionArchiveMemory(state);
+  const safeNote = text(note, SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT);
+  return normalizeSuccessionArchiveMemory({
+    ...current,
+    watchlists: current.watchlists.map((watchlist) => watchlist.id === watchlistId
+      ? { ...watchlist, note: safeNote, updatedAt: nowIso(now) }
+      : watchlist),
+  });
 }
 
 export function withToggledWatchlistItem(state, watchlistId, item, now = new Date()) {
@@ -222,6 +235,10 @@ export function createSuccessionWatchlist(name) {
 
 export function deleteSuccessionWatchlist(id) {
   return writeSuccessionArchiveMemory(withoutWatchlist(readSuccessionArchiveMemory(), id));
+}
+
+export function updateSuccessionWatchlistNote(id, note) {
+  return writeSuccessionArchiveMemory(withUpdatedWatchlistNote(readSuccessionArchiveMemory(), id, note));
 }
 
 export function toggleSuccessionWatchlistItem(watchlistId, item) {
