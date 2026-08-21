@@ -45,5 +45,8 @@ jobs:
       - name: Audit people, Nen, and spatial comprehension
         run: node scripts/audit-succession-comprehension-systems.mjs
 
+      - name: Audit mystery and research comprehension
+        run: node scripts/audit-succession-comprehension-research.mjs
+
       - name: Production build
         run: npm run build
