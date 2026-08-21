@@ -7,6 +7,7 @@ const tasks = Object.freeze([
   ['Spoiler boundary', ['run', 'audit:spoilers']],
   ['Runtime schemas', ['run', 'audit:schema']],
   ['CSS ownership', ['run', 'audit:css']],
+  ['Succession Phase 5 contracts', ['run', 'audit:succession-phase5']],
 ]);
 
 const failures = [];
