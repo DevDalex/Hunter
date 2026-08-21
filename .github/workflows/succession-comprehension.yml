@@ -1,0 +1,43 @@
+name: Succession Comprehension
+
+on:
+  pull_request:
+    paths:
+      - 'src/data/succession/**'
+      - 'src/components/succession/**'
+      - 'scripts/audit-succession-comprehension-*.mjs'
+      - '.github/workflows/succession-comprehension.yml'
+  push:
+    branches:
+      - 'agent/succession-comprehension-presentation'
+    paths:
+      - 'src/data/succession/**'
+      - 'src/components/succession/**'
+      - 'scripts/audit-succession-comprehension-*.mjs'
+      - '.github/workflows/succession-comprehension.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  comprehension:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit Succession comprehension P0
+        run: node scripts/audit-succession-comprehension-p0.mjs
+
+      - name: Production build
+        run: npm run build
