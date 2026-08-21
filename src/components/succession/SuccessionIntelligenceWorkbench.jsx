@@ -31,6 +31,7 @@ import {
 import { EntityLink, entityWorkspaceTarget } from './SuccessionArchivePrimitives';
 import SuccessionResearchMemoryPanel from './SuccessionResearchMemoryPanel';
 import './SuccessionIntelligenceWorkbench.css';
+import './SuccessionIntelligenceCompareComprehension.css';
 
 const modes = Object.freeze([
   ['overview', 'Overview', Network],
