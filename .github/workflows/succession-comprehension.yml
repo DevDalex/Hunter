@@ -39,5 +39,8 @@ jobs:
       - name: Audit Succession comprehension P0
         run: node scripts/audit-succession-comprehension-p0.mjs
 
+      - name: Audit visual story comprehension
+        run: node scripts/audit-succession-comprehension-story.mjs
+
       - name: Production build
         run: npm run build
