@@ -13,6 +13,7 @@ import {
 import { ARCHIVE_BOUNDARY } from '../../data/archiveMeta';
 import { routeToHref } from '../../lib/appRouter';
 import { getEntitiesByType, getEntityById } from '../../data/succession/successionData';
+import { recordSuccessionLocalRouteView } from '../../data/succession/localAnalytics';
 import {
   getSuccessionArchiveHub,
   getSuccessionArchiveRoute,
@@ -24,6 +25,7 @@ import SuccessionCommandHome from './SuccessionCommandHome';
 import SuccessionComprehensionBar from './SuccessionComprehensionBar';
 import SuccessionConsolidatedRouteNotice from './SuccessionConsolidatedRouteNotice';
 import SuccessionEntityQuickBriefing from './SuccessionEntityQuickBriefing';
+import SuccessionLocalAnalyticsPanel from './SuccessionLocalAnalyticsPanel';
 import SuccessionNowDashboard from './SuccessionNowDashboard';
 import SuccessionPeoplePowerComprehensionPanel from './SuccessionPeoplePowerComprehensionPanel';
 import SuccessionNenSpatialComprehensionPanel from './SuccessionNenSpatialComprehensionPanel';
@@ -150,6 +152,10 @@ export default function SuccessionArchiveShell({
   }, [onNavigate, route.id]);
 
   useEffect(() => {
+    if (route.id !== 'archive') recordSuccessionLocalRouteView(route.id);
+  }, [route.id]);
+
+  useEffect(() => {
     const previousRoute = previousRouteRef.current;
     previousRouteRef.current = activeId;
     if (route.id === 'search' || previousRoute === activeId) return undefined;
@@ -173,6 +179,7 @@ export default function SuccessionArchiveShell({
   const showNow = route.id === 'story';
   const showPeoplePower = activeHub.id === 'people';
   const showNenSpatial = ['nen', 'black-whale'].includes(activeHub.id);
+  const showLocalAnalytics = route.id === 'research' && (!routeParams?.mode || routeParams.mode === 'overview');
 
   return <article className="succession-archive" data-archive-route={route.id} data-archive-hub={activeHub.id}>
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
@@ -266,6 +273,7 @@ export default function SuccessionArchiveShell({
             {showNow && <SuccessionNowDashboard chapter={spoilerLimit} onNavigate={navigate} />}
             {showPeoplePower && <SuccessionPeoplePowerComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
             {showNenSpatial && <SuccessionNenSpatialComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
+            {showLocalAnalytics && <SuccessionLocalAnalyticsPanel />}
             {showCharacterConsistency && <Suspense fallback={null}>
               <SuccessionInformationConsistencyPanel activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} />
             </Suspense>}
