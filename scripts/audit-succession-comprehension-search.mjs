@@ -10,10 +10,11 @@ const normalize = (value) => String(value || '').toLocaleLowerCase();
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {
-  const [ui, archive, mysteries] = await Promise.all([
+  const [ui, archive, mysteries, memory] = await Promise.all([
     vite.ssrLoadModule('/src/components/succession/SuccessionSearchComprehensionPanel.jsx'),
     vite.ssrLoadModule('/src/data/succession/successionData.js'),
     vite.ssrLoadModule('/src/data/succession/successionMysteryCases.js'),
+    vite.ssrLoadModule('/src/data/succession/archiveMemory.js'),
   ]);
   const parse = ui.parseSuccessionSearchIntent;
   assert(parse('who is targeting Woble')?.type === 'targeting', 'targeting intent parser is missing');
@@ -22,6 +23,11 @@ try {
   assert(parse('where is Kurapika')?.type === 'location', 'location intent parser is missing');
   assert(parse('unresolved Tserriednich')?.type === 'unresolved', 'unresolved-case intent parser is missing');
   assert(parse('ordinary keyword search') === null, 'ordinary keyword search must remain outside the structured parser');
+
+  const saved = memory.withSavedArchiveSearch(memory.defaultSuccessionArchiveMemory, 'who knows about TSK-17', 416, new Date('2026-08-21T00:00:00Z'));
+  assert(saved.savedSearches.length === 1, 'saved-search reducer did not persist a query');
+  assert(saved.savedSearches[0].chapter === 416, 'saved-search reducer did not preserve its chapter boundary');
+  assert(saved.savedSearches[0].query === 'who knows about TSK-17', 'saved-search reducer altered the query text');
 
   const chapter = 417;
   const wobleThreats = archive.getThreatAssassinationMatrix(chapter).filter((row) => normalize(row.target?.name).includes('woble'));
@@ -47,13 +53,17 @@ try {
   for (const token of ['who is targeting Woble', 'who knows about TSK-17', 'what changed in chapter 417', 'where is Kurapika', 'unresolved Tserriednich']) assert(panel.includes(token), `search examples are missing ${token}`);
   assert(panel.includes('getCharacterStateAtChapter') && panel.includes('getThreatAssassinationMatrix') && panel.includes('getKnowledgeWarfareMatrix') && panel.includes('getChapterWhatChanged'), 'structured answers are not derived from canonical chapter-bounded selectors');
   assert(panel.includes('getSuccessionMysteryCasesAtChapter'), 'unresolved-case search is not bounded to published mystery cases');
+  assert(panel.includes('saveSuccessionArchiveSearch(cleanQuery, chapter)'), 'Search does not persist the current query and chapter to Research Memory');
+  assert(panel.includes("route?.target === 'search' ? route.params?.query : ''"), 'saved searches cannot rehydrate the Search query from route state');
+  assert(panel.includes("if (!intent) return <SaveSearchControl"), 'ordinary keyword searches cannot be saved');
+  assert(css.includes('.succession-search-intent__save'), 'saved-search action has no presentation contract');
 
   const fontSizes = [...css.matchAll(/font-size:\s*(\d+)px/g)].map((match) => Number(match[1]));
   assert(fontSizes.length > 0 && fontSizes.every((size) => size >= 11), `search comprehension introduced text below the 11px floor: ${fontSizes.filter((size) => size < 11).join(', ')}`);
   assert(!/@media\s*\([^)]*max-width:/i.test(css), 'structured search must not introduce mobile/tablet breakpoints');
   assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'structured search must preserve reduced-motion handling');
 
-  console.log(`Succession search comprehension audit passed: ${wobleThreats.length} Woble threat signals, ${tskKnowledge.length} TSK-17 knowledge records, ${change.records.length} Chapter 417 deltas, and ${tserriednichCases.length} Tserriednich open cases support direct answers.`);
+  console.log(`Succession search comprehension audit passed: saved-search round trips plus ${wobleThreats.length} Woble threat signals, ${tskKnowledge.length} TSK-17 knowledge records, ${change.records.length} Chapter 417 deltas, and ${tserriednichCases.length} Tserriednich open cases support direct answers.`);
 } finally {
   await vite.close();
 }
