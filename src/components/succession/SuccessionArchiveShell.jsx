@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { ARCHIVE_BOUNDARY } from '../../data/archiveMeta';
 import { routeToHref } from '../../lib/appRouter';
+import { getEntitiesByType, getEntityById } from '../../data/succession/successionData';
 import {
   getSuccessionArchiveHub,
   getSuccessionArchiveRoute,
@@ -21,6 +22,7 @@ import {
 import SpoilerControl from '../SpoilerControl';
 import SuccessionCommandHome from './SuccessionCommandHome';
 import SuccessionComprehensionBar from './SuccessionComprehensionBar';
+import SuccessionEntityQuickBriefing from './SuccessionEntityQuickBriefing';
 import SuccessionNowDashboard from './SuccessionNowDashboard';
 import SuccessionPeoplePowerComprehensionPanel from './SuccessionPeoplePowerComprehensionPanel';
 import SuccessionNenSpatialComprehensionPanel from './SuccessionNenSpatialComprehensionPanel';
@@ -57,6 +59,18 @@ const needsCharacterConsistency = (routeId, routeParams = {}) => {
   if (routeId === 'princes' && Number.isFinite(Number(routeParams.prince))) return true;
   if (routeId === 'queens' && routeParams.focus) return true;
   return false;
+};
+
+const resolveBriefingEntity = (routeId, routeParams = {}) => {
+  if (routeParams.entity) return getEntityById(routeParams.entity);
+  if (routeId === 'princes' && Number.isFinite(Number(routeParams.prince))) {
+    return getEntitiesByType('character').find((entity) => entity.princeOrder === Number(routeParams.prince)) || null;
+  }
+  if (routeId === 'chapters' && Number.isFinite(Number(routeParams.chapter))) {
+    return getEntitiesByType('chapter').find((entity) => entity.number === Number(routeParams.chapter)) || null;
+  }
+  if (routeId === 'queens' && routeParams.focus) return getEntityById(routeParams.focus) || null;
+  return null;
 };
 
 function ArchiveNavigation({ activeHubId, onNavigate, onIntent, id }) {
@@ -124,6 +138,9 @@ export default function SuccessionArchiveShell({
   const activeHub = getSuccessionArchiveHub(route.id);
   const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
   const showCharacterConsistency = needsCharacterConsistency(route.id, routeParams);
+  const briefingEntity = hidePageHeader ? null : resolveBriefingEntity(route.id, routeParams);
+  const requestedBriefingChapter = Number(routeParams?.chapter);
+  const briefingChapter = Number.isFinite(requestedBriefingChapter) ? Math.min(spoilerLimit, Math.max(340, requestedBriefingChapter)) : spoilerLimit;
 
   useEffect(() => {
     if (route.id === 'archive') onNavigate('story', {});
@@ -244,6 +261,7 @@ export default function SuccessionArchiveShell({
             aria-label={`${route.label} workspace content`}
             tabIndex="-1"
           >
+            {briefingEntity && <SuccessionEntityQuickBriefing entity={briefingEntity} chapter={briefingChapter} onNavigate={navigate} />}
             {showNow && <SuccessionNowDashboard chapter={spoilerLimit} onNavigate={navigate} />}
             {showPeoplePower && <SuccessionPeoplePowerComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
             {showNenSpatial && <SuccessionNenSpatialComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
