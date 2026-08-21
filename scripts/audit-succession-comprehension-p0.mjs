@@ -82,9 +82,12 @@ try {
   for (const state of ['canon', 'inference', 'theory', 'editorial', 'translation', 'changed', 'unresolved']) assert(semanticCss.includes(`.succession-semantic-state.is-${state}`), `semantic state ${state} has no distinct presentation treatment`);
   assert(contextBar.includes('ARCHIVE_BOUNDARY') && contextBar.includes('onSpoilerChange(previous)') && contextBar.includes('onSpoilerChange(next)'), 'chapter scrub controls are not bound to the archive boundary');
 
-  for (const token of ['Five-second briefing', 'Recent change', 'Evidence', 'Unknown / unresolved', 'Connected state', 'Open canonical dossier', 'Research context']) assert(quick.includes(token), `universal entity briefing is missing ${token}`);
+  for (const token of ['Five-second briefing', 'Recent change', 'Evidence', 'Unknown / unresolved', 'Connected state', 'Open canonical dossier', 'Research context', 'Character mini timeline', 'Maintained state changes through Chapter']) assert(quick.includes(token), `universal entity briefing is missing ${token}`);
   assert(quick.includes('getEntityStateAtChapter') && quick.includes('getChapterStateDiff') && quick.includes('getSourcesForEntity'), 'entity briefing is not derived from canonical state/diff/evidence selectors');
   assert(quick.includes('stateSentence') && quick.includes('unresolvedFields'), 'entity briefing lacks its standard current-state sentence or unresolved-state treatment');
+  assert(quick.includes('characterStateSignature') && quick.includes('for (let chapter = 340; chapter <= boundary; chapter += 1)') && quick.includes("entity.entityType === 'character' && <CharacterMiniTimeline"), 'universal character mini timeline is not derived and mounted from chapter-bounded character state');
+  assert(quick.includes('unchanged chapters are intentionally collapsed') && quick.includes('Showing the latest {visible.length} of {points.length} maintained state-change points.'), 'character mini timeline lacks its no-fake-change boundary or subset disclosure');
+  assert(quickCss.includes('.succession-entity-quick__timeline ol') && quickCss.includes('overflow-x: auto') && quickCss.includes('role') === false, 'character mini timeline visual container is missing');
 
   for (const css of [dashboardCss, contextCss, quickCss, semanticCss]) {
     assert(!/@media\s*\([^)]*max-width:/i.test(css), 'comprehension layer must not introduce mobile/tablet breakpoints');
@@ -93,7 +96,7 @@ try {
     assert(fontSizes.every((size) => size >= 11), `P0 comprehension introduced text below the 11px floor: ${fontSizes.filter((size) => size < 11).join(', ')}`);
   }
 
-  console.log(`Succession comprehension P0 audit passed: Ch. ${chapter} NOW dashboard, universal entity briefing, shared seven-state semantic legend, complete semantic chapter controls, ${change.records.length} delta records, ${dossier.openThreads.length} open threads, ${threats.length} threat signals, ${knowledge.length} knowledge claims, and ${spatial.hotspots.length} spatial hotspots are wired.`);
+  console.log(`Succession comprehension P0 audit passed: Ch. ${chapter} NOW dashboard, universal entity briefing with character mini timelines, shared seven-state semantic legend, complete semantic chapter controls, ${change.records.length} delta records, ${dossier.openThreads.length} open threads, ${threats.length} threat signals, ${knowledge.length} knowledge claims, and ${spatial.hotspots.length} spatial hotspots are wired.`);
 } finally {
   await vite.close();
 }
