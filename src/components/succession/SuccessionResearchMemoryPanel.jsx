@@ -1,16 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowRight, Bookmark, Clock3, Download, GitCompareArrows, LibraryBig, Plus, Save, Search, Trash2 } from 'lucide-react';
-import { getEntityById } from '../../data/succession/successionData';
+import { ArrowDown, ArrowRight, ArrowUp, Bookmark, Clock3, Download, FileText, GitCompareArrows, LibraryBig, Plus, Printer, Save, Search, Tags, Trash2 } from 'lucide-react';
+import { getEntityById, getSourcesForEntity } from '../../data/succession/successionData';
 import {
   SUCCESSION_ARCHIVE_MEMORY_EVENT,
   SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT,
+  SUCCESSION_ARCHIVE_WATCHLIST_STATUSES,
+  SUCCESSION_ARCHIVE_WATCHLIST_TAG_LIMIT,
   clearSuccessionCompareTray,
   createSuccessionWatchlist,
   deleteSuccessionWatchlist,
+  moveSuccessionWatchlistItem,
   readSuccessionArchiveMemory,
   removeSuccessionArchiveSearch,
   toggleSuccessionArchiveBookmark,
+  toggleSuccessionWatchlistCitation,
   toggleSuccessionWatchlistItem,
+  updateSuccessionWatchlistMetadata,
   updateSuccessionWatchlistNote,
 } from '../../data/succession/archiveMemory';
 import './SuccessionResearchMemoryPanel.css';
@@ -30,14 +35,36 @@ const formatWhen = (value) => {
   return new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(parsed));
 };
 
+const citationCandidatesForWatchlist = (watchlist) => {
+  const map = new Map();
+  for (const item of watchlist.items) {
+    if (!item.entityId) continue;
+    for (const source of getSourcesForEntity(item.entityId) || []) map.set(source.id, source);
+  }
+  return [...map.values()].sort((left, right) => Number(left.chapter || 9999) - Number(right.chapter || 9999) || String(left.name || left.id).localeCompare(String(right.name || right.id)));
+};
+
+const citationLine = (source) => {
+  const chapter = source.chapter ? `Chapter ${source.chapter}` : source.name || source.id;
+  const type = source.sourceType ? ` · ${source.sourceType}` : '';
+  const note = source.note ? ` — ${source.note}` : '';
+  return `- ${chapter}${type}${note} [${source.id}]`;
+};
+
 const markdownForWatchlist = (watchlist) => {
-  const records = watchlist.items.map((item) => {
+  const records = watchlist.items.map((item, index) => {
     const record = describeItem(item);
     const context = item.context ? ` — ${item.context}` : '';
-    return `- **${record.label}** (${record.type.replaceAll('-', ' ')})${context}\n  - Archive route: \`${item.route}\`${item.entityId ? `\n  - Entity: \`${item.entityId}\`` : ''}`;
+    return `${index + 1}. **${record.label}** (${record.type.replaceAll('-', ' ')})${context}\n   - Archive route: \`${item.route}\`${item.entityId ? `\n   - Entity: \`${item.entityId}\`` : ''}`;
   });
+  const citations = citationCandidatesForWatchlist(watchlist).filter((source) => watchlist.citationIds.includes(source.id));
   return [
     `# ${watchlist.name}`,
+    '',
+    `Status: **${watchlist.status}**`,
+    watchlist.tags.length ? `Tags: ${watchlist.tags.map((tag) => `\`${tag}\``).join(' ')}` : 'Tags: _none_',
+    '',
+    '## Working thesis / notes',
     '',
     watchlist.note || '_No investigation note saved._',
     '',
@@ -45,21 +72,59 @@ const markdownForWatchlist = (watchlist) => {
     '',
     ...(records.length ? records : ['_No records saved._']),
     '',
-    `Exported from Succession Research Memory. Local research notes are not canonical archive data.`,
+    '## Selected citations',
+    '',
+    ...(citations.length ? citations.map(citationLine) : ['_No citations selected._']),
+    '',
+    'Exported from Succession Research Memory. Local notes, status, tags, ordering and citation selections are personal research material, not canonical archive data.',
   ].join('\n');
 };
 
-const downloadMarkdown = (watchlist) => {
+const citationBundleForWatchlist = (watchlist) => {
+  const citations = citationCandidatesForWatchlist(watchlist).filter((source) => watchlist.citationIds.includes(source.id));
+  return [
+    `# Citation bundle — ${watchlist.name}`,
+    '',
+    `Investigation status: ${watchlist.status}`,
+    `Selected citations: ${citations.length}`,
+    '',
+    ...(citations.length ? citations.map(citationLine) : ['_No citations selected._']),
+    '',
+    'Generated from canonical source records linked to saved investigation entities.',
+  ].join('\n');
+};
+
+const downloadTextFile = (filename, content, type = 'text/markdown;charset=utf-8') => {
   if (typeof window === 'undefined' || typeof Blob === 'undefined') return;
-  const blob = new Blob([markdownForWatchlist(watchlist)], { type: 'text/markdown;charset=utf-8' });
+  const blob = new Blob([content], { type });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement('a');
   anchor.href = url;
-  anchor.download = `${watchlist.name.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80) || 'succession-research'}.md`;
+  anchor.download = filename;
   document.body.appendChild(anchor);
   anchor.click();
   anchor.remove();
   URL.revokeObjectURL(url);
+};
+
+const fileStem = (watchlist) => watchlist.name.toLocaleLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80) || 'succession-research';
+const downloadMarkdown = (watchlist) => downloadTextFile(`${fileStem(watchlist)}.md`, markdownForWatchlist(watchlist));
+const downloadCitationBundle = (watchlist) => downloadTextFile(`${fileStem(watchlist)}-citations.md`, citationBundleForWatchlist(watchlist));
+
+const printWatchlist = (watchlistId) => {
+  if (typeof window === 'undefined') return;
+  const target = document.querySelector(`[data-watchlist-id="${CSS.escape(watchlistId)}"]`);
+  if (!target) return;
+  const cleanup = () => {
+    document.body.classList.remove('is-printing-succession-watchlist');
+    target.classList.remove('is-print-target');
+    window.removeEventListener('afterprint', cleanup);
+  };
+  document.body.classList.add('is-printing-succession-watchlist');
+  target.classList.add('is-print-target');
+  window.addEventListener('afterprint', cleanup, { once: true });
+  window.print();
+  window.setTimeout(cleanup, 1000);
 };
 
 function OpenItemButton({ item, onNavigate, label = 'Open' }) {
@@ -71,6 +136,7 @@ export default function SuccessionResearchMemoryPanel({ spoilerLimit = 417, onNa
   const [watchlistName, setWatchlistName] = useState('');
   const [watchlistPick, setWatchlistPick] = useState({});
   const [noteDrafts, setNoteDrafts] = useState({});
+  const [tagDrafts, setTagDrafts] = useState({});
 
   useEffect(() => {
     const refresh = () => setMemory(readSuccessionArchiveMemory());
@@ -106,11 +172,16 @@ export default function SuccessionResearchMemoryPanel({ spoilerLimit = 417, onNa
     updateSuccessionWatchlistNote(watchlist.id, note);
   };
 
+  const saveTags = (watchlist) => {
+    const tags = tagDrafts[watchlist.id] ?? watchlist.tags.join(', ');
+    updateSuccessionWatchlistMetadata(watchlist.id, { tags });
+  };
+
   return <section className="succession-research-memory" aria-labelledby="succession-research-memory-title">
     <header className="succession-research-memory__hero">
       <span><LibraryBig size={15} aria-hidden="true" /> Research memory · local only</span>
       <h2 id="succession-research-memory-title">Continue where you left off instead of rebuilding your mental map</h2>
-      <p>Visits, bookmarks, saved searches, research collections and the compare tray stay in this browser. Notes and exports are personal research material, never canonical archive data.</p>
+      <p>Visits, bookmarks, saved searches, research collections and the compare tray stay in this browser. Notes, status, tags, ordering, citation selections and exports are personal research material, never canonical archive data.</p>
     </header>
 
     <div className="succession-research-memory__summary">
@@ -151,14 +222,24 @@ export default function SuccessionResearchMemoryPanel({ spoilerLimit = 417, onNa
       </section>
 
       <section className="is-watchlists">
-        <header><span><LibraryBig size={13} aria-hidden="true" /> Research collections</span><h3>Group records, keep an investigation note, and export a portable dossier</h3></header>
+        <header><span><LibraryBig size={13} aria-hidden="true" /> Research collections</span><h3>Investigations with notes, status, tags, ordering, citations and portable exports</h3></header>
         <form className="succession-research-memory__watchlist-create" onSubmit={createWatchlist}><label><span>New collection</span><input value={watchlistName} onChange={(event) => setWatchlistName(event.target.value)} maxLength="120" placeholder="e.g. Halkenburg investigation" /></label><button type="submit" disabled={!watchlistName.trim()}><Plus size={12} /> Create</button></form>
         <div className="succession-research-memory__watchlists">{memory.watchlists.map((watchlist) => {
           const note = noteDrafts[watchlist.id] ?? watchlist.note ?? '';
           const noteDirty = note !== (watchlist.note || '');
-          return <article key={watchlist.id}><header><div><b>{watchlist.name}</b><small>{watchlist.items.length} saved record{watchlist.items.length === 1 ? '' : 's'} · {formatWhen(watchlist.updatedAt)}</small></div><div className="succession-research-memory__collection-actions"><button type="button" onClick={() => downloadMarkdown(watchlist)}><Download size={12} /> Export .md</button><button type="button" onClick={() => deleteSuccessionWatchlist(watchlist.id)}><Trash2 size={12} /> Delete</button></div></header><label className="succession-research-memory__note"><span>Investigation note / working thesis</span><textarea value={note} maxLength={SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT} onChange={(event) => setNoteDrafts((current) => ({ ...current, [watchlist.id]: event.target.value }))} placeholder="Question, hypothesis, evidence to revisit, contradictions, next checks…" /><small>{note.length} / {SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT} characters · local only</small><button type="button" disabled={!noteDirty} onClick={() => saveNote(watchlist)}><Save size={12} /> Save note</button></label><ol>{watchlist.items.slice(0, 8).map((item) => { const record = describeItem(item); return <li key={`${watchlist.id}:${item.route}:${item.entityId || JSON.stringify(item.params)}`}><OpenItemButton item={item} onNavigate={onNavigate} label={record.label} /></li>; })}</ol>{watchlist.items.length > 8 && <small className="succession-research-memory__shown">Showing 8 of {watchlist.items.length} saved records in this collection.</small>}{bookmarks.length > 0 && <div className="succession-research-memory__watchlist-add"><select aria-label={`Bookmark to add to ${watchlist.name}`} value={watchlistPick[watchlist.id] || ''} onChange={(event) => setWatchlistPick((current) => ({ ...current, [watchlist.id]: event.target.value }))}><option value="">Choose bookmarked record…</option>{bookmarks.map((item, index) => <option value={index} key={`${watchlist.id}:${item.route}:${item.entityId || index}`}>{describeItem(item).label}</option>)}</select><button type="button" disabled={watchlistPick[watchlist.id] === undefined || watchlistPick[watchlist.id] === ''} onClick={() => { const item = bookmarks[Number(watchlistPick[watchlist.id])]; if (item) toggleSuccessionWatchlistItem(watchlist.id, item); }}>Add</button></div>}</article>;
+          const tags = tagDrafts[watchlist.id] ?? watchlist.tags.join(', ');
+          const tagsDirty = tags !== watchlist.tags.join(', ');
+          const citations = citationCandidatesForWatchlist(watchlist);
+          return <article data-watchlist-id={watchlist.id} data-status={watchlist.status} key={watchlist.id}>
+            <header><div><b>{watchlist.name}</b><small>{watchlist.items.length} saved record{watchlist.items.length === 1 ? '' : 's'} · {watchlist.citationIds.length} citations · {formatWhen(watchlist.updatedAt)}</small></div><div className="succession-research-memory__collection-actions"><button type="button" onClick={() => downloadMarkdown(watchlist)}><Download size={12} /> Dossier .md</button><button type="button" onClick={() => downloadCitationBundle(watchlist)}><FileText size={12} /> Citations</button><button type="button" onClick={() => printWatchlist(watchlist.id)}><Printer size={12} /> Print</button><button type="button" onClick={() => deleteSuccessionWatchlist(watchlist.id)}><Trash2 size={12} /> Delete</button></div></header>
+            <div className="succession-research-memory__investigation-meta"><label><span>Status</span><select value={watchlist.status} onChange={(event) => updateSuccessionWatchlistMetadata(watchlist.id, { status: event.target.value })}>{SUCCESSION_ARCHIVE_WATCHLIST_STATUSES.map((status) => <option value={status} key={status}>{status}</option>)}</select></label><label className="is-tags"><span><Tags size={11} aria-hidden="true" /> Tags · max {SUCCESSION_ARCHIVE_WATCHLIST_TAG_LIMIT}</span><input value={tags} onChange={(event) => setTagDrafts((current) => ({ ...current, [watchlist.id]: event.target.value }))} placeholder="ritual, halkenburg, evidence-gap" /><button type="button" disabled={!tagsDirty} onClick={() => saveTags(watchlist)}><Save size={11} /> Save tags</button></label></div>
+            <label className="succession-research-memory__note"><span>Investigation note / working thesis</span><textarea value={note} maxLength={SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT} onChange={(event) => setNoteDrafts((current) => ({ ...current, [watchlist.id]: event.target.value }))} placeholder="Question, hypothesis, evidence to revisit, contradictions, next checks…" /><small>{note.length} / {SUCCESSION_ARCHIVE_WATCHLIST_NOTE_LIMIT} characters · local only</small><button type="button" disabled={!noteDirty} onClick={() => saveNote(watchlist)}><Save size={12} /> Save note</button></label>
+            <section className="succession-research-memory__ordered-records"><h4>Ordered evidence / record stack</h4><ol>{watchlist.items.map((item, index) => { const record = describeItem(item); return <li key={`${watchlist.id}:${item.route}:${item.entityId || JSON.stringify(item.params)}`}><span>{index + 1}</span><OpenItemButton item={item} onNavigate={onNavigate} label={record.label} /><div><button type="button" disabled={index === 0} aria-label={`Move ${record.label} up`} onClick={() => moveSuccessionWatchlistItem(watchlist.id, index, 'up')}><ArrowUp size={11} /></button><button type="button" disabled={index === watchlist.items.length - 1} aria-label={`Move ${record.label} down`} onClick={() => moveSuccessionWatchlistItem(watchlist.id, index, 'down')}><ArrowDown size={11} /></button><button type="button" onClick={() => toggleSuccessionWatchlistItem(watchlist.id, item)}><Trash2 size={11} /> Remove</button></div></li>; })}</ol>{!watchlist.items.length && <p className="succession-research-memory__empty">No records in this investigation yet.</p>}</section>
+            <details className="succession-research-memory__citations"><summary>Citations · {watchlist.citationIds.length} selected / {citations.length} available</summary><div>{citations.map((source) => <label key={source.id}><input type="checkbox" checked={watchlist.citationIds.includes(source.id)} onChange={() => toggleSuccessionWatchlistCitation(watchlist.id, source.id)} /><span><b>{source.chapter ? `Chapter ${source.chapter}` : source.name || source.id}</b><small>{source.sourceType || 'source'} · {source.note || source.id}</small></span></label>)}</div>{!citations.length && <p className="succession-research-memory__empty">Saved records have no linked source records available for a citation bundle.</p>}</details>
+            {bookmarks.length > 0 && <div className="succession-research-memory__watchlist-add"><select aria-label={`Bookmark to add to ${watchlist.name}`} value={watchlistPick[watchlist.id] || ''} onChange={(event) => setWatchlistPick((current) => ({ ...current, [watchlist.id]: event.target.value }))}><option value="">Choose bookmarked record…</option>{bookmarks.map((item, index) => <option value={index} key={`${watchlist.id}:${item.route}:${item.entityId || index}`}>{describeItem(item).label}</option>)}</select><button type="button" disabled={watchlistPick[watchlist.id] === undefined || watchlistPick[watchlist.id] === ''} onClick={() => { const item = bookmarks[Number(watchlistPick[watchlist.id])]; if (item) toggleSuccessionWatchlistItem(watchlist.id, item); }}>Add</button></div>}
+          </article>;
         })}</div>
-        {!memory.watchlists.length && <p className="succession-research-memory__empty">Create a collection, add records from archive bookmarks, then keep notes or export the dossier as Markdown.</p>}
+        {!memory.watchlists.length && <p className="succession-research-memory__empty">Create an investigation, add records from archive bookmarks, then manage notes, status, tags, ordering and citations or export a dossier.</p>}
       </section>
     </div>
   </section>;
