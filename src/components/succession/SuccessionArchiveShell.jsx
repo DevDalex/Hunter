@@ -22,6 +22,7 @@ import {
 import SpoilerControl from '../SpoilerControl';
 import SuccessionCommandHome from './SuccessionCommandHome';
 import SuccessionComprehensionBar from './SuccessionComprehensionBar';
+import SuccessionConsolidatedRouteNotice from './SuccessionConsolidatedRouteNotice';
 import SuccessionEntityQuickBriefing from './SuccessionEntityQuickBriefing';
 import SuccessionNowDashboard from './SuccessionNowDashboard';
 import SuccessionPeoplePowerComprehensionPanel from './SuccessionPeoplePowerComprehensionPanel';
@@ -142,6 +143,7 @@ export default function SuccessionArchiveShell({
   const briefingEntity = hidePageHeader ? null : resolveBriefingEntity(route.id, routeParams);
   const requestedBriefingChapter = Number(routeParams?.chapter);
   const briefingChapter = Number.isFinite(requestedBriefingChapter) ? Math.min(spoilerLimit, Math.max(340, requestedBriefingChapter)) : spoilerLimit;
+  const consolidationSource = routeParams?.consolidatedFrom || (route.status === 'legacy' ? route.id : null);
 
   useEffect(() => {
     if (route.id === 'archive') onNavigate('story', {});
@@ -212,6 +214,7 @@ export default function SuccessionArchiveShell({
       <div className="succession-archive__workspace">
         <div className="succession-archive__workspace-frame">
           <SuccessionComprehensionBar spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} />
+          <SuccessionConsolidatedRouteNotice from={consolidationSource} currentRouteId={route.id} onNavigate={navigate} />
 
           <div className="succession-route-context">
             <nav className="succession-breadcrumbs" aria-label="Breadcrumb">
