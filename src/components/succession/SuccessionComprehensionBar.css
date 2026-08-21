@@ -98,6 +98,7 @@
 .succession-comprehension-bar__legend .is-canon { border-style: solid; }
 .succession-comprehension-bar__legend .is-inference { border-style: dashed; }
 .succession-comprehension-bar__legend .is-theory { border-style: dotted; }
+.succession-comprehension-bar__legend .is-editorial { border-top-width: 3px; }
 .succession-comprehension-bar__legend .is-translation { border-left-width: 4px; }
 .succession-comprehension-bar__legend .is-changed { background: #ecece7; }
 .succession-comprehension-bar__legend .is-unresolved { border-radius: 999px; }
