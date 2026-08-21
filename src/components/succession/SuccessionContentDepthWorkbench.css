@@ -326,6 +326,90 @@
   letter-spacing: .05em;
 }
 
+.succession-depth-setup-timeline {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.succession-depth-setup-timeline > article {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(180px, .55fr) minmax(0, .9fr);
+  gap: 8px;
+  align-items: stretch;
+  padding: 8px;
+  border: 1px solid #bdbdb7;
+  background: #fff;
+}
+
+.succession-depth-setup-node {
+  display: grid;
+  gap: 6px;
+  align-content: center;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid #d3d3cd;
+  background: #fafaf7;
+}
+
+.succession-depth-setup-node > span,
+.succession-depth-setup-gap > span,
+.succession-depth-setup-gap > small,
+.succession-depth-shown,
+.succession-depth-research-detail > summary {
+  color: #5e5e59;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.succession-depth-setup-node > span,
+.succession-depth-research-detail > summary {
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.succession-depth-setup-node.is-payoff { border-width: 2px; }
+
+.succession-depth-setup-gap {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  text-align: center;
+}
+
+.succession-depth-setup-gap > i {
+  display: block;
+  height: 7px;
+  overflow: hidden;
+  border: 1px solid #aaa9a3;
+  background: #ecece7;
+  font-style: normal;
+}
+
+.succession-depth-setup-gap > i > b {
+  display: block;
+  width: var(--setup-gap-width, 0%);
+  height: 100%;
+  background: #343434;
+}
+
+.succession-depth-shown {
+  display: block;
+  margin: 8px 0 12px;
+}
+
+.succession-depth-research-detail {
+  margin-top: 12px;
+  border: 1px solid #aaa;
+  background: #fafaf7;
+}
+
+.succession-depth-research-detail > summary {
+  padding: 9px 11px;
+  cursor: pointer;
+}
+
 .succession-depth-body button:focus-visible,
 .succession-depth-tabs button:focus-visible,
 .succession-depth-entry button:focus-visible,
@@ -338,5 +422,6 @@
   .succession-depth-workbench *,
   .succession-depth-entry * {
     scroll-behavior: auto;
+    transition: none !important;
   }
 }
