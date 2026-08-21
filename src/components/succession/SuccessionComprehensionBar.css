@@ -1,7 +1,7 @@
 .succession-comprehension-bar {
   min-height: 48px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
@@ -16,14 +16,16 @@
 .succession-comprehension-bar *::after { box-sizing: border-box; }
 
 .succession-comprehension-bar__chapter,
-.succession-comprehension-bar__actions {
+.succession-comprehension-bar__actions,
+.succession-comprehension-bar__density {
   display: flex;
   align-items: center;
   gap: 6px;
   min-width: 0;
 }
 
-.succession-comprehension-bar__chapter > span {
+.succession-comprehension-bar__chapter > span,
+.succession-comprehension-bar__density > span {
   margin-right: 4px;
   color: #5d5d5d;
   font-size: 11px;
@@ -57,6 +59,8 @@
 .succession-comprehension-bar button:hover,
 .succession-comprehension-bar button:focus-visible { background: #e8e8e3; }
 .succession-comprehension-bar button:disabled { opacity: .42; cursor: default; }
+.succession-comprehension-bar__density button { text-transform: capitalize; }
+.succession-comprehension-bar__density button.is-active { background: #242424; color: #fff; border-color: #242424; }
 
 .succession-comprehension-bar__legend { position: relative; }
 .succession-comprehension-bar__legend summary {
@@ -103,9 +107,21 @@
 .succession-comprehension-bar__legend .is-changed { background: #ecece7; }
 .succession-comprehension-bar__legend .is-unresolved { border-radius: 999px; }
 
-/* The top status strip and page header already carry Desk / Boundary context.
-   Keep the sidebar focused on navigation and the adjustable reading boundary. */
+/* Desk and boundary live in the global context bar; keep the sidebar navigation-only. */
 .succession-archive__sidebar-context { display: none; }
+
+/* Archive-wide density is a presentation preference only; data and result counts never change. */
+.succession-archive[data-density='compact'] .succession-archive__content { gap: 12px; }
+.succession-archive[data-density='compact'] :where(.succession-search-complete__groups article, .succession-entity-grid > article, .succession-intelligence-workbench__body > section, .succession-story-comprehension__section, .succession-nen-spatial__section) { padding-block: 9px; }
+.succession-archive[data-density='compact'] :where(table th, table td) { padding: 8px; }
+.succession-archive[data-density='compact'] :where(.succession-story-comprehension__layout, .succession-nen-spatial__layout, .succession-research-memory__grid) { gap: 8px; padding: 10px; }
+
+.succession-archive[data-density='analyst'] .succession-archive__content { gap: 8px; }
+.succession-archive[data-density='analyst'] :where(.succession-search-complete__groups article, .succession-entity-grid > article, .succession-intelligence-workbench__body > section, .succession-story-comprehension__section, .succession-nen-spatial__section) { padding-block: 7px; }
+.succession-archive[data-density='analyst'] :where(table th, table td) { padding: 6px; }
+.succession-archive[data-density='analyst'] :where(.succession-story-comprehension__layout, .succession-nen-spatial__layout, .succession-research-memory__grid) { gap: 6px; padding: 8px; }
+.succession-archive[data-density='analyst'] .succession-search-complete__groups { gap: 10px; }
+.succession-archive[data-density='analyst'] .succession-entity-quick { margin-bottom: 10px; }
 
 @media (prefers-reduced-motion: reduce) {
   .succession-comprehension-bar *,
