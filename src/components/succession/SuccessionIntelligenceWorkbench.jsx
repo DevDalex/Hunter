@@ -29,6 +29,7 @@ import {
   getProtocolRecordsAtChapter,
 } from '../../data/succession/successionData';
 import { EntityLink, entityWorkspaceTarget } from './SuccessionArchivePrimitives';
+import SuccessionResearchMemoryPanel from './SuccessionResearchMemoryPanel';
 import './SuccessionIntelligenceWorkbench.css';
 
 const modes = Object.freeze([
@@ -66,7 +67,7 @@ function EntityAction({ entity, onNavigate, label = 'Open record' }) {
   return <button type="button" onClick={() => onNavigate(entityWorkspaceTarget(entity), { entity: entity.id })}>{label} <ArrowRight size={12} aria-hidden="true" /></button>;
 }
 
-function OverviewMode({ spoilerLimit, onMode }) {
+function OverviewMode({ spoilerLimit, onMode, onNavigate }) {
   const summary = getIntelligenceWorkbenchSummary(spoilerLimit);
   const cards = [
     ['diff', 'Chapter-to-chapter state comparison', 'Compare two chapter boundaries and display only additions, removals, and changed canonical states.', `${summary.chapter} current boundary`, GitCompareArrows],
@@ -76,10 +77,13 @@ function OverviewMode({ spoilerLimit, onMode }) {
     ['compare', 'Same-type record comparison', 'Compare compatible records without generating duplicate permanent dossiers.', 'Up to four records', SearchCheck],
     ['changes', 'Archive editorial change log', 'Review merged archive changes separately from the story timeline.', `${summary.editorialEntries} published entries`, FileClock],
   ];
-  return <section className="succession-intelligence-overview" aria-labelledby="phase-4-overview-title">
-    <header><span>Generated intelligence, not duplicated lore</span><h3 id="phase-4-overview-title">Six tools built on the same canonical graph.</h3><p>Every result respects the selected chapter boundary. Facts stay in their original records; this workbench reveals changes and relationships between them.</p></header>
-    <div>{cards.map(([id, title, description, meta, Icon]) => <article key={id}><Icon size={21} aria-hidden="true" /><span>{meta}</span><h4>{title}</h4><p>{description}</p><button type="button" onClick={() => onMode(id)}>Open intelligence view <ArrowRight size={13} /></button></article>)}</div>
-  </section>;
+  return <>
+    <SuccessionResearchMemoryPanel spoilerLimit={spoilerLimit} onNavigate={onNavigate} />
+    <section className="succession-intelligence-overview" aria-labelledby="phase-4-overview-title">
+      <header><span>Generated intelligence, not duplicated lore</span><h3 id="phase-4-overview-title">Six tools built on the same canonical graph.</h3><p>Every result respects the selected chapter boundary. Facts stay in their original records; this workbench reveals changes and relationships between them.</p></header>
+      <div>{cards.map(([id, title, description, meta, Icon]) => <article key={id}><Icon size={21} aria-hidden="true" /><span>{meta}</span><h4>{title}</h4><p>{description}</p><button type="button" onClick={() => onMode(id)}>Open intelligence view <ArrowRight size={13} /></button></article>)}</div>
+    </section>
+  </>;
 }
 
 function DiffMode({ routeParams, spoilerLimit, onNavigate }) {
@@ -151,7 +155,7 @@ export default function SuccessionIntelligenceWorkbench({ routeParams = {}, spoi
     <header className="succession-intelligence-workbench__hero"><div><span><ShieldQuestion size={16} aria-hidden="true" /> Phase 4 · High-value intelligence</span><h2 id="phase-4-workbench-title">Cross-examine the Succession Archive.</h2><p>Compare chapter states, map secrets, separate ritual from law, follow physical evidence, compare compatible records, and review editorial history without creating duplicate facts.</p></div><dl><div><dt>Boundary</dt><dd>Chapter {spoilerLimit}</dd></div><div><dt>Mode</dt><dd>{labelize(mode)}</dd></div><div><dt>Source rule</dt><dd>Chapter-linked</dd></div></dl></header>
     <WorkbenchTabs mode={mode} onSelect={selectMode} />
     <div className="succession-intelligence-workbench__body">
-      {mode === 'overview' && <OverviewMode spoilerLimit={spoilerLimit} onMode={selectMode} />}
+      {mode === 'overview' && <OverviewMode spoilerLimit={spoilerLimit} onMode={selectMode} onNavigate={onNavigate} />}
       {mode === 'diff' && <DiffMode routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={onNavigate} />}
       {mode === 'knowledge' && <KnowledgeMode routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={onNavigate} />}
       {mode === 'protocols' && <ProtocolMode routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={onNavigate} />}
