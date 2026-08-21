@@ -102,6 +102,10 @@
 .succession-comprehension-bar__legend .is-changed { background: #ecece7; }
 .succession-comprehension-bar__legend .is-unresolved { border-radius: 999px; }
 
+/* The top status strip and page header already carry Desk / Boundary context.
+   Keep the sidebar focused on navigation and the adjustable reading boundary. */
+.succession-archive__sidebar-context { display: none; }
+
 @media (prefers-reduced-motion: reduce) {
   .succession-comprehension-bar *,
   .succession-comprehension-bar *::before,
