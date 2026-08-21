@@ -22,6 +22,8 @@ import SpoilerControl from '../SpoilerControl';
 import SuccessionCommandHome from './SuccessionCommandHome';
 import SuccessionComprehensionBar from './SuccessionComprehensionBar';
 import SuccessionNowDashboard from './SuccessionNowDashboard';
+import SuccessionPeoplePowerComprehensionPanel from './SuccessionPeoplePowerComprehensionPanel';
+import SuccessionNenSpatialComprehensionPanel from './SuccessionNenSpatialComprehensionPanel';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveContrastFixes.css';
 import './SuccessionArchiveDeepContrastFixes.css';
@@ -146,6 +148,8 @@ export default function SuccessionArchiveShell({
   const headerActions = <button type="button" className="succession-button succession-button--search" onClick={onOpenSearch}><Search size={16} aria-hidden="true" /> Search <kbd>Ctrl K</kbd></button>;
   const onHubRoot = route.id === activeHub.target;
   const showNow = route.id === 'story';
+  const showPeoplePower = activeHub.id === 'people';
+  const showNenSpatial = ['nen', 'black-whale'].includes(activeHub.id);
 
   return <article className="succession-archive" data-archive-route={route.id} data-archive-hub={activeHub.id}>
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
@@ -241,6 +245,8 @@ export default function SuccessionArchiveShell({
             tabIndex="-1"
           >
             {showNow && <SuccessionNowDashboard chapter={spoilerLimit} onNavigate={navigate} />}
+            {showPeoplePower && <SuccessionPeoplePowerComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
+            {showNenSpatial && <SuccessionNenSpatialComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
             {showCharacterConsistency && <Suspense fallback={null}>
               <SuccessionInformationConsistencyPanel activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} />
             </Suspense>}
