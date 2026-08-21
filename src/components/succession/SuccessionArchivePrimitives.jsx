@@ -1,27 +1,23 @@
 import { useRef } from 'react';
 import { ArrowRight, BookOpen, ExternalLink, Link2 } from 'lucide-react';
-import { EvidenceBadge, StatusPill } from '../ArchiveUI';
+import { StatusPill } from '../ArchiveUI';
 import SafeImage from '../SafeImage';
 import {
   getEntityById,
   getRelatedEntities,
   getSourcesForEntity,
 } from '../../data/succession/successionData';
+import { semanticStateForCanonLevel } from '../../data/succession/comprehensionDesignSystem';
 import {
   RecordCoverageSections,
   RecordCurrencyStrip,
   useCoverageBoundary,
 } from './SuccessionCoverageCurrency';
+import SuccessionSemanticStateBadge from './SuccessionSemanticStateBadge';
 
 const cx = (...parts) => parts.filter(Boolean).join(' ');
 const initials = (name = '') => name.split(/\s+/).filter(Boolean).map((part) => part[0]).slice(0, 2).join('').toUpperCase() || '?';
 const safeId = (value = '') => String(value).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-const evidenceState = (level) => {
-  if (level === 'inference') return 'inferred';
-  if (level === 'theory') return 'unclear';
-  return 'confirmed';
-};
 
 export const entityWorkspaceTarget = (entity) => {
   if (!entity) return 'archive';
@@ -122,7 +118,7 @@ export function EntityHeader({ entity, onNavigate, readingBoundary }) {
         <h2>{entity.name || entity.id}</h2>
         {entity.summary && <p>{entity.summary}</p>}
         <div className="succession-entity-header__badges">
-          <EvidenceBadge state={evidenceState(entity.canonLevel)}>{entity.canonLevel || 'canon'}</EvidenceBadge>
+          <SuccessionSemanticStateBadge state={semanticStateForCanonLevel(entity.canonLevel)}>{entity.canonLevel || 'canon'}</SuccessionSemanticStateBadge>
           {entity.status?.life && <StatusPill tone="neutral">{entity.status.life}</StatusPill>}
           {chapterBoundary && <StatusPill tone="neutral">Graph snapshot Ch. {chapterBoundary}</StatusPill>}
           <StatusPill tone="neutral">{sources.length} source{sources.length === 1 ? '' : 's'}</StatusPill>
