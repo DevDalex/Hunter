@@ -74,6 +74,9 @@ try {
   assert(systems.includes('does not infer territorial control'), 'Black Whale access layer lacks its anti-inference boundary');
   assert(systems.includes('Showing {locationLayers.length} of {infrastructure.records.length} location layers'), 'Black Whale location-layer subset is not disclosed');
   assert(systems.includes('Movement list shows') && systems.includes('Hotspot list shows'), 'spatial top-N subsets are not disclosed');
+  for (const layer of ['Movement', 'Hotspots', 'Occupancy', 'Events', 'Assignments', 'Access', 'Protocols']) assert(systems.includes(`'${layer.toLowerCase() === 'occupancy' ? 'occupants' : layer.toLowerCase()}', '${layer}'`), `Black Whale evidence layer toggle is missing ${layer}`);
+  assert(systems.includes("aria-label=\"Black Whale evidence layers\"") && systems.includes('aria-pressed={enabled(id)}'), 'Black Whale layer controls are not exposed as accessible toggles');
+  assert(systems.includes('--hotspot-width') && systems.includes('maxHotspotLoad'), 'hotspot operational load is not visually encoded proportionally');
 
   for (const css of [peopleCss, informationCss, systemsCss, infrastructureCss]) {
     assert(!/@media\s*\([^)]*max-width:/i.test(css), 'comprehension systems must not introduce mobile/tablet breakpoints');
@@ -83,6 +86,7 @@ try {
   }
   assert(peopleCss.includes('position: sticky'), 'people comparison matrices do not preserve sticky scan anchors');
   assert(systemsCss.includes('grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);'), 'Nen mechanics flow does not render as a four-stage chain');
+  assert(systemsCss.includes('.succession-nen-spatial__layer-controls') && systemsCss.includes('.succession-nen-spatial__hotspots'), 'Black Whale layer-control or hotspot styling is missing');
 
   console.log(`Succession systems comprehension audit passed: ${princes.length} princes, ${knowledge.length} knowledge records, ${deception.length} deception routes, ${leverage.rows.length} leverage dossiers, ${transfers.length} transfer records, ${interactions.interactions.length} ability contexts, ${infrastructure.records.length} infrastructure locations, and ${spatial.hotspots.length} spatial hotspots are wired.`);
 } finally {
