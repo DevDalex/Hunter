@@ -1,0 +1,32 @@
+.succession-semantic-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 27px;
+  padding: 4px 7px;
+  border: 1px solid currentColor;
+  background: var(--succession-surface-paper-raised, #fff);
+  color: var(--succession-text-on-paper, #1b1b1b);
+  font-size: 11px;
+  font-weight: 820;
+  line-height: 1.2;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
+
+.succession-semantic-state.is-compact {
+  min-height: 23px;
+  padding: 3px 6px;
+}
+
+.succession-semantic-state.is-canon { border-style: solid; }
+.succession-semantic-state.is-inference { border-style: dashed; }
+.succession-semantic-state.is-theory { border-style: dotted; }
+.succession-semantic-state.is-editorial { border-top-width: 3px; }
+.succession-semantic-state.is-translation { border-left-width: 4px; }
+.succession-semantic-state.is-changed { background: var(--succession-surface-2, #ecece7); }
+.succession-semantic-state.is-unresolved { border-radius: 999px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-semantic-state { transition: none !important; }
+}
