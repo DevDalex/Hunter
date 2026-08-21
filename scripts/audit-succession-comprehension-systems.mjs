@@ -57,7 +57,7 @@ try {
   assert(infrastructure.records.every((record) => record.state && 'accessLevel' in record.state && 'zoneRole' in record.state && Array.isArray(record.protocolIds)), 'infrastructure rows lost access / zone / protocol fields');
   assert(Array.isArray(spatial.hotspots) && spatial.hotspots.length > 0, 'spatial hotspots are unavailable');
 
-  const [shell, people, peopleCss, informationCss, householdsUi, householdsCss, operationsUi, operationsCss, systems, systemsCss, infrastructureCss] = await Promise.all([
+  const [shell, people, peopleCss, informationCss, householdsUi, householdsCss, operationsUi, operationsCss, systems, systemsCss, infrastructureCss, overlaysUi, overlaysCss] = await Promise.all([
     readFile(path.join(root, 'src/components/succession/SuccessionArchiveShell.jsx'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionPeoplePowerComprehensionPanel.jsx'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionPeoplePowerComprehensionPanel.css'), 'utf8'),
@@ -69,6 +69,8 @@ try {
     readFile(path.join(root, 'src/components/succession/SuccessionNenSpatialComprehensionPanel.jsx'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionNenSpatialComprehensionPanel.css'), 'utf8'),
     readFile(path.join(root, 'src/components/succession/SuccessionSpatialInfrastructureComprehension.css'), 'utf8'),
+    readFile(path.join(root, 'src/components/succession/SuccessionBlackWhaleInstitutionalOverlays.jsx'), 'utf8'),
+    readFile(path.join(root, 'src/components/succession/SuccessionBlackWhaleInstitutionalOverlays.css'), 'utf8'),
   ]);
 
   assert(shell.includes("const showPeoplePower = activeHub.id === 'people';"), 'People & Power comprehension is not hub-mounted');
@@ -106,8 +108,15 @@ try {
   for (const layer of ['Movement', 'Hotspots', 'Occupancy', 'Events', 'Assignments', 'Access', 'Protocols']) assert(systems.includes(`'${layer.toLowerCase() === 'occupancy' ? 'occupants' : layer.toLowerCase()}', '${layer}'`), `Black Whale evidence layer toggle is missing ${layer}`);
   assert(systems.includes("aria-label=\"Black Whale evidence layers\"") && systems.includes('aria-pressed={enabled(id)}'), 'Black Whale layer controls are not exposed as accessible toggles');
   assert(systems.includes('--hotspot-width') && systems.includes('maxHotspotLoad'), 'hotspot operational load is not visually encoded proportionally');
+  assert(systems.includes('SuccessionBlackWhaleInstitutionalOverlays') && systems.includes('<SuccessionBlackWhaleInstitutionalOverlays records={infrastructure.records || []} />'), 'Black Whale institutional overlays are not mounted in the spatial comprehension layer');
 
-  for (const css of [peopleCss, informationCss, householdsCss, operationsCss, systemsCss, infrastructureCss]) {
+  for (const token of ['Military', 'Justice', 'Mafia', 'Nen', 'Routes', 'Incidents']) assert(overlaysUi.includes(`'${token.toLocaleLowerCase()}', '${token}'`), `Black Whale institutional overlay is missing ${token}`);
+  for (const id of ['organization:kakin-military', 'organization:benjamin-private-army', 'organization:kakin-justice-bureau', 'organization:xi-yu', 'organization:cha-r', 'organization:heil-ly']) assert(overlaysUi.includes(id), `Black Whale institutional overlay lost explicit organization ID ${id}`);
+  assert(overlaysUi.includes('event.organizationIds') && overlaysUi.includes('assignment.allegianceEntityId') && overlaysUi.includes('assignment.reportingEntityId'), 'institutional overlays are not derived from explicit linked organization fields');
+  assert(overlaysUi.includes('Array.isArray(event.abilityIds)') && overlaysUi.includes("record.system === 'transport-and-access'") && overlaysUi.includes('(record.state?.events || []).length > 0'), 'Nen/routes/incidents overlays are not derived from maintained event/infrastructure signals');
+  assert(overlaysUi.includes('does not mean ownership, command, jurisdiction or exclusive control'), 'institutional overlays lack the no-control-inference boundary');
+
+  for (const css of [peopleCss, informationCss, householdsCss, operationsCss, systemsCss, infrastructureCss, overlaysCss]) {
     assert(!/@media\s*\([^)]*max-width:/i.test(css), 'comprehension systems must not introduce mobile/tablet breakpoints');
     assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'comprehension systems must preserve reduced-motion handling');
     const fontSizes = [...css.matchAll(/font-size:\s*(\d+)px/g)].map((match) => Number(match[1]));
@@ -118,8 +127,9 @@ try {
   assert(operationsCss.includes('grid-template-columns: minmax(0, 1fr) auto minmax(105px, .75fr) auto minmax(0, 1fr);'), 'operations/conflicts route grammar is incomplete');
   assert(systemsCss.includes('grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);'), 'Nen mechanics flow does not render as a four-stage chain');
   assert(systemsCss.includes('.succession-nen-spatial__layer-controls') && systemsCss.includes('.succession-nen-spatial__hotspots'), 'Black Whale layer-control or hotspot styling is missing');
+  assert(overlaysCss.includes('.succession-black-whale-overlays__rows') && overlaysCss.includes('grid-template-columns: repeat(3, minmax(0, 1fr));'), 'institutional overlay scan layout is incomplete');
 
-  console.log(`Succession systems comprehension audit passed: ${princes.length} princes, ${households.length} household chains, ${threats.length} threat routes, ${operationsLedger.assignmentIds.length} operational assignments, ${alliances.length} alliance/hostile edges, ${knowledge.length} knowledge records, ${deception.length} deception routes, ${leverage.rows.length} leverage dossiers, ${transfers.length} transfer records, ${interactions.interactions.length} ability contexts, ${infrastructure.records.length} infrastructure locations, and ${spatial.hotspots.length} spatial hotspots are wired.`);
+  console.log(`Succession systems comprehension audit passed: ${princes.length} princes, ${households.length} household chains, ${threats.length} threat routes, ${operationsLedger.assignmentIds.length} operational assignments, ${alliances.length} alliance/hostile edges, six explicit Black Whale institutional/operational overlays, ${knowledge.length} knowledge records, ${deception.length} deception routes, ${leverage.rows.length} leverage dossiers, ${transfers.length} transfer records, ${interactions.interactions.length} ability contexts, ${infrastructure.records.length} infrastructure locations, and ${spatial.hotspots.length} spatial hotspots are wired.`);
 } finally {
   await vite.close();
 }
