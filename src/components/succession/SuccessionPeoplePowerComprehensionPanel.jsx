@@ -11,6 +11,7 @@ import {
 } from '../../data/succession/successionData';
 import { getExplicitLeverageViews } from '../../data/succession/contentDepthFinishingSelectors';
 import { entityWorkspaceTarget } from './SuccessionArchivePrimitives';
+import SuccessionRoyalHouseholdChains from './SuccessionRoyalHouseholdChains';
 import './SuccessionPeoplePowerComprehensionPanel.css';
 import './SuccessionInformationWarComprehension.css';
 
@@ -127,6 +128,7 @@ export default function SuccessionPeoplePowerComprehensionPanel({ chapter = 417,
     <header className="succession-people-power__hero"><span><Users size={15} aria-hidden="true" /> People & Power comprehension</span><h2 id="succession-people-power-title">Compare people, knowledge, leverage and exceptional states before opening the full dossiers</h2><p>The visual layer reads from the same canonical people, relationship, knowledge and chapter-state graph used by the detailed workspaces.</p></header>
     <div className="succession-people-power__layout">
       <PrinceCompare chapter={chapter} onNavigate={onNavigate} />
+      <SuccessionRoyalHouseholdChains chapter={chapter} onNavigate={onNavigate} />
       <KnowledgeMatrix chapter={chapter} />
       <InformationWarDepth chapter={chapter} onNavigate={onNavigate} />
       <LeverageBoard chapter={chapter} onNavigate={onNavigate} />
