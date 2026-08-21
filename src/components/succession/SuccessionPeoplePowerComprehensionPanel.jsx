@@ -2,14 +2,17 @@ import { useMemo, useState } from 'react';
 import { ArrowRight, BrainCircuit, Crown, HeartPulse, Scale, Users } from 'lucide-react';
 import {
   getBodyIdentityConsciousnessExplorer,
+  getDeceptionLedger,
   getEntitiesByType,
   getEntityById,
   getKnowledgeWarfareMatrix,
   getPrinceCampaignBoard,
+  getReaderVsInUniverseKnowledge,
 } from '../../data/succession/successionData';
 import { getExplicitLeverageViews } from '../../data/succession/contentDepthFinishingSelectors';
 import { entityWorkspaceTarget } from './SuccessionArchivePrimitives';
 import './SuccessionPeoplePowerComprehensionPanel.css';
+import './SuccessionInformationWarComprehension.css';
 
 const labelize = (value) => String(value || 'unknown').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 const compactName = (name) => String(name || '').replace(/ Hui Guo Rou$/i, '');
@@ -67,6 +70,30 @@ function KnowledgeMatrix({ chapter }) {
   </section>;
 }
 
+function InformationWarDepth({ chapter, onNavigate }) {
+  const knowledge = getReaderVsInUniverseKnowledge(chapter);
+  const deception = getDeceptionLedger(chapter);
+  const disclosure = knowledge.filter((record) => record.hiddenFromOrMisinformed.length || !/public|announc/i.test(`${record.inUniverseState} ${record.secrecy}`)).slice(0, 10);
+  const publicCount = knowledge.filter((record) => /public|announc/i.test(`${record.inUniverseState} ${record.secrecy}`)).length;
+  const obscuredCount = knowledge.filter((record) => record.hiddenFromOrMisinformed.length > 0).length;
+  const shownDeception = deception.slice(0, 10);
+
+  return <section className="succession-people-power__section succession-people-power__information-war">
+    <header><span><BrainCircuit size={14} aria-hidden="true" /> Disclosure & deception</span><h3>Reader visibility is not the same as in-world knowledge</h3><p>The reader can inspect every maintained claim through the selected boundary. In-world state, secrecy, explicit knowers, hidden or misinformed parties, and deception relationships stay separate.</p></header>
+    <div className="succession-information-war__summary">
+      <div><span>Reader-visible claims</span><b>{knowledge.length}</b><small>through Ch. {chapter}</small></div>
+      <div><span>Public / announced</span><b>{publicCount}</b><small>maintained state labels</small></div>
+      <div><span>Hidden / misinformed</span><b>{obscuredCount}</b><small>claims naming affected parties</small></div>
+      <div><span>Deception routes</span><b>{deception.length}</b><small>explicit relationship signals</small></div>
+    </div>
+    <div className="succession-information-war__columns">
+      <section><header><span>Disclosure ledger</span><h4>What the reader sees versus what the world knows</h4></header><ol className="succession-information-war__disclosure">{disclosure.map((record) => <li key={record.id}><div><b>{record.name}</b><span className="succession-information-war__state">{labelize(record.inUniverseState)}</span><span className="succession-information-war__state">{labelize(record.secrecy)}</span></div><small>Known by: {record.knownBy.join(' · ') || 'No published knower labels'}</small><small>Hidden / misinformed: {record.hiddenFromOrMisinformed.join(' · ') || 'None published'}</small></li>)}</ol>{knowledge.length > disclosure.length && <p className="succession-information-war__note">Showing {disclosure.length} disclosure-sensitive claims from {knowledge.length} reader-visible knowledge records.</p>}</section>
+      <section><header><span>Deception routes</span><h4>Maintained concealment or misinformation relationships</h4></header><ol className="succession-information-war__deception">{shownDeception.map((record) => <li key={record.id}><div className="succession-information-war__route"><EntityButton id={record.source?.id} onNavigate={onNavigate} /><i aria-hidden="true">→</i><EntityButton id={record.target?.id} onNavigate={onNavigate} /></div><b>{labelize(record.subtype)}</b><small>{record.basis || 'Maintained relationship record; no additional motive is inferred.'}</small></li>)}</ol>{!shownDeception.length && <p className="succession-information-war__note">No maintained deception relationship is active at this boundary.</p>}{deception.length > shownDeception.length && <p className="succession-information-war__note">Showing {shownDeception.length} of {deception.length} maintained deception routes.</p>}</section>
+    </div>
+    <p className="succession-information-war__note">This view does not infer private intent, assign truth scores, or convert absence from the knower list into proof that a character is ignorant.</p>
+  </section>;
+}
+
 function LeverageBoard({ chapter, onNavigate }) {
   const leverage = getExplicitLeverageViews(chapter);
   const rows = [...(leverage.rows || [])]
@@ -101,6 +128,7 @@ export default function SuccessionPeoplePowerComprehensionPanel({ chapter = 417,
     <div className="succession-people-power__layout">
       <PrinceCompare chapter={chapter} onNavigate={onNavigate} />
       <KnowledgeMatrix chapter={chapter} />
+      <InformationWarDepth chapter={chapter} onNavigate={onNavigate} />
       <LeverageBoard chapter={chapter} onNavigate={onNavigate} />
       <BodyIdentity chapter={chapter} onNavigate={onNavigate} />
     </div>
