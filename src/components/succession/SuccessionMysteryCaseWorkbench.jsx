@@ -8,6 +8,7 @@ import {
 import SuccessionAnalyticalFinishingPanel from './SuccessionAnalyticalFinishingPanel';
 import SuccessionContentDepthWorkbench from './SuccessionContentDepthWorkbench';
 import SuccessionEvidenceTranslationWorkbench from './SuccessionEvidenceTranslationWorkbench';
+import SuccessionMysteryComprehensionPanel from './SuccessionMysteryComprehensionPanel';
 import './SuccessionIntelligenceWorkbench.css';
 
 const labelize = (value) => String(value || 'unknown').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
@@ -80,24 +81,27 @@ export default function SuccessionMysteryCaseWorkbench({ routeParams = {}, spoil
     </section>
   </>;
 
-  return <section className="succession-intelligence-workbench">
-    <div className="succession-intelligence-workbench__hero">
-      <div><span><ShieldQuestion size={14} aria-hidden="true" /> Mystery intelligence</span><h2>Case files through Chapter {spoilerLimit}.</h2><p>Known facts remain separate from candidate explanations. Every case exposes what would need to be learned before it can actually be resolved.</p></div>
-      <dl><div><dt>Visible cases</dt><dd>{records.length}</dd></div><div><dt>Open</dt><dd>{summary.open}</dd></div><div><dt>Boundary</dt><dd>Ch. {spoilerLimit}</dd></div></dl>
-    </div>
-    <div className="succession-intelligence-tabs"><button type="button" className="is-active" aria-current="page" onClick={() => onNavigate('research', { mode: 'cases' })}><ShieldQuestion size={15} aria-hidden="true" /><span>Cases</span></button><button type="button" onClick={() => onNavigate('research', { mode: 'overview' })}><ArrowLeft size={15} aria-hidden="true" /><span>Intelligence overview</span></button></div>
-    <div className="succession-intelligence-workbench__body">
-      {selected ? <CaseDetail record={selected} onNavigate={onNavigate} /> : <section className="succession-intelligence-knowledge">
-        <header><span>Open questions · competing explanations · evidence boundaries</span><h3>What is actually unresolved?</h3><p>Search by character, mechanic, institution, threat, or mystery. Candidate explanations are explicitly marked as hypotheses, not facts.</p></header>
-        <label className="succession-intelligence-controls"><span className="sr-only">Filter mystery cases</span><Search size={15} aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Filter case files…" /></label>
-        <div>{records.map((record) => <article key={record.id}>
-          <header><ShieldQuestion size={16} aria-hidden="true" /><span>{labelize(record.category)}</span><b>{labelize(record.status)}</b></header>
-          <h4>{record.title}</h4>
-          <p>{record.question}</p>
-          <dl><div><dt>Known</dt><dd>{record.knownFacts.length}</dd></div><div><dt>Unknown</dt><dd>{record.unknowns.length}</dd></div><div><dt>Candidates</dt><dd>{record.candidates.length}</dd></div></dl>
-          <button type="button" onClick={() => onNavigate('research', { mode: 'cases', case: record.id })}>Open case <ArrowRight size={13} aria-hidden="true" /></button>
-        </article>)}</div>
-      </section>}
-    </div>
-  </section>;
+  return <>
+    {!selected && <SuccessionMysteryComprehensionPanel chapter={spoilerLimit} onNavigate={onNavigate} />}
+    <section className="succession-intelligence-workbench">
+      <div className="succession-intelligence-workbench__hero">
+        <div><span><ShieldQuestion size={14} aria-hidden="true" /> Mystery intelligence</span><h2>Case files through Chapter {spoilerLimit}.</h2><p>Known facts remain separate from candidate explanations. Every case exposes what would need to be learned before it can actually be resolved.</p></div>
+        <dl><div><dt>Visible cases</dt><dd>{records.length}</dd></div><div><dt>Open</dt><dd>{summary.open}</dd></div><div><dt>Boundary</dt><dd>Ch. {spoilerLimit}</dd></div></dl>
+      </div>
+      <div className="succession-intelligence-tabs"><button type="button" className="is-active" aria-current="page" onClick={() => onNavigate('research', { mode: 'cases' })}><ShieldQuestion size={15} aria-hidden="true" /><span>Cases</span></button><button type="button" onClick={() => onNavigate('research', { mode: 'overview' })}><ArrowLeft size={15} aria-hidden="true" /><span>Intelligence overview</span></button></div>
+      <div className="succession-intelligence-workbench__body">
+        {selected ? <CaseDetail record={selected} onNavigate={onNavigate} /> : <section className="succession-intelligence-knowledge">
+          <header><span>Open questions · competing explanations · evidence boundaries</span><h3>What is actually unresolved?</h3><p>Search by character, mechanic, institution, threat, or mystery. Candidate explanations are explicitly marked as hypotheses, not facts.</p></header>
+          <label className="succession-intelligence-controls"><span className="sr-only">Filter mystery cases</span><Search size={15} aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Filter case files…" /></label>
+          <div>{records.map((record) => <article key={record.id}>
+            <header><ShieldQuestion size={16} aria-hidden="true" /><span>{labelize(record.category)}</span><b>{labelize(record.status)}</b></header>
+            <h4>{record.title}</h4>
+            <p>{record.question}</p>
+            <dl><div><dt>Known</dt><dd>{record.knownFacts.length}</dd></div><div><dt>Unknown</dt><dd>{record.unknowns.length}</dd></div><div><dt>Candidates</dt><dd>{record.candidates.length}</dd></div></dl>
+            <button type="button" onClick={() => onNavigate('research', { mode: 'cases', case: record.id })}>Open case <ArrowRight size={13} aria-hidden="true" /></button>
+          </article>)}</div>
+        </section>}
+      </div>
+    </section>
+  </>;
 }
