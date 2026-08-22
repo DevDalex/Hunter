@@ -38,14 +38,14 @@ try {
   assert(store.includes('routeViews') && store.includes('firstSeenAt') && store.includes('lastSeenAt'), 'analytics store lacks approved aggregate fields');
   assert(panel.includes('Search text, entity IDs, notes, Reader pages') && panel.includes('never recorded here or sent to a server'), 'privacy boundary is not disclosed in the dashboard');
   assert(panel.includes('Pause counters') && panel.includes('Resume counters') && panel.includes('Reset local analytics'), 'analytics user controls are incomplete');
-  assert(shell.includes('recordSuccessionLocalRouteView(route.id)') && shell.includes('showLocalAnalytics && <SuccessionLocalAnalyticsPanel />'), 'analytics is not instrumented/mounted through the archive shell');
-  assert(shell.includes("route.id === 'research' && (!routeParams?.mode || routeParams.mode === 'overview')"), 'analytics dashboard is not constrained to the Research overview');
+  assert(shell.includes('recordSuccessionLocalRouteView(route.id)') && shell.includes('showResearchOverviewMeta && <SuccessionLocalAnalyticsPanel />'), 'analytics is not instrumented/mounted through the archive shell');
+  assert(shell.includes("const showResearchOverviewMeta = route.id === 'research' && (!routeParams?.mode || routeParams.mode === 'overview');"), 'analytics dashboard is not constrained to the Research overview');
   assert(!/@media\s*\([^)]*max-width:/i.test(css), 'analytics panel introduced a mobile/tablet breakpoint');
   assert(css.includes('@media (prefers-reduced-motion: reduce)'), 'analytics panel lacks reduced-motion handling');
   const sizes = [...css.matchAll(/font-size:\s*(\d+)px/g)].map((match) => Number(match[1]));
   assert(sizes.every((size) => size >= 11), `analytics panel introduced text below 11px: ${sizes.filter((size) => size < 11).join(', ')}`);
 
-  console.log('Succession local analytics audit passed: aggregate route-only storage, no network transport, pause/resume/reset controls, and Research dashboard mount are enforced.');
+  console.log('Succession local analytics audit passed: aggregate route-only storage, no network transport, pause/resume/reset controls, and shared Research-overview dashboard mount are enforced.');
 } finally {
   await vite.close();
 }
