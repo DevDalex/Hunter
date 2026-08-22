@@ -2,9 +2,11 @@ import { useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, BookOpen, Library, Search } from 'lucide-react';
 import { EvidenceBadge, StatusPill } from '../ArchiveUI';
 import {
+  getEntityById,
   getGlossaryEntriesAtChapter,
   getGlossaryEntryAtChapter,
 } from '../../data/succession/successionData';
+import { DEEP_GLOSSARY_ENTRIES } from '../../data/succession/contentDepthExpansionReference';
 import {
   ArchiveState,
   EntityLink,
@@ -23,6 +25,20 @@ const normalize = (value) => String(value || '')
   .trim();
 
 const evidenceState = (certainty) => certainty === 'inference' ? 'inferred' : certainty === 'theory' ? 'unclear' : 'confirmed';
+
+const supplementalGlossaryAtChapter = (chapter) => DEEP_GLOSSARY_ENTRIES
+  .filter((entry) => entry.firstChapter <= Number(chapter))
+  .map((entry) => Object.freeze({
+    ...entry,
+    relatedRecords: Object.freeze((entry.relatedEntityIds || []).map((id) => getEntityById(id)).filter(Boolean).map((entity) => Object.freeze({ id: entity.id, entity }))),
+    sources: Object.freeze((entry.sourceIds || []).map((id) => getEntityById(id)).filter(Boolean)),
+  }));
+
+const mergeGlossary = (base, supplemental) => {
+  const seen = new Set(base.map((entry) => normalize(entry.term)));
+  return [...base, ...supplemental.filter((entry) => !seen.has(normalize(entry.term)))]
+    .sort((left, right) => left.term.localeCompare(right.term));
+};
 
 function GlossaryDossier({ entry, entries, onNavigate }) {
   const index = entries.findIndex((record) => record.id === entry.id);
@@ -51,8 +67,14 @@ function GlossaryDossier({ entry, entries, onNavigate }) {
 }
 
 export default function SuccessionArchiveGlossaryWorkspace({ routeParams = {}, spoilerLimit, onNavigate }) {
-  const entries = useMemo(() => getGlossaryEntriesAtChapter(spoilerLimit), [spoilerLimit]);
-  const selected = routeParams.term ? getGlossaryEntryAtChapter(routeParams.term, spoilerLimit) : null;
+  const entries = useMemo(() => mergeGlossary(getGlossaryEntriesAtChapter(spoilerLimit), supplementalGlossaryAtChapter(spoilerLimit)), [spoilerLimit]);
+  const canonicalSelected = routeParams.term ? getGlossaryEntryAtChapter(routeParams.term, spoilerLimit) : null;
+  const selected = useMemo(() => {
+    if (!routeParams.term) return null;
+    if (canonicalSelected) return canonicalSelected;
+    const target = normalize(routeParams.term);
+    return entries.find((entry) => entry.id === routeParams.term || normalize(entry.term) === target) || null;
+  }, [canonicalSelected, entries, routeParams.term]);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
   const categories = useMemo(() => [...new Set(entries.map((entry) => entry.category))].sort(), [entries]);
@@ -68,7 +90,7 @@ export default function SuccessionArchiveGlossaryWorkspace({ routeParams = {}, s
 
   return <div className="succession-product-workspace succession-glossary-canonical">
     <header className="succession-product-hero">
-      <div><span><Library size={16} aria-hidden="true" /> Canonical vocabulary</span><h2>Glossary terms connected to the archive graph</h2><p>Definitions, synonyms, certainty, first-known chapters, related records, and evidence all obey the selected reading boundary.</p></div>
+      <div><span><Library size={16} aria-hidden="true" /> Canonical vocabulary</span><h2>Glossary terms connected to the archive graph</h2><p>Definitions, synonyms, certainty, first-known chapters, related records, and evidence all obey the selected reading boundary. Deep reference terms supplement the canonical product glossary without replacing richer existing entries.</p></div>
       <dl><div><dt>Available terms</dt><dd>{entries.length}</dd></div><div><dt>Categories</dt><dd>{categories.length}</dd></div><div><dt>Visible</dt><dd>{visible.length}</dd></div></dl>
     </header>
 
