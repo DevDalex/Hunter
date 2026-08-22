@@ -1,4 +1,4 @@
-import * as base from './successionDossierThrough400.js';
+import * as base from './successionDossierBoundary400.js';
 import {
   succession401ChapterResearch,
   succession401Mysteries,
@@ -7,7 +7,7 @@ import {
   succession401SourcePolicy,
 } from './succession401Research.js';
 
-export * from './successionDossierThrough400.js';
+export * from './successionDossierBoundary400.js';
 
 const freeze = (value) => Object.freeze(value);
 const source401 = 'https://hunterxhunter.fandom.com/wiki/Chapter_401';
