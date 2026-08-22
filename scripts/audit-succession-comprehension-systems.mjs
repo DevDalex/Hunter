@@ -123,7 +123,7 @@ try {
     assert(fontSizes.every((size) => size >= 11), `comprehension systems introduced text below the 11px floor: ${fontSizes.filter((size) => size < 11).join(', ')}`);
   }
   assert(peopleCss.includes('position: sticky'), 'people comparison matrices do not preserve sticky scan anchors');
-  assert(householdsCss.includes('grid-template-columns: minmax(0, .9fr)') && householdsCss.includes('border-style: dashed') && householdsCss.includes('border-style: dotted'), 'household chain actor/role/reporting visual grammar is incomplete');
+  assert(householdsCss.includes('grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1.08fr) 18px minmax(0, 1fr);') && householdsCss.includes('border-style: dashed') && householdsCss.includes('border-style: dotted'), 'household chain actor/role/reporting visual grammar is incomplete');
   assert(operationsCss.includes('grid-template-columns: minmax(0, 1fr) auto minmax(105px, .75fr) auto minmax(0, 1fr);'), 'operations/conflicts route grammar is incomplete');
   assert(systemsCss.includes('grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);'), 'Nen mechanics flow does not render as a four-stage chain');
   assert(systemsCss.includes('.succession-nen-spatial__layer-controls') && systemsCss.includes('.succession-nen-spatial__hotspots'), 'Black Whale layer-control or hotspot styling is missing');
