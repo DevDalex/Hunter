@@ -9,6 +9,7 @@ import {
 } from './successionData.js';
 import { successionContentExpansion } from './contentDepthExpansion.js';
 import { createContentCompletionSelectors } from './contentCompletionSelectors.js';
+import { getResolvedLedgerCompletion } from './contentCompletionLedgerFix.js';
 import {
   getNenCompletion,
   getGlossaryCompletion,
@@ -37,11 +38,11 @@ export const {
   getKnowledgeCompletion,
   getMysteryCompletion,
   getCrossLinkCompletion,
-  getLedgerCompletion,
   getOrientationCompletion,
   getEvidenceCompletion,
   getAppendixCompletion,
 } = successionContentCompletion;
 
+export const getLedgerCompletion = (chapter) => getResolvedLedgerCompletion(chapter);
 export { getNenCompletion, getGlossaryCompletion, getCrossLinkCoverage };
 export const getCompletionReport = (chapter) => extendCompletionReport(successionContentCompletion.getCompletionReport(chapter), chapter);
