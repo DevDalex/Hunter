@@ -92,7 +92,7 @@
 .succession-now__metric > small {
   overflow: hidden;
   color: #646464;
-  font-size: 10px;
+  font-size: 11px;
   line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -169,7 +169,7 @@
   padding: 4px 6px;
   border: 1px solid #8d8d88;
   background: #f4f4f0;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 850;
   letter-spacing: .05em;
   text-transform: uppercase;
@@ -182,10 +182,10 @@
 .succession-now__hotspots strong { display: block; font-size: 12px; }
 .succession-now__ledger small,
 .succession-now__factions small,
-.succession-now__hotspots small { color: #676767; font-size: 10px; }
+.succession-now__hotspots small { color: #676767; font-size: 11px; }
 .succession-now__factions li > small,
 .succession-now__hotspots li > span { text-align: right; }
-.succession-now__hotspots li > span { color: #4e4e4e; font-size: 10px; }
+.succession-now__hotspots li > span { color: #4e4e4e; font-size: 11px; }
 
 .succession-now__threads li {
   padding: 10px 13px;
@@ -203,7 +203,7 @@
   border-top: 1px solid #e0e0dc;
   color: #646464;
   background: #fafaf8;
-  font-size: 10px;
+  font-size: 11px;
 }
 
 .succession-now__empty { line-height: 1.45; }
