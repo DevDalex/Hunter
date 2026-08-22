@@ -9,6 +9,12 @@ import {
 } from './successionData.js';
 import { successionContentExpansion } from './contentDepthExpansion.js';
 import { createContentCompletionSelectors } from './contentCompletionSelectors.js';
+import {
+  getNenCompletion,
+  getGlossaryCompletion,
+  getCrossLinkCoverage,
+  extendCompletionReport,
+} from './contentCompletionSupplement.js';
 
 export const successionContentCompletion = createContentCompletionSelectors({
   data: successionArchiveData,
@@ -35,5 +41,7 @@ export const {
   getOrientationCompletion,
   getEvidenceCompletion,
   getAppendixCompletion,
-  getCompletionReport,
 } = successionContentCompletion;
+
+export { getNenCompletion, getGlossaryCompletion, getCrossLinkCoverage };
+export const getCompletionReport = (chapter) => extendCompletionReport(successionContentCompletion.getCompletionReport(chapter), chapter);
