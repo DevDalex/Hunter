@@ -9,6 +9,7 @@ const tasks = Object.freeze([
   ['Architecture decisions', ['scripts/audit-succession-adrs.mjs']],
   ['Historical CSS boundary', ['scripts/audit-succession-css-consolidation.mjs']],
   ['Chapter 400 chunk boundary', ['scripts/audit-succession-chapter400-chunk-boundary.mjs']],
+  ['Chapter 403 chunk boundary', ['scripts/audit-succession-chapter403-chunk-boundary.mjs']],
   ['Media derivative manifest/files', ['scripts/generate-media-derivatives.mjs', '--verify-only']],
   ['Media derivative integration', ['scripts/audit-media-derivatives.mjs']],
 ]);
