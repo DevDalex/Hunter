@@ -64,8 +64,11 @@ for (const token of [
   'IntersectionObserver',
   'decoding="async"',
   "priority || (eager ? 'high' : 'auto')",
-  'width={media?.width || undefined}',
-  'height={media?.height || undefined}',
+  'srcSet={responsiveMedia?.srcSet || props.srcSet}',
+  'sizes={responsiveMedia?.sizes || props.sizes}',
+  'width={media?.width || responsiveMedia?.width || undefined}',
+  'height={media?.height || responsiveMedia?.height || undefined}',
+  "data-media-responsive={responsiveMedia ? 'true' : 'false'}",
   'safe-image-placeholder',
 ]) assert(safeImage.includes(token), `SafeImage stability contract is missing ${token}`);
 
@@ -146,4 +149,4 @@ for (const heading of ['Data and evidence boundaries', 'Media constraints', 'Com
   assert(debtDocs.includes(heading), `non-critical debt record is missing ${heading}`);
 }
 
-console.log('Succession Batch 5 final audit passed: desktop-only interaction states, keyboard tabs, route focus, live announcements, reduced motion, forced colors, containment, image stability, legacy cleanup, canonical release routes, performance, staged desktop cross-browser QA, final audit, and debt documentation are registered.');
+console.log('Succession Batch 5 final audit passed: desktop-only interaction states, keyboard tabs, route focus, live announcements, reduced motion, forced colors, containment, responsive image stability, legacy cleanup, canonical release routes, performance, staged desktop cross-browser QA, final audit, and debt documentation are registered.');
