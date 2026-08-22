@@ -1,4 +1,5 @@
 import NenSystemExpansionMap from './NenSystemExpansionMap';
+import SuccessionContextualCompletion from './succession/SuccessionContextualCompletion';
 import { nenRecords } from '../data/nenEncyclopedia';
 import { nenDeepRecords } from '../data/nenDeepReference';
 import { priorityPortraitByName } from '../data/priorityMedia.generated';
@@ -16,7 +17,10 @@ const portraitItemFor = (name) => {
 };
 
 export default function NenEncyclopedia({ spoilerLimit = Number.MAX_SAFE_INTEGER }) {
-  return <section className="nen-map-only" id="nen">
-    <NenSystemExpansionMap records={expandedNenRecords} spoilerLimit={spoilerLimit} portraitItemFor={portraitItemFor} />
-  </section>;
+  return <>
+    <section className="nen-map-only" id="nen">
+      <NenSystemExpansionMap records={expandedNenRecords} spoilerLimit={spoilerLimit} portraitItemFor={portraitItemFor} />
+    </section>
+    <SuccessionContextualCompletion spoilerLimit={spoilerLimit} encyclopedia />
+  </>;
 }

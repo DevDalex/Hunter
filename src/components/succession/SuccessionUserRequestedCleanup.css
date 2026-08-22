@@ -1,0 +1,26 @@
+/* Final user-requested presentation cleanup. Loaded last so it wins over legacy redesign layers. */
+
+/* Remove the redundant Black Whale / evidence masthead from every archive workspace. */
+.succession-archive__status-strip {
+  display: none !important;
+}
+
+/* With the strip removed, the archive shell should occupy the full viewport. */
+.succession-archive__layout {
+  min-height: 100vh !important;
+}
+
+.succession-archive__sidebar-inner {
+  height: 100% !important;
+}
+
+/* Story Intelligence hero copy should read as solid black on the light document surface. */
+.succession-archive[data-archive-hub="story"] .archive-page-header h1,
+.succession-archive[data-archive-hub="story"] .succession-page-header h1,
+.succession-archive[data-archive-hub="story"] .archive-page-header p,
+.succession-archive[data-archive-hub="story"] .succession-page-header p {
+  color: #000 !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+  -webkit-text-stroke: 0 !important;
+}
