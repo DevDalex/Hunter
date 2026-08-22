@@ -41,6 +41,10 @@ export default function SuccessionArchiveEntry(props) {
     || (props.routeTarget === 'story' && Object.keys(props.routeParams || {}).length === 0);
   const isReader = props.routeTarget === 'reader';
   const isLightRoute = props.routeTarget === 'black-whale' || props.routeTarget === 'princes';
+  const entityChapter = Number(String(props.routeParams?.entity || '').match(/^chapter:(\d+)$/)?.[1]);
+  const contextualRouteParams = props.routeTarget === 'chapters' && !props.routeParams?.chapter && entityChapter
+    ? { ...props.routeParams, chapter: entityChapter }
+    : props.routeParams;
 
   if (isCommandHome) {
     return <SuccessionCommandHome
@@ -59,13 +63,13 @@ export default function SuccessionArchiveEntry(props) {
           : <SuccessionArchiveApp {...props} />}
       <SuccessionContextualCompletion
         routeTarget={props.routeTarget}
-        routeParams={props.routeParams}
+        routeParams={contextualRouteParams}
         spoilerLimit={props.spoilerLimit}
         onNavigate={props.onNavigate}
       />
       <SuccessionContextualReferenceExpansion
         routeTarget={props.routeTarget}
-        routeParams={props.routeParams}
+        routeParams={contextualRouteParams}
         spoilerLimit={props.spoilerLimit}
       />
     </>
