@@ -12,6 +12,12 @@ import { entityWorkspaceTarget } from './SuccessionArchivePrimitives';
 import './SuccessionEvidenceTranslationWorkbench.css';
 
 const labelize = (value) => String(value || 'unknown').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+const semanticState = (claim) => {
+  const value = `${claim?.canonLevel || ''} ${claim?.certainty || ''}`.toLocaleLowerCase();
+  if (value.includes('theory')) return 'theory';
+  if (/infer|probable|approx/.test(value)) return 'inference';
+  return 'canon';
+};
 
 function EntityButton({ entity, onNavigate }) {
   if (!entity) return null;
@@ -24,12 +30,30 @@ function ClaimDetail({ profile, onNavigate }) {
     <button type="button" onClick={() => onNavigate('research', { mode: 'cases', workspace: 'evidence' })}><ArrowLeft size={13} aria-hidden="true" /> Back to provenance coverage</button>
     <header><span>Claim-level provenance · {profile.coverage}% sourced</span><h3>{profile.entity.name}</h3><p>{profile.note}</p><EntityButton entity={entity} onNavigate={onNavigate} /></header>
     <dl className="succession-provenance-stats"><div><dt>Claims</dt><dd>{profile.claims.length}</dd></div><div><dt>Sources</dt><dd>{profile.sources.length}</dd></div><div><dt>Unsupported</dt><dd>{profile.unsupported.length}</dd></div><div><dt>Inferred</dt><dd>{profile.inferred.length}</dd></div></dl>
-    <div className="succession-provenance-claims">{profile.claims.map((claim) => <article key={claim.id} className={claim.sources.length ? '' : 'is-unsupported'}>
-      <header><span>{claim.label}</span><b>{labelize(claim.provenanceState)}</b></header>
-      <p>{claim.displayValue}</p>
-      <dl><div><dt>Canon</dt><dd>{labelize(claim.canonLevel)}</dd></div><div><dt>Certainty</dt><dd>{labelize(claim.certainty)}</dd></div><div><dt>Source mode</dt><dd>{claim.inheritedSourceChain ? 'Inherited entity source chain' : 'Explicit claim sources'}</dd></div></dl>
-      <div className="succession-provenance-sources">{claim.sources.length ? claim.sources.map((source) => <span key={source.id}>{source.name}</span>) : <span className="is-warning"><TriangleAlert size={12} aria-hidden="true" /> No bounded source resolved</span>}</div>
-    </article>)}</div>
+    <div className="succession-provenance-claim-legend" aria-label="Claim evidence states">
+      <span className="is-explicit">Explicit claim source</span><span className="is-inherited">Inherited entity source</span><span className="is-unsupported">Unsupported</span><span className="is-inference">Inference / theory</span>
+    </div>
+    <div className="succession-provenance-claims">{profile.claims.map((claim) => <details key={claim.id} className={`${claim.sources.length ? '' : 'is-unsupported'} is-${semanticState(claim)}`}>
+      <summary><span>{claim.label}</span><b>{labelize(claim.provenanceState)}</b><small>{claim.displayValue}</small></summary>
+      <div className="succession-provenance-claim-body">
+        <dl><div><dt>Canon</dt><dd>{labelize(claim.canonLevel)}</dd></div><div><dt>Certainty</dt><dd>{labelize(claim.certainty)}</dd></div><div><dt>Source mode</dt><dd>{claim.inheritedSourceChain ? 'Inherited entity source chain' : 'Explicit claim sources'}</dd></div></dl>
+        <div className="succession-provenance-sources">{claim.sources.length ? claim.sources.map((source) => <span key={source.id}>{source.name}</span>) : <span className="is-warning"><TriangleAlert size={12} aria-hidden="true" /> No bounded source resolved</span>}</div>
+      </div>
+    </details>)}</div>
+  </section>;
+}
+
+function ProvenanceHealth({ report }) {
+  const total = Math.max(1, report.claims);
+  const segments = [
+    ['explicit', 'Explicit claim sources', report.explicitClaimSources],
+    ['inherited', 'Inherited entity sources', report.inheritedEntitySources],
+    ['unsupported', 'Unsupported', report.unsupported],
+  ];
+  return <section className="succession-provenance-health" aria-labelledby="succession-provenance-health-title">
+    <header><span>Evidence health</span><h4 id="succession-provenance-health-title">How the current claim set is sourced</h4><p>{report.coverage}% of generated and explicit claims resolve to at least one bounded source.</p></header>
+    <div className="succession-provenance-health__bar" aria-hidden="true">{segments.map(([key, label, value]) => <span className={`is-${key}`} style={{ flexGrow: value }} key={key} title={`${label}: ${value}`} />)}</div>
+    <dl>{segments.map(([key, label, value]) => <div key={key}><dt><i className={`is-${key}`} aria-hidden="true" />{label}</dt><dd>{value}<small>{Math.round((value / total) * 100)}%</small></dd></div>)}</dl>
   </section>;
 }
 
@@ -37,7 +61,7 @@ function ProvenanceView({ chapter, routeParams, onNavigate }) {
   const report = getProvenanceCoverageReport(chapter);
   const selected = routeParams.entity ? getClaimProvenanceProfile(routeParams.entity, chapter) : null;
   if (selected) return <ClaimDetail profile={selected} onNavigate={onNavigate} />;
-  return <section><header className="succession-provenance-head"><span>Research evidence graph</span><h3>Claim-level provenance coverage</h3><p>Generated field claims inherit a canonical entity’s source chain until an explicit claim-level citation is available. Unsupported claims remain visible as debt instead of being silently treated as sourced.</p></header><dl className="succession-provenance-stats"><div><dt>Coverage</dt><dd>{report.coverage}%</dd></div><div><dt>Claims</dt><dd>{report.claims}</dd></div><div><dt>Explicit claim sources</dt><dd>{report.explicitClaimSources}</dd></div><div><dt>Inherited sources</dt><dd>{report.inheritedEntitySources}</dd></div><div><dt>Unsupported</dt><dd>{report.unsupported}</dd></div></dl><h4 className="succession-provenance-subhead">Weakest coverage first</h4><div className="succession-provenance-grid">{report.weakest.map((profile) => <article key={profile.entity.id}><FileSearch size={18} aria-hidden="true" /><span>{profile.coverage}% coverage</span><h4>{profile.entity.name}</h4><p>{profile.claims.length} claims · {profile.unsupported.length} unsupported · {profile.inferred.length} inferred</p><button type="button" onClick={() => onNavigate('research', { mode: 'cases', workspace: 'evidence', entity: profile.entity.id })}>Inspect claims <ArrowRight size={13} aria-hidden="true" /></button></article>)}</div></section>;
+  return <section><header className="succession-provenance-head"><span>Research evidence graph</span><h3>Claim-level provenance coverage</h3><p>Generated field claims inherit a canonical entity’s source chain until an explicit claim-level citation is available. Unsupported claims remain visible as debt instead of being silently treated as sourced.</p></header><ProvenanceHealth report={report} /><dl className="succession-provenance-stats"><div><dt>Coverage</dt><dd>{report.coverage}%</dd></div><div><dt>Claims</dt><dd>{report.claims}</dd></div><div><dt>Explicit claim sources</dt><dd>{report.explicitClaimSources}</dd></div><div><dt>Inherited sources</dt><dd>{report.inheritedEntitySources}</dd></div><div><dt>Unsupported</dt><dd>{report.unsupported}</dd></div></dl><h4 className="succession-provenance-subhead">Weakest coverage first</h4><div className="succession-provenance-grid">{report.weakest.map((profile) => <article key={profile.entity.id}><FileSearch size={18} aria-hidden="true" /><span>{profile.coverage}% coverage</span><h4>{profile.entity.name}</h4><p>{profile.claims.length} claims · {profile.unsupported.length} unsupported · {profile.inferred.length} inferred</p><button type="button" onClick={() => onNavigate('research', { mode: 'cases', workspace: 'evidence', entity: profile.entity.id })}>Inspect claims <ArrowRight size={13} aria-hidden="true" /></button></article>)}</div><small className="succession-provenance-disclosure">Showing {report.weakest.length} weakest-coverage profiles from {report.profiles.length} maintained evidence profiles.</small></section>;
 }
 
 function TranslationView({ chapter, onNavigate }) {

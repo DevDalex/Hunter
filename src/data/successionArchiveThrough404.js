@@ -1,6 +1,6 @@
-import * as base from './successionArchiveThrough403.js';
+import * as base from './successionArchiveBoundary403.js';
 
-export * from './successionArchiveThrough403.js';
+export * from './successionArchiveBoundary403.js';
 
 const wiki = (slug) => `https://hunterxhunter.fandom.com/wiki/${slug}`;
 

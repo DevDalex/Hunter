@@ -68,9 +68,7 @@
   cursor: pointer;
 }
 
-.succession-provenance-workbench {
-  margin-bottom: 20px;
-}
+.succession-provenance-workbench { margin-bottom: 20px; }
 
 .succession-provenance-hero {
   padding: 20px 22px 18px;
@@ -88,16 +86,8 @@
   text-transform: uppercase;
 }
 
-.succession-provenance-hero h2 {
-  margin: 5px 0 7px;
-  font-size: 27px;
-}
-
-.succession-provenance-hero p {
-  margin: 0;
-  max-width: 940px;
-  color: #404040;
-}
+.succession-provenance-hero h2 { margin: 5px 0 7px; font-size: 27px; }
+.succession-provenance-hero p { margin: 0; max-width: 940px; color: #404040; }
 
 .succession-provenance-tabs {
   display: flex;
@@ -112,19 +102,51 @@
   min-height: 40px;
 }
 
-.succession-provenance-tabs button.is-active {
-  border-bottom-color: #111;
-  background: #deded9;
-}
+.succession-provenance-tabs button.is-active { border-bottom-color: #111; background: #deded9; }
+.succession-provenance-body { padding: 22px; }
+.succession-provenance-head { max-width: 960px; margin-bottom: 18px; }
 
-.succession-provenance-body {
-  padding: 22px;
+.succession-provenance-health {
+  margin: 0 0 18px;
+  padding: 14px;
+  border: 1px solid #b7b7b2;
+  background: #fff;
 }
-
-.succession-provenance-head {
-  max-width: 960px;
-  margin-bottom: 18px;
+.succession-provenance-health > header { margin-bottom: 10px; }
+.succession-provenance-health > header > span {
+  color: #5a5a5a;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
+.succession-provenance-health h4 { margin: 4px 0 5px; font-size: 17px; }
+.succession-provenance-health p { margin: 0; color: #4d4d4d; font-size: 11px; }
+.succession-provenance-health__bar {
+  height: 20px;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid #777;
+  background: #f2f2ee;
+}
+.succession-provenance-health__bar > span { min-width: 0; flex-basis: 0; }
+.succession-provenance-health__bar > span.is-explicit { background: #444; }
+.succession-provenance-health__bar > span.is-inherited { background: #999; }
+.succession-provenance-health__bar > span.is-unsupported { background: #e3e3de; }
+.succession-provenance-health > dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 0;
+}
+.succession-provenance-health > dl > div { padding: 8px; border: 1px solid #d0d0ca; background: #fafaf7; }
+.succession-provenance-health dt { display: flex; align-items: center; gap: 6px; color: #555; font-size: 11px; font-weight: 800; }
+.succession-provenance-health dt i { width: 11px; height: 11px; border: 1px solid #777; }
+.succession-provenance-health dt i.is-explicit { background: #444; }
+.succession-provenance-health dt i.is-inherited { background: #999; }
+.succession-provenance-health dt i.is-unsupported { background: #e3e3de; }
+.succession-provenance-health dd { display: flex; align-items: baseline; gap: 6px; margin: 4px 0 0; font-size: 18px; font-weight: 850; }
+.succession-provenance-health dd small { color: #666; font-size: 11px; font-weight: 700; }
 
 .succession-provenance-stats {
   display: flex;
@@ -150,11 +172,7 @@
   text-transform: uppercase;
 }
 
-.succession-provenance-stats dd {
-  margin: 2px 0 0;
-  font-size: 20px;
-  font-weight: 850;
-}
+.succession-provenance-stats dd { margin: 2px 0 0; font-size: 20px; font-weight: 850; }
 
 .succession-provenance-grid,
 .succession-provenance-claims {
@@ -164,39 +182,27 @@
 }
 
 .succession-provenance-grid article,
-.succession-provenance-claims article {
+.succession-provenance-claims article,
+.succession-provenance-claims details {
   min-width: 0;
   border: 1px solid #bdbdb7;
   background: #fff;
-  padding: 14px;
 }
+.succession-provenance-grid article { padding: 14px; }
 
-.succession-provenance-grid article.is-mechanics {
-  border-width: 2px;
-  border-color: #303030;
-}
-
-.succession-provenance-grid article h4 {
-  margin: 6px 0 8px;
-  font-size: 16px;
-}
+.succession-provenance-grid article.is-mechanics { border-width: 2px; border-color: #303030; }
+.succession-provenance-grid article h4 { margin: 6px 0 8px; font-size: 16px; }
 
 .succession-provenance-grid article dl,
-.succession-provenance-claims article dl {
-  margin: 10px 0 0;
-}
+.succession-provenance-claims article dl,
+.succession-provenance-claims details dl { margin: 10px 0 0; }
 
 .succession-provenance-grid article dl > div,
-.succession-provenance-claims article dl > div {
-  border-top: 1px solid #deded8;
-  padding: 7px 0;
-}
+.succession-provenance-claims article dl > div,
+.succession-provenance-claims details dl > div { border-top: 1px solid #deded8; padding: 7px 0; }
 
 .succession-provenance-grid dd,
-.succession-provenance-claims dd {
-  margin: 3px 0 0;
-  overflow-wrap: anywhere;
-}
+.succession-provenance-claims dd { margin: 3px 0 0; overflow-wrap: anywhere; }
 
 .succession-provenance-subhead {
   margin: 20px 0 10px;
@@ -207,17 +213,60 @@
   letter-spacing: .06em;
 }
 
-.succession-provenance-detail > button {
-  margin-bottom: 14px;
+.succession-provenance-disclosure {
+  display: block;
+  margin: 10px 0 0;
+  padding: 9px 11px;
+  border: 1px solid #c8c8c2;
+  background: #fafaf7;
+  color: #616161;
+  font-size: 11px;
 }
 
-.succession-provenance-detail > header {
-  margin-bottom: 16px;
-}
+.succession-provenance-detail > button { margin-bottom: 14px; }
+.succession-provenance-detail > header { margin-bottom: 16px; }
+.succession-provenance-detail > header .succession-provenance-entity { margin-top: 10px; }
 
-.succession-provenance-detail > header .succession-provenance-entity {
-  margin-top: 10px;
+.succession-provenance-claim-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
 }
+.succession-provenance-claim-legend span {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 7px;
+  border: 1px solid #888;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 780;
+}
+.succession-provenance-claim-legend .is-inherited { border-style: dashed; }
+.succession-provenance-claim-legend .is-unsupported { border-style: dotted; }
+.succession-provenance-claim-legend .is-inference { border-left-width: 4px; }
+
+.succession-provenance-claims details > summary {
+  min-height: 86px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 5px 10px;
+  align-content: start;
+  padding: 12px;
+  cursor: pointer;
+  list-style: none;
+}
+.succession-provenance-claims details > summary::-webkit-details-marker { display: none; }
+.succession-provenance-claims details > summary > span { font-size: 11px; font-weight: 850; text-transform: uppercase; }
+.succession-provenance-claims details > summary > b { font-size: 11px; text-align: right; }
+.succession-provenance-claims details > summary > small { grid-column: 1 / -1; color: #4d4d4d; font-size: 11px; line-height: 1.4; }
+.succession-provenance-claims details[open] > summary { border-bottom: 1px solid #ddd; background: #f5f5f1; }
+.succession-provenance-claims details.is-unsupported { border-style: dashed; }
+.succession-provenance-claims details.is-inference > summary { border-left: 4px solid #666; }
+.succession-provenance-claims details.is-theory > summary { border-left: 4px dotted #666; }
+.succession-provenance-claims details > summary:focus-visible { outline: 3px solid #111; outline-offset: 2px; }
+.succession-provenance-claim-body { padding: 0 12px 12px; }
 
 .succession-provenance-claims article > header {
   display: flex;
@@ -230,10 +279,7 @@
   text-transform: uppercase;
 }
 
-.succession-provenance-claims article.is-unsupported {
-  border-color: #5f5f5f;
-  border-style: dashed;
-}
+.succession-provenance-claims article.is-unsupported { border-color: #5f5f5f; border-style: dashed; }
 
 .succession-provenance-sources {
   display: flex;
@@ -263,19 +309,12 @@
 .succession-provenance-grid article > button:hover,
 .succession-provenance-detail > button:hover,
 .succession-provenance-entity:hover,
-.succession-provenance-tabs button:hover {
-  background: #e3e3de;
-}
+.succession-provenance-tabs button:hover { background: #e3e3de; }
 
 .succession-provenance-entry button:focus-visible,
-.succession-provenance-workbench button:focus-visible {
-  outline: 3px solid #111;
-  outline-offset: 2px;
-}
+.succession-provenance-workbench button:focus-visible { outline: 3px solid #111; outline-offset: 2px; }
 
 @media (prefers-reduced-motion: reduce) {
   .succession-provenance-workbench *,
-  .succession-provenance-entry * {
-    scroll-behavior: auto;
-  }
+  .succession-provenance-entry * { scroll-behavior: auto; }
 }

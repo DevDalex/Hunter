@@ -75,6 +75,10 @@ const resolveSuccessionTarget = (target = '', params = {}) => {
 
     const retiredTarget = successionArchiveRetiredTargets[nextTarget];
     if (retiredTarget) {
+      nextParams = {
+        ...nextParams,
+        consolidatedFrom: nextParams.consolidatedFrom || nextTarget,
+      };
       nextTarget = retiredTarget;
       continue;
     }
@@ -175,7 +179,14 @@ export function parseLegacyHashRoute(hash = '') {
   const [candidate = '', target = ''] = path.split('/');
   const params = readQuery(queryString);
 
-  if (candidate === 'succession') return normalizeDestination('succession', target || 'archive', params);
+  if (candidate === 'succession') {
+    const legacySource = target && (successionArchiveRetiredTargets[target] || legacySuccessionPathToTarget.has(target))
+      ? target
+      : '';
+    return normalizeDestination('succession', target || 'archive', legacySource
+      ? { ...params, consolidatedFrom: params.consolidatedFrom || legacySource }
+      : params);
+  }
   if (candidate === 'reference') return normalizeDestination('reference', target, params);
   if (candidate === 'timeline') return normalizeDestination('succession', 'timeline', params);
 
@@ -217,11 +228,16 @@ export function parseCleanRoute(pathname = '/', search = '') {
     if (parts.length === 2) return normalizeDestination('succession', 'archive', params);
     if (parts.length !== 3) return attempted(pathnameClean);
 
-    const target = successionArchivePathToTarget.get(parts[2])
-      || legacySuccessionPathToTarget.get(parts[2]);
+    const pathPart = parts[2];
+    const retiredTarget = successionArchiveRetiredTargets[pathPart];
+    const legacyTarget = legacySuccessionPathToTarget.get(pathPart);
+    const target = successionArchivePathToTarget.get(pathPart) || legacyTarget;
+    const routeParams = retiredTarget || legacyTarget
+      ? { ...params, consolidatedFrom: params.consolidatedFrom || pathPart }
+      : params;
 
     return target
-      ? normalizeDestination('succession', target, params)
+      ? normalizeDestination('succession', target, routeParams)
       : attempted(pathnameClean);
   }
 

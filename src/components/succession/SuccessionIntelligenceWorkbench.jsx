@@ -29,7 +29,9 @@ import {
   getProtocolRecordsAtChapter,
 } from '../../data/succession/successionData';
 import { EntityLink, entityWorkspaceTarget } from './SuccessionArchivePrimitives';
+import SuccessionResearchMemoryPanel from './SuccessionResearchMemoryPanel';
 import './SuccessionIntelligenceWorkbench.css';
+import './SuccessionIntelligenceCompareComprehension.css';
 
 const modes = Object.freeze([
   ['overview', 'Overview', Network],
@@ -48,6 +50,7 @@ const comparisonTypes = Object.freeze([
   'character', 'organization', 'ability', 'guardian-beast', 'location', 'event', 'assignment',
   'relationship', 'knowledge-record', 'protocol', 'object', 'document', 'evidence-item',
 ]);
+const comparisonFieldViews = Object.freeze(['differences', 'all', 'shared']);
 const labelize = (value) => String(value || 'unknown').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 const parseIds = (value) => String(value || '').split(',').map((id) => id.trim()).filter(Boolean);
 
@@ -66,7 +69,7 @@ function EntityAction({ entity, onNavigate, label = 'Open record' }) {
   return <button type="button" onClick={() => onNavigate(entityWorkspaceTarget(entity), { entity: entity.id })}>{label} <ArrowRight size={12} aria-hidden="true" /></button>;
 }
 
-function OverviewMode({ spoilerLimit, onMode }) {
+function OverviewMode({ spoilerLimit, onMode, onNavigate }) {
   const summary = getIntelligenceWorkbenchSummary(spoilerLimit);
   const cards = [
     ['diff', 'Chapter-to-chapter state comparison', 'Compare two chapter boundaries and display only additions, removals, and changed canonical states.', `${summary.chapter} current boundary`, GitCompareArrows],
@@ -76,10 +79,13 @@ function OverviewMode({ spoilerLimit, onMode }) {
     ['compare', 'Same-type record comparison', 'Compare compatible records without generating duplicate permanent dossiers.', 'Up to four records', SearchCheck],
     ['changes', 'Archive editorial change log', 'Review merged archive changes separately from the story timeline.', `${summary.editorialEntries} published entries`, FileClock],
   ];
-  return <section className="succession-intelligence-overview" aria-labelledby="phase-4-overview-title">
-    <header><span>Generated intelligence, not duplicated lore</span><h3 id="phase-4-overview-title">Six tools built on the same canonical graph.</h3><p>Every result respects the selected chapter boundary. Facts stay in their original records; this workbench reveals changes and relationships between them.</p></header>
-    <div>{cards.map(([id, title, description, meta, Icon]) => <article key={id}><Icon size={21} aria-hidden="true" /><span>{meta}</span><h4>{title}</h4><p>{description}</p><button type="button" onClick={() => onMode(id)}>Open intelligence view <ArrowRight size={13} /></button></article>)}</div>
-  </section>;
+  return <>
+    <SuccessionResearchMemoryPanel spoilerLimit={spoilerLimit} onNavigate={onNavigate} />
+    <section className="succession-intelligence-overview" aria-labelledby="phase-4-overview-title">
+      <header><span>Generated intelligence, not duplicated lore</span><h3 id="phase-4-overview-title">Six tools built on the same canonical graph.</h3><p>Every result respects the selected chapter boundary. Facts stay in their original records; this workbench reveals changes and relationships between them.</p></header>
+      <div>{cards.map(([id, title, description, meta, Icon]) => <article key={id}><Icon size={21} aria-hidden="true" /><span>{meta}</span><h4>{title}</h4><p>{description}</p><button type="button" onClick={() => onMode(id)}>Open intelligence view <ArrowRight size={13} /></button></article>)}</div>
+    </section>
+  </>;
 }
 
 function DiffMode({ routeParams, spoilerLimit, onNavigate }) {
@@ -125,16 +131,20 @@ function ArtifactMode({ routeParams, spoilerLimit, onNavigate }) {
 
 function CompareMode({ routeParams, spoilerLimit, onNavigate }) {
   const initialIds = parseIds(routeParams.compare);
+  const requestedFieldView = comparisonFieldViews.includes(routeParams.fields) ? routeParams.fields : 'differences';
   const [type, setType] = useState(routeParams.type || getEntityById(initialIds[0])?.entityType || 'character');
+  const [fieldView, setFieldView] = useState(requestedFieldView);
   const candidates = useMemo(() => getEntitiesByType(type).filter((entity) => !entity.chapterRange?.start || entity.chapterRange.start <= spoilerLimit).sort((a, b) => a.name.localeCompare(b.name)), [type, spoilerLimit]);
   const defaults = initialIds.length >= 2 ? initialIds : candidates.slice(0, 2).map((entity) => entity.id);
   const [ids, setIds] = useState(defaults);
   useEffect(() => { setIds((current) => current.filter((id) => getEntityById(id)?.entityType === type).slice(0, 4)); }, [type]);
+  useEffect(() => setFieldView(requestedFieldView), [requestedFieldView]);
   const selectedIds = ids.length >= 2 ? ids : candidates.slice(0, 2).map((entity) => entity.id);
   const result = compareSameTypeRecords(selectedIds, spoilerLimit);
+  const visibleRows = result.valid ? result.rows.filter((row) => fieldView === 'all' || (fieldView === 'differences' ? !row.allSame : row.allSame)) : [];
   const setSlot = (index, value) => setIds((current) => { const next = [...current]; next[index] = value; return next.filter(Boolean); });
-  const apply = () => onNavigate('research', { mode: 'compare', type, compare: selectedIds.join(',') });
-  return <section className="succession-intelligence-compare" aria-labelledby="phase-4-compare-title"><header><div><span>Same-type comparison</span><h3 id="phase-4-compare-title">Compare records without cloning dossiers.</h3><p>Only compatible fields are shown. Shared values and differences remain chapter-bounded.</p></div><div className="succession-intelligence-controls"><label>Record type<select value={type} onChange={(event) => { setType(event.target.value); setIds([]); }}>{comparisonTypes.map((value) => <option value={value} key={value}>{labelize(value)}</option>)}</select></label>{[0, 1, 2, 3].map((index) => <label key={index}>Record {index + 1}<select value={selectedIds[index] || ''} onChange={(event) => setSlot(index, event.target.value)}><option value="">None</option>{candidates.map((entity) => <option value={entity.id} key={entity.id}>{entity.name}</option>)}</select></label>)}<button type="button" onClick={apply}>Save comparison URL</button></div></header>{result.valid ? <div className="succession-intelligence-table"><table><thead><tr><th>Field</th>{result.records.map((record) => <th key={record.id}>{record.name}</th>)}</tr></thead><tbody>{result.rows.map((row) => <tr className={row.allSame ? 'is-shared' : 'is-different'} key={row.key}><th>{row.label}</th>{row.displayValues.map((value, index) => <td key={`${row.key}-${result.records[index].id}`}>{value}</td>)}</tr>)}</tbody></table><footer><span>{result.differenceCount} differences</span><span>{result.sharedCount} shared fields</span>{result.records.map((record) => <EntityAction entity={getEntityById(record.id)} onNavigate={onNavigate} label={record.name} key={record.id} />)}</footer></div> : <p className="succession-intelligence-empty">{result.reason}</p>}</section>;
+  const apply = () => onNavigate('research', { mode: 'compare', type, compare: selectedIds.join(','), fields: fieldView });
+  return <section className="succession-intelligence-compare" aria-labelledby="phase-4-compare-title"><header><div><span>Same-type comparison</span><h3 id="phase-4-compare-title">Compare records without cloning dossiers.</h3><p>Differences are shown first by default. Switch to shared fields or the complete compatible-field set without changing the underlying chapter-bounded comparison.</p></div><div className="succession-intelligence-controls"><label>Record type<select value={type} onChange={(event) => { setType(event.target.value); setIds([]); }}>{comparisonTypes.map((value) => <option value={value} key={value}>{labelize(value)}</option>)}</select></label><label>Fields<select value={fieldView} onChange={(event) => setFieldView(event.target.value)}><option value="differences">Differences only</option><option value="all">All compatible fields</option><option value="shared">Shared only</option></select></label>{[0, 1, 2, 3].map((index) => <label key={index}>Record {index + 1}<select value={selectedIds[index] || ''} onChange={(event) => setSlot(index, event.target.value)}><option value="">None</option>{candidates.map((entity) => <option value={entity.id} key={entity.id}>{entity.name}</option>)}</select></label>)}<button type="button" onClick={apply}>Save comparison URL</button></div></header>{result.valid ? <div className="succession-intelligence-table" tabIndex="0" role="region" aria-label={`Comparison matrix showing ${visibleRows.length} of ${result.rows.length} compatible fields`}><div className="succession-intelligence-table__status" role="status" aria-live="polite">Showing {visibleRows.length} of {result.rows.length} compatible fields · {labelize(fieldView)} view</div><table><thead><tr><th>Field</th>{result.records.map((record) => <th key={record.id}>{record.name}</th>)}</tr></thead><tbody>{visibleRows.map((row) => <tr className={row.allSame ? 'is-shared' : 'is-different'} key={row.key}><th>{row.label}</th>{row.displayValues.map((value, index) => <td key={`${row.key}-${result.records[index].id}`}>{value}</td>)}</tr>)}</tbody></table>{!visibleRows.length && <p className="succession-intelligence-table__empty">No compatible fields match the selected {fieldView} view.</p>}<footer><span>{result.differenceCount} differences</span><span>{result.sharedCount} shared fields</span>{result.records.map((record) => <EntityAction entity={getEntityById(record.id)} onNavigate={onNavigate} label={record.name} key={record.id} />)}</footer></div> : <p className="succession-intelligence-empty">{result.reason}</p>}</section>;
 }
 
 function ChangesMode() {
@@ -151,7 +161,7 @@ export default function SuccessionIntelligenceWorkbench({ routeParams = {}, spoi
     <header className="succession-intelligence-workbench__hero"><div><span><ShieldQuestion size={16} aria-hidden="true" /> Phase 4 · High-value intelligence</span><h2 id="phase-4-workbench-title">Cross-examine the Succession Archive.</h2><p>Compare chapter states, map secrets, separate ritual from law, follow physical evidence, compare compatible records, and review editorial history without creating duplicate facts.</p></div><dl><div><dt>Boundary</dt><dd>Chapter {spoilerLimit}</dd></div><div><dt>Mode</dt><dd>{labelize(mode)}</dd></div><div><dt>Source rule</dt><dd>Chapter-linked</dd></div></dl></header>
     <WorkbenchTabs mode={mode} onSelect={selectMode} />
     <div className="succession-intelligence-workbench__body">
-      {mode === 'overview' && <OverviewMode spoilerLimit={spoilerLimit} onMode={selectMode} />}
+      {mode === 'overview' && <OverviewMode spoilerLimit={spoilerLimit} onMode={selectMode} onNavigate={onNavigate} />}
       {mode === 'diff' && <DiffMode routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={onNavigate} />}
       {mode === 'knowledge' && <KnowledgeMode routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={onNavigate} />}
       {mode === 'protocols' && <ProtocolMode routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={onNavigate} />}

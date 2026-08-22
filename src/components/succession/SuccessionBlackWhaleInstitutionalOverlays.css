@@ -1,0 +1,131 @@
+.succession-black-whale-overlays {
+  margin-top: 12px;
+  border-top: 1px solid #d6d6d1;
+  padding-top: 11px;
+}
+
+.succession-black-whale-overlays > header > span {
+  color: #5f5f5a;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.succession-black-whale-overlays > header h4 {
+  margin: 4px 0 5px;
+  font-size: 15px;
+}
+
+.succession-black-whale-overlays > header p,
+.succession-black-whale-overlays__note {
+  margin: 0;
+  color: #5a5a56;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.succession-black-whale-overlays > nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 9px 0;
+}
+
+.succession-black-whale-overlays > nav button {
+  min-height: 31px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 8px;
+  border: 1px solid #8b8b85;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 780;
+  cursor: pointer;
+}
+
+.succession-black-whale-overlays > nav button.is-active {
+  border-color: #222;
+  background: #222;
+  color: #fff;
+}
+
+.succession-black-whale-overlays > nav button small {
+  display: inline-grid;
+  min-width: 20px;
+  min-height: 20px;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.succession-black-whale-overlays > nav button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.succession-black-whale-overlays__rows {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.succession-black-whale-overlays__rows article {
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid #d0d0ca;
+  background: #fafaf7;
+}
+
+.succession-black-whale-overlays__rows article > header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.succession-black-whale-overlays__rows article > header b {
+  font-size: 12px;
+}
+
+.succession-black-whale-overlays__rows article > header small,
+.succession-black-whale-overlays__rows article > small {
+  color: #62625e;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.succession-black-whale-overlays__rows article > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 7px 0 5px;
+}
+
+.succession-black-whale-overlays__rows article > div span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 24px;
+  padding: 3px 6px;
+  border: 1px solid #8f8f89;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 760;
+}
+
+.succession-black-whale-overlays__note {
+  margin-top: 8px;
+  padding-top: 7px;
+  border-top: 1px solid #deded9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-black-whale-overlays *,
+  .succession-black-whale-overlays *::before,
+  .succession-black-whale-overlays *::after { transition: none !important; }
+}

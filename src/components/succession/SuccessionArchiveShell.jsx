@@ -12,6 +12,8 @@ import {
 } from 'lucide-react';
 import { ARCHIVE_BOUNDARY } from '../../data/archiveMeta';
 import { routeToHref } from '../../lib/appRouter';
+import { getEntitiesByType, getEntityById } from '../../data/succession/successionData';
+import { recordSuccessionLocalRouteView } from '../../data/succession/localAnalytics';
 import {
   getSuccessionArchiveHub,
   getSuccessionArchiveRoute,
@@ -20,10 +22,17 @@ import {
 } from '../../data/succession/archiveRoutes';
 import SpoilerControl from '../SpoilerControl';
 import SuccessionCommandHome from './SuccessionCommandHome';
+import SuccessionComprehensionBar from './SuccessionComprehensionBar';
+import SuccessionConsolidatedRouteNotice from './SuccessionConsolidatedRouteNotice';
+import SuccessionCoverageRoadmap from './SuccessionCoverageRoadmap';
+import SuccessionEntityQuickBriefing from './SuccessionEntityQuickBriefing';
+import SuccessionLocalAnalyticsPanel from './SuccessionLocalAnalyticsPanel';
+import SuccessionNowDashboard from './SuccessionNowDashboard';
+import SuccessionPeoplePowerComprehensionPanel from './SuccessionPeoplePowerComprehensionPanel';
+import SuccessionNenSpatialComprehensionPanel from './SuccessionNenSpatialComprehensionPanel';
+import SuccessionOnboardingMission from './SuccessionOnboardingMission';
 import { ArchivePageHeader } from './SuccessionArchivePrimitives';
-import './SuccessionArchiveContrastFixes.css';
-import './SuccessionArchiveDeepContrastFixes.css';
-import './SuccessionArchiveNenFixes.css';
+import './SuccessionArchiveHistoricalLayers.css';
 
 const SuccessionInformationConsistencyPanel = lazy(() => import('./SuccessionInformationConsistencyPanel'));
 
@@ -55,6 +64,18 @@ const needsCharacterConsistency = (routeId, routeParams = {}) => {
   return false;
 };
 
+const resolveBriefingEntity = (routeId, routeParams = {}) => {
+  if (routeParams.entity) return getEntityById(routeParams.entity);
+  if (routeId === 'princes' && Number.isFinite(Number(routeParams.prince))) {
+    return getEntitiesByType('character').find((entity) => entity.princeOrder === Number(routeParams.prince)) || null;
+  }
+  if (routeId === 'chapters' && Number.isFinite(Number(routeParams.chapter))) {
+    return getEntitiesByType('chapter').find((entity) => entity.number === Number(routeParams.chapter)) || null;
+  }
+  if (routeId === 'queens' && routeParams.focus) return getEntityById(routeParams.focus) || null;
+  return null;
+};
+
 function ArchiveNavigation({ activeHubId, onNavigate, onIntent, id }) {
   return <nav id={id} className="succession-archive-nav" aria-label="Succession Contest Archive">
     {successionArchiveHubGroups.map((group) => {
@@ -78,7 +99,7 @@ function ArchiveNavigation({ activeHubId, onNavigate, onIntent, id }) {
             <span>{hub.label}</span>
           </a>;
         })}</div>
-      </section>;
+      </section>
     })}
   </nav>;
 }
@@ -120,10 +141,18 @@ export default function SuccessionArchiveShell({
   const activeHub = getSuccessionArchiveHub(route.id);
   const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
   const showCharacterConsistency = needsCharacterConsistency(route.id, routeParams);
+  const briefingEntity = hidePageHeader ? null : resolveBriefingEntity(route.id, routeParams);
+  const requestedBriefingChapter = Number(routeParams?.chapter);
+  const briefingChapter = Number.isFinite(requestedBriefingChapter) ? Math.min(spoilerLimit, Math.max(340, requestedBriefingChapter)) : spoilerLimit;
+  const consolidationSource = routeParams?.consolidatedFrom || (route.status === 'legacy' ? route.id : null);
 
   useEffect(() => {
     if (route.id === 'archive') onNavigate('story', {});
   }, [onNavigate, route.id]);
+
+  useEffect(() => {
+    if (route.id !== 'archive') recordSuccessionLocalRouteView(route.id);
+  }, [route.id]);
 
   useEffect(() => {
     const previousRoute = previousRouteRef.current;
@@ -134,15 +163,22 @@ export default function SuccessionArchiveShell({
   }, [activeId, route.id]);
 
   const showCommandHome = route.id === 'story' && Object.keys(routeParams || {}).length === 0;
-  if (showCommandHome) return <SuccessionCommandHome
-    spoilerLimit={spoilerLimit}
-    onNavigate={onNavigate}
-    onOpenSearch={onOpenSearch}
-  />;
+  if (showCommandHome) return <>
+    <SuccessionOnboardingMission onNavigate={onNavigate} />
+    <SuccessionCommandHome
+      spoilerLimit={spoilerLimit}
+      onNavigate={onNavigate}
+      onOpenSearch={onOpenSearch}
+    />
+  </>;
 
   const navigate = (target, params = {}) => onNavigate(target, params);
   const headerActions = <button type="button" className="succession-button succession-button--search" onClick={onOpenSearch}><Search size={16} aria-hidden="true" /> Search <kbd>Ctrl K</kbd></button>;
   const onHubRoot = route.id === activeHub.target;
+  const showNow = route.id === 'story';
+  const showPeoplePower = activeHub.id === 'people';
+  const showNenSpatial = ['nen', 'black-whale'].includes(activeHub.id);
+  const showResearchOverviewMeta = route.id === 'research' && (!routeParams?.mode || routeParams.mode === 'overview');
 
   return <article className="succession-archive" data-archive-route={route.id} data-archive-hub={activeHub.id}>
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
@@ -150,8 +186,6 @@ export default function SuccessionArchiveShell({
 
     <div className="succession-archive__status-strip" aria-label="Black Whale archive context">
       <span><Ship size={14} aria-hidden="true" /><strong>Black Whale 1</strong></span>
-      <span><b>Desk</b> {activeHub.label}</span>
-      <span><b>Boundary</b> Chapter {spoilerLimit}</span>
       <span><b>Evidence</b> Canon separated</span>
     </div>
 
@@ -185,6 +219,9 @@ export default function SuccessionArchiveShell({
 
       <div className="succession-archive__workspace">
         <div className="succession-archive__workspace-frame">
+          <SuccessionComprehensionBar spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} />
+          <SuccessionConsolidatedRouteNotice from={consolidationSource} currentRouteId={route.id} onNavigate={navigate} />
+
           <div className="succession-route-context">
             <nav className="succession-breadcrumbs" aria-label="Breadcrumb">
               <ol>
@@ -221,11 +258,7 @@ export default function SuccessionArchiveShell({
             title={activeHub.title}
             description={activeHub.description}
             actions={headerActions}
-            meta={[
-              { label: 'View', value: route.label },
-              { label: 'Reading boundary', value: `Chapter ${spoilerLimit}` },
-              { label: 'Evidence mode', value: 'Canon separated' },
-            ]}
+            meta={[{ label: 'View', value: route.label }]}
           />}
           <div
             ref={contentRef}
@@ -235,6 +268,12 @@ export default function SuccessionArchiveShell({
             aria-label={`${route.label} workspace content`}
             tabIndex="-1"
           >
+            {briefingEntity && <SuccessionEntityQuickBriefing entity={briefingEntity} chapter={briefingChapter} onNavigate={navigate} />}
+            {showNow && <SuccessionNowDashboard chapter={spoilerLimit} onNavigate={navigate} />}
+            {showPeoplePower && <SuccessionPeoplePowerComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
+            {showNenSpatial && <SuccessionNenSpatialComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
+            {showResearchOverviewMeta && <SuccessionCoverageRoadmap chapter={spoilerLimit} onNavigate={navigate} />}
+            {showResearchOverviewMeta && <SuccessionLocalAnalyticsPanel />}
             {showCharacterConsistency && <Suspense fallback={null}>
               <SuccessionInformationConsistencyPanel activeId={route.id} routeParams={routeParams} spoilerLimit={spoilerLimit} />
             </Suspense>}

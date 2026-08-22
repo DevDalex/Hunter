@@ -38,6 +38,98 @@
   font: inherit;
 }
 
+.succession-search-complete__facets {
+  display: grid;
+  gap: 10px;
+  padding: 13px;
+  border: 1px solid var(--archive-line, rgba(255,255,255,.14));
+  border-radius: 16px;
+  background: rgba(255,255,255,.025);
+}
+
+.succession-search-complete__facets > header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.succession-search-complete__facets > header div {
+  display: grid;
+  gap: 3px;
+}
+
+.succession-search-complete__facets > header span,
+.succession-search-complete__facets > header b,
+.succession-search-complete__analysis > span {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.succession-search-complete__facets > header h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.succession-search-complete__facets > nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.succession-search-complete__facets > nav button,
+.succession-search-complete__analysis button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 9px;
+  border: 1px solid var(--archive-line, rgba(255,255,255,.18));
+  border-radius: 999px;
+  background: rgba(255,255,255,.045);
+  color: inherit;
+  font-size: 11px;
+  font-weight: 760;
+  cursor: pointer;
+}
+
+.succession-search-complete__facets > nav button span {
+  min-width: 22px;
+  padding: 2px 5px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  text-align: center;
+}
+
+.succession-search-complete__facets > nav button.is-active {
+  background: currentColor;
+}
+
+.succession-search-complete__facets > nav button.is-active,
+.succession-search-complete__facets > nav button.is-active span {
+  color: var(--succession-surface-paper-raised, #fff);
+}
+
+.succession-search-complete__facets button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.succession-search-complete__analysis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid var(--archive-line, rgba(255,255,255,.14));
+}
+
+.succession-search-complete__analysis > span {
+  margin-right: 4px;
+}
+
 .succession-search-complete__groups {
   display: grid;
   gap: 16px;
