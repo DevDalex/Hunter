@@ -51,5 +51,8 @@ jobs:
       - name: Audit roadmap completion
         run: node scripts/audit-succession-content-depth-completion.mjs
 
+      - name: Audit 100 percent content completion contract
+        run: node scripts/audit-succession-content-depth-100.mjs
+
       - name: Production build
         run: npm run build
