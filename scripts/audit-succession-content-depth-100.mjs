@@ -10,7 +10,7 @@ const assert = (condition, message) => {
 const allowed = new Set(['known', 'none-known', 'canon-unknown', 'not-applicable']);
 const assertStatuses = (rows, label) => {
   assert(Array.isArray(rows), `${label} is not an array`);
-  rows.forEach((row, index) => assert(allowed.has(row?.status || row?.completionState), `${label}[${index}] has an unclassified status`));
+  rows.forEach((row, index) => assert(allowed.has(row?.completionState || row?.status), `${label}[${index}] has an unclassified completion status`));
 };
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
