@@ -12,8 +12,6 @@ function EntityButton({ id, onNavigate }) {
   return <button type="button" onClick={() => onNavigate(entityWorkspaceTarget(entity), { entity: entity.id })}>{entity.name}<ArrowRight size={10} aria-hidden="true" /></button>;
 }
 
-const assignmentTarget = (assignment) => assignment?.principalEntityId || assignment?.subjectEntityId || null;
-
 export default function SuccessionRoyalHouseholdChains({ chapter = 417, onNavigate }) {
   const rows = getRoyalHouseholdMatrix(chapter);
   const [selectedId, setSelectedId] = useState(() => rows[0]?.character.id || '');
@@ -26,7 +24,7 @@ export default function SuccessionRoyalHouseholdChains({ chapter = 417, onNaviga
     <nav aria-label="Prince household to inspect">{rows.map((row) => <button type="button" className={row.character.id === selected.character.id ? 'is-active' : ''} aria-pressed={row.character.id === selected.character.id} onClick={() => setSelectedId(row.character.id)} key={row.character.id}>{row.order || '—'} · {row.character.name.replace(/ Hui Guo Rou$/i, '')}</button>)}</nav>
     <div className="succession-household-chains__summary"><strong>{selected.personnelIds.length}</strong><span>linked personnel</span><strong>{assignments.length}</strong><span>active household assignments</span></div>
     <ol>{assignments.map((assignment) => {
-      const targetId = assignmentTarget(assignment);
+      const targetId = assignment.principalEntityId || assignment.subjectEntityId || null;
       return <li key={assignment.id}>
         <div><small>Actor</small><EntityButton id={assignment.personId} onNavigate={onNavigate} /></div>
         <i aria-hidden="true">→</i>
