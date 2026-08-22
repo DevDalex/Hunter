@@ -5,14 +5,13 @@
   display: none !important;
 }
 
-/* Recover the vertical space that the removed 34px strip previously reserved. */
+/* With the strip removed, the archive shell should occupy the full viewport. */
 .succession-archive__layout {
-  min-height: calc(100vh - var(--header-height)) !important;
+  min-height: 100vh !important;
 }
 
 .succession-archive__sidebar-inner {
-  top: var(--header-height) !important;
-  height: calc(100vh - var(--header-height)) !important;
+  height: 100% !important;
 }
 
 /* Story Intelligence hero copy should read as solid black on the light document surface. */
