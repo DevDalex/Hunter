@@ -20,6 +20,9 @@ assert(entrySource.includes("import SuccessionContextualReferenceExpansion from 
 assert(entrySource.includes('<SuccessionContextualReferenceExpansion'), 'normal Succession route shell does not render the full reference expansion');
 assert(nenSource.includes("import SuccessionContextualCompletion from './succession/SuccessionContextualCompletion'"), 'general Nen encyclopedia does not import the contextual completion surface');
 assert(nenSource.includes('<SuccessionContextualCompletion spoilerLimit={spoilerLimit} encyclopedia />'), 'general Nen encyclopedia does not expose the normalized completion records');
+const nenMapClose = nenSource.indexOf('</section>');
+const nenCompletionStart = nenSource.indexOf('<SuccessionContextualCompletion spoilerLimit={spoilerLimit} encyclopedia />');
+assert(nenMapClose >= 0 && nenCompletionStart > nenMapClose, 'general Nen completion content must remain outside the interactive .nen-map-only shell so it cannot intercept map clicks');
 
 for (const target of ['chapters', 'princes', 'research', 'organizations', 'nen', 'guardian-spirit-beasts', 'glossary', 'events', 'relationships', 'story', 'timeline']) {
   assert(surfaceSource.includes(`routeTarget === '${target}'`), `normal ${target} route is not mapped to completion content`);
