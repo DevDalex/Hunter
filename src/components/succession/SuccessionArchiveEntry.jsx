@@ -25,6 +25,7 @@ import './SuccessionPhase2PresentationConsistency.css';
 import './SuccessionFinalReleasePatch.css';
 import './SuccessionFinalContrastClosure.css';
 import SuccessionCommandHome from './SuccessionCommandHome';
+import SuccessionContextualCompletion from './SuccessionContextualCompletion';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));
@@ -49,10 +50,18 @@ export default function SuccessionArchiveEntry(props) {
   }
 
   return <Suspense fallback={<ArchiveRouteLoading />}>
-    {isReader
-      ? <SuccessionArchiveReaderRoute {...props} />
-      : isLightRoute
-        ? <SuccessionArchiveLightRoute {...props} />
-        : <SuccessionArchiveApp {...props} />}
+    <>
+      {isReader
+        ? <SuccessionArchiveReaderRoute {...props} />
+        : isLightRoute
+          ? <SuccessionArchiveLightRoute {...props} />
+          : <SuccessionArchiveApp {...props} />}
+      <SuccessionContextualCompletion
+        routeTarget={props.routeTarget}
+        routeParams={props.routeParams}
+        spoilerLimit={props.spoilerLimit}
+        onNavigate={props.onNavigate}
+      />
+    </>
   </Suspense>;
 }
