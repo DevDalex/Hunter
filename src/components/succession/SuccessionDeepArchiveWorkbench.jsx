@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
 import { BookOpenCheck, BrainCircuit, Crown, Database, FileSearch, GitBranch, Library, Network, Scale, Search, ShieldQuestion, Swords, Users } from 'lucide-react';
+import { getEntityById } from '../../data/succession/successionData';
 import {
   getArchiveLedgers,
   getChapterForensicDossier,
   getContentExpansionSummary,
   getCrossLinkAtlas,
-  getEntityById,
   getEvidenceQualityAudit,
   getFullPrinceDossiers,
   getInformationWarExpansion,
@@ -16,7 +16,7 @@ import {
   getReaderOrientation,
   getReferenceAppendices,
   getTroupeHisokaDeepDossier,
-} from '../../data/succession/successionData';
+} from '../../data/succession/contentDepthExpansion';
 import { entityWorkspaceTarget } from './SuccessionArchivePrimitives';
 import './SuccessionDeepArchiveWorkbench.css';
 
