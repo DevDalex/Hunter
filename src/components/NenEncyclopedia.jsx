@@ -17,8 +17,10 @@ const portraitItemFor = (name) => {
 };
 
 export default function NenEncyclopedia({ spoilerLimit = Number.MAX_SAFE_INTEGER }) {
-  return <section className="nen-map-only" id="nen">
-    <NenSystemExpansionMap records={expandedNenRecords} spoilerLimit={spoilerLimit} portraitItemFor={portraitItemFor} />
+  return <>
+    <section className="nen-map-only" id="nen">
+      <NenSystemExpansionMap records={expandedNenRecords} spoilerLimit={spoilerLimit} portraitItemFor={portraitItemFor} />
+    </section>
     <SuccessionContextualCompletion spoilerLimit={spoilerLimit} encyclopedia />
-  </section>;
+  </>;
 }
