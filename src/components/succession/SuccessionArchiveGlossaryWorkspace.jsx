@@ -4,6 +4,7 @@ import { EvidenceBadge, StatusPill } from '../ArchiveUI';
 import {
   getEntityById,
   getGlossaryEntriesAtChapter,
+  getGlossaryEntryAtChapter,
 } from '../../data/succession/successionData';
 import { DEEP_GLOSSARY_ENTRIES } from '../../data/succession/contentDepthExpansionReference';
 import {
@@ -67,11 +68,13 @@ function GlossaryDossier({ entry, entries, onNavigate }) {
 
 export default function SuccessionArchiveGlossaryWorkspace({ routeParams = {}, spoilerLimit, onNavigate }) {
   const entries = useMemo(() => mergeGlossary(getGlossaryEntriesAtChapter(spoilerLimit), supplementalGlossaryAtChapter(spoilerLimit)), [spoilerLimit]);
+  const canonicalSelected = routeParams.term ? getGlossaryEntryAtChapter(routeParams.term, spoilerLimit) : null;
   const selected = useMemo(() => {
     if (!routeParams.term) return null;
+    if (canonicalSelected) return canonicalSelected;
     const target = normalize(routeParams.term);
     return entries.find((entry) => entry.id === routeParams.term || normalize(entry.term) === target) || null;
-  }, [entries, routeParams.term]);
+  }, [canonicalSelected, entries, routeParams.term]);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
   const categories = useMemo(() => [...new Set(entries.map((entry) => entry.category))].sort(), [entries]);
