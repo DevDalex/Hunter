@@ -44,7 +44,9 @@
 }
 
 .succession-household-chains button {
+  min-width: 0;
   min-height: 30px;
+  max-width: 100%;
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -55,7 +57,20 @@
   font: inherit;
   font-size: 11px;
   font-weight: 760;
+  line-height: 1.25;
+  white-space: normal;
+  overflow-wrap: anywhere;
   cursor: pointer;
+}
+
+.succession-household-chains button > svg {
+  flex: 0 0 auto;
+}
+
+.succession-household-chains > ol > li > div > button {
+  width: 100%;
+  justify-content: space-between;
+  text-align: left;
 }
 
 .succession-household-chains button.is-active {
@@ -109,6 +124,7 @@
   padding: 6px;
   border: 1px solid #d9d9d4;
   background: #fff;
+  overflow: hidden;
 }
 
 .succession-household-chains > ol > li > div.is-role { border-width: 2px; }
@@ -117,9 +133,11 @@
 
 .succession-household-chains small,
 .succession-household-chains > ol > li > div > span {
+  min-width: 0;
   color: #64645f;
   font-size: 11px;
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .succession-household-chains small {
@@ -131,7 +149,7 @@
   text-transform: uppercase;
 }
 
-.succession-household-chains > ol > li > div > b { font-size: 12px; }
+.succession-household-chains > ol > li > div > b { min-width: 0; font-size: 12px; overflow-wrap: anywhere; }
 .succession-household-chains__empty { margin: 0; padding: 12px; color: #5f5f5b; font-size: 11px; }
 
 @media (prefers-reduced-motion: reduce) {
