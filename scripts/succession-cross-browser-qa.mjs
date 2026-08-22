@@ -131,7 +131,7 @@ try {
             if (!focusVisible) runtimeErrors.push('first interactive control has no visible focus outline');
           }
           if (routeId === 'assignments') {
-            const table = page.getByRole('button', { name: 'Table' });
+            const table = page.getByRole('button', { name: 'Table', exact: true });
             await table.click();
             await page.waitForSelector('.succession-assignment-table', { timeout: 8_000 });
           }
