@@ -179,7 +179,14 @@ export function parseLegacyHashRoute(hash = '') {
   const [candidate = '', target = ''] = path.split('/');
   const params = readQuery(queryString);
 
-  if (candidate === 'succession') return normalizeDestination('succession', target || 'archive', params);
+  if (candidate === 'succession') {
+    const legacySource = target && (successionArchiveRetiredTargets[target] || legacySuccessionPathToTarget.has(target))
+      ? target
+      : '';
+    return normalizeDestination('succession', target || 'archive', legacySource
+      ? { ...params, consolidatedFrom: params.consolidatedFrom || legacySource }
+      : params);
+  }
   if (candidate === 'reference') return normalizeDestination('reference', target, params);
   if (candidate === 'timeline') return normalizeDestination('succession', 'timeline', params);
 
