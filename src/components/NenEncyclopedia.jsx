@@ -1,9 +1,12 @@
 import NenSystemExpansionMap from './NenSystemExpansionMap';
 import { nenRecords } from '../data/nenEncyclopedia';
+import { nenDeepRecords } from '../data/nenDeepReference';
 import { priorityPortraitByName } from '../data/priorityMedia.generated';
 import '../nen-reference-map.css';
 import '../nen-spectrum-expansion.css';
 import '../nen-map-shell.css';
+
+const expandedNenRecords = Object.freeze([...nenRecords, ...nenDeepRecords]);
 
 const portraitItemFor = (name) => {
   const media = priorityPortraitByName.get(name);
@@ -14,6 +17,6 @@ const portraitItemFor = (name) => {
 
 export default function NenEncyclopedia({ spoilerLimit = Number.MAX_SAFE_INTEGER }) {
   return <section className="nen-map-only" id="nen">
-    <NenSystemExpansionMap records={nenRecords} spoilerLimit={spoilerLimit} portraitItemFor={portraitItemFor} />
+    <NenSystemExpansionMap records={expandedNenRecords} spoilerLimit={spoilerLimit} portraitItemFor={portraitItemFor} />
   </section>;
 }
