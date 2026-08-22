@@ -104,22 +104,29 @@
 }
 
 .succession-household-chains > ol > li {
+  min-width: 0;
   display: grid;
-  grid-template-columns: minmax(0, .9fr) auto minmax(0, .8fr) auto minmax(0, .9fr) minmax(0, .9fr) minmax(0, .9fr);
+  grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1.08fr) 18px minmax(0, 1fr);
   gap: 6px;
   align-items: stretch;
-  min-width: 0;
   margin-bottom: 7px;
   padding: 7px;
   border: 1px solid #d0d0ca;
   background: #fafaf7;
+  overflow: hidden;
 }
 
 .succession-household-chains > ol > li:last-child { margin-bottom: 0; }
-.succession-household-chains > ol > li > i { align-self: center; color: #777; font-style: normal; }
+.succession-household-chains > ol > li > i {
+  align-self: center;
+  justify-self: center;
+  color: #777;
+  font-style: normal;
+}
 
 .succession-household-chains > ol > li > div {
   min-width: 0;
+  max-width: 100%;
   display: grid;
   align-content: center;
   gap: 4px;
@@ -130,12 +137,19 @@
 }
 
 .succession-household-chains > ol > li > div.is-role { border-width: 2px; }
-.succession-household-chains > ol > li > div.is-report { border-style: dashed; }
-.succession-household-chains > ol > li > div.is-allegiance { border-style: dotted; }
+.succession-household-chains > ol > li > div.is-report {
+  grid-column: 1 / 4;
+  border-style: dashed;
+}
+.succession-household-chains > ol > li > div.is-allegiance {
+  grid-column: 4 / 6;
+  border-style: dotted;
+}
 
 .succession-household-chains small,
 .succession-household-chains > ol > li > div > span {
   min-width: 0;
+  max-width: 100%;
   color: #64645f;
   font-size: 11px;
   line-height: 1.35;
@@ -151,7 +165,12 @@
   text-transform: uppercase;
 }
 
-.succession-household-chains > ol > li > div > b { min-width: 0; font-size: 12px; overflow-wrap: anywhere; }
+.succession-household-chains > ol > li > div > b {
+  min-width: 0;
+  max-width: 100%;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
 .succession-household-chains__empty { margin: 0; padding: 12px; color: #5f5f5b; font-size: 11px; }
 
 @media (prefers-reduced-motion: reduce) {
