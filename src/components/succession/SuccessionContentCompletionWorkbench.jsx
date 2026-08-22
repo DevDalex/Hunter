@@ -4,12 +4,15 @@ import {
   getAllChapterCompletionDossiers,
   getAppendixCompletion,
   getCompletionReport,
+  getCrossLinkCoverage,
   getEvidenceCompletion,
+  getGlossaryCompletion,
   getInvestigationCompletion,
   getKakinCompletion,
   getKnowledgeCompletion,
   getLedgerCompletion,
   getMysteryCompletion,
+  getNenCompletion,
   getPrinceCompletionDossiers,
   getSpecialTrackerCompletion,
 } from '../../data/succession/contentCompletion';
@@ -24,7 +27,10 @@ const VIEWS = [
   ['investigations', 'Investigations'],
   ['kakin', 'Kakin'],
   ['knowledge', 'Information war'],
+  ['nen', 'Nen'],
   ['mysteries', 'Mysteries'],
+  ['glossary', 'Glossary'],
+  ['crosslinks', 'Cross-links'],
   ['ledgers', 'Ledgers'],
   ['evidence', 'Evidence'],
   ['appendices', 'Appendices'],
@@ -53,8 +59,8 @@ function Status({ value }) {
 }
 
 function FieldRows({ fields }) {
-  return <div className="succession-completion-fields">{fields.map((item) => <article key={item.id || item.label || item.focus || item.facet || item.topic || item.name}>
-    <header><h4>{item.label || item.focus || item.facet || item.topic || item.name}</h4><Status value={item.status || item.completionState || 'known'} /></header>
+  return <div className="succession-completion-fields">{fields.map((item, index) => <article key={item.id || item.label || item.focus || item.facet || item.topic || item.name || item.term || `${index}`}>
+    <header><h4>{item.label || item.focus || item.facet || item.topic || item.name || item.term}</h4><Status value={item.status || item.completionState || 'known'} /></header>
     {renderValue(item.value ?? item.rows ?? item.knownFacts)}
     {item.note && <p>{item.note}</p>}
     {!!item.sourceRefs?.length && <small>Sources: {item.sourceRefs.join(' · ')}</small>}
@@ -71,6 +77,9 @@ function Coverage({ chapter }) {
       <div><dt>Chapters</dt><dd>{report.chapters}</dd></div>
       <div><dt>Princes</dt><dd>{report.princes}</dd></div>
       <div><dt>Trackers</dt><dd>{report.trackers}</dd></div>
+      <div><dt>Nen records</dt><dd>{report.nenRecords}</dd></div>
+      <div><dt>Glossary</dt><dd>{report.glossaryTerms}</dd></div>
+      <div><dt>Cross-linked</dt><dd>{report.crossLinkedEntities}</dd></div>
       <div><dt>Ledgers</dt><dd>{report.ledgers}</dd></div>
       <div><dt>Appendices</dt><dd>{report.appendixFamilies}</dd></div>
     </dl>
@@ -119,9 +128,24 @@ function Knowledge({ chapter }) {
   return <section className="succession-completion-panel"><header><span>Information war</span><h3>{row.totalClaims} canonical knowledge claims mapped across requested topics</h3></header><FieldRows fields={row.topics} /></section>;
 }
 
+function Nen() {
+  const row = useMemo(() => getNenCompletion(), []);
+  return <section className="succession-completion-panel"><header><span>General Nen encyclopedia</span><h3>{row.count} normalized system and ability records</h3><p>Every record exposes summary, mechanics, study guidance, related concepts, and a source slot. Unknown record fields remain explicit instead of being silently absent.</p></header><div className="succession-completion-groups">{row.records.map((record) => <article key={record.id}><header><h4>{record.name}</h4><Status value={record.status} /></header><FieldRows fields={record.fields.map((item) => ({ ...item, label: item.field }))} /></article>)}</div></section>;
+}
+
 function Mysteries({ chapter }) {
   const rows = useMemo(() => getMysteryCompletion(chapter), [chapter]);
   return <section className="succession-completion-panel"><header><span>Mystery dossiers</span><h3>Evidence, unknowns, candidates, and resolution history</h3></header><div className="succession-completion-groups">{rows.map((row) => <article key={row.id}><header><h4>{row.title}</h4><Status value={row.completionState} /></header><p>{row.question}</p><h5>Known</h5>{renderValue(row.knownFacts)}<h5>Unknown</h5>{renderValue(row.unknowns)}<h5>Candidates</h5>{renderValue(row.candidates)}</article>)}</div></section>;
+}
+
+function Glossary({ chapter }) {
+  const row = useMemo(() => getGlossaryCompletion(chapter), [chapter]);
+  return <section className="succession-completion-panel"><header><span>Canonical vocabulary</span><h3>{row.count} chapter-bounded glossary terms</h3></header><div className="succession-completion-groups">{row.records.map((record) => <article key={record.id}><header><h4>{record.term}</h4><Status value={record.status} /></header><FieldRows fields={record.fields.map((item) => ({ ...item, label: item.field }))} /></article>)}</div></section>;
+}
+
+function CrossLinks({ chapter }) {
+  const row = useMemo(() => getCrossLinkCoverage(chapter), [chapter]);
+  return <section className="succession-completion-panel"><header><span>Cross-link coverage</span><h3>{row.count} released canonical entities checked</h3><p>An entity with no extra edge is explicitly marked as a graph-isolated canon record instead of vanishing from the cross-link audit.</p></header><div className="succession-completion-groups">{row.records.map((record) => <article key={record.id}><header><h4>{record.name}</h4><Status value={record.status} /></header><p>{record.entityType}</p><p>{record.note || `${record.relatedEntityIds.length} related · ${record.relationshipIds.length} relationships · ${record.sourceIds.length} sources`}</p></article>)}</div></section>;
 }
 
 function Ledgers({ chapter }) {
@@ -151,7 +175,10 @@ export default function SuccessionContentCompletionWorkbench({ spoilerLimit = 41
     {view === 'investigations' && <Investigations chapter={chapter} />}
     {view === 'kakin' && <Kakin chapter={chapter} />}
     {view === 'knowledge' && <Knowledge chapter={chapter} />}
+    {view === 'nen' && <Nen />}
     {view === 'mysteries' && <Mysteries chapter={chapter} />}
+    {view === 'glossary' && <Glossary chapter={chapter} />}
+    {view === 'crosslinks' && <CrossLinks chapter={chapter} />}
     {view === 'ledgers' && <Ledgers chapter={chapter} />}
     {view === 'evidence' && <Evidence chapter={chapter} />}
     {view === 'appendices' && <Appendices chapter={chapter} />}
