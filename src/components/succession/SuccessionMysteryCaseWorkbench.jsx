@@ -6,6 +6,7 @@ import {
   getSuccessionMysteryCaseSummary,
 } from '../../data/succession/successionMysteryCases';
 import SuccessionAnalyticalFinishingPanel from './SuccessionAnalyticalFinishingPanel';
+import SuccessionContentCompletionWorkbench from './SuccessionContentCompletionWorkbench';
 import SuccessionContentDepthWorkbench from './SuccessionContentDepthWorkbench';
 import SuccessionDeepArchiveWorkbench from './SuccessionDeepArchiveWorkbench';
 import SuccessionEvidenceTranslationWorkbench from './SuccessionEvidenceTranslationWorkbench';
@@ -64,6 +65,7 @@ export default function SuccessionMysteryCaseWorkbench({ routeParams = {}, spoil
   if (depthActive) {
     const depthChapter = Math.min(spoilerLimit, Math.max(340, Number(routeParams.chapter) || spoilerLimit));
     return <>
+      <SuccessionContentCompletionWorkbench spoilerLimit={spoilerLimit} />
       <SuccessionDeepArchiveWorkbench routeParams={routeParams} spoilerLimit={spoilerLimit} onNavigate={depthNavigate} />
       <SuccessionContentDepthWorkbench routeParams={{ ...routeParams, mode: 'depth' }} spoilerLimit={spoilerLimit} onNavigate={depthNavigate} />
       <SuccessionAnalyticalFinishingPanel chapter={depthChapter} onNavigate={depthNavigate} />
