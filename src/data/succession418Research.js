@@ -54,7 +54,7 @@ export const succession418ChapterResearch = freeze([freeze({
   ]),
   threadLabels:freeze(['Tserriednich','Salkov','Theta','Benjamin','Parallel Future','Zetsu','Room 1004','Staged death','Escape routes','Special Martial Law']),
   confidence:freeze([
-    '64 chapter-bounded beats are taken only from the user-supplied Chapter 418 synopsis.',
+    '63 chapter-bounded beats are taken only from the user-supplied Chapter 418 synopsis.',
     'VIZ independently verifies Chapter 418 publication on August 23, 2026 and the official reader URL; no VIZ story content is imported.',
     'The apparent death uncertainty from Chapter 417 is resolved: Tserriednich remains alive and mobile while affected observers follow the predicted/staged future.',
     'Area-of-effect, antenna, static/range, boundary collapse, outside-observer, result-only vision, and one-eleventh battery rules remain Tserriednich hypotheses or estimates where the supplied synopsis does not complete a controlled test.',
@@ -62,7 +62,7 @@ export const succession418ChapterResearch = freeze([freeze({
     'Route A is Tserriednich’s chosen plan, not a confirmed successful escape route.',
     'Chapter 418 is the current publication ceiling; no Chapter 419+ consequence is invented.',
   ]),
-  status:'Strict maintained Chapter 418 packet: 64 chapter-bounded beats, pre-assault Parallel Future experiments, sustained-Zetsu perception extension, Chapter 417 death-resolution, staged coffin deception, Room 1004 military inspection, Tier 1 route analysis, Theta ambiguity, and current-publication-ceiling firewall',
+  status:'Strict maintained Chapter 418 packet: 63 chapter-bounded beats, pre-assault Parallel Future experiments, sustained-Zetsu perception extension, Chapter 417 death-resolution, staged coffin deception, Room 1004 military inspection, Tier 1 route analysis, Theta ambiguity, and current-publication-ceiling firewall',
   coverage:freeze({ identity:true,publication:true,summary:true,sceneSummary:true,chronology:true,appearances:true,locations:true,relationships:true,assignments:true,nen:true,source:true }),
   lastReviewed:'August 23, 2026',
   releaseDate:'August 23, 2026',
