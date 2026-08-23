@@ -15,7 +15,7 @@ try {
     vite.ssrLoadModule('/src/data/succession/successionMysteryCases.js'),
     vite.ssrLoadModule('/src/data/succession/contentDepthTranslationVariants.js'),
   ]);
-  const chapter = 417;
+  const chapter = 418;
 
   // P0 · Canonical depth closure.
   const knowledge = archive.getKnowledgeRecordsAtChapter(chapter);
@@ -24,14 +24,15 @@ try {
   const editorial = archive.getEditorialChangeLog();
   const storyThreads = archive.getStoryThreadsAtChapter(chapter);
   const princes = archive.getPrinceCampaignBoard(chapter);
-  assert(knowledge.some((row) => row.id === 'knowledge-record:benjamin-layered-affliction'), 'P0 Knowledge & Secrecy is not closed through Chapter 417');
-  assert(protocols.some((row) => row.id === 'protocol:gypsy-life-host-transfer') && protocols.some((row) => row.id === 'protocol:special-martial-law-order'), 'P0 Rules / Law / Ritual protocols are not closed through Chapter 417');
-  assert(artifacts.some((row) => row.id === 'object:tsk-17') && artifacts.some((row) => row.id === 'document:first-unit-reactivation-order-417') && artifacts.some((row) => row.id === 'evidence-item:unma-halkenburg-publication-endpoint'), 'P0 Objects / Documents / Evidence are not closed through Chapter 417');
-  assert(editorial.entries?.some((row) => row.id === 'change:content-depth-417-p0'), 'P0 editorial/revision history lacks the current content-depth entry');
+  assert(knowledge.some((row) => row.id === 'knowledge-record:benjamin-layered-affliction'), 'P0 Knowledge & Secrecy is not closed through Chapter 418');
+  assert(protocols.some((row) => row.id === 'protocol:gypsy-life-host-transfer') && protocols.some((row) => row.id === 'protocol:special-martial-law-order'), 'P0 Rules / Law / Ritual protocols are not closed through Chapter 418');
+  assert(artifacts.some((row) => row.id === 'object:tsk-17') && artifacts.some((row) => row.id === 'document:first-unit-reactivation-order-417') && artifacts.some((row) => row.id === 'evidence-item:unma-halkenburg-publication-endpoint'), 'P0 Objects / Documents / Evidence are not closed through Chapter 418');
+  assert(editorial.entries?.some((row) => row.id === 'change:content-depth-417-p0'), 'P0 editorial/revision history lacks the retained current-depth baseline entry');
   assert(mysteries.successionMysteryCases.length >= 19 && mysteries.successionMysteryCases.every((row) => Array.isArray(row.candidates) && Array.isArray(row.knownFacts) && Array.isArray(row.unknowns) && Array.isArray(row.resolutionHistory)), 'P0 mystery case-file model is incomplete');
-  for (const id of ['story-thread:benjamin-layered-countdown', 'story-thread:tserriednich-room1004-reality', 'story-thread:tubeppa-tyson-tsk17', 'story-thread:gypsy-life-host-transfer', 'story-thread:benjamin-unma-confrontation']) {
+  for (const id of ['story-thread:benjamin-layered-countdown', 'story-thread:tserriednich-room1004-reality', 'story-thread:tubeppa-tyson-tsk17', 'story-thread:gypsy-life-host-transfer', 'story-thread:benjamin-unma-confrontation', 'story-thread:tserriednich-route-a-escape']) {
     assert(storyThreads.some((row) => (row.profile || row).id === id), `P0 Story Intelligence is missing ${id}`);
   }
+  assert(storyThreads.some((row) => (row.profile || row).id === 'story-thread:tserriednich-room1004-reality' && ((row.profile || row).resolutionChapter === 418 || (row.profile || row).status === 'resolved')), 'P0 Room 1004 reality thread is not resolved at Chapter 418');
   assert(princes.length === 14, 'P0 all-14-princes campaign board is incomplete');
 
   // P1 · Core strategic intelligence.
@@ -60,7 +61,7 @@ try {
   assert(p1.rules.records.length > 0, 'P1 Succession Rules Engine is empty');
   assert(Array.isArray(p1.training.eventIds) && Array.isArray(p1.training.participants), 'P1 Nen training tracker is unavailable');
   assert(p1.transfers.length > 0, 'P1 ability transfer/inheritance ledger is empty');
-  for (let maintained = 340; maintained <= 417; maintained += 1) {
+  for (let maintained = 340; maintained <= 418; maintained += 1) {
     const change = archive.getChapterWhatChanged(maintained);
     assert(change?.chapter === maintained, `P1 What Changed? is missing Chapter ${maintained}`);
     const expectedPrevious = maintained === 340 ? 340 : maintained - 1;
@@ -120,7 +121,7 @@ try {
   for (const token of ['60-second', 'Standard', 'Deep analysis', 'Evidence']) assert(readingUi.includes(token), `released depth-mode UI is missing ${token}`);
   assert(bridgeUi.includes('SuccessionAnalyticalFinishingPanel') && bridgeUi.includes("workspace === 'depth'"), 'Research route does not expose the complete depth system');
 
-  console.log(`Succession content-depth completion audit passed: P0–P3 released through Chapter 417 with 14 princes, 8 queens, ${mysteries.successionMysteryCases.length} mystery cases, 78/78 chapter-change briefs, ${setup.records.length} setup/payoff links, ${foreshadowing.signals.length} structural signals, ${commitments.total} commitment records, ${spatial.summary.systems} spatial systems, and four explicit leverage dimensions.`);
+  console.log(`Succession content-depth completion audit passed: P0–P3 released through Chapter 418 with 14 princes, 8 queens, ${mysteries.successionMysteryCases.length} mystery cases, 79/79 chapter-change briefs, ${setup.records.length} setup/payoff links, ${foreshadowing.signals.length} structural signals, ${commitments.total} commitment records, ${spatial.summary.systems} spatial systems, and four explicit leverage dimensions.`);
 } finally {
   await vite.close();
 }
