@@ -2,11 +2,9 @@ import { useMemo, useState } from 'react';
 import { ArrowLeft, ArrowRight, BookOpen, Library, Search } from 'lucide-react';
 import { EvidenceBadge, StatusPill } from '../ArchiveUI';
 import {
-  getEntityById,
   getGlossaryEntriesAtChapter,
   getGlossaryEntryAtChapter,
 } from '../../data/succession/successionData';
-import { DEEP_GLOSSARY_ENTRIES } from '../../data/succession/contentDepthExpansionReference';
 import {
   ArchiveState,
   EntityLink,
@@ -26,20 +24,6 @@ const normalize = (value) => String(value || '')
 
 const evidenceState = (certainty) => certainty === 'inference' ? 'inferred' : certainty === 'theory' ? 'unclear' : 'confirmed';
 
-const supplementalGlossaryAtChapter = (chapter) => DEEP_GLOSSARY_ENTRIES
-  .filter((entry) => entry.firstChapter <= Number(chapter))
-  .map((entry) => Object.freeze({
-    ...entry,
-    relatedRecords: Object.freeze((entry.relatedEntityIds || []).map((id) => getEntityById(id)).filter(Boolean).map((entity) => Object.freeze({ id: entity.id, entity }))),
-    sources: Object.freeze((entry.sourceIds || []).map((id) => getEntityById(id)).filter(Boolean)),
-  }));
-
-const mergeGlossary = (base, supplemental) => {
-  const seen = new Set(base.map((entry) => normalize(entry.term)));
-  return [...base, ...supplemental.filter((entry) => !seen.has(normalize(entry.term)))]
-    .sort((left, right) => left.term.localeCompare(right.term));
-};
-
 function GlossaryDossier({ entry, entries, onNavigate }) {
   const index = entries.findIndex((record) => record.id === entry.id);
   const previous = entries[index - 1] || null;
@@ -48,16 +32,20 @@ function GlossaryDossier({ entry, entries, onNavigate }) {
     <header>
       <button type="button" className="succession-button succession-button--quiet" onClick={() => onNavigate('glossary', {})}><ArrowLeft size={14} aria-hidden="true" /> All terms</button>
       <div><span>{entry.category}</span><h2 id="glossary-dossier-title">{entry.term}</h2><p>{entry.definition}</p></div>
-      <div className="succession-product-dossier__badges"><EvidenceBadge state={evidenceState(entry.certainty)}>{entry.certainty}</EvidenceBadge><StatusPill tone="neutral">Known by Ch. {entry.firstChapter}</StatusPill></div>
+      <div className="succession-product-dossier__badges"><EvidenceBadge state={evidenceState(entry.certainty)}>{entry.certainty}</EvidenceBadge><StatusPill tone="neutral">Available by Ch. {entry.firstChapter}</StatusPill></div>
     </header>
 
-    {!!entry.synonyms.length && <section><h3>Alternate wording</h3><div className="succession-product-chips">{entry.synonyms.map((synonym) => <span key={synonym}>{synonym}</span>)}</div></section>}
+    {!!entry.synonyms?.length && <section><h3>Alternate wording</h3><div className="succession-product-chips">{entry.synonyms.map((synonym) => <span key={synonym}>{synonym}</span>)}</div></section>}
+
+    {!!entry.relatedTerms?.length && <section><h3>Related Nen / archive vocabulary</h3><div className="succession-product-chips">{entry.relatedTerms.map((term) => <button type="button" key={term} onClick={() => onNavigate('glossary', { term })}>{term}</button>)}</div></section>}
 
     <section aria-labelledby="glossary-connections-title"><h3 id="glossary-connections-title">Connected canonical records</h3>{entry.relatedRecords?.length ? <div className="succession-product-links">{entry.relatedRecords.map((record) => record.entity
       ? <EntityLink entity={record.entity} onNavigate={onNavigate} key={record.id} />
       : <button type="button" key={record.id} onClick={() => onNavigate(record.route, record.params)}><span><small>{record.kind.replaceAll('-', ' ')}</small><b>{record.label}</b></span><ArrowRight size={13} aria-hidden="true" /></button>)}</div> : <p>No direct graph record is published for this archive vocabulary term.</p>}</section>
 
-    {!!entry.sources.length && <section className="succession-source-list" aria-labelledby="glossary-sources-title"><header><span>Evidence</span><h3 id="glossary-sources-title">Chapter sources available at this boundary</h3></header>{entry.sources.map((source) => <SourceReference source={source} onNavigate={onNavigate} key={source.id} />)}</section>}
+    {!!entry.sources?.length && <section className="succession-source-list" aria-labelledby="glossary-sources-title"><header><span>Evidence</span><h3 id="glossary-sources-title">Chapter or reference sources available at this boundary</h3></header>{entry.sources.map((source) => <SourceReference source={source} onNavigate={onNavigate} key={source.id || source.url || source.name} />)}</section>}
+
+    {entry.availabilityNote && <section><h3>Boundary note</h3><p>{entry.availabilityNote}</p></section>}
 
     <nav className="succession-product-prev-next" aria-label="Glossary record navigation">
       {previous ? <button type="button" onClick={() => onNavigate('glossary', { term: previous.id })}><ArrowLeft size={14} aria-hidden="true" /><span><small>Previous term</small><b>{previous.term}</b></span></button> : <span />}
@@ -67,21 +55,20 @@ function GlossaryDossier({ entry, entries, onNavigate }) {
 }
 
 export default function SuccessionArchiveGlossaryWorkspace({ routeParams = {}, spoilerLimit, onNavigate }) {
-  const entries = useMemo(() => mergeGlossary(getGlossaryEntriesAtChapter(spoilerLimit), supplementalGlossaryAtChapter(spoilerLimit)), [spoilerLimit]);
-  const canonicalSelected = routeParams.term ? getGlossaryEntryAtChapter(routeParams.term, spoilerLimit) : null;
+  const entries = useMemo(() => getGlossaryEntriesAtChapter(spoilerLimit), [spoilerLimit]);
   const selected = useMemo(() => {
     if (!routeParams.term) return null;
-    if (canonicalSelected) return canonicalSelected;
-    const target = normalize(routeParams.term);
-    return entries.find((entry) => entry.id === routeParams.term || normalize(entry.term) === target) || null;
-  }, [canonicalSelected, entries, routeParams.term]);
+    return getGlossaryEntryAtChapter(routeParams.term, spoilerLimit)
+      || entries.find((entry) => entry.id === routeParams.term || normalize(entry.term) === normalize(routeParams.term) || (entry.synonyms || []).some((synonym) => normalize(synonym) === normalize(routeParams.term)))
+      || null;
+  }, [entries, routeParams.term, spoilerLimit]);
   const [query, setQuery] = useState('');
   const [category, setCategory] = useState('all');
   const categories = useMemo(() => [...new Set(entries.map((entry) => entry.category))].sort(), [entries]);
   const visible = useMemo(() => entries.filter((entry) => {
     if (category !== 'all' && entry.category !== category) return false;
     if (!query.trim()) return true;
-    const text = normalize(`${entry.term} ${entry.definition} ${entry.category} ${entry.synonyms.join(' ')}`);
+    const text = normalize(`${entry.term} ${entry.definition} ${entry.category} ${(entry.synonyms || []).join(' ')} ${(entry.relatedTerms || []).join(' ')}`);
     return normalize(query).split(' ').filter(Boolean).every((token) => text.includes(token));
   }), [entries, category, query]);
 
@@ -90,7 +77,7 @@ export default function SuccessionArchiveGlossaryWorkspace({ routeParams = {}, s
 
   return <div className="succession-product-workspace succession-glossary-canonical">
     <header className="succession-product-hero">
-      <div><span><Library size={16} aria-hidden="true" /> Canonical vocabulary</span><h2>Glossary terms connected to the archive graph</h2><p>Definitions, synonyms, certainty, first-known chapters, related records, and evidence all obey the selected reading boundary. Deep reference terms supplement the canonical product glossary without replacing richer existing entries.</p></div>
+      <div><span><Library size={16} aria-hidden="true" /> Canonical vocabulary</span><h2>Glossary terms connected to the archive graph and Nen reference</h2><p>Definitions, synonyms, certainty, first-known boundaries, related records, and evidence all obey the selected reading boundary. Succession-specific terms and series-level Nen vocabulary now use one deduplicated catalogue.</p></div>
       <dl><div><dt>Available terms</dt><dd>{entries.length}</dd></div><div><dt>Categories</dt><dd>{categories.length}</dd></div><div><dt>Visible</dt><dd>{visible.length}</dd></div></dl>
     </header>
 
@@ -100,6 +87,6 @@ export default function SuccessionArchiveGlossaryWorkspace({ routeParams = {}, s
     </div>
 
     <p className="succession-product-status" role="status" aria-live="polite">{visible.length} glossary term{visible.length === 1 ? '' : 's'} available through Chapter {spoilerLimit}.</p>
-    {visible.length ? <section className="succession-glossary-canonical__grid" aria-label="Glossary records">{visible.map((entry) => <article key={entry.id}><header><BookOpen size={17} aria-hidden="true" /><span>{entry.category}</span></header><h3>{entry.term}</h3><p>{entry.definition}</p><footer><EvidenceBadge state={evidenceState(entry.certainty)}>{entry.certainty}</EvidenceBadge><button type="button" onClick={() => onNavigate('glossary', { term: entry.id })}>Open term <ArrowRight size={13} aria-hidden="true" /></button></footer></article>)}</section> : <ArchiveState kind="empty" title="No glossary match" description="Clear the filters or try a synonym, ability name, location, law, or archive term." />}
+    {visible.length ? <section className="succession-glossary-canonical__grid" aria-label="Glossary records">{visible.map((entry) => <article key={entry.id}><header><BookOpen size={17} aria-hidden="true" /><span>{entry.category}</span></header><h3>{entry.term}</h3><p>{entry.definition}</p><footer><EvidenceBadge state={evidenceState(entry.certainty)}>{entry.certainty}</EvidenceBadge><button type="button" onClick={() => onNavigate('glossary', { term: entry.id })}>Open term <ArrowRight size={13} aria-hidden="true" /></button></footer></article>)}</section> : <ArchiveState kind="empty" title="No glossary match" description="Clear the filters or try a synonym, ability name, Nen concept, location, law, or archive term." />}
   </div>;
 }
