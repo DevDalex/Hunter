@@ -42,8 +42,8 @@ assert(accessibilityImport > readerImport, 'accessibility closure must load afte
 assert(entry.includes("props.routeTarget === 'reader'"), 'Reader route is not intercepted by the archive entry');
 assert(entry.includes('<SuccessionArchiveReaderRoute {...props} />'), 'Reader route wrapper is not rendered');
 
-assert(shell.includes('succession-archive__status-strip'), 'Black Whale operational status strip is missing');
-assert(shell.includes('<Ship size={14}'), 'status strip no longer identifies the Black Whale');
+assert(!shell.includes('succession-archive__status-strip'), 'retired full-width Black Whale status strip must not return');
+assert(!shell.includes('Canon separated'), 'retired evidence/canon status-strip copy must not return');
 assert(shell.includes('Succession Intelligence'), 'archive command identity is missing');
 assert(shell.includes('SuccessionCommandHome'), 'command-center homepage is not mounted by the archive shell');
 
@@ -54,7 +54,6 @@ assert(readerRoute.includes("onExitArchive={() => onNavigate('archive')}"), 'rea
 
 const combined = styles.join('\n');
 const requiredSelectors = [
-  '.succession-archive__status-strip',
   '.succession-command-home__portals',
   '.succession-royal-command',
   '.black-whale-intelligence',
@@ -86,4 +85,4 @@ for (const [index, source] of styles.entries()) {
   assert(opening === closing, `${cssFiles[index]} has unbalanced CSS blocks (${opening} opening, ${closing} closing)`);
 }
 
-console.log(`Succession Black Whale redesign audit passed: ${cssFiles.length} themed layers, reference-matched portal homepage, integrated Reader route, operational shell, route coverage, accessibility closure, and canonical chapter bridge verified.`);
+console.log(`Succession Black Whale redesign audit passed: ${cssFiles.length} themed layers, reference-matched portal homepage, integrated Reader route, operational shell without the retired status strip, route coverage, accessibility closure, and canonical chapter bridge verified.`);
