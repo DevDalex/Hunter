@@ -22,10 +22,12 @@ import { characterState414CorrectionProfiles } from './characterState414Correcti
 import { characterState415CorrectionProfiles } from './characterState415Corrections.js';
 import { characterState416CorrectionProfiles } from './characterState416Corrections.js';
 import { characterState417CorrectionProfiles } from './characterState417Corrections.js';
+import { characterState418CorrectionProfiles } from './characterState418Corrections.js';
 import { abilityKnowledge414Overrides } from './nenSystemFoundation414Corrections.js';
 import { abilityKnowledge415Overrides } from './nenSystemFoundation415Corrections.js';
 import { abilityKnowledge416Overrides } from './nenSystemFoundation416Corrections.js';
 import { abilityKnowledge417Overrides } from './nenSystemFoundation417Corrections.js';
+import { abilityKnowledge418Overrides } from './nenSystemFoundation418Corrections.js';
 
 const freeze = (value) => Object.freeze(value);
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
@@ -75,7 +77,7 @@ const protocolRecords = freeze(uniqueById([
 ]));
 const editorialChangeLog = freeze({
   ...phase4EditorialChangeLog,
-  version: 'content-depth-417-v1',
+  version: 'content-depth-418-v1',
   entries: freeze(uniqueById([
     ...(phase4EditorialChangeLog.entries || []),
     ...contentDepthEditorialEntries417,
@@ -91,6 +93,14 @@ const abilities = freeze(uniqueById([
       latestChapter: 417,
       latestKnowledgeNote: 'Chapter 417 confirms Benjamin actively uses inherited Secret Window to observe Camilla contacting the medical department.',
       updatedAt: '2026-08-14',
+    });
+    if (record.id === 'ability:parallel-future') return freeze({
+      ...record,
+      latestChapter: 418,
+      status: 'demonstrated and materially expanded',
+      researchStatus: 'core ten-second future sight plus sustained-Zetsu observer-perception extension demonstrated / exact radius, outside-observer behavior, and maximum aura duration unresolved',
+      latestKnowledgeNote: 'Chapter 418 demonstrates that Tserriednich can remain in Zetsu after the initial ten-second playback and keep affected Room 1004 observers following the predicted future while he moves and acts elsewhere.',
+      updatedAt: '2026-08-23',
     });
     if (record.id === 'ability:muteking') return freeze({
       ...record,
@@ -112,16 +122,16 @@ const abilities = freeze(uniqueById([
     if (record.id === 'ability:cats-name') return freeze({
       ...record,
       latestChapter: 416,
-      researchStatus: 'core counteractive revival mechanics confirmed / disease and indirect-killer edge conditions unresolved through Chapter 417 publication ceiling',
-      latestKnowledgeNote: 'Chapter 417 does not resolve Cat’s Name versus TSK-17; Camilla remains alive and contacts the medical department while Benjamin surveils her.',
-      updatedAt: '2026-08-14',
+      researchStatus: 'core counteractive revival mechanics confirmed / disease and indirect-killer edge conditions unresolved through Chapter 418 publication ceiling',
+      latestKnowledgeNote: 'Chapter 418 focuses on Tserriednich and does not resolve Cat’s Name versus TSK-17.',
+      updatedAt: '2026-08-23',
     });
     if (record.id === 'ability:benjamin-baton') return freeze({
       ...record,
       latestChapter: 417,
-      researchStatus: 'core loyal-soldier inheritance confirmed / Gypsy Life post-death fusion interaction revealed / future transfer unobserved',
-      latestKnowledgeNote: 'Chapter 417 reveals that Gypsy Life fuses with Benjamin Baton after Benjamin’s death before Guardian Spirit Beast transfer to a blood relative.',
-      updatedAt: '2026-08-14',
+      researchStatus: 'core loyal-soldier inheritance confirmed / Gypsy Life post-death fusion interaction revealed / future transfer unobserved through Chapter 418',
+      latestKnowledgeNote: 'Chapter 417 reveals that Gypsy Life fuses with Benjamin Baton after Benjamin’s death before Guardian Spirit Beast transfer to a blood relative; Chapter 418 does not advance that mechanism.',
+      updatedAt: '2026-08-23',
     });
     return record;
   }),
@@ -147,17 +157,21 @@ const normalizedState414 = normalizeStates(characterState414CorrectionProfiles);
 const normalizedState415 = normalizeStates(characterState415CorrectionProfiles);
 const normalizedState416 = normalizeStates(characterState416CorrectionProfiles);
 const normalizedState417 = normalizeStates(characterState417CorrectionProfiles);
+const normalizedState418 = normalizeStates(characterState418CorrectionProfiles);
 const characterStateProfiles414 = mergeRecordMap(phase4PredecessorData.characterStateProfiles, normalizedState414);
 const characterStateProfiles414Closed = closeSupersededStateRanges(characterStateProfiles414, normalizedState415, 415);
 const characterStateProfiles415 = mergeRecordMap(characterStateProfiles414Closed, normalizedState415);
 const characterStateProfiles415Closed = closeSupersededStateRanges(characterStateProfiles415, normalizedState416, 416);
 const characterStateProfiles416 = mergeRecordMap(characterStateProfiles415Closed, normalizedState416);
 const characterStateProfiles416Closed = closeSupersededStateRanges(characterStateProfiles416, normalizedState417, 417);
-const characterStateProfiles = mergeRecordMap(characterStateProfiles416Closed, normalizedState417);
+const characterStateProfiles417 = mergeRecordMap(characterStateProfiles416Closed, normalizedState417);
+const characterStateProfiles417Closed = closeSupersededStateRanges(characterStateProfiles417, normalizedState418, 418);
+const characterStateProfiles = mergeRecordMap(characterStateProfiles417Closed, normalizedState418);
 const abilityKnowledgeOverrides414 = mergeRecordMap(phase4PredecessorData.abilityKnowledgeOverrides, abilityKnowledge414Overrides);
 const abilityKnowledgeOverrides415 = mergeRecordMap(abilityKnowledgeOverrides414, abilityKnowledge415Overrides);
 const abilityKnowledgeOverrides416 = mergeRecordMap(abilityKnowledgeOverrides415, abilityKnowledge416Overrides);
-const abilityKnowledgeOverrides = mergeRecordMap(abilityKnowledgeOverrides416, abilityKnowledge417Overrides);
+const abilityKnowledgeOverrides417 = mergeRecordMap(abilityKnowledgeOverrides416, abilityKnowledge417Overrides);
+const abilityKnowledgeOverrides = mergeRecordMap(abilityKnowledgeOverrides417, abilityKnowledge418Overrides);
 
 const relationshipShape = Object.freeze({
   'relationship:luzurus-ridge-ch414-delay-kanjidol': ['professional', 'protective-command-delay', 'allied', 'active-cooperation'],
@@ -191,6 +205,11 @@ const relationshipShape = Object.freeze({
   'relationship:benjamin-camilla-ch417-surveillance-framing': ['hostile', 'surveillance-and-framing-plan', 'hostile', 'active'],
   'relationship:benjamin-unma-ch417-planned-confrontation': ['hostile', 'planned-dynastic-confrontation', 'hostile', 'planned'],
   'relationship:benjamin-halkenburg-ch417-elimination-pressure': ['hostile', 'elimination-pressure', 'hostile', 'active'],
+  'relationship:tserriednich-salkov-ch418-ability-test': ['command', 'concealed-nen-experiment-and-testimony', 'allied', 'active'],
+  'relationship:tserriednich-benjamin-ch418-staged-death': ['hostile', 'staged-death-deception', 'hostile', 'active'],
+  'relationship:tserriednich-theta-ch418-perception-ambiguity': ['professional', 'concealed-observation', 'uncertain', 'ambiguous'],
+  'relationship:tserriednich-vantine-ch418-invisible-fire': ['hostile', 'perception-effect-gunfire-test', 'hostile', 'demonstrated'],
+  'relationship:tserriednich-nasubi-ch418-coffin-delay': ['family', 'information-delay-contingency', 'neutral', 'planned'],
 });
 const relationshipIds = new Set(Object.keys(relationshipShape));
 const relationships = freeze((phase4PredecessorData.relationships || []).map((record) => {
@@ -208,7 +227,7 @@ const relationships = freeze((phase4PredecessorData.relationships || []).map((re
     basis: record.basis || record.summary,
     operationalState: record.operationalState || record.summary,
     strength: record.strength || 'operational',
-    certainty: 'confirmed',
+    certainty: record.certainty || 'confirmed',
     relatedEventIds: freeze(record.relatedEventIds || []),
     evidenceNotes: freeze(record.evidenceNotes || record.evidence || []),
     legacyIds: freeze(record.legacyIds || []),
@@ -229,5 +248,5 @@ export const successionArchiveData = freeze({
   evidenceItems,
   editorialChangeLog,
   highValueIntelligenceVersion: 'phase-4-v1',
-  contentDepthVersion: 'content-depth-417-v1',
+  contentDepthVersion: 'content-depth-418-v1',
 });
