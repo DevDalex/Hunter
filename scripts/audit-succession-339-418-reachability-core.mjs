@@ -12,7 +12,12 @@ source = source
   .replaceAll('successionArchiveThrough417.js','successionArchiveThrough418.js')
   .replaceAll('successionDossierThrough417.js','successionDossierThrough418.js')
   .replaceAll('Through417','Through418')
-  .replaceAll('through417','through418');
+  .replaceAll('through417','through418')
+  .replaceAll('339–417','339–418')
+  .replaceAll('340–417','340–418')
+  .replaceAll('Chapter 417 dossier','Chapter 418 dossier')
+  .replaceAll('at 417','at 418')
+  .replaceAll('Chapter 417.','Chapter 418.');
 await mkdir(path.dirname(generatedPath),{ recursive:true });
 await writeFile(generatedPath,source,'utf8');
 try {
