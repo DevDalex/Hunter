@@ -78,17 +78,18 @@
     "generate:build-info": "node scripts/generate-build-info.mjs",
     "prepare:eta-assets": "node scripts/prepare-eta-assets.mjs",
     "check": "npm run generate:build-info && npm run docs:check && npm run test:unit && npm run audit:foundation && npm run audit:succession-runtime && npm run audit:succession-visibility && npm run audit:succession-phase5 && npm run audit:hosted-admin",
-    "build:runtime": "npm run audit:succession-runtime && node scripts/clean-hosting.mjs && npm run prepare:media-derivatives && npm run audit:media-derivatives && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs && npm run audit:release",
-    "build": "npm run check && npm run build:runtime",
-    "deploy": "npm run build && wrangler deploy",
+    "build:runtime": "node scripts/clean-hosting.mjs && npm run prepare:media-derivatives && npm run audit:media-derivatives && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs && npm run audit:release",
+    "build": "npm run build:runtime",
+    "verify": "npm run check && npm run build:runtime",
+    "deploy": "npm run verify && wrangler deploy",
     "preview": "vite preview --host 0.0.0.0",
     "browser:install": "playwright install chromium",
     "admin:chapters": "node scripts/succession-chapter-admin.mjs",
     "import:succession-chapter": "node scripts/import-succession-chapter.mjs",
     "import:succession-chapter:url": "node scripts/import-succession-chapter-url.mjs",
     "qa:browser:verify": "npm run qa:nen-final && npm run qa:accessibility && npm run qa:search && npm run qa:visual && npm run qa:succession-shell && npm run qa:succession-final-product && npm run qa:succession-reader && node scripts/performance-qa.mjs",
-    "qa:browser:ci": "npm run generate:build-info && npm run build:runtime && npm run qa:browser:verify",
-    "qa:browser": "npm run build && npm run qa:browser:verify"
+    "qa:browser:ci": "npm run verify && npm run qa:browser:verify",
+    "qa:browser": "npm run verify && npm run qa:browser:verify"
   },
   "dependencies": {
     "lucide-react": "1.24.0",
