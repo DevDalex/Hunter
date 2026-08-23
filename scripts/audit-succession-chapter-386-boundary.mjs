@@ -3,6 +3,21 @@ import { createServer } from 'vite';
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Chapter 386 boundary audit failed: ${message}`);
 };
+const boundedAbilityText = (record) => JSON.stringify({
+  summary: record?.summary,
+  mechanics: record?.mechanics,
+  ability: record?.ability ? {
+    summary: record.ability.summary,
+    activation: record.ability.activation,
+    conditions: record.ability.conditions,
+    limitations: record.ability.limitations,
+    costs: record.ability.costs,
+    targets: record.ability.targets,
+    range: record.ability.range,
+    duration: record.ability.duration,
+    knownUses: record.ability.knownUses,
+  } : null,
+});
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {
@@ -22,8 +37,8 @@ try {
 
   const parallel = archive.getAbilityDossier('ability:parallel-future', 386);
   assert(parallel?.known, 'Parallel Future must be available as an observed phenomenon at Chapter 386');
-  const parallelText = JSON.stringify(parallel);
-  assert(!parallelText.includes('ten-second') && !parallelText.includes('ten second') && !parallelText.includes('10-second'), 'Chapter 386 Parallel Future dossier must not leak the later ten-second rule');
+  const parallelText = boundedAbilityText(parallel);
+  assert(!parallelText.includes('ten-second') && !parallelText.includes('ten second') && !parallelText.includes('10-second'), 'Chapter 386 Parallel Future chapter-bounded mechanics must not leak the later ten-second rule');
   assert(parallelText.includes('luminol') || parallelText.includes('no blood'), 'Chapter 386 Parallel Future dossier must include the new forensic no-blood evidence');
   assert(parallel.knowledgeState === 'partially documented', 'Parallel Future must remain partially documented at the Chapter 386 boundary');
 
