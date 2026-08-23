@@ -1,4 +1,5 @@
 import { readStoredJson, removeStoredValue, writeStoredJson } from '../../lib/browserStorage.js';
+import { LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER } from '../latestChapterMetadata.js';
 
 export const SUCCESSION_ARCHIVE_MEMORY_KEY = 'hxh-succession-archive-memory-v1';
 export const SUCCESSION_ARCHIVE_MEMORY_EVENT = 'hxh-succession-archive-memory';
@@ -68,7 +69,9 @@ const normalizeSearch = (value = {}) => {
   return Object.freeze({
     id: text(value.id, 120) || query.toLocaleLowerCase(),
     query,
-    chapter: Number.isFinite(chapter) ? Math.max(340, Math.min(417, chapter)) : 417,
+    chapter: Number.isFinite(chapter)
+      ? Math.max(340, Math.min(LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER, chapter))
+      : LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
     savedAt: timestamp(value.savedAt) || null,
   });
 };
@@ -140,7 +143,7 @@ export function withUpdatedArchiveBookmarkMetadata(state, item, metadata = {}) {
   });
 }
 
-export function withSavedArchiveSearch(state, query, chapter = 417, now = new Date()) {
+export function withSavedArchiveSearch(state, query, chapter = LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER, now = new Date()) {
   const current = normalizeSuccessionArchiveMemory(state);
   const normalized = normalizeSearch({ query, chapter, savedAt: nowIso(now) });
   if (!normalized) return current;
