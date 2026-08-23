@@ -13,9 +13,9 @@ export const archiveCoverage = Object.freeze({
   }),
   reader: Object.freeze({
     id: 'reader',
-    label: 'Latest readable chapter',
+    label: 'Latest chapter with local page images',
     chapter: LATEST_AUTHORIZED_SUCCESSION_CHAPTER,
-    description: 'The latest chapter authorized for the integrated reader.',
+    description: 'The latest chapter whose manga page images are imported into the integrated reader. This is separate from the published and fully indexed research ceilings.',
   }),
   research: Object.freeze({
     id: 'research',
@@ -28,7 +28,7 @@ export const archiveCoverage = Object.freeze({
 export const archiveCoverageList = Object.freeze(Object.values(archiveCoverage));
 
 export const domainCoverage = Object.freeze({
-  reader: Object.freeze({ label: 'Chapter reader', chapter: archiveCoverage.reader.chapter, status: 'maintained' }),
+  reader: Object.freeze({ label: 'Chapter reader page images', chapter: archiveCoverage.reader.chapter, status: 'maintained' }),
   chapters: Object.freeze({ label: 'Chapter dossiers', chapter: archiveCoverage.research.chapter, status: 'maintained' }),
   story: Object.freeze({ label: 'Story Intelligence', chapter: archiveCoverage.research.chapter, status: 'maintained' }),
   timeline: Object.freeze({ label: 'Voyage timeline', chapter: archiveCoverage.research.chapter, status: 'maintained' }),
