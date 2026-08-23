@@ -13,16 +13,16 @@ try {
   const [archive, mysteryModule, storyDepthModule, storyCorrections] = await Promise.all([
     vite.ssrLoadModule('/src/data/succession/successionData.js'),
     vite.ssrLoadModule('/src/data/succession/successionMysteryCases.js'),
-    vite.ssrLoadModule('/src/data/succession/contentDepthStory417.js'),
+    vite.ssrLoadModule('/src/data/succession/contentDepthStory418.js'),
     vite.ssrLoadModule('/src/data/succession/storyIntelligenceCorrections.js'),
   ]);
   const { successionArchiveData, successionArchiveValidation } = archive;
   const { successionMysteryCases } = mysteryModule;
-  const { contentDepthCurrentPhaseThreadIds417, contentDepthStoryThreads417 } = storyDepthModule;
+  const { contentDepthCurrentPhaseThreadIds418, contentDepthStoryThreads418 } = storyDepthModule;
   const { correctedStoryPhaseProfiles, correctedStoryThreadProfiles } = storyCorrections;
 
   assert(successionArchiveValidation.valid, `canonical validation failed: ${successionArchiveValidation.errors.join(' | ')}`);
-  assert(successionArchiveData.contentDepthVersion === 'content-depth-417-v1', 'content depth version is not active');
+  assert(successionArchiveData.contentDepthVersion === 'content-depth-418-v1', 'content depth version is not active at Chapter 418');
 
   const knowledge = byId(successionArchiveData.knowledgeRecords);
   for (const id of [
@@ -80,30 +80,32 @@ try {
     'evidence-item:zhang-lei-coin-value10',
     'evidence-item:unma-halkenburg-publication-endpoint',
   ]) assert(evidence.has(id), `missing ${id}`);
-  assert(evidence.get('evidence-item:unma-halkenburg-publication-endpoint')?.chapterRange?.start === 417, 'publication endpoint evidence must remain Chapter 417-bounded');
+  assert(evidence.get('evidence-item:unma-halkenburg-publication-endpoint')?.chapterRange?.start === 417, 'Chapter 417 Unma/Halkenburg evidence must remain historically Chapter 417-bounded');
 
-  assert(successionArchiveData.editorialChangeLog?.version === 'content-depth-417-v1', 'editorial log version must advance with P0');
-  assert((successionArchiveData.editorialChangeLog?.entries || []).some((entry) => entry.id === 'change:content-depth-417-p0'), 'editorial log must record the content-depth P0 expansion');
+  assert(successionArchiveData.editorialChangeLog?.version === 'content-depth-418-v1', 'editorial log version must advance with the Chapter 418 integration');
+  assert((successionArchiveData.editorialChangeLog?.entries || []).some((entry) => entry.id === 'change:content-depth-417-p0'), 'editorial log must retain the Chapter 417 content-depth P0 expansion');
 
   assert(successionMysteryCases.length >= 19, `expected at least 19 mystery cases, found ${successionMysteryCases.length}`);
   for (const record of successionMysteryCases) {
     assert(record.id.startsWith('mystery-case:'), `${record.id} must use the mystery-case namespace`);
-    assert(record.firstChapter <= 417 && record.latestChapter <= 417, `${record.id} leaks beyond Chapter 417`);
+    assert(record.firstChapter <= 418 && record.latestChapter <= 418, `${record.id} leaks beyond Chapter 418`);
     assert(record.knownFacts.length > 0, `${record.id} needs known facts`);
     assert(record.unknowns.length > 0, `${record.id} needs explicit unknowns`);
     assert(record.candidates.length > 0, `${record.id} needs competing or bounded candidate explanations`);
     assert(record.sourceIds.length > 0, `${record.id} needs chapter sources`);
   }
 
-  const depthThreads = Object.values(contentDepthStoryThreads417);
-  assert(depthThreads.length === 9, `expected 9 current-release depth threads, found ${depthThreads.length}`);
+  const depthThreads = Object.values(contentDepthStoryThreads418);
+  assert(depthThreads.length === 14, `expected 14 current-release depth threads through 418, found ${depthThreads.length}`);
   for (const thread of depthThreads) {
     assert(correctedStoryThreadProfiles[thread.id], `${thread.id} is not exposed through Story Intelligence`);
-    assert(thread.chapterRange.start <= 417, `${thread.id} starts beyond the publication boundary`);
+    assert(thread.chapterRange.start <= 418, `${thread.id} starts beyond the publication boundary`);
   }
-  const currentPhase = correctedStoryPhaseProfiles['story-phase:current-releases-414-417'];
-  assert(currentPhase, 'current Chapter 414–417 Story phase is missing');
-  for (const id of contentDepthCurrentPhaseThreadIds417) assert(currentPhase.threadIds.includes(id), `${id} is not linked to the current-release phase`);
+  const currentPhase = correctedStoryPhaseProfiles['story-phase:current-releases-414-418'];
+  assert(currentPhase, 'current Chapter 414–418 Story phase is missing');
+  for (const id of contentDepthCurrentPhaseThreadIds418) assert(currentPhase.threadIds.includes(id), `${id} is not linked to the current-release phase`);
+  assert(correctedStoryThreadProfiles['story-thread:tserriednich-room1004-reality']?.resolutionChapter === 418, 'Room 1004 reality thread must resolve in Chapter 418');
+  assert(correctedStoryThreadProfiles['story-thread:tserriednich-route-a-escape']?.status === 'open', 'Route A escape thread must remain open at the Chapter 418 ceiling');
 
   const [appSource, caseWorkbenchSource] = await Promise.all([
     readFile(path.join(root, 'src/components/succession/SuccessionArchiveApp.jsx'), 'utf8'),
@@ -115,7 +117,7 @@ try {
   assert(caseWorkbenchSource.includes("mode: 'cases'"), 'case workbench does not expose a stable Research deep link');
   assert(caseWorkbenchSource.includes('Evidence for') && caseWorkbenchSource.includes('Evidence against / limits'), 'case detail does not render evidence for/against');
 
-  console.log(`Succession content depth P0 audit passed: ${successionArchiveValidation.stats.knowledgeRecords} knowledge records, ${successionArchiveValidation.stats.protocols} protocols, ${successionArchiveValidation.stats.objects} objects, ${successionArchiveValidation.stats.documents} documents, ${successionArchiveValidation.stats.evidenceItems} evidence items, ${successionMysteryCases.length} mystery case files, and ${depthThreads.length} current-release Story threads through Chapter 417.`);
+  console.log(`Succession content depth P0 audit passed: ${successionArchiveValidation.stats.knowledgeRecords} knowledge records, ${successionArchiveValidation.stats.protocols} protocols, ${successionArchiveValidation.stats.objects} objects, ${successionArchiveValidation.stats.documents} documents, ${successionArchiveValidation.stats.evidenceItems} evidence items, ${successionMysteryCases.length} mystery case files, and ${depthThreads.length} current-release Story threads through Chapter 418.`);
 } finally {
   await vite.close();
 }
