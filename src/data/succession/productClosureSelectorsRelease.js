@@ -169,11 +169,44 @@ export const createProductClosureSelectors = (args) => {
       .slice(0, Number(options.limit) || 40));
   };
 
+  const getProductClosureReport = () => {
+    const baseReport = base.getProductClosureReport();
+    const glossary = getGlossaryEntriesAtChapter(latestChapter);
+    const validExtendedIds = new Set([
+      ...Object.keys(args.data.nenSystemProfiles || {}),
+      ...Object.keys(args.data.storyPhaseProfiles || {}),
+      ...Object.keys(args.data.storyLaneProfiles || {}),
+      ...Object.keys(args.data.storyThreadProfiles || {}),
+      ...Object.keys(args.data.storyCausalLinksById || {}),
+    ]);
+    const referenceIssues = [];
+    for (const entry of glossary) {
+      for (const id of entry.relatedEntityIds || []) {
+        if (!args.archive.getEntityById(id) && !validExtendedIds.has(id)) referenceIssues.push(Object.freeze({ entryId: entry.id, referenceId: id }));
+      }
+      for (const sourceId of entry.sourceIds || []) {
+        if (args.archive.getEntityById(sourceId)?.entityType !== 'source') referenceIssues.push(Object.freeze({ entryId: entry.id, referenceId: sourceId }));
+      }
+    }
+    const closureReady = glossary.length >= 20
+      && referenceIssues.length === 0
+      && baseReport.media.total > 0
+      && baseReport.media.issues.length === 0;
+    return Object.freeze({
+      ...baseReport,
+      status: closureReady ? 'release-candidate' : 'open',
+      closureReady,
+      glossary: Object.freeze({ total: glossary.length, referenceIssues: freeze(referenceIssues), unified: true }),
+      search: Object.freeze({ ...baseReport.search, unifiedGlossary: true }),
+    });
+  };
+
   return Object.freeze({
     ...base,
     getGlossaryEntry,
     getGlossaryEntryAtChapter,
     getGlossaryEntriesAtChapter,
     searchArchiveProduct,
+    getProductClosureReport,
   });
 };
