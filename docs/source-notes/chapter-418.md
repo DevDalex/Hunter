@@ -22,7 +22,7 @@ Do not invent what happens after he leaves Room 1004, whether he successfully re
 
 Chapter 418 begins **a short time before Benjamin's Room 1004 assault**, then overlaps and recontextualizes events presented in Chapters 416–417 from Tserriednich's actual point of view. All Chapter 418 timeline records remain on **Voyage Day 12** unless the synopsis explicitly identifies the next-day 6 a.m. funeral plan.
 
-The Chapter 418 event packet contains **64 chapter-bounded beats**. These preserve distinct ability-rule, experiment, command, staged-death, perception, funeral, inspection, and escape-planning transitions without importing later outcomes.
+The Chapter 418 event packet contains **63 chapter-bounded beats**. These preserve distinct ability-rule, experiment, command, staged-death, perception, funeral, inspection, and escape-planning transitions without importing later outcomes.
 
 ## Parallel Future / Zetsu boundary
 
