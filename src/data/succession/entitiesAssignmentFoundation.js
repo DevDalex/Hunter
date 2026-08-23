@@ -1,8 +1,9 @@
 import { successionArchiveData as locationFoundationData } from './entitiesLocationFoundation.js';
 import { assignmentFoundationExpansion } from './assignmentFoundationExpansion.js';
+import { assignmentFoundation418Expansion } from './assignmentFoundation418Expansion.js';
 import { remapJusticeLocationId386 } from './locationFoundation386Corrections.js';
 
-const ARCHIVE_DATE = '2026-08-09';
+const ARCHIVE_DATE = '2026-08-23';
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const eventIdAliases = Object.freeze({
   'event:camilla-have-not-network-disclosure': 'event:camilla-curse-network-disclosure',
@@ -105,6 +106,7 @@ const normalizeAssignment = (assignment) => {
 const assignments = Object.freeze(uniqueById([
   ...locationFoundationData.assignments,
   ...assignmentFoundationExpansion,
+  ...assignmentFoundation418Expansion,
 ]).map(normalizeAssignment));
 
 export const successionArchiveData = Object.freeze({
