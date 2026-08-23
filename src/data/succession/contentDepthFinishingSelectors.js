@@ -11,15 +11,17 @@ import {
   getShipInfrastructureIndex,
   getStoryThreadsAtChapter,
 } from './successionData.js';
+import { LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER } from '../latestChapterMetadata.js';
 
 const freeze = (value = []) => Object.freeze(Array.isArray(value) ? [...value] : value);
-const clamp = (chapter) => Math.min(417, Math.max(340, Number(chapter) || 417));
+const ACTIVE_RESEARCH_CHAPTER = LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER;
+const clamp = (chapter) => Math.min(ACTIVE_RESEARCH_CHAPTER, Math.max(340, Number(chapter) || ACTIVE_RESEARCH_CHAPTER));
 const text = (...values) => values.flat(Infinity).filter(Boolean).join(' ').toLocaleLowerCase();
 const chapterOf = (record) => Number(record?.canonicalChapterRange?.start ?? record?.chapterRange?.start ?? record?.chapter ?? NaN);
 const compact = (entity) => entity ? Object.freeze({ id: entity.id, entityType: entity.entityType, name: entity.name || entity.id }) : null;
 const delta = (after = [], before = []) => after.length - before.length;
 
-export const getSetupPayoffIndex = (chapter = 417) => {
+export const getSetupPayoffIndex = (chapter = ACTIVE_RESEARCH_CHAPTER) => {
   const boundary = clamp(chapter);
   const graph = getConsequenceChains(boundary) || {};
   const records = freeze((graph.links || []).flatMap((link) => {
@@ -48,7 +50,7 @@ export const getSetupPayoffIndex = (chapter = 417) => {
   });
 };
 
-export const getForeshadowingTracker = (chapter = 417) => {
+export const getForeshadowingTracker = (chapter = ACTIVE_RESEARCH_CHAPTER) => {
   const boundary = clamp(chapter);
   const dossiers = getStoryThreadsAtChapter(boundary) || [];
   const signals = freeze(dossiers.flatMap((dossier) => {
@@ -82,7 +84,7 @@ export const getForeshadowingTracker = (chapter = 417) => {
   });
 };
 
-export const getPromisesContractsTracker = (chapter = 417) => {
+export const getPromisesContractsTracker = (chapter = ACTIVE_RESEARCH_CHAPTER) => {
   const boundary = clamp(chapter);
   const pattern = /promise|contract|agreement|deal|treaty|truce|terms|vow|pledge|oath|commitment|cooperat/;
   const protocols = freeze(getProtocolRecordsAtChapter(boundary).filter((record) => pattern.test(text(record.name, record.summary, record.domain, record.ruleStatement, record.trigger, record.authority))).map((record) => Object.freeze({
@@ -115,7 +117,7 @@ export const getPromisesContractsTracker = (chapter = 417) => {
   return Object.freeze({ chapter: boundary, protocols, relationships, assignments, total: protocols.length + relationships.length + assignments.length });
 };
 
-export const getSpatialEvidenceIntelligence = (chapter = 417) => {
+export const getSpatialEvidenceIntelligence = (chapter = ACTIVE_RESEARCH_CHAPTER) => {
   const boundary = clamp(chapter);
   const previous = Math.max(340, boundary - 1);
   const infrastructure = getShipInfrastructureIndex(boundary);
@@ -148,7 +150,7 @@ export const getSpatialEvidenceIntelligence = (chapter = 417) => {
   });
 };
 
-export const getFactionRecentChangeSummaries = (chapter = 417) => {
+export const getFactionRecentChangeSummaries = (chapter = ACTIVE_RESEARCH_CHAPTER) => {
   const boundary = clamp(chapter);
   const previous = Math.max(340, boundary - 1);
   const before = new Map(getFactionResourceBoard(previous).map((row) => [row.organization.id, row]));
@@ -171,7 +173,7 @@ export const getFactionRecentChangeSummaries = (chapter = 417) => {
     || left.organization.name.localeCompare(right.organization.name)));
 };
 
-export const getExplicitLeverageViews = (chapter = 417) => {
+export const getExplicitLeverageViews = (chapter = ACTIVE_RESEARCH_CHAPTER) => {
   const boundary = clamp(chapter);
   const legalPattern = /law|legal|justice|martial|custody|detention|court|authority|order/;
   const legalRelationshipCounts = new Map();
@@ -195,7 +197,7 @@ export const getExplicitLeverageViews = (chapter = 417) => {
   return Object.freeze({ chapter: boundary, rows, dimensions: freeze(['political', 'nen', 'legal', 'information']) });
 };
 
-export const getAnalyticalFinishingSummary = (chapter = 417) => {
+export const getAnalyticalFinishingSummary = (chapter = ACTIVE_RESEARCH_CHAPTER) => {
   const boundary = clamp(chapter);
   const setup = getSetupPayoffIndex(boundary);
   const foreshadowing = getForeshadowingTracker(boundary);
