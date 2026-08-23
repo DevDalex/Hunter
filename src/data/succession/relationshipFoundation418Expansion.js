@@ -1,0 +1,16 @@
+const freeze = (value) => Object.freeze(value);
+const range = freeze({ start:418,end:418 });
+const relation = ({ slug,name,summary,fromId,toId,relationshipType,direction='directed',status='active',evidence=[] }) => freeze({
+  id:`relationship:${slug}`, entityType:'relationship', slug, name, aliases:freeze([]), summary,
+  sourceIds:freeze(['source:chapter-418']), publicationStatus:'published', canonLevel:'canon',
+  createdAt:'2026-08-23', updatedAt:'2026-08-23', fromId,toId,relationshipType,direction,
+  chapterRange:range,status,certainty:'confirmed',evidence:freeze(evidence),revealedChapter:418,latestChapter:418,
+});
+
+export const relationshipFoundation418Expansion = freeze([
+  relation({ slug:'tserriednich-salkov-ch418-ability-test',name:'Tserriednich → Salkov · concealed ability test',summary:'Tserriednich uses Salkov as an unwitting timing and perception subject while testing sustained-Zetsu Parallel Future, then assigns him the exact-witness role in the staged death.',fromId:'character:tserriednich-hui-guo-rou',toId:'character:salkov',relationshipType:'concealed Nen experimentation and command trust',status:'active',evidence:['Chapter 418 water-bottle experiment and pre-assault witness order.'] }),
+  relation({ slug:'tserriednich-benjamin-ch418-staged-death',name:'Tserriednich → Benjamin · staged-death deception',summary:'Benjamin performs the execution he perceives while the real Tserriednich remains alive nearby, turning Benjamin’s attack into cover for Tserriednich’s escape.',fromId:'character:tserriednich-hui-guo-rou',toId:'character:benjamin-hui-guo-rou',relationshipType:'hostile deception',status:'active',evidence:['Chapter 418 recontextualizes the Room 1004 assault.'] }),
+  relation({ slug:'tserriednich-theta-ch418-perception-ambiguity',name:'Tserriednich → Theta · concealed observation',summary:'Tserriednich briefly suspects Theta may see him when her gaze appears to land on him, but she walks past without confirmed recognition.',fromId:'character:tserriednich-hui-guo-rou',toId:'character:theta',relationshipType:'concealed observation and unresolved detection',status:'ambiguous',evidence:['Strict Chapter 418 endpoint sequence.'] }),
+  relation({ slug:'tserriednich-vantine-ch418-invisible-fire',name:'Tserriednich → Vantine · perception-effect gunfire test',summary:'Tserriednich fires three rounds at Vantine; the bullets crumple at his forehead while Vantine continues reacting to the predicted future rather than the real attack.',fromId:'character:tserriednich-hui-guo-rou',toId:'character:vantine',relationshipType:'hostile ability interaction',status:'demonstrated',evidence:['Chapter 418 Room 1004 argument and gunfire.'] }),
+  relation({ slug:'tserriednich-nasubi-ch418-coffin-delay',name:'Tserriednich → Nasubi · coffin information-delay contingency',summary:'Tserriednich plans for his no-viewing coffin to reach Nasubi in hopes that the king’s handling of information will delay discovery that the Fourth Prince may still be alive.',fromId:'character:tserriednich-hui-guo-rou',toId:'character:nasubi-hui-guo-rou',relationshipType:'information-delay contingency',status:'planned',evidence:['Chapter 418 post-assault coffin planning.'] }),
+]);
