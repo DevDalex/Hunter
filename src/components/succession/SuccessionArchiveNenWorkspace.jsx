@@ -19,6 +19,7 @@ import {
   X,
   Zap,
 } from 'lucide-react';
+import { LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER } from '../../data/latestChapterMetadata';
 import {
   getAbilitiesKnownAtChapter,
   getAbilityDossier,
@@ -168,7 +169,7 @@ function SystemCard({ profile, dossier, onOpen }) {
   </button>;
 }
 
-export default function SuccessionArchiveNenWorkspace({ routeParams = {}, spoilerLimit = 413, onNavigate }) {
+export default function SuccessionArchiveNenWorkspace({ routeParams = {}, spoilerLimit = LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER, onNavigate }) {
   const requestedAbility = routeParams.entity ? getEntityById(routeParams.entity) : null;
   const [mode, setMode] = useState(requestedAbility?.entityType === 'ability' ? 'abilities' : routeParams.view === 'abilities' ? 'abilities' : 'systems');
   const [query, setQuery] = useState(routeParams.search || '');
