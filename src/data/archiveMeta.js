@@ -11,6 +11,37 @@ export const ARCHIVE_DETAILED_BOUNDARY = LATEST_DETAILED_SUCCESSION_RESEARCH_CHA
 export const ARCHIVE_REVIEW_DATE = 'July 29, 2026';
 export const ARCHIVE_SOURCE = 'VIZ publication records, Hunterpedia structured references, and VoraciousDrake translation cross-checks; community context is labelled separately';
 
+const SPOILER_LIMIT_KEY = 'hxh-spoiler-limit';
+const SPOILER_BOUNDARY_KEY = 'hxh-spoiler-boundary';
+const LEGACY_DEFAULT_BOUNDARIES = new Set([416, 417]);
+
+const migrateStoredSpoilerBoundary = () => {
+  if (typeof window === 'undefined') return;
+  try {
+    const storage = window.localStorage;
+    const stored = Number(storage.getItem(SPOILER_LIMIT_KEY));
+    const previouslySeenBoundary = Number(storage.getItem(SPOILER_BOUNDARY_KEY));
+    const validStored = Number.isFinite(stored) && stored >= 1 && stored <= ARCHIVE_BOUNDARY;
+    const legacyDefault = validStored
+      && !previouslySeenBoundary
+      && LEGACY_DEFAULT_BOUNDARIES.has(stored)
+      && stored < ARCHIVE_BOUNDARY;
+    const trackedOldDefault = validStored
+      && previouslySeenBoundary > 0
+      && previouslySeenBoundary < ARCHIVE_BOUNDARY
+      && stored === previouslySeenBoundary;
+
+    if (legacyDefault || trackedOldDefault) {
+      storage.setItem(SPOILER_LIMIT_KEY, String(ARCHIVE_BOUNDARY));
+    }
+    storage.setItem(SPOILER_BOUNDARY_KEY, String(ARCHIVE_BOUNDARY));
+  } catch {
+    // Storage is optional. The in-memory archive boundary still defaults to the latest release.
+  }
+};
+
+migrateStoredSpoilerBoundary();
+
 export { archiveCoverage, domainCoverage, SITE_STATS };
 
 export const coverageLabels = {

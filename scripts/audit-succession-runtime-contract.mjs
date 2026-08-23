@@ -96,7 +96,10 @@ assert(packageJson.scripts?.['audit:succession-runtime'] === 'node scripts/run-s
 assert(packageJson.scripts?.['audit:succession-contract'] === 'node scripts/audit-succession-runtime-contract.mjs', 'package scripts must expose this contract audit directly');
 assert(packageJson.scripts?.['audit:succession-product-inventory'] === 'node scripts/audit-succession-product-inventory.mjs', 'package scripts must expose the product inventory audit');
 assert(packageJson.scripts?.['audit:succession-final-product'] === 'node scripts/audit-succession-final-product-closure.mjs', 'package scripts must expose the final-product audit');
-assert(packageJson.scripts?.['build:runtime']?.startsWith('npm run audit:succession-runtime &&'), 'build:runtime must collect all Succession failures before continuing');
+assert(packageJson.scripts?.verify === 'npm run check && npm run build:runtime', 'verify must collect all Succession failures before the production build');
+assert(packageJson.scripts?.build === 'npm run build:runtime', 'hosted production build must remain lightweight and separate from full verification');
+assert(!packageJson.scripts?.['build:runtime']?.includes('audit:succession-runtime'), 'build:runtime must not replay the expensive Succession runtime audit after verification');
+assert(packageJson.scripts?.deploy?.startsWith('npm run verify'), 'manual deploy must retain the full verification gate');
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {

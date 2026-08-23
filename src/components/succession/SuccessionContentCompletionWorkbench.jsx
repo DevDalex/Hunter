@@ -17,6 +17,7 @@ import {
   getSpecialTrackerCompletion,
 } from '../../data/succession/contentCompletion';
 import { SPECIAL_PRINCE_TRACKERS } from '../../data/succession/contentDepthExpansionReference';
+import { LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER } from '../../data/latestChapterMetadata';
 import './SuccessionContentCompletionWorkbench.css';
 
 const VIEWS = [
@@ -145,7 +146,7 @@ function Glossary({ chapter }) {
 
 function CrossLinks({ chapter }) {
   const row = useMemo(() => getCrossLinkCoverage(chapter), [chapter]);
-  return <section className="succession-completion-panel"><header><span>Cross-link coverage</span><h3>{row.count} released canonical entities checked</h3><p>An entity with no extra edge is explicitly marked as a graph-isolated canon record instead of vanishing from the cross-link audit.</p></header><div className="succession-completion-groups">{row.records.map((record) => <article key={record.id}><header><h4>{record.name}</h4><Status value={record.status} /></header><p>{record.entityType}</p><p>{record.note || `${record.relatedEntityIds.length} related · ${record.relationshipIds.length} relationships · ${record.sourceIds.length} sources`}</p></article>)}</div></section>;
+  return <section className="succession-completion-panel"><header><span>Cross-link coverage</span><h3>{row.count} released canonical entities checked</h3><p>An entity with no extra edge is explicitly marked as a graph-isolated canon record instead of vanishing from the cross-link audit.</p></header><div className="succession-completion-groups">{row.records.map((record) => <article key={row.id}><header><h4>{row.name}</h4><Status value={row.status} /></header><p>{row.entityType}</p><p>{row.note || `${row.relatedEntityIds.length} related · ${row.relationshipIds.length} relationships · ${row.sourceIds.length} sources`}</p></article>)}</div></section>;
 }
 
 function Ledgers({ chapter }) {
@@ -163,8 +164,11 @@ function Appendices({ chapter }) {
   return <section className="succession-completion-panel"><header><span>Reference systems</span><h3>Every requested appendix family remains visible even where canon is unresolved</h3></header><FieldRows fields={row.families} /></section>;
 }
 
-export default function SuccessionContentCompletionWorkbench({ spoilerLimit = 417 }) {
-  const chapter = Math.min(417, Math.max(340, Number(spoilerLimit) || 417));
+export default function SuccessionContentCompletionWorkbench({ spoilerLimit = LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER }) {
+  const chapter = Math.min(
+    LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
+    Math.max(340, Number(spoilerLimit) || LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER),
+  );
   const [view, setView] = useState('coverage');
   return <section className="succession-content-completion"><header className="succession-completion-hero"><div><span><ShieldCheck size={15} aria-hidden="true" /> Content completion</span><h2>Audit-backed research coverage through Chapter {chapter}</h2><p>This layer closes the gap between “the UI supports a field” and “the field actually resolves to researched content or an explicit canon-unknown state.”</p></div><Database size={30} aria-hidden="true" /></header>
     <nav className="succession-completion-tabs" aria-label="Content completion views">{VIEWS.map(([id, label]) => <button type="button" className={view === id ? 'is-active' : ''} onClick={() => setView(id)} key={id}>{id === 'chapters' ? <FileSearch size={14} /> : id === 'princes' ? <Users size={14} /> : null}{label}</button>)}</nav>

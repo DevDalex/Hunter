@@ -1,6 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } from '../src/data/successionChapterAvailability.generated.js';
+import { LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER } from '../src/data/latestChapterMetadata.js';
 import {
   getSuccessionArchiveHub,
   successionArchiveGroups,
@@ -64,7 +65,11 @@ for (const [retired, destination] of Object.entries(successionArchiveRetiredTarg
 assert(successionArchiveRoutes.find((route) => route.id === 'characters')?.description.includes('body state'), 'Characters must own life and body-state information');
 assert(successionArchiveRoutes.find((route) => route.id === 'organizations')?.description.includes('mafia families'), 'Organizations must own the consolidated power structure');
 assert(successionArchiveRoutes.find((route) => route.id === 'research')?.description.includes('media provenance'), 'Research must own redirected media provenance');
-assert(successionArchiveRoutes.find((route) => route.id === 'chapters')?.description.includes('latest imported reader release'), 'Chapter route must follow imported chapter availability');
+const chapterRouteDescription = successionArchiveRoutes.find((route) => route.id === 'chapters')?.description || '';
+assert(chapterRouteDescription.includes('current published research boundary'), 'Chapter route must follow the published research boundary');
+assert(chapterRouteDescription.includes('separate imported-media boundary'), 'Chapter route must distinguish local page media from research visibility');
+assert(chapterRouteDescription.includes('do not limit chapter research visibility'), 'Chapter route must state that manga page media does not cap chapter research visibility');
+assert(LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER >= LATEST_AUTHORIZED_SUCCESSION_CHAPTER, 'research boundary must not be reduced to the local page-media ceiling');
 
 const [
   app,
@@ -158,4 +163,4 @@ assert(!/@media\s*\([^)]*max-width:/i.test(css) && css.includes('@media (prefers
 assert(css.includes(':focus-visible'), 'accessible focus styling is required');
 assert(packageJson.includes('"audit:succession-shell"') && packageJson.includes('"qa:succession-shell"'), 'package scripts must expose archive shell checks');
 
-console.log(`Succession Archive shell audit passed through imported Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}: ${successionArchiveRoutes.length} maintained routes organized into ${successionArchiveHubs.length} top-level hubs, ${Object.keys(successionArchiveRetiredTargets).length} registry-derived redirects, and all canonical dossiers preserved.`);
+console.log(`Succession Archive shell audit passed: research through Chapter ${LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER}, local page media through Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}; ${successionArchiveRoutes.length} maintained routes organized into ${successionArchiveHubs.length} top-level hubs, ${Object.keys(successionArchiveRetiredTargets).length} registry-derived redirects, and all canonical dossiers preserved.`);
