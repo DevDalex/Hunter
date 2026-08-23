@@ -184,11 +184,6 @@ export default function SuccessionArchiveShell({
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
     <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{route.label} workspace loaded. Reading boundary Chapter {spoilerLimit}. Active hub: {activeHub.label}.</span>
 
-    <div className="succession-archive__status-strip" aria-label="Black Whale archive context">
-      <span><Ship size={14} aria-hidden="true" /><strong>Black Whale 1</strong></span>
-      <span><b>Evidence</b> Canon separated</span>
-    </div>
-
     <div className="succession-archive__layout">
       <aside className="succession-archive__sidebar">
         <div className="succession-archive__sidebar-inner">
