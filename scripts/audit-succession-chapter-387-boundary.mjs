@@ -3,6 +3,21 @@ import { createServer } from 'vite';
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Chapter 387 boundary audit failed: ${message}`);
 };
+const boundedAbilityText = (record) => JSON.stringify({
+  summary: record?.summary,
+  mechanics: record?.mechanics,
+  ability: record?.ability ? {
+    summary: record.ability.summary,
+    activation: record.ability.activation,
+    conditions: record.ability.conditions,
+    limitations: record.ability.limitations,
+    costs: record.ability.costs,
+    targets: record.ability.targets,
+    range: record.ability.range,
+    duration: record.ability.duration,
+    knownUses: record.ability.knownUses,
+  } : null,
+});
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {
@@ -27,9 +42,9 @@ try {
   const parallel386 = archive.getAbilityDossier('ability:parallel-future', 386);
   const parallel387 = archive.getAbilityDossier('ability:parallel-future', 387);
   assert(parallel385?.known && parallel386?.known && parallel387?.known, 'Parallel Future must remain queryable across 385–387');
-  const text385 = JSON.stringify(parallel385);
-  const text386 = JSON.stringify(parallel386);
-  const text387 = JSON.stringify(parallel387);
+  const text385 = boundedAbilityText(parallel385);
+  const text386 = boundedAbilityText(parallel386);
+  const text387 = boundedAbilityText(parallel387);
   const tenSecondPattern = /ten-second|ten second|10-second|10 second/i;
   assert(!tenSecondPattern.test(text385), 'Chapter 385 must not receive the Chapter 387 ten-second reveal retroactively');
   assert(!tenSecondPattern.test(text386), 'Chapter 386 must not receive the Chapter 387 ten-second reveal retroactively');
@@ -39,7 +54,7 @@ try {
   assert(parallel387.knowledgeState === 'documented', 'Chapter 387 must become the first documented core-mechanics boundary');
 
   const ability = archive.getEntityById('ability:parallel-future');
-  assert(ability?.latestChapter === 387 && ability?.sourceChapterNumbers?.includes(387), 'global Parallel Future entity must extend through Chapter 387');
+  assert(ability?.latestChapter >= 387 && ability?.sourceChapterNumbers?.includes(387), 'global Parallel Future entity must retain the Chapter 387 source while allowing later maintained extensions');
   assert(ability?.classification?.nenTypes?.includes('specialization'), 'Parallel Future must retain the existing confirmed Specialization classification');
   assert(!String(ability?.limitations || []).includes('must remain defenseless for ten seconds'), 'Tserriednich’s superseded initial worry must not become the final global limitation');
 

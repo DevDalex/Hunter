@@ -13,7 +13,7 @@ try {
     vite.ssrLoadModule('/src/data/succession/successionData.js'),
     vite.ssrLoadModule('/src/data/succession/contentDepthFinishingSelectors.js'),
   ]);
-  const chapter = 417;
+  const chapter = 418;
   const setup = finishing.getSetupPayoffIndex(chapter);
   const foreshadowing = finishing.getForeshadowingTracker(chapter);
   const commitments = finishing.getPromisesContractsTracker(chapter);
@@ -36,20 +36,20 @@ try {
   assert(commitments.protocols.length + commitments.relationships.length + commitments.assignments.length === commitments.total, 'commitment tracker total is inconsistent');
   assert([...commitments.protocols, ...commitments.relationships, ...commitments.assignments].every((row) => row.sourceType && row.id), 'commitment tracker lost canonical record identity');
 
-  assert(spatial.chapter === chapter && spatial.previousChapter === 416, 'spatial comparison must use 416 → 417 at the current boundary');
+  assert(spatial.chapter === chapter && spatial.previousChapter === 417, 'spatial comparison must use 417 → 418 at the current boundary');
   assert(spatial.summary.systems >= 7, `Black Whale spatial intelligence exposes only ${spatial.summary.systems} systems`);
   assert(spatial.summary.locations > 0 && spatial.hotspots.length > 0, 'spatial evidence intelligence has no maintained locations/hotspots');
   assert(spatial.hotspots.every((row) => Number.isFinite(row.provenanceCoverage) && row.provenanceCoverage >= 0 && row.provenanceCoverage <= 100), 'spatial hotspot provenance coverage is invalid');
 
   assert(factions.length > 0, 'faction recent-change summaries are empty');
-  assert(factions.every((row) => row.organization?.id && row.previousChapter === 416 && typeof row.changed === 'boolean'), 'faction recent-change row shape is invalid');
+  assert(factions.every((row) => row.organization?.id && row.previousChapter === 417 && typeof row.changed === 'boolean'), 'faction recent-change row shape is invalid');
 
   assert(leverage.chapter === chapter && leverage.rows.length > 0, 'explicit leverage view is empty');
   assert(leverage.dimensions.join('|') === 'political|nen|legal|information', 'leverage view does not expose the four requested dimensions');
   assert(leverage.rows.every((row) => ['political', 'nen', 'legal', 'information'].every((key) => Number.isFinite(row[key]))), 'leverage dimensions must remain transparent numeric signal counts');
 
   const chapterChanges = [];
-  for (let maintained = 340; maintained <= 417; maintained += 1) {
+  for (let maintained = 340; maintained <= 418; maintained += 1) {
     const change = archive.getChapterWhatChanged(maintained);
     assert(change?.chapter === maintained, `What Changed? is missing Chapter ${maintained}`);
     assert(change.summary && Array.isArray(change.records), `What Changed? Chapter ${maintained} has an invalid diff shape`);
@@ -57,7 +57,7 @@ try {
     assert(change.previousChapter === expectedPrevious, `What Changed? Chapter ${maintained} has the wrong comparison boundary`);
     chapterChanges.push(change);
   }
-  assert(chapterChanges.length === 78, `expected 78 maintained Chapter 340–417 change briefs, found ${chapterChanges.length}`);
+  assert(chapterChanges.length === 79, `expected 79 maintained Chapter 340–418 change briefs, found ${chapterChanges.length}`);
 
   assert(summary.setupPayoff === setup.records.length, 'finishing summary lost setup/payoff count');
   assert(summary.foreshadowingSignals === foreshadowing.signals.length, 'finishing summary lost structural signal count');
@@ -82,7 +82,7 @@ try {
   assert(fontSizes.every((size) => size >= 11), `content-depth presentation introduced text below the 11px floor: ${fontSizes.filter((size) => size < 11).join(', ')}`);
   assert(bridgeSource.includes('SuccessionAnalyticalFinishingPanel') && bridgeSource.includes('depthActive'), 'Research depth bridge does not mount the analytical finishing layer');
 
-  console.log(`Succession analytical finishing audit passed: ${setup.records.length} cross-chapter setup/payoff links with mini timelines, ${foreshadowing.signals.length} structural story signals, ${commitments.total} commitment records, ${spatial.summary.systems} Black Whale systems, ${factions.length} faction summaries, ${leverage.rows.length} leverage dossiers, and 78/78 maintained What Changed? briefs through Chapter 417.`);
+  console.log(`Succession analytical finishing audit passed: ${setup.records.length} cross-chapter setup/payoff links with mini timelines, ${foreshadowing.signals.length} structural story signals, ${commitments.total} commitment records, ${spatial.summary.systems} Black Whale systems, ${factions.length} faction summaries, ${leverage.rows.length} leverage dossiers, and 79/79 maintained What Changed? briefs through Chapter 418.`);
 } finally {
   await vite.close();
 }

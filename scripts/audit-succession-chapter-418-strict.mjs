@@ -1,5 +1,10 @@
 import fs from 'node:fs';
-import { succession418ChapterResearch, succession418SourcePolicy, succession418TimelineEvents } from '../src/data/succession418Research.js';
+import {
+  succession418ChapterResearch,
+  succession418NenFindings,
+  succession418SourcePolicy,
+  succession418TimelineEvents,
+} from '../src/data/succession418Research.js';
 
 const assert = (condition,message) => { if (!condition) throw new Error(`Chapter 418 strict audit failed: ${message}`); };
 const note = fs.readFileSync('docs/source-notes/chapter-418.md','utf8').replace(/\*\*/g,'');
@@ -23,6 +28,9 @@ assert(/6 a\.m\.|6am|6 a.m./i.test(text) && /Voyage Day 13/i.test(text),'next-da
 assert(/Route A/i.test(text) && /Route B/i.test(text) && /Route C/i.test(text),'three-route analysis must be present');
 assert(/Theta/i.test(text) && /without confirmed recognition|without reacting/i.test(text),'Theta endpoint ambiguity must be preserved');
 assert(/Do not invent/i.test(note) && /Chapter 419/i.test(note),'post-endpoint invention must be explicitly forbidden');
-assert(/hypotheses/i.test(note) && /antenna/i.test(note) && /outside observers/i.test(note),'Tserriednich hypotheses must remain separated from confirmed mechanics');
+assert(/hypotheses/i.test(note) && /antenna/i.test(note) && /observers outside|outside observers/i.test(note),'source note must explicitly preserve Tserriednich hypothesis boundaries');
+const hypothesisFindings = succession418NenFindings.filter((finding) => /hypothesis|estimate|unverified/i.test(finding.status || ''));
+assert(hypothesisFindings.length >= 2 && hypothesisFindings.every((finding) => /Tserriednich/i.test(finding.status || '') || /unverified|estimate/i.test(finding.status || '')),'structured Nen findings must keep hypotheses/estimates distinct from confirmed mechanics');
+assert(/hypotheses\/self-models/i.test(succession418SourcePolicy.inferenceRule || ''),'source policy must keep inferred range/battery mechanics speaker-bounded');
 
 console.log('Chapter 418 strict audit passed: 63 source-bounded events preserve the sustained-Zetsu reveal, staged-death escape plan, hypothesis boundaries, and Route A publication endpoint.');
