@@ -71,8 +71,11 @@ function FieldRows({ fields }) {
 function Coverage({ chapter }) {
   const report = useMemo(() => getCompletionReport(chapter), [chapter]);
   return <section className="succession-completion-panel">
-    <header><span>Completion contract</span><h3>{report.completeness}% requested-slot coverage</h3><p>{report.definition}</p></header>
+    <header><span>Completion contract</span><h3>{report.structuralCompleteness}% structural completeness · {report.canonExtractionCoverage}% canon extraction coverage</h3><p>{report.definition}</p></header>
     <dl className="succession-completion-stats">
+      <div><dt>Structural completeness</dt><dd>{report.structuralCompleteness}%</dd></div>
+      <div><dt>Canon extraction</dt><dd>{report.canonExtractionCoverage}%</dd></div>
+      <div><dt>Explicit canon unknowns</dt><dd>{report.explicitUnknowns}</dd></div>
       <div><dt>Checked slots</dt><dd>{report.cells}</dd></div>
       <div><dt>Missing</dt><dd>{report.missing.length}</dd></div>
       <div><dt>Chapters</dt><dd>{report.chapters}</dd></div>
@@ -84,17 +87,33 @@ function Coverage({ chapter }) {
       <div><dt>Ledgers</dt><dd>{report.ledgers}</dd></div>
       <div><dt>Appendices</dt><dd>{report.appendixFamilies}</dd></div>
     </dl>
+    <p>{report.structuralDefinition}</p><p>{report.extractionDefinition}</p>
     <div className="succession-completion-key">{Object.entries(report.counts).map(([key, count]) => <span key={key}><Status value={key} /> {count}</span>)}</div>
   </section>;
+}
+
+function NenDelta({ delta }) {
+  if (!delta) return null;
+  const groups = [
+    ['New abilities', delta.newAbilities],
+    ['Refined abilities', delta.refinedAbilities],
+    ['New systems', delta.newSystems],
+    ['Guardian Spirit Beasts', delta.guardianSpiritBeasts],
+    ['Rule changes', delta.ruleChanges],
+    ['Nen-linked events', delta.mechanicEvents],
+    ['Hypotheses / unresolved mechanics', delta.hypotheses],
+  ];
+  return <section className="succession-completion-groups"><article><header><h4>Structured Nen Delta · Chapter {delta.chapter}</h4><Status value={delta.status} /></header><p>{delta.note}</p>{groups.map(([label, rows]) => <div key={label}><h5>{label}</h5>{rows?.length ? renderValue(rows) : <p>None known at this boundary.</p>}</div>)}</article></section>;
 }
 
 function Chapters({ chapter }) {
   const dossiers = useMemo(() => getAllChapterCompletionDossiers(chapter), [chapter]);
   const [selected, setSelected] = useState(chapter);
   const dossier = dossiers.find((row) => row.chapter === selected) || dossiers.at(-1);
-  return <section className="succession-completion-panel"><header><span>Chapter forensics</span><h3>Every requested field, Chapter 339–{chapter}</h3><p>Known facts, confirmed absences, unresolved canon, and scope boundaries are all visible. No schema-only blanks.</p></header>
+  return <section className="succession-completion-panel"><header><span>Chapter forensics</span><h3>Every requested field, Chapter 339–{chapter}</h3><p>Known facts, confirmed absences, unresolved canon, and scope boundaries are all visible. Nen changes are derived from structured chapter-bounded transitions instead of keyword matching.</p></header>
     <div className="succession-completion-picker">{dossiers.map((row) => <button type="button" className={row.chapter === dossier.chapter ? 'is-active' : ''} onClick={() => setSelected(row.chapter)} key={row.chapter}>{row.chapter}</button>)}</div>
-    <div className="succession-completion-summary"><strong>Chapter {dossier.chapter}</strong><span>{dossier.scope}</span><span>{dossier.completeness}%</span></div>
+    <div className="succession-completion-summary"><strong>Chapter {dossier.chapter}</strong><span>{dossier.scope}</span><span>{dossier.completeness}% structure</span></div>
+    <NenDelta delta={dossier.nenDelta} />
     <FieldRows fields={dossier.fields} />
   </section>;
 }
@@ -146,7 +165,7 @@ function Glossary({ chapter }) {
 
 function CrossLinks({ chapter }) {
   const row = useMemo(() => getCrossLinkCoverage(chapter), [chapter]);
-  return <section className="succession-completion-panel"><header><span>Cross-link coverage</span><h3>{row.count} released canonical entities checked</h3><p>An entity with no extra edge is explicitly marked as a graph-isolated canon record instead of vanishing from the cross-link audit.</p></header><div className="succession-completion-groups">{row.records.map((record) => <article key={row.id}><header><h4>{row.name}</h4><Status value={row.status} /></header><p>{row.entityType}</p><p>{row.note || `${row.relatedEntityIds.length} related · ${row.relationshipIds.length} relationships · ${row.sourceIds.length} sources`}</p></article>)}</div></section>;
+  return <section className="succession-completion-panel"><header><span>Cross-link coverage</span><h3>{row.count} released canonical entities checked</h3><p>An entity with no extra edge is explicitly marked as a graph-isolated canon record instead of vanishing from the cross-link audit.</p></header><div className="succession-completion-groups">{row.records.map((record) => <article key={record.id}><header><h4>{record.name}</h4><Status value={record.status} /></header><p>{record.entityType}</p><p>{record.note || `${record.relatedEntityIds.length} related · ${record.relationshipIds.length} relationships · ${record.sourceIds.length} sources`}</p></article>)}</div></section>;
 }
 
 function Ledgers({ chapter }) {
@@ -167,10 +186,10 @@ function Appendices({ chapter }) {
 export default function SuccessionContentCompletionWorkbench({ spoilerLimit = LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER }) {
   const chapter = Math.min(
     LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
-    Math.max(340, Number(spoilerLimit) || LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER),
+    Math.max(339, Number(spoilerLimit) || LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER),
   );
   const [view, setView] = useState('coverage');
-  return <section className="succession-content-completion"><header className="succession-completion-hero"><div><span><ShieldCheck size={15} aria-hidden="true" /> Content completion</span><h2>Audit-backed research coverage through Chapter {chapter}</h2><p>This layer closes the gap between “the UI supports a field” and “the field actually resolves to researched content or an explicit canon-unknown state.”</p></div><Database size={30} aria-hidden="true" /></header>
+  return <section className="succession-content-completion"><header className="succession-completion-hero"><div><span><ShieldCheck size={15} aria-hidden="true" /> Content completion</span><h2>Audit-backed research coverage through Chapter {chapter}</h2><p>This layer separates structural completeness from extracted canon, while retaining explicit unknowns instead of silently filling them.</p></div><Database size={30} aria-hidden="true" /></header>
     <nav className="succession-completion-tabs" aria-label="Content completion views">{VIEWS.map(([id, label]) => <button type="button" className={view === id ? 'is-active' : ''} onClick={() => setView(id)} key={id}>{id === 'chapters' ? <FileSearch size={14} /> : id === 'princes' ? <Users size={14} /> : null}{label}</button>)}</nav>
     {view === 'coverage' && <Coverage chapter={chapter} />}
     {view === 'chapters' && <Chapters chapter={chapter} />}
