@@ -75,7 +75,9 @@ assert(chapterWorkspace.includes('Every chapter placed inside phase, plotline, c
 assert(chapterWorkspace.includes('requestedAllowed') && chapterWorkspace.includes('boundedSelectedNumber'), 'chapter deep links must clamp to the spoiler boundary');
 assert(!/@media\s*\([^)]*max-width:/i.test(storyStyles) && !/@media\s*\([^)]*max-width:/i.test(chapterStyles), 'Batch 4 story workspaces must remain desktop-only');
 assert(storyStyles.includes('@media(prefers-reduced-motion:reduce)') && chapterStyles.includes('@media(prefers-reduced-motion:reduce)'), 'both Batch 4 workspaces must honor reduced motion');
-assert(routes.includes('latest imported reader release'), 'route registry must follow imported chapter availability');
+assert(routes.includes('current published research boundary'), 'route registry must follow the published research boundary');
+assert(routes.includes('separate imported-media boundary'), 'route registry must keep local manga page media separate from story research visibility');
+assert(routes.includes('do not limit chapter research visibility'), 'route registry must explicitly protect research visibility from the reader-media ceiling');
 
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 try {
