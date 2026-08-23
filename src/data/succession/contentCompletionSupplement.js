@@ -51,14 +51,21 @@ export const getNenCompletion = () => {
 export const getGlossaryCompletion = (chapter = latestBoundary()) => {
   const canonical = successionProductClosure.getGlossaryEntriesAtChapter(chapter) || [];
   const rows = [...canonical].sort((a, b) => String(a.term).localeCompare(String(b.term))).map((record) => {
-    const sourceRefs = record.sourceIds || record.sources || [];
+    const sourceRefs = (record.sourceIds || []).length
+      ? record.sourceIds
+      : (record.sources || []).map((source) => typeof source === 'string' ? source : source.id || source.url || source.name).filter(Boolean);
+    const relatedRefs = (record.relatedEntityIds || []).length
+      ? record.relatedEntityIds
+      : (record.relatedRecords || []).length
+        ? record.relatedRecords
+        : record.relatedTerms || [];
     const fields = [
       ['term', record.term],
       ['category', record.category],
       ['definition', record.definition || record.summary],
       ['synonyms', record.synonyms || []],
       ['first chapter', record.firstChapter || record.chapterRange?.start],
-      ['related records', record.relatedEntityIds || record.relatedRecords || record.relatedTerms || []],
+      ['related records', relatedRefs],
       ['sources', sourceRefs],
     ].map(([field, value]) => Object.freeze({ field, status: fieldState(value), value: value ?? null }));
     return Object.freeze({ id: record.id || normalize(record.term), term: record.term, record, fields: freeze(fields), status: fields.some((field) => field.field === 'definition' && field.status === 'known') ? 'known' : 'canon-unknown', completeness: 100 });
