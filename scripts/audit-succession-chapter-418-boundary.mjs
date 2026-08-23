@@ -58,7 +58,7 @@ try {
   const relationshipIds = [
     'relationship:tserriednich-salkov-ch418-ability-test',
     'relationship:tserriednich-benjamin-ch418-staged-death',
-    'relationship:tserriednich-theta-ch418-perception-ambiguity',
+    'relationship:tserriednich-theta-ch418-ambiguous-contact',
     'relationship:tserriednich-vantine-ch418-invisible-fire',
     'relationship:tserriednich-nasubi-ch418-coffin-delay',
   ];
