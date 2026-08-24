@@ -10,6 +10,7 @@ import TimelineSemanticLandmarks from './TimelineSemanticLandmarks';
 import TimelineSpatialIntelligence from './TimelineSpatialIntelligence';
 import TimelineStoryField from './TimelineStoryField';
 import TimelineStoryTopography from './TimelineStoryTopography';
+import TimelineWorkspaceSwitcher, { resolveTimelineWorkspaceMode } from './TimelineWorkspaceSwitcher';
 import './TimelineWorkspace.css';
 
 export default function TimelineWorkspace({
@@ -22,8 +23,13 @@ export default function TimelineWorkspace({
   const resolvedState = requestedState.view === 'ship'
     ? { ...requestedState, view: 'intelligence', intel: 'space' }
     : requestedState;
-  const spatialActive = resolvedState.view === 'intelligence' && resolvedState.intel === 'space';
-  const cinematicActive = Boolean(resolvedState.event);
+  const workspaceMode = resolveTimelineWorkspaceMode(resolvedState);
+  const spatialActive = workspaceMode === 'space';
+  const cinematicActive = workspaceMode === 'event';
+  const storyActive = workspaceMode === 'story';
+  const compareActive = workspaceMode === 'compare';
+  const atlasActive = workspaceMode === 'atlas';
+  const archiveActive = workspaceMode === 'archive';
   const atlasState = spatialActive
     ? { ...resolvedState, view: 'intelligence', intel: 'knowledge' }
     : resolvedState;
@@ -63,6 +69,7 @@ export default function TimelineWorkspace({
   const commitTimelineState = (params) => onNavigate?.({
     scope: 'events',
     ...params,
+    ...(resolvedState.mode ? { mode: resolvedState.mode } : {}),
     ...(resolvedState.compare ? { compare: resolvedState.compare } : {}),
     ...(resolvedState.spaceLocation ? { spaceLocation: resolvedState.spaceLocation } : {}),
     ...(resolvedState.spaceFrom ? { spaceFrom: resolvedState.spaceFrom } : {}),
@@ -81,7 +88,14 @@ export default function TimelineWorkspace({
     const name = typeof location === 'string'
       ? location
       : location?.name || location?.room || location?.location || '';
-    const { event: _event, view: _view, intel: _intel, spaceLocation: _spaceLocation, ...preserved } = resolvedState;
+    const {
+      event: _event,
+      view: _view,
+      intel: _intel,
+      mode: _mode,
+      spaceLocation: _spaceLocation,
+      ...preserved
+    } = resolvedState;
     onNavigate?.({
       ...preserved,
       scope: 'events',
@@ -93,12 +107,18 @@ export default function TimelineWorkspace({
   };
 
   return (
-    <section className={`timeline-workspace timeline-command timeline-command--voyage-only${spatialActive ? ' timeline-workspace--spatial-intelligence' : ''}${cinematicActive ? ' timeline-workspace--event-focus' : ''}`} id="timeline-workspace">
+    <section className={`timeline-workspace timeline-command timeline-command--voyage-only timeline-workspace--mode-${workspaceMode}${spatialActive ? ' timeline-workspace--spatial-intelligence' : ''}${cinematicActive ? ' timeline-workspace--event-focus' : ''}`} id="timeline-workspace">
       <TimelineContextNavigator
         requestedState={resolvedState}
         spoilerLimit={spoilerLimit}
         onNavigate={navigateTimelineState}
       />
+
+      {!cinematicActive && <TimelineWorkspaceSwitcher
+        activeMode={workspaceMode}
+        requestedState={resolvedState}
+        onNavigate={navigateTimelineState}
+      />}
 
       {cinematicActive ? <TimelineEventFocus
         eventId={resolvedState.event}
@@ -113,38 +133,38 @@ export default function TimelineWorkspace({
           onNavigate={navigateTimelineState}
         />
 
-        {!spatialActive && <TimelineStoryTopography
+        {storyActive && <>
+          <TimelineStoryTopography
+            requestedState={resolvedState}
+            spoilerLimit={spoilerLimit}
+            onNavigate={navigateTimelineState}
+          />
+          <TimelineSemanticLandmarks
+            requestedState={resolvedState}
+            spoilerLimit={spoilerLimit}
+            onNavigate={navigateTimelineState}
+          />
+          <TimelineStoryField
+            requestedState={resolvedState}
+            spoilerLimit={spoilerLimit}
+            onNavigate={navigateTimelineState}
+          />
+        </>}
+
+        {compareActive && <TimelineComparisonBuilder
           requestedState={resolvedState}
           spoilerLimit={spoilerLimit}
           onNavigate={navigateTimelineState}
         />}
 
-        {!spatialActive && <TimelineSemanticLandmarks
-          requestedState={resolvedState}
-          spoilerLimit={spoilerLimit}
-          onNavigate={navigateTimelineState}
-        />}
-
-        {!spatialActive && <TimelineStoryField
-          requestedState={resolvedState}
-          spoilerLimit={spoilerLimit}
-          onNavigate={navigateTimelineState}
-        />}
-
-        <TimelineComparisonBuilder
-          requestedState={resolvedState}
-          spoilerLimit={spoilerLimit}
-          onNavigate={navigateTimelineState}
-        />
-
-        <SuccessionTimeline
+        {(atlasActive || archiveActive) && <SuccessionTimeline
           spoilerLimit={spoilerLimit}
           initialQuery={requestedSearch}
           requestedState={atlasState}
           onOpenLocation={openLocationInSpatialIntelligence}
           onSearchCommit={applySearch}
           onStateCommit={commitTimelineState}
-        />
+        />}
 
         {spatialActive && <TimelineSpatialIntelligence
           requestedState={resolvedState}
@@ -153,9 +173,9 @@ export default function TimelineWorkspace({
           onOpenLocation={onOpenLocation}
         />}
 
-        <details className="st-research-annex">
+        {atlasActive && <details className="st-research-annex">
           <summary>
-            <div><span>Research annex</span><strong>Princes, open questions, Nen developments, and active deadlines</strong></div>
+            <div><span>Extended intelligence annex</span><strong>Princes, open questions, Nen developments, and active deadlines</strong></div>
             <ChevronDown size={20} aria-hidden="true" />
           </summary>
           <TimelineIntelligencePanels
@@ -165,7 +185,7 @@ export default function TimelineWorkspace({
             defaultSectionsOpen={false}
             embedded
           />
-        </details>
+        </details>}
       </>}
     </section>
   );
