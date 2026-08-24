@@ -1,5 +1,6 @@
 import { ChevronDown } from 'lucide-react';
 import SuccessionTimeline from './SuccessionTimeline';
+import TimelineCharacterSpatialFollower from './TimelineCharacterSpatialFollower';
 import TimelineComparisonBuilder from './TimelineComparisonBuilder';
 import TimelineContextNavigator from './TimelineContextNavigator';
 import TimelineIntelligencePanels from './TimelineIntelligencePanels';
@@ -58,6 +59,11 @@ export default function TimelineWorkspace({
       <TimelineContextNavigator
         requestedState={resolvedState}
         spoilerLimit={spoilerLimit}
+        onNavigate={navigateTimelineState}
+      />
+
+      <TimelineCharacterSpatialFollower
+        requestedState={resolvedState}
         onNavigate={navigateTimelineState}
       />
 
