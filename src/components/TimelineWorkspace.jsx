@@ -6,6 +6,7 @@ import TimelineContextNavigator from './TimelineContextNavigator';
 import TimelineIntelligencePanels from './TimelineIntelligencePanels';
 import TimelineSpatialIntelligence from './TimelineSpatialIntelligence';
 import TimelineStoryField from './TimelineStoryField';
+import TimelineStoryTopography from './TimelineStoryTopography';
 import './TimelineWorkspace.css';
 
 export default function TimelineWorkspace({
@@ -67,6 +68,12 @@ export default function TimelineWorkspace({
         requestedState={resolvedState}
         onNavigate={navigateTimelineState}
       />
+
+      {!spatialActive && <TimelineStoryTopography
+        requestedState={resolvedState}
+        spoilerLimit={spoilerLimit}
+        onNavigate={navigateTimelineState}
+      />}
 
       {!spatialActive && <TimelineStoryField
         requestedState={resolvedState}
