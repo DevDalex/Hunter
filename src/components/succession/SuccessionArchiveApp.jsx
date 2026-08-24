@@ -175,7 +175,7 @@ function FamilyTreeWorkspace({ spoilerLimit, onNavigate }) {
 
 function PreservedWorkspace({ routeId, routeParams, spoilerLimit, onNavigate }) {
   if (routeId === 'black-whale') return <Suspense fallback={<Loading label="Black Whale atlas" />}><BlackWhaleGuide initialQuery={routeParams.room || ''} initialLocationId={routeParams.entity || ''} spoilerLimit={spoilerLimit} onOpenWorldMap={(params = {}) => onNavigate('locations', params)} onOpenCanonicalLocation={(params) => onNavigate('locations', params)} /></Suspense>;
-  if (routeId === 'timeline') return <Suspense fallback={<Loading label="voyage timeline" />}><TimelineWorkspace embedded requestedArc="succession-contest" requestedScope={routeParams.scope || 'events'} requestedSearch={routeParams.search || ''} spoilerLimit={spoilerLimit} onNavigate={(params) => onNavigate('timeline', params)} onOpenLocation={(room) => onNavigate('black-whale', { room })} /></Suspense>;
+  if (routeId === 'timeline') return <Suspense fallback={<Loading label="voyage timeline" />}><TimelineWorkspace embedded requestedArc="succession-contest" requestedScope={routeParams.scope || 'events'} requestedSearch={routeParams.search || ''} requestedState={routeParams} spoilerLimit={spoilerLimit} onNavigate={(params) => onNavigate('timeline', params)} onOpenLocation={(room) => onNavigate('black-whale', { room })} /></Suspense>;
   return null;
 }
 

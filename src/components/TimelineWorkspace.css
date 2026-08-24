@@ -1,5 +1,6 @@
 @import './TimelineCommand.css';
 @import './SuccessionTimelineEditorial.css';
+@import './SuccessionTimelineAtlas.css';
 
 .timeline-workspace.timeline-command {
   width: 100%;

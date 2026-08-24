@@ -1,13 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowRight,
+  Bookmark,
   BookOpen,
   ChevronDown,
   Clock3,
+  Copy,
   ExternalLink,
   Filter,
+  FolderPlus,
   Layers3,
   MapPin,
+  NotebookPen,
   Search,
   ShieldQuestion,
   SlidersHorizontal,
@@ -31,16 +35,36 @@ import {
   timingConfidenceForEvent,
 } from '../data/successionTimelineIntelligence';
 import { strictTimelineNenForEvent } from '../data/successionTimelineIntelligenceView';
+import { getEntityById } from '../data/succession/successionData';
+import {
+  SUCCESSION_ARCHIVE_MEMORY_EVENT,
+  clearSuccessionCompareTray,
+  createSuccessionWatchlist,
+  readSuccessionArchiveMemory,
+  toggleSuccessionArchiveBookmark,
+  toggleSuccessionCompareItem,
+  toggleSuccessionWatchlistItem,
+  updateSuccessionWatchlistNote,
+} from '../data/succession/archiveMemory';
+import {
+  SUCCESSION_TIMELINE_NOTES_EVENT,
+  archiveItemForTimelineEvent,
+  classifyTimelineEvent,
+  readSuccessionTimelineNotes,
+  writeSuccessionTimelineNote,
+} from '../data/successionTimelineResearch';
 import {
   mediaForTimelinePhase,
   successionTimelinePhases,
   timelinePhaseForChapter,
 } from '../data/successionTimelinePresentation';
+import SuccessionTimelineAtlas, { TIMELINE_DEPTHS } from './SuccessionTimelineAtlas';
 
 const PAGE_SIZE = 36;
 const archiveRoot = '/story/succession-contest';
 const chapterRecordHref = (chapter) => `${archiveRoot}/chapter-records?chapter=${encodeURIComponent(chapter)}&entity=${encodeURIComponent(`chapter:${chapter}`)}`;
 const normalize = (value) => String(value || '').trim().toLocaleLowerCase();
+const labelizeEventType = (value) => String(value || 'other').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 const confidenceClass = (value) => normalize(value).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 const confidenceGroup = (value = '') => {
   const normalized = normalize(value);
@@ -58,15 +82,19 @@ const confidenceLabels = {
 const arrangementOptions = [
   ['story', 'Story order'],
   ['chapter', 'Chapters'],
+  ['day', 'Voyage days'],
+  ['movement', 'Movements'],
   ['thread', 'Threads'],
+  ['character', 'People'],
   ['location', 'Locations'],
+  ['evidence', 'Evidence'],
 ];
 const trackName = (id) => timelineTracks.find((track) => track.id === id)?.label || id;
 
 const searchTextForEvent = (event) => {
-  const causality = timelineCausalityForEvent(event);
-  const people = peopleForTimelineEvent(event);
-  const nen = strictTimelineNenForEvent(event);
+  const causality = event.causality || timelineCausalityForEvent(event);
+  const people = event.people || peopleForTimelineEvent(event);
+  const nen = event.nen || strictTimelineNenForEvent(event);
   return normalize([
     event.time,
     event.title,
@@ -77,6 +105,7 @@ const searchTextForEvent = (event) => {
     event.dayHeadline,
     event.phaseTitle,
     event.confidence,
+    event.eventType,
     ...(event.tracks || []),
     ...(event.tracks || []).map(trackName),
     ...people,
@@ -114,9 +143,27 @@ const groupEvents = (events, arrangement) => {
       add(`thread-${primaryTrack}`, { eyebrow: 'Primary story thread', title: trackName(primaryTrack), subtitle: 'Filter by a thread to include every linked record.' }, event);
       continue;
     }
+    if (arrangement === 'day') {
+      if (!event.day) add('day-prelude', { eyebrow: 'Before departure', title: 'Pre-voyage', subtitle: 'Expedition, ritual, contracts, recruitment, and boarding.' }, event);
+      else add(`day-${event.day}`, { eyebrow: event.date || 'Voyage chronology', title: `Voyage Day ${event.day}`, subtitle: event.dayHeadline }, event);
+      continue;
+    }
+    if (arrangement === 'movement') {
+      add(`movement-${event.phaseId}`, { eyebrow: 'Editorial movement', title: event.phaseTitle, subtitle: `Chapters grouped inside the seven-movement story architecture.` }, event);
+      continue;
+    }
+    if (arrangement === 'character') {
+      const person = event.people?.[0] || 'No named participant';
+      add(`character-${person}`, { eyebrow: 'Primary participant', title: person, subtitle: 'Other involved people remain visible inside each complete record.' }, event);
+      continue;
+    }
     if (arrangement === 'location') {
       const place = event.location || 'Location not assigned';
       add(`location-${place}`, { eyebrow: 'Operational location', title: place, subtitle: 'Records currently visible in this place.' }, event);
+      continue;
+    }
+    if (arrangement === 'evidence') {
+      add(`evidence-${event.evidence}`, { eyebrow: 'Evidence state', title: event.evidence, subtitle: 'Claim confidence remains separate from chronological placement.' }, event);
       continue;
     }
     if (!event.day) {
@@ -128,6 +175,7 @@ const groupEvents = (events, arrangement) => {
 
   const result = [...groups.values()];
   if (arrangement === 'location') result.sort((left, right) => right.events.length - left.events.length || left.title.localeCompare(right.title));
+  if (arrangement === 'character' || arrangement === 'evidence') result.sort((left, right) => right.events.length - left.events.length || left.title.localeCompare(right.title));
   if (arrangement === 'thread') result.sort((left, right) => {
     const leftId = left.key.replace('thread-', '');
     const rightId = right.key.replace('thread-', '');
@@ -136,13 +184,29 @@ const groupEvents = (events, arrangement) => {
   return result;
 };
 
-function TimelineEventRecord({ event, expanded, onToggle, onOpenLocation }) {
-  const causality = timelineCausalityForEvent(event);
-  const people = peopleForTimelineEvent(event);
-  const nen = strictTimelineNenForEvent(event);
-  const timing = timingConfidenceForEvent(event);
-  const evidence = evidenceConfidenceForEvent(event);
-  const importance = timelineImportance(event);
+function TimelineEventRecord({
+  event,
+  expanded,
+  onToggle,
+  onOpenLocation,
+  memory,
+  note,
+  onNoteChange,
+  onToggleBookmark,
+  onToggleCompare,
+  onCollect,
+  onCopyLink,
+}) {
+  const causality = event.causality || timelineCausalityForEvent(event);
+  const people = event.people || peopleForTimelineEvent(event);
+  const nen = event.nen || strictTimelineNenForEvent(event);
+  const timing = event.timing || timingConfidenceForEvent(event);
+  const evidence = event.evidence || evidenceConfidenceForEvent(event);
+  const importance = event.importance || timelineImportance(event);
+  const item = archiveItemForTimelineEvent(event);
+  const bookmarked = memory.bookmarks.some((record) => record.entityId === event.id);
+  const compared = memory.compare.some((record) => record.entityId === event.id);
+  const collected = memory.watchlists.some((watchlist) => watchlist.items.some((record) => record.entityId === event.id));
 
   return (
     <details className={`st-record st-record--${importance}`} id={event.domId} open={expanded}>
@@ -162,7 +226,7 @@ function TimelineEventRecord({ event, expanded, onToggle, onOpenLocation }) {
 
       <div className="st-record__full">
         <div className="st-record__lead">
-          <span>Complete event record</span>
+          <span>Complete event record · {labelizeEventType(event.eventType)}</span>
           <p>{event.detail}</p>
         </div>
 
@@ -210,7 +274,16 @@ function TimelineEventRecord({ event, expanded, onToggle, onOpenLocation }) {
           <a href={chapterRecordHref(event.chapter)}><BookOpen size={13} aria-hidden="true" /> Internal chapter record</a>
           <a href={event.source} target="_blank" rel="noreferrer">Source note <ExternalLink size={12} aria-hidden="true" /></a>
           {onOpenLocation && event.location && <button type="button" onClick={() => onOpenLocation(event.location)}><MapPin size={12} aria-hidden="true" /> Open ship location</button>}
+          <button type="button" className={bookmarked ? 'is-active' : ''} aria-pressed={bookmarked} onClick={() => onToggleBookmark(item)}><Bookmark size={12} aria-hidden="true" /> {bookmarked ? 'Bookmarked' : 'Bookmark'}</button>
+          <button type="button" className={compared ? 'is-active' : ''} aria-pressed={compared} onClick={() => onToggleCompare(item)}><Layers3 size={12} aria-hidden="true" /> {compared ? 'In compare tray' : 'Compare'}</button>
+          <button type="button" className={collected ? 'is-active' : ''} aria-pressed={collected} onClick={() => onCollect(item)}><FolderPlus size={12} aria-hidden="true" /> {collected ? 'In collection' : 'Collect'}</button>
+          <button type="button" onClick={() => onCopyLink(event)}><Copy size={12} aria-hidden="true" /> Copy deep link</button>
         </footer>
+        <label className="st-record__research-note">
+          <span><NotebookPen size={13} aria-hidden="true" /> Private research note</span>
+          <textarea value={note || ''} onChange={(changeEvent) => onNoteChange(event.id, changeEvent.target.value)} maxLength="4000" placeholder="Working theory, connection, citation reminder, or question…" />
+          <small>{(note || '').length} / 4,000 · stored in this browser</small>
+        </label>
       </div>
     </details>
   );
@@ -219,8 +292,10 @@ function TimelineEventRecord({ event, expanded, onToggle, onOpenLocation }) {
 export default function SuccessionTimeline({
   spoilerLimit = Number.MAX_SAFE_INTEGER,
   initialQuery = '',
+  requestedState = {},
   onOpenLocation,
   onSearchCommit,
+  onStateCommit,
 }) {
   const boundaryDays = useMemo(() => successionDays.filter((day) => day.events.some((event) => event.chapter <= spoilerLimit)), [spoilerLimit]);
   const allVisibleEvents = useMemo(() => {
@@ -239,26 +314,48 @@ export default function SuccessionTimeline({
         archiveIndex: index + 1,
         domId: `st-event-${index + 1}`,
       };
-      return { ...preparedEvent, searchText: searchTextForEvent(preparedEvent) };
+      const enrichedEvent = {
+        ...preparedEvent,
+        people: peopleForTimelineEvent(preparedEvent),
+        nen: strictTimelineNenForEvent(preparedEvent),
+        causality: timelineCausalityForEvent(preparedEvent),
+        importance: timelineImportance(preparedEvent),
+        timing: timingConfidenceForEvent(preparedEvent),
+        evidence: evidenceConfidenceForEvent(preparedEvent),
+        eventType: classifyTimelineEvent(preparedEvent),
+      };
+      return { ...enrichedEvent, searchText: searchTextForEvent(enrichedEvent) };
     });
   }, [boundaryDays, spoilerLimit]);
 
   const visiblePhases = useMemo(() => successionTimelinePhases.filter((phase) => phase.startChapter <= spoilerLimit), [spoilerLimit]);
-  const [activePhaseId, setActivePhaseId] = useState('foundation');
+  const [activePhaseId, setActivePhaseId] = useState(requestedState.phase || 'foundation');
   const activePhase = visiblePhases.find((phase) => phase.id === activePhaseId) || visiblePhases.at(-1) || successionTimelinePhases[0];
-  const [scope, setScope] = useState(initialQuery.trim() ? 'all' : 'phase');
-  const [arrangement, setArrangement] = useState('story');
-  const [activeTrack, setActiveTrack] = useState('all');
-  const [confidence, setConfidence] = useState('all');
-  const [location, setLocation] = useState('all');
+  const [scope, setScope] = useState(requestedState.scope === 'phase' ? 'phase' : 'all');
+  const [arrangement, setArrangement] = useState(arrangementOptions.some(([id]) => id === requestedState.arrange) ? requestedState.arrange : 'story');
+  const [activeTrack, setActiveTrack] = useState(requestedState.thread || 'all');
+  const [confidence, setConfidence] = useState(requestedState.confidence || 'all');
+  const [location, setLocation] = useState(requestedState.location || 'all');
   const [query, setQuery] = useState(initialQuery);
   const [expandedEventId, setExpandedEventId] = useState('');
   const [visibleLimit, setVisibleLimit] = useState(PAGE_SIZE);
+  const [readingDepth, setReadingDepth] = useState(TIMELINE_DEPTHS.some((item) => item.id === requestedState.depth) ? requestedState.depth : 'complete');
+  const [atlasView, setAtlasView] = useState(['overview', 'threads', 'people', 'ship', 'intelligence', 'research'].includes(requestedState.view) ? requestedState.view : 'overview');
+  const [intelligenceView, setIntelligenceView] = useState(['knowledge', 'operations', 'deadlines', 'nen', 'mysteries', 'decisions', 'causality', 'evidence'].includes(requestedState.intel) ? requestedState.intel : 'knowledge');
+  const [activeCharacterId, setActiveCharacterId] = useState(requestedState.character || '');
+  const [activeDay, setActiveDay] = useState(requestedState.day === 'pre' ? null : Number.isFinite(Number(requestedState.day)) ? Number(requestedState.day) : 'all');
+  const [memory, setMemory] = useState(() => readSuccessionArchiveMemory());
+  const [notes, setNotes] = useState(() => readSuccessionTimelineNotes());
+  const [copyState, setCopyState] = useState('');
   const spotlightFocusRef = useRef(false);
+  const routeEventHandledRef = useRef('');
   const chapterMinimum = allVisibleEvents.length ? Math.min(...allVisibleEvents.map((event) => event.chapter)) : 340;
   const chapterMaximum = allVisibleEvents.length ? Math.max(...allVisibleEvents.map((event) => event.chapter)) : spoilerLimit;
-  const [chapterFrom, setChapterFrom] = useState(chapterMinimum);
-  const [chapterTo, setChapterTo] = useState(chapterMaximum);
+  const requestedFrom = Number(requestedState.from);
+  const requestedTo = Number(requestedState.to);
+  const [chapterFrom, setChapterFrom] = useState(Number.isFinite(requestedFrom) ? requestedFrom : chapterMinimum);
+  const [chapterTo, setChapterTo] = useState(Number.isFinite(requestedTo) ? requestedTo : chapterMaximum);
+  const [contextChapter, setContextChapter] = useState(Number(requestedState.chapter) || chapterMaximum);
 
   useEffect(() => {
     if (!visiblePhases.some((phase) => phase.id === activePhaseId)) setActivePhaseId(visiblePhases.at(-1)?.id || 'foundation');
@@ -267,15 +364,37 @@ export default function SuccessionTimeline({
   useEffect(() => {
     setChapterFrom((current) => Math.max(chapterMinimum, Math.min(current, chapterMaximum)));
     setChapterTo((current) => Math.max(chapterMinimum, Math.min(current, chapterMaximum)));
+    setContextChapter((current) => Math.max(chapterMinimum, Math.min(current, chapterMaximum)));
   }, [chapterMaximum, chapterMinimum]);
+
+  useEffect(() => {
+    const refreshMemory = () => setMemory(readSuccessionArchiveMemory());
+    const refreshNotes = () => setNotes(readSuccessionTimelineNotes());
+    globalThis.addEventListener?.(SUCCESSION_ARCHIVE_MEMORY_EVENT, refreshMemory);
+    globalThis.addEventListener?.(SUCCESSION_TIMELINE_NOTES_EVENT, refreshNotes);
+    return () => {
+      globalThis.removeEventListener?.(SUCCESSION_ARCHIVE_MEMORY_EVENT, refreshMemory);
+      globalThis.removeEventListener?.(SUCCESSION_TIMELINE_NOTES_EVENT, refreshNotes);
+    };
+  }, []);
 
   useEffect(() => {
     setQuery(initialQuery);
     if (initialQuery.trim()) setScope('all');
   }, [initialQuery]);
 
+  useEffect(() => {
+    if (requestedState.view && ['overview', 'threads', 'people', 'ship', 'intelligence', 'research'].includes(requestedState.view)) setAtlasView(requestedState.view);
+    if (requestedState.intel && ['knowledge', 'operations', 'deadlines', 'nen', 'mysteries', 'decisions', 'causality', 'evidence'].includes(requestedState.intel)) setIntelligenceView(requestedState.intel);
+    if (requestedState.depth && TIMELINE_DEPTHS.some((item) => item.id === requestedState.depth)) setReadingDepth(requestedState.depth);
+    if (requestedState.character !== undefined) setActiveCharacterId(requestedState.character || '');
+    if (requestedState.chapter) setContextChapter(Number(requestedState.chapter));
+  }, [requestedState.chapter, requestedState.character, requestedState.depth, requestedState.intel, requestedState.view]);
+
   const activePhaseEvents = useMemo(() => allVisibleEvents.filter((event) => event.phaseId === activePhase.id), [activePhase.id, allVisibleEvents]);
   const locationOptions = useMemo(() => [...new Set(allVisibleEvents.map((event) => event.location).filter(Boolean))].sort(), [allVisibleEvents]);
+  const activeCharacter = activeCharacterId ? getEntityById(activeCharacterId) : null;
+  const activeCharacterTerms = activeCharacter ? [activeCharacter.name, ...(activeCharacter.aliases || [])].map(normalize) : [];
   const baseEvents = scope === 'phase' ? activePhaseEvents : allVisibleEvents;
   const filteredEvents = useMemo(() => {
     const normalizedQuery = normalize(query);
@@ -283,12 +402,17 @@ export default function SuccessionTimeline({
     const end = Math.max(chapterFrom, chapterTo);
     return baseEvents.filter((event) => {
       const trackMatch = activeTrack === 'all' || event.tracks?.includes(activeTrack);
-      const confidenceMatch = confidence === 'all' || confidenceGroup(timingConfidenceForEvent(event)) === confidence;
+      const confidenceMatch = confidence === 'all' || confidenceGroup(event.timing) === confidence;
       const locationMatch = location === 'all' || event.location === location;
       const chapterMatch = event.chapter >= start && event.chapter <= end;
-      return trackMatch && confidenceMatch && locationMatch && chapterMatch && (!normalizedQuery || event.searchText.includes(normalizedQuery));
+      const dayMatch = activeDay === 'all' || (activeDay === null ? !event.day : event.day === activeDay);
+      const depthMatch = ['research', 'complete'].includes(readingDepth)
+        || (readingDepth === 'study' && event.importance !== 'complete')
+        || (['pulse', 'recap'].includes(readingDepth) && event.importance === 'major');
+      const characterMatch = !activeCharacterTerms.length || event.people.some((person) => activeCharacterTerms.some((term) => normalize(person).includes(term) || term.includes(normalize(person))));
+      return trackMatch && confidenceMatch && locationMatch && chapterMatch && dayMatch && depthMatch && characterMatch && (!normalizedQuery || event.searchText.includes(normalizedQuery));
     });
-  }, [activeTrack, baseEvents, chapterFrom, chapterTo, confidence, location, query]);
+  }, [activeCharacterTerms, activeDay, activeTrack, baseEvents, chapterFrom, chapterTo, confidence, location, query, readingDepth]);
 
   useEffect(() => {
     if (spotlightFocusRef.current) {
@@ -297,13 +421,16 @@ export default function SuccessionTimeline({
     }
     setVisibleLimit(PAGE_SIZE);
     setExpandedEventId('');
-  }, [activePhase.id, activeTrack, arrangement, chapterFrom, chapterTo, confidence, location, query, scope]);
+  }, [activeCharacterId, activeDay, activePhase.id, activeTrack, arrangement, chapterFrom, chapterTo, confidence, location, query, readingDepth, scope]);
 
   const activeFilterCount = [
     query.trim(),
     activeTrack !== 'all',
     confidence !== 'all',
     location !== 'all',
+    activeDay !== 'all',
+    activeCharacterId,
+    readingDepth !== 'complete',
     chapterFrom !== chapterMinimum,
     chapterTo !== chapterMaximum,
   ].filter(Boolean).length;
@@ -316,8 +443,8 @@ export default function SuccessionTimeline({
   const phaseCounts = useMemo(() => Object.fromEntries(visiblePhases.map((phase) => [phase.id, allVisibleEvents.filter((event) => event.phaseId === phase.id).length])), [allVisibleEvents, visiblePhases]);
   const spotlights = useMemo(() => {
     const selected = activePhase.spotlightTerms.map((term) => activePhaseEvents.find((event) => normalize(`${event.title} ${event.detail}`).includes(normalize(term))));
-    const major = activePhaseEvents.filter((event) => timelineImportance(event) === 'major');
-    const standard = activePhaseEvents.filter((event) => timelineImportance(event) === 'standard');
+    const major = activePhaseEvents.filter((event) => event.importance === 'major');
+    const standard = activePhaseEvents.filter((event) => event.importance === 'standard');
     return uniqueEvents([...selected, ...major, ...standard]).slice(0, 5);
   }, [activePhase, activePhaseEvents]);
 
@@ -326,6 +453,9 @@ export default function SuccessionTimeline({
     setActiveTrack('all');
     setConfidence('all');
     setLocation('all');
+    setActiveDay('all');
+    setActiveCharacterId('');
+    setReadingDepth('complete');
     setChapterFrom(chapterMinimum);
     setChapterTo(chapterMaximum);
     onSearchCommit?.('');
@@ -337,16 +467,21 @@ export default function SuccessionTimeline({
   };
 
   const openEvent = (event) => {
-    const phaseIndex = activePhaseEvents.findIndex((candidate) => candidate.id === event.id);
+    const archiveIndex = allVisibleEvents.findIndex((candidate) => candidate.id === event.id);
     spotlightFocusRef.current = true;
-    setScope('phase');
+    setActivePhaseId(event.phaseId);
+    setContextChapter(event.chapter);
+    setScope('all');
     setQuery('');
     setActiveTrack('all');
     setConfidence('all');
     setLocation('all');
+    setActiveDay('all');
+    setActiveCharacterId('');
+    setReadingDepth('complete');
     setChapterFrom(chapterMinimum);
     setChapterTo(chapterMaximum);
-    setVisibleLimit(Math.max(PAGE_SIZE, phaseIndex + 1));
+    setVisibleLimit(Math.max(PAGE_SIZE, archiveIndex + 1));
     setExpandedEventId(event.id);
     globalThis.requestAnimationFrame?.(() => globalThis.requestAnimationFrame?.(() => {
       const reduceMotion = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -355,13 +490,107 @@ export default function SuccessionTimeline({
     }));
   };
 
+  useEffect(() => {
+    const requestedEventId = requestedState.event || '';
+    if (!requestedEventId || routeEventHandledRef.current === requestedEventId) return;
+    const event = allVisibleEvents.find((candidate) => candidate.id === requestedEventId);
+    if (!event) return;
+    routeEventHandledRef.current = requestedEventId;
+    openEvent(event);
+  }, [allVisibleEvents, requestedState.event]);
+
+  const timelineStateParams = (event = null) => ({
+    scope,
+    view: atlasView,
+    ...(atlasView === 'intelligence' ? { intel: intelligenceView } : {}),
+    depth: readingDepth,
+    phase: activePhase.id,
+    arrange: arrangement,
+    chapter: event?.chapter || contextChapter,
+    from: chapterFrom,
+    to: chapterTo,
+    ...(activeDay === null ? { day: 'pre' } : activeDay !== 'all' ? { day: activeDay } : {}),
+    ...(activeCharacterId ? { character: activeCharacterId } : {}),
+    ...(activeTrack !== 'all' ? { thread: activeTrack } : {}),
+    ...(confidence !== 'all' ? { confidence } : {}),
+    ...(location !== 'all' ? { location } : {}),
+    ...(query.trim() ? { search: query.trim() } : {}),
+    ...(event ? { event: event.id } : {}),
+  });
+
+  const copyPermanentView = async (event = null) => {
+    const params = timelineStateParams(event);
+    onStateCommit?.(params);
+    try {
+      const url = new URL('/story/succession-contest/timeline', globalThis.location?.origin || 'https://example.invalid');
+      Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, String(value)));
+      await globalThis.navigator?.clipboard?.writeText(url.href);
+      setCopyState(event ? `Copied deep link for ${event.title}` : 'Copied permanent timeline view');
+      globalThis.setTimeout?.(() => setCopyState(''), 2200);
+    } catch {
+      setCopyState('Permanent view is now reflected in the address bar');
+    }
+  };
+
+  const handleNoteChange = (eventId, note) => setNotes(writeSuccessionTimelineNote(eventId, note));
+  const handleBookmark = (item) => setMemory(toggleSuccessionArchiveBookmark(item));
+  const handleCompare = (item) => setMemory(toggleSuccessionCompareItem(item));
+  const handleCollect = (item) => {
+    let current = readSuccessionArchiveMemory();
+    let target = current.watchlists.find((watchlist) => watchlist.status === 'active') || current.watchlists[0];
+    if (!target) {
+      current = createSuccessionWatchlist('Timeline research');
+      target = current.watchlists.at(-1);
+    }
+    if (target) current = toggleSuccessionWatchlistItem(target.id, item);
+    setMemory(current);
+  };
+  const researchActions = {
+    clearCompare: () => setMemory(clearSuccessionCompareTray()),
+    createCollection: (name) => setMemory(createSuccessionWatchlist(name)),
+    updateCollectionNote: (id, note) => setMemory(updateSuccessionWatchlistNote(id, note)),
+  };
+
+  const openMemoryItem = (item) => {
+    const eventId = item.entityId || item.params?.event;
+    const event = allVisibleEvents.find((candidate) => candidate.id === eventId);
+    if (event) openEvent(event);
+  };
+
+  const selectAtlasChapter = (chapter) => {
+    const next = Math.max(chapterMinimum, Math.min(Number(chapter) || chapterMinimum, chapterMaximum));
+    setContextChapter(next);
+    setScope('all');
+    setActiveDay('all');
+    setChapterFrom(next);
+    setChapterTo(next);
+  };
+  const selectAtlasDay = (day) => {
+    setScope('all');
+    setActiveDay(day);
+    setChapterFrom(chapterMinimum);
+    setChapterTo(chapterMaximum);
+  };
+  const selectTrackChapter = (track, chapter) => {
+    setScope('all');
+    setActiveTrack(track);
+    setActiveDay('all');
+    setChapterFrom(chapter);
+    setChapterTo(chapter);
+    setContextChapter(chapter);
+  };
+  const selectAtlasLocation = (nextLocation) => {
+    setScope('all');
+    setLocation(nextLocation || 'all');
+  };
+
   const dayChangeForGroup = (group) => {
     if (!group.key.startsWith('day-')) return null;
     return timelineDayChanges.find((item) => item.day === Number(group.key.replace('day-', ''))) || null;
   };
 
   return (
-    <section className="st-editorial" id="succession-timeline" aria-labelledby="st-editorial-title">
+    <section className="st-editorial" id="succession-timeline" aria-labelledby="st-editorial-title" data-reading-depth={readingDepth}>
       <header className="st-editorial__masthead">
         <div>
           <span>Succession Contest / complete chronology</span>
@@ -375,6 +604,35 @@ export default function SuccessionTimeline({
           <div><dt>Boundary</dt><dd>Ch. {chapterMaximum}</dd></div>
         </dl>
       </header>
+
+      <p className="sr-only" aria-live="polite">{copyState}</p>
+
+      <SuccessionTimelineAtlas
+        events={allVisibleEvents}
+        chapterMinimum={chapterMinimum}
+        chapterMaximum={chapterMaximum}
+        contextChapter={contextChapter}
+        onContextChapterChange={selectAtlasChapter}
+        activeDay={activeDay}
+        onSelectDay={selectAtlasDay}
+        depth={readingDepth}
+        onDepthChange={setReadingDepth}
+        activeView={atlasView}
+        onViewChange={setAtlasView}
+        activeIntelligenceView={intelligenceView}
+        onIntelligenceViewChange={setIntelligenceView}
+        activeCharacterId={activeCharacterId}
+        onCharacterChange={(characterId) => { setActiveCharacterId(characterId); setScope('all'); }}
+        onSelectTrackChapter={selectTrackChapter}
+        onSelectLocation={selectAtlasLocation}
+        onOpenLocation={onOpenLocation}
+        onOpenEvent={openEvent}
+        onShare={() => copyPermanentView()}
+        memory={memory}
+        notes={notes}
+        researchActions={researchActions}
+        onOpenMemoryItem={openMemoryItem}
+      />
 
       <nav className="st-phase-rail" aria-label="Timeline movements">
         {visiblePhases.map((phase) => (
@@ -491,7 +749,20 @@ export default function SuccessionTimeline({
               </header>
               {dayChange && arrangement === 'story' && <aside className="st-group__synthesis"><span>End-of-day synthesis</span><p>{dayChange.headline}</p><div><small>{dayChange.developments[0]}</small><small>{dayChange.nen[0]}</small><small>{dayChange.carry[0]}</small></div></aside>}
               <div className="st-group__records">
-                {group.events.map((event) => <TimelineEventRecord event={event} expanded={expandedEventId === event.id} onToggle={(id) => setExpandedEventId((current) => current === id ? '' : id)} onOpenLocation={onOpenLocation} key={event.id} />)}
+                {group.events.map((event) => <TimelineEventRecord
+                  event={event}
+                  expanded={expandedEventId === event.id}
+                  onToggle={(id) => setExpandedEventId((current) => current === id ? '' : id)}
+                  onOpenLocation={onOpenLocation}
+                  memory={memory}
+                  note={notes[event.id] || ''}
+                  onNoteChange={handleNoteChange}
+                  onToggleBookmark={handleBookmark}
+                  onToggleCompare={handleCompare}
+                  onCollect={handleCollect}
+                  onCopyLink={copyPermanentView}
+                  key={event.id}
+                />)}
               </div>
             </section>;
           })}
