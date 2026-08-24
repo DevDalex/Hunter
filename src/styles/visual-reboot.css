@@ -1,0 +1,1309 @@
+/*
+ * Visual reboot
+ *
+ * Presentation only. The archive data, route contracts, filters, navigation,
+ * evidence semantics, and chapter boundaries remain untouched.
+ *
+ * The shell exposes a calculated presentation kind and information density.
+ * This layer uses those values to decide width, spacing, grid pressure, and
+ * card scale so a 15-record dossier and a 1,000-record research surface do
+ * not pretend to be the same page.
+ */
+
+:root {
+  --vr-paper: #f2ede3;
+  --vr-paper-raised: #fbf8f1;
+  --vr-paper-deep: #e6ded1;
+  --vr-ink: #181714;
+  --vr-ink-soft: #34312c;
+  --vr-muted: #70695f;
+  --vr-line: rgba(24, 23, 20, .18);
+  --vr-line-strong: rgba(24, 23, 20, .52);
+  --vr-burgundy: #781f2d;
+  --vr-burgundy-dark: #51131d;
+  --vr-brass: #a47e43;
+  --vr-night: #151416;
+  --vr-night-raised: #1e1c1e;
+  --vr-night-muted: #aaa39a;
+  --vr-focus: #c79b50;
+  --vr-serif: Georgia, 'Times New Roman', serif;
+  --vr-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --vr-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+}
+
+html {
+  background: var(--vr-paper);
+}
+
+body {
+  background: var(--vr-paper);
+  color: var(--vr-ink);
+}
+
+body::selection,
+body *::selection {
+  background: var(--vr-burgundy);
+  color: #fff;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Shared non-archive pages                                                    */
+/* -------------------------------------------------------------------------- */
+
+.site-header {
+  border-bottom: 1px solid rgba(255,255,255,.09) !important;
+  background: rgba(21, 20, 22, .985) !important;
+  box-shadow: none !important;
+}
+
+.page-intro {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--vr-line-strong);
+  background:
+    linear-gradient(90deg, rgba(120,31,45,.055), transparent 42%),
+    var(--vr-paper);
+}
+
+.page-intro::before {
+  width: 4px !important;
+  background: var(--vr-burgundy) !important;
+}
+
+.page-intro h1,
+.page-intro h2 {
+  max-width: 18ch;
+  color: var(--vr-ink);
+  font-family: var(--vr-serif);
+  font-weight: 500;
+  letter-spacing: -.045em;
+}
+
+.page-intro p {
+  max-width: 72ch;
+  color: var(--vr-muted);
+  line-height: 1.7;
+}
+
+.index-section {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: clamp(30px, 4vw, 68px);
+}
+
+.index-heading {
+  border-bottom: 1px solid var(--vr-line);
+  padding-bottom: 22px;
+}
+
+.index-heading h2 {
+  max-width: 22ch;
+  font-family: var(--vr-serif);
+  font-weight: 500;
+  letter-spacing: -.035em;
+}
+
+.story-grid {
+  gap: 1px !important;
+  border: 1px solid var(--vr-line);
+  background: var(--vr-line);
+}
+
+.story-grid > article {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: var(--vr-paper-raised) !important;
+  box-shadow: none !important;
+}
+
+.story-grid > article > span,
+.section-kicker {
+  color: var(--vr-burgundy) !important;
+  font-family: var(--vr-mono);
+  letter-spacing: .12em;
+}
+
+.story-grid > article h3 {
+  font-family: var(--vr-serif);
+  font-weight: 500;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Command home                                                                */
+/* -------------------------------------------------------------------------- */
+
+.succession-command-home {
+  --home-bg: #121113 !important;
+  --home-bg-soft: #171518 !important;
+  --home-panel: rgba(25, 23, 25, .94) !important;
+  --home-panel-soft: rgba(30, 28, 30, .92) !important;
+  --home-line: rgba(242, 237, 227, .14) !important;
+  --home-line-strong: rgba(242, 237, 227, .28) !important;
+  --home-text: #f5f0e7 !important;
+  --home-muted: #aaa39a !important;
+  --home-dim: #817a72 !important;
+  --home-accent: #a93243 !important;
+  grid-template-columns: 232px minmax(0, 1fr) !important;
+  background: var(--vr-night) !important;
+}
+
+.succession-command-home__rail {
+  border-right-color: rgba(242,237,227,.16) !important;
+  background:
+    linear-gradient(180deg, rgba(120,31,45,.12), transparent 220px),
+    #111012 !important;
+  box-shadow: none !important;
+}
+
+.succession-command-home__identity {
+  min-height: 172px !important;
+}
+
+.succession-command-home__identity-mark > b {
+  text-shadow: none !important;
+}
+
+.succession-command-home__identity-mark::after {
+  background: var(--vr-burgundy) !important;
+  box-shadow: none !important;
+}
+
+.succession-command-home__rail nav a {
+  min-height: 46px !important;
+  color: #bcb5ad !important;
+  font-family: var(--vr-serif);
+  font-size: 12px !important;
+  letter-spacing: .015em !important;
+  text-transform: none !important;
+}
+
+.succession-command-home__rail nav a:hover,
+.succession-command-home__rail nav a:focus-visible,
+.succession-command-home__rail nav a.is-active {
+  background: rgba(255,255,255,.055) !important;
+  color: #fff !important;
+}
+
+.succession-command-home__rail nav a.is-active {
+  color: #fff !important;
+}
+
+.succession-command-home__rail nav a.is-active::before {
+  background: var(--vr-burgundy) !important;
+  box-shadow: none !important;
+}
+
+.succession-command-home__rail nav a > i {
+  border-color: #c24b5a !important;
+  background: #c24b5a !important;
+  box-shadow: none !important;
+}
+
+.succession-command-home__main {
+  height: auto !important;
+  min-height: 100vh !important;
+  overflow: visible !important;
+  grid-template-rows: minmax(540px, 62vh) auto auto !important;
+  gap: 1px !important;
+  padding: 0 !important;
+  background: rgba(255,255,255,.11) !important;
+}
+
+.succession-command-home__hero {
+  border: 0 !important;
+  border-bottom: 1px solid var(--home-line-strong) !important;
+  background: #111012 !important;
+}
+
+.succession-command-home__hero-grid {
+  opacity: .09 !important;
+}
+
+.succession-command-home__hero-orbit {
+  opacity: .48;
+}
+
+.succession-command-home__ship-stage img {
+  filter: grayscale(1) contrast(1.12) brightness(.72) !important;
+}
+
+.succession-command-home__search {
+  border: 1px solid rgba(245,240,231,.26) !important;
+  background: rgba(17,16,18,.86) !important;
+  box-shadow: none !important;
+}
+
+.succession-command-home__voyage {
+  border: 1px solid rgba(245,240,231,.2) !important;
+  background: rgba(17,16,18,.88) !important;
+  backdrop-filter: none !important;
+}
+
+.succession-command-home__portals {
+  gap: 1px !important;
+  padding: 0 !important;
+  border-bottom: 1px solid rgba(245,240,231,.15);
+  background: rgba(245,240,231,.12) !important;
+}
+
+.succession-command-home__portal {
+  min-height: 230px;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #181719 !important;
+  box-shadow: none !important;
+}
+
+.succession-command-home__portal:hover {
+  background: #201e21 !important;
+  transform: none !important;
+}
+
+.succession-command-home__portal-number,
+.succession-command-home__portal-copy strong {
+  color: #cb6573 !important;
+}
+
+.succession-command-home__lower-grid {
+  gap: 1px !important;
+  padding: 0 !important;
+  background: rgba(245,240,231,.12) !important;
+}
+
+.succession-command-home__lower-grid > section {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #181719 !important;
+  box-shadow: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Archive frame                                                               */
+/* -------------------------------------------------------------------------- */
+
+body:has(.succession-archive) {
+  background: var(--vr-paper) !important;
+}
+
+.succession-archive {
+  --succession-canvas: var(--vr-paper) !important;
+  --succession-canvas-raised: var(--vr-paper-raised) !important;
+  --succession-surface-1: var(--vr-paper-raised) !important;
+  --succession-surface-2: #ece5da !important;
+  --succession-surface-3: #ddd3c5 !important;
+  --succession-surface-inset: #eee8de !important;
+  --succession-surface-paper: var(--vr-paper-raised) !important;
+  --succession-surface-paper-raised: #fffdf8 !important;
+  --succession-surface-selected: var(--vr-night) !important;
+  --succession-text: var(--vr-ink) !important;
+  --succession-text-strong: #0e0d0c !important;
+  --succession-text-muted: #625c54 !important;
+  --succession-text-subtle: #81796f !important;
+  --succession-gold: var(--vr-brass) !important;
+  --succession-gold-strong: #7a5a2d !important;
+  --succession-crimson: var(--vr-burgundy) !important;
+  --succession-crimson-strong: var(--vr-burgundy-dark) !important;
+  --succession-border-subtle: #d5ccbf !important;
+  --succession-border-default: #b8ada0 !important;
+  --succession-border-strong: #2b2824 !important;
+  --sa-bg: var(--vr-paper) !important;
+  --sa-sidebar: var(--vr-night) !important;
+  --sa-surface: var(--vr-paper) !important;
+  --sa-surface-raised: var(--vr-paper-raised) !important;
+  --sa-surface-muted: var(--vr-paper-deep) !important;
+  --sa-ink: var(--vr-ink) !important;
+  --sa-ink-muted: var(--vr-muted) !important;
+  --sa-border: var(--vr-line) !important;
+  --sa-border-strong: var(--vr-line-strong) !important;
+  --sa-accent: var(--vr-burgundy) !important;
+  --sa-accent-dark: var(--vr-burgundy-dark) !important;
+  --sa-focus: var(--vr-focus) !important;
+  --vr-content-width: 1360px;
+  --vr-gutter: 42px;
+  --vr-section-gap: 30px;
+  --vr-card-gap: 14px;
+  --vr-card-pad: 20px;
+  min-height: 100vh !important;
+  background: var(--vr-paper) !important;
+  color: var(--vr-ink) !important;
+}
+
+.succession-archive[data-presentation-density='calm'] {
+  --vr-section-gap: 38px;
+  --vr-card-gap: 18px;
+  --vr-card-pad: 24px;
+}
+
+.succession-archive[data-presentation-density='medium'] {
+  --vr-section-gap: 30px;
+  --vr-card-gap: 14px;
+  --vr-card-pad: 20px;
+}
+
+.succession-archive[data-presentation-density='high'] {
+  --vr-section-gap: 24px;
+  --vr-card-gap: 10px;
+  --vr-card-pad: 16px;
+}
+
+.succession-archive[data-presentation-density='extreme'] {
+  --vr-section-gap: 18px;
+  --vr-card-gap: 7px;
+  --vr-card-pad: 13px;
+}
+
+.succession-archive[data-presentation-kind='overview'] { --vr-content-width: 1260px; }
+.succession-archive[data-presentation-kind='narrative'] { --vr-content-width: 1380px; }
+.succession-archive[data-presentation-kind='directory'],
+.succession-archive[data-presentation-kind='portrait-directory'] { --vr-content-width: 1480px; }
+.succession-archive[data-presentation-kind='ledger'],
+.succession-archive[data-presentation-kind='matrix'],
+.succession-archive[data-presentation-kind='network'],
+.succession-archive[data-presentation-kind='systems'] { --vr-content-width: 1540px; }
+.succession-archive[data-presentation-kind='chronology'],
+.succession-archive[data-presentation-kind='spatial'],
+.succession-archive[data-presentation-kind='research'],
+.succession-archive[data-presentation-kind='search'] { --vr-content-width: 1680px; }
+.succession-archive[data-presentation-kind='reader'] { --vr-content-width: 1900px; }
+.succession-archive[data-presentation-kind='reference'] { --vr-content-width: 1420px; }
+
+.succession-archive__layout {
+  grid-template-columns: 268px minmax(0, 1fr) !important;
+  background: var(--vr-paper) !important;
+}
+
+.succession-archive__sidebar {
+  position: sticky !important;
+  top: 0 !important;
+  height: 100vh !important;
+  padding: 0 !important;
+  border-right: 1px solid rgba(255,255,255,.1) !important;
+  background: var(--vr-night) !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive__sidebar-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.succession-archive__brand {
+  display: grid !important;
+  grid-template-columns: 48px minmax(0, 1fr) !important;
+  gap: 12px !important;
+  align-items: center !important;
+  padding: 22px 20px !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,.12) !important;
+  background: transparent !important;
+  color: #f5f0e7 !important;
+}
+
+.succession-archive__brand-seal {
+  width: 44px !important;
+  height: 44px !important;
+  border: 1px solid rgba(255,255,255,.38) !important;
+  background: transparent !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive__brand-copy :where(span, strong, p) {
+  color: inherit !important;
+}
+
+.succession-archive__brand-copy > span,
+.succession-archive__brand-copy p {
+  color: #aaa39a !important;
+}
+
+.succession-archive__brand-copy strong {
+  font-family: var(--vr-serif) !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  line-height: 1.05 !important;
+}
+
+.succession-archive__sidebar-context {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,.12) !important;
+  background: transparent !important;
+}
+
+.succession-archive__sidebar-context > div {
+  padding: 14px 16px !important;
+  border-right: 1px solid rgba(255,255,255,.1) !important;
+  background: transparent !important;
+}
+
+.succession-archive__sidebar-context > div:last-child {
+  border-right: 0 !important;
+}
+
+.succession-archive__sidebar-context dt,
+.succession-archive-nav h2 {
+  color: #817a72 !important;
+  font-family: var(--vr-mono) !important;
+  font-size: 9px !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-archive__sidebar-context dd {
+  margin-top: 4px !important;
+  color: #f2ede3 !important;
+  font-size: 11px !important;
+}
+
+.succession-archive__sidebar-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.succession-archive-nav {
+  padding: 20px 14px !important;
+}
+
+.succession-archive-nav section + section {
+  margin-top: 22px !important;
+}
+
+.succession-archive-nav h2 {
+  margin: 0 8px 8px !important;
+}
+
+.succession-archive-nav section > div {
+  gap: 2px !important;
+  border: 0 !important;
+}
+
+.succession-archive-nav a {
+  min-height: 40px !important;
+  display: grid !important;
+  grid-template-columns: 18px minmax(0,1fr) !important;
+  gap: 10px !important;
+  padding: 8px 10px !important;
+  border: 0 !important;
+  background: transparent !important;
+  color: #b8b1a8 !important;
+  box-shadow: none !important;
+  font-family: var(--vr-serif) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  transform: none !important;
+}
+
+.succession-archive-nav a:hover {
+  background: rgba(255,255,255,.055) !important;
+  color: #fff !important;
+}
+
+.succession-archive-nav a.is-active,
+.succession-archive-nav a[aria-current='page'] {
+  position: relative;
+  background: rgba(255,255,255,.075) !important;
+  color: #fff !important;
+}
+
+.succession-archive-nav a.is-active::before,
+.succession-archive-nav a[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  inset: 7px auto 7px -14px;
+  width: 3px;
+  background: #b43849;
+}
+
+.succession-archive__boundary {
+  margin: 0 !important;
+  border: 0 !important;
+  border-top: 1px solid rgba(255,255,255,.12) !important;
+  background: transparent !important;
+  color: #d8d1c8 !important;
+}
+
+.succession-archive__boundary summary {
+  padding: 15px 18px !important;
+  color: #d8d1c8 !important;
+}
+
+.succession-archive__boundary :where(b, label, span) {
+  color: inherit !important;
+}
+
+.succession-archive__workspace,
+.succession-archive__workspace-frame {
+  min-width: 0;
+  background: var(--vr-paper) !important;
+}
+
+.succession-archive__workspace::before,
+.succession-archive__workspace-frame::before,
+.succession-archive__workspace-frame::after {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Route chrome                                                                */
+/* -------------------------------------------------------------------------- */
+
+.succession-route-context {
+  width: min(100%, var(--vr-content-width));
+  margin-inline: auto !important;
+  padding: 14px var(--vr-gutter) 0 !important;
+  border: 0 !important;
+}
+
+.succession-breadcrumbs {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--vr-muted) !important;
+  font-family: var(--vr-mono) !important;
+  font-size: 10px !important;
+}
+
+.succession-breadcrumbs :where(button, span, li, svg),
+.succession-return-path {
+  color: var(--vr-muted) !important;
+}
+
+.succession-breadcrumbs span[aria-current='page'] {
+  color: var(--vr-ink) !important;
+}
+
+.succession-return-path {
+  border: 0 !important;
+  padding: 7px 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.succession-return-path:hover {
+  background: transparent !important;
+  color: var(--vr-burgundy) !important;
+}
+
+.succession-hub-tabs {
+  position: relative;
+  width: min(calc(100% - (var(--vr-gutter) * 2)), calc(var(--vr-content-width) - (var(--vr-gutter) * 2)));
+  margin: 14px auto 0 !important;
+  display: flex !important;
+  gap: 0 !important;
+  overflow-x: auto !important;
+  border: 0 !important;
+  border-block: 1px solid var(--vr-line-strong) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.succession-hub-tabs > a {
+  min-height: 39px !important;
+  padding: 0 16px !important;
+  border: 0 !important;
+  border-right: 1px solid var(--vr-line) !important;
+  background: transparent !important;
+  color: var(--vr-muted) !important;
+  box-shadow: none !important;
+  font-family: var(--vr-sans) !important;
+  font-size: 10px !important;
+  font-weight: 760 !important;
+  letter-spacing: .07em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-hub-tabs > a:hover {
+  background: rgba(120,31,45,.045) !important;
+  color: var(--vr-ink) !important;
+}
+
+.succession-hub-tabs > a.is-active,
+.succession-hub-tabs > a[aria-current='page'] {
+  background: var(--vr-ink) !important;
+  color: #fff !important;
+}
+
+.succession-page-header {
+  width: min(100%, var(--vr-content-width)) !important;
+  max-width: none !important;
+  margin: 0 auto !important;
+  padding: 34px var(--vr-gutter) 26px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--vr-line) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.succession-page-header__classification {
+  opacity: .65;
+}
+
+.succession-page-header__body {
+  align-items: end !important;
+}
+
+.succession-page-header__copy > span,
+.succession-page-header__kicker {
+  color: var(--vr-burgundy) !important;
+  font-family: var(--vr-mono) !important;
+  font-size: 9px !important;
+  letter-spacing: .13em !important;
+}
+
+.succession-page-header h1,
+.succession-page-header h2 {
+  max-width: 17ch !important;
+  margin: 8px 0 10px !important;
+  color: var(--vr-ink) !important;
+  font-family: var(--vr-serif) !important;
+  font-size: clamp(38px, 4.25vw, 64px) !important;
+  font-weight: 500 !important;
+  line-height: .96 !important;
+  letter-spacing: -.05em !important;
+}
+
+.succession-page-header__copy > p,
+.succession-page-header__description {
+  max-width: 74ch !important;
+  margin: 0 !important;
+  color: var(--vr-muted) !important;
+  font-family: var(--vr-sans) !important;
+  font-size: 13px !important;
+  line-height: 1.7 !important;
+}
+
+.succession-page-header__meta {
+  margin-top: 22px !important;
+  border: 0 !important;
+  border-top: 1px solid var(--vr-line) !important;
+  background: transparent !important;
+}
+
+.succession-page-header__meta > div {
+  padding: 10px 0 !important;
+  background: transparent !important;
+}
+
+.succession-page-header__meta-index {
+  color: var(--vr-burgundy) !important;
+}
+
+.succession-button,
+.succession-page-header button {
+  min-height: 38px !important;
+  border: 1px solid var(--vr-line-strong) !important;
+  border-radius: 0 !important;
+  background: var(--vr-paper-raised) !important;
+  color: var(--vr-ink) !important;
+  box-shadow: none !important;
+}
+
+.succession-button:hover,
+.succession-page-header button:hover {
+  border-color: var(--vr-burgundy) !important;
+  background: var(--vr-burgundy) !important;
+  color: #fff !important;
+}
+
+.succession-archive__content {
+  width: min(100%, var(--vr-content-width));
+  max-width: none !important;
+  margin-inline: auto !important;
+  padding: var(--vr-section-gap) var(--vr-gutter) 90px !important;
+}
+
+.succession-archive__content > * + * {
+  margin-top: var(--vr-section-gap) !important;
+}
+
+.succession-archive[data-presentation-density='extreme'] .succession-page-header {
+  padding-top: 24px !important;
+  padding-bottom: 20px !important;
+}
+
+.succession-archive[data-presentation-density='extreme'] .succession-page-header h1 {
+  font-size: clamp(34px, 3.5vw, 54px) !important;
+}
+
+.succession-archive[data-presentation-density='extreme'] .succession-page-header__classification {
+  display: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Shared information surfaces                                                 */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive :where(
+  .archive-card,
+  .succession-entity-grid > article,
+  .succession-source-reference,
+  .succession-state,
+  .succession-related,
+  .succession-selected-record-coverage,
+  [class$='__panel'],
+  [class$='-panel']
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive :where(input, select, textarea) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive :where(button, a) {
+  text-underline-offset: 3px;
+}
+
+.succession-archive :where(table) {
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.succession-archive :where(th) {
+  font-family: var(--vr-mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.succession-archive :where(td, th) {
+  border-color: var(--vr-line) !important;
+}
+
+.succession-archive :where(.succession-entity-grid) {
+  gap: var(--vr-card-gap) !important;
+}
+
+.succession-archive[data-presentation-density='calm'] .succession-entity-grid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+}
+
+.succession-archive[data-presentation-density='medium'] .succession-entity-grid {
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)) !important;
+}
+
+.succession-archive[data-presentation-density='high'] .succession-entity-grid,
+.succession-archive[data-presentation-density='extreme'] .succession-entity-grid {
+  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr)) !important;
+}
+
+.succession-entity-grid > article {
+  min-height: 0 !important;
+  padding: var(--vr-card-pad) !important;
+  border: 1px solid var(--vr-line) !important;
+  background: var(--vr-paper-raised) !important;
+}
+
+.succession-entity-grid > article:hover {
+  border-color: var(--vr-line-strong) !important;
+}
+
+.succession-entity-grid h3 {
+  margin-top: 14px !important;
+  font-family: var(--vr-serif) !important;
+  font-weight: 500 !important;
+}
+
+.succession-entity-grid p {
+  color: var(--vr-muted) !important;
+  line-height: 1.55 !important;
+}
+
+.succession-entity-visual {
+  overflow: hidden;
+  border-radius: 0 !important;
+  background: #ded6ca !important;
+}
+
+.succession-source-reference {
+  border: 0 !important;
+  border-top: 1px solid var(--vr-line) !important;
+  background: transparent !important;
+}
+
+.succession-related {
+  border: 0 !important;
+  border-block: 1px solid var(--vr-line) !important;
+  background: transparent !important;
+}
+
+/* Controls should read as one instrument, not a pile of floating chips. */
+.succession-archive :where(
+  .succession-character-command-bar,
+  .succession-location-filter-panel,
+  .succession-event-command__filters,
+  .succession-institution-command__controls,
+  .succession-search-complete__facets,
+  [class*='filter-panel'],
+  [class*='command-bar']
+) {
+  border-radius: 0 !important;
+  border: 1px solid var(--vr-line-strong) !important;
+  background: #ede6db !important;
+  box-shadow: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Editorial route heroes                                                      */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive :where(
+  .succession-character-command-hero,
+  .succession-institution-command__hero,
+  .succession-canonical-locations__hero,
+  .succession-event-command__hero,
+  .succession-assignment-command__hero,
+  .succession-relationship-command__hero,
+  .succession-chapter-command__hero,
+  .succession-nen-command__hero,
+  .succession-guardian-command__hero,
+  .succession-glossary-command__hero
+) {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(26px, 3vw, 46px) !important;
+  border: 0 !important;
+  border-top: 3px solid var(--vr-burgundy) !important;
+  border-bottom: 1px solid rgba(255,255,255,.14) !important;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(115deg, rgba(120,31,45,.16), transparent 52%),
+    var(--vr-night) !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive :where(
+  .succession-character-command-hero,
+  .succession-institution-command__hero,
+  .succession-canonical-locations__hero,
+  .succession-event-command__hero,
+  .succession-assignment-command__hero,
+  .succession-relationship-command__hero,
+  .succession-chapter-command__hero,
+  .succession-nen-command__hero,
+  .succession-guardian-command__hero,
+  .succession-glossary-command__hero
+) :where(h2, h3, strong, b) {
+  color: #fff !important;
+}
+
+.succession-archive :where(
+  .succession-character-command-hero,
+  .succession-institution-command__hero,
+  .succession-canonical-locations__hero,
+  .succession-event-command__hero,
+  .succession-assignment-command__hero,
+  .succession-relationship-command__hero,
+  .succession-chapter-command__hero,
+  .succession-nen-command__hero,
+  .succession-guardian-command__hero,
+  .succession-glossary-command__hero
+) h2 {
+  font-family: var(--vr-serif) !important;
+  font-weight: 500 !important;
+  letter-spacing: -.035em !important;
+  line-height: 1.02 !important;
+}
+
+.succession-archive :where(
+  .succession-character-command-hero,
+  .succession-institution-command__hero,
+  .succession-canonical-locations__hero,
+  .succession-event-command__hero,
+  .succession-assignment-command__hero,
+  .succession-relationship-command__hero,
+  .succession-chapter-command__hero,
+  .succession-nen-command__hero,
+  .succession-guardian-command__hero,
+  .succession-glossary-command__hero
+) :where(p, small, dt, span) {
+  color: #bbb3aa !important;
+}
+
+.succession-archive :where(
+  .succession-character-command-hero,
+  .succession-institution-command__hero,
+  .succession-canonical-locations__hero,
+  .succession-event-command__hero,
+  .succession-assignment-command__hero,
+  .succession-relationship-command__hero,
+  .succession-chapter-command__hero,
+  .succession-nen-command__hero,
+  .succession-guardian-command__hero,
+  .succession-glossary-command__hero
+) :where(dd, em) {
+  color: #fff !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* People and royal family                                                     */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive[data-archive-route='characters'] .succession-character-workspace,
+.succession-archive[data-archive-route='princes'] .succession-archive__content,
+.succession-archive[data-archive-route='queens'] .succession-archive__content {
+  --portrait-rail: 86px;
+}
+
+.succession-archive[data-archive-route='characters'] :where(.succession-character-directory, .succession-character-command-grid),
+.succession-archive[data-archive-route='princes'] :where(.succession-prince-grid, .succession-royal-grid),
+.succession-archive[data-archive-route='queens'] :where(.succession-queen-grid, .succession-royal-grid) {
+  gap: var(--vr-card-gap) !important;
+}
+
+.succession-archive[data-presentation-density='high'][data-archive-route='characters'] :where(.succession-character-command-card, .succession-character-card),
+.succession-archive[data-presentation-density='extreme'][data-archive-route='characters'] :where(.succession-character-command-card, .succession-character-card) {
+  min-height: 0 !important;
+  padding: 12px !important;
+}
+
+.succession-archive[data-archive-route='characters'] :where(.succession-character-command-card, .succession-character-card),
+.succession-archive[data-archive-route='princes'] :where([class*='prince-card'], [class*='royal-card']),
+.succession-archive[data-archive-route='queens'] :where([class*='queen-card'], [class*='royal-card']) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Institutions and assignments                                                */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive[data-archive-route='organizations'] :where(
+  .succession-institution-comparison,
+  .succession-institution-command__directory,
+  .succession-institution-command__hierarchy
+),
+.succession-archive[data-archive-route='bodyguards'] :where(
+  .succession-assignment-command__directory,
+  .succession-assignment-command__matrix
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='organizations'] .succession-institution-comparison__table-wrap,
+.succession-archive[data-archive-route='bodyguards'] :where([class*='table-wrap'], [class*='matrix']) {
+  overflow: auto !important;
+  border: 1px solid var(--vr-line) !important;
+  background: var(--vr-paper-raised) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Spatial routes                                                              */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive[data-presentation-kind='spatial'] .succession-archive__content {
+  padding-inline: 24px !important;
+}
+
+.succession-location-directory {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)) !important;
+  gap: var(--vr-card-gap) !important;
+}
+
+.succession-location-card {
+  min-width: 0 !important;
+  border: 1px solid var(--vr-line) !important;
+  border-radius: 0 !important;
+  background: var(--vr-paper-raised) !important;
+  box-shadow: none !important;
+}
+
+.succession-location-card:hover,
+.succession-location-card.is-selected {
+  border-color: var(--vr-burgundy) !important;
+  background: #fffdf8 !important;
+}
+
+.succession-location-dossier {
+  border: 0 !important;
+  border-top: 3px solid var(--vr-burgundy) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.succession-location-dossier > header {
+  background: #ebe3d7 !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Chronology and event routes                                                 */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive[data-presentation-kind='chronology'] .succession-archive__content {
+  padding-inline: 20px !important;
+}
+
+.succession-archive[data-presentation-kind='chronology'] :where(
+  .succession-event-command__directory,
+  .succession-event-command__grid,
+  .succession-event-command__timeline
+) {
+  gap: var(--vr-card-gap) !important;
+}
+
+.succession-event-command-card {
+  min-width: 0 !important;
+  border: 1px solid var(--vr-line) !important;
+  border-radius: 0 !important;
+  background: var(--vr-paper-raised) !important;
+  box-shadow: none !important;
+}
+
+.succession-event-command-card:hover,
+.succession-event-command-card.is-selected {
+  border-color: var(--vr-burgundy) !important;
+  background: #fffdf8 !important;
+  transform: none !important;
+}
+
+/* The timeline is allowed to be wide, but its canvas must stay inside its route. */
+.succession-archive[data-archive-route='timeline'] .timeline-workspace,
+.succession-archive[data-archive-route='timeline'] .timeline-command {
+  max-width: 100% !important;
+  overflow: clip !important;
+}
+
+.succession-archive[data-archive-route='timeline'] :where(.timeline-context-navigator, .timeline-story-field) {
+  border-color: var(--vr-line-strong) !important;
+  background: var(--vr-paper) !important;
+  box-shadow: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Nen and Guardian Spirit Beasts                                              */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive[data-archive-route='nen'] :where(
+  .succession-nen-workspace,
+  .succession-nen-command,
+  .succession-nen-system-board
+),
+.succession-archive[data-archive-route='guardian-spirit-beasts'] :where(
+  .succession-guardian-workspace,
+  .succession-guardian-command
+) {
+  gap: var(--vr-section-gap) !important;
+}
+
+.succession-archive[data-archive-route='nen'] :where([class*='ability-card'], [class*='nen-card']),
+.succession-archive[data-archive-route='guardian-spirit-beasts'] :where([class*='guardian-card'], [class*='beast-card']) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Relationships                                                               */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive[data-presentation-kind='network'] :where(
+  .succession-relationship-network,
+  .succession-relationship-command__graph,
+  .succession-relationship-command__matrix
+) {
+  overflow: auto !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Search, research, glossary                                                  */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive[data-archive-route='search'] .succession-search-workspace > label {
+  min-height: 72px !important;
+  border: 0 !important;
+  border-bottom: 2px solid var(--vr-ink) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='search'] .succession-search-workspace > label input {
+  font-family: var(--vr-serif) !important;
+  font-size: clamp(24px, 3vw, 42px) !important;
+  letter-spacing: -.03em !important;
+}
+
+.succession-search-complete__facets {
+  border-inline: 0 !important;
+  background: transparent !important;
+}
+
+.succession-archive[data-archive-route='research'] .succession-archive__content {
+  display: grid;
+  gap: var(--vr-section-gap);
+}
+
+.succession-archive[data-archive-route='research'] .succession-archive__content > * {
+  min-width: 0;
+}
+
+.succession-archive[data-archive-route='research'] :where(
+  .succession-intelligence-workbench,
+  .succession-mystery-case-workbench,
+  .succession-evidence-workspace,
+  .succession-coverage-report
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='glossary'] :where(
+  .succession-glossary-grid,
+  .succession-glossary-directory
+) {
+  columns: auto !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: var(--vr-card-gap) !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Chapter ledgers                                                             */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive[data-archive-route='chapters'] :where(
+  .succession-chapter-grid,
+  .succession-chapter-command__directory
+) {
+  gap: var(--vr-card-gap) !important;
+}
+
+.succession-archive[data-archive-route='chapters'] :where([class*='chapter-card']) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Reader                                                                      */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive[data-presentation-kind='reader'] {
+  background: #111012 !important;
+}
+
+.succession-archive[data-presentation-kind='reader'] .succession-archive__workspace,
+.succession-archive[data-presentation-kind='reader'] .succession-archive__workspace-frame {
+  background: #111012 !important;
+}
+
+.succession-archive[data-presentation-kind='reader'] .succession-page-header,
+.succession-archive[data-presentation-kind='reader'] .succession-route-context,
+.succession-archive[data-presentation-kind='reader'] .succession-hub-tabs {
+  color: #f5f0e7 !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Integrated Nen encyclopedia                                                 */
+/* -------------------------------------------------------------------------- */
+
+.succession-integrated-reference {
+  --forest: var(--vr-burgundy);
+  --forest-dark: var(--vr-burgundy-dark);
+  --gold: var(--vr-brass);
+  background: var(--vr-paper);
+}
+
+.succession-integrated-reference .page-intro {
+  max-width: none;
+  background:
+    linear-gradient(105deg, rgba(120,31,45,.07), transparent 48%),
+    var(--vr-paper) !important;
+}
+
+.succession-integrated-reference :where(.reference-backbone, .nen-desk-hero, .nen-principle-workbench, .nen-principle-map) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-integrated-reference .reference-backbone {
+  max-width: 1480px;
+  margin-inline: auto;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Pre-Succession chapter route and 404                                        */
+/* -------------------------------------------------------------------------- */
+
+.pre-succession-chapter-record {
+  max-width: 1360px !important;
+}
+
+.pre-succession-chapter-record > .story-grid {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+}
+
+.pre-overview__footer {
+  border-block: 1px solid var(--vr-line-strong) !important;
+  background: transparent !important;
+}
+
+.pre-overview__footer button {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.app-shell.view-not-found .story-grid {
+  max-width: 900px;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Paint and motion budget                                                     */
+/* -------------------------------------------------------------------------- */
+
+.succession-archive :where(
+  [class*='glow'],
+  [class*='orbit']
+) {
+  box-shadow: none !important;
+}
+
+.succession-archive :where(
+  .succession-entity-grid > article,
+  .succession-event-command-card,
+  .succession-location-card,
+  .succession-button,
+  .succession-hub-tabs > a,
+  .succession-archive-nav a
+) {
+  transition-duration: 110ms !important;
+  transition-property: background-color, border-color, color, opacity !important;
+}
+
+.succession-archive[data-presentation-density='extreme'] :where(
+  .succession-entity-grid > article,
+  .succession-event-command-card,
+  .succession-location-card,
+  [class*='-card']
+) {
+  box-shadow: none !important;
+}
+
+.succession-archive[data-presentation-density='extreme'] .succession-archive__content > :where(section, article) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 520px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-command-home *,
+  .succession-archive * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
