@@ -59,6 +59,8 @@ const ROUTE_PROFILE = Object.freeze({
   glossary: { kind: 'reference', complexity: .8, count: () => safeCount('glossary-entry'), floor: 'medium' },
 });
 
+export const successionPresentationRouteIds = Object.freeze(Object.keys(ROUTE_PROFILE));
+
 const DENSITY_RANK = Object.freeze({ calm: 0, medium: 1, high: 2, extreme: 3 });
 
 const densityForUnits = (units) => {
