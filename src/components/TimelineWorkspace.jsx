@@ -19,6 +19,11 @@ export default function TimelineWorkspace({
   };
 
   const navigateTimelineState = (params) => onNavigate?.({ scope: 'events', ...params });
+  const commitTimelineState = (params) => onNavigate?.({
+    scope: 'events',
+    ...params,
+    ...(requestedState.compare ? { compare: requestedState.compare } : {}),
+  });
 
   return (
     <section className="timeline-workspace timeline-command timeline-command--voyage-only" id="timeline-workspace">
@@ -40,7 +45,7 @@ export default function TimelineWorkspace({
         requestedState={requestedState}
         onOpenLocation={onOpenLocation}
         onSearchCommit={applySearch}
-        onStateCommit={navigateTimelineState}
+        onStateCommit={commitTimelineState}
       />
 
       <details className="st-research-annex">
