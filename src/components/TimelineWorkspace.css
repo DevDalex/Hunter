@@ -12,14 +12,48 @@
   min-width: 0;
 }
 
+/* The persistent story clock and Story Topography supersede the atlas's
+   original density/day navigation. Keep one temporal control system. */
+.timeline-workspace .sta-density,
+.timeline-workspace .sta-days {
+  display: none;
+}
+
 /* Ship is no longer a parallel top-level product. Its maintained spatial
-   intelligence now lives under Intelligence > Space. Legacy view=ship links
-   are normalized by TimelineWorkspace.jsx. */
+   intelligence lives in the dedicated Space workspace. Legacy view=ship links
+   are normalized before render. */
 .timeline-workspace .sta-view-nav {
   grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 .timeline-workspace .sta-view-nav > button:nth-child(4) {
   display: none;
+}
+
+/* The old adjacent-sibling sticky selector stopped matching once richer
+   timeline layers were inserted. The workspace owns the real sticky offset. */
+.timeline-workspace--mode-atlas .sta-view-nav {
+  top: 148px;
+}
+
+/* Atlas is now the analytical workspace, not another full chronology page. */
+.timeline-workspace--mode-atlas .st-phase-rail,
+.timeline-workspace--mode-atlas .st-phase-spread,
+.timeline-workspace--mode-atlas .st-spotlight,
+.timeline-workspace--mode-atlas .st-archive,
+.timeline-workspace--mode-atlas .st-archive__method {
+  display: none;
+}
+
+/* Archive is deliberately text/research-first. Story Map owns topography,
+   landmarks, and cinematic navigation; Atlas owns the analytical dashboards. */
+.timeline-workspace--mode-archive .sta-atlas,
+.timeline-workspace--mode-archive .st-phase-spread,
+.timeline-workspace--mode-archive .st-spotlight {
+  display: none;
+}
+
+.timeline-workspace--mode-archive .st-editorial__masthead {
+  border-bottom: 1px solid var(--st-line, rgba(29, 29, 27, .18));
 }
 
 /* The 2.5D field renders a variable number of story lanes. Keep the scene
@@ -28,26 +62,17 @@
   min-height: calc(var(--lane-count) * 46px + 190px);
 }
 
-.timeline-workspace--spatial-intelligence > .timeline-comparison,
-.timeline-workspace--spatial-intelligence > .st-research-annex,
-.timeline-workspace--spatial-intelligence .st-phase-rail,
-.timeline-workspace--spatial-intelligence .st-phase-spread,
-.timeline-workspace--spatial-intelligence .st-spotlight,
-.timeline-workspace--spatial-intelligence .st-archive,
-.timeline-workspace--spatial-intelligence .sta-view-stage {
-  display: none;
-}
-
-.timeline-workspace--spatial-intelligence > .st-editorial {
-  margin-bottom: 0;
-}
-
-.timeline-workspace--spatial-intelligence .sta-atlas {
-  margin-bottom: 0;
-  border-bottom: 0;
-}
-
-.timeline-workspace--spatial-intelligence > .timeline-spatial-intelligence {
+.timeline-workspace--mode-space > .timeline-spatial-intelligence {
   position: relative;
   z-index: 2;
+}
+
+.timeline-workspace--mode-event > .timeline-event-focus {
+  min-width: 0;
+}
+
+@media (max-width: 980px) {
+  .timeline-workspace--mode-atlas .sta-view-nav {
+    top: 0;
+  }
 }
