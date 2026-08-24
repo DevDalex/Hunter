@@ -10,6 +10,8 @@ on:
       - 'src/components/TimelineWorkspace.css'
       - 'src/components/TimelineCommand.css'
       - 'src/components/SuccessionTimeline.jsx'
+      - 'src/components/SuccessionTimelineAtlas.jsx'
+      - 'src/components/SuccessionTimelineAtlas.css'
       - 'src/components/BlackWhaleGuide.jsx'
       - 'src/components/BlackWhaleIntelligenceCommand.css'
       - 'src/components/SafeImage.jsx'
@@ -24,7 +26,9 @@ on:
       - 'src/components/succession/SuccessionArchiveAssignmentCommand.css'
       - 'src/components/succession/SuccessionArchiveSearch.css'
       - 'src/data/routeManifest.js'
+      - 'src/data/successionTimelineResearch.js'
       - 'scripts/audit-succession-batch-5-*.mjs'
+      - 'scripts/audit-succession-timeline-atlas.mjs'
       - 'scripts/succession-final-release-qa.mjs'
       - 'scripts/succession-cross-browser-qa.mjs'
       - 'docs/SUCCESSION-VISUAL-REDESIGN-*.md'
@@ -59,6 +63,9 @@ jobs:
 
       - name: Audit Batch 5 timeline intelligence
         run: node scripts/audit-succession-batch-5-timeline.mjs
+
+      - name: Audit complete Timeline Atlas
+        run: node scripts/audit-succession-timeline-atlas.mjs
 
       - name: Audit Batch 5 relationship intelligence
         run: node scripts/audit-succession-batch-5-relationships.mjs

@@ -20,6 +20,7 @@
     "audit:succession-royal-command": "node scripts/audit-succession-royal-command.mjs",
     "audit:succession-batch-3": "node scripts/audit-succession-batch-3-closure.mjs",
     "audit:succession-batch-5-final": "node scripts/audit-succession-batch-5-final.mjs",
+    "audit:succession-timeline-atlas": "node scripts/audit-succession-timeline-atlas.mjs",
     "report:succession-visual-inventory": "node scripts/report-succession-visual-inventory.mjs",
     "audit:succession-stabilization": "node scripts/audit-succession-stabilization.mjs",
     "audit:succession-contract": "node scripts/audit-succession-runtime-contract.mjs",

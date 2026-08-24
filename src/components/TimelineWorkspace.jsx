@@ -5,6 +5,7 @@ import './TimelineWorkspace.css';
 
 export default function TimelineWorkspace({
   requestedSearch = '',
+  requestedState = {},
   spoilerLimit = Number.MAX_SAFE_INTEGER,
   onNavigate,
   onOpenLocation,
@@ -19,8 +20,10 @@ export default function TimelineWorkspace({
       <SuccessionTimeline
         spoilerLimit={spoilerLimit}
         initialQuery={requestedSearch}
+        requestedState={requestedState}
         onOpenLocation={onOpenLocation}
         onSearchCommit={applySearch}
+        onStateCommit={(params) => onNavigate?.({ scope: 'events', ...params })}
       />
 
       <details className="st-research-annex">
