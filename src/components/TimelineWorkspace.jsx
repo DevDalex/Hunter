@@ -44,6 +44,12 @@ export default function TimelineWorkspace({
   }
 
   useEffect(() => {
+    if (requestedState.view !== 'ship') return;
+    const { view: _legacyView, mode: _legacyMode, ...preserved } = requestedState;
+    onNavigate?.({ ...preserved, scope: 'events', view: 'intelligence', intel: 'space' });
+  }, [onNavigate, requestedState]);
+
+  useEffect(() => {
     const eventId = resolvedState.event || '';
     const previousEventId = previousEventRef.current;
     if (!eventId) {
