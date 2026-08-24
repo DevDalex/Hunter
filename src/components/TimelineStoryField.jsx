@@ -37,20 +37,24 @@ const CORE_LANES = [
   'expedition',
 ];
 const DEPTH_ORDER = ['pulse', 'recap', 'study', 'research', 'complete'];
+const CONTEXT_WINDOW = 18;
 const normalize = (value) => String(value || '').trim().toLocaleLowerCase();
 const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(value, maximum));
-const importanceRank = { major: 3, standard: 2, complete: 1 };
 
-const labelForTrack = (id) => timelineTracks.find((track) => track.id === id)?.label
-  || String(id || 'other').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+function StoryFieldNode({ event, left, laneIndex, selected, muted, featured, onOpen }) {
+  const elevation = event.importance === 'major' ? 38 : event.importance === 'standard' ? 22 : 10;
+  const scale = event.importance === 'major' ? 1.08 : event.importance === 'standard' ? .94 : .72;
+  const flipLabel = left > 78;
 
-function StoryFieldNode({ event, left, laneIndex, selected, muted, onOpen }) {
-  const elevation = event.importance === 'major' ? 64 : event.importance === 'standard' ? 34 : 16;
-  const scale = event.importance === 'major' ? 1.2 : event.importance === 'standard' ? 1 : .76;
   return <button
     type="button"
-    className={`tsf-node is-${event.importance}${selected ? ' is-selected' : ''}${muted ? ' is-muted' : ''}`}
-    style={{ '--node-left': `${left}%`, '--node-elevation': `${elevation}px`, '--node-scale': scale, '--lane-index': laneIndex }}
+    className={`tsf-node is-${event.importance}${selected ? ' is-selected' : ''}${muted ? ' is-muted' : ''}${featured ? ' is-featured' : ''}${flipLabel ? ' label-left' : ''}`}
+    style={{
+      '--node-left': `${left}%`,
+      '--node-elevation': `${elevation}px`,
+      '--node-scale': scale,
+      '--lane-index': laneIndex,
+    }}
     aria-label={`Chapter ${event.chapter}. ${event.title}. ${event.location || 'Location not assigned'}.`}
     title={`Ch. ${event.chapter} · ${event.title}`}
     onClick={() => onOpen(event)}
@@ -70,7 +74,7 @@ export default function TimelineStoryField({
   spoilerLimit = Number.MAX_SAFE_INTEGER,
   onNavigate,
 }) {
-  const [camera, setCamera] = useState('field');
+  const [camera, setCamera] = useState('flat');
   const [hoveredLane, setHoveredLane] = useState('');
 
   const events = useMemo(() => {
@@ -81,21 +85,23 @@ export default function TimelineStoryField({
       .filter((event) => event.chapter <= spoilerLimit)
       .map((event) => ({ ...event, day: day.day, date: day.date })));
     const seen = new Set();
-    return [...prelude, ...voyage].filter((event) => {
-      if (!event?.id || seen.has(event.id)) return false;
-      seen.add(event.id);
-      return true;
-    }).map((event, archiveIndex) => ({
-      ...event,
-      archiveIndex,
-      people: peopleForTimelineEvent(event),
-      importance: timelineImportance(event),
-    }));
+
+    return [...prelude, ...voyage]
+      .filter((event) => {
+        if (!event?.id || seen.has(event.id)) return false;
+        seen.add(event.id);
+        return true;
+      })
+      .map((event, archiveIndex) => ({
+        ...event,
+        archiveIndex,
+        people: peopleForTimelineEvent(event),
+        importance: timelineImportance(event),
+      }));
   }, [spoilerLimit]);
 
   const chapterMinimum = events.length ? Math.min(...events.map((event) => event.chapter)) : 340;
   const chapterMaximum = events.length ? Math.max(...events.map((event) => event.chapter)) : chapterMinimum;
-  const chapterSpan = Math.max(1, chapterMaximum - chapterMinimum + 1);
   const contextChapter = clamp(Number(requestedState.chapter) || chapterMaximum, chapterMinimum, chapterMaximum);
   const depth = DEPTH_ORDER.includes(requestedState.depth) ? requestedState.depth : 'complete';
   const activeTrack = requestedState.thread || '';
@@ -103,6 +109,21 @@ export default function TimelineStoryField({
   const activeCharacterTerms = activeCharacter
     ? [activeCharacter.name, ...(activeCharacter.aliases || [])].map(normalize).filter(Boolean)
     : [];
+
+  const boundedWindow = Math.min(CONTEXT_WINDOW, chapterMaximum - chapterMinimum + 1);
+  let windowFrom = contextChapter - Math.floor((boundedWindow - 1) / 2);
+  let windowTo = windowFrom + boundedWindow - 1;
+  if (windowFrom < chapterMinimum) {
+    windowTo += chapterMinimum - windowFrom;
+    windowFrom = chapterMinimum;
+  }
+  if (windowTo > chapterMaximum) {
+    windowFrom -= windowTo - chapterMaximum;
+    windowTo = chapterMaximum;
+  }
+  windowFrom = clamp(windowFrom, chapterMinimum, chapterMaximum);
+  windowTo = clamp(windowTo, chapterMinimum, chapterMaximum);
+  const windowSpan = Math.max(1, windowTo - windowFrom + 1);
 
   const trackStats = useMemo(() => {
     const stats = new Map();
@@ -129,6 +150,7 @@ export default function TimelineStoryField({
         return (trackStats.get(right.id)?.count || 0) - (trackStats.get(left.id)?.count || 0)
           || left.label.localeCompare(right.label);
       });
+
     const selected = available.slice(0, 14).map((track) => ({
       ...track,
       count: trackStats.get(track.id)?.count || 0,
@@ -142,19 +164,24 @@ export default function TimelineStoryField({
 
   const assignedEvents = useMemo(() => events.map((event) => {
     const availableTracks = (event.tracks || []).filter((track) => laneIds.has(track) && track !== 'other');
-    const primaryTrack = [...availableTracks].sort((left, right) => (laneRank.get(left) ?? 999) - (laneRank.get(right) ?? 999))[0] || 'other';
+    const primaryTrack = [...availableTracks]
+      .sort((left, right) => (laneRank.get(left) ?? 999) - (laneRank.get(right) ?? 999))[0] || 'other';
     return { ...event, primaryTrack };
   }), [events, laneIds, laneRank]);
 
-  const visibleEvents = useMemo(() => assignedEvents.filter((event) => {
+  const depthEvents = useMemo(() => assignedEvents.filter((event) => {
     if (depth === 'pulse' || depth === 'recap') return event.importance === 'major';
     if (depth === 'study') return event.importance !== 'complete';
     return true;
   }), [assignedEvents, depth]);
 
+  const windowEvents = useMemo(() => depthEvents.filter((event) => (
+    event.chapter >= windowFrom && event.chapter <= windowTo
+  )), [depthEvents, windowFrom, windowTo]);
+
   const chapterBuckets = useMemo(() => {
     const map = new Map();
-    for (const event of visibleEvents) {
+    for (const event of windowEvents) {
       const key = `${event.primaryTrack}:${event.chapter}`;
       const current = map.get(key) || [];
       current.push(event);
@@ -162,28 +189,43 @@ export default function TimelineStoryField({
     }
     for (const rows of map.values()) rows.sort((left, right) => left.archiveIndex - right.archiveIndex);
     return map;
-  }, [visibleEvents]);
+  }, [windowEvents]);
 
-  const plottedEvents = useMemo(() => visibleEvents.map((event) => {
+  const plottedEvents = useMemo(() => windowEvents.map((event) => {
     const bucket = chapterBuckets.get(`${event.primaryTrack}:${event.chapter}`) || [event];
     const within = Math.max(0, bucket.findIndex((candidate) => candidate.id === event.id));
-    const fractional = bucket.length === 1 ? .5 : .16 + (within / Math.max(1, bucket.length - 1)) * .68;
-    const left = ((event.chapter - chapterMinimum + fractional) / chapterSpan) * 100;
+    const fractional = bucket.length === 1 ? .5 : .12 + (within / Math.max(1, bucket.length - 1)) * .76;
+    const left = ((event.chapter - windowFrom + fractional) / windowSpan) * 100;
     const characterMatch = !activeCharacterTerms.length || event.people.some((person) => {
       const normalized = normalize(person);
       return activeCharacterTerms.some((term) => normalized.includes(term) || term.includes(normalized));
     });
     return { ...event, plotLeft: left, characterMatch };
-  }), [activeCharacterTerms, chapterBuckets, chapterMinimum, chapterSpan, visibleEvents]);
+  }), [activeCharacterTerms, chapterBuckets, windowEvents, windowFrom, windowSpan]);
+
+  const persistentLabelIds = useMemo(() => {
+    if (depth !== 'pulse' && depth !== 'recap') return new Set();
+    const bestByLane = new Map();
+    for (const event of plottedEvents) {
+      if (event.importance !== 'major') continue;
+      const current = bestByLane.get(event.primaryTrack);
+      if (!current || Math.abs(event.chapter - contextChapter) < Math.abs(current.chapter - contextChapter)) {
+        bestByLane.set(event.primaryTrack, event);
+      }
+    }
+    return new Set([...bestByLane.values()].map((event) => event.id));
+  }, [contextChapter, depth, plottedEvents]);
 
   const rails = useMemo(() => {
-    const threads = getStoryThreadsAtChapter(chapterMaximum) || [];
+    const threads = getStoryThreadsAtChapter(contextChapter) || [];
     const eventMap = new Map(assignedEvents.map((event) => [event.id, event]));
     return threads.flatMap((thread, index) => {
       const profile = thread?.profile || thread;
       const start = Number(profile?.chapterRange?.start);
-      const end = Number(profile?.chapterRange?.end ?? chapterMaximum);
+      const end = Number(profile?.chapterRange?.end ?? contextChapter);
       if (!Number.isFinite(start) || !Number.isFinite(end) || end - start < 2) return [];
+      if (end < windowFrom || start > windowTo) return [];
+
       const eventIds = profile?.eventIds || (thread?.events || []).map((event) => event.id).filter(Boolean);
       const laneCounts = new Map();
       for (const id of eventIds) {
@@ -197,15 +239,15 @@ export default function TimelineStoryField({
         label: profile.name || profile.question || 'Ongoing thread',
         laneId,
         laneIndex,
-        start: clamp(start, chapterMinimum, chapterMaximum),
-        end: clamp(end, chapterMinimum, chapterMaximum),
+        start: clamp(start, windowFrom, windowTo),
+        end: clamp(end, windowFrom, windowTo),
       }];
-    }).sort((left, right) => (right.end - right.start) - (left.end - left.start)).slice(0, 20);
-  }, [assignedEvents, chapterMaximum, chapterMinimum, laneRank, lanes.length]);
+    }).sort((left, right) => (right.end - right.start) - (left.end - left.start)).slice(0, 12);
+  }, [assignedEvents, contextChapter, laneRank, lanes.length, windowFrom, windowTo]);
 
-  const sceneWidth = clamp(chapterSpan * (camera === 'flat' ? 34 : 44), 1500, 4300);
+  const sceneWidth = clamp(windowSpan * (camera === 'flat' ? 62 : 68), 980, 1320);
   const focusLane = activeTrack && laneIds.has(activeTrack) ? activeTrack : hoveredLane;
-  const contextLeft = ((contextChapter - chapterMinimum + .5) / chapterSpan) * 100;
+  const contextLeft = ((contextChapter - windowFrom + .5) / windowSpan) * 100;
 
   const commit = (overrides = {}, remove = []) => {
     const preserved = { ...requestedState };
@@ -217,20 +259,16 @@ export default function TimelineStoryField({
     if (activeTrack === laneId) commit({}, ['thread']);
     else commit({ thread: laneId, view: 'threads' });
   };
-  const openEvent = (event) => commit({
-    event: event.id,
-    chapter: event.chapter,
-    depth: 'complete',
-  });
+  const openEvent = (event) => commit({ event: event.id, chapter: event.chapter, depth: 'complete' });
   const jumpContext = (chapter) => commit({ chapter: clamp(chapter, chapterMinimum, chapterMaximum) }, ['event']);
   const setDepth = (nextDepth) => commit({ depth: nextDepth });
 
-  return <section className={`timeline-story-field is-camera-${camera}${focusLane ? ' has-focus' : ''}`} aria-labelledby="tsf-title">
+  return <section className={`timeline-story-field is-camera-${camera} is-depth-${depth}${focusLane ? ' has-focus' : ''}`} aria-labelledby="tsf-title">
     <header className="tsf-head">
       <div>
         <span><Rotate3d size={14} aria-hidden="true" /> STORY FIELD · TIME × THREAD × IMPORTANCE</span>
         <h2 id="tsf-title">The chronology has depth now.</h2>
-        <p>Every visible node is still a real timeline record. Elevation means narrative importance, horizontal position means chapter, lanes mean story threads, and long rails represent maintained multi-chapter threads.</p>
+        <p>Only the active 18-chapter context is mounted here. The full archive stays indexed, while the field remains readable and fast.</p>
       </div>
       <div className="tsf-camera" aria-label="Story field camera">
         <span>CAMERA</span>
@@ -268,17 +306,21 @@ export default function TimelineStoryField({
           key={lane.id}
         >
           <i>{String(index + 1).padStart(2, '0')}</i>
-          <span><strong>{lane.label}</strong><small>{lane.count || plottedEvents.filter((event) => event.primaryTrack === lane.id).length} records</small></span>
+          <span><strong>{lane.label}</strong><small>{lane.count || 0} records</small></span>
           {lane.major > 0 && <b>{lane.major}</b>}
         </button>)}
       </aside>
 
-      <div className="tsf-viewport" role="region" aria-label="Scrollable 2.5D story field" tabIndex="0">
-        <div className="tsf-horizon"><span>CHAPTER {chapterMinimum}</span><strong>{camera === 'field' ? 'PERSPECTIVE STORY FIELD' : 'ORTHOGRAPHIC STORY FIELD'}</strong><span>CHAPTER {chapterMaximum}</span></div>
+      <div className="tsf-viewport" role="region" aria-label="Scrollable story field" tabIndex="0">
+        <div className="tsf-horizon"><span>CHAPTER {windowFrom}</span><strong>{camera === 'field' ? 'PERSPECTIVE STORY FIELD' : 'ORTHOGRAPHIC STORY FIELD'}</strong><span>CHAPTER {windowTo}</span></div>
         <div className="tsf-scene" style={{ '--scene-width': `${sceneWidth}px`, '--lane-count': lanes.length }}>
           <div className="tsf-stage">
             <div className="tsf-chapter-grid" aria-hidden="true">
-              {Array.from({ length: chapterSpan }, (_, index) => chapterMinimum + index).map((chapter) => <i className={chapter % 5 === 0 ? 'is-major-tick' : ''} style={{ '--chapter-left': `${((chapter - chapterMinimum + .5) / chapterSpan) * 100}%` }} key={chapter}><span>{chapter % 5 === 0 ? chapter : ''}</span></i>)}
+              {Array.from({ length: windowSpan }, (_, index) => windowFrom + index).map((chapter) => <i
+                className={chapter % 5 === 0 ? 'is-major-tick' : ''}
+                style={{ '--chapter-left': `${((chapter - windowFrom + .5) / windowSpan) * 100}%` }}
+                key={chapter}
+              ><span>{chapter}</span></i>)}
             </div>
             <div className="tsf-context-line" style={{ '--context-left': `${contextLeft}%` }} aria-hidden="true"><span>CH. {contextChapter}</span></div>
 
@@ -291,8 +333,8 @@ export default function TimelineStoryField({
             ><span>{lane.label}</span></div>)}
 
             {rails.map((rail) => {
-              const left = ((rail.start - chapterMinimum) / chapterSpan) * 100;
-              const width = Math.max(.7, ((rail.end - rail.start + 1) / chapterSpan) * 100);
+              const left = ((rail.start - windowFrom) / windowSpan) * 100;
+              const width = Math.max(.7, ((rail.end - rail.start + 1) / windowSpan) * 100);
               const muted = Boolean(focusLane && focusLane !== rail.laneId);
               return <button
                 type="button"
@@ -315,6 +357,7 @@ export default function TimelineStoryField({
                 laneIndex={laneIndexValue}
                 selected={selected}
                 muted={laneMuted || characterMuted}
+                featured={persistentLabelIds.has(event.id)}
                 onOpen={openEvent}
                 key={event.id}
               />;
@@ -325,8 +368,8 @@ export default function TimelineStoryField({
     </div>
 
     <footer className="tsf-footer">
-      <div><Eye size={13} aria-hidden="true" /><span>{plottedEvents.length.toLocaleString()} visible nodes</span><small>{events.length.toLocaleString()} total records remain in the archive below.</small></div>
-      <div><Maximize2 size={13} aria-hidden="true" /><span>{rails.length} duration rails</span><small>Only maintained multi-chapter threads are drawn as spans.</small></div>
+      <div><Eye size={13} aria-hidden="true" /><span>{plottedEvents.length.toLocaleString()} mounted nodes</span><small>Ch. {windowFrom}–{windowTo}; {events.length.toLocaleString()} total archive records stay indexed.</small></div>
+      <div><Maximize2 size={13} aria-hidden="true" /><span>{rails.length} active rails</span><small>Only spans intersecting the current context are mounted.</small></div>
       {activeCharacter && <div><Crosshair size={13} aria-hidden="true" /><span>Following {activeCharacter.name}</span><small>Unrelated nodes recede instead of disappearing.</small></div>}
     </footer>
   </section>;
