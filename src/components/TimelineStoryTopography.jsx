@@ -8,6 +8,11 @@ import {
   Skull,
   TriangleAlert,
 } from 'lucide-react';
+import {
+  successionDays,
+  successionPreludeEvents,
+} from '../data/successionTimeline';
+import { timelineImportance } from '../data/successionTimelineIntelligence';
 import { classifyTimelineEvent } from '../data/successionTimelineResearch';
 import { strictTimelineNenForEvent } from '../data/successionTimelineIntelligenceView';
 import './TimelineStoryTopography.css';
@@ -39,14 +44,30 @@ function Signal({ icon: Icon, value, label }) {
 }
 
 export default function TimelineStoryTopography({
-  events = [],
-  chapterMinimum = 340,
-  chapterMaximum = 340,
-  contextChapter = chapterMaximum,
-  activeTrack = '',
-  onSelectChapter,
+  requestedState = {},
+  spoilerLimit = Number.MAX_SAFE_INTEGER,
+  onNavigate,
 }) {
+  const events = useMemo(() => {
+    const prelude = successionPreludeEvents
+      .filter((event) => event.chapter <= spoilerLimit)
+      .map((event) => ({ ...event, day: null }));
+    const voyage = successionDays.flatMap((day) => day.events
+      .filter((event) => event.chapter <= spoilerLimit)
+      .map((event) => ({ ...event, day: day.day, date: day.date })));
+    const seen = new Set();
+    return [...prelude, ...voyage].filter((event) => {
+      if (!event?.id || seen.has(event.id)) return false;
+      seen.add(event.id);
+      return true;
+    }).map((event) => ({ ...event, importance: timelineImportance(event) }));
+  }, [spoilerLimit]);
+
+  const chapterMinimum = events.length ? Math.min(...events.map((event) => event.chapter)) : 340;
+  const chapterMaximum = events.length ? Math.max(...events.map((event) => event.chapter)) : chapterMinimum;
   const chapterSpan = Math.max(1, chapterMaximum - chapterMinimum + 1);
+  const contextChapter = clamp(Number(requestedState.chapter) || chapterMaximum, chapterMinimum, chapterMaximum);
+  const activeTrack = requestedState.thread || '';
   const focusedEvents = useMemo(
     () => activeTrack ? events.filter((event) => event.tracks?.includes(activeTrack)) : events,
     [activeTrack, events],
@@ -72,7 +93,6 @@ export default function TimelineStoryTopography({
         + nen * weights.nen;
       return {
         chapter,
-        events: chapterEvents,
         count: chapterEvents.length,
         major,
         standard,
@@ -85,7 +105,7 @@ export default function TimelineStoryTopography({
     });
 
     const maximumRaw = Math.max(1, ...rows.map((row) => row.raw));
-    const withPressure = rows.map((row, index) => {
+    return rows.map((row, index) => {
       const previous = rows[index - 1]?.raw || 0;
       const next = rows[index + 1]?.raw || 0;
       const outerPrevious = rows[index - 2]?.raw || 0;
@@ -97,8 +117,7 @@ export default function TimelineStoryTopography({
         ridge: Math.round((smoothed / maximumRaw) * 100),
       };
     });
-    return withPressure;
-  }, [chapterMaximum, chapterMinimum, chapterSpan, focusedEvents]);
+  }, [chapterMinimum, chapterSpan, focusedEvents]);
 
   const peaks = useMemo(() => [...topography]
     .filter((row) => row.count)
@@ -117,7 +136,11 @@ export default function TimelineStoryTopography({
     nen: summary.nen + row.nen,
   }), { major: 0, emergencies: 0, deaths: 0, nen: 0 });
 
-  const selectChapter = (chapter) => onSelectChapter?.(clamp(chapter, chapterMinimum, chapterMaximum));
+  const selectChapter = (chapter) => {
+    const nextChapter = clamp(chapter, chapterMinimum, chapterMaximum);
+    const { event: _event, ...preserved } = requestedState;
+    onNavigate?.({ ...preserved, scope: 'events', chapter: nextChapter });
+  };
 
   return <section className="timeline-story-topography" aria-labelledby="tst-title">
     <header className="tst-head">
@@ -189,7 +212,7 @@ export default function TimelineStoryTopography({
           <Signal icon={Skull} value={totalSignals.deaths} label="fatality signals" />
           <Signal icon={Sparkles} value={totalSignals.nen} label="strict Nen signals" />
         </div>
-        <footer><Activity size={12} aria-hidden="true" /><span>{focusedEvents.length.toLocaleString()} records shape this terrain{activeTrack ? ' in the selected thread' : ' across the full arc'}.</span></footer>
+        <footer><Activity size={12} aria-hidden="true" /><span>{focusedEvents.length.toLocaleString()} records shape this terrain{activeTrack ? ` in ${activeTrack}` : ' across the full arc'}.</span></footer>
       </section>
     </div>
   </section>;
