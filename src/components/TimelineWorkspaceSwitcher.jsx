@@ -15,11 +15,23 @@ export const TIMELINE_WORKSPACE_MODES = Object.freeze([
   { id: 'space', label: 'Space', note: 'Black Whale spatial intelligence', icon: ShipWheel },
 ]);
 
+const hasArchiveShapedState = (state) => Boolean(
+  state.search
+  || state.arrange
+  || state.confidence
+  || state.location
+  || state.day !== undefined
+  || state.from !== undefined
+  || state.to !== undefined,
+);
+
 export function resolveTimelineWorkspaceMode(state = {}) {
   if (state.event) return 'event';
   if (state.view === 'intelligence' && state.intel === 'space') return 'space';
   if (TIMELINE_WORKSPACE_MODES.some((mode) => mode.id === state.mode)) return state.mode;
+  if (state.compare) return 'compare';
   if (['threads', 'people', 'intelligence', 'research'].includes(state.view)) return 'atlas';
+  if (hasArchiveShapedState(state)) return 'archive';
   return 'story';
 }
 
