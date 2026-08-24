@@ -34,6 +34,7 @@ export default function TimelineContextNavigator({
   const requestedChapter = finiteNumber(requestedState.chapter);
   const contextChapter = clamp(requestedChapter ?? chapterMaximum, chapterMinimum, chapterMaximum);
   const [windowSize, setWindowSize] = useState(() => Math.min(chapterSpan, 18));
+  const spatialActive = requestedState.view === 'intelligence' && requestedState.intel === 'space';
 
   const chapters = useMemo(() => {
     const counts = new Map();
@@ -96,7 +97,7 @@ export default function TimelineContextNavigator({
         <div className="tcn-head__actions">
           <button type="button" onClick={() => navigateToChapter(contextChapter - 1)} disabled={contextChapter <= chapterMinimum} aria-label="Previous chapter"><ChevronLeft size={16} aria-hidden="true" /></button>
           <button type="button" onClick={() => navigateToChapter(contextChapter + 1)} disabled={contextChapter >= chapterMaximum} aria-label="Next chapter"><ChevronRight size={16} aria-hidden="true" /></button>
-          <button type="button" className="tcn-spatial" onClick={() => navigateToChapter(contextChapter, { view: 'ship' })}><ShipWheel size={14} aria-hidden="true" /><span>Spatial intelligence</span></button>
+          <button type="button" className={`tcn-spatial${spatialActive ? ' is-active' : ''}`} aria-pressed={spatialActive} onClick={() => navigateToChapter(contextChapter, { view: 'intelligence', intel: 'space' })}><ShipWheel size={14} aria-hidden="true" /><span>Spatial intelligence</span></button>
         </div>
       </header>
 
