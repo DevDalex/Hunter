@@ -22,6 +22,12 @@
   display: none;
 }
 
+/* The 2.5D field renders a variable number of story lanes. Keep the scene
+   height data-driven so the orthographic camera never clips lower lanes. */
+.timeline-workspace .tsf-scene {
+  min-height: calc(var(--lane-count) * 46px + 190px);
+}
+
 .timeline-workspace--spatial-intelligence > .timeline-comparison,
 .timeline-workspace--spatial-intelligence > .st-research-annex,
 .timeline-workspace--spatial-intelligence .st-phase-rail,
