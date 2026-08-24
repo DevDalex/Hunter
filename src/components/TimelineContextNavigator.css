@@ -1,0 +1,245 @@
+.timeline-context-navigator {
+  --tcn-accent: var(--st-accent, #9b2b24);
+  --tcn-focus: var(--st-focus, #d6b35d);
+  --tcn-ink: var(--st-ink, #1d1d1b);
+  --tcn-paper: var(--st-paper, #f3efe6);
+  --tcn-paper-raised: var(--st-paper-raised, #faf7ef);
+  --tcn-muted: var(--st-muted, #6e6a62);
+  --tcn-line: var(--st-line, rgba(29, 29, 27, .18));
+  --tcn-line-strong: var(--st-line-strong, rgba(29, 29, 27, .42));
+  position: sticky;
+  z-index: 30;
+  top: 0;
+  display: grid;
+  width: 100%;
+  height: 148px;
+  grid-template-rows: 44px 64px 40px;
+  overflow: hidden;
+  border-top: 1px solid var(--tcn-line-strong);
+  border-bottom: 1px solid var(--tcn-line-strong);
+  background: color-mix(in srgb, var(--tcn-paper-raised) 94%, transparent);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--tcn-ink) 9%, transparent);
+  color: var(--tcn-ink);
+  backdrop-filter: blur(16px);
+}
+
+.timeline-context-navigator *,
+.timeline-context-navigator *::before,
+.timeline-context-navigator *::after { box-sizing: border-box; }
+.timeline-context-navigator button { min-height: 32px; font: inherit; cursor: pointer; }
+.timeline-context-navigator button:disabled { cursor: default; opacity: .35; }
+.timeline-context-navigator button:focus-visible { outline: 3px solid var(--tcn-focus); outline-offset: 2px; }
+
+.tcn-head {
+  display: grid;
+  grid-template-columns: minmax(250px, 1fr) auto minmax(250px, 1fr);
+  align-items: stretch;
+  border-bottom: 1px solid var(--tcn-line);
+  background: var(--tcn-paper-raised);
+}
+.tcn-head__identity,
+.tcn-head__clock,
+.tcn-head__actions { min-width: 0; display: flex; align-items: center; }
+.tcn-head__identity { gap: 10px; padding: 0 18px; }
+.tcn-head__identity > span,
+.tcn-head__clock > span {
+  color: var(--tcn-accent);
+  font-family: var(--succession-font-mono, var(--mono));
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+.tcn-head__identity > strong,
+.tcn-head__clock > strong {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -.02em;
+}
+.tcn-head__identity > small,
+.tcn-head__clock > small { overflow: hidden; color: var(--tcn-muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.tcn-head__clock {
+  gap: 8px;
+  justify-content: center;
+  border-right: 1px solid var(--tcn-line);
+  border-left: 1px solid var(--tcn-line);
+  padding: 0 18px;
+}
+.tcn-head__clock > svg { color: var(--tcn-accent); }
+.tcn-head__clock > strong { min-width: 34px; font-size: 22px; text-align: center; }
+.tcn-head__actions { justify-content: flex-end; padding-right: 12px; }
+.tcn-head__actions button {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-left: 1px solid var(--tcn-line);
+  padding: 0 12px;
+  background: transparent;
+  color: var(--tcn-ink);
+  font-size: 10px;
+  font-weight: 850;
+}
+.tcn-head__actions button:hover:not(:disabled) { background: var(--tcn-ink); color: var(--tcn-paper); }
+.tcn-head__actions .tcn-spatial { min-width: 150px; color: var(--tcn-accent); }
+.tcn-head__actions .tcn-spatial:hover { color: var(--tcn-paper); }
+
+.tcn-field {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  padding: 7px 14px 12px;
+  background:
+    linear-gradient(to bottom, transparent 0 78%, color-mix(in srgb, var(--tcn-ink) 7%, transparent) 78% 79%, transparent 79%),
+    var(--tcn-paper);
+}
+.tcn-bars {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  height: 45px;
+  grid-template-columns: repeat(var(--tcn-chapter-count), minmax(3px, 1fr));
+  gap: 2px;
+  align-items: end;
+  border-bottom: 1px solid var(--tcn-line-strong);
+}
+.tcn-bar {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  min-height: 0 !important;
+  height: 100%;
+  align-items: flex-end;
+  border: 0;
+  padding: 0;
+  background: transparent;
+}
+.tcn-bar > i {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: var(--tcn-density);
+  min-height: 3px;
+  background: color-mix(in srgb, var(--tcn-ink) 58%, var(--tcn-paper));
+  transition: height 160ms ease, background 140ms ease, transform 140ms ease;
+}
+.tcn-bar:hover > i,
+.tcn-bar:focus-visible > i { background: var(--tcn-accent); transform: translateY(-2px); }
+.tcn-bar.is-current > i { background: var(--tcn-accent); }
+.tcn-bar > span {
+  position: absolute;
+  z-index: 5;
+  right: 50%;
+  bottom: -11px;
+  color: var(--tcn-muted);
+  font-family: var(--succession-font-mono, var(--mono));
+  font-size: 7px;
+  line-height: 1;
+  transform: translateX(50%);
+}
+.tcn-viewport {
+  position: absolute;
+  z-index: 3;
+  top: 4px;
+  bottom: 7px;
+  min-width: 6px;
+  border: 1px solid var(--tcn-accent);
+  background: color-mix(in srgb, var(--tcn-accent) 7%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tcn-paper) 70%, transparent);
+  pointer-events: none;
+}
+.tcn-viewport::before,
+.tcn-viewport::after {
+  position: absolute;
+  top: 50%;
+  width: 3px;
+  height: 18px;
+  background: var(--tcn-accent);
+  content: "";
+  transform: translateY(-50%);
+}
+.tcn-viewport::before { left: -2px; }
+.tcn-viewport::after { right: -2px; }
+.tcn-marker {
+  position: absolute;
+  z-index: 4;
+  top: 2px;
+  bottom: 5px;
+  width: 1px;
+  background: var(--tcn-focus);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.tcn-marker::before {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--tcn-paper);
+  border-radius: 50%;
+  background: var(--tcn-focus);
+  content: "";
+  transform: translateX(-50%);
+}
+.tcn-marker i {
+  position: absolute;
+  right: 4px;
+  top: 6px;
+  width: 28px;
+  border-top: 1px solid var(--tcn-focus);
+  opacity: .55;
+}
+
+.tcn-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  border-top: 1px solid var(--tcn-line);
+  background: var(--tcn-paper-raised);
+}
+.tcn-controls__legend { display: flex; min-width: 0; gap: 16px; align-items: center; padding: 0 16px; color: var(--tcn-muted); font-size: 8px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.tcn-controls__legend span { display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
+.tcn-controls__legend i { width: 2px; height: 13px; background: var(--tcn-focus); }
+.tcn-controls__legend b { width: 15px; height: 9px; border: 1px solid var(--tcn-accent); background: color-mix(in srgb, var(--tcn-accent) 7%, transparent); }
+.tcn-controls__zoom { display: flex; height: 100%; border-left: 1px solid var(--tcn-line); }
+.tcn-controls__zoom button {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-right: 1px solid var(--tcn-line);
+  padding: 0 11px;
+  background: transparent;
+  color: var(--tcn-ink);
+  font-size: 9px;
+  font-weight: 850;
+}
+.tcn-controls__zoom button:hover:not(:disabled) { background: var(--tcn-ink); color: var(--tcn-paper); }
+
+/* The persistent navigator replaces the older in-atlas density strip. */
+.timeline-context-navigator + .st-editorial .sta-density { display: none; }
+.timeline-context-navigator + .st-editorial .sta-view-nav { top: 148px; }
+
+@media (max-width: 980px) {
+  .timeline-context-navigator { position: relative; height: auto; grid-template-rows: auto 72px auto; }
+  .tcn-head { grid-template-columns: 1fr auto; }
+  .tcn-head__identity { min-height: 44px; }
+  .tcn-head__clock { border-right: 0; }
+  .tcn-head__actions { grid-column: 1 / 3; min-height: 40px; border-top: 1px solid var(--tcn-line); }
+  .tcn-head__actions .tcn-spatial { margin-left: auto; }
+  .tcn-field { min-height: 72px; overflow-x: auto; }
+  .tcn-bars { min-width: 780px; }
+  .tcn-controls { grid-template-columns: 1fr; }
+  .tcn-controls__legend { min-height: 36px; overflow-x: auto; }
+  .tcn-controls__zoom { min-height: 40px; border-top: 1px solid var(--tcn-line); border-left: 0; }
+  .timeline-context-navigator + .st-editorial .sta-view-nav { top: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tcn-bar > i { transition: none; }
+}
