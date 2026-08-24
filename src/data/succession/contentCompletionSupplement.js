@@ -1,5 +1,6 @@
 import { nenRecords } from '../nenEncyclopedia.js';
 import { nenDeepRecords } from '../nenDeepReference.js';
+import { LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER } from '../latestChapterMetadata.js';
 import {
   successionArchive,
   successionArchiveData,
@@ -7,7 +8,6 @@ import {
   isSuccessionEntityAvailableAtChapter,
 } from './successionData.js';
 import { successionContentExpansion } from './contentDepthExpansion.js';
-import { DEEP_GLOSSARY_ENTRIES } from './contentDepthExpansionReference.js';
 
 const freeze = (value = []) => Object.freeze(Array.isArray(value) ? [...value] : value);
 const uniqueBy = (rows, key) => {
@@ -21,6 +21,7 @@ const uniqueBy = (rows, key) => {
 };
 const normalize = (value) => String(value || '').trim().toLowerCase();
 const fieldState = (value) => value == null || value === '' || (Array.isArray(value) && value.length === 0) ? 'canon-unknown' : 'known';
+const latestBoundary = () => successionArchiveData.chapters.at(-1)?.number || LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER;
 
 export const getNenCompletion = () => {
   const records = uniqueBy([...nenRecords, ...nenDeepRecords], (row) => normalize(row.id || row.name));
@@ -47,19 +48,24 @@ export const getNenCompletion = () => {
   return Object.freeze({ records: freeze(rows), count: rows.length, completeness: rows.every((row) => row.completeness === 100) ? 100 : 0 });
 };
 
-export const getGlossaryCompletion = (chapter = successionArchiveData.chapters.at(-1)?.number || 417) => {
+export const getGlossaryCompletion = (chapter = latestBoundary()) => {
   const canonical = successionProductClosure.getGlossaryEntriesAtChapter(chapter) || [];
-  const canonicalTerms = new Set(canonical.map((row) => normalize(row.term)));
-  const supplemental = DEEP_GLOSSARY_ENTRIES.filter((row) => row.firstChapter <= chapter && !canonicalTerms.has(normalize(row.term)));
-  const rows = [...canonical, ...supplemental].sort((a, b) => String(a.term).localeCompare(String(b.term))).map((record) => {
-    const sourceRefs = record.sourceIds || record.sources || [];
+  const rows = [...canonical].sort((a, b) => String(a.term).localeCompare(String(b.term))).map((record) => {
+    const sourceRefs = (record.sourceIds || []).length
+      ? record.sourceIds
+      : (record.sources || []).map((source) => typeof source === 'string' ? source : source.id || source.url || source.name).filter(Boolean);
+    const relatedRefs = (record.relatedEntityIds || []).length
+      ? record.relatedEntityIds
+      : (record.relatedRecords || []).length
+        ? record.relatedRecords
+        : record.relatedTerms || [];
     const fields = [
       ['term', record.term],
       ['category', record.category],
       ['definition', record.definition || record.summary],
       ['synonyms', record.synonyms || []],
       ['first chapter', record.firstChapter || record.chapterRange?.start],
-      ['related records', record.relatedEntityIds || record.relatedRecords || []],
+      ['related records', relatedRefs],
       ['sources', sourceRefs],
     ].map(([field, value]) => Object.freeze({ field, status: fieldState(value), value: value ?? null }));
     return Object.freeze({ id: record.id || normalize(record.term), term: record.term, record, fields: freeze(fields), status: fields.some((field) => field.field === 'definition' && field.status === 'known') ? 'known' : 'canon-unknown', completeness: 100 });
@@ -67,7 +73,7 @@ export const getGlossaryCompletion = (chapter = successionArchiveData.chapters.a
   return Object.freeze({ chapter, records: freeze(rows), count: rows.length, completeness: 100 });
 };
 
-export const getCrossLinkCoverage = (chapter = successionArchiveData.chapters.at(-1)?.number || 417) => {
+export const getCrossLinkCoverage = (chapter = latestBoundary()) => {
   const types = ['character', 'organization', 'location', 'ability', 'guardian-beast', 'event', 'assignment', 'relationship', 'protocol', 'object', 'document', 'knowledge-record'];
   const entities = types.flatMap((type) => successionArchive.getEntitiesByType(type)).filter((entity) => isSuccessionEntityAvailableAtChapter(entity, chapter));
   const rows = entities.map((entity) => {
@@ -105,6 +111,14 @@ export const extendCompletionReport = (baseReport, chapter = baseReport.throughC
   supplementCells.forEach((row) => { counts[row.status] = (counts[row.status] || 0) + 1; });
   const missing = [...(baseReport.missing || []), ...supplementCells.filter((row) => !['known', 'none-known', 'canon-unknown', 'not-applicable'].includes(row.status))];
   const cells = Number(baseReport.cells || 0) + supplementCells.length;
+  const structuralCompleteness = missing.length === 0 ? 100 : Number((((cells - missing.length) / Math.max(1, cells)) * 100).toFixed(2));
+  const explicitUnknowns = Number(counts['canon-unknown'] || 0);
+  const notApplicable = Number(counts['not-applicable'] || 0);
+  const applicableCells = Math.max(0, cells - notApplicable);
+  const canonResolved = Number(counts.known || 0) + Number(counts['none-known'] || 0);
+  const canonExtractionCoverage = applicableCells
+    ? Number(((canonResolved / applicableCells) * 100).toFixed(2))
+    : 100;
   return Object.freeze({
     ...baseReport,
     cells,
@@ -113,6 +127,13 @@ export const extendCompletionReport = (baseReport, chapter = baseReport.throughC
     nenRecords: nen.count,
     glossaryTerms: glossary.count,
     crossLinkedEntities: crossLinks.count,
-    completeness: missing.length === 0 ? 100 : Number((((cells - missing.length) / Math.max(1, cells)) * 100).toFixed(2)),
+    explicitUnknowns,
+    applicableCells,
+    structuralCompleteness,
+    canonExtractionCoverage,
+    completeness: structuralCompleteness,
+    definition: 'Structural completeness measures whether every requested slot has an explicit state. Canon extraction coverage separately measures applicable slots resolved to a canon-backed value or an explicit none-known result; canon-unknown remains visible instead of being counted as extracted knowledge.',
+    structuralDefinition: 'Known, none-known, canon-unknown, and documented not-applicable states all satisfy the structural schema. Missing or invalid states reduce structural completeness.',
+    extractionDefinition: 'Known and none-known states count as canon-extracted. Canon-unknown states remain unresolved and not-applicable states are removed from the extraction denominator.',
   });
 };

@@ -13,13 +13,12 @@ const assertStatuses = (rows, label) => {
   rows.forEach((row, index) => assert(allowed.has(row?.completionState || row?.status), `${label}[${index}] has an unclassified completion status`));
 };
 
-const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
+const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true, hmr: false } });
 try {
-  const [completion, reference] = await Promise.all([
-    vite.ssrLoadModule('/src/data/succession/contentCompletion.js'),
-    vite.ssrLoadModule('/src/data/succession/contentDepthExpansionReference.js'),
-  ]);
-  const chapter = 417;
+  const metadata = await vite.ssrLoadModule('/src/data/latestChapterMetadata.js');
+  const completion = await vite.ssrLoadModule('/src/data/succession/contentCompletion.js');
+  const reference = await vite.ssrLoadModule('/src/data/succession/contentDepthExpansionReference.js');
+  const chapter = metadata.LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER;
   const report = completion.getCompletionReport(chapter);
 
   assert(report.completeness === 100, `overall completion is ${report.completeness}% instead of 100%`);
@@ -27,9 +26,10 @@ try {
   assert(report.cells > 0, 'completion report contains no audited cells');
 
   const chapters = completion.getAllChapterCompletionDossiers(chapter);
-  assert(chapters.length === 79, `expected Chapter 339–417 coverage (79 dossiers), found ${chapters.length}`);
-  assert(chapters[0]?.chapter === 339 && chapters.at(-1)?.chapter === 417, 'chapter completion boundary is not 339–417');
-  assert(chapters[0]?.scope === 'pre-succession-bridge', 'Chapter 339 must remain the pre-Succession Series bridge');
+  const expectedChapterDossiers = chapter - 339 + 1;
+  assert(chapters.length === expectedChapterDossiers, `expected Chapter 339–${chapter} coverage (${expectedChapterDossiers} dossiers), found ${chapters.length}`);
+  assert(chapters[0]?.chapter === 339 && chapters.at(-1)?.chapter === chapter, `chapter completion boundary is not 339–${chapter}`);
+  assert(chapters[0]?.scope === 'chapter-specific-pre-succession-handoff', 'Chapter 339 must remain the chapter-specific pre-Succession handoff record');
   for (const dossier of chapters) {
     assert(dossier.completeness === 100, `Chapter ${dossier.chapter} dossier is not complete`);
     assert(dossier.fields.length === reference.CHAPTER_FORENSIC_FIELDS.length, `Chapter ${dossier.chapter} has ${dossier.fields.length}/${reference.CHAPTER_FORENSIC_FIELDS.length} forensic fields`);
@@ -90,7 +90,7 @@ try {
   assert(ledgers.every((row) => row.completeness === 100), 'one or more operational ledgers are incomplete');
   assertStatuses(ledgers, 'Operational ledgers');
   const orders = ledgers.find((row) => row.id === 'orders');
-  assert(orders?.count > 0, 'orders/surveillance/custody ledger still resolves to a false zero at Chapter 417');
+  assert(orders?.count > 0, `orders/surveillance/custody ledger still resolves to a false zero at Chapter ${chapter}`);
 
   const orientation = completion.getOrientationCompletion(chapter);
   assert(orientation.completeness === 100 && orientation.checkpoints.length === reference.READER_ORIENTATION_CHECKPOINTS.length, 'reader-orientation checkpoints are incomplete');
@@ -112,7 +112,7 @@ try {
   }
   assert(bridge.includes('SuccessionContentCompletionWorkbench'), 'Research Depth does not expose the content-completion workbench');
 
-  console.log(`Succession 100% content-completion audit passed: ${report.cells} requested slots, ${chapters.length} chapter dossiers, ${princes.length} prince dossiers, ${trackers.length} special trackers, ${investigations.length} investigation families, ${nen.count} Nen records, ${glossary.count} glossary terms, ${crossLinks.count} cross-linked entities, ${ledgers.length} operational ledgers, ${appendices.families.length} appendix families, and 0 unclassified slots.`);
+  console.log(`Succession 100% content-completion audit passed through Chapter ${chapter}: ${report.cells} requested slots, ${chapters.length} chapter dossiers, ${princes.length} prince dossiers, ${trackers.length} special trackers, ${investigations.length} investigation families, ${nen.count} Nen records, ${glossary.count} glossary terms, ${crossLinks.count} cross-linked entities, ${ledgers.length} operational ledgers, ${appendices.families.length} appendix families, and 0 unclassified slots.`);
 } finally {
   await vite.close();
 }

@@ -1,4 +1,5 @@
 import { chapterTitles } from './chapterTitles';
+import { chapter339ResearchOverride } from './chapter339Research.js';
 import {
   LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
   LATEST_PUBLISHED_CHAPTER,
@@ -40,7 +41,7 @@ export const preSuccessionChapterResearch = chapterTitles.slice(0, 339).map((tit
   const previousTitle = number > 1 ? chapterTitles[number - 2] : null;
   const nextTitle = number < chapterTitles.length ? chapterTitles[number] : null;
 
-  return {
+  const record = {
     number,
     title,
     arcId: arc.id,
@@ -77,6 +78,8 @@ export const preSuccessionChapterResearch = chapterTitles.slice(0, 339).map((tit
     researchLevel: hunterExamChapterDetails[number] ? 'Hunterpedia chapter-specific record + arc-phase context' : 'Arc-phase context record; chapter source linked',
     reviewed: hunterExamChapterDetails[number]?.lastReviewed || 'July 14, 2026',
   };
+
+  return number === 339 ? Object.freeze({ ...record, ...chapter339ResearchOverride }) : record;
 });
 
 export const preSuccessionResearchByChapter = new Map(preSuccessionChapterResearch.map((record) => [record.number, record]));
