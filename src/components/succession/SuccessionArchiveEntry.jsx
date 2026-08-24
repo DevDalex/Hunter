@@ -24,7 +24,10 @@ import './SuccessionArchitectureVisualRevision.css';
 import './SuccessionPhase2PresentationConsistency.css';
 import './SuccessionFinalReleasePatch.css';
 import './SuccessionFinalContrastClosure.css';
+import './SuccessionUserRequestedCleanup.css';
 import SuccessionCommandHome from './SuccessionCommandHome';
+import SuccessionContextualCompletion from './SuccessionContextualCompletion';
+import SuccessionContextualReferenceExpansion from './SuccessionContextualReferenceExpansion';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));
@@ -39,6 +42,10 @@ export default function SuccessionArchiveEntry(props) {
     || (props.routeTarget === 'story' && Object.keys(props.routeParams || {}).length === 0);
   const isReader = props.routeTarget === 'reader';
   const isLightRoute = props.routeTarget === 'black-whale' || props.routeTarget === 'princes';
+  const entityChapter = Number(String(props.routeParams?.entity || '').match(/^chapter:(\d+)$/)?.[1]);
+  const contextualRouteParams = props.routeTarget === 'chapters' && !props.routeParams?.chapter && entityChapter
+    ? { ...props.routeParams, chapter: entityChapter }
+    : props.routeParams;
 
   if (isCommandHome) {
     return <SuccessionCommandHome
@@ -49,10 +56,23 @@ export default function SuccessionArchiveEntry(props) {
   }
 
   return <Suspense fallback={<ArchiveRouteLoading />}>
-    {isReader
-      ? <SuccessionArchiveReaderRoute {...props} />
-      : isLightRoute
-        ? <SuccessionArchiveLightRoute {...props} />
-        : <SuccessionArchiveApp {...props} />}
+    <>
+      {isReader
+        ? <SuccessionArchiveReaderRoute {...props} />
+        : isLightRoute
+          ? <SuccessionArchiveLightRoute {...props} />
+          : <SuccessionArchiveApp {...props} />}
+      <SuccessionContextualCompletion
+        routeTarget={props.routeTarget}
+        routeParams={contextualRouteParams}
+        spoilerLimit={props.spoilerLimit}
+        onNavigate={props.onNavigate}
+      />
+      <SuccessionContextualReferenceExpansion
+        routeTarget={props.routeTarget}
+        routeParams={contextualRouteParams}
+        spoilerLimit={props.spoilerLimit}
+      />
+    </>
   </Suspense>;
 }
