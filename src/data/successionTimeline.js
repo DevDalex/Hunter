@@ -101,6 +101,18 @@ export const successionPrelude = freeze([
   ...uncoveredLegacyPrelude,
 ].sort((left, right) => (chapterNumbersFromSpec(left.chapters)[0] || 0) - (chapterNumbersFromSpec(right.chapters)[0] || 0)));
 
+const maintainedPreludeByChapter = new Map(maintainedPrelude.map((period) => [Number(period.chapters), period]));
+export const successionPreludeEvents = freeze(maintainedPreVoyage.flatMap((research) => {
+  const period = maintainedPreludeByChapter.get(research.number);
+  return (maintainedEventsByChapter.get(research.number) || []).map((event) => freeze({
+    ...event,
+    day: null,
+    date: period?.date || research.voyageDay || 'Pre-voyage',
+    preludeId: period?.id || `maintained-prelude-${research.number}`,
+    periodTitle: period?.title || research.title || `Chapter ${research.number}`,
+  }));
+}));
+
 const dayByNumber = new Map(legacySuccessionDays.map((day) => [day.day, {
   ...day,
   events: [...day.events],
@@ -165,4 +177,4 @@ for (const research of chronologyResearch) {
 }
 
 export const timelineEventCount = successionDays.reduce((total, day) => total + day.events.length, 0)
-  + successionPrelude.reduce((total, period) => total + (period.eventIds?.length || 0), 0);
+  + successionPreludeEvents.length;

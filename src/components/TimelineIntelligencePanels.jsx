@@ -52,7 +52,13 @@ const confidenceTone = (label) => {
 
 const chapterWithinBoundary = (chapter, spoilerLimit) => Number(chapter || 0) <= spoilerLimit;
 
-export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_SAFE_INTEGER, onOpenLocation }) {
+export default function TimelineIntelligencePanels({
+  spoilerLimit = Number.MAX_SAFE_INTEGER,
+  onOpenLocation,
+  showChronology = true,
+  defaultSectionsOpen = true,
+  embedded = false,
+}) {
   const [depth, setDepth] = useState('major');
   const [questionScope, setQuestionScope] = useState('open');
   const characters = useMemo(() => getEntitiesByType('character'), []);
@@ -164,7 +170,7 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
     </article>;
   };
 
-  return <section className="timeline-intelligence" aria-labelledby="timeline-intelligence-title">
+  return <section className={`timeline-intelligence${embedded ? ' timeline-intelligence--embedded' : ''}`} aria-labelledby="timeline-intelligence-title">
     <header className="timeline-intelligence__header">
       <div>
         <span><BrainCircuit size={15} aria-hidden="true" /> Timeline intelligence layer</span>
@@ -178,7 +184,7 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
       </div>
     </header>
 
-    <details className="timeline-intelligence__section" open>
+    {showChronology && <details className="timeline-intelligence__section" open={defaultSectionsOpen}>
       <summary><span>Integrated chronology</span><strong>Chapter 340 → Ch. {spoilerLimit}</strong></summary>
       <div className="timeline-intelligence__section-body">
         {!!visiblePrelude.length && <section className="timeline-intelligence__prelude">
@@ -208,9 +214,9 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
           })}
         </div>
       </div>
-    </details>
+    </details>}
 
-    <details className="timeline-intelligence__section" open>
+    <details className="timeline-intelligence__section" open={defaultSectionsOpen}>
       <summary><span>All fourteen princes</span><strong>Contestant progression</strong></summary>
       <div className="timeline-intelligence__section-body timeline-intelligence__princes">
         {princeRows.map((prince) => {
@@ -225,7 +231,7 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
       </div>
     </details>
 
-    <details className="timeline-intelligence__section" open>
+    <details className="timeline-intelligence__section" open={defaultSectionsOpen}>
       <summary><span>Questions</span><strong>Open ↔ resolved ↔ all</strong></summary>
       <div className="timeline-intelligence__section-body">
         <div className="timeline-intelligence__question-switch" aria-label="Question status">
@@ -244,7 +250,7 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
       </div>
     </details>
 
-    <details className="timeline-intelligence__section" open>
+    <details className="timeline-intelligence__section" open={defaultSectionsOpen}>
       <summary><span>Nen developments</span><strong>{visibleNen.length} maintained signals</strong></summary>
       <div className="timeline-intelligence__section-body timeline-intelligence__nen-grid">
         {visibleNen.map((item) => <article key={`${item.chapter}-${item.title}`}>
@@ -255,7 +261,7 @@ export default function TimelineIntelligencePanels({ spoilerLimit = Number.MAX_S
       </div>
     </details>
 
-    <details className="timeline-intelligence__section" open>
+    <details className="timeline-intelligence__section" open={defaultSectionsOpen}>
       <summary><span>Active deadlines & countdowns</span><strong>{visibleDeadlines.length} tracked</strong></summary>
       <div className="timeline-intelligence__section-body timeline-intelligence__deadlines">
         {visibleDeadlines.map((item) => <article key={item.id}>

@@ -1,38 +1,12 @@
 @import './TimelineCommand.css';
+@import './SuccessionTimelineEditorial.css';
 
-/* Route-local collision repair for the legacy prelude grid inherited by the archive shell. */
-.timeline-command-voyage .timeline-prelude__steps {
-  grid-template-columns: minmax(0, 1fr);
-  min-width: 0;
-}
-
-.timeline-command-voyage .timeline-prelude__steps > details,
-.timeline-command-voyage .timeline-prelude__steps > details > summary,
-.timeline-command-voyage .timeline-prelude__steps > details > div {
+.timeline-workspace.timeline-command {
   width: 100%;
+  margin: 0 auto 80px;
+}
+
+.timeline-workspace > .st-editorial,
+.timeline-workspace > .st-research-annex {
   min-width: 0;
-  max-width: 100%;
-}
-
-/* The archive shell has older generic timeline heading rules with higher cascade reach. */
-.succession-archive .timeline-command .timeline-command-voyage__hero h2 {
-  color: var(--succession-text-strong);
-}
-
-.succession-archive .timeline-command .timeline-command-voyage__hero p {
-  color: var(--succession-text-muted);
-}
-
-.timeline-command__hero h2 {
-  max-width: 1000px;
-  margin-top: 16px;
-  color: var(--timeline-ink);
-  font-family: var(--succession-font-display, var(--serif));
-  font-size: clamp(46px, 7vw, 104px);
-  line-height: .87;
-  letter-spacing: -.062em;
-}
-
-.timeline-command__navigation > header > div > span {
-  color: var(--timeline-paper-ink);
 }
