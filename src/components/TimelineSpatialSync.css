@@ -1,0 +1,70 @@
+.tsi-sync-focus {
+  display: flex;
+  min-height: 54px;
+  flex-wrap: wrap;
+  align-items: stretch;
+  border-bottom: 1px solid var(--st-line-strong);
+  background: var(--st-paper-muted);
+}
+.tsi-sync-focus > div,
+.tsi-sync-focus > button,
+.tsi-sync-focus > span {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  min-height: 54px;
+  border: 0;
+  border-right: 1px solid var(--st-line-strong);
+  padding: 0 14px;
+}
+.tsi-sync-focus > div {
+  color: var(--st-accent);
+  font-family: var(--succession-font-mono, var(--mono));
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+.tsi-sync-focus > button {
+  background: var(--st-paper-raised);
+  color: var(--st-ink);
+  text-align: left;
+}
+.tsi-sync-focus > button span { font-family: Georgia, "Times New Roman", serif; font-size: 13px; }
+.tsi-sync-focus > button small { color: var(--st-muted); font-size: 8px; text-transform: uppercase; }
+.tsi-sync-focus > button:hover { background: var(--st-ink); color: var(--st-paper); }
+.tsi-sync-focus > button:hover small { color: var(--st-light-muted); }
+.tsi-sync-focus__source,
+.tsi-sync-focus__movement {
+  color: var(--st-muted);
+  font-family: var(--succession-font-mono, var(--mono));
+  font-size: 9px;
+  font-weight: 850;
+}
+.tsi-sync-focus__movement { color: var(--st-accent); }
+.tsi-sync-focus .tsi-sync-focus__clear { margin-left: auto; color: var(--st-accent); }
+
+.tsi-occupants > div button.is-active {
+  background: var(--st-ink);
+  color: var(--st-focus);
+}
+
+.tsi-movement li.is-focused {
+  box-shadow: inset 4px 0 var(--st-accent);
+  background: var(--st-paper-raised);
+}
+.tsi-movement li.is-focused > button:first-child {
+  color: var(--st-accent);
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .tsi-sync-focus { display: grid; grid-template-columns: 1fr 1fr; }
+  .tsi-sync-focus > div,
+  .tsi-sync-focus > button,
+  .tsi-sync-focus > span { border-bottom: 1px solid var(--st-line-strong); }
+  .tsi-sync-focus .tsi-sync-focus__clear { margin-left: 0; }
+}
+
+@media (max-width: 620px) {
+  .tsi-sync-focus { grid-template-columns: 1fr; }
+}
