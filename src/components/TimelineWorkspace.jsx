@@ -32,8 +32,26 @@ export default function TimelineWorkspace({
     scope: 'events',
     ...params,
     ...(resolvedState.compare ? { compare: resolvedState.compare } : {}),
+    ...(resolvedState.spaceLocation ? { spaceLocation: resolvedState.spaceLocation } : {}),
+    ...(resolvedState.spaceFrom ? { spaceFrom: resolvedState.spaceFrom } : {}),
+    ...(resolvedState.spaceTo ? { spaceTo: resolvedState.spaceTo } : {}),
     ...(spatialActive ? { view: 'intelligence', intel: 'space' } : {}),
   });
+
+  const openLocationInSpatialIntelligence = (location) => {
+    const name = typeof location === 'string'
+      ? location
+      : location?.name || location?.room || location?.location || '';
+    const { event: _event, view: _view, intel: _intel, spaceLocation: _spaceLocation, ...preserved } = resolvedState;
+    onNavigate?.({
+      ...preserved,
+      scope: 'events',
+      view: 'intelligence',
+      intel: 'space',
+      chapter: Number(resolvedState.chapter) || spoilerLimit,
+      ...(name ? { spaceLocation: name } : {}),
+    });
+  };
 
   return (
     <section className={`timeline-workspace timeline-command timeline-command--voyage-only${spatialActive ? ' timeline-workspace--spatial-intelligence' : ''}`} id="timeline-workspace">
@@ -53,7 +71,7 @@ export default function TimelineWorkspace({
         spoilerLimit={spoilerLimit}
         initialQuery={requestedSearch}
         requestedState={atlasState}
-        onOpenLocation={onOpenLocation}
+        onOpenLocation={openLocationInSpatialIntelligence}
         onSearchCommit={applySearch}
         onStateCommit={commitTimelineState}
       />
@@ -72,7 +90,7 @@ export default function TimelineWorkspace({
         </summary>
         <TimelineIntelligencePanels
           spoilerLimit={spoilerLimit}
-          onOpenLocation={onOpenLocation}
+          onOpenLocation={openLocationInSpatialIntelligence}
           showChronology={false}
           defaultSectionsOpen={false}
           embedded
