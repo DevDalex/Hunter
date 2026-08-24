@@ -5,6 +5,7 @@ import TimelineComparisonBuilder from './TimelineComparisonBuilder';
 import TimelineContextNavigator from './TimelineContextNavigator';
 import TimelineIntelligencePanels from './TimelineIntelligencePanels';
 import TimelineSpatialIntelligence from './TimelineSpatialIntelligence';
+import TimelineStoryField from './TimelineStoryField';
 import './TimelineWorkspace.css';
 
 export default function TimelineWorkspace({
@@ -66,6 +67,12 @@ export default function TimelineWorkspace({
         requestedState={resolvedState}
         onNavigate={navigateTimelineState}
       />
+
+      {!spatialActive && <TimelineStoryField
+        requestedState={resolvedState}
+        spoilerLimit={spoilerLimit}
+        onNavigate={navigateTimelineState}
+      />}
 
       <TimelineComparisonBuilder
         requestedState={resolvedState}
