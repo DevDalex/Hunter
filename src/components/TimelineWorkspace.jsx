@@ -4,6 +4,7 @@ import TimelineCharacterSpatialFollower from './TimelineCharacterSpatialFollower
 import TimelineComparisonBuilder from './TimelineComparisonBuilder';
 import TimelineContextNavigator from './TimelineContextNavigator';
 import TimelineIntelligencePanels from './TimelineIntelligencePanels';
+import TimelineSemanticLandmarks from './TimelineSemanticLandmarks';
 import TimelineSpatialIntelligence from './TimelineSpatialIntelligence';
 import TimelineStoryField from './TimelineStoryField';
 import TimelineStoryTopography from './TimelineStoryTopography';
@@ -70,6 +71,12 @@ export default function TimelineWorkspace({
       />
 
       {!spatialActive && <TimelineStoryTopography
+        requestedState={resolvedState}
+        spoilerLimit={spoilerLimit}
+        onNavigate={navigateTimelineState}
+      />}
+
+      {!spatialActive && <TimelineSemanticLandmarks
         requestedState={resolvedState}
         spoilerLimit={spoilerLimit}
         onNavigate={navigateTimelineState}
