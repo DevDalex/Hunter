@@ -1,5 +1,6 @@
 import { ChevronDown } from 'lucide-react';
 import SuccessionTimeline from './SuccessionTimeline';
+import TimelineComparisonBuilder from './TimelineComparisonBuilder';
 import TimelineContextNavigator from './TimelineContextNavigator';
 import TimelineIntelligencePanels from './TimelineIntelligencePanels';
 import './TimelineWorkspace.css';
@@ -17,12 +18,20 @@ export default function TimelineWorkspace({
     onNavigate?.({ ...preservedState, scope: 'events', ...(next ? { search: next } : {}) });
   };
 
+  const navigateTimelineState = (params) => onNavigate?.({ scope: 'events', ...params });
+
   return (
     <section className="timeline-workspace timeline-command timeline-command--voyage-only" id="timeline-workspace">
       <TimelineContextNavigator
         requestedState={requestedState}
         spoilerLimit={spoilerLimit}
-        onNavigate={(params) => onNavigate?.({ scope: 'events', ...params })}
+        onNavigate={navigateTimelineState}
+      />
+
+      <TimelineComparisonBuilder
+        requestedState={requestedState}
+        spoilerLimit={spoilerLimit}
+        onNavigate={navigateTimelineState}
       />
 
       <SuccessionTimeline
@@ -31,7 +40,7 @@ export default function TimelineWorkspace({
         requestedState={requestedState}
         onOpenLocation={onOpenLocation}
         onSearchCommit={applySearch}
-        onStateCommit={(params) => onNavigate?.({ scope: 'events', ...params })}
+        onStateCommit={navigateTimelineState}
       />
 
       <details className="st-research-annex">
