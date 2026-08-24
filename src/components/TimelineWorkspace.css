@@ -11,3 +11,37 @@
 .timeline-workspace > .st-research-annex {
   min-width: 0;
 }
+
+/* Ship is no longer a parallel top-level product. Its maintained spatial
+   intelligence now lives under Intelligence > Space. Legacy view=ship links
+   are normalized by TimelineWorkspace.jsx. */
+.timeline-workspace .sta-view-nav {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+.timeline-workspace .sta-view-nav > button:nth-child(4) {
+  display: none;
+}
+
+.timeline-workspace--spatial-intelligence > .timeline-comparison,
+.timeline-workspace--spatial-intelligence > .st-research-annex,
+.timeline-workspace--spatial-intelligence .st-phase-rail,
+.timeline-workspace--spatial-intelligence .st-phase-spread,
+.timeline-workspace--spatial-intelligence .st-spotlight,
+.timeline-workspace--spatial-intelligence .st-archive,
+.timeline-workspace--spatial-intelligence .sta-view-stage {
+  display: none;
+}
+
+.timeline-workspace--spatial-intelligence > .st-editorial {
+  margin-bottom: 0;
+}
+
+.timeline-workspace--spatial-intelligence .sta-atlas {
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+.timeline-workspace--spatial-intelligence > .timeline-spatial-intelligence {
+  position: relative;
+  z-index: 2;
+}
