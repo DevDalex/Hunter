@@ -4,6 +4,7 @@ import { buildSuccessionExplorerModel } from '../../data/succession/explorerMode
 import SuccessionExplorerRoutePanels from './SuccessionExplorerRoutePanels';
 import { useSuccessionExplorer } from './SuccessionExplorerState';
 import SuccessionExplorerWorkbench from './SuccessionExplorerWorkbench';
+import SuccessionPerspectiveFogOverlay from './SuccessionPerspectiveFogOverlay';
 
 export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit, onNavigate }) {
   const explorer = useSuccessionExplorer();
@@ -42,6 +43,7 @@ export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit
 
   if (!portalTarget) return null;
   return createPortal(<>
+    <SuccessionPerspectiveFogOverlay routeId={routeId} model={model} />
     {routeId === 'archive' && view === 'world' && <SuccessionExplorerWorkbench onNavigate={onNavigate} />}
     <SuccessionExplorerRoutePanels
       routeId={routeId}
