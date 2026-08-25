@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { buildSuccessionExplorerModel } from '../../data/succession/explorerModel';
 import SuccessionExplorerRoutePanels from './SuccessionExplorerRoutePanels';
 import { useSuccessionExplorer } from './SuccessionExplorerState';
+import SuccessionExplorerWorkbench from './SuccessionExplorerWorkbench';
 
 export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit, onNavigate }) {
   const explorer = useSuccessionExplorer();
@@ -40,15 +41,18 @@ export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit
   }, [explorer.selectedIds, model.nodes]);
 
   if (!portalTarget) return null;
-  return createPortal(<SuccessionExplorerRoutePanels
-    routeId={routeId}
-    view={view}
-    model={model}
-    selectedNode={selectedNode}
-    chapter={explorer.chapter}
-    spoilerLimit={spoilerLimit}
-    compareIds={explorer.compareIds}
-    explorer={explorer}
-    onNavigate={onNavigate}
-  />, portalTarget);
+  return createPortal(<>
+    {routeId === 'archive' && view === 'world' && <SuccessionExplorerWorkbench onNavigate={onNavigate} />}
+    <SuccessionExplorerRoutePanels
+      routeId={routeId}
+      view={view}
+      model={model}
+      selectedNode={selectedNode}
+      chapter={explorer.chapter}
+      spoilerLimit={spoilerLimit}
+      compareIds={explorer.compareIds}
+      explorer={explorer}
+      onNavigate={onNavigate}
+    />
+  </>, portalTarget);
 }
