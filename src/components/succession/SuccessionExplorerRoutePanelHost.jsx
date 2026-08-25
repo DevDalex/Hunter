@@ -1,11 +1,20 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { buildSuccessionExplorerModel } from '../../data/succession/explorerModel';
+import {
+  BlackWhaleDeckInstrument,
+  NenInteractionInstrument,
+  PerspectiveKnowledgeMapInstrument,
+  TimelineCartographyInstrument,
+} from './SuccessionExplorerAdvancedInstruments';
 import SuccessionExplorerGuidedTour from './SuccessionExplorerGuidedTour';
 import SuccessionExplorerRoutePanels from './SuccessionExplorerRoutePanels';
 import { useSuccessionExplorer } from './SuccessionExplorerState';
 import SuccessionExplorerWorkbench from './SuccessionExplorerWorkbench';
 import SuccessionPerspectiveFogOverlay from './SuccessionPerspectiveFogOverlay';
+
+const timelineCartographyViews = new Set(['atlas', 'braid', 'matrix', 'heatmap', 'playback']);
+const nenLaboratoryViews = new Set(['interactions', 'conditions', 'threat', 'hypotheses']);
 
 export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit, onNavigate }) {
   const explorer = useSuccessionExplorer();
@@ -45,8 +54,12 @@ export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit
   if (!portalTarget) return null;
   return createPortal(<>
     <SuccessionPerspectiveFogOverlay routeId={routeId} model={model} />
+    {explorer.perspective !== 'reader' && <PerspectiveKnowledgeMapInstrument chapter={explorer.chapter} />}
     {routeId === 'archive' && view === 'world' && <SuccessionExplorerWorkbench onNavigate={onNavigate} />}
     {routeId === 'story' && view === 'guided' && <SuccessionExplorerGuidedTour routeId={routeId} model={model} />}
+    {routeId === 'timeline' && timelineCartographyViews.has(view) && <TimelineCartographyInstrument chapter={explorer.chapter} view={view} />}
+    {routeId === 'black-whale' && <BlackWhaleDeckInstrument chapter={explorer.chapter} view={view} onNavigate={onNavigate} />}
+    {routeId === 'nen' && nenLaboratoryViews.has(view) && <NenInteractionInstrument chapter={explorer.chapter} view={view} onNavigate={onNavigate} />}
     <SuccessionExplorerRoutePanels
       routeId={routeId}
       view={view}
