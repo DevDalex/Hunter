@@ -1,0 +1,108 @@
+/*
+ * Browser release closure for the Explorer operating system.
+ *
+ * This layer is intentionally narrow: it corrects rendered desktop defects
+ * found by the release matrix without changing archive semantics or route
+ * behavior. It loads after the historical presentation stack.
+ */
+
+/* Shared archive chrome: keep metadata readable at the actual rendered size. */
+.succession-archive.succession-archive .succession-comprehension-bar__chapter > span,
+.succession-archive.succession-archive .succession-comprehension-bar__density > span,
+.succession-archive.succession-archive .succession-page-header__kicker,
+.succession-archive.succession-archive .succession-page-header__classification,
+.succession-archive.succession-archive .succession-breadcrumbs li,
+.succession-archive.succession-archive .succession-breadcrumbs__separator {
+  font-size: 11px !important;
+}
+
+.succession-archive.succession-archive .succession-page-header__classification {
+  color: #514c47 !important;
+}
+
+.succession-archive.succession-archive .succession-page-header__kicker {
+  color: var(--vr-burgundy, #781f2d) !important;
+}
+
+.succession-archive.succession-archive .succession-breadcrumbs button,
+.succession-archive.succession-archive .succession-breadcrumbs li > span,
+.succession-archive.succession-archive .succession-breadcrumbs__separator {
+  color: #4a4641 !important;
+}
+
+/* The Explorer's previous muted tone sat on the WCAG edge on inset paper. */
+.succession-explorer-surface {
+  --sx-muted: #514c47;
+}
+
+/* Let the five toolbar instruments compress inside the route stage. */
+.succession-explorer-surface .succession-explorer-toolbar {
+  grid-template-columns:
+    minmax(0, 1.3fr)
+    minmax(0, 1fr)
+    minmax(108px, .48fr)
+    minmax(0, 1fr)
+    minmax(0, .68fr);
+}
+
+.succession-explorer-surface .succession-explorer-toolbar > *,
+.succession-explorer-surface .succession-explorer-control,
+.succession-explorer-surface .succession-explorer-control select {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.succession-explorer-surface .succession-explorer-control select {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Explorer chrome and metadata use an 11px desktop readability floor. */
+.succession-explorer-surface .succession-explorer-surface__identity > span,
+.succession-explorer-surface .succession-explorer-analysis-panel > span,
+.succession-explorer-surface .succession-explorer-inspector > span,
+.succession-explorer-surface .succession-explorer-reader-sync > div > span,
+.succession-explorer-surface .succession-explorer-surface__header dt,
+.succession-explorer-surface .succession-explorer-control > span,
+.succession-explorer-surface .succession-explorer-playback select,
+.succession-explorer-surface .succession-explorer-depth > span,
+.succession-explorer-surface .succession-explorer-depth button i,
+.succession-explorer-surface .succession-explorer-canvas__tools > span,
+.succession-explorer-surface .succession-explorer-canvas__status small,
+.succession-explorer-surface .succession-explorer-inspector header span,
+.succession-explorer-surface .succession-explorer-inspector header small,
+.succession-explorer-surface .succession-explorer-inspector dt,
+.succession-explorer-surface .succession-explorer-inspector dd,
+.succession-explorer-surface .succession-explorer-note,
+.succession-explorer-surface .succession-explorer-compare > header span,
+.succession-explorer-surface .succession-explorer-compare > header strong,
+.succession-explorer-surface .succession-explorer-compare > header button,
+.succession-explorer-surface .succession-explorer-compare__record span,
+.succession-explorer-surface .succession-explorer-diff label,
+.succession-explorer-surface .succession-explorer-diff dt,
+.succession-explorer-surface .succession-explorer-diff__records button span,
+.succession-explorer-surface .succession-explorer-diff__records button small,
+.succession-explorer-surface .succession-explorer-knowledge article span,
+.succession-explorer-surface .succession-explorer-knowledge article p,
+.succession-explorer-surface .succession-explorer-path li span,
+.succession-explorer-surface .succession-explorer-memory span,
+.succession-explorer-surface .succession-explorer-capabilities summary strong,
+.succession-explorer-surface .succession-explorer-capabilities article p {
+  font-size: 11px !important;
+}
+
+/* Route instruments are metadata-heavy. Their titles remain in h3/strong; the
+ * small semantic labels and explanatory copy should never fall below 11px. */
+.succession-explorer-surface .succession-explorer-route-panel :is(span, small, dt, p) {
+  font-size: 11px !important;
+}
+
+/* Preserve strong contrast in the dark inspector after lifting text size. */
+.succession-explorer-surface .succession-explorer-inspector dt,
+.succession-explorer-surface .succession-explorer-note {
+  color: #bdb7af;
+}
+
+.succession-explorer-surface .succession-explorer-inspector dd {
+  color: #eee8df;
+}
