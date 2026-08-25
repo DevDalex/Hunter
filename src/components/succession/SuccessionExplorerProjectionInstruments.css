@@ -1,0 +1,175 @@
+.succession-explorer-projection,
+.succession-explorer-resume {
+  margin-top: 16px;
+  border: 1px solid rgba(164, 126, 67, .24);
+  border-top: 2px solid var(--vr-burgundy, #781f2d);
+  background: #111315;
+  color: #ece5db;
+}
+
+.succession-explorer-projection > header,
+.succession-explorer-resume > header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 18px;
+  padding: 16px 19px;
+  border-bottom: 1px solid rgba(236, 227, 213, .11);
+  background: linear-gradient(104deg, rgba(120, 31, 45, .15), transparent 58%);
+}
+
+.succession-explorer-projection > header span,
+.succession-explorer-resume > header span {
+  color: #ad936d;
+  font: 700 9px ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.succession-explorer-projection h3,
+.succession-explorer-resume h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+  color: #fff;
+  font: 500 22px/1.08 Georgia, serif;
+  letter-spacing: -.025em;
+}
+
+.succession-explorer-projection h3 svg,
+.succession-explorer-resume h3 svg {
+  color: #b6915d;
+}
+
+.succession-explorer-projection p,
+.succession-explorer-resume p {
+  max-width: 920px;
+  margin: 0;
+  color: #a49d95;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.succession-explorer-projection > header > strong {
+  color: #dbc49f;
+  font: 700 12px ui-monospace, monospace;
+}
+
+.succession-explorer-projection__canvas {
+  height: min(66vh, 700px);
+  min-height: 500px;
+}
+
+.succession-explorer-projection__canvas > * {
+  height: 100%;
+}
+
+.succession-explorer-resume > header > dl {
+  display: flex;
+  margin: 0;
+}
+
+.succession-explorer-resume > header > dl > div {
+  min-width: 78px;
+  padding: 3px 11px;
+  border-left: 1px solid rgba(236, 227, 213, .1);
+}
+
+.succession-explorer-resume dt {
+  color: #7d756d;
+  font: 700 8px ui-monospace, monospace;
+  text-transform: uppercase;
+}
+
+.succession-explorer-resume dd {
+  margin: 4px 0 0;
+  color: #f1e5d4;
+  font: 700 13px ui-monospace, monospace;
+}
+
+.succession-explorer-resume__columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: rgba(236, 227, 213, .08);
+}
+
+.succession-explorer-resume__columns > section {
+  min-width: 0;
+  padding: 13px;
+  background: #121416;
+}
+
+.succession-explorer-resume__columns > section > header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  color: #dcd2c6;
+}
+
+.succession-explorer-resume__columns > section > header svg {
+  width: 14px;
+  color: #ae8d5c;
+}
+
+.succession-explorer-resume__columns > section > div {
+  display: grid;
+  gap: 1px;
+}
+
+.succession-explorer-resume__columns button {
+  min-height: 58px;
+  padding: 8px 10px;
+  overflow: hidden;
+  border: 1px solid rgba(236, 227, 213, .07);
+  border-radius: 0;
+  background: rgba(255, 255, 255, .018);
+  color: #e7ded3;
+  text-align: left;
+  cursor: pointer;
+}
+
+.succession-explorer-resume__columns button span,
+.succession-explorer-resume__columns button strong,
+.succession-explorer-resume__columns button small {
+  display: block;
+}
+
+.succession-explorer-resume__columns button span {
+  color: #957f61;
+  font: 700 8px ui-monospace, monospace;
+  text-transform: uppercase;
+}
+
+.succession-explorer-resume__columns button strong {
+  margin-top: 4px;
+  overflow: hidden;
+  color: #eee7dc;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.succession-explorer-resume__columns button small {
+  margin-top: 4px;
+  color: #77716a;
+  font-size: 9px;
+}
+
+.succession-explorer-resume__columns button:hover,
+.succession-explorer-resume__columns button:focus-visible {
+  border-color: rgba(218, 188, 132, .5);
+  background: rgba(164, 126, 67, .07);
+  outline: 1px solid rgba(218, 188, 132, .28);
+  outline-offset: -2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-explorer-projection *,
+  .succession-explorer-resume * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
