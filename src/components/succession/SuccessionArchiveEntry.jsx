@@ -34,6 +34,7 @@ const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));
 const SuccessionArchiveLightRoute = lazy(() => import('./SuccessionArchiveLightRoute'));
 const SuccessionExplorerSurface = lazy(() => import('./SuccessionExplorerSurface'));
+const SuccessionExplorerRoutePanelHost = lazy(() => import('./SuccessionExplorerRoutePanelHost'));
 
 function ArchiveRouteLoading() {
   return <div className="route-loading succession-route-loading" role="status" aria-live="polite">Opening Succession workspace…</div>;
@@ -61,6 +62,11 @@ export default function SuccessionArchiveEntry(props) {
             onNavigate={props.onNavigate}
           />
         </div>
+        <SuccessionExplorerRoutePanelHost
+          routeId="archive"
+          spoilerLimit={props.spoilerLimit}
+          onNavigate={props.onNavigate}
+        />
       </Suspense>
     </SuccessionExplorerProvider>;
   }
@@ -72,6 +78,11 @@ export default function SuccessionArchiveEntry(props) {
         : isLightRoute
           ? <SuccessionArchiveLightRoute {...props} />
           : <SuccessionArchiveApp {...props} />}
+      <SuccessionExplorerRoutePanelHost
+        routeId={props.routeTarget}
+        spoilerLimit={props.spoilerLimit}
+        onNavigate={props.onNavigate}
+      />
     </Suspense>
   </SuccessionExplorerProvider>;
 }
