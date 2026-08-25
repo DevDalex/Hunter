@@ -7,6 +7,10 @@ import {
   PerspectiveKnowledgeMapInstrument,
   TimelineCartographyInstrument,
 } from './SuccessionExplorerAdvancedInstruments';
+import {
+  NenInteractionGraphInstrument,
+  TimelineCausalityGraphInstrument,
+} from './SuccessionExplorerGraphInstruments';
 import SuccessionExplorerGuidedTour from './SuccessionExplorerGuidedTour';
 import SuccessionExplorerRoutePanels from './SuccessionExplorerRoutePanels';
 import { useSuccessionExplorer } from './SuccessionExplorerState';
@@ -57,8 +61,11 @@ export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit
     {explorer.perspective !== 'reader' && <PerspectiveKnowledgeMapInstrument chapter={explorer.chapter} />}
     {routeId === 'archive' && view === 'world' && <SuccessionExplorerWorkbench onNavigate={onNavigate} />}
     {routeId === 'story' && view === 'guided' && <SuccessionExplorerGuidedTour routeId={routeId} model={model} />}
+    {routeId === 'story' && view === 'causality' && <TimelineCausalityGraphInstrument chapter={explorer.chapter} />}
     {routeId === 'timeline' && timelineCartographyViews.has(view) && <TimelineCartographyInstrument chapter={explorer.chapter} view={view} />}
+    {routeId === 'timeline' && view === 'causality' && <TimelineCausalityGraphInstrument chapter={explorer.chapter} />}
     {routeId === 'black-whale' && <BlackWhaleDeckInstrument chapter={explorer.chapter} view={view} onNavigate={onNavigate} />}
+    {routeId === 'nen' && view === 'interactions' && <NenInteractionGraphInstrument chapter={explorer.chapter} />}
     {routeId === 'nen' && nenLaboratoryViews.has(view) && <NenInteractionInstrument chapter={explorer.chapter} view={view} onNavigate={onNavigate} />}
     <SuccessionExplorerRoutePanels
       routeId={routeId}
