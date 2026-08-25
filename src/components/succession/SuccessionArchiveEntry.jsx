@@ -28,6 +28,7 @@ import '../../styles/visual-reboot.css';
 import './SuccessionVisualRebootLate.css';
 import './SuccessionRouteVisualTuning.css';
 import './SuccessionChromeFinal.css';
+import './SuccessionBrowserReleaseClosure.css';
 import SuccessionCommandHome from './SuccessionCommandHome';
 import { SuccessionExplorerProvider } from './SuccessionExplorerState';
 
