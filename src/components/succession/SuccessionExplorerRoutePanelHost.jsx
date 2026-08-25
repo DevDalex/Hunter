@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { buildSuccessionExplorerModel } from '../../data/succession/explorerModel';
+import SuccessionExplorerGuidedTour from './SuccessionExplorerGuidedTour';
 import SuccessionExplorerRoutePanels from './SuccessionExplorerRoutePanels';
 import { useSuccessionExplorer } from './SuccessionExplorerState';
 import SuccessionExplorerWorkbench from './SuccessionExplorerWorkbench';
@@ -45,6 +46,7 @@ export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit
   return createPortal(<>
     <SuccessionPerspectiveFogOverlay routeId={routeId} model={model} />
     {routeId === 'archive' && view === 'world' && <SuccessionExplorerWorkbench onNavigate={onNavigate} />}
+    {routeId === 'story' && view === 'guided' && <SuccessionExplorerGuidedTour routeId={routeId} model={model} />}
     <SuccessionExplorerRoutePanels
       routeId={routeId}
       view={view}
