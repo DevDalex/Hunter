@@ -181,7 +181,7 @@ export default function TimelineWorkspace({
 
         {atlasActive && <details className="st-research-annex">
           <summary>
-            <div><span>Extended intelligence annex</span><strong>Princes, open questions, Nen developments, and active deadlines</strong></div>
+            <div><span>Research annex · extended intelligence</span><strong>Princes, open questions, Nen developments, and active deadlines</strong></div>
             <ChevronDown size={20} aria-hidden="true" />
           </summary>
           <TimelineIntelligencePanels
