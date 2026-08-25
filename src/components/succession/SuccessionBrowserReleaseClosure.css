@@ -97,6 +97,29 @@
   font-size: 11px !important;
 }
 
+/* Advanced Timeline/ship instruments load lazily after the shell bundle. Their
+ * own CSS intentionally used micro-labels, so the release layer needs enough
+ * specificity and !important to keep the rendered floor intact. */
+main .succession-explorer-advanced .succession-explorer-advanced__head > div > span,
+main .succession-explorer-advanced .succession-explorer-cartography__axis-label,
+main .succession-explorer-advanced .succession-explorer-cartography__chapter-axis button,
+main .succession-explorer-advanced .succession-explorer-cartography__lane-label small,
+main .succession-explorer-advanced .succession-explorer-cartography__cells button span,
+main .succession-explorer-advanced .succession-explorer-cartography__ribbons button span,
+main .succession-explorer-advanced .succession-explorer-cartography__ribbons button small,
+main .succession-explorer-advanced .succession-explorer-deck__tier > header small,
+main .succession-explorer-advanced .succession-explorer-deck__tier button > span,
+main .succession-explorer-advanced .succession-explorer-deck__tier button > small,
+main .succession-explorer-advanced .succession-explorer-deck__movement button span {
+  font-size: 11px !important;
+}
+
+/* Reader continuity is also a lazy route panel and can arrive after the shell
+ * rules. Keep its semantic label at the same 11px rendered floor. */
+main .succession-explorer-surface .succession-explorer-reader-sync > div > span {
+  font-size: 11px !important;
+}
+
 /* Preserve strong contrast in the dark inspector after lifting text size. */
 .succession-explorer-surface .succession-explorer-inspector dt,
 .succession-explorer-surface .succession-explorer-note {
