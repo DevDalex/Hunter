@@ -110,6 +110,7 @@ test('the unified surface exposes time, perspective, playback, comparison, notes
     'CapabilityDeck',
     'Save / copy view',
     'Open synchronized Timeline',
+    'getKnowledgeMatrix',
   ]) assert.ok(surfaceSource.includes(token), `Explorer surface is missing ${token}`);
 });
 
@@ -136,7 +137,8 @@ test('live archive models exist for every major information grammar', () => {
     'getActiveAssignmentsAtChapter',
     'getActiveRelationshipsAtChapter',
     'getLocationChildren',
-    'getKnowledgeMatrix',
+    'getStoryEventsKnownAtChapter',
+    'searchArchiveProduct',
   ]) assert.ok(modelSource.includes(dataToken), `model layer does not consume ${dataToken}`);
 });
 
