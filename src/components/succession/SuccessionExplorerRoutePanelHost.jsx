@@ -1,12 +1,31 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { buildSuccessionExplorerModel } from '../../data/succession/explorerModel';
 import SuccessionExplorerRoutePanels from './SuccessionExplorerRoutePanels';
 import { useSuccessionExplorer } from './SuccessionExplorerState';
 
 export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit, onNavigate }) {
   const explorer = useSuccessionExplorer();
+  const [portalTarget, setPortalTarget] = useState(null);
   const view = explorer.getRouteView(routeId);
   const lens = explorer.getRouteLens(routeId);
+
+  useEffect(() => {
+    let frame = null;
+    let attempts = 0;
+    const resolve = () => {
+      const target = document.querySelector(`.succession-explorer-surface[data-explorer-route="${routeId}"]`);
+      if (target) {
+        setPortalTarget(target);
+        return;
+      }
+      attempts += 1;
+      if (attempts < 20) frame = window.requestAnimationFrame(resolve);
+    };
+    resolve();
+    return () => { if (frame) window.cancelAnimationFrame(frame); };
+  }, [routeId]);
+
   const model = useMemo(() => buildSuccessionExplorerModel({
     routeId,
     chapter: explorer.chapter,
@@ -20,7 +39,8 @@ export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit
     return selectedEntityId ? model.nodes.find((item) => item.entityId === selectedEntityId) || null : null;
   }, [explorer.selectedIds, model.nodes]);
 
-  return <SuccessionExplorerRoutePanels
+  if (!portalTarget) return null;
+  return createPortal(<SuccessionExplorerRoutePanels
     routeId={routeId}
     view={view}
     model={model}
@@ -30,5 +50,5 @@ export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit
     compareIds={explorer.compareIds}
     explorer={explorer}
     onNavigate={onNavigate}
-  />;
+  />, portalTarget);
 }
