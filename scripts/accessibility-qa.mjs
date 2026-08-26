@@ -74,6 +74,10 @@ const settle = async (page) => {
   await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 8_000 }).catch(() => {});
   await page.waitForTimeout(120);
 };
+const settleArchiveWorkspace = async (page, timeout = 30_000) => {
+  await page.waitForSelector('main h1', { state: 'visible', timeout });
+  await page.waitForSelector('.succession-archive__content[role="region"][aria-label]', { state: 'visible', timeout });
+};
 
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
@@ -165,14 +169,18 @@ try {
       await page.waitForFunction(() => document.activeElement?.id === 'succession-workspace-content');
     });
     await recordInteraction('chapter workspace cards activate with keyboard', 'succession/chapters', async (page) => {
+      // Chapters is one of the heaviest archive surfaces. Wait for the semantic workspace
+      // contract before probing its controls so cold module compilation cannot masquerade as
+      // a keyboard failure on slower runners.
+      await settleArchiveWorkspace(page);
       const opener = page.locator('.succession-chapter-command__card.is-documented:not([aria-current="page"])').first();
-      await opener.waitFor({ state: 'visible', timeout: 10_000 });
+      await opener.waitFor({ state: 'visible', timeout: 30_000 });
       const chapter = (await opener.locator('.succession-chapter-command__number').innerText()).trim();
       await opener.focus();
       if (!await opener.evaluate((node) => node === document.activeElement)) throw new Error('chapter card did not receive focus');
       await page.keyboard.press('Enter');
       const selectedCard = page.locator(`.succession-chapter-command__card[aria-current="page"] .succession-chapter-command__number`).filter({ hasText: chapter });
-      await selectedCard.waitFor({ state: 'visible', timeout: 10_000 });
+      await selectedCard.waitFor({ state: 'visible', timeout: 30_000 });
     });
     await recordInteraction('Black Whale manifest accepts keyboard focus', 'succession/black-whale', async (page) => {
       const manifest = page.locator('.ship-manifest__table-wrap');
