@@ -103,6 +103,16 @@ try {
     try {
       const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height } });
       const page = await context.newPage();
+
+      // Measure common archive cold boot separately from route-specific rendering. The first
+      // heavy archive route causes Firefox/WebKit to compile the shared Succession application
+      // chunk; treating that one-time startup cost as a Chapters defect made the route matrix
+      // order-dependent. The warm-up remains strict: the real shell and workspace must appear.
+      await page.goto(`${base}/#/succession/timeline`, { waitUntil: 'domcontentloaded', timeout: 25_000 });
+      await page.waitForSelector('main h1', { timeout: 45_000 });
+      await page.waitForSelector('.succession-archive__content[role="region"][aria-label]', { timeout: 45_000 });
+      await page.goto('about:blank');
+
       for (const [routeId, route] of routes) {
         const runtimeErrors = [];
         const failedRequests = [];
@@ -117,9 +127,13 @@ try {
         page.on('console', onConsole);
         try {
           await page.goto(`${base}/#/${route}`, { waitUntil: 'domcontentloaded', timeout: 25_000 });
-          await page.waitForSelector('main', { timeout: 12_000 });
-          await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 10_000 }).catch(() => {});
-          await page.waitForTimeout(420);
+          await page.waitForSelector('main', { timeout: 15_000 });
+          await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 15_000 }).catch(() => {});
+          await page.waitForSelector('main h1', { timeout: 15_000 });
+          if (routeId !== 'story') {
+            await page.waitForSelector('.succession-archive__content[role="region"][aria-label]', { timeout: 15_000 });
+          }
+          await page.waitForTimeout(120);
           const audit = await page.evaluate(inspect);
           const firstControl = page.locator('main :is(button, a[href], input, select, summary)').first();
           if (await firstControl.count()) {
