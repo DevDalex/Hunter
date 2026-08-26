@@ -119,7 +119,14 @@ try {
           await page.goto(`${base}/#/${route}`, { waitUntil: 'domcontentloaded', timeout: 25_000 });
           await page.waitForSelector('main', { timeout: 12_000 });
           await page.waitForFunction(() => !document.querySelector('.route-loading'), null, { timeout: 10_000 }).catch(() => {});
-          await page.waitForTimeout(420);
+          // Firefox/WebKit can finish the heavy Chapters route after DOMContentLoaded and after
+          // the outer Suspense fallback disappears. Wait for the same semantic contract this QA
+          // later asserts instead of racing those engines with a fixed paint delay.
+          await page.waitForSelector('main h1', { timeout: 12_000 });
+          if (routeId !== 'story') {
+            await page.waitForSelector('.succession-archive__content[role="region"][aria-label]', { timeout: 12_000 });
+          }
+          await page.waitForTimeout(120);
           const audit = await page.evaluate(inspect);
           const firstControl = page.locator('main :is(button, a[href], input, select, summary)').first();
           if (await firstControl.count()) {
