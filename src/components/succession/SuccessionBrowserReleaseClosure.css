@@ -1,0 +1,217 @@
+/*
+ * Browser release closure for the Explorer operating system.
+ *
+ * This layer is intentionally narrow: it corrects rendered desktop defects
+ * found by the release matrix without changing archive semantics or route
+ * behavior. It loads after the historical presentation stack.
+ */
+
+/* Shared archive chrome: keep metadata readable at the actual rendered size. */
+.succession-archive.succession-archive .succession-comprehension-bar__chapter > span,
+.succession-archive.succession-archive .succession-comprehension-bar__density > span,
+.succession-archive.succession-archive .succession-page-header__kicker,
+.succession-archive.succession-archive .succession-page-header__classification,
+.succession-archive.succession-archive .succession-breadcrumbs li,
+.succession-archive.succession-archive .succession-breadcrumbs__separator {
+  font-size: 11px !important;
+}
+
+.succession-archive.succession-archive .succession-page-header__classification,
+.succession-archive.succession-archive .succession-page-header__classification > span {
+  color: #514c47 !important;
+}
+
+.succession-archive.succession-archive .succession-page-header__kicker {
+  color: var(--vr-burgundy, #781f2d) !important;
+}
+
+.succession-archive.succession-archive .succession-page-header__meta-item > dd {
+  color: #181714 !important;
+}
+
+.succession-archive.succession-archive .succession-breadcrumbs button,
+.succession-archive.succession-archive .succession-breadcrumbs li > span,
+.succession-archive.succession-archive .succession-breadcrumbs__separator {
+  color: #4a4641 !important;
+}
+
+/* The dark rail must keep its section and chapter markers legible. */
+.succession-archive.succession-archive .succession-archive-nav > section > h2,
+.succession-archive.succession-archive #succession-desktop-navigation-operations-label,
+.succession-archive.succession-archive #succession-desktop-navigation-library-label {
+  color: #bdb7af !important;
+  font-size: 11px !important;
+}
+
+.succession-archive.succession-archive .succession-archive__boundary summary > b {
+  color: #f4efe7 !important;
+}
+
+/* The Explorer's previous muted tone sat on the WCAG edge on inset paper. */
+.succession-explorer-surface {
+  --sx-muted: #514c47;
+}
+
+/* Let the five toolbar instruments compress inside the route stage. */
+.succession-explorer-surface .succession-explorer-toolbar {
+  grid-template-columns:
+    minmax(0, 1.3fr)
+    minmax(0, 1fr)
+    minmax(108px, .48fr)
+    minmax(0, 1fr)
+    minmax(0, .68fr);
+}
+
+.succession-explorer-surface .succession-explorer-toolbar > *,
+.succession-explorer-surface .succession-explorer-control,
+.succession-explorer-surface .succession-explorer-control select {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.succession-explorer-surface .succession-explorer-control select {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Explorer chrome and metadata use an 11px desktop readability floor. */
+.succession-explorer-surface .succession-explorer-surface__identity > span,
+.succession-explorer-surface .succession-explorer-analysis-panel > span,
+.succession-explorer-surface .succession-explorer-inspector > span,
+.succession-explorer-surface .succession-explorer-reader-sync > div > span,
+.succession-explorer-surface .succession-explorer-surface__header dt,
+.succession-explorer-surface .succession-explorer-control > span,
+.succession-explorer-surface .succession-explorer-playback select,
+.succession-explorer-surface .succession-explorer-depth > span,
+.succession-explorer-surface .succession-explorer-depth button i,
+.succession-explorer-surface .succession-explorer-canvas__tools > span,
+.succession-explorer-surface .succession-explorer-canvas__status small,
+.succession-explorer-surface .succession-explorer-inspector header span,
+.succession-explorer-surface .succession-explorer-inspector header small,
+.succession-explorer-surface .succession-explorer-inspector dt,
+.succession-explorer-surface .succession-explorer-inspector dd,
+.succession-explorer-surface .succession-explorer-note,
+.succession-explorer-surface .succession-explorer-compare > header span,
+.succession-explorer-surface .succession-explorer-compare > header strong,
+.succession-explorer-surface .succession-explorer-compare > header button,
+.succession-explorer-surface .succession-explorer-compare__record span,
+.succession-explorer-surface .succession-explorer-diff label,
+.succession-explorer-surface .succession-explorer-diff dt,
+.succession-explorer-surface .succession-explorer-diff__records button span,
+.succession-explorer-surface .succession-explorer-diff__records button small,
+.succession-explorer-surface .succession-explorer-knowledge article span,
+.succession-explorer-surface .succession-explorer-knowledge article p,
+.succession-explorer-surface .succession-explorer-path li span,
+.succession-explorer-surface .succession-explorer-memory span,
+.succession-explorer-surface .succession-explorer-capabilities summary strong,
+.succession-explorer-surface .succession-explorer-capabilities article p {
+  font-size: 11px !important;
+}
+
+/* The semantic-depth strip is rendered on warm inset paper. Use a deliberately
+ * darker neutral for its unselected labels rather than relying on a near-pass. */
+main .succession-explorer-surface .succession-explorer-depth > span,
+main .succession-explorer-surface .succession-explorer-depth > button:not(.is-active) {
+  color: #514c47 !important;
+}
+
+/* Route instruments are metadata-heavy. Their titles remain in h3/strong; the
+ * small semantic labels and explanatory copy should never fall below 11px. */
+.succession-explorer-surface .succession-explorer-route-panel :is(span, small, dt, p) {
+  font-size: 11px !important;
+}
+
+/* Advanced Timeline/ship instruments load lazily after the shell bundle. Their
+ * own CSS intentionally used micro-labels, so the release layer needs enough
+ * specificity and !important to keep the rendered floor intact. */
+main .succession-explorer-advanced .succession-explorer-advanced__head > div > span,
+main .succession-explorer-advanced .succession-explorer-cartography__axis-label,
+main .succession-explorer-advanced .succession-explorer-cartography__chapter-axis button,
+main .succession-explorer-advanced .succession-explorer-cartography__lane-label small,
+main .succession-explorer-advanced .succession-explorer-cartography__cells button span,
+main .succession-explorer-advanced .succession-explorer-cartography__ribbons button span,
+main .succession-explorer-advanced .succession-explorer-cartography__ribbons button small,
+main .succession-explorer-advanced .succession-explorer-deck__tier > header > span,
+main .succession-explorer-advanced .succession-explorer-deck__tier > header small,
+main .succession-explorer-advanced .succession-explorer-deck__tier button > span,
+main .succession-explorer-advanced .succession-explorer-deck__tier button > small,
+main .succession-explorer-advanced .succession-explorer-deck__movement button span {
+  font-size: 11px !important;
+}
+
+main .succession-explorer-advanced .succession-explorer-cartography__chapter-axis button {
+  color: #bdb6ad !important;
+}
+
+/* Reader continuity is also a lazy route panel and can arrive after the shell
+ * rules. Keep its semantic labels at the same 11px rendered floor. */
+main .succession-explorer-reader-sync > header span,
+main .succession-explorer-reader-sync__selection > span,
+main .succession-explorer-reader-sync dt,
+main .succession-explorer-reader-sync nav button strong,
+main .succession-explorer-reader-sync__selection button small {
+  font-size: 11px !important;
+}
+
+/* The legacy Timeline context/topography layer still participates in the new
+ * atlas. Raise its micro-labels without changing the data-dense geometry. */
+main .timeline-context-navigator .tcn-head__identity > span,
+main .timeline-context-navigator .tcn-head__clock > span,
+main .timeline-context-navigator .tcn-head__identity > small,
+main .timeline-context-navigator .tcn-head__clock > small,
+main .timeline-context-navigator .tcn-head__actions button,
+main .timeline-context-navigator .tcn-bar > span,
+main .timeline-context-navigator .tcn-controls__legend,
+main .timeline-context-navigator .tcn-controls__zoom button {
+  font-size: 11px !important;
+}
+
+main .timeline-story-topography .tst-head > div:first-child > span,
+main .timeline-story-topography .tst-peaks header > span,
+main .timeline-story-topography .tst-signals header > span,
+main .timeline-story-topography .tst-current > span,
+main .timeline-story-topography .tst-current > small,
+main .timeline-story-topography .tst-column__chapter,
+main .timeline-story-topography .tst-current-line span,
+main .timeline-story-topography .tst-peaks button > i,
+main .timeline-story-topography .tst-peaks button span small,
+main .timeline-story-topography .tst-signals > div > span small,
+main .timeline-story-topography .tst-signals footer {
+  font-size: 11px !important;
+}
+
+/* Light intelligence tables inherited white header text from the old dark
+ * treatment. Their current paper cells need ink instead. */
+.succession-archive.succession-archive :is(
+  .succession-people-power__compare-wrap,
+  .succession-people-power__knowledge-wrap
+) table thead th {
+  color: #181714 !important;
+}
+
+/* Route-specific light surfaces identified by rendered axe samples. */
+.succession-archive.succession-archive .ship-temporal-command > header > div > span > small {
+  color: #514c47 !important;
+}
+
+.succession-archive.succession-archive .succession-release-candidate > header > div > span,
+.succession-archive.succession-archive .succession-release-candidate__inventory > article > span {
+  color: #514c47 !important;
+}
+
+/* The command-center Explorer uses dark panes. Its compact pane/open controls
+ * need a light burgundy tint rather than the paper-surface accent. */
+.succession-command-explorer-wrap header > button,
+.succession-command-home + .succession-command-explorer-wrap header > button {
+  color: #efc2c9 !important;
+}
+
+/* Preserve strong contrast in the dark inspector after lifting text size. */
+.succession-explorer-surface .succession-explorer-inspector dt,
+.succession-explorer-surface .succession-explorer-note {
+  color: #bdb7af;
+}
+
+.succession-explorer-surface .succession-explorer-inspector dd {
+  color: #eee8df;
+}

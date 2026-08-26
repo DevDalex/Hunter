@@ -21,7 +21,7 @@ const genericGuidedViews = [
   'src/components/SuccessionDossier.jsx',
 ];
 const genericGuidedText = await Promise.all(genericGuidedViews.map(read));
-const timelineWorkspace = await read('src/components/TimelineWorkspace.jsx');
+const timelineCartography = await read('src/components/succession/SuccessionExplorerAdvancedInstruments.jsx');
 
 assert(fontSizes.length > 250, 'the explicit typography inventory unexpectedly shrank');
 assert(fontSizes.every((size) => Number.isFinite(size) && size > 0), 'explicit pixel type declarations must be positive numeric values');
@@ -33,8 +33,9 @@ assert(!unsupportedMaxWidths.length, `unsupported narrow-width media rules remai
 assert(css.includes('--content-sticky-top:'), 'the shared sticky-stack offset is missing');
 assert(css.includes('.horizontal-scroll-hint'), 'the labelled horizontal-overflow cue is missing');
 assert(genericGuidedText.every((text) => text.includes('<HorizontalScrollHint')), 'every retained generic wide research view must expose its horizontal-overflow cue');
-assert(timelineWorkspace.includes('<HorizontalScrollHint>'), 'Timeline must expose its dedicated horizontal chronology cue');
-assert(timelineWorkspace.includes('Timeline chronology continues horizontally.'), 'Timeline must explain its horizontal reading direction');
+assert(timelineCartography.includes('succession-explorer-cartography__scroll'), 'Timeline must retain its dedicated horizontal cartography scroller');
+assert(timelineCartography.includes('succession-explorer-cartography__chapter-axis'), 'Timeline cartography must expose a persistent chapter-axis cue');
+assert(timelineCartography.includes('Horizontal position is chapter.'), 'Timeline cartography must explain its horizontal reading direction');
 
 const smallestDeclaredSize = Math.min(...fontSizes);
-console.log(`Readability audit passed: ${fontSizes.length} explicit type declarations inventoried (smallest ${smallestDeclaredSize}px); ${genericGuidedViews.length} generic scroll-guided research views plus dedicated Timeline chronology; 1180px minimum reading surface enforced with no narrow-width or touch-device contract.`);
+console.log(`Readability audit passed: ${fontSizes.length} explicit type declarations inventoried (smallest ${smallestDeclaredSize}px); ${genericGuidedViews.length} generic scroll-guided research views plus dedicated Timeline cartography; 1180px minimum reading surface enforced with no narrow-width or touch-device contract.`);
