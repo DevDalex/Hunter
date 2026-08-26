@@ -1,0 +1,148 @@
+/*
+ * Final selector-level closure from the rendered desktop browser matrix.
+ *
+ * This file intentionally targets only surfaces that the runtime accessibility
+ * sweep proved were still inheriting a mismatched historical foreground after
+ * the warm-paper visual reboot. No route semantics, data, or interaction
+ * behavior are changed here.
+ */
+
+/* Shared page-header labels: lazy workspace CSS can load after the shell, so
+ * target the actual child text with enough specificity to survive that order. */
+html body .succession-page-header .succession-page-header__classification > span,
+html body .succession-page-header .succession-page-header__meta-item dt b {
+  color: #4a4641 !important;
+}
+
+/* Unknown-state cells sit on white research tables. Keep the uncertainty cue,
+ * but use a darker brass that clears normal-text contrast. */
+html body .succession-archive .is-unknown > small {
+  color: #6b531a !important;
+}
+
+/* Command-home update action was using the paper burgundy on a near-black
+ * panel. A lighter rose keeps the same semantic accent on the dark surface. */
+html body .succession-command-home .succession-command-home__updates header > button {
+  color: #efc2c9 !important;
+}
+
+/* Royal portrait cards can fall back to pale portrait placeholders. Give the
+ * rank/status overlays their own dark backing instead of assuming an image. */
+html body .succession-prince-card.is-active .succession-prince-card__visual .succession-prince-card__rank,
+html body .succession-prince-card.is-active .succession-prince-card__visual .succession-prince-card__status {
+  color: #ffffff !important;
+  background: #2b2424 !important;
+  text-shadow: none !important;
+}
+
+/* Chapter-selected prose is rendered over a slate selection fill. */
+html body .succession-chapter-intel .is-selected > div > p {
+  color: #ffffff !important;
+}
+
+/* Black Whale temporal command: the visual reboot moved the command deck onto
+ * paper, so old light-on-dark labels must now use ink/brass-on-paper. */
+html body .succession-archive .ship-temporal-command #ship-temporal-command-title,
+html body .succession-archive .ship-temporal-command > header > b,
+html body .succession-archive .ship-temporal-command > label > span,
+html body .succession-archive .ship-temporal-command > footer > div > span,
+html body .succession-archive .ship-temporal-command > footer > div > strong {
+  color: #181714 !important;
+  text-shadow: none !important;
+}
+
+html body .succession-archive .ship-temporal-command > header > b {
+  color: #781f2d !important;
+}
+
+/* Nen command cards currently use a dark card body while several inherited
+ * foregrounds still come from the paper theme. Reassert dark-surface text. */
+html body .succession-nen-command-system > h3 {
+  color: #f7f1e8 !important;
+}
+html body .succession-nen-command-system > p {
+  color: #c9c2b9 !important;
+}
+html body .succession-nen-command-system > footer {
+  color: #e0bd7f !important;
+}
+
+/* Guardian Spirit Beast command variables were crossing the old dark theme
+ * with the new paper surfaces. Correct the semantic variables at the command
+ * root so metrics, orbit labels, cards and controls agree with their canvas. */
+html body .succession-gsb-command {
+  --gsb-ink: #181714 !important;
+  --gsb-muted: #514c47 !important;
+  --gsb-paper-ink: #181714 !important;
+  --gsb-paper-muted-ink: #514c47 !important;
+  --gsb-gold: #6b531a !important;
+}
+
+html body .succession-gsb-workspace .succession-page-header__meta-item dt b,
+html body .succession-gsb-command .succession-gsb-command__metrics dt,
+html body .succession-gsb-command .succession-gsb-command__metrics dd {
+  color: #181714 !important;
+}
+
+/* Research is now a light evidence ledger. These specific legacy labels were
+ * still using the old dark-panel muted token (#c0b9ae). */
+html body .succession-archive[data-archive-route="research"] .is-closed > span,
+html body .succession-archive[data-archive-route="research"] .is-release-candidate > span,
+html body .succession-archive[data-archive-route="research"] .succession-release-candidate__external > span,
+html body .succession-archive[data-archive-route="research"] .succession-evidence-chapter > header > div > span,
+html body .succession-archive[data-archive-route="research"] .succession-evidence-chapter header > label > span,
+html body .succession-archive[data-archive-route="research"] .succession-evidence-linked-groups > section > header > div > span {
+  color: #514c47 !important;
+}
+
+html body .succession-archive[data-archive-route="research"] .succession-evidence-chapter__score > div > b {
+  color: #781f2d !important;
+}
+
+/* Timeline cartography: record-count labels sit inside dark burgundy density
+ * cells, while duration labels can cross burgundy rails. Use light ink there. */
+html body .succession-explorer-cartography__cells .has-records > span,
+html body .timeline-story-field .tsf-duration > span {
+  color: #fff4ea !important;
+}
+
+/* The desktop QA contract intentionally floors interface text at 11px. These
+ * are the remaining explicit micro-labels from the Timeline representation,
+ * semantic-landmark and story-field layers. Geometry stays unchanged. */
+html body .timeline-workspace-switcher .tws-identity > span,
+html body .timeline-workspace-switcher .tws-identity > small,
+html body .timeline-workspace-switcher .tws-modes button small,
+html body .timeline-semantic-landmarks .tsl-head > div:first-child > span,
+html body .timeline-semantic-landmarks .tsl-status > span,
+html body .timeline-semantic-landmarks .tsl-status > small,
+html body .timeline-semantic-landmarks .tsl-axis > i span,
+html body .timeline-semantic-landmarks .tsl-context-line span,
+html body .timeline-semantic-landmarks .tsl-landmark figcaption small,
+html body .timeline-semantic-landmarks .tsl-landmark__copy small,
+html body .timeline-semantic-landmarks .tsl-landmark__copy em,
+html body .timeline-semantic-landmarks .tsl-person-focus small,
+html body .timeline-semantic-landmarks .tsl-event-focus > div > span,
+html body .timeline-semantic-landmarks .tsl-event-focus > div > small,
+html body .timeline-semantic-landmarks .tsl-event-focus > button,
+html body .timeline-semantic-landmarks .tsl-method span,
+html body .timeline-story-field .tsf-head > div:first-child > span,
+html body .timeline-story-field .tsf-toolbar > div > span,
+html body .timeline-story-field .tsf-lanes > header span,
+html body .timeline-story-field .tsf-camera > span,
+html body .timeline-story-field .tsf-camera button,
+html body .timeline-story-field .tsf-depth button,
+html body .timeline-story-field .tsf-context button,
+html body .timeline-story-field .tsf-legend,
+html body .timeline-story-field .tsf-lanes > button > i,
+html body .timeline-story-field .tsf-lanes > button small,
+html body .timeline-story-field .tsf-lanes > button > b,
+html body .timeline-story-field .tsf-horizon,
+html body .timeline-story-field .tsf-horizon strong,
+html body .timeline-story-field .tsf-chapter-grid > i span,
+html body .timeline-story-field .tsf-context-line span,
+html body .timeline-story-field .tsf-lane-deck > span,
+html body .timeline-story-field .tsf-duration span,
+html body .timeline-story-field .tsf-node__label small,
+html body .timeline-story-field .tsf-node__label em {
+  font-size: 11px !important;
+}
