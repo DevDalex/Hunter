@@ -1,0 +1,1256 @@
+/*
+ * Succession Contest architecture reference implementation.
+ * This layer intentionally loads after the locked archive styles and only
+ * affects the approved architecture landing board.
+ */
+
+body.succession-architecture-mode {
+  margin: 0 !important;
+  background: #0f1212 !important;
+}
+
+.succession-architecture-board {
+  --paper: #f4f1e9;
+  --paper-bright: #fbfaf6;
+  --paper-muted: #ebe7dc;
+  --ink: #181a18;
+  --ink-soft: #5d5b54;
+  --rule: #cfc8b9;
+  --rule-dark: #a69d8c;
+  --gold: #a08043;
+  --gold-soft: #d2bb82;
+  --rail: #141919;
+  --rail-soft: #202626;
+  --story: #263726;
+  --people: #4a1717;
+  --ship: #173948;
+  --nen: #29204a;
+  min-height: 100vh !important;
+  color: var(--ink) !important;
+  background: #0f1212 !important;
+  font-family: Georgia, 'Times New Roman', serif !important;
+}
+
+.succession-architecture-board *,
+.succession-architecture-board *::before,
+.succession-architecture-board *::after {
+  box-sizing: border-box !important;
+}
+
+.succession-architecture-board [data-route-action]::after,
+.succession-architecture-board [data-route-action]:focus-visible::after {
+  display: none !important;
+  content: none !important;
+}
+
+.succession-architecture-board .succession-archive__content {
+  max-width: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #0f1212 !important;
+}
+
+.succession-architecture-board .succession-architecture__sheet {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 205px minmax(0, 1fr) !important;
+  grid-template-rows: 132px auto auto 48px !important;
+  width: min(100%, 1680px) !important;
+  min-height: 930px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid #0a0d0d !important;
+  border-radius: 0 !important;
+  background:
+    radial-gradient(circle at 72% 18%, rgba(160,128,67,.045), transparent 32%),
+    repeating-linear-gradient(0deg, rgba(70,62,47,.018) 0 1px, transparent 1px 4px),
+    var(--paper) !important;
+  box-shadow: 0 24px 70px rgba(0,0,0,.42) !important;
+}
+
+.succession-architecture-board .succession-architecture__corner {
+  display: none !important;
+}
+
+/* Masthead */
+.succession-architecture-board .succession-architecture__masthead {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 !important;
+  display: grid !important;
+  grid-template-columns: 205px minmax(0,1fr) 278px !important;
+  align-items: stretch !important;
+  min-height: 132px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--rule-dark) !important;
+  background: transparent !important;
+}
+
+.succession-architecture-board .succession-architecture__identity {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  width: 100% !important;
+  min-height: 132px !important;
+  padding: 13px 14px !important;
+  color: #e9dfc6 !important;
+  border: 0 !important;
+  border-right: 1px solid #2f3634 !important;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(115deg, rgba(255,255,255,.025), transparent 35%),
+    var(--rail) !important;
+  text-align: center !important;
+  cursor: pointer !important;
+}
+
+.succession-architecture-board .succession-architecture__identity > span {
+  display: grid !important;
+  place-items: center !important;
+  width: 57px !important;
+  height: 57px !important;
+  margin: 0 !important;
+  color: #d6bf86 !important;
+  border: 1px solid #92763d !important;
+  border-radius: 50% !important;
+  background: rgba(0,0,0,.18) !important;
+  box-shadow: inset 0 0 0 4px rgba(160,128,67,.08) !important;
+}
+
+.succession-architecture-board .succession-architecture__identity > span svg {
+  width: 31px !important;
+  height: 31px !important;
+}
+
+.succession-architecture-board .succession-architecture__identity > div {
+  display: grid !important;
+  gap: 5px !important;
+}
+
+.succession-architecture-board .succession-architecture__identity strong {
+  color: #eee7d6 !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  letter-spacing: .095em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__identity small {
+  color: #b9b5a9 !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 7px !important;
+  line-height: 1.65 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__title {
+  display: grid !important;
+  align-content: center !important;
+  justify-items: center !important;
+  padding: 14px 24px 10px !important;
+  background: rgba(255,255,255,.19) !important;
+}
+
+.succession-architecture-board .succession-architecture__title h1 {
+  margin: 0 !important;
+  color: #1b1d1b !important;
+  font-family: Georgia, 'Times New Roman', serif !important;
+  font-size: clamp(43px, 4.1vw, 67px) !important;
+  font-weight: 400 !important;
+  line-height: .98 !important;
+  letter-spacing: -.035em !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+}
+
+.succession-architecture-board .succession-architecture__title p {
+  position: relative !important;
+  margin: 13px 0 0 !important;
+  color: #816633 !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 8px !important;
+  font-weight: 600 !important;
+  letter-spacing: .37em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__title p::before,
+.succession-architecture-board .succession-architecture__title p::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 50% !important;
+  width: 46px !important;
+  height: 1px !important;
+  background: #b6985e !important;
+}
+
+.succession-architecture-board .succession-architecture__title p::before { right: calc(100% + 18px) !important; }
+.succession-architecture-board .succession-architecture__title p::after { left: calc(100% + 18px) !important; }
+
+.succession-architecture-board .succession-architecture__document-meta {
+  position: relative !important;
+  display: grid !important;
+  align-content: center !important;
+  padding: 18px 21px !important;
+  border-left: 1px solid #ded8ca !important;
+  background: rgba(255,255,255,.23) !important;
+}
+
+.succession-architecture-board .succession-architecture__document-meta dl {
+  display: grid !important;
+  gap: 5px !important;
+  margin: 0 !important;
+}
+
+.succession-architecture-board .succession-architecture__document-meta dl > div {
+  display: grid !important;
+  grid-template-columns: 1fr auto !important;
+  gap: 10px !important;
+  align-items: baseline !important;
+}
+
+.succession-architecture-board .succession-architecture__document-meta dt,
+.succession-architecture-board .succession-architecture__document-meta dd {
+  margin: 0 !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 7px !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__document-meta dt { color: #6a665d !important; }
+.succession-architecture-board .succession-architecture__document-meta dd { color: #1e201e !important; font-weight: 700 !important; }
+
+.succession-architecture-board .succession-architecture__document-meta > span {
+  justify-self: end !important;
+  margin-top: 9px !important;
+  padding: 4px 11px !important;
+  color: #705a2f !important;
+  border: 1px solid #ac9567 !important;
+  background: #f8f5ec !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 7px !important;
+  font-weight: 700 !important;
+  letter-spacing: .15em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__stamp {
+  display: none !important;
+}
+
+/* Main three-column field */
+.succession-architecture-board .succession-architecture__primary-grid {
+  grid-column: 1 / -1 !important;
+  grid-row: 2 !important;
+  display: grid !important;
+  grid-template-columns: 205px minmax(0,1fr) 274px !important;
+  gap: 0 !important;
+  min-height: 438px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+}
+
+.succession-architecture-board .succession-architecture__left-column {
+  display: grid !important;
+  grid-template-rows: auto 1fr !important;
+  min-width: 0 !important;
+  padding: 0 12px 12px !important;
+  color: #e7e0ce !important;
+  border-right: 1px solid #303635 !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.018), transparent 25%),
+    var(--rail) !important;
+}
+
+.succession-architecture-board .succession-architecture__navigation {
+  display: grid !important;
+  align-content: start !important;
+  margin: 0 -12px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.succession-architecture-board .succession-architecture__navigation > h2 {
+  display: none !important;
+}
+
+.succession-architecture-board .succession-architecture__navigation > a {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 38px 1fr !important;
+  align-items: center !important;
+  min-height: 47px !important;
+  padding: 0 15px !important;
+  color: #e5dfd0 !important;
+  border: 0 !important;
+  border-bottom: 1px solid #333938 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+
+.succession-architecture-board .succession-architecture__navigation > a svg {
+  width: 21px !important;
+  height: 21px !important;
+  color: #d6d1c3 !important;
+  stroke-width: 1.35 !important;
+}
+
+.succession-architecture-board .succession-architecture__navigation > a span {
+  color: inherit !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+.succession-architecture-board .succession-architecture__navigation > a.is-current {
+  color: #f1e4bd !important;
+  border-left: 3px solid #b18f4c !important;
+  background: linear-gradient(90deg, rgba(176,139,71,.25), rgba(176,139,71,.025)) !important;
+}
+
+.succession-architecture-board .succession-architecture__navigation > a:hover,
+.succession-architecture-board .succession-architecture__navigation > a:focus-visible {
+  color: #fff7df !important;
+  background: rgba(255,255,255,.055) !important;
+  outline: 1px solid #9b814f !important;
+  outline-offset: -1px !important;
+}
+
+.succession-architecture-board .succession-architecture__ship-portrait {
+  align-self: end !important;
+  display: grid !important;
+  grid-template-rows: minmax(0,1fr) auto !important;
+  min-height: 176px !important;
+  margin: 13px 0 0 !important;
+  padding: 9px !important;
+  overflow: hidden !important;
+  border: 1px solid #6e6654 !important;
+  border-radius: 0 !important;
+  background: #171d1d !important;
+}
+
+.succession-architecture-board .succession-architecture__ship-portrait::before,
+.succession-architecture-board .succession-architecture__ship-portrait::after {
+  content: none !important;
+  display: none !important;
+}
+
+.succession-architecture-board .succession-architecture__ship-portrait img,
+.succession-architecture-board .succession-architecture__ship-portrait .succession-architecture__ship-blueprint {
+  display: block !important;
+  width: 100% !important;
+  height: 132px !important;
+  padding: 0 !important;
+  object-fit: contain !important;
+  filter: grayscale(1) sepia(.18) contrast(1.08) brightness(.83) !important;
+  opacity: .95 !important;
+}
+
+.succession-architecture-board .succession-architecture__ship-portrait small {
+  display: block !important;
+  padding-top: 8px !important;
+  color: #d7ccb0 !important;
+  font-size: 8px !important;
+  line-height: 1.4 !important;
+  letter-spacing: .13em !important;
+  text-align: center !important;
+  text-transform: uppercase !important;
+}
+
+/* Four central cards */
+.succession-architecture-board .succession-architecture__modules {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0,1fr)) !important;
+  grid-template-rows: repeat(2, minmax(0,1fr)) !important;
+  gap: 16px !important;
+  min-width: 0 !important;
+  padding: 14px 15px 14px 16px !important;
+  background: transparent !important;
+}
+
+.succession-architecture-board .succession-architecture__module {
+  position: relative !important;
+  min-width: 0 !important;
+  min-height: 193px !important;
+  overflow: hidden !important;
+  border: 1px solid #c8c0b0 !important;
+  border-radius: 5px !important;
+  background: rgba(252,250,245,.82) !important;
+  box-shadow: 0 3px 9px rgba(57,48,35,.08) !important;
+}
+
+.succession-architecture-board .succession-architecture__module > header {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 55px 1fr 20px !important;
+  align-items: center !important;
+  min-height: 69px !important;
+  padding: 10px 14px 9px 9px !important;
+  border: 0 !important;
+  border-bottom: 1px solid #d9d2c4 !important;
+  background:
+    linear-gradient(90deg, rgba(173,157,123,.08), transparent 45%),
+    rgba(255,255,255,.38) !important;
+}
+
+.succession-architecture-board .succession-architecture__module > header > span {
+  position: relative !important;
+  display: grid !important;
+  place-items: center !important;
+  width: 48px !important;
+  height: 48px !important;
+  color: transparent !important;
+  border: 1px solid rgba(255,255,255,.16) !important;
+  border-radius: 50% !important;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.18) !important;
+  font-size: 0 !important;
+}
+
+.succession-architecture-board .succession-architecture__module > header > span::before {
+  display: block !important;
+  color: #f4edda !important;
+  font-size: 25px !important;
+  line-height: 1 !important;
+}
+
+.succession-architecture-board .succession-architecture__module:nth-child(1) > header > span { background: var(--story) !important; }
+.succession-architecture-board .succession-architecture__module:nth-child(1) > header > span::before { content: '▤' !important; }
+.succession-architecture-board .succession-architecture__module:nth-child(2) > header > span { background: var(--people) !important; }
+.succession-architecture-board .succession-architecture__module:nth-child(2) > header > span::before { content: '♛' !important; }
+.succession-architecture-board .succession-architecture__module:nth-child(3) > header > span { background: var(--ship) !important; }
+.succession-architecture-board .succession-architecture__module:nth-child(3) > header > span::before { content: '♜' !important; transform: rotate(180deg) !important; }
+.succession-architecture-board .succession-architecture__module:nth-child(4) > header > span { background: var(--nen) !important; }
+.succession-architecture-board .succession-architecture__module:nth-child(4) > header > span::before { content: '✧' !important; }
+
+.succession-architecture-board .succession-architecture__module > header > div {
+  min-width: 0 !important;
+}
+
+.succession-architecture-board .succession-architecture__module > header h2 {
+  margin: 0 !important;
+  color: #252620 !important;
+  font-family: Georgia, 'Times New Roman', serif !important;
+  font-size: 19px !important;
+  font-weight: 400 !important;
+  line-height: 1.08 !important;
+  letter-spacing: .01em !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+}
+
+.succession-architecture-board .succession-architecture__module > header p {
+  margin: 3px 0 0 !important;
+  color: #6f6a5d !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 6px !important;
+  font-weight: 600 !important;
+  line-height: 1.3 !important;
+  letter-spacing: .12em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__module > header > i {
+  display: block !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-top: 1px solid #4a4942 !important;
+  border-right: 1px solid #4a4942 !important;
+  transform: rotate(45deg) !important;
+}
+
+.succession-architecture-board .succession-architecture__view-grid,
+.succession-architecture-board .succession-architecture__split-grid {
+  display: grid !important;
+  min-height: 122px !important;
+  margin: 0 !important;
+  padding: 7px !important;
+  background: transparent !important;
+}
+
+.succession-architecture-board .succession-architecture__view-grid {
+  grid-template-columns: repeat(4,minmax(0,1fr)) !important;
+  gap: 4px !important;
+}
+
+.succession-architecture-board .succession-architecture__view-grid.is-five {
+  grid-template-columns: repeat(5,minmax(0,1fr)) !important;
+}
+
+.succession-architecture-board .succession-architecture__view-cell {
+  display: grid !important;
+  grid-template-rows: auto 34px 1fr !important;
+  align-items: start !important;
+  justify-items: start !important;
+  min-width: 0 !important;
+  min-height: 108px !important;
+  padding: 8px 8px 7px !important;
+  color: #2b2d29 !important;
+  border: 1px solid #ddd6c8 !important;
+  border-radius: 2px !important;
+  background: rgba(255,255,255,.42) !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+
+.succession-architecture-board .succession-architecture__view-cell > strong {
+  order: 1 !important;
+  color: #262721 !important;
+  font-size: 10px !important;
+  font-weight: 400 !important;
+  line-height: 1.15 !important;
+  text-transform: none !important;
+  white-space: nowrap !important;
+}
+
+.succession-architecture-board .succession-architecture__view-visual {
+  order: 2 !important;
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-height: 31px !important;
+  margin: 3px 0 !important;
+  color: #353731 !important;
+  background: transparent !important;
+}
+
+.succession-architecture-board .succession-architecture__view-visual svg {
+  width: 22px !important;
+  height: 22px !important;
+  stroke-width: 1.25 !important;
+}
+
+.succession-architecture-board .succession-architecture__view-visual i {
+  display: none !important;
+}
+
+.succession-architecture-board .succession-architecture__view-cell > small {
+  order: 3 !important;
+  color: #676359 !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 6px !important;
+  line-height: 1.45 !important;
+  text-align: left !important;
+}
+
+.succession-architecture-board .succession-architecture__view-cell:hover,
+.succession-architecture-board .succession-architecture__view-cell:focus-visible,
+.succession-architecture-board .succession-architecture__split-grid > a:hover,
+.succession-architecture-board .succession-architecture__split-grid > a:focus-visible {
+  border-color: #a68c56 !important;
+  background: #fffdf7 !important;
+  outline: 2px solid rgba(160,128,67,.22) !important;
+  outline-offset: -2px !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid {
+  grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  gap: 6px !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid > a {
+  display: grid !important;
+  grid-template-rows: auto 1fr auto !important;
+  min-width: 0 !important;
+  min-height: 109px !important;
+  padding: 7px !important;
+  color: #292a26 !important;
+  border: 1px solid #ddd6c8 !important;
+  border-radius: 2px !important;
+  background: rgba(255,255,255,.4) !important;
+  text-align: center !important;
+  text-decoration: none !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid > a > strong {
+  color: #252620 !important;
+  font-size: 9px !important;
+  font-weight: 400 !important;
+  letter-spacing: .07em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid > a > small {
+  color: #666258 !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 6px !important;
+  line-height: 1.35 !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid > a > .succession-architecture__ship-blueprint,
+.succession-architecture-board .succession-architecture__split-grid > a img {
+  display: block !important;
+  width: 100% !important;
+  height: 63px !important;
+  padding: 2px !important;
+  object-fit: contain !important;
+  filter: grayscale(1) sepia(.1) contrast(.82) brightness(1.2) !important;
+  opacity: .72 !important;
+}
+
+.succession-architecture-board .succession-architecture__radar {
+  width: 100% !important;
+  height: 64px !important;
+  color: #6c675b !important;
+  fill: none !important;
+  stroke: currentColor !important;
+  stroke-width: 1 !important;
+  opacity: .75 !important;
+}
+
+.succession-architecture-board .succession-architecture__beast-grid {
+  display: grid !important;
+  grid-template-columns: repeat(6,minmax(0,1fr)) !important;
+  gap: 3px !important;
+  width: 100% !important;
+  min-height: 64px !important;
+  padding: 3px 0 !important;
+}
+
+.succession-architecture-board .succession-architecture__beast-grid > span {
+  position: relative !important;
+  display: block !important;
+  min-width: 0 !important;
+  height: 58px !important;
+  overflow: hidden !important;
+  border: 1px solid #d8d1c4 !important;
+  background: #f5f2eb !important;
+}
+
+.succession-architecture-board .succession-architecture__beast-grid img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  filter: grayscale(1) sepia(.06) contrast(.9) !important;
+}
+
+.succession-architecture-board .succession-architecture__beast-grid b {
+  position: absolute !important;
+  left: 0 !important;
+  bottom: 0 !important;
+  padding: 1px 4px !important;
+  color: #fff !important;
+  background: #77736b !important;
+  font-size: 6px !important;
+  line-height: 1.3 !important;
+}
+
+/* Right library rail */
+.succession-architecture-board .succession-architecture__library {
+  display: grid !important;
+  grid-template-rows: auto auto auto auto 1fr !important;
+  align-content: start !important;
+  gap: 0 !important;
+  min-width: 0 !important;
+  padding: 14px 14px 14px 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.succession-architecture-board .succession-architecture__library > h2 {
+  display: none !important;
+}
+
+.succession-architecture-board .succession-architecture__library > a {
+  display: grid !important;
+  grid-template-columns: 45px 1fr 13px !important;
+  align-items: center !important;
+  min-height: 65px !important;
+  padding: 9px 9px !important;
+  color: #22231f !important;
+  border: 1px solid #cec6b7 !important;
+  border-bottom: 0 !important;
+  border-radius: 0 !important;
+  background: rgba(255,255,255,.55) !important;
+  text-decoration: none !important;
+}
+
+.succession-architecture-board .succession-architecture__library > a:first-of-type {
+  border-radius: 4px 4px 0 0 !important;
+}
+
+.succession-architecture-board .succession-architecture__library > a:nth-of-type(3) {
+  border-bottom: 1px solid #cec6b7 !important;
+  border-radius: 0 0 4px 4px !important;
+}
+
+.succession-architecture-board .succession-architecture__library > a::after {
+  content: '›' !important;
+  display: block !important;
+  color: #646157 !important;
+  font-size: 21px !important;
+  line-height: 1 !important;
+}
+
+.succession-architecture-board .succession-architecture__library > a > span {
+  display: grid !important;
+  place-items: center !important;
+  width: 35px !important;
+  height: 35px !important;
+  color: #262824 !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.succession-architecture-board .succession-architecture__library > a svg {
+  width: 26px !important;
+  height: 26px !important;
+  stroke-width: 1.2 !important;
+}
+
+.succession-architecture-board .succession-architecture__library > a strong {
+  display: block !important;
+  margin-bottom: 4px !important;
+  color: #242521 !important;
+  font-size: 10px !important;
+  font-weight: 400 !important;
+  letter-spacing: .045em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__library > a small {
+  display: block !important;
+  color: #676259 !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 6px !important;
+  line-height: 1.45 !important;
+}
+
+.succession-architecture-board .succession-architecture__library > a:hover,
+.succession-architecture-board .succession-architecture__library > a:focus-visible {
+  background: #fffdf7 !important;
+  outline: 2px solid rgba(160,128,67,.22) !important;
+  outline-offset: -2px !important;
+}
+
+.succession-architecture-board .succession-architecture__library-map {
+  position: relative !important;
+  min-height: 167px !important;
+  margin-top: 14px !important;
+  padding: 28px 10px 9px !important;
+  border: 1px solid #c9c0b0 !important;
+  border-radius: 4px !important;
+  background:
+    repeating-radial-gradient(circle at 50% 58%, transparent 0 20px, rgba(113,102,80,.12) 21px 22px),
+    linear-gradient(rgba(255,255,255,.56),rgba(255,255,255,.56)) !important;
+}
+
+.succession-architecture-board .succession-architecture__library-map::before {
+  content: 'Voyage locator' !important;
+  position: absolute !important;
+  top: 9px !important;
+  left: 10px !important;
+  color: #514d44 !important;
+  font-size: 8px !important;
+  letter-spacing: .08em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__map-sketch {
+  width: 100% !important;
+  height: 126px !important;
+  fill: none !important;
+  stroke: #9b927f !important;
+  stroke-width: 1 !important;
+  opacity: .55 !important;
+}
+
+/* Lower records band */
+.succession-architecture-board .succession-architecture__lower-grid {
+  grid-column: 2 / -1 !important;
+  grid-row: 3 !important;
+  display: grid !important;
+  grid-template-columns: 43% 57% !important;
+  gap: 0 !important;
+  min-height: 309px !important;
+  margin: 0 !important;
+  padding: 0 14px 12px 10px !important;
+  border: 0 !important;
+  background: var(--paper) !important;
+}
+
+.succession-architecture-board .succession-architecture__lower-grid > div:first-child {
+  display: grid !important;
+  grid-template-rows: 191px 104px !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+  padding-right: 10px !important;
+}
+
+.succession-architecture-board .succession-architecture__contracts {
+  display: grid !important;
+  grid-template-columns: 49px 1fr 88px !important;
+  align-items: center !important;
+  min-width: 0 !important;
+  height: 191px !important;
+  padding: 11px !important;
+  border: 1px solid #c8c0b0 !important;
+  border-radius: 4px !important;
+  background: rgba(255,255,255,.46) !important;
+}
+
+.succession-architecture-board .succession-architecture__contract-sigil {
+  align-self: stretch !important;
+  display: grid !important;
+  place-items: start center !important;
+  padding-top: 10px !important;
+  color: #736a56 !important;
+  border-right: 1px solid #ddd6c9 !important;
+}
+
+.succession-architecture-board .succession-architecture__contracts > div:nth-child(2) {
+  min-width: 0 !important;
+  padding: 0 15px !important;
+}
+
+.succession-architecture-board .succession-architecture__contracts h2 {
+  margin: 0 0 13px !important;
+  padding-bottom: 8px !important;
+  color: #38382f !important;
+  border-bottom: 1px solid #d9d2c4 !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  letter-spacing: .03em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__contracts h2 span {
+  color: #777267 !important;
+  font-size: 7px !important;
+}
+
+.succession-architecture-board .succession-architecture__contracts ul {
+  display: grid !important;
+  grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  gap: 18px 25px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.succession-architecture-board .succession-architecture__contracts li {
+  position: relative !important;
+  min-width: 0 !important;
+  padding-left: 12px !important;
+  color: #4e4b43 !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 6px !important;
+  line-height: 1.35 !important;
+}
+
+.succession-architecture-board .succession-architecture__contracts li::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: .35em !important;
+  width: 5px !important;
+  height: 5px !important;
+  border: 1px solid #967b47 !important;
+  border-radius: 50% !important;
+}
+
+.succession-architecture-board .succession-architecture__integrity-seal {
+  display: grid !important;
+  place-items: center !important;
+  align-content: center !important;
+  width: 74px !important;
+  height: 74px !important;
+  color: #4c4b44 !important;
+  border: 3px double #a59d8d !important;
+  border-radius: 50% !important;
+  text-align: center !important;
+}
+
+.succession-architecture-board .succession-architecture__integrity-seal svg {
+  width: 19px !important;
+  height: 19px !important;
+}
+
+.succession-architecture-board .succession-architecture__integrity-seal b,
+.succession-architecture-board .succession-architecture__integrity-seal small {
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__integrity-seal b {
+  margin-top: 2px !important;
+  font-size: 6px !important;
+}
+
+.succession-architecture-board .succession-architecture__integrity-seal small {
+  font-size: 5px !important;
+}
+
+.succession-architecture-board .succession-architecture__footer-specs {
+  display: grid !important;
+  grid-template-columns: 1.05fr 1.45fr 1fr !important;
+  gap: 0 !important;
+  min-width: 0 !important;
+  height: 104px !important;
+  overflow: hidden !important;
+  border: 1px solid #c8c0b0 !important;
+  border-radius: 4px !important;
+  background: rgba(255,255,255,.43) !important;
+}
+
+.succession-architecture-board .succession-architecture__footer-specs > section {
+  min-width: 0 !important;
+  padding: 11px !important;
+  border-right: 1px solid #d9d2c4 !important;
+}
+
+.succession-architecture-board .succession-architecture__footer-specs > section:last-child {
+  border-right: 0 !important;
+}
+
+.succession-architecture-board .succession-architecture__footer-specs h2 {
+  margin: 0 0 7px !important;
+  color: #45443d !important;
+  font-size: 9px !important;
+  font-weight: 400 !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__footer-specs p,
+.succession-architecture-board .succession-architecture__footer-specs li {
+  color: #666158 !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 5px !important;
+  line-height: 1.45 !important;
+}
+
+.succession-architecture-board .succession-architecture__footer-specs ul {
+  display: grid !important;
+  gap: 3px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.succession-architecture-board .succession-architecture__reference-grid {
+  position: relative !important;
+  height: 58px !important;
+  border: 1px solid #d4cdbf !important;
+  background-image:
+    linear-gradient(#e1dccf 1px, transparent 1px),
+    linear-gradient(90deg,#e1dccf 1px, transparent 1px) !important;
+  background-size: 14px 14px !important;
+}
+
+.succession-architecture-board .succession-architecture__reference-grid span {
+  position: absolute !important;
+  right: 4px !important;
+  bottom: 3px !important;
+  color: #6d685e !important;
+  font-size: 5px !important;
+}
+
+/* Existing miniature becomes the timeline/dossier composition. */
+.succession-architecture-board .succession-architecture__skeleton-block {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  min-width: 0 !important;
+  height: 305px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  border: 1px solid #c8c0b0 !important;
+  border-radius: 4px !important;
+  background: rgba(255,255,255,.46) !important;
+}
+
+.succession-architecture-board .succession-architecture__callouts {
+  display: none !important;
+}
+
+.succession-architecture-board .succession-architecture__page-skeleton {
+  display: grid !important;
+  grid-template-rows: 38px 1fr !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.succession-architecture-board .succession-architecture__page-skeleton > header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  min-height: 38px !important;
+  padding: 0 12px !important;
+  border-bottom: 1px solid #d5cec0 !important;
+  background: rgba(255,255,255,.28) !important;
+}
+
+.succession-architecture-board .succession-architecture__page-skeleton > header strong {
+  color: #373830 !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__page-skeleton > header a {
+  min-height: 25px !important;
+  padding: 5px 8px !important;
+  color: #3b3b35 !important;
+  border: 1px solid #c7bfaf !important;
+  background: #faf8f2 !important;
+  font-size: 6px !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body {
+  display: grid !important;
+  grid-template-columns: 40px minmax(0,1fr) 145px !important;
+  min-width: 0 !important;
+  height: 100% !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > nav {
+  display: grid !important;
+  align-content: start !important;
+  border-right: 1px solid #d8d1c4 !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > nav a {
+  display: grid !important;
+  place-items: center !important;
+  min-height: 31px !important;
+  color: #55544c !important;
+  border-bottom: 1px solid #e0dacd !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > main {
+  min-width: 0 !important;
+  padding: 8px 10px !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > main > ol {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 6px !important;
+  margin: 0 0 8px !important;
+  padding: 0 !important;
+  color: #777167 !important;
+  list-style: none !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 5px !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-tabs {
+  display: flex !important;
+  gap: 14px !important;
+  min-height: 23px !important;
+  margin-bottom: 8px !important;
+  border-bottom: 1px solid #d9d2c5 !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-tabs a {
+  min-height: 22px !important;
+  padding: 0 2px 5px !important;
+  color: #55534c !important;
+  border: 0 !important;
+  background: none !important;
+  font-size: 6px !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-tabs a.is-current {
+  color: #725b2f !important;
+  border-bottom: 2px solid #9d8046 !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > main > section {
+  display: grid !important;
+  grid-template-columns: 1fr 155px !important;
+  gap: 8px !important;
+  min-height: 102px !important;
+}
+
+.succession-architecture-board .succession-architecture__mock-content,
+.succession-architecture-board .succession-architecture__map-shortcut {
+  min-width: 0 !important;
+  min-height: 102px !important;
+  padding: 10px !important;
+  color: #44443c !important;
+  border: 1px solid #ddd6c8 !important;
+  background: rgba(255,255,255,.44) !important;
+  text-decoration: none !important;
+}
+
+.succession-architecture-board .succession-architecture__mock-content h3 {
+  margin: 0 0 12px !important;
+  font-size: 9px !important;
+  font-weight: 400 !important;
+}
+
+.succession-architecture-board .succession-architecture__mock-content > span {
+  display: grid !important;
+  gap: 8px !important;
+}
+
+.succession-architecture-board .succession-architecture__mock-content > span i {
+  display: grid !important;
+  grid-template-columns: 8px 1fr !important;
+  align-items: center !important;
+}
+
+.succession-architecture-board .succession-architecture__mock-content > span b {
+  width: 7px !important;
+  height: 7px !important;
+  border: 1px solid #8d7650 !important;
+  border-radius: 50% !important;
+}
+
+.succession-architecture-board .succession-architecture__mock-content > span em {
+  display: block !important;
+  height: 1px !important;
+  background: #cac3b6 !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > main > footer {
+  display: grid !important;
+  grid-template-columns: 1fr 140px !important;
+  gap: 9px !important;
+  margin-top: 8px !important;
+}
+
+.succession-architecture-board .succession-architecture__timeline-shortcut {
+  display: grid !important;
+  grid-template-columns: repeat(6,1fr) !important;
+  align-items: start !important;
+  min-height: 54px !important;
+  padding-top: 11px !important;
+  color: #555149 !important;
+  border-top: 2px solid #5d5b54 !important;
+  text-decoration: none !important;
+}
+
+.succession-architecture-board .succession-architecture__timeline-shortcut span {
+  position: relative !important;
+  display: grid !important;
+  justify-items: center !important;
+  gap: 5px !important;
+  font-size: 5px !important;
+}
+
+.succession-architecture-board .succession-architecture__timeline-shortcut i {
+  width: 7px !important;
+  height: 7px !important;
+  margin-top: -15px !important;
+  border: 1px solid #333630 !important;
+  border-radius: 50% !important;
+  background: #f6f3eb !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > aside {
+  min-width: 0 !important;
+  padding: 9px !important;
+  border-left: 1px solid #d7d0c3 !important;
+  background: rgba(248,246,240,.8) !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > aside h3 {
+  margin: 0 0 7px !important;
+  color: #57544c !important;
+  font-size: 6px !important;
+  font-weight: 400 !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > aside > a {
+  display: grid !important;
+  justify-items: center !important;
+  gap: 5px !important;
+  min-height: 79px !important;
+  margin-bottom: 9px !important;
+  padding: 9px !important;
+  color: #5b584f !important;
+  border: 1px solid #d8d1c4 !important;
+  background: rgba(255,255,255,.55) !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > aside p {
+  display: grid !important;
+  grid-template-columns: 6px 1fr !important;
+  gap: 6px !important;
+  align-items: center !important;
+  margin: 5px 0 !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > aside p i {
+  width: 4px !important;
+  height: 4px !important;
+  border-radius: 50% !important;
+  background: #96805a !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > aside p span {
+  height: 1px !important;
+  background: #cbc4b7 !important;
+}
+
+/* Footer */
+.succession-architecture-board .succession-architecture__document-footer {
+  grid-column: 1 / -1 !important;
+  grid-row: 4 !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  align-items: center !important;
+  min-height: 48px !important;
+  padding: 0 18px !important;
+  color: #d6ceb9 !important;
+  border: 0 !important;
+  border-top: 1px solid #343a39 !important;
+  background: #111717 !important;
+  font-family: ui-sans-serif, system-ui, sans-serif !important;
+  font-size: 7px !important;
+  letter-spacing: .15em !important;
+  text-transform: uppercase !important;
+}
+
+.succession-architecture-board .succession-architecture__document-footer span:nth-child(2) { text-align: center !important; }
+.succession-architecture-board .succession-architecture__document-footer span:nth-child(3) { text-align: right !important; }
+
+@media (max-width: 1280px) {
+  .succession-architecture-board .succession-architecture__sheet {
+    grid-template-columns: 184px minmax(0,1fr) !important;
+  }
+  .succession-architecture-board .succession-architecture__masthead {
+    grid-template-columns: 184px minmax(0,1fr) 235px !important;
+  }
+  .succession-architecture-board .succession-architecture__primary-grid {
+    grid-template-columns: 184px minmax(0,1fr) 235px !important;
+  }
+  .succession-architecture-board .succession-architecture__title h1 {
+    font-size: 48px !important;
+  }
+  .succession-architecture-board .succession-architecture__modules {
+    gap: 10px !important;
+    padding: 12px !important;
+  }
+  .succession-architecture-board .succession-architecture__module > header h2 {
+    font-size: 16px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-architecture-board *,
+  .succession-architecture-board *::before,
+  .succession-architecture-board *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}

@@ -906,90 +906,6 @@
 .succession-assignment-personnel b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .succession-assignment-snapshot-board > p { padding: 0 20px 18px; color: var(--assignment-paper-muted-ink); font-size: 12px; }
 
-@media (max-width: 1180px) {
-  .succession-assignment-command__metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .succession-assignment-command__metrics > div:nth-child(3) { border-right: 0; }
-  .succession-assignment-command__metrics > div:nth-child(-n+3) { border-bottom: 1px solid color-mix(in srgb, var(--assignment-paper-ink) 14%, transparent); }
-  .succession-assignment-type-board > div { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .succession-assignment-result-command { grid-template-columns: 1fr 1fr; }
-  .succession-assignment-result-command nav:last-child { grid-column: 1 / -1; }
-  .succession-assignment-dossier > header,
-  .succession-assignment-character-snapshot > header { grid-template-columns: auto minmax(0, 1fr) minmax(240px, .55fr); }
-  .succession-assignment-dossier > header > button,
-  .succession-assignment-character-snapshot > header > button { grid-column: 1 / -1; justify-self: start; }
-}
-
-@media (max-width: 900px) {
-  .succession-assignment-command .succession-canonical-assignments__hero,
-  .succession-assignment-type-board > header { grid-template-columns: 1fr; }
-  .succession-assignment-command__signal { width: min(100%, 250px); }
-  .succession-assignment-type-board > div,
-  .succession-assignment-filter-panel__fields,
-  .succession-assignment-command-chain > div,
-  .succession-assignment-events > div,
-  .succession-assignment-sources > div,
-  .succession-assignment-snapshot-board > div,
-  .succession-assignment-personnel > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-assignment-directory { grid-template-columns: 1fr; }
-  .succession-assignment-ledger { overflow-x: auto; }
-  .succession-assignment-ledger-row { min-width: 980px; }
-  .succession-assignment-dossier > header,
-  .succession-assignment-character-snapshot > header { grid-template-columns: auto minmax(0, 1fr); }
-  .succession-assignment-dossier > header dl,
-  .succession-assignment-character-snapshot > header dl { grid-column: 1 / -1; }
-}
-
-@media (max-width: 680px) {
-  .succession-assignment-command .succession-canonical-assignments__hero,
-  .succession-assignment-type-board { padding: 21px; border-radius: 21px; }
-  .succession-assignment-command__hero-copy h2 { font-size: clamp(38px, 13vw, 58px); }
-  .succession-assignment-command__hero-copy > div { display: grid; }
-  .succession-assignment-command__metrics { grid-template-columns: 1fr 1fr; }
-  .succession-assignment-command__metrics > div,
-  .succession-assignment-command__metrics > div:nth-child(3) { border-right: 1px solid color-mix(in srgb, var(--assignment-paper-ink) 14%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--assignment-paper-ink) 14%, transparent); }
-  .succession-assignment-command__metrics > div:nth-child(even) { border-right: 0; }
-  .succession-assignment-command__metrics > div:last-child { grid-column: 1 / -1; border-right: 0; border-bottom: 0; }
-  .succession-assignment-type-board > div { grid-template-columns: 1fr; }
-  .succession-assignment-filter-panel > header { align-items: stretch; flex-direction: column; }
-  .succession-assignment-filter-panel > header > button { width: 100%; margin-left: 0; }
-  .succession-assignment-filter-panel__fields,
-  .succession-assignment-result-command { grid-template-columns: 1fr; }
-  .succession-assignment-result-command nav:last-child { grid-column: auto; }
-  .succession-assignment-result-command nav { display: grid; grid-template-columns: 1fr; }
-  .succession-assignment-active-filters { display: grid; grid-template-columns: 1fr; }
-  .succession-assignment-active-filters button { width: 100%; }
-  .succession-assignment-filter-panel > footer { align-items: stretch; flex-direction: column; }
-  .succession-assignment-card { grid-template-columns: auto minmax(0, 1fr); min-height: 0; padding: 16px; }
-  .succession-assignment-card dl { grid-column: 1 / -1; grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .succession-assignment-purpose-grid,
-  .succession-assignment-succession-chain > div,
-  .succession-assignment-character-snapshot > section > div { grid-template-columns: 1fr; }
-  .succession-assignment-dossier > header,
-  .succession-assignment-character-snapshot > header { grid-template-columns: 1fr; }
-  .succession-assignment-dossier > header > button,
-  .succession-assignment-character-snapshot > header > button { grid-column: auto; width: 100%; }
-  .succession-assignment-command-chain > div,
-  .succession-assignment-events > div,
-  .succession-assignment-sources > div,
-  .succession-assignment-snapshot-board > div,
-  .succession-assignment-personnel > div { grid-template-columns: 1fr; }
-  .succession-assignment-snapshot-board > header { align-items: stretch; flex-direction: column; }
-  .succession-assignment-snapshot-board > header > button { width: 100%; margin-left: 0; }
-}
-
-@media (max-width: 480px) {
-  .succession-assignment-command__metrics { grid-template-columns: 1fr; }
-  .succession-assignment-command__metrics > div,
-  .succession-assignment-command__metrics > div:nth-child(even),
-  .succession-assignment-command__metrics > div:nth-child(3),
-  .succession-assignment-command__metrics > div:last-child { grid-column: auto; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--assignment-paper-ink) 14%, transparent); }
-  .succession-assignment-command__metrics > div:last-child { border-bottom: 0; }
-  .succession-assignment-card { grid-template-columns: 1fr; }
-  .succession-assignment-card dl { grid-template-columns: 1fr; }
-  .succession-assignment-dossier > header dl,
-  .succession-assignment-character-snapshot > header dl { grid-template-columns: 1fr; }
-}
-
 @media (hover: hover) {
   .succession-assignment-card:hover,
   .succession-assignment-card:focus-visible {
@@ -1004,11 +920,6 @@
   .succession-assignment-ledger-row:hover {
     border-color: var(--assignment-crimson);
   }
-}
-
-@media (hover: none) {
-  .succession-assignment-card:hover,
-  .succession-assignment-card:focus-visible { transform: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

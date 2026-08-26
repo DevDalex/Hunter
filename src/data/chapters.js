@@ -5,8 +5,13 @@ import { chapterFocus } from './successionDossier';
 import { getSeriesPhaseByChapter } from './seriesArcDossiers';
 import { getPreSuccessionResearch } from './seriesResearch';
 import { hunterExamChapterDetails } from './hunterExamChapterDetails';
+import {
+  getChapterCatalogueTitle,
+  getLatestChapterMetadata,
+  LATEST_PUBLISHED_CHAPTER,
+} from './latestChapterMetadata';
 
-export const LATEST_CHAPTER = 413;
+export const LATEST_CHAPTER = LATEST_PUBLISHED_CHAPTER;
 export const FANDOM_BASE = 'https://hunterxhunter.fandom.com/wiki';
 
 const verifiedDetails = {
@@ -34,6 +39,24 @@ const verifiedDetails = {
     researchStatus: 'Source-checked current detail',
     lastReviewed: 'July 13, 2026',
   },
+  414: {
+    releaseDate: 'July 19, 2026',
+    summary: 'Luzurus prepares nonresistance countermeasures for martial law while Room 1014 separates the curse threatening the Fourteenth Prince from the actual Woble’s unresolved location. Oito authorizes a coded-contact contingency, Kurapika identifies trusted outside friends as possible help, and the chapter supplies a 49-day voyage marker.',
+    characters: ['Kurapika', 'Oito Hui Guo Rou', 'Woble Hui Guo Rou', 'Bill', 'Luzurus Hui Guo Rou', 'Basho'],
+    locations: ['Black Whale', 'Room 1007', 'Room 1014', 'Administrative records'],
+    notes: ['Official VIZ publication identity verified.', 'Hunterpedia chapter page cross-checked with independent English and Japanese analysis.', 'Gon and Killua remain prospective contacts; no response or assignment is claimed.'],
+    researchStatus: 'Source-checked current detail',
+    lastReviewed: 'July 28, 2026',
+  },
+  415: {
+    releaseDate: 'July 26, 2026',
+    summary: 'A pre-voyage flashback reveals Furykov’s analysis of Beyond’s long-prepared prince-linked curse. At 13:50 Oito’s coded postcards enter the mail system, and at 14:15 special martial law begins enforcing royal relocations and confinement. Tubeppa receives a relocation order, Luzurus is reported missing, Marayam’s household holds its isolated Nen space, and Oito is conditionally confined pending the actual Woble’s status.',
+    characters: ['Furykov', 'Beyond Netero', 'Kurapika', 'Oito Hui Guo Rou', 'Woble Hui Guo Rou', 'Bill', 'Benjamin Hui Guo Rou', 'Tubeppa Hui Guo Rou', 'Luzurus Hui Guo Rou', 'Marayam Hui Guo Rou', 'Biscuit Krueger', 'Babimyna'],
+    locations: ['Kakin pre-voyage meeting', 'Black Whale', 'Room 1001', 'Room 1005', 'Room 1007', 'Room 1013 isolated Nen space', 'Room 1014'],
+    notes: ['Japanese title: 真偽.', 'Official VIZ publication identity verified.', 'Hunterpedia chapter page cross-checked with independent translation and review sources.', 'Furykov’s 365-day and 700-day figures are recorded as estimates for the specific detected curse, not universal Nen-exorcism rules.'],
+    researchStatus: 'Source-checked current detail',
+    lastReviewed: 'July 28, 2026',
+  },
 };
 
 const makeStudyPrompt = (arc, number, title) => {
@@ -41,7 +64,12 @@ const makeStudyPrompt = (arc, number, title) => {
   return `While reading “${title},” track ${lens.toLowerCase()} and note what changes between the chapter’s opening and closing scene.`;
 };
 
-export const chapters = chapterTitles.map((title, index) => {
+const chapterCatalogueTitles = Array.from(
+  { length: LATEST_CHAPTER },
+  (_, index) => getChapterCatalogueTitle(index + 1, chapterTitles),
+);
+
+export const chapters = chapterCatalogueTitles.map((title, index) => {
   const number = index + 1;
   const arc = getArcByChapter(number);
   const volume = getVolumeByChapter(number);
@@ -59,6 +87,7 @@ export const chapters = chapterTitles.map((title, index) => {
     researchStatus: 'Locally summarized Succession record',
     lastReviewed: 'July 14, 2026',
   } : {};
+  const releaseMetadata = getLatestChapterMetadata(number);
   const detail = { ...phaseContextDetail, ...successionDetail, ...(hunterExamChapterDetails[number] || {}), ...(verifiedDetails[number] || {}) };
 
   return {
@@ -70,10 +99,13 @@ export const chapters = chapterTitles.map((title, index) => {
     volume: volume?.number || null,
     volumeStatus: volume?.number === 39 ? 'Fandom lists chapters 401–410 for Volume 39' : volume ? `Collected in Volume ${volume.number}` : 'Not yet listed in a collected volume',
     sourceUrl: `${FANDOM_BASE}/Chapter_${number}`,
+    officialReaderUrl: releaseMetadata?.officialReaderUrl || null,
+    titleStatus: releaseMetadata?.titleStatus || 'maintained-reference-title',
+    detailStatus: releaseMetadata?.detailStatus || (detail.researchStatus === 'Catalogue record' ? 'catalogue' : 'maintained-research'),
     summary: detail.summary || `${title} is Chapter ${number} of the ${arc.title} arc${volume ? ` and is collected in Volume ${volume.number}` : ''}. Use the linked Hunterpedia entry for the full community synopsis and appearance list.`,
     studyPrompt: makeStudyPrompt(arc, number, title),
     pages: detail.pages || null,
-    releaseDate: detail.releaseDate || null,
+    releaseDate: detail.releaseDate || releaseMetadata?.releaseDate || null,
     tankobonDate: detail.tankobonDate || null,
     adaptations: detail.adaptations || [],
     characters: detail.characters || [],

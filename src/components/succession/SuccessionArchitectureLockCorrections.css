@@ -1,0 +1,144 @@
+/* Final architecture-lock browser corrections.
+ * These rules do not recompose tablet/mobile layouts.
+ */
+
+/*
+ * The four circle-and-cross ornaments depended on independent transformed
+ * elements. Non-uniform viewport fitting made their geometry span the canvas on
+ * very narrow screens. The sheet border and registration rules remain; only
+ * the unstable ornamental nodes are retired. The lock-specific selector wins
+ * regardless of extracted stylesheet order.
+ */
+.succession-architecture-board.is-architecture-locked
+  .succession-architecture__sheet
+  > i.succession-architecture__corner {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/*
+ * Legacy closure layers used overflow-wrap:anywhere on compact labels. The
+ * approved architecture record must wrap only between words.
+ */
+.succession-architecture-board.is-architecture-locked
+  :is(
+    .succession-architecture__view-cell > strong,
+    .succession-architecture__split-grid strong,
+    .succession-architecture__navigation a span,
+    .succession-architecture__module header h2
+  ) {
+  overflow-wrap: normal !important;
+  word-break: normal !important;
+  hyphens: none !important;
+  white-space: normal !important;
+  text-wrap: balance;
+}
+
+/*
+ * Preserve the shared shell's uppercase editorial appearance without changing
+ * the semantic title-case text returned by the browser accessibility tree.
+ */
+.succession-archive:not(.succession-architecture-board)
+  .succession-hub-tabs > a {
+  text-transform: none !important;
+  font-variant-caps: all-small-caps;
+}
+
+/* The miniature shell destinations are links, not miniature form controls. */
+.succession-architecture__page-skeleton a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.succession-architecture__page-skeleton > header a {
+  display: inline-flex;
+  min-width: 135px;
+  min-height: 30px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 22px;
+  padding: 4px 7px;
+  border: 1px solid var(--architecture-line-soft);
+  color: var(--architecture-muted);
+  background: #fff;
+  font-size: 11px;
+}
+
+.succession-architecture__skeleton-body > nav a {
+  display: grid;
+  width: 100%;
+  min-height: 35px;
+  place-items: center;
+  border: 0;
+  border-bottom: 1px solid var(--architecture-line-soft);
+  background: #f7f7f5;
+}
+
+.succession-architecture__skeleton-body > main > ol a {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+}
+
+.succession-architecture__skeleton-tabs a {
+  display: inline-flex;
+  min-height: 25px;
+  align-items: center;
+  padding: 3px 6px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.succession-architecture__skeleton-tabs a.is-current {
+  border-bottom-color: #111;
+  font-weight: 800;
+}
+
+.succession-architecture__skeleton-body > aside > a {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: 33px 1fr;
+  gap: 4px;
+  margin: 0 0 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: inherit;
+}
+
+.succession-architecture__skeleton-body > aside > a svg {
+  grid-row: span 2;
+  padding: 4px;
+  border: 1px solid var(--architecture-line-soft);
+}
+
+.succession-architecture__page-skeleton > header a:hover,
+.succession-architecture__page-skeleton > header a:focus-visible,
+.succession-architecture__skeleton-body > nav a:hover,
+.succession-architecture__skeleton-body > nav a:focus-visible,
+.succession-architecture__skeleton-tabs a:hover,
+.succession-architecture__skeleton-tabs a:focus-visible,
+.succession-architecture__skeleton-body > aside > a:hover,
+.succession-architecture__skeleton-body > aside > a:focus-visible {
+  color: #fff !important;
+  background: #111 !important;
+}
+
+.succession-architecture__page-skeleton a:active {
+  transform: translateY(1px);
+}
+
+@media (forced-colors: active) {
+  .succession-architecture__page-skeleton a {
+    border-color: CanvasText;
+  }
+}

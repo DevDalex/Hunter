@@ -1,4 +1,9 @@
 import { chapterTitles } from './chapterTitles';
+import { chapter339ResearchOverride } from './chapter339Research.js';
+import {
+  LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
+  LATEST_PUBLISHED_CHAPTER,
+} from './latestChapterMetadata';
 import { seriesArcDossiers } from './seriesArcDossiers';
 import { successionPeriods } from './successionDossier';
 import { hunterExamChapterDetails } from './hunterExamChapterDetails';
@@ -36,7 +41,7 @@ export const preSuccessionChapterResearch = chapterTitles.slice(0, 339).map((tit
   const previousTitle = number > 1 ? chapterTitles[number - 2] : null;
   const nextTitle = number < chapterTitles.length ? chapterTitles[number] : null;
 
-  return {
+  const record = {
     number,
     title,
     arcId: arc.id,
@@ -73,6 +78,8 @@ export const preSuccessionChapterResearch = chapterTitles.slice(0, 339).map((tit
     researchLevel: hunterExamChapterDetails[number] ? 'Hunterpedia chapter-specific record + arc-phase context' : 'Arc-phase context record; chapter source linked',
     reviewed: hunterExamChapterDetails[number]?.lastReviewed || 'July 14, 2026',
   };
+
+  return number === 339 ? Object.freeze({ ...record, ...chapter339ResearchOverride }) : record;
 });
 
 export const preSuccessionResearchByChapter = new Map(preSuccessionChapterResearch.map((record) => [record.number, record]));
@@ -102,21 +109,24 @@ export const seriesChronology = [
     scope: 'Completed arc',
   }))),
   ...successionPeriods.map((period, index) => {
-    const range = String(period.chapters).match(/\d+/g)?.map(Number) || [340, 413];
+    const range = String(period.chapters).match(/\d+/g)?.map(Number) || [340, LATEST_PUBLISHED_CHAPTER];
+    const isCurrent = String(period.chapters).includes('current') || index === successionPeriods.length - 1;
     return {
       id: `succession-${period.status}`,
       arcId: 'succession-contest',
       arcTitle: 'Succession Contest',
       order: `07.${String(index + 1).padStart(2, '0')}`,
       title: period.name,
-      chapters: `Chapters ${period.chapters.replace('current', '413')}`,
-      range: [range[0], range[1] || 413],
+      chapters: `Chapters ${period.chapters.replace('current', String(LATEST_PUBLISHED_CHAPTER))}`,
+      range: [range[0], range[1] || (isCurrent ? LATEST_PUBLISHED_CHAPTER : range[0])],
       precision: 'Current-arc structural period',
       anchor: period.status,
       route: 'Kakin announcement → Black Whale boarding → voyage',
       summary: period.summary,
       shift: 'This period separates expedition politics, royal preparation, and the active voyage so they are not treated as one undifferentiated contest.',
-      consequence: index === successionPeriods.length - 1 ? 'Ongoing through Chapter 413.' : `Leads into ${successionPeriods[index + 1]?.name || 'the active contest'}.`,
+      consequence: index === successionPeriods.length - 1
+        ? `Publication extends through Chapter ${LATEST_PUBLISHED_CHAPTER}; detailed maintained research is verified through Chapter ${LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER} and the current imported releases remain pending annotation.`
+        : `Leads into ${successionPeriods[index + 1]?.name || 'the active contest'}.`,
       people: period.focus,
       factions: [],
       places: index < 2 ? ['Known World', 'Kakin expedition infrastructure'] : ['Black Whale 1'],
@@ -129,8 +139,10 @@ export const seriesChronology = [
 ];
 
 export const seriesResearchStats = {
-  indexedChapters: chapterTitles.length,
-  locallyChapterSpecific: preSuccessionChapterResearch.filter((record) => record.chapterSpecific).length + (chapterTitles.length - 339),
+  indexedChapters: LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
+  publishedChapters: LATEST_PUBLISHED_CHAPTER,
+  pendingPublishedChapters: LATEST_PUBLISHED_CHAPTER - LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
+  locallyChapterSpecific: preSuccessionChapterResearch.filter((record) => record.chapterSpecific).length + (LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER - 339),
   preSuccessionContextRecords: preSuccessionChapterResearch.length,
   completedArcPhases: seriesArcDossiers.reduce((total, arc) => total + arc.phases.length, 0),
   chronologyBlocks: seriesChronology.length,

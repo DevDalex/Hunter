@@ -1,0 +1,55 @@
+const freeze = (value) => Object.freeze(value);
+const chapterSourceId = (number) => `source:chapter-${number}`;
+
+export const abilityFoundation401Expansion = freeze([
+  freeze({
+    id: 'ability:moonlight-act',
+    entityType: 'ability',
+    slug: 'moonlight-act',
+    name: 'Transparent Words—Moonlight Act',
+    aliases: freeze(['Moonlight Act', 'Transparent Words']),
+    summary: 'Longhi’s conditional Manipulation ability creates a voluntary limited-term Nen contract through an aura pen-and-paper interface. Longhi must explain the relevant terms in advance without deceit before the other party voluntarily signs. The Chapter 401 Tubeppa–Woble agreement can enforce one week of Zetsu for breach and can grant Kurapika a one-use loan of Moonlight Act after a separate investigation condition is fulfilled.',
+    sourceIds: freeze([chapterSourceId(401)]),
+    publicationStatus: 'published',
+    canonLevel: 'canon',
+    createdAt: '2026-08-10',
+    updatedAt: '2026-08-10',
+    ownerIds: freeze(['character:longhi']),
+    classification: freeze({ nenTypes: freeze(['manipulation']), certainty: 'confirmed' }),
+    category: 'conditional contract / action restriction / ability loan',
+    activation: 'Longhi manifests an aura pen and paper, accurately explains the applicable contract terms and required disclosures, and the counterparty voluntarily signs the limited-term agreement. The Chapter 401 explanation treats voluntary signature as an absolute condition.',
+    conditions: freeze([
+      'The counterparty must sign voluntarily; Longhi cannot satisfy the demonstrated absolute condition through forced signature.',
+      'The agreement is limited-term rather than open-ended.',
+      'Longhi’s vow and limitation require advance explanation without deceit.',
+      'For ordinary contractual enforcement, Longhi must accurately communicate the contract terms.',
+      'For the special power-grant/reward arrangement, Longhi must explain the larger plan in detail and receive the signature before the power can be granted.',
+      'In the Chapter 401 Tubeppa–Woble treaty, breach is judged around the agreed non-interference/non-attack terms and evidence of fraud, damage, or clearly harmful intent.',
+      'The Chapter 401 treaty expires at 9:00 a.m. the following Sunday and renews for one week if a Tubeppa messenger is inside Room 1014 at that moment.',
+    ]),
+    limitations: freeze([
+      'The aura pen and paper are demonstrated as the ability interface, but Chapter 401 does not establish Conjuration as an additional Nen category.',
+      'The one-week enforced-Zetsu punishment is documented for the Chapter 401 treaty and is not generalized as the penalty for every possible Moonlight Act contract.',
+      'The exact universal meaning of “attack” is not mechanically defined; Longhi describes the parties’ intended harm/fraud/damage standard for this agreement.',
+      'The chapter does not establish Moonlight Act’s maximum number of simultaneous contracts, maximum physical range, aura cost, cancellation mechanics beyond the stated treaty terms, or whether every future contract can grant an ability loan.',
+      'The reward investigation concerns a possible child of Beyond among the princes, but Chapter 401 does not establish that such a prince exists.',
+    ]),
+    costs: freeze([
+      'Longhi binds herself to truthful advance disclosure under her vow and limitation.',
+      'A breaching party under the demonstrated Tubeppa–Woble treaty is subject to one week of enforced Zetsu.',
+    ]),
+    targets: freeze(['voluntary contract signatories', 'actions governed by the signed agreement', 'Kurapika as the demonstrated prospective one-use reward recipient']),
+    range: 'contract-mediated; physical maximum unknown',
+    duration: 'contract-defined; the Chapter 401 peace agreement runs until 9:00 a.m. the following Sunday and can auto-renew one week at a time under its messenger condition',
+    status: 'active',
+    knownUses: freeze([
+      'Chapter 401: Longhi demonstrates the aura pen-and-paper interface and explains the voluntary-signature/truthful-disclosure framework to Kurapika and Bill.',
+      'Chapter 401: the Tubeppa–Woble/Oito peace agreement prohibits harmful interference/attacks against the opposing prince, queen, and affiliated guards and assigns one week of enforced Zetsu for breach.',
+      'Chapter 401: Longhi offers Kurapika one use of Moonlight Act as a reward if the stated Beyond-child investigation condition is fulfilled, with a separate personal-contract fallback after Tubeppa termination.',
+    ]),
+    firstChapter: 401,
+    latestChapter: 401,
+    sourceChapterNumbers: freeze([401]),
+    researchStatus: 'official name, Manipulation classification, voluntary signature, truthful disclosure, Chapter 401 treaty penalty/renewal, and one-use reward documented / broader contract capacity, range, cost, and generalization unresolved',
+  }),
+]);

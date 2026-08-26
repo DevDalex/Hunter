@@ -1,0 +1,66 @@
+const freeze = (value) => Object.freeze(value);
+const chapterSourceId = (number) => `source:chapter-${number}`;
+
+const knowledge = ({ id, abilityName = null, knowledgeState = 'documented', certainty = 'confirmed', summary, activation, conditions = [], limitations = [], costs = [], targets = [], range = 'unknown', duration = 'unknown', knownUses = [], sources = [394] }) => freeze({
+  id,
+  abilityName,
+  chapterRange: freeze({ start: 394, end: 394 }),
+  knowledgeState,
+  certainty,
+  summary,
+  mechanics: freeze({ activation, conditions: freeze(conditions), limitations: freeze(limitations), costs: freeze(costs), targets: freeze(targets), range, duration, knownUses: freeze(knownUses) }),
+  sourceIds: freeze(sources.map(chapterSourceId)),
+});
+
+export const abilityKnowledge394Overrides = freeze({
+  'ability:gateaume-decoy-body': freeze([knowledge({
+    id: 'ability-knowledge:gateaume-decoy-body:394',
+    abilityName: 'Gateaume’s Decoy Body Ability',
+    knowledgeState: 'bloodless false/remote body observed / mechanism unresolved',
+    summary: 'Hinrigh stabs Gateaume’s displayed old-man body in the right thigh and observes no blood. Gateaume accepts Hinrigh’s distinction between the displayed body and his real body, then disappears while the knife falls. The archive uses a descriptive ability label but does not classify the phenomenon or invent the real-body location.',
+    activation: 'Unsupplied; the displayed body is already active at the Chapter 394 opening.',
+    conditions: ['The displayed body can react to a thigh stab without bleeding.', 'Gateaume refers to a real body distinct from the displayed body.', 'The displayed body disappears and leaves the knife behind.'],
+    limitations: ['Official name and Nen category are unsupplied.', 'Conjuration, Emission, Manipulation, transformation, projection, remote control, and other mechanisms are not selected without evidence.', 'Real-body location, damage transfer, sensory link, range, duration, activation, and reset remain unknown.'],
+    targets: ['Gateaume’s displayed Room 3101 body'],
+    knownUses: ['Chapter 394: bloodless knife injury, real-body distinction, and disappearance are observed.'],
+  })]),
+  'ability:voconte-door-ability': freeze([knowledge({
+    id: 'ability-knowledge:voconte-door-ability:394',
+    abilityName: 'Voconte’s Door Ability',
+    knowledgeState: 'direct room connection reported / complete routing rules unresolved',
+    summary: 'Terebellum says Voconte directly connected the corpse-receiving room to the processing area. This advances the Chapter 393 trap proposal into a concrete reported direct-connection use. Voconte remains a confirmed natural Emitter, while the door technique itself remains unclassified.',
+    activation: 'Unsupplied. Chapter 394 reports an already established direct connection rather than showing the setup procedure.',
+    conditions: ['A room can be directly connected to the processing area in the demonstrated/reported Heil-Ly network.', 'Chapter 393 also establishes a proposed trap use.', 'Voconte’s natural type is Emitter.'],
+    limitations: ['Official ability name and ability-specific Nen category remain unsupplied.', 'Trigger, setup time, valid surfaces, directionality, maximum links, range, capacity, duration, aura cost, and reset remain unresolved.', 'Not every Chapter 394 Heil-Ly route is automatically attributed to Voconte.', 'Owner type does not by itself establish the technique as Emission.'],
+    targets: ['prepared room / processing-area route endpoints; exact target rules unresolved'],
+    range: 'unknown; one direct hideout-area connection is reported',
+    knownUses: ['Chapter 393: proposed door trap.', 'Chapter 394: direct corpse-room to processing-area connection reported by Terebellum.'],
+    sources: [393, 394],
+  })]),
+  'ability:contagion': freeze([knowledge({
+    id: 'ability-knowledge:contagion:394',
+    knowledgeState: 'level-21 transition demonstrated / tracking plan disclosed',
+    summary: 'Chapter 394 demonstrates Bille reaching level 21 after killing Tassi and immediately undergoing Water Divination, identifying him as a Conjurer. Matvere states that he is a Transmuter. Morena also explicitly plans to infect someone on Tserriednich’s side with Contagion so she can track his movements.',
+    activation: 'The previously maintained Contagion infection/leveling system remains active. Chapter 394 shows a member crossing to level 21 through a kill and Morena planning an infected target for intelligence tracking.',
+    conditions: ['Bille kills Tassi and reaches level 21.', 'Water Divination identifies Bille as a Conjurer after the level-21 transition.', 'Morena says infecting someone on Tserriednich’s side would let her track his movements.', 'Dogman is ordered to keep leveling from 36 to beyond 50 before his priority mission.'],
+    limitations: ['No personal Bille ability is revealed.', 'Water Divination identifies natural type but does not establish an individual developed ability.', 'The tracking function’s precision, interface, range, duration, and whether the target perceives it remain unresolved.', 'Dogman’s priority search target is not named in the supplied synopsis.', 'Multi-attacker level allocation remains unresolved unless separately established.'],
+    targets: ['Heil-Ly Contagion community members and intended infected target on Tserriednich’s side'],
+    range: 'community-system and tracking range unresolved',
+    duration: 'ongoing progression; tracking duration unresolved',
+    knownUses: ['Chapter 391: Nen-user kill value discussion.', 'Chapter 393: level-21 ability-development threshold and innate-type discussion.', 'Chapter 394: Bille reaches 21, receives Water Divination, and Morena discloses a tracking use for an infected target.'],
+    sources: [378, 391, 393, 394],
+  })]),
+  'ability:hinrigh-object-animal-transformation': freeze([knowledge({
+    id: 'ability-knowledge:hinrigh-object-animal-transformation:394',
+    knowledgeState: 'surveillance-object recovery demonstrated',
+    summary: 'Hinrigh returns to the fountain, retrieves the transformed surveillance cat, returns it to its original camcorder form, and reviews the footage. This confirms the reversible surveillance use already established for Biohazard without adding a new transformation category or duration rule.',
+    activation: 'Existing Biohazard mechanics apply; Chapter 394 specifically shows recovery/reversion of a transformed camcorder-cat.',
+    conditions: ['The transformed surveillance cat remains recoverable by Hinrigh.', 'The object can return to its original camcorder form with its recorded footage available for review.'],
+    limitations: ['Chapter 394 does not establish a new maximum duration, range, animal complexity, independent intelligence level, or remote-control rule.', 'The content of the footage is not converted into facts not supplied in this synopsis.'],
+    targets: ['camcorder previously transformed into a cat for surveillance'],
+    range: 'existing Biohazard range remains as previously maintained',
+    duration: 'long enough for the surveillance operation; exact maximum unresolved',
+    knownUses: ['Chapter 391: transformed objects used for surveillance/restraint.', 'Chapter 394: cat is recovered, reverted to camcorder, and footage reviewed.'],
+    sources: [391, 394],
+  })]),
+});

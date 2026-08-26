@@ -1,17 +1,110 @@
 import { successionArchiveData as foundationData } from './entitiesAbilityFoundation.js';
 import { eventFoundationExpansion } from './eventFoundationExpansion.js';
+import { eventFoundation370Expansion } from './eventFoundation370Expansion.js';
+import { eventFoundation371Expansion } from './eventFoundation371Expansion.js';
+import { eventFoundation372Expansion } from './eventFoundation372Expansion.js';
+import { eventFoundation373Expansion } from './eventFoundation373Expansion.js';
+import { eventFoundation374Expansion } from './eventFoundation374Expansion.js';
+import { eventFoundation375Expansion } from './eventFoundation375Expansion.js';
+import { eventFoundation376Expansion } from './eventFoundation376Expansion.js';
+import { eventFoundation377Expansion } from './eventFoundation377Expansion.js';
+import { eventFoundation378Expansion } from './eventFoundation378Expansion.js';
+import { eventFoundation379Expansion } from './eventFoundation379Expansion.js';
+import { eventFoundation380Expansion } from './eventFoundation380Expansion.js';
+import { eventFoundation381Expansion } from './eventFoundation381Expansion.js';
+import { eventFoundation382Expansion } from './eventFoundation382Expansion.js';
+import { eventFoundation383Expansion } from './eventFoundation383Expansion.js';
+import { eventFoundation384Expansion } from './eventFoundation384Expansion.js';
+import { eventFoundation385Expansion } from './eventFoundation385Expansion.js';
+import { eventFoundation386Expansion } from './eventFoundation386Expansion.js';
+import { eventFoundation387Expansion } from './eventFoundation387Expansion.js';
+import { eventFoundation388Expansion } from './eventFoundation388Expansion.js';
+import { eventFoundation389Expansion } from './eventFoundation389Expansion.js';
+import { eventFoundation390Expansion } from './eventFoundation390Expansion.js';
+import { eventFoundation391Expansion } from './eventFoundation391Expansion.js';
+import { eventFoundation391Corrections } from './eventFoundation391Corrections.js';
+import { eventFoundation392Expansion } from './eventFoundation392Expansion.js';
+import { eventFoundation393Expansion } from './eventFoundation393Expansion.js';
+import { eventFoundation394Expansion } from './eventFoundation394Expansion.js';
+import { eventFoundation395Expansion } from './eventFoundation395Expansion.js';
+import { eventFoundation396Expansion } from './eventFoundation396Expansion.js';
+import { eventFoundation397Expansion } from './eventFoundation397Expansion.js';
+import { eventFoundation398Expansion } from './eventFoundation398Expansion.js';
+import { eventFoundation399Expansion } from './eventFoundation399Expansion.js';
+import { eventFoundation400Expansion } from './eventFoundation400Expansion.js';
+import { eventFoundation400Corrections } from './eventFoundation400Corrections.js';
+import { eventFoundation401Expansion } from './eventFoundation401Expansion.js';
+import { eventFoundation402Expansion } from './eventFoundation402Expansion.js';
+import { eventFoundation403Expansion } from './eventFoundation403Expansion.js';
+import { eventFoundation404Expansion } from './eventFoundation404Expansion.js';
+import { eventFoundation405Expansion } from './eventFoundation405Expansion.js';
+import { eventFoundation406Expansion } from './eventFoundation406Expansion.js';
+import { eventFoundation407Expansion } from './eventFoundation407Expansion.js';
+import { eventFoundation408Expansion } from './eventFoundation408Expansion.js';
+import { eventFoundation409Expansion } from './eventFoundation409Expansion.js';
+import { eventFoundation410Expansion } from './eventFoundation410Expansion.js';
+import { eventFoundation411Expansion } from './eventFoundation411Expansion.js';
+import { eventFoundation412Expansion } from './eventFoundation412Expansion.js';
 
-const ARCHIVE_DATE = '2026-07-24';
+const ARCHIVE_DATE = '2026-08-13';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
 const includesChapter = (range, chapter) => chapter >= range.start && chapter <= (range.end ?? range.start);
+const eventExpansions = Object.freeze([
+  ...eventFoundationExpansion,
+  ...eventFoundation370Expansion,
+  ...eventFoundation371Expansion,
+  ...eventFoundation372Expansion,
+  ...eventFoundation373Expansion,
+  ...eventFoundation374Expansion,
+  ...eventFoundation375Expansion,
+  ...eventFoundation376Expansion,
+  ...eventFoundation377Expansion,
+  ...eventFoundation378Expansion,
+  ...eventFoundation379Expansion,
+  ...eventFoundation380Expansion,
+  ...eventFoundation381Expansion,
+  ...eventFoundation382Expansion,
+  ...eventFoundation383Expansion,
+  ...eventFoundation384Expansion,
+  ...eventFoundation385Expansion,
+  ...eventFoundation386Expansion,
+  ...eventFoundation387Expansion,
+  ...eventFoundation388Expansion,
+  ...eventFoundation389Expansion,
+  ...eventFoundation390Expansion,
+  ...eventFoundation391Expansion,
+  ...eventFoundation391Corrections,
+  ...eventFoundation392Expansion,
+  ...eventFoundation393Expansion,
+  ...eventFoundation394Expansion,
+  ...eventFoundation395Expansion,
+  ...eventFoundation396Expansion,
+  ...eventFoundation397Expansion,
+  ...eventFoundation398Expansion,
+  ...eventFoundation399Expansion,
+  ...eventFoundation400Expansion,
+  ...eventFoundation400Corrections,
+  ...eventFoundation401Expansion,
+  ...eventFoundation402Expansion,
+  ...eventFoundation403Expansion,
+  ...eventFoundation404Expansion,
+  ...eventFoundation405Expansion,
+  ...eventFoundation406Expansion,
+  ...eventFoundation407Expansion,
+  ...eventFoundation408Expansion,
+  ...eventFoundation409Expansion,
+  ...eventFoundation410Expansion,
+  ...eventFoundation411Expansion,
+  ...eventFoundation412Expansion,
+]);
 
 const events = Object.freeze(uniqueById([
   ...foundationData.events,
-  ...eventFoundationExpansion,
+  ...eventExpansions,
 ]));
 
-const expandedEventIds = new Set(eventFoundationExpansion.map((event) => event.id));
+const expandedEventIds = new Set(eventExpansions.map((event) => event.id));
 
 const chapters = Object.freeze(foundationData.chapters.map((chapter) => {
   const linkedEvents = events.filter((event) => expandedEventIds.has(event.id) && includesChapter(event.chapterRange, chapter.number));
@@ -19,36 +112,18 @@ const chapters = Object.freeze(foundationData.chapters.map((chapter) => {
 
   const appearanceRecords = new Map((chapter.appearanceRecords || []).map((appearance) => [appearance.characterId, appearance]));
   for (const participantId of linkedEvents.flatMap((event) => event.participantIds || [])) {
-    if (!appearanceRecords.has(participantId)) {
-      appearanceRecords.set(participantId, Object.freeze({ characterId: participantId, role: 'event participant' }));
-    }
+    if (!appearanceRecords.has(participantId)) appearanceRecords.set(participantId, Object.freeze({ characterId: participantId, role: 'event participant' }));
   }
 
   return Object.freeze({
     ...chapter,
     appearanceRecords: Object.freeze([...appearanceRecords.values()]),
-    eventIds: Object.freeze(unique([
-      ...(chapter.eventIds || []),
-      ...linkedEvents.map((event) => event.id),
-    ])),
-    locationIds: Object.freeze(unique([
-      ...(chapter.locationIds || []),
-      ...linkedEvents.flatMap((event) => event.locationIds || []),
-    ])),
-    abilityIds: Object.freeze(unique([
-      ...(chapter.abilityIds || []),
-      ...linkedEvents.flatMap((event) => event.abilityIds || []),
-    ])),
-    organizationIds: Object.freeze(unique([
-      ...(chapter.organizationIds || []),
-      ...linkedEvents.flatMap((event) => event.organizationIds || []),
-    ])),
+    eventIds: Object.freeze(unique([...(chapter.eventIds || []), ...linkedEvents.map((event) => event.id)])),
+    locationIds: Object.freeze(unique([...(chapter.locationIds || []), ...linkedEvents.flatMap((event) => event.locationIds || [])])),
+    abilityIds: Object.freeze(unique([...(chapter.abilityIds || []), ...linkedEvents.flatMap((event) => event.abilityIds || [])])),
+    organizationIds: Object.freeze(unique([...(chapter.organizationIds || []), ...linkedEvents.flatMap((event) => event.organizationIds || [])])),
     updatedAt: ARCHIVE_DATE,
   });
 }));
 
-export const successionArchiveData = Object.freeze({
-  ...foundationData,
-  events,
-  chapters,
-});
+export const successionArchiveData = Object.freeze({ ...foundationData, events, chapters });

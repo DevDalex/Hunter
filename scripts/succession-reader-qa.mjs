@@ -3,6 +3,7 @@ import { access, mkdir, readFile, stat, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } from '../src/data/successionChapterAvailability.generated.js';
+import { LATEST_PUBLISHED_CHAPTER } from '../src/data/latestChapterMetadata.js';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
@@ -10,8 +11,9 @@ const output = path.resolve(root, process.env.SUCCESSION_READER_QA_OUTPUT || '.s
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
 const results = [];
 const failures = [];
-const LATEST_CHAPTER = Math.max(414, LATEST_AUTHORIZED_SUCCESSION_CHAPTER);
+const LATEST_CHAPTER = Math.max(414, LATEST_PUBLISHED_CHAPTER, LATEST_AUTHORIZED_SUCCESSION_CHAPTER);
 const EXPECTED_CHAPTER_TOTAL = LATEST_CHAPTER - 338 + 1;
+const EXPECTED_MEDIA_TOTAL = LATEST_AUTHORIZED_SUCCESSION_CHAPTER - 338 + 1;
 
 const mime = {
   '.css': 'text/css; charset=utf-8', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
@@ -107,7 +109,9 @@ try {
 
   await record('Reader route is standalone and reading-first', desktop, async () => {
     const reader = await openReader(desktop, base);
-    if (await desktop.locator('.arc-page, .succession-archive').count()) throw new Error('Reader is still wrapped by a story hero or archive shell');
+    if (await desktop.locator('.arc-page').count()) throw new Error('Reader is still wrapped by a legacy story hero');
+    if (await desktop.locator('.succession-archive').count() !== 1) throw new Error('Reader is not integrated into the canonical Succession archive shell');
+    if (await desktop.locator('.succession-reader-command').count() !== 1) throw new Error('Reader command workspace is missing from the archive shell');
     if (await reader.locator('.succession-reader__topbar').count() !== 1) throw new Error('Compact reader top bar is missing');
     if (await reader.locator('.succession-reader__bottombar').count() !== 1) throw new Error('Reader bottom navigation is missing');
     if (await reader.locator('.succession-reader__canvas').count() !== 1) throw new Error('Reading canvas is missing');
@@ -127,6 +131,9 @@ try {
     const summary = (await desktop.locator('.succession-reader__chapter-summary').innerText()).replace(/\s+/g, ' ').toLocaleLowerCase();
     if (!summary.includes(`${EXPECTED_CHAPTER_TOTAL} indexed`)) {
       throw new Error(`Chapter drawer summary does not report ${EXPECTED_CHAPTER_TOTAL} indexed chapters: ${summary}`);
+    }
+    if (!summary.includes(`${EXPECTED_MEDIA_TOTAL} with pages`)) {
+      throw new Error(`Chapter drawer summary does not report ${EXPECTED_MEDIA_TOTAL} chapters with local pages: ${summary}`);
     }
 
     const groups = desktop.locator('.succession-reader__chapter-groups');
@@ -212,32 +219,6 @@ try {
   });
 
   await desktop.close();
-
-  const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce', isMobile: true });
-  await record('Mobile reader is contained and uses accessible sheets', mobile, async () => {
-    await openReader(mobile, base, `chapter=${LATEST_CHAPTER}&page=1&mode=page`);
-    await closeReaderPanel(mobile);
-    const state = await mobile.evaluate(() => ({
-      overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-      readerWidth: document.querySelector('.succession-reader')?.getBoundingClientRect().width || 0,
-      reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-      arcPage: Boolean(document.querySelector('.arc-page')),
-      archiveShell: Boolean(document.querySelector('.succession-archive')),
-    }));
-    if (state.arcPage || state.archiveShell) throw new Error('Mobile reader is wrapped by another application shell');
-    if (state.overflow > 1) throw new Error(`Reader overflowed mobile viewport by ${state.overflow}px`);
-    if (state.readerWidth > 390.5) throw new Error(`Reader exceeds mobile width: ${state.readerWidth}`);
-    if (!state.reducedMotion) throw new Error('Reduced-motion emulation was not active');
-
-    await mobile.keyboard.press('c');
-    await mobile.waitForSelector('.succession-reader-panel--left [role="dialog"]');
-    const sheet = mobile.locator('.succession-reader-panel--left > section');
-    if ((await sheet.boundingBox()).width > 390.5) throw new Error('Mobile chapter sheet exceeds the viewport');
-    const firstInput = mobile.locator('.succession-reader__chapter-tools input');
-    if (!await firstInput.evaluate((node) => node === document.activeElement)) throw new Error('Chapter search did not receive initial panel focus');
-    await closeReaderPanel(mobile);
-  });
-  await mobile.close();
 } finally {
   await browser.close().catch(() => {});
   await new Promise((resolve) => server.close(resolve));

@@ -1,0 +1,19 @@
+@import './RoyalFamilyInspectorFrame.css';
+@import './RoyalFamilyInspectorContent01.css';
+@import './RoyalFamilyInspectorContent02.css';
+@import './RoyalFamilyInspectorContent03.css';
+@import './RoyalFamilyInspectorNetwork01.css';
+@import './RoyalFamilyInspectorNetwork02.css';
+@import './RoyalFamilyInspectorNetwork03.css';
+@import './RoyalFamilyInspectorNetwork04.css';
+@import './RoyalFamilyInspectorDesktop.css';
+
+/* Route-owned baseline kept here for build-audit ownership and late cascade safety. */
+.royal-map .royal-map__inspector,
+html:has(.succession-royal-hierarchy-workspace) .royal-map .royal-map__inspector {
+  position: fixed !important;
+}
+
+.royal-map__inspector-ledger {
+  display: grid;
+}

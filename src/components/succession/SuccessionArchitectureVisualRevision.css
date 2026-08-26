@@ -1,0 +1,623 @@
+/*
+ * Succession Contest architecture portal — visual revision 1.1.
+ *
+ * The information architecture and viewport contract remain locked. This layer
+ * completes the previously deferred tonal hierarchy, canonical imagery,
+ * illustration consistency, and lower-band presentation. It deliberately does
+ * not introduce a tablet/mobile recomposition.
+ */
+
+.succession-architecture-board.is-architecture-locked {
+  --architecture-canvas-v11: #e8e8e4;
+  --architecture-sheet-v11: #f7f7f3;
+  --architecture-panel-v11: #fff;
+  --architecture-panel-soft-v11: #efefeb;
+  --architecture-inset-v11: #e6e6e1;
+  --architecture-ink-v11: #181816;
+  --architecture-ink-soft-v11: #555550;
+  --architecture-ink-faint-v11: #767670;
+  --architecture-line-strong-v11: #282825;
+  --architecture-line-v11: #9d9d97;
+  --architecture-line-soft-v11: #cecec8;
+  --architecture-shadow-v11: 0 8px 24px rgba(20, 20, 18, .08), 0 1px 2px rgba(20, 20, 18, .12);
+  --architecture-shadow-soft-v11: 0 4px 12px rgba(20, 20, 18, .065);
+  --architecture-image-filter-v11: grayscale(1) contrast(1.13) brightness(.965);
+  color: var(--architecture-ink-v11) !important;
+  background:
+    linear-gradient(rgba(20, 20, 18, .018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 20, 18, .014) 1px, transparent 1px),
+    var(--architecture-canvas-v11) !important;
+  background-size: 24px 24px !important;
+}
+
+body.succession-architecture-mode,
+body:has(.succession-architecture-board.is-architecture-locked) {
+  background: var(--architecture-canvas-v11, #e8e8e4) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__sheet {
+  border-color: var(--architecture-line-strong-v11) !important;
+  color: var(--architecture-ink-v11) !important;
+  background:
+    radial-gradient(circle at 18% 12%, rgba(255,255,255,.78), transparent 34%),
+    linear-gradient(rgba(20,20,18,.012) 1px, transparent 1px),
+    var(--architecture-sheet-v11) !important;
+  background-size: auto, 100% 20px, auto !important;
+  box-shadow: inset 0 0 0 5px rgba(255,255,255,.58) !important;
+}
+
+/* Structure remains approved; the visual layer is explicitly under review. */
+.succession-architecture-board.is-architecture-locked .succession-architecture__identity small::after {
+  display: block;
+  margin-top: 4px;
+  color: var(--architecture-ink-soft-v11);
+  content: "VISUAL LAYER 1.1 · REVIEW";
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: .09em;
+  line-height: 1.2;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__document-meta {
+  position: relative;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__document-meta::after {
+  position: absolute;
+  right: 92px;
+  bottom: 2px;
+  padding: 3px 6px;
+  border: 1px solid var(--architecture-line-strong-v11);
+  color: var(--architecture-ink-v11);
+  background: var(--architecture-panel-soft-v11);
+  content: "TONAL + ASSET REVISION";
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: .075em;
+  line-height: 1;
+}
+
+/* Masthead and major editorial hierarchy. */
+.succession-architecture-board.is-architecture-locked .succession-architecture__masthead {
+  border-bottom: 2px solid var(--architecture-line-strong-v11) !important;
+  background: rgba(255,255,255,.32) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__title h1 {
+  color: var(--architecture-ink-v11) !important;
+  text-shadow: 0 1px 0 #fff;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__title p {
+  color: var(--architecture-ink-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__title p::before,
+.succession-architecture-board.is-architecture-locked .succession-architecture__title p::after {
+  background: var(--architecture-line-strong-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__identity > span {
+  border-color: var(--architecture-line-strong-v11) !important;
+  background: var(--architecture-panel-v11) !important;
+  box-shadow: inset 0 0 0 4px var(--architecture-panel-soft-v11);
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__document-meta dl {
+  color: var(--architecture-ink-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__document-meta dd {
+  color: var(--architecture-ink-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__document-meta > span {
+  border: 1px solid #111 !important;
+  color: #fff !important;
+  background: #20201e !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__stamp {
+  color: rgba(36,36,33,.72) !important;
+  background: rgba(255,255,255,.34) !important;
+  box-shadow: inset 0 0 0 4px rgba(247,247,243,.8), inset 0 0 0 5px #888882 !important;
+}
+
+/* Navigation and high-level module hierarchy. */
+.succession-architecture-board.is-architecture-locked .succession-architecture__navigation,
+.succession-architecture-board.is-architecture-locked .succession-architecture__library,
+.succession-architecture-board.is-architecture-locked .succession-architecture__module,
+.succession-architecture-board.is-architecture-locked .succession-architecture__contracts,
+.succession-architecture-board.is-architecture-locked .succession-architecture__footer-specs,
+.succession-architecture-board.is-architecture-locked .succession-architecture__skeleton-block {
+  border-color: var(--architecture-line-strong-v11) !important;
+  background: var(--architecture-panel-v11) !important;
+  box-shadow: var(--architecture-shadow-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__navigation h2,
+.succession-architecture-board.is-architecture-locked .succession-architecture__library > h2 {
+  border-bottom: 2px solid var(--architecture-line-strong-v11) !important;
+  background: var(--architecture-panel-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__navigation a {
+  border-bottom-color: var(--architecture-line-soft-v11) !important;
+  color: var(--architecture-ink-v11) !important;
+  background: rgba(255,255,255,.66) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__navigation a:nth-of-type(even) {
+  background: var(--architecture-panel-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__navigation a.is-current {
+  color: #fff !important;
+  background: #20201e !important;
+  box-shadow: inset 4px 0 0 #777770 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__module {
+  overflow: hidden;
+  border-width: 1.5px !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__module > header {
+  min-height: 64px;
+  border-bottom: 2px solid var(--architecture-line-strong-v11) !important;
+  background:
+    linear-gradient(90deg, rgba(30,30,28,.055), transparent 42%),
+    var(--architecture-panel-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__module > header > span {
+  border: 1px solid #111 !important;
+  color: #fff !important;
+  background: #20201e !important;
+  box-shadow: 3px 3px 0 #bcbcb5 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__module > header h2 {
+  color: var(--architecture-ink-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__module > header p {
+  color: var(--architecture-ink-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__module > header > i {
+  background: var(--architecture-line-v11) !important;
+}
+
+/* Destination cards: three levels of rule weight and tonal separation. */
+.succession-architecture-board.is-architecture-locked .succession-architecture__view-grid,
+.succession-architecture-board.is-architecture-locked .succession-architecture__split-grid {
+  gap: 1px !important;
+  background: var(--architecture-line-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__view-cell,
+.succession-architecture-board.is-architecture-locked .succession-architecture__split-grid > a,
+.succession-architecture-board.is-architecture-locked .succession-architecture__library > a {
+  border-color: transparent !important;
+  color: var(--architecture-ink-v11) !important;
+  background: var(--architecture-panel-v11) !important;
+  box-shadow: none !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__view-cell:nth-child(even),
+.succession-architecture-board.is-architecture-locked .succession-architecture__library > a:nth-of-type(even) {
+  background: #f4f4f0 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__view-cell > strong,
+.succession-architecture-board.is-architecture-locked .succession-architecture__split-grid strong,
+.succession-architecture-board.is-architecture-locked .succession-architecture__library strong {
+  color: var(--architecture-ink-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__view-cell > small,
+.succession-architecture-board.is-architecture-locked .succession-architecture__split-grid small,
+.succession-architecture-board.is-architecture-locked .succession-architecture__library small {
+  color: var(--architecture-ink-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__view-visual {
+  border: 1px solid var(--architecture-line-soft-v11) !important;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.9), rgba(225,225,220,.72)),
+    var(--architecture-panel-soft-v11) !important;
+  box-shadow: inset 0 0 0 4px rgba(255,255,255,.34) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__view-visual svg,
+.succession-architecture-board.is-architecture-locked .succession-architecture__navigation svg,
+.succession-architecture-board.is-architecture-locked .succession-architecture__library svg {
+  color: #252522 !important;
+  stroke-width: 1.55 !important;
+}
+
+.succession-architecture-board.is-architecture-locked [data-route-action]::after {
+  border-color: #20201e !important;
+  color: #fff !important;
+  background: #20201e !important;
+  box-shadow: 0 3px 10px rgba(20,20,18,.16);
+}
+
+.succession-architecture-board.is-architecture-locked :is(
+  .succession-architecture__view-cell,
+  .succession-architecture__split-grid > a,
+  .succession-architecture__library > a
+):hover {
+  color: var(--architecture-ink-v11) !important;
+  background: #e5e5df !important;
+  box-shadow: inset 0 0 0 2px var(--architecture-line-strong-v11) !important;
+}
+
+/*
+ * Canonical image-treatment system.
+ * The original vector drawings stay underneath at low opacity as a resilient
+ * fallback, while the visible frame uses local sourced manga assets already
+ * maintained by the Black Whale workspace.
+ */
+.succession-architecture-board.is-architecture-locked :is(
+  .succession-architecture__ship-blueprint,
+  .succession-architecture__map-sketch
+) {
+  display: block !important;
+  overflow: hidden !important;
+  border: 1px solid var(--architecture-line-v11) !important;
+  border-radius: 0 !important;
+  background-color: var(--architecture-inset-v11) !important;
+  background-repeat: no-repeat !important;
+  background-position: 50% 50% !important;
+  background-size: contain !important;
+  box-shadow: inset 0 0 0 4px rgba(255,255,255,.38), inset 0 -18px 28px rgba(20,20,18,.045) !important;
+  filter: var(--architecture-image-filter-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked :is(
+  .succession-architecture__ship-blueprint,
+  .succession-architecture__map-sketch
+) :is(path, circle) {
+  opacity: .13 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__ship-portrait,
+.succession-architecture-board.is-architecture-locked .succession-architecture__split-grid > a,
+.succession-architecture-board.is-architecture-locked .succession-architecture__library-map,
+.succession-architecture-board.is-architecture-locked .succession-architecture__map-shortcut {
+  position: relative;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__ship-portrait .succession-architecture__ship-blueprint,
+.succession-architecture-board.is-architecture-locked .succession-architecture__module:nth-child(3) .succession-architecture__split-grid > a:first-child .succession-architecture__ship-blueprint,
+.succession-architecture-board.is-architecture-locked .succession-architecture__skeleton-body main > footer .succession-architecture__map-shortcut .succession-architecture__map-sketch {
+  background-image: url('/black-whale-cutaway.png') !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__module:nth-child(3) .succession-architecture__split-grid > a:last-child .succession-architecture__map-sketch,
+.succession-architecture-board.is-architecture-locked .succession-architecture__library-map .succession-architecture__map-sketch,
+.succession-architecture-board.is-architecture-locked .succession-architecture__skeleton-body main > section .succession-architecture__map-shortcut .succession-architecture__map-sketch {
+  background-image: url('/media/rooms/tier-1-quarters.png') !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__ship-portrait .succession-architecture__ship-blueprint {
+  min-height: 130px;
+  background-size: cover !important;
+  background-position: 50% 46% !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__module:nth-child(3) .succession-architecture__ship-blueprint,
+.succession-architecture-board.is-architecture-locked .succession-architecture__module:nth-child(3) .succession-architecture__map-sketch {
+  min-height: 126px;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__library-map .succession-architecture__map-sketch {
+  min-height: 154px;
+  background-size: cover !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__page-skeleton .succession-architecture__map-shortcut .succession-architecture__map-sketch {
+  min-height: 78px;
+  background-size: cover !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__ship-portrait::before,
+.succession-architecture-board.is-architecture-locked .succession-architecture__module:nth-child(3) .succession-architecture__split-grid > a::before,
+.succession-architecture-board.is-architecture-locked .succession-architecture__library-map::before,
+.succession-architecture-board.is-architecture-locked .succession-architecture__page-skeleton .succession-architecture__map-shortcut::before {
+  position: absolute;
+  z-index: 4;
+  top: 5px;
+  left: 6px;
+  padding: 3px 5px;
+  border: 1px solid rgba(31,31,29,.72);
+  color: #fff;
+  background: rgba(31,31,29,.84);
+  content: "CANONICAL MANGA IMAGE";
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 8.5px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__module:nth-child(3) .succession-architecture__split-grid > a:last-child::before,
+.succession-architecture-board.is-architecture-locked .succession-architecture__library-map::before,
+.succession-architecture-board.is-architecture-locked .succession-architecture__skeleton-body main > section .succession-architecture__map-shortcut::before {
+  content: "CANONICAL TIER 1 MAP";
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__ship-portrait small {
+  color: var(--architecture-ink-v11) !important;
+  background: var(--architecture-panel-soft-v11) !important;
+  border-top: 1px solid var(--architecture-line-v11) !important;
+}
+
+/* Nen and supporting illustrations are raised to the same visual weight. */
+.succession-architecture-board.is-architecture-locked .succession-architecture__radar {
+  border: 1px solid var(--architecture-line-soft-v11);
+  background:
+    radial-gradient(circle at center, #c7c7c1 0 9%, transparent 10%),
+    linear-gradient(145deg, #f8f8f5, #e7e7e2);
+  box-shadow: inset 0 0 0 4px rgba(255,255,255,.35);
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__radar path {
+  stroke: #292927 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__radar circle {
+  fill: #f7f7f3 !important;
+  stroke: #292927 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__beast-grid {
+  gap: 5px !important;
+  padding: 8px !important;
+  border: 1px solid var(--architecture-line-soft-v11);
+  background: #e7e7e2 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__beast-grid > span {
+  border-color: var(--architecture-line-v11) !important;
+  background: linear-gradient(145deg, #fafaf7, #dcdcd6) !important;
+  box-shadow: inset 0 0 0 3px rgba(255,255,255,.35);
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__beast-grid > span:nth-child(2n) {
+  background: linear-gradient(145deg, #e8e8e3, #fafaf7) !important;
+}
+
+/* Library and secondary image rail. */
+.succession-architecture-board.is-architecture-locked .succession-architecture__library {
+  background: #f5f5f1 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__library > a {
+  border-bottom: 1px solid var(--architecture-line-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__library > a > span {
+  border-right-color: var(--architecture-line-v11) !important;
+  background: var(--architecture-panel-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__library-map {
+  border: 1px solid var(--architecture-line-strong-v11) !important;
+  background: var(--architecture-inset-v11) !important;
+  box-shadow: var(--architecture-shadow-soft-v11) !important;
+}
+
+/* Lower specification band: finished document, not raw UX wireframe. */
+.succession-architecture-board.is-architecture-locked .succession-architecture__lower-grid {
+  gap: 14px !important;
+  border-top: 2px solid var(--architecture-line-strong-v11) !important;
+  padding-top: 12px !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__contracts {
+  overflow: hidden;
+  border-width: 1.5px !important;
+  background:
+    linear-gradient(90deg, var(--architecture-panel-soft-v11) 0 70px, transparent 70px),
+    var(--architecture-panel-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__contract-sigil {
+  color: var(--architecture-ink-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__contracts h2 {
+  border-bottom: 1px solid var(--architecture-line-v11) !important;
+  color: var(--architecture-ink-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__contracts h2 span {
+  color: var(--architecture-ink-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__contracts li {
+  border-bottom: 1px dotted var(--architecture-line-soft-v11) !important;
+  color: var(--architecture-ink-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__integrity-seal {
+  color: var(--architecture-ink-v11) !important;
+  background: var(--architecture-panel-soft-v11) !important;
+  box-shadow: inset 0 0 0 4px var(--architecture-panel-v11), inset 0 0 0 5px var(--architecture-line-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__footer-specs {
+  overflow: hidden;
+  border-width: 1px !important;
+  background: var(--architecture-panel-soft-v11) !important;
+  box-shadow: none !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__footer-specs > section {
+  border-right: 1px solid var(--architecture-line-v11) !important;
+  background: transparent !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__footer-specs > section:last-child {
+  border-right: 0 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__footer-specs h2 {
+  border-bottom-color: var(--architecture-line-v11) !important;
+  color: var(--architecture-ink-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__footer-specs p,
+.succession-architecture-board.is-architecture-locked .succession-architecture__footer-specs li {
+  color: var(--architecture-ink-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__reference-grid {
+  opacity: .68;
+  background-color: #ecece7 !important;
+  background-image:
+    linear-gradient(var(--architecture-line-soft-v11) 1px, transparent 1px),
+    linear-gradient(90deg, var(--architecture-line-soft-v11) 1px, transparent 1px) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__reference-grid::after {
+  position: absolute;
+  right: 5px;
+  bottom: 4px;
+  color: var(--architecture-ink-faint-v11);
+  content: "SPACING REFERENCE · SECONDARY";
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 8px;
+  letter-spacing: .05em;
+}
+
+/* The miniature shell reads as a polished shared-interface preview. */
+.succession-architecture-board.is-architecture-locked .succession-architecture__skeleton-block {
+  overflow: hidden;
+  border-width: 1.5px !important;
+  background: #e7e7e2 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__callouts {
+  color: #fff !important;
+  background: #2c2c29 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__callouts b {
+  color: #fff !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__callouts span {
+  color: #cfcfc8 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__page-skeleton {
+  border-color: var(--architecture-line-strong-v11) !important;
+  background: var(--architecture-panel-v11) !important;
+  box-shadow: var(--architecture-shadow-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__page-skeleton > header {
+  border-bottom: 2px solid var(--architecture-line-strong-v11) !important;
+  background: #f7f7f3 !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__skeleton-body > nav {
+  border-right-color: var(--architecture-line-v11) !important;
+  background: var(--architecture-panel-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__skeleton-body > main {
+  background: #fff !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__skeleton-body > main > ol,
+.succession-architecture-board.is-architecture-locked .succession-architecture__skeleton-tabs {
+  border-bottom-color: var(--architecture-line-soft-v11) !important;
+  color: var(--architecture-ink-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__mock-content {
+  border-bottom: 1px solid var(--architecture-line-v11) !important;
+  background:
+    linear-gradient(180deg, rgba(239,239,235,.84), rgba(255,255,255,.9)) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__skeleton-body > aside {
+  border-left-color: var(--architecture-line-v11) !important;
+  background: var(--architecture-panel-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__timeline-shortcut {
+  border-top: 2px solid var(--architecture-line-strong-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__document-footer {
+  border-top: 2px solid var(--architecture-line-strong-v11) !important;
+  color: var(--architecture-ink-soft-v11) !important;
+  background: var(--architecture-panel-soft-v11) !important;
+}
+
+.succession-architecture-board.is-architecture-locked .succession-architecture__document-footer::after {
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  color: var(--architecture-ink-faint-v11);
+  content: "VISUAL REVISION 1.1 · CANONICAL ASSETS + TONAL SYSTEM";
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  transform: translateX(-50%);
+}
+
+/* Desktop/laptop only refinements. No tablet/mobile recomposition is added. */
+@media (min-width: 1101px) {
+  .succession-architecture-board.is-architecture-locked .succession-architecture__primary-grid {
+    column-gap: 16px !important;
+  }
+
+  .succession-architecture-board.is-architecture-locked .succession-architecture__modules {
+    gap: 14px !important;
+  }
+
+  .succession-architecture-board.is-architecture-locked .succession-architecture__module {
+    box-shadow: var(--architecture-shadow-v11) !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .succession-architecture-board.is-architecture-locked :is(
+    .succession-architecture__module,
+    .succession-architecture__navigation,
+    .succession-architecture__library,
+    .succession-architecture__contracts,
+    .succession-architecture__footer-specs,
+    .succession-architecture__skeleton-block,
+    .succession-architecture__ship-blueprint,
+    .succession-architecture__map-sketch
+  ) {
+    border-color: CanvasText !important;
+    box-shadow: none !important;
+  }
+
+  .succession-architecture-board.is-architecture-locked :is(
+    .succession-architecture__ship-blueprint,
+    .succession-architecture__map-sketch
+  ) {
+    background-image: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-architecture-board.is-architecture-locked * {
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}

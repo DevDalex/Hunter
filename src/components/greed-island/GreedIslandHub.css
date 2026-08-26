@@ -115,20 +115,6 @@
   line-height: 1.45;
 }
 
-@media (max-width: 760px) {
-  .gi-hub {
-    padding: 24px 16px 40px;
-  }
-
-  .gi-hub__modules {
-    grid-template-columns: 1fr;
-  }
-
-  .gi-hub__modules button {
-    min-height: 96px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .gi-hub__modules button {
     transition: none;

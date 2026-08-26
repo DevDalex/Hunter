@@ -333,16 +333,3 @@
 .ea-two-column .ea-state-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .ea-source-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); border-color: var(--ea-dark-line); background: var(--ea-dark-line); }
 .ea-source-grid a { justify-content: space-between; background: #15131a; }
-
-@media (max-width: 1100px) {
-  .ea-hero,
-  .ea-character-board,
-  .ea-conflict-ledger,
-  .ea-mechanics-inspector,
-  .ea-two-column { grid-template-columns: 1fr; }
-  .ea-hero__facts,
-  .ea-overview-grid,
-  .ea-system-grid,
-  .ea-source-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ea-local-nav { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}

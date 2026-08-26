@@ -12,16 +12,12 @@ const output = path.resolve(root, process.env.ACCESSIBILITY_QA_OUTPUT || '.acces
 const playwrightSpecifier = process.env.PLAYWRIGHT_CORE_PATH || 'playwright-core';
 const executablePath = process.env.CHROMIUM_PATH;
 const selectedRoute = process.env.ACCESSIBILITY_QA_ROUTE || '';
-const selectedViewport = process.env.ACCESSIBILITY_QA_VIEWPORT || 'all';
 const axePath = process.env.AXE_CORE_PATH || (() => {
   try { return require.resolve('axe-core/axe.min.js'); }
   catch { return ''; }
 })();
 
-const viewports = [
-  { id: 'desktop', width: 1440, height: 1000 },
-  { id: 'mobile', width: 390, height: 844 },
-].filter((item) => selectedViewport === 'all' || item.id === selectedViewport);
+const desktopViewport = { width: 1440, height: 1000 };
 const routePath = ({ view, target }) => view === 'home' ? 'home/' : view === 'series' ? (target ? `series/${target}` : 'series/') : `${view}/${target}`;
 const routes = routeManifest.map((route) => ({ ...route, path: routePath(route) }))
   .filter((route) => !selectedRoute || route.path === selectedRoute.replace(/^#?\/?/, ''));
@@ -31,7 +27,7 @@ const mime = {
   '.webp': 'image/webp', '.zip': 'application/zip',
 };
 
-if (!routes.length || !viewports.length) throw new Error('No accessibility-QA route or viewport matched the requested filter.');
+if (!routes.length) throw new Error('No accessibility-QA route matched the requested filter.');
 if (!axePath) throw new Error('Accessibility QA requires axe-core. Install it temporarily with "npm install --no-save axe-core", or set AXE_CORE_PATH to axe.min.js.');
 
 const resolvePlaywright = async () => {
@@ -92,11 +88,11 @@ const server = await serve();
 const base = `http://127.0.0.1:${server.address().port}`;
 const routeResults = [];
 const interactionResults = [];
-const page = await browser.newPage({ viewport: { width: viewports[0].width, height: viewports[0].height } });
+const page = await browser.newPage({ viewport: desktopViewport });
 
-const recordInteraction = async (name, viewport, route, test) => {
+const recordInteraction = async (name, route, test) => {
   try {
-    await page.setViewportSize(viewport);
+    await page.setViewportSize(desktopViewport);
     await page.goto(`${base}/#/${route}`, { waitUntil: 'domcontentloaded', timeout: 15_000 });
     await settle(page);
     await test(page);
@@ -109,91 +105,76 @@ const recordInteraction = async (name, viewport, route, test) => {
 };
 
 try {
-  for (const viewport of viewports) {
-    await page.setViewportSize({ width: viewport.width, height: viewport.height });
-    for (const route of routes) {
-      try {
-        await page.goto(`${base}/#/${route.path}`, { waitUntil: 'domcontentloaded', timeout: 15_000 });
-        await settle(page);
-        await page.addScriptTag({ path: axePath });
-        const result = await page.evaluate(async () => globalThis.axe.run(document, {
-          runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
-        }));
-        const allViolations = result.violations.map((item) => ({
-          id: item.id,
-          impact: item.impact,
-          help: item.help,
-          nodes: item.nodes.map((node) => ({ target: node.target, html: node.html, failureSummary: node.failureSummary })),
-        }));
-        const contrastWarnings = allViolations.filter((item) => item.id === 'color-contrast');
-        const violations = allViolations.filter((item) => item.id !== 'color-contrast');
-        routeResults.push({ viewport: viewport.id, route: route.path, violations, contrastWarnings });
-        process.stdout.write(`${violations.length ? '✗' : '✓'} ${viewport.id.padEnd(7)} ${route.path}${violations.length ? ` · ${violations.map((item) => `${item.id}:${item.nodes.length}`).join(', ')}` : ''}${contrastWarnings.length ? ` · contrast warnings:${contrastWarnings.reduce((total, item) => total + item.nodes.length, 0)}` : ''}\n`);
-      } catch (error) {
-        routeResults.push({ viewport: viewport.id, route: route.path, error: error.message, violations: [], contrastWarnings: [] });
-        process.stdout.write(`✗ ${viewport.id.padEnd(7)} ${route.path} · ${error.message}\n`);
-      } finally { await page.goto('about:blank').catch(() => {}); }
-    }
+  await page.setViewportSize(desktopViewport);
+  for (const route of routes) {
+    try {
+      await page.goto(`${base}/#/${route.path}`, { waitUntil: 'domcontentloaded', timeout: 15_000 });
+      await settle(page);
+      await page.addScriptTag({ path: axePath });
+      const result = await page.evaluate(async () => globalThis.axe.run(document, {
+        runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
+      }));
+      const allViolations = result.violations.map((item) => ({
+        id: item.id,
+        impact: item.impact,
+        help: item.help,
+        nodes: item.nodes.map((node) => ({ target: node.target, html: node.html, failureSummary: node.failureSummary })),
+      }));
+      const contrastWarnings = allViolations.filter((item) => item.id === 'color-contrast');
+      const violations = allViolations.filter((item) => item.id !== 'color-contrast');
+      routeResults.push({ viewport: 'desktop', route: route.path, violations, contrastWarnings });
+      process.stdout.write(`${violations.length ? '✗' : '✓'} desktop ${route.path}${violations.length ? ` · ${violations.map((item) => `${item.id}:${item.nodes.length}`).join(', ')}` : ''}${contrastWarnings.length ? ` · contrast warnings:${contrastWarnings.reduce((total, item) => total + item.nodes.length, 0)}` : ''}\n`);
+    } catch (error) {
+      routeResults.push({ viewport: 'desktop', route: route.path, error: error.message, violations: [], contrastWarnings: [] });
+      process.stdout.write(`✗ desktop ${route.path} · ${error.message}\n`);
+    } finally { await page.goto('about:blank').catch(() => {}); }
   }
 
-  if (selectedRoute === '' && selectedViewport === 'all') {
-    await recordInteraction('skip link moves focus to main', { width: 1440, height: 1000 }, 'home/', async (page) => {
+  if (selectedRoute === '') {
+    await recordInteraction('skip link moves focus to main', 'home/', async (page) => {
       await page.keyboard.press('Tab');
       if (!await page.locator('.skip-link').evaluate((node) => node === document.activeElement)) throw new Error('skip link did not receive first focus');
       await page.keyboard.press('Enter');
       if (!await page.locator('#main-content').evaluate((node) => node === document.activeElement)) throw new Error('main content did not receive focus');
     });
-    await recordInteraction('archive search traps and restores focus', { width: 1440, height: 1000 }, 'home/', async (page) => {
+    await recordInteraction('archive search routes and autofocuses', 'home/', async (page) => {
       const trigger = page.locator('.header-search-button');
       await trigger.click();
-      await page.waitForSelector('.archive-search-dialog[role="dialog"]');
-      if (!await page.locator('.archive-search-input input').evaluate((node) => node === document.activeElement)) throw new Error('search input did not receive focus');
-      await page.keyboard.press('Escape');
-      await page.waitForSelector('.archive-search-dialog', { state: 'detached' });
-      if (!await trigger.evaluate((node) => node === document.activeElement)) throw new Error('search trigger did not regain focus');
+      await page.waitForSelector('.succession-archive[data-archive-route="search"]', { timeout: 10_000 });
+      const input = page.locator('.succession-search-workspace input');
+      await input.waitFor({ state: 'visible', timeout: 10_000 });
+      if (!await input.evaluate((node) => node === document.activeElement)) throw new Error('routed search input did not receive focus');
     });
-    await recordInteraction('mobile-browser menu contains and restores focus', { width: 390, height: 844 }, 'home/', async (page) => {
-      const trigger = page.locator('.mobile-menu-button');
-      await trigger.click();
-      await page.waitForFunction(() => document.activeElement?.matches('.header-links a'));
-      await page.keyboard.press('Shift+Tab');
-      if (!await trigger.evaluate((node) => node === document.activeElement)) throw new Error('Shift+Tab escaped the open menu');
-      await page.keyboard.press('Tab');
-      if (!await page.locator('.header-links a').first().evaluate((node) => node === document.activeElement)) throw new Error('Tab did not wrap to the first menu link');
-      await page.keyboard.press('Escape');
-      if (await trigger.getAttribute('aria-expanded') !== 'false') throw new Error('Escape did not close the menu');
-      if (!await trigger.evaluate((node) => node === document.activeElement)) throw new Error('menu trigger did not regain focus');
-    });
-    await recordInteraction('family-tree branch controls activate with keyboard', { width: 1440, height: 1000 }, 'succession/princes?view=tree', async (page) => {
-      const queens = page.locator('.royal-guard-tree__queen');
+    await recordInteraction('family-tree queen nodes activate with keyboard', 'succession/princes?view=tree', async (page) => {
+      const queens = page.locator('.royal-map__queen-node');
       await queens.first().waitFor({ state: 'visible', timeout: 10_000 });
-      if (await queens.count() < 2) throw new Error('family tree did not render multiple queen branches');
+      if (await queens.count() < 2) throw new Error('family tree did not render multiple queen nodes');
       const nextQueen = queens.nth(1);
       await nextQueen.focus();
-      if (!await nextQueen.evaluate((node) => node === document.activeElement)) throw new Error('queen branch control did not receive focus');
+      if (!await nextQueen.evaluate((node) => node === document.activeElement)) throw new Error('queen node did not receive focus');
       await page.keyboard.press('Enter');
-      if (await nextQueen.getAttribute('aria-pressed') !== 'true') throw new Error('keyboard activation did not select the queen branch');
+      if (await nextQueen.getAttribute('aria-pressed') !== 'true') throw new Error('keyboard activation did not pin the queen node');
     });
-    await recordInteraction('Succession Archive navigation activates with keyboard', { width: 1440, height: 1000 }, 'succession/story', async (page) => {
-      const timelineLink = page.locator('#succession-desktop-navigation a').filter({ hasText: 'Timeline' });
+    await recordInteraction('Succession homepage navigation activates with keyboard', 'succession/story', async (page) => {
+      const timelineLink = page.locator('.succession-command-home__rail nav a').filter({ hasText: 'Timeline' });
+      await timelineLink.waitFor({ state: 'visible', timeout: 10_000 });
       await timelineLink.focus();
-      if (!await timelineLink.evaluate((node) => node === document.activeElement)) throw new Error('archive navigation link did not receive focus');
+      if (!await timelineLink.evaluate((node) => node === document.activeElement)) throw new Error('homepage Timeline link did not receive focus');
       await page.keyboard.press('Enter');
-      await page.waitForSelector('.succession-archive[data-archive-route="timeline"]', { timeout: 10_000 });
-      const activeLink = page.locator('#succession-desktop-navigation a[aria-current="page"]');
-      if ((await activeLink.innerText()).trim() !== 'Timeline') throw new Error('keyboard activation did not open the Timeline workspace');
+      await page.waitForSelector('.succession-archive[data-archive-route="timeline"][data-archive-hub="story"]', { timeout: 10_000 });
+      await page.waitForFunction(() => document.activeElement?.id === 'succession-workspace-content');
     });
-    await recordInteraction('chapter drawer traps and restores focus', { width: 1440, height: 1000 }, 'series/chapters', async (page) => {
-      const opener = page.locator('.chapter-row').first();
+    await recordInteraction('chapter workspace cards activate with keyboard', 'succession/chapters', async (page) => {
+      const opener = page.locator('.succession-chapter-command__card.is-documented:not([aria-current="page"])').first();
+      await opener.waitFor({ state: 'visible', timeout: 10_000 });
+      const chapter = (await opener.locator('.succession-chapter-command__number').innerText()).trim();
       await opener.focus();
-      await opener.click();
-      await page.waitForSelector('.chapter-drawer[role="dialog"]');
-      if (!await page.locator('.chapter-drawer__top button').evaluate((node) => node === document.activeElement)) throw new Error('drawer close button did not receive focus');
-      await page.keyboard.press('Escape');
-      await page.waitForSelector('.chapter-drawer', { state: 'detached' });
-      if (!await opener.evaluate((node) => node === document.activeElement)) throw new Error('chapter opener did not regain focus');
+      if (!await opener.evaluate((node) => node === document.activeElement)) throw new Error('chapter card did not receive focus');
+      await page.keyboard.press('Enter');
+      const selectedCard = page.locator(`.succession-chapter-command__card[aria-current="page"] .succession-chapter-command__number`).filter({ hasText: chapter });
+      await selectedCard.waitFor({ state: 'visible', timeout: 10_000 });
     });
-    await recordInteraction('Black Whale manifest accepts keyboard focus', { width: 390, height: 844 }, 'succession/black-whale', async (page) => {
+    await recordInteraction('Black Whale manifest accepts keyboard focus', 'succession/black-whale', async (page) => {
       const manifest = page.locator('.ship-manifest__table-wrap');
       await manifest.focus();
       if (!await manifest.evaluate((node) => node === document.activeElement)) throw new Error('manifest scroll region did not receive focus');
@@ -221,5 +202,5 @@ const summary = {
   failed: failedRoutes.length + failedInteractions.length,
 };
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, routes: routeResults, interactions: interactionResults }, null, 2)}\n`);
-console.log(`\nAccessibility QA: ${summary.routePasses}/${summary.routeChecks} structural route/viewport renders and ${summary.interactionPasses}/${summary.interactionChecks} keyboard flows passed. Contrast warnings: ${contrastWarningCount} node(s) across ${contrastWarningRoutes} render(s), reported but deferred to the design-system contrast batch.`);
+console.log(`\nDesktop accessibility QA: ${summary.routePasses}/${summary.routeChecks} route renders and ${summary.interactionPasses}/${summary.interactionChecks} keyboard flows passed. Contrast warnings: ${contrastWarningCount} node(s) across ${contrastWarningRoutes} render(s), reported but deferred to the design-system contrast batch.`);
 if (summary.failed) process.exitCode = 1;

@@ -1,0 +1,117 @@
+const freeze = (value) => Object.freeze(value);
+const source411 = 'https://hunterxhunter.fandom.com/wiki/Chapter_411';
+
+export const succession411SourcePolicy = freeze({
+  reviewedAt: '2026-08-12',
+  soleStorySource: 'Current user-supplied Hunterpedia-style Chapter 411 synopsis provided on 2026-08-12',
+  chronologyBoundary: 'Chapter 411 opens at 8:00 a.m. on Voyage Day 12. Its presentation is non-linear relative to Chapter 410 material shown later under Special Martial Law, so publication order must not be mistaken for clock order.',
+  bodyBoundary: 'Halkenburg is conscious and acting through Balsamilco Might’s body while impersonating Balsamilco. This does not revive a separate active Halkenburg body state or erase Balsamilco’s body-occupation condition.',
+  kachoBoundary: 'The person called Kacho in the scene is the post-death Nen construct protecting Fugetsu, not the revived human Kacho.',
+  kurapikaTheoryBoundary: 'Kurapika’s explanation of the four-stage Succession Contest ritual, the voyage deadline, dynastic fall, and the necessity of leaving a multiple-survivor failure option are preserved as Kurapika’s proposed Nen/ritual analysis, not narrator-certified cosmology.',
+  assassinationBoundary: 'Kurapika believes Halkenburg was assassinated based on timing before his Benjamin trial, but explicitly recognizes that there is no proof. Kaiser likewise discusses alternatives rather than establishing the killer as fact.',
+  sarahellBoundary: 'Sarahell’s one-week, immediate-kill, and approximately five-day curse estimates are her operational estimates under stated access conditions; exorcist presence remains unresolved.',
+  stoppingPoint: 'Kurapika declares Woble ineligible to participate in the Succession Contest. The class is shocked and Oito is awake and shaken. No Chapter 412+ explanation of that declaration is imported.',
+  excluded: freeze([
+    'Any Chapter 412+ explanation, confirmation, reversal, or consequence of Woble being declared ineligible',
+    'Kurapika’s ritual model presented as objective narrator fact',
+    'Kurapika’s assassination suspicion presented as proven murder attribution',
+    'Human Kacho treated as alive or revived',
+    'Halkenburg treated as physically restored to his original body',
+    'Sarahell having already cursed or killed Woble',
+    'An exorcist being confirmed present or absent',
+    'Any later outcome of Slakka’s information pressure or the second Nen class',
+  ]),
+});
+
+const timelineEvent = ({ id, title, detail, location, tracks, people = [], confidence = 'Confirmed in the supplied Chapter 411 synopsis', time = 'Voyage Day 12 · Chapter 411 presentation order' }) => freeze({
+  id, title, detail, time, day: 'Voyage Day 12', tier: location, location,
+  tracks: freeze(tracks), people: freeze(people), chapter: 411, confidence, source: source411,
+});
+
+export const succession411TimelineEvents = freeze([
+  timelineEvent({ id: '411-halkenburg-in-balsamilco-calls-benjamin-at-eight', title: 'Halkenburg impersonates Balsamilco in an 8:00 a.m. call to Benjamin', detail: 'At 8:00 a.m. on Voyage Day 12, Halkenburg acts from within Balsamilco Might’s body and speaks to Benjamin as Balsamilco from the Ministry of Justice on Tier 2.', location: 'Black Whale · Tier 2 · Ministry of Justice', tracks: ['halkenburg', 'benjamin', 'body-transfer'], people: ['Halkenburg Hui Guo Rou', 'Balsamilco Might', 'Benjamin Hui Guo Rou'], time: 'Voyage Day 12 · 8:00 a.m.' }),
+  timelineEvent({ id: '411-funeral-schedule-prince-exemption-guard-reassignment', title: 'The disguised call fixes Halkenburg’s funeral schedule and guard-reassignment plan', detail: 'Halkenburg-as-Balsamilco says the procession leaves at 1:00 p.m. and reaches Tier 1 at 2:00 p.m., princes are exempt from the farewell sendoff, and Halkenburg’s guards will be disbanded and reassigned below Tier 2.', location: 'Black Whale · Tier 2 · Ministry of Justice', tracks: ['halkenburg', 'funeral', 'guards'], people: ['Halkenburg Hui Guo Rou', 'Benjamin Hui Guo Rou'], time: 'Voyage Day 12 · 8:00 a.m.' }),
+  timelineEvent({ id: '411-kaiser-melody-kacho-monitor-sleeping-fugetsu', title: 'Kaiser, Melody, and Kacho’s construct monitor the sleeping Fugetsu', detail: 'Fugetsu sleeps soundly. Kacho’s post-death Nen construct worries about draining her, while Melody says Fugetsu needs Kacho and must recover enough to wake naturally.', location: 'Black Whale · Tier 2 · Kaiser office', tracks: ['fugetsu', 'kacho', 'nen'], people: ['Kaiser', 'Melody', 'Fugetsu Hui Guo Rou', 'Kacho Hui Guo Rou'] }),
+  timelineEvent({ id: '411-kaiser-plans-around-halkenburg-funeral', title: 'Kaiser plans around Halkenburg’s funeral without fixing the killer as fact', detail: 'Kaiser says the funeral should remain grand and solemn whether Halkenburg was killed or assassinated by Benjamin and prepares for what follows.', location: 'Black Whale · Tier 2 · Kaiser office', tracks: ['kaiser', 'halkenburg', 'analysis'], people: ['Kaiser', 'Halkenburg Hui Guo Rou'], confidence: 'Kaiser discusses possibilities; killer attribution is not narrator-confirmed.' }),
+  timelineEvent({ id: '411-sarahell-disguises-herself-as-maid', title: 'Sarahell disguises herself as a maid', detail: 'In Camilla’s Room 302 confinement area, Sarahell uses makeup, wig, contacts, and a maid uniform to enter a covert persona.', location: 'Black Whale · VVIP area · Room 302', tracks: ['sarahell', 'camilla', 'infiltration'], people: ['Sarahell'] }),
+  timelineEvent({ id: '411-sarahell-continues-woble-curse-plan-and-exorcist-check', title: 'Sarahell continues the Woble curse operation and prioritizes an exorcist check', detail: 'Despite Halkenburg’s death changing the situation, Sarahell proceeds and says an exorcist must be identified if present so the plan can be adjusted.', location: 'Black Whale · VVIP area · Room 302', tracks: ['sarahell', 'woble', 'curse'], people: ['Sarahell', 'Woble Hui Guo Rou'] }),
+  timelineEvent({ id: '411-sarahell-gives-curse-timing-and-kako-takeover', title: 'Sarahell gives conditional curse timing and asks Kako to take over', detail: 'Sarahell estimates about one week without visual access, but says Room 1014 dropping its guard could allow an immediate kill, then asks Fukataki to have Kako take over.', location: 'Black Whale · VVIP area · Room 302', tracks: ['sarahell', 'woble', 'curse'], people: ['Sarahell', 'Woble Hui Guo Rou'] }),
+  timelineEvent({ id: '411-eighteen-participants-gather-for-second-nen-round', title: 'Eighteen participants gather for the second round of Nen lessons', detail: 'All eighteen expected guards and servants gather at Room 1014 while Bill and Shimanu remain with Oito and Woble in the bedroom.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['kurapika', 'nen-training', 'woble'], people: ['Kurapika', 'Bill', 'Oito Hui Guo Rou', 'Woble Hui Guo Rou'] }),
+  timelineEvent({ id: '411-kurapika-splits-intro-beginner-classes', title: 'Kurapika splits the class into introductory and beginner tracks', detail: 'The eighteen participants split nine-and-nine. The introductory track keeps the two-week usable-Nen promise, while the beginner track runs a month at one major-principle basic per week; aligned princes may send one extra introductory participant.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['kurapika', 'nen-training', 'defense'], people: ['Kurapika'] }),
+  timelineEvent({ id: '411-furykov-reads-lessons-as-defensive-equalization', title: 'Furykov reads Kurapika’s expansion as defensive equalization', detail: 'Furykov sees the expanded lesson as potentially creating real Nen users, dispersing guards, equalizing military strength, and shifting the succession struggle toward defense.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['furykov', 'nen-training', 'analysis'], people: ['Furykov', 'Kurapika'], confidence: 'Furykov strategic analysis.' }),
+  timelineEvent({ id: '411-naipei-belerainte-revisit-unresolved-class-murders', title: 'Naipei and Belerainte revisit the unresolved murders from the prior lessons', detail: 'Naipei worries about the prior lesson murders. Belerainte cannot guarantee safety, does not expect Naipei to be targeted, and asks to be told if a masked girl appears.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['silent-majority', 'security'], people: ['Belerainte'] }),
+  timelineEvent({ id: '411-fugetsu-servants-improve-and-room1010-sealing-mentioned', title: 'Fugetsu servants note physical improvement while Room 1010 sealing is mentioned', detail: 'Illardia and Ladiolus note improved physical condition after awakening, while Roccoli mentions soldiers trying to seal Room 1010 before Yuri silences the topic.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['fugetsu', 'nen-training', 'security'], people: ['Fugetsu Hui Guo Rou'] }),
+  timelineEvent({ id: '411-luzurus-guards-weigh-nen-strategy-and-watch-sarahell', title: 'Luzurus’s guards weigh Nen training and treat disguised Sarahell as a possible spy', detail: 'Javietti and Satobi discuss Luzurus’s watch-and-wait strategy, Nen’s future value, and contact with Camilla’s guards while considering the apparent maid Sarahell a possible spy.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['luzurus', 'nen-training', 'sarahell'], people: ['Sarahell', 'Luzurus Hui Guo Rou'] }),
+  timelineEvent({ id: '411-sarahell-estimates-five-day-object-assisted-curse', title: 'Sarahell identifies Woble and estimates an object-assisted five-day route', detail: 'Sarahell notes Woble’s location and thinks obtaining something Woble used could reduce curse preparation to roughly five days.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['sarahell', 'woble', 'curse'], people: ['Sarahell', 'Woble Hui Guo Rou'], confidence: 'Sarahell operational estimate; no curse is completed.' }),
+  timelineEvent({ id: '411-tenftory-zhang-lei-manage-extra-seat-and-hidden-friendship', title: 'Tenftory and Zhang Lei manage the extra seat while hiding their friendship with Woble’s side', detail: 'Tenftory advises against reducing Room 1003 personnel, proposes a post-workshop dinner with Woble’s side, and Zhang Lei warns against Benjamin learning of their good relationship.', location: 'Black Whale · Room 1014 / Room 1003 call', tracks: ['zhang-lei', 'alliance', 'nen-training'], people: ['Zhang Lei Hui Guo Rou'] }),
+  timelineEvent({ id: '411-maor-considers-more-kurapika-training', title: 'Maor considers further Kurapika training necessary for Tubeppa’s defense', detail: 'Maor weighs his weak Nen position against Benjamin’s men and considers inviting Kurapika for more training while Tubeppa remains targeted.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['tubeppa', 'kurapika', 'analysis'], people: ['Kurapika', 'Tubeppa Hui Guo Rou'] }),
+  timelineEvent({ id: '411-kurapika-suspects-halkenburg-assassination-without-proof', title: 'Kurapika suspects Halkenburg was assassinated but recognizes he has no proof', detail: 'Kurapika thinks the timing before Halkenburg’s Benjamin-related proceeding makes assassination plausible, explicitly recognizes there is no proof, and considers whether public disclosure could provoke chaos.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['kurapika', 'halkenburg', 'analysis'], people: ['Kurapika', 'Halkenburg Hui Guo Rou', 'Benjamin Hui Guo Rou'], confidence: 'Kurapika inference with explicit lack of proof.' }),
+  timelineEvent({ id: '411-gipper-replaces-borksen-and-class-splits-nine-nine', title: 'Gipper replaces Borksen as the class settles into two groups of nine', detail: 'Gipper introduces himself as Borksen’s replacement, receives Danjin’s blunt warning not to die, and Kurapika organizes the participants into the two nine-person groups.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['borksen', 'nen-training'], people: ['Kurapika', 'Borksen'] }),
+  timelineEvent({ id: '411-gadeau-enters-for-luzurus-with-private-ambition', title: 'Gadeau enters for Luzurus while privately considering an attack on Woble', detail: 'Gadeau arrives as Luzurus’s extra representative but privately seeks a chance to target Woble and improve his own standing.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['luzurus', 'woble', 'threat'], people: ['Luzurus Hui Guo Rou', 'Woble Hui Guo Rou'], confidence: 'Private intent only; no attack occurs in Chapter 411.' }),
+  timelineEvent({ id: '411-kurapika-considers-silent-majority-risk', title: 'Kurapika considers another Silent Majority attack as the lesson begins', detail: 'Kurapika wonders whether the unidentified snake-charmer might attack another Tserriednich guard and create legal pressure against Room 1014.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['kurapika', 'silent-majority', 'risk'], people: ['Kurapika', 'Tserriednich Hui Guo Rou'], confidence: 'Kurapika risk analysis; no new attack or identity is confirmed.' }),
+  timelineEvent({ id: '411-slakka-volunteers-and-reveals-zhang-lei-assignment', title: 'Slakka volunteers for the introductory class and reveals his Zhang Lei assignment', detail: 'Slakka identifies himself as Duazul-affiliated, says he was assigned to Zhang Lei, and requests Nen training instead of waiting around.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['slakka', 'zhang-lei', 'nen-training'], people: ['Zhang Lei Hui Guo Rou', 'Kurapika'] }),
+  timelineEvent({ id: '411-sakata-slakka-information-pressure-kurapika-intervenes', title: 'Slakka pressures Sakata’s information position until Kurapika intervenes', detail: 'Sakata fears Slakka will expose their backroom information posture; Slakka knowingly presses the issue, and Kurapika intervenes by reframing the discussion around Nen information relevant to the contest.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['slakka', 'sakata', 'information'], people: ['Kurapika'] }),
+  timelineEvent({ id: '411-kurapika-proposes-vow-limitation-model-for-contest', title: 'Kurapika proposes that the Succession Contest is structured through vows and limitations', detail: 'Kurapika proposes that the one-survivor contest uses extreme resolve and risk as Nen vows and limitations to maximize the future ruler’s potential.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['kurapika', 'succession-ritual', 'nen', 'theory'], people: ['Kurapika'], confidence: 'Kurapika proposed analysis, not narrator-certified fact.' }),
+  timelineEvent({ id: '411-kurapika-proposes-four-stage-kakin-ritual', title: 'Kurapika outlines a proposed four-stage Kakin succession ritual', detail: 'Kurapika proposes four stages: prayer and vow for Kakin’s prosperity; offering the royal bloodline as resolve; gathering the fallen into a sacred-energy convergence; and a successor ruling governance and religion using the resulting power.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['kurapika', 'succession-ritual', 'nen', 'theory'], people: ['Kurapika'], confidence: 'Kurapika proposed model; not narrator-certified cosmology.' }),
+  timelineEvent({ id: '411-kurapika-says-multiple-survivor-failure-option-must-remain', title: 'Kurapika links the voyage deadline, dynastic risk, and multiple-survivor failure option', detail: 'Kurapika points to roughly a month and a half before Nasubi announces a successor, argues a victor must be identified during the voyage or the Hui Guo Rou family would fall from power, and says the genuine possibility of more than one survivor and ritual failure must remain as a Nen limitation. Furykov recognizes that the explanation could encourage attacks on weaker princes.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['kurapika', 'succession-ritual', 'deadline', 'furykov', 'theory'], people: ['Kurapika', 'Furykov', 'Nasubi Hui Guo Rou'], confidence: 'Kurapika theory/prediction plus Furykov reaction.' }),
+  timelineEvent({ id: '411-kurapika-declares-woble-ineligible-oito-awake', title: 'Kurapika declares Woble ineligible to participate as Oito lies awake and shaken', detail: 'Kurapika declares Woble ineligible to participate in the Succession Contest, shocking the class. In Woble’s bedroom, Oito is awake with her eyes wide. The chapter stops before any Chapter 412+ explanation.', location: 'Black Whale · Tier 1 · Room 1014', tracks: ['kurapika', 'woble', 'oito', 'succession-ritual'], people: ['Kurapika', 'Woble Hui Guo Rou', 'Oito Hui Guo Rou'], confidence: 'Declaration and reaction confirmed; rationale beyond Chapter 411 is quarantined.' }),
+]);
+
+export const succession411ChapterFocus = freeze({
+  411: 'At 8:00 a.m. Halkenburg acts through Balsamilco’s body while prince factions prepare around his funeral. Sarahell infiltrates Room 1014 as Kurapika expands the second Nen class, then proposes a vows-and-limitations model for Kakin’s succession ritual and ends by declaring Woble ineligible to participate.',
+});
+
+export const succession411NenFindings = freeze({
+  lessonStructure: 'Eighteen participants split nine-and-nine between an introductory track promising usable Nen within two weeks and a month-long beginner track targeting one major principle’s basics per week.',
+  kachoState: 'Kacho in the Kaiser-office scene is the post-death Nen construct protecting Fugetsu; human Kacho is not revived.',
+  sarahellCurse: 'Sarahell estimates about one week without sight/access, possible immediate killing if Room 1014 drops its guard, and roughly five days if she obtains an object used by Woble. Exorcist presence remains unresolved.',
+  ritualTheory: 'Kurapika proposes a four-stage succession ritual powered by vows, bloodline sacrifice, gathering of the fallen, and resulting governance/religious power. This remains Kurapika’s analysis.',
+  failureTheory: 'Kurapika argues that a real possibility of more than one survivor and ritual failure must remain available for the restriction to carry Nen force.',
+});
+
+export const succession411RelationshipRecords = freeze([
+  freeze({ id: 'ch411-halkenburg-benjamin-balsamilco-impersonation', subject: 'Halkenburg → Benjamin', relation: 'deceptive impersonation', status: 'Halkenburg speaks through Balsamilco’s body as though he were Balsamilco and gives funeral/guard plans.', chapters: '411', source: source411 }),
+  freeze({ id: 'ch411-kacho-fugetsu-protective-dependency', subject: 'Kacho construct → Fugetsu', relation: 'protective post-death Nen dependency', status: 'Kacho worries she drains Fugetsu; Melody says Fugetsu needs Kacho and would not last without her.', chapters: '411', source: source411 }),
+  freeze({ id: 'ch411-sarahell-woble-curse-targeting', subject: 'Sarahell → Woble', relation: 'covert assassination targeting', status: 'Sarahell infiltrates as a maid and maintains conditional curse/kill plans; no successful curse or attack is recorded.', chapters: '411', source: source411 }),
+  freeze({ id: 'ch411-kurapika-room1014-instruction-coalition', subject: 'Kurapika → Nen lesson participants', relation: 'defensive instruction and information coalition', status: 'Kurapika expands training to eighteen participants and uses the class to disclose his succession-ritual analysis.', chapters: '411', source: source411 }),
+]);
+
+export const succession411Mysteries = freeze([
+  freeze({ id: 'ch411-woble-ineligibility-rationale', question: 'Why does Kurapika declare Woble ineligible to participate?', status: 'open at Chapter 411 endpoint; Chapter 412+ explanation quarantined', firstChapter: 411, lastChapter: 411, source: source411 }),
+  freeze({ id: 'ch411-sarahell-exorcist-question', question: 'Is an exorcist available around Woble/Room 1014?', status: 'unresolved', firstChapter: 411, lastChapter: 411, source: source411 }),
+  freeze({ id: 'ch411-halkenburg-death-proof', question: 'Can Kurapika prove his assassination theory about Halkenburg?', status: 'no proof in Chapter 411', firstChapter: 411, lastChapter: 411, source: source411 }),
+]);
+
+export const succession411ResolvedQuestions = freeze([
+  freeze({ question: 'When does Chapter 411 open?', answer: '8:00 a.m. on Voyage Day 12.', resolvedIn: '411', source: source411 }),
+  freeze({ question: 'How many people attend the second Nen lesson before extra additions?', answer: 'Eighteen, split into two groups of nine.', resolvedIn: '411', source: source411 }),
+  freeze({ question: 'What is Chapter 411’s final declaration?', answer: 'Kurapika declares Woble ineligible to participate in the Succession Contest.', resolvedIn: '411', source: source411 }),
+]);
+
+export const succession411ChapterResearch = freeze([
+  freeze({
+    number: 411,
+    title: 'Chapter 411',
+    japaneseTitle: null,
+    phase: 'Active contest and voyage',
+    voyageDay: 'Voyage Day 12 · opens at 8:00 a.m.',
+    chronology: freeze({ presentDay: true, spansDays: freeze([12]), exactClockTime: '8:00 a.m.', presentationOrderNonLinear: true, stoppingPoint: 'Kurapika declares Woble ineligible to participate; Oito is awake and shaken; Chapter 412+ explanation is excluded.' }),
+    lanes: freeze(['Halkenburg body-transfer operation', 'Fugetsu and Kacho', 'Sarahell curse infiltration', 'Room 1014 Nen training', 'Silent Majority risk', 'Succession ritual theory', 'Woble eligibility']),
+    focus: succession411ChapterFocus[411],
+    events: succession411TimelineEvents,
+    prelude: freeze([]),
+    characters: freeze(['Halkenburg Hui Guo Rou', 'Balsamilco Might', 'Benjamin Hui Guo Rou', 'Kaiser', 'Melody', 'Fugetsu Hui Guo Rou', 'Kacho Hui Guo Rou', 'Sarahell', 'Kurapika', 'Oito Hui Guo Rou', 'Woble Hui Guo Rou', 'Furykov']),
+    locations: freeze(['Black Whale · Tier 2 · Ministry of Justice', 'Black Whale · Tier 2 · Kaiser office', 'Black Whale · VVIP area · Room 302', 'Black Whale · Tier 1 · Room 1014']),
+    threadLabels: freeze(['Halkenburg & Benjamin', 'Nen development', 'Woble & Oito', 'Camilla curses', 'Nasubi & ritual', 'Succession Contest']),
+    confidence: freeze(['26 chapter-bounded canonical beats are taken only from the supplied synopsis.', 'Kurapika theory/inference, Kaiser uncertainty, Sarahell operational estimates, Kacho construct identity, and Chapter 412+ spoiler boundaries remain explicitly attributed.']),
+    status: 'Strict maintained Chapter 411 packet: 26 curated chapter-bounded beats, 8:00 a.m. non-linear opening, Halkenburg/Balsamilco and Kacho identity boundaries, Sarahell infiltration, Room 1014 Nen instruction, Kurapika ritual-theory attribution, Woble-ineligible endpoint, and Chapter 412+ spoiler firewall',
+    coverage: freeze({ identity: true, publication: true, summary: true, sceneSummary: true, chronology: true, appearances: true, locations: true, relationships: true, assignments: true, nen: true, source: true }),
+    lastReviewed: 'August 12, 2026',
+    releaseDate: null,
+    titleStatus: 'chapter-number-placeholder-under-user-supplied-source-policy',
+    officialReaderUrl: null,
+    source: source411,
+    sourcePolicy: succession411SourcePolicy,
+    crossChecks: freeze([]),
+  }),
+]);

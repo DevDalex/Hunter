@@ -1,0 +1,37 @@
+const freeze = (value) => Object.freeze(value);
+
+export const eventFoundation391Corrections = freeze([
+  freeze({
+    id: 'event:tier-3-padaille-battle',
+    entityType: 'event',
+    slug: 'tier-3-padaille-battle',
+    name: 'Tier 3 Padaille Battle',
+    aliases: freeze([]),
+    summary: 'Hinrigh is attacked on Tier 3 by Heil-Ly members Tevelares, Quorolle, and Padaille. Biohazard handcuff-pigeons repeatedly restrain Padaille while Fistful of Weapons cycles through hammer, drill, and axe forms. Hinrigh ultimately kills Padaille with Padaille’s own axe form; Tevelares and Quorolle escape and decide to seek Morena’s instructions.',
+    sourceIds: freeze(['source:chapter-391']),
+    publicationStatus: 'published',
+    canonLevel: 'canon',
+    createdAt: '2026-08-09',
+    updatedAt: '2026-08-09',
+    category: 'mafia-battle',
+    importance: 'critical',
+    chapterRange: freeze({ start: 391, end: 391 }),
+    chronology: freeze({ sequence: 11, day: 10, timeOfDay: null, certainty: 'direct-chapter-390-continuation-no-clock-time' }),
+    participantIds: freeze(['character:hinrigh-biganduffno', 'character:padaille', 'character:tevelares', 'character:quorolle']),
+    organizationIds: freeze(['organization:xi-yu', 'organization:heil-ly']),
+    locationIds: freeze(['location:black-whale:tier-3']),
+    abilityIds: freeze(['ability:hinrigh-object-animal-transformation', 'ability:fistful-of-weapons']),
+    causes: freeze(['Padaille, Tevelares, and Quorolle decide to attack Hinrigh while assessing the Contagion reward for killing a Nen user.']),
+    outcomes: freeze([
+      'Padaille demonstrates hammer, drill, and axe forms through Fistful of Weapons.',
+      'Biohazard handcuff-pigeons repeatedly restrain Padaille and are described by Hinrigh as aura-reinforced against standard bullets.',
+      'Hinrigh’s left hand is pierced by Padaille’s drill form.',
+      'Hinrigh kills Padaille by forcing Padaille’s own axe-form hand into the back of his head.',
+      'Tevelares and Quorolle escape and decide to seek Morena’s instructions.',
+    ]),
+    consequenceEventIds: freeze([]),
+    status: 'completed',
+    stateChanges: freeze(['Padaille: alive → dead.', 'Tevelares and Quorolle: direct attack → retreat and request for Morena guidance.']),
+    openQuestions: freeze(['What instructions will Morena give the surviving members?', 'What exact task is Hinrigh relying on Misha to perform?']),
+  }),
+]);

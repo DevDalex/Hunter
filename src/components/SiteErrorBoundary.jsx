@@ -8,8 +8,15 @@ export default class SiteErrorBoundary extends Component {
     return { failed: true };
   }
 
-  componentDidCatch() {
+  componentDidCatch(error, info) {
     document.title = 'Recovery · Hunter × Hunter Archive';
+    const diagnostic = {
+      message: error?.message || String(error || 'Unknown render error'),
+      stack: error?.stack || null,
+      componentStack: info?.componentStack || null,
+    };
+    if (typeof window !== 'undefined') window.__HXA_RECOVERY_ERROR__ = diagnostic;
+    console.error('[Hunter Archive recovery boundary]', diagnostic);
   }
 
   render() {

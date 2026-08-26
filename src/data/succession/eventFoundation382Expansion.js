@@ -1,0 +1,78 @@
+const freeze = (value) => Object.freeze(value);
+const characterId = (name) => `character:${String(name).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`;
+const chapterSourceId = (number) => `source:chapter-${number}`;
+const tier1 = 'location:black-whale:tier-1';
+const room = (number) => `${tier1}:room-${1000 + number}`;
+
+const event = ({ slug, name, summary, category, importance = 'major', sequence, participants = [], locations = [], abilities = [], causes = [], outcomes = [], stateChanges = [], openQuestions = [], timeOfDay = null, status = 'completed' }) => freeze({
+  id: `event:${slug}`,
+  entityType: 'event',
+  slug,
+  name,
+  aliases: freeze([]),
+  summary,
+  sourceIds: freeze([chapterSourceId(382)]),
+  publicationStatus: 'published',
+  canonLevel: 'canon',
+  createdAt: '2026-08-09',
+  updatedAt: '2026-08-09',
+  category,
+  importance,
+  chapterRange: freeze({ start: 382, end: 382 }),
+  chronology: freeze({ sequence, day: 8, timeOfDay, certainty: timeOfDay ? 'confirmed' : 'chapter-bounded' }),
+  participantIds: freeze(participants.map(characterId)),
+  organizationIds: freeze(['organization:kakin-royal-family']),
+  locationIds: freeze(locations),
+  abilityIds: freeze(abilities.map((slugValue) => `ability:${slugValue}`)),
+  causes: freeze(causes),
+  outcomes: freeze(outcomes),
+  consequenceEventIds: freeze([]),
+  status,
+  stateChanges: freeze(stateChanges),
+  openQuestions: freeze(openQuestions),
+});
+
+export const eventFoundation382Expansion = freeze([
+  event({
+    slug: 'halkenburg-nasubi-armed-confrontation',
+    name: 'Halkenburg Confronts Nasubi at Gunpoint',
+    summary: 'After four days of repeated visits lower the entrance guards’ vigilance, Halkenburg and five followers hold the guards at gunpoint, confront Nasubi over the Succession Contest, and test the ritual’s resistance to lethal action.',
+    category: 'royal-confrontation',
+    importance: 'critical',
+    sequence: 1,
+    participants: ['Halkenburg Hui Guo Rou', 'Nasubi Hui Guo Rou', 'Nugui'],
+    locations: [tier1],
+    causes: ['Halkenburg believes he consented to the Seed Urn ritual without being told that the princes would kill one another.', 'Repeated petitions have failed to stop the contest.'],
+    outcomes: ['A bullet fired at Nasubi stops before reaching him, though the mechanism is not identified in the supplied Chapter 382 synopsis.', 'Halkenburg attempts to shoot himself and his Guardian Spirit Beast visibly stops that bullet.', 'Nasubi tells Halkenburg to become king if he wants to change Kakin.'],
+    stateChanges: ['Halkenburg’s resistance escalates from petitions and letters to armed confrontation and direct action.'],
+    openQuestions: ['What exactly stops the bullet fired at Nasubi?', 'How literal and universal is Nasubi’s claim that he cannot die until the ritual ends?'],
+  }),
+  event({
+    slug: 'sale-sale-elimination',
+    name: 'Salé-salé Elimination',
+    summary: 'Salé-salé is found unresponsive and apparently not breathing while attendants attempt CPR; Yushohi reports directly to Benjamin that the assassination has succeeded.',
+    category: 'royal-assassination',
+    importance: 'critical',
+    sequence: 3,
+    participants: ['Salé-salé Hui Guo Rou', 'Yushohi', 'Benjamin Hui Guo Rou'],
+    locations: [room(8)],
+    causes: ['Rihan previously neutralized Salé-salé’s Guardian Spirit Beast and handed the assassination phase to Yushohi.'],
+    outcomes: ['Salé-salé is killed.', 'Benjamin receives confirmation that the assassination mission succeeded.', 'The maintained chronology records a second prince death after Momoze.'],
+    stateChanges: ['Salé-salé’s succession branch loses its candidate.'],
+    openQuestions: ['What specific Nen ability or method does Yushohi use to kill Salé-salé?'],
+  }),
+  event({
+    slug: 'sunday-banquet-day-8-opening',
+    name: 'Voyage Day 8 Sunday Banquet Opening',
+    summary: 'At 8:00 p.m. on Voyage Day 8, Kacho, Fugetsu, and Melody wait nervously in the banquet hall immediately before the Sunday banquet begins.',
+    category: 'royal-banquet',
+    importance: 'critical',
+    sequence: 4,
+    participants: ['Kacho Hui Guo Rou', 'Fugetsu Hui Guo Rou', 'Melody'],
+    locations: [tier1],
+    causes: ['The weekly royal banquet creates the scheduled opening around which the twins and Melody have been preparing their music and escape plan.'],
+    outcomes: ['The Sunday banquet reaches its opening.', 'The twins’ escape plan is poised for execution but has not yet unfolded in Chapter 382.'],
+    stateChanges: ['The voyage advances to the first Sunday-banquet execution point for the Kacho/Fugetsu escape strategy.'],
+    timeOfDay: '20:00',
+  }),
+]);

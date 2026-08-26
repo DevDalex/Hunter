@@ -1,0 +1,36 @@
+.royal-map__dossier-timeline li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 15px minmax(0, 1fr);
+  gap: 9px;
+  padding: 0 0 10px;
+}
+
+.royal-map__dossier-timeline li > span {
+  z-index: 1;
+  width: 9px;
+  height: 9px;
+  margin-top: 7px;
+  border: 2px solid #171715;
+  border-radius: 50%;
+  background: var(--dossier-gold);
+  box-shadow: 0 0 0 1px #8c7132;
+}
+
+.royal-map__dossier-timeline li > div {
+  padding: 8px 9px;
+  border: 1px solid #454038;
+  border-radius: 5px;
+  background: #201e1a;
+}
+
+.royal-map__dossier-timeline header { display: flex; gap: 8px; justify-content: space-between; }
+.royal-map__dossier-timeline strong { color: #fff0cd; font-size: 10px; }
+.royal-map__dossier-timeline em { color: #d1aa50; font-size: 8px; font-style: normal; white-space: nowrap; }
+.royal-map__dossier-timeline p { margin-top: 4px !important; font-size: 9px !important; }
+.royal-map__dossier-timeline small { color: #938a7d; font-size: 8px; text-transform: capitalize; }
+
+.royal-map__dossier-evidence { display: grid; gap: 10px; }
+.royal-map__dossier-evidence > article { border-top: 3px solid var(--dossier-gold); }
+.royal-map__dossier-evidence > article > strong { display: block; margin-top: 4px; color: #fff2d2; font: 600 18px/1.1 Georgia, serif; }
+.royal-map__dossier-evidence > article > p { font-size: 9px !important; }

@@ -1,0 +1,226 @@
+/* Phase 1 architecture-board isolation.
+   This file intentionally loads after the legacy Succession presentation layers. */
+
+body.succession-architecture-mode .site-header {
+  display: none !important;
+}
+
+.succession-architecture-board,
+.succession-architecture-board .succession-architecture__sheet,
+.succession-architecture-board .succession-architecture__sheet :where(h1, h2, h3, h4, p, li, dt, dd, small, strong, b, span, a, button) {
+  color: #111 !important;
+  text-shadow: none !important;
+}
+
+.succession-architecture-board .succession-architecture__title p {
+  text-transform: none !important;
+  font-variant-caps: all-small-caps;
+}
+
+.succession-architecture-board .succession-architecture__navigation a.is-current,
+.succession-architecture-board .succession-architecture__navigation a.is-current *,
+.succession-architecture-board .succession-architecture__navigation a:hover,
+.succession-architecture-board .succession-architecture__navigation a:hover *,
+.succession-architecture-board .succession-architecture__module > header > span,
+.succession-architecture-board .succession-drawer header,
+.succession-architecture-board .succession-drawer header *,
+.succession-architecture-board .succession-drawer .succession-architecture__navigation a,
+.succession-architecture-board .succession-drawer .succession-architecture__navigation a * {
+  color: #fff !important;
+}
+
+.succession-architecture-board .succession-architecture__view-grid,
+.succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 0 !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  margin: 0 9px 10px !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border: 1px solid #8a8a86 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  scrollbar-width: auto !important;
+}
+
+.succession-architecture-board .succession-architecture__view-grid.is-five {
+  grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+}
+
+.succession-architecture-board .succession-architecture__view-cell,
+.succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid > a.succession-architecture__view-cell {
+  position: static !important;
+  display: grid !important;
+  grid-template-rows: auto minmax(80px, 1fr) auto !important;
+  flex: initial !important;
+  align-items: initial !important;
+  justify-content: initial !important;
+  gap: 6px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  min-height: 177px !important;
+  padding: 8px 9px 10px !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-right: 1px solid #c9c9c4 !important;
+  border-radius: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  color: #111 !important;
+  background: rgba(255, 255, 255, .34) !important;
+  box-shadow: none !important;
+  transform: none !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  white-space: normal !important;
+}
+
+.succession-architecture-board .succession-architecture__view-cell:last-child,
+.succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid > a.succession-architecture__view-cell:last-child {
+  border-right: 0 !important;
+}
+
+.succession-architecture-board .succession-architecture__view-cell:hover,
+.succession-architecture-board .succession-architecture__view-cell:focus-visible {
+  color: #111 !important;
+  background: #e4e4e0 !important;
+  transform: none !important;
+}
+
+.succession-architecture-board .succession-architecture__view-cell > strong,
+.succession-architecture-board .succession-architecture__view-cell > small,
+.succession-architecture-board .succession-architecture__view-visual,
+.succession-architecture-board .succession-architecture__view-visual * {
+  display: revert;
+  max-width: 100% !important;
+  color: #111 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere !important;
+}
+
+.succession-architecture-board .succession-architecture__view-visual {
+  display: grid !important;
+  min-height: 83px !important;
+  place-content: center !important;
+  overflow: hidden !important;
+  border: 1px solid #c9c9c4 !important;
+  border-radius: 0 !important;
+  background: linear-gradient(135deg, #fff, #f0f0ed) !important;
+}
+
+.succession-architecture-board :where(
+  .succession-architecture__reference-grid > span,
+  .succession-architecture__callouts p,
+  .succession-architecture__callouts p > span,
+  .succession-architecture__skeleton-body > main > ol li,
+  .succession-architecture__skeleton-tabs > span,
+  .succession-architecture__skeleton-body > main > footer span,
+  .succession-architecture__document-footer > span
+) {
+  font-size: 11px !important;
+  line-height: 1.25 !important;
+}
+
+.succession-architecture-board .succession-architecture__page-skeleton > header button {
+  color: #555 !important;
+  background: #fff !important;
+}
+
+.succession-architecture-board .succession-architecture__skeleton-body > nav button {
+  color: #111 !important;
+  background: #f7f7f5 !important;
+}
+
+/* Desktop action geometry: keep the architecture portal compact instead of
+   stretching every destination into a tall poster-like column. */
+@media (min-width: 1101px) {
+  .succession-architecture-board .succession-architecture__navigation a {
+    grid-template-columns: 46px minmax(0, 1fr) !important;
+    min-height: 48px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__navigation a span {
+    padding: 6px 9px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__module > header {
+    height: 68px !important;
+    min-height: 68px !important;
+    max-height: 68px !important;
+    padding-block: 6px !important;
+    overflow: hidden !important;
+  }
+
+  .succession-architecture-board .succession-architecture__module header h2 {
+    font-size: clamp(18px, 1.35vw, 22px) !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    text-wrap: nowrap !important;
+  }
+
+  .succession-architecture-board .succession-architecture__module header p {
+    max-height: 2.4em !important;
+    margin-top: 3px !important;
+    overflow: hidden !important;
+    line-height: 1.15 !important;
+  }
+
+  .succession-architecture-board .succession-architecture__view-cell,
+  .succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid > a.succession-architecture__view-cell {
+    grid-template-rows: auto 54px auto !important;
+    gap: 4px !important;
+    min-height: 142px !important;
+    padding: 6px 7px 8px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__view-visual {
+    height: 54px !important;
+    min-height: 54px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__view-visual svg {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__view-visual i:nth-of-type(1) { top: 11px !important; }
+  .succession-architecture-board .succession-architecture__view-visual i:nth-of-type(2) { top: 22px !important; }
+  .succession-architecture-board .succession-architecture__view-visual i:nth-of-type(3) { top: 33px !important; }
+
+  .succession-architecture-board .succession-architecture__split-grid > a {
+    grid-template-rows: auto 92px auto !important;
+    gap: 4px !important;
+    min-height: 156px !important;
+    padding: 6px 8px 8px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__ship-blueprint,
+  .succession-architecture-board .succession-architecture__radar {
+    max-height: 88px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__beast-grid {
+    gap: 3px !important;
+    padding: 4px 2px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__beast-grid > span {
+    min-height: 38px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__library > a {
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+    min-height: 64px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__library > a > div {
+    padding: 8px !important;
+  }
+}

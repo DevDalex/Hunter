@@ -52,9 +52,3 @@
 .gi-card-libraries__source-links a {
   margin: 0;
 }
-
-@media (max-width: 620px) {
-  .gi-library-card-face__image {
-    image-rendering: auto;
-  }
-}

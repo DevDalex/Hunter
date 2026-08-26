@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main]
   push:
-    branches: [main]
+    branches: [main, dev]
   workflow_dispatch:
 
 concurrency:
@@ -31,12 +31,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build Cloudflare application
+      - name: Verify and build Cloudflare application
         shell: bash
         run: |
           set -o pipefail
           mkdir -p .ci
-          npm run build 2>&1 | tee .ci/build.log
+          npm run verify 2>&1 | tee .ci/build.log
 
       - name: Verify full-stack artifact shape
         shell: bash

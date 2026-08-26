@@ -1,0 +1,78 @@
+name: Desktop-only purge apply
+
+on:
+  push:
+    branches:
+      - succession-339-417-visibility-audit
+    paths:
+      - 'scripts/**'
+      - 'docs/**'
+      - '.github/workflows/desktop-only-purge-preview.yml'
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desktop-only-purge-apply-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  apply:
+    name: Apply repository-wide desktop-only purge
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out branch
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Generate desktop-only purge
+        run: |
+          node scripts/desktop-only-runtime-cleanup.mjs
+          node scripts/desktop-only-purge.mjs
+          git diff --stat
+          git diff --binary > desktop-only-purge.patch
+          git diff --check
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify transformed CSS contracts
+        run: npm run audit:css
+
+      - name: Verify transformed production bundle
+        run: npx vite build
+
+      - name: Commit verified desktop-only source purge
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add src public
+          if git diff --cached --quiet; then
+            echo 'No generated desktop-only source changes remain.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Purge narrow-screen and touch presentation'
+          git push origin HEAD:succession-339-417-visibility-audit
+
+      - name: Upload purge diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-only-purge-diagnostics
+          path: |
+            desktop-only-purge.patch
+            .desktop-only-purge-report.json
+          include-hidden-files: true
+          if-no-files-found: warn
+          retention-days: 7

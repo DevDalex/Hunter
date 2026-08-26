@@ -39,6 +39,8 @@ jobs:
         shell: bash
         env:
           VISUAL_QA_SCREENSHOTS: failures
+          VISUAL_QA_VIEWPORT: desktop
+          ACCESSIBILITY_QA_VIEWPORT: desktop
         run: |
           set -o pipefail
           mkdir -p .browser-qa

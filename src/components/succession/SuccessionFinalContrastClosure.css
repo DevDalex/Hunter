@@ -1,0 +1,11 @@
+/* Last release-matrix corrections discovered by desktop browser QA. */
+
+/* Reserve the full command surface while the route-owned workspace chunk loads.
+   This prevents first-load layout shift before the desktop workspace is ready. */
+.succession-route-loading {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #020403;
+  color: #edf1eb;
+}

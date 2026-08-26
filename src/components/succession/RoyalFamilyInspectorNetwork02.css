@@ -1,0 +1,39 @@
+.royal-map__inspector-ledger article > div { min-width: 0; }
+.royal-map__inspector-ledger strong,
+.royal-map__dossier-relations strong { color: #fff1d0; font-size: 10px; }
+.royal-map__inspector-ledger span,
+.royal-map__inspector-ledger em,
+.royal-map__dossier-relations span { display: block; color: #b8ad9d; font-size: 8px; font-style: normal; }
+.royal-map__inspector-ledger article > p { grid-column: 1 / -1; margin: 3px 0 0 !important; font-size: 9px !important; }
+.royal-map__inspector-ledger article > small { grid-column: 1 / -1; color: #8f8577; font-size: 8px; }
+
+.royal-map__dossier-relations article {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 7px;
+  align-items: start;
+}
+
+.royal-map__dossier-relations .royal-map__portrait.is-compact,
+.royal-map__dossier-relations .royal-map__portrait-fallback.is-compact { width: 34px; height: 40px; }
+.royal-map__dossier-relations p { margin-top: 4px !important; font-size: 9px !important; }
+.royal-map__dossier-empty { margin: 0 !important; padding: 12px; border: 1px dashed #49443c; color: #a59b8d !important; font-size: 9px !important; text-align: center; }
+
+.royal-map__dossier-timeline {
+  position: relative;
+  display: grid;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.royal-map__dossier-timeline::before {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 7px;
+  width: 1px;
+  background: #5b5040;
+  content: '';
+}

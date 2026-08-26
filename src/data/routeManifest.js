@@ -1,5 +1,9 @@
 import { ARCHIVE_BOUNDARY } from './archiveMeta.js';
-import { successionArchiveRoutes } from './succession/archiveRoutes.js';
+import {
+  canonicalSuccessionRoutes,
+  legacyRouteRedirects,
+  releasedSuccessionRoutes,
+} from './routeRegistry.js';
 
 export {
   getSuccessionArchiveRoute,
@@ -7,32 +11,29 @@ export {
   successionArchiveLegacyTargets,
   successionArchivePathToTarget,
   successionArchivePrimary,
+  successionArchiveRetiredTargets,
   successionArchiveRouteById,
   successionArchiveRouteIds,
   successionArchiveRoutes,
   successionArchiveTargetToPath,
 } from './succession/archiveRoutes.js';
 
-export const viewIds = ['home', 'series', 'succession', 'reference', 'timeline'];
+export {
+  canonicalSuccessionRouteById,
+  canonicalSuccessionRoutes,
+  legacyRouteRedirects,
+  releasedSuccessionRoutes,
+  resolveSuccessionRoute,
+  searchableSuccessionRoutes,
+  sitemapSuccessionRoutes,
+} from './routeRegistry.js';
+
+export const viewIds = ['succession', 'reference', 'series'];
 export const views = new Set(viewIds);
+export const seriesRoutes = ['chapters'];
 
-export const seriesRoutes = [
-  { id: 'arcs', target: '', label: 'Story hub' },
-  { id: 'volume-0', target: 'volume-0', label: 'Volume 0 · Kurapika’s Memories' },
-  { id: 'hunter-exam', target: 'hunter-exam', label: 'Hunter Exam' },
-  { id: 'zoldyck-family', target: 'zoldyck-family', label: 'Zoldyck Family' },
-  { id: 'heavens-arena', target: 'heavens-arena', label: 'Heavens Arena' },
-  { id: 'yorknew-city', target: 'yorknew-city', label: 'Yorknew City' },
-  { id: 'greed-island', target: 'greed-island', label: 'Greed Island' },
-  { id: 'chimera-ant', target: 'chimera-ant', label: 'Chimera Ant' },
-  { id: 'chairman-election', target: 'chairman-election', label: 'Chairman Election' },
-  { id: 'succession-contest', target: 'succession-contest', label: 'Succession Contest' },
-  { id: 'chronology', target: 'chronology', label: 'Complete chronology' },
-  { id: 'chapters', target: 'chapters', label: 'Chapter directory' },
-  { id: 'adaptation', target: 'adaptation', label: '2011 anime guide' },
-];
-
-// Retained during incremental migration so legacy components and deep links remain valid.
+// Compatibility metadata for older navigation consumers. Canonical route behavior,
+// release status, aliases, and sitemap/search policy live in routeRegistry.js.
 export const successionPages = [
   {
     id: 'overview', label: 'Arc overview', kicker: 'The current story', title: 'Succession Contest',
@@ -47,8 +48,8 @@ export const successionPages = [
     description: `Royalty, guards, servants, Hunters, soldiers, mafia, Justice, the Troupe, and expedition personnel indexed through Chapter ${ARCHIVE_BOUNDARY}.`,
   },
   {
-    id: 'chapters', label: 'Records', kicker: 'Chapters and changing states', title: 'Chapters, deaths and mysteries',
-    description: `Current-arc chapter records, deaths, possession and body states, consequential objects, and unresolved questions through Chapter ${ARCHIVE_BOUNDARY}.`,
+    id: 'chapters', label: 'Records', kicker: 'Chapters and changing states', title: 'Chapters, character states and mysteries',
+    description: `Current-arc chapter records, character life and body states, possession, consequential objects, and unresolved questions through Chapter ${ARCHIVE_BOUNDARY}.`,
   },
   {
     id: 'black-whale', label: 'Black Whale', kicker: 'Interactive ship atlas', title: 'Inside Black Whale 1',
@@ -59,110 +60,65 @@ export const successionPages = [
     description: 'Guardian Spirit Beasts, Succession-specific abilities, Kurapika’s classes, ritual rules, conditions, costs, and unknown mechanics.',
   },
   {
-    id: 'mafia', label: 'Power blocs', kicker: 'Organizations and operations', title: 'Mafia, Justice and operations',
-    description: 'Xi-Yu, Cha-R, Heil-Ly, the Phantom Troupe, military authority, investigations, assassinations, escapes, and political relationships.',
+    id: 'organizations', label: 'Organizations', kicker: 'Power structures and operations', title: 'Organizations and institutions',
+    description: 'Mafia families, Justice, military authority, royal houses, political institutions, expedition groups, investigations, operations, and institutional relationships.',
   },
 ];
 
 export const successionPrimary = successionPages.map((page) => page.id);
 export const legacyDossierPage = successionPages[0];
 
-export const successionAliases = {
-  'deep-dossier': { target: 'family-tree', panel: 'princes' },
-  princes: { target: 'family-tree', panel: 'princes' },
-  'connection-board': { target: 'succession-roster', panel: 'relationships' },
-  'nen-classes': { target: 'beasts', panel: 'classes' },
-  justice: { target: 'mafia', panel: 'justice' },
-  deaths: { target: 'chapters', panel: 'deaths' },
-  mysteries: { target: 'chapters', panel: 'mysteries' },
-  'succession-sources': { target: 'overview' },
-};
+export const successionAliases = Object.freeze(
+  Object.fromEntries(Object.entries(legacyRouteRedirects).map(([alias, target]) => [alias, { target }])),
+);
 
 export const successionPageIds = new Set([
-  ...successionPages.map((page) => page.id),
+  ...canonicalSuccessionRoutes.map((route) => route.id),
   ...Object.keys(successionAliases),
 ]);
 
 export const successionDossierTabs = {
   'family-tree': 'royal',
   beasts: 'beasts',
-  mafia: 'mafia',
+  organizations: 'organizations',
+  mafia: 'organizations',
   chapters: 'chapters',
 };
 
 export const dossierTabRoutes = {
-  overview: 'overview', royal: 'family-tree', assignments: 'succession-roster', threads: 'succession-roster',
-  beasts: 'beasts', abilities: 'beasts', rules: 'beasts', mafia: 'mafia', justice: 'mafia',
-  relationships: 'mafia', operations: 'mafia', status: 'chapters', objects: 'chapters',
-  chapters: 'chapters', mysteries: 'chapters', links: 'chapters', sources: 'overview',
+  overview: 'archive', royal: 'princes', assignments: 'bodyguards', threads: 'relationships',
+  beasts: 'guardian-spirit-beasts', abilities: 'nen', rules: 'nen', mafia: 'organizations',
+  justice: 'organizations', relationships: 'relationships', operations: 'organizations',
+  status: 'chapters', objects: 'chapters', chapters: 'chapters', mysteries: 'chapters',
+  links: 'chapters', sources: 'research',
 };
 
 export const referencePages = [
   {
-    id: 'encyclopedia', label: 'Characters', kicker: 'People and connected records', title: 'Character encyclopedia',
-    description: 'Browse the complete character index, then follow status, affiliations, relationships, abilities, locations, conflicts, and related records.',
-  },
-  {
     id: 'nen', label: 'Nen & abilities', kicker: 'Power system', title: 'Nen and ability encyclopedia',
     description: 'Learn the system from aura fundamentals through advanced techniques, six categories, vows, curses, Nen beasts, and named abilities.',
-  },
-  {
-    id: 'atlas', label: 'World & places', kicker: 'Story geography', title: 'World and location atlas',
-    description: 'Explore the Known World on an interactive geographic map, trace curated story and Succession routes, then connect places to their people, factions, events, and nested records.',
-  },
-  {
-    id: 'systems', label: 'Organizations', kicker: 'Authority, membership and operations', title: 'Organizations and institutions',
-    description: 'Explore institutions, factions, members, sponsorship, typed relationships, territory, and operations in one stable workspace.',
-  },
-  {
-    id: 'conflicts', label: 'Fights', kicker: 'Battles, games and operations', title: 'Fights and conflicts',
-    description: 'Browse battles, assassinations, pursuits, operations, games, negotiations, objectives, participants, abilities, turning points, results, and consequences.',
   },
 ];
 
 export const referencePrimary = referencePages.map((page) => page.id);
+export const referenceAliases = Object.freeze({
+  nen: { target: 'nen' },
+});
 
-export const referenceAliases = {
-  '': { target: 'encyclopedia' },
-  characters: { target: 'encyclopedia', category: 'characters' },
-  people: { target: 'encyclopedia', category: 'characters' },
-  world: { target: 'atlas' },
-  locations: { target: 'atlas' },
-  factions: { target: 'systems', view: 'factions' },
-  mafia: { target: 'systems', view: 'factions' },
-  institutions: { target: 'systems', view: 'institutions' },
-  relationships: { target: 'systems', view: 'relations' },
-  operations: { target: 'systems', view: 'operations' },
-  objects: { target: 'encyclopedia', category: 'objects' },
-  'hisoka-chrollo': { target: 'conflicts', case: 'hisoka-chrollo' },
-  'research-library': { target: 'atlas' },
-  'study-layers': { target: 'atlas' },
-  directory: { target: 'encyclopedia' },
-  hunterpedia: { target: 'encyclopedia' },
-  sources: { target: 'encyclopedia' },
-};
+export const successionReleaseRouteIds = Object.freeze(releasedSuccessionRoutes.map((route) => route.id));
+export const successionReleaseRoutes = releasedSuccessionRoutes;
 
-// The release matrix is a deliberately curated set of public entry screens.
-// Batch 3 promotes the redesigned Royal Family, queen-household, and institution workspaces into the rendered release gate.
-// Batch 4 promotes Chapter, Event, Nen, Guardian Spirit Beast, Location, and Black Whale commands into the rendered release gate.
-// Batch 5 promotes relationship, timeline, spatial, assignment, and advanced result commands into the rendered release gate.
-// The complete Succession hierarchy remains validated separately by the archive shell audit.
-export const successionReleaseRouteIds = Object.freeze(['story', 'chapters', 'events', 'timeline', 'characters', 'princes', 'queens', 'bodyguards', 'organizations', 'relationships', 'locations', 'black-whale', 'nen', 'guardian-spirit-beasts', 'research']);
-export const successionReleaseRoutes = successionReleaseRouteIds.map((id) => successionArchiveRoutes.find((route) => route.id === id));
-
-export const routeManifest = [
-  { view: 'home', target: '', label: 'Hunter Archive home' },
-  { view: 'timeline', target: '', label: 'Global timeline' },
-  ...seriesRoutes.map((route) => ({ view: 'series', target: route.target, label: route.label })),
-  ...successionReleaseRoutes.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
+export const routeManifest = Object.freeze([
+  ...releasedSuccessionRoutes.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
   ...referencePages.map((route) => ({ view: 'reference', target: route.id, label: route.title })),
-];
+  { view: 'series', target: 'chapters', label: 'Pre-Succession chapter record' },
+]);
 
-export const routeManifestStats = {
+export const routeManifestStats = Object.freeze({
   screens: routeManifest.length,
-  timeline: 1,
-  succession: successionArchiveRoutes.length,
-  successionReleaseScreens: successionReleaseRoutes.length + 1,
+  succession: canonicalSuccessionRoutes.length,
+  successionReleaseScreens: releasedSuccessionRoutes.length + 1,
   reference: referencePages.length,
-  aliases: Object.keys(referenceAliases).length + Object.keys(successionAliases).length,
-};
+  series: seriesRoutes.length,
+  aliases: Object.keys(referenceAliases).length + Object.keys(legacyRouteRedirects).length,
+});

@@ -1,0 +1,100 @@
+name: Succession Comprehension
+
+on:
+  pull_request:
+    paths:
+      - 'src/data/succession/**'
+      - 'src/data/successionHomeSummary.js'
+      - 'src/components/succession/**'
+      - 'src/components/succession-reader/**'
+      - 'src/components/SuccessionChapterReader.jsx'
+      - 'src/lib/appRouter.js'
+      - 'scripts/audit-succession-comprehension-*.mjs'
+      - 'scripts/audit-succession-phase2-ux-closure.mjs'
+      - 'scripts/audit-succession-runtime-schema-coverage.mjs'
+      - 'scripts/audit-succession-spoiler-leak-surfaces.mjs'
+      - 'scripts/audit-succession-local-analytics.mjs'
+      - 'scripts/audit-succession-coverage-roadmap.mjs'
+      - '.github/workflows/succession-comprehension.yml'
+  push:
+    branches:
+      - 'agent/succession-comprehension-presentation'
+    paths:
+      - 'src/data/succession/**'
+      - 'src/data/successionHomeSummary.js'
+      - 'src/components/succession/**'
+      - 'src/components/succession-reader/**'
+      - 'src/components/SuccessionChapterReader.jsx'
+      - 'src/lib/appRouter.js'
+      - 'scripts/audit-succession-comprehension-*.mjs'
+      - 'scripts/audit-succession-phase2-ux-closure.mjs'
+      - 'scripts/audit-succession-runtime-schema-coverage.mjs'
+      - 'scripts/audit-succession-spoiler-leak-surfaces.mjs'
+      - 'scripts/audit-succession-local-analytics.mjs'
+      - 'scripts/audit-succession-coverage-roadmap.mjs'
+      - '.github/workflows/succession-comprehension.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  comprehension:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Audit Succession comprehension P0
+        run: node scripts/audit-succession-comprehension-p0.mjs
+
+      - name: Audit Phase 2 onboarding and route consolidation
+        run: node scripts/audit-succession-phase2-ux-closure.mjs
+
+      - name: Audit visual story comprehension
+        run: node scripts/audit-succession-comprehension-story.mjs
+
+      - name: Audit people, Nen, and spatial comprehension
+        run: node scripts/audit-succession-comprehension-systems.mjs
+
+      - name: Audit mystery and research comprehension
+        run: node scripts/audit-succession-comprehension-research.mjs
+
+      - name: Audit structured search comprehension
+        run: node scripts/audit-succession-comprehension-search.mjs
+
+      - name: Audit Research Memory comprehension
+        run: node scripts/audit-succession-comprehension-memory.mjs
+
+      - name: Audit comparison comprehension
+        run: node scripts/audit-succession-comprehension-compare.mjs
+
+      - name: Audit archive and Reader progress bridge
+        run: node scripts/audit-succession-comprehension-reader-bridge.mjs
+
+      - name: Audit runtime schema coverage
+        run: node scripts/audit-succession-runtime-schema-coverage.mjs
+
+      - name: Audit spoiler surfaces
+        run: node scripts/audit-succession-spoiler-leak-surfaces.mjs
+
+      - name: Audit local analytics privacy contract
+        run: node scripts/audit-succession-local-analytics.mjs
+
+      - name: Audit public coverage roadmap
+        run: node scripts/audit-succession-coverage-roadmap.mjs
+
+      - name: Audit information design system
+        run: node scripts/audit-succession-comprehension-design-system.mjs
+
+      - name: Production build
+        run: npm run build

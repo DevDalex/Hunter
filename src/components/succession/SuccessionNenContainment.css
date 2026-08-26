@@ -1,0 +1,305 @@
+/* Nen and ritual systems: controlled research surfaces with restrained interference. */
+
+.succession-nen-command {
+  --nen-canvas: #11181e;
+  --nen-surface: #172229;
+  --nen-raised: #223039;
+  --nen-paper: #eceeea;
+  --nen-paper-muted: #dfe3df;
+  --nen-ink: #edf1ef;
+  --nen-muted: #aeb8bd;
+  --nen-paper-ink: #192830;
+  --nen-paper-muted-ink: #5d6b72;
+  --nen-gold: #78698a;
+  --nen-crimson: #9c3f4a;
+  --nen-line: rgba(215, 223, 225, .18);
+  --nen-line-strong: rgba(215, 223, 225, .3);
+}
+
+.succession-nen-command__hero {
+  border-radius: 5px;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(104, 90, 121, .28), transparent 35%),
+    linear-gradient(rgba(132, 112, 151, .04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(132, 112, 151, .04) 1px, transparent 1px),
+    linear-gradient(145deg, #172229, #0f171c);
+  background-size: auto, 26px 26px, 26px 26px, auto;
+  box-shadow: none;
+}
+
+.succession-nen-command__hero::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 5px;
+  background: #685a79;
+  content: "";
+}
+
+.succession-nen-command__hero::after {
+  color: rgba(237, 241, 239, .025);
+  letter-spacing: -.035em;
+}
+
+.succession-nen-command__hero > div:first-child > span,
+.succession-nen-command-ability > div:nth-child(2) > span,
+.succession-nen-command-system > span {
+  color: #a998bc;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.succession-nen-command__hero h2 {
+  color: #fff;
+  font-family: var(--sans);
+  font-weight: 760;
+}
+
+.succession-nen-command__hero p {
+  color: #b3bdc0;
+  font-size: 14px;
+}
+
+.succession-nen-command__core {
+  border-color: rgba(133, 112, 153, .58);
+  border-radius: 6px;
+  background:
+    repeating-linear-gradient(0deg, transparent 0 27px, rgba(141, 119, 161, .08) 28px 29px),
+    repeating-linear-gradient(90deg, transparent 0 27px, rgba(141, 119, 161, .08) 28px 29px),
+    radial-gradient(circle, rgba(104, 90, 121, .2), transparent 65%),
+    #131d23;
+}
+
+.succession-nen-command__core::before,
+.succession-nen-command__core::after {
+  background: rgba(169, 152, 188, .25);
+}
+
+.succession-nen-command__core > svg,
+.succession-nen-command__core > span {
+  color: #aa98bc;
+}
+
+.succession-nen-command__core > strong {
+  color: #fff;
+  font-family: var(--mono);
+}
+
+.succession-nen-command__core i {
+  border-color: #8a759d;
+  background: #172229;
+  box-shadow: 0 0 0 5px rgba(104, 90, 121, .1);
+}
+
+.succession-nen-command__metrics {
+  gap: 1px;
+  border-radius: 4px;
+  background: rgba(25, 40, 48, .2);
+  box-shadow: none;
+}
+
+.succession-nen-command__metrics > div {
+  border-right: 0;
+  background: #e8eae6;
+}
+
+.succession-nen-command__metrics dt,
+.succession-nen-command-ability dt,
+.succession-nen-command-system dt {
+  color: #65737a;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.succession-nen-command__metrics dd {
+  color: #192830;
+  font-family: var(--mono);
+}
+
+.succession-nen-command__control-deck {
+  border-radius: 4px;
+  background: #e2e5e1;
+  box-shadow: none;
+}
+
+.succession-nen-command__control-deck button,
+.succession-nen-command__active-filters button,
+.succession-nen-command__filters label {
+  border-radius: 3px;
+  background: #edf0ec;
+  color: #526169;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.succession-nen-command__control-deck button:hover,
+.succession-nen-command__control-deck button:focus-visible,
+.succession-nen-command__control-deck button.is-active,
+.succession-nen-command__active-filters button:hover,
+.succession-nen-command__active-filters button:focus-visible {
+  border-color: #685a79;
+  background: rgba(104, 90, 121, .13);
+  color: #42394d;
+}
+
+.succession-nen-command__filters label > span:not(.sr-only),
+.succession-nen-command__active-filters > span {
+  color: #637179;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.succession-nen-command-ability,
+.succession-nen-command-system {
+  border-radius: 4px;
+  background: linear-gradient(150deg, #223039, #172229);
+  box-shadow: none;
+  transform: none !important;
+}
+
+.succession-nen-command-ability::before,
+.succession-nen-command-system::before {
+  background: #685a79;
+}
+
+.succession-nen-command-ability:hover,
+.succession-nen-command-ability:focus-visible,
+.succession-nen-command-system:hover,
+.succession-nen-command-system:focus-visible {
+  border-color: #927da5;
+  box-shadow: inset 0 0 0 1px rgba(146, 125, 165, .24);
+}
+
+.succession-nen-command-ability h3,
+.succession-nen-command-system h3,
+.succession-nen-command-ability h4,
+.succession-nen-command-system h4 {
+  color: #fff;
+  font-family: var(--sans);
+}
+
+.succession-nen-command-ability p,
+.succession-nen-command-system p,
+.succession-nen-command-ability small {
+  color: #aeb8bd;
+}
+
+.succession-nen-command-ability dl,
+.succession-nen-command-system dl {
+  gap: 1px;
+  background: rgba(215, 223, 225, .12);
+}
+
+.succession-nen-command-ability dl div,
+.succession-nen-command-system dl div {
+  border-radius: 0;
+  background: rgba(255, 255, 255, .035);
+}
+
+.succession-nen-command-ability dd,
+.succession-nen-command-system dd {
+  color: #edf1ef;
+  font-family: var(--mono);
+}
+
+.succession-nen-command-ability footer,
+.succession-nen-command-system footer {
+  border-top-color: rgba(215, 223, 225, .14);
+}
+
+.succession-nen-command-ability footer b,
+.succession-nen-command-system footer b {
+  color: #b39dc5;
+  font-family: var(--mono);
+  font-size: 9px;
+  text-transform: uppercase;
+}
+
+.succession-nen-command-dossier__hero,
+.succession-nen-command-pipeline,
+.succession-nen-command-system-architecture,
+.succession-nen-command-section,
+.succession-nen-command-boundary,
+.succession-nen-command-mechanic-list {
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.succession-nen-command-dossier__hero {
+  background:
+    radial-gradient(circle at 88% 16%, rgba(104, 90, 121, .24), transparent 36%),
+    #151f25;
+}
+
+.succession-nen-command-dossier__hero h2,
+.succession-nen-command-dossier__hero h3 {
+  color: #fff;
+  font-family: var(--sans);
+}
+
+.succession-nen-command-dossier__hero > div > span {
+  color: #aa98bc;
+  font-family: var(--mono);
+}
+
+.succession-nen-command-dossier__hero p {
+  color: #b4bec1;
+}
+
+.succession-nen-command-dossier__hero dl {
+  gap: 1px;
+  background: rgba(215, 223, 225, .12);
+}
+
+.succession-nen-command-dossier__hero dl div {
+  border-radius: 0;
+  background: rgba(255, 255, 255, .035);
+}
+
+.succession-nen-command-dossier__hero dt {
+  color: #8f9da3;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+
+.succession-nen-command-dossier__hero dd {
+  color: #fff;
+}
+
+.succession-nen-command-boundary {
+  border-left: 5px solid #685a79;
+  background: rgba(104, 90, 121, .11);
+}
+
+.succession-nen-command-pipeline ol {
+  gap: 1px;
+  border: 1px solid rgba(24, 39, 47, .22);
+  background: rgba(24, 39, 47, .18);
+}
+
+.succession-nen-command-pipeline li {
+  border-radius: 0;
+  background: #e8eae6;
+}
+
+.succession-nen-command-pipeline li > span,
+.succession-nen-command-pipeline li b,
+.succession-nen-command-mechanic-list header span {
+  color: #685a79;
+  font-family: var(--mono);
+}
+
+.succession-nen-command-mechanic-list,
+.succession-nen-command-section,
+.succession-nen-command-system-architecture {
+  border-color: rgba(24, 39, 47, .24);
+  background: #e8eae6;
+}
+
+.succession-nen-command-mechanic-list h4,
+.succession-nen-command-section h3,
+.succession-nen-command-system-architecture h3 {
+  color: #1b2a32;
+  font-family: var(--sans);
+}

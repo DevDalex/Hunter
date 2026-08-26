@@ -7,6 +7,7 @@ export const createNenSystemSelectors = ({ data, archive }) => {
   const latestChapter = data.chapters.at(-1)?.number || 413;
   const systemProfiles = data.nenSystemProfiles || Object.freeze({});
   const beastStateProfiles = data.guardianBeastStateProfiles || Object.freeze({});
+  const abilityKnowledgeOverrides = data.abilityKnowledgeOverrides || Object.freeze({});
   const abilitySystemLinks = data.abilitySystemLinks || Object.freeze({});
 
   const sourceAtChapter = (sourceId, chapter) => {
@@ -48,6 +49,10 @@ export const createNenSystemSelectors = ({ data, archive }) => {
 
   const systemAvailableAtChapter = (profile, chapter) => Boolean(profile && includesChapter(profile.chapterRange, chapter));
 
+  const abilityKnowledgeOverrideAtChapter = (abilityId, chapter) => (abilityKnowledgeOverrides[abilityId] || [])
+    .filter((record) => includesChapter(record.chapterRange, chapter))
+    .sort((left, right) => right.chapterRange.start - left.chapterRange.start)[0] || null;
+
   const getAbilityKnowledgeAtChapter = (abilityId, chapter = null) => {
     const ability = archive.getEntityById(abilityId);
     if (!ability || ability.entityType !== 'ability') return null;
@@ -55,31 +60,46 @@ export const createNenSystemSelectors = ({ data, archive }) => {
     if (!Number.isFinite(parsedChapter)) return null;
     const firstChapter = firstKnownChapter(ability);
     const known = firstChapter === null || parsedChapter >= firstChapter;
+    const override = known ? abilityKnowledgeOverrideAtChapter(abilityId, parsedChapter) : null;
+    const overrideMechanics = override?.mechanics || null;
+    const boundedAbility = override ? Object.freeze({
+      ...ability,
+      name: override.abilityName || ability.name,
+      summary: override.summary || ability.summary,
+      activation: overrideMechanics?.activation ?? ability.activation,
+      conditions: Object.freeze([...(overrideMechanics?.conditions ?? ability.conditions ?? [])]),
+      limitations: Object.freeze([...(overrideMechanics?.limitations ?? ability.limitations ?? [])]),
+      costs: Object.freeze([...(overrideMechanics?.costs ?? ability.costs ?? [])]),
+      targets: Object.freeze([...(overrideMechanics?.targets ?? ability.targets ?? [])]),
+      range: overrideMechanics?.range ?? ability.range,
+      duration: overrideMechanics?.duration ?? ability.duration,
+      knownUses: Object.freeze([...(overrideMechanics?.knownUses ?? ability.knownUses ?? [])]),
+    }) : ability;
+    const defaultKnowledgeState = ability.status === 'unrevealed' || ability.researchStatus === 'unrevealed' || ability.researchStatus === 'major-mystery'
+      ? 'existence known; mechanics unrevealed'
+      : ability.researchStatus === 'partial' || ability.researchStatus === 'inferred-mechanics' || ability.classification?.certainty !== 'confirmed'
+        ? 'partially documented'
+        : 'documented';
     return Object.freeze({
-      ability,
+      ability: boundedAbility,
       chapter: parsedChapter,
       known,
       firstKnownChapter: firstChapter,
-      knowledgeState: known
-        ? ability.status === 'unrevealed' || ability.researchStatus === 'unrevealed' || ability.researchStatus === 'major-mystery'
-          ? 'existence known; mechanics unrevealed'
-          : ability.researchStatus === 'partial' || ability.researchStatus === 'inferred-mechanics' || ability.classification?.certainty !== 'confirmed'
-            ? 'partially documented'
-            : 'documented'
-        : 'not yet revealed',
-      certainty: known ? ability.classification?.certainty || 'confirmed' : 'unknown',
+      knowledgeState: known ? override?.knowledgeState || defaultKnowledgeState : 'not yet revealed',
+      certainty: known ? override?.certainty || ability.classification?.certainty || 'confirmed' : 'unknown',
+      summary: known ? override?.summary || ability.summary : null,
       mechanics: known ? Object.freeze({
-        activation: ability.activation || 'Unknown.',
-        conditions: Object.freeze([...(ability.conditions || [])]),
-        limitations: Object.freeze([...(ability.limitations || [])]),
-        costs: Object.freeze([...(ability.costs || [])]),
-        targets: Object.freeze([...(ability.targets || [])]),
-        range: ability.range || 'unknown',
-        duration: ability.duration || 'unknown',
-        knownUses: Object.freeze([...(ability.knownUses || [])]),
+        activation: overrideMechanics?.activation ?? ability.activation ?? 'Unknown.',
+        conditions: Object.freeze([...(overrideMechanics?.conditions ?? ability.conditions ?? [])]),
+        limitations: Object.freeze([...(overrideMechanics?.limitations ?? ability.limitations ?? [])]),
+        costs: Object.freeze([...(overrideMechanics?.costs ?? ability.costs ?? [])]),
+        targets: Object.freeze([...(overrideMechanics?.targets ?? ability.targets ?? [])]),
+        range: overrideMechanics?.range ?? ability.range ?? 'unknown',
+        duration: overrideMechanics?.duration ?? ability.duration ?? 'unknown',
+        knownUses: Object.freeze([...(overrideMechanics?.knownUses ?? ability.knownUses ?? [])]),
       }) : null,
       sources: Object.freeze(known
-        ? (ability.sourceIds || []).map((id) => sourceAtChapter(id, parsedChapter)).filter(Boolean)
+        ? ((override?.sourceIds || ability.sourceIds || []).map((id) => sourceAtChapter(id, parsedChapter)).filter(Boolean))
         : []),
     });
   };

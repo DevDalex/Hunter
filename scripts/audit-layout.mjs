@@ -1,48 +1,102 @@
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { transformWithOxc } from 'vite';
 import {
   referencePages,
   routeManifest,
   routeManifestStats,
-  successionPages,
+  seriesRoutes,
   successionReleaseRoutes,
 } from '../src/data/routeManifest.js';
 
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
-const assert = (condition, message) => { if (!condition) throw new Error(`Layout audit failed: ${message}`); };
+const assert = (condition, message) => {
+  if (!condition) throw new Error(`Layout audit failed: ${message}`);
+};
 
-const [app, css, worldAtlas, familyTree, royalTree, royalTreeCss, blackWhale, packageJson] = await Promise.all([
+const [app, css, router, header, integratedReferences, familyTree, blackWhale, packageJson, shellCss] = await Promise.all([
   read('src/App.jsx'),
   read('src/styles.css'),
-  read('src/components/WorldAtlas.jsx'),
+  read('src/lib/appRouter.js'),
+  read('src/components/Header.jsx'),
+  read('src/components/succession/SuccessionIntegratedReferences.jsx'),
   read('src/components/FamilyTree.jsx'),
-  read('src/components/succession/RoyalFamilyGuardTree.jsx'),
-  read('src/components/succession/RoyalFamilyGuardTree.css'),
   read('src/components/BlackWhaleGuide.jsx'),
   read('package.json'),
+  read('src/components/succession/SuccessionArchiveShellRedesign.css'),
 ]);
 
+const collectJsxFiles = async (directory) => {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    const absolute = path.join(directory, entry.name);
+    if (entry.isDirectory()) files.push(...await collectJsxFiles(absolute));
+    else if (/\.[jt]sx$/.test(entry.name)) files.push(absolute);
+  }
+  return files;
+};
+
+const jsxFiles = await collectJsxFiles(path.join(root, 'src'));
+const jsxSyntaxFailures = [];
+for (const filename of jsxFiles) {
+  try {
+    await transformWithOxc(await readFile(filename, 'utf8'), filename);
+  } catch (error) {
+    jsxSyntaxFailures.push(`${path.relative(root, filename)}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+assert(!jsxSyntaxFailures.length, `Oxc rejected ${jsxSyntaxFailures.length} JSX source file(s): ${jsxSyntaxFailures.join(' | ')}`);
+
 const routeKeys = routeManifest.map((route) => `${route.view}/${route.target}`);
+const seriesManifestRoutes = routeManifest.filter((route) => route.view === 'series');
 assert(routeManifest.length === routeManifestStats.screens, 'route manifest statistics must match the rendered route matrix');
-assert(new Set(routeKeys).size === routeKeys.length, 'the redesigned reader-facing route matrix must not contain duplicate destinations');
-assert(routeManifest.length >= 35, 'the expanded curated route matrix must retain all redesigned release screens');
+assert(new Set(routeKeys).size === routeKeys.length, 'the focused route matrix must not contain duplicate destinations');
+assert(referencePages.map((page) => page.id).join(',') === 'nen', 'only the general Nen Encyclopedia may remain as a general reference page');
+assert(routeManifestStats.reference === 1, 'the focused site must expose exactly one general reference screen');
 assert(routeManifestStats.successionReleaseScreens === successionReleaseRoutes.length + 1, 'Succession release-screen statistics must include archive home plus every curated route');
 assert(successionReleaseRoutes.length >= 15 && successionReleaseRoutes.every(Boolean), 'the curated Succession release matrix is incomplete');
-assert(successionPages.length === 7 && referencePages.length === 5 && routeManifestStats.timeline === 1, 'the grouped legacy workspaces must retain seven Succession screens, five encyclopedia screens, and one global Timeline');
-assert(!referencePages.some((page) => page.id === 'notebook'), 'the Notebook navigation button returned');
-assert(!routeManifest.some((route) => /source/i.test(`${route.target} ${route.label}`)), 'a dedicated Sources screen returned to the public route matrix');
-assert(!app.includes('StudyNotebook') && !app.includes("import SourceRegistry"), 'a removed Notebook or Sources section is still mounted by the application');
-assert(css.includes('--content: 1240px') && css.includes('--wide: 1540px'), 'editorial content and visual-wide measures are missing');
-assert(css.includes('.ship-manifest__table-wrap, .assignment-table-wrap { width: 100%; min-width: 0; max-width: 100%; overflow-x: auto;'), 'wide tables must remain inside named scroll frames');
-assert(familyTree.includes('RoyalFamilyGuardTree'), 'the unified royal family renderer is not mounted');
-assert(royalTree.includes('royal-guard-tree__king') && royalTree.includes('royal-guard-tree__queen-grid') && royalTree.includes('royal-guard-tree__center-prince') && royalTree.includes('royal-guard-tree__guard-slot'), 'the royal visualization must contain the king, queens, selected prince, and guard orbit');
-assert(royalTreeCss.includes('.royal-guard-tree__king-stem') && royalTreeCss.includes('.royal-guard-tree__queen-line') && royalTreeCss.includes('.royal-guard-tree__branch-stem') && royalTreeCss.includes('.royal-guard-tree__guard-line'), 'the unified royal visualization must retain connected lineage and protection lines');
-assert(css.includes('.interactive-ship-map__canvas { position: relative; min-height: 470px; }') && blackWhale.includes('ship-hotspot-layer'), 'the dominant clickable Black Whale canvas is missing');
-assert(css.includes('.entity-record-image img { width: 100%; height: 100%; max-height: 620px; object-fit: contain;') && css.includes('.room-card > figure img { width: 100%; height: 100%; object-fit: contain;'), 'portrait and room media must use uncropped contain framing');
-assert(css.includes('@media (max-width: 900px)') && css.includes('@media (max-width: 640px)') && css.includes('@media (max-width: 420px)'), 'tablet and phone layout boundaries are required');
-assert(royalTreeCss.includes('@media (max-width: 1100px)') && royalTreeCss.includes('@media (max-width: 760px)') && royalTreeCss.includes('@media (max-width: 430px)'), 'the royal family visualization needs desktop-collapse, tablet, and phone adaptations');
-assert(worldAtlas.includes('Map as MapIcon') && worldAtlas.includes('new Map('), 'the World Atlas constructor guard is missing');
-assert(packageJson.includes('"qa:visual"') && packageJson.includes('"qa:architecture"'), 'the repeatable browser and architecture matrix commands are missing');
+assert(routeManifest.every((route) => route.view === 'succession' || route.view === 'reference' || route.view === 'series'), 'an unsupported top-level view returned to the public route matrix');
+assert(seriesRoutes.length === 1 && seriesRoutes[0] === 'chapters', 'the only permitted restored Series route is the read-only chapters bridge');
+assert(seriesManifestRoutes.length === 1 && seriesManifestRoutes[0].target === 'chapters', 'the public route matrix must expose exactly one read-only Series chapter bridge');
+assert(!routeManifest.some((route) => route.view === 'timeline' || route.view === 'home'), 'Home or global Timeline returned to the route matrix');
 
-console.log(`Layout audit passed: ${routeManifest.length} unique purposeful routes; ${successionReleaseRoutes.length} curated Succession release workspaces; one global Timeline; ${successionPages.length} legacy Succession screens; ${referencePages.length} Reference screens; Notebook absent; unified royal family and guard network; contained media and tables; dominant ship atlas; responsive editorial shell.`);
+for (const retired of [
+  'SiteHome',
+  'SeriesWorkspace',
+  'EntityEncyclopedia',
+  'OrganizationWorkspace',
+  'ConflictArchive',
+  'HisokaChrolloDossier',
+  'ArchiveSearch',
+  'WorldAtlas',
+]) assert(!app.includes(retired), `the retired ${retired} module is still mounted by the application`);
+
+assert(app.includes('SuccessionArchiveApp'), 'the Succession archive is not mounted');
+assert(app.includes('SuccessionIntegratedReferences'), 'the retained integrated reference host is not mounted');
+assert(app.includes('PreSuccessionChapterRecord'), 'the read-only pre-Succession chapter bridge is not mounted');
+assert(integratedReferences.includes('NenEncyclopedia'), 'the retained general Nen Encyclopedia is not mounted by the integrated reference host');
+assert(!integratedReferences.includes('WorldAtlas'), 'the retired World Atlas returned to the integrated reference host');
+assert(router.includes("if (!parts.length || pathnameClean === '/index.html')"), 'the root route guard is missing');
+assert(router.includes("view: 'succession', target: 'archive'"), 'the root route must resolve to the Succession archive');
+assert(router.includes("if (view === 'series')"), 'the read-only pre-Succession series route guard is missing');
+assert(router.includes("return cleanUrl(`/series/${normalized.target || 'chapters'}`"), 'the pre-Succession chapter bridge clean URL is missing');
+assert(router.includes("['nen', { target: 'nen' }]") && !router.includes("['world', { target: 'atlas' }]") , 'the retained /nen route or retired /world boundary is incorrect');
+assert(
+  header.includes("label: 'Succession Archive'")
+    && header.includes("label: 'Nen Library'")
+    && !header.includes("label: 'World Atlas'"),
+  'the focused primary navigation is incomplete or the retired World Atlas returned',
+);
+assert(!header.includes("label: 'Characters'") && !header.includes("label: 'Fights'") && !header.includes("label: 'Story'"), 'retired navigation returned');
+assert(!header.includes('mobile-menu-button') && !header.includes('menuOpen'), 'narrow-screen header navigation returned');
+
+assert(css.includes('--content: 1240px') && css.includes('--wide: 1540px'), 'editorial content and visual-wide measures are missing');
+assert(shellCss.includes('min-width: 1180px'), 'desktop-only shell minimum width is missing');
+assert(!shellCss.includes('@media (max-width:'), 'narrow-width shell breakpoints returned');
+assert(familyTree.includes('RoyalFamilyGuardTree'), 'the Succession royal family visualization is not mounted');
+assert(blackWhale.includes('Black Whale passenger manifest'), 'the Succession Black Whale workspace lost its manifest');
+assert(packageJson.includes('"build"') && packageJson.includes('"audit:succession-runtime"'), 'the focused build contract is incomplete');
+
+console.log(`Layout audit passed: ${routeManifest.length} focused routes, ${successionReleaseRoutes.length} curated Succession screens, one retained integrated reference, one read-only pre-Succession chapter bridge, valid JSX, a desktop-only 1180px shell floor, and no retired public workspaces.`);

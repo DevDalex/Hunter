@@ -9,7 +9,7 @@ export const successionVisualPrinciples = freeze([
   freezeRecord({ id: 'restraint', rule: 'Atmosphere comes from composition, typography, spacing, and restrained color—not visual noise.' }),
   freezeRecord({ id: 'chapter-bounded', rule: 'Visual states must preserve chapter boundaries and must not imply unavailable knowledge.' }),
   freezeRecord({ id: 'evidence-aware', rule: 'Confirmed, inferred, uncertain, disputed, and pending information must remain visually distinct.' }),
-  freezeRecord({ id: 'responsive', rule: 'Mobile layouts reorder by importance instead of shrinking desktop arrangements.' }),
+  freezeRecord({ id: 'desktop-only', rule: 'The supported presentation is a fixed desktop workspace with an 1180px minimum application width.' }),
   freezeRecord({ id: 'accessible', rule: 'Focus, contrast, zoom, reduced motion, and color-independent meaning are foundation requirements.' }),
 ]);
 

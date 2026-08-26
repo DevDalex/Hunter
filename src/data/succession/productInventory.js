@@ -1,3 +1,5 @@
+import { successionArchiveLegacyTargets } from './archiveRoutes.js';
+
 const freeze = (values) => Object.freeze(values);
 
 const workspace = (routeId, module, authority, options = {}) => Object.freeze({
@@ -10,46 +12,33 @@ const workspace = (routeId, module, authority, options = {}) => Object.freeze({
 });
 
 export const successionProductInventory = Object.freeze({
-  version: 1,
+  version: 3,
   batch: 5,
   status: 'release-candidate',
   authoritativeWorkspaces: freeze([
     workspace('archive', 'SuccessionArchiveApp.jsx#ArchiveHome', 'archive overview', { chapterBounded: false }),
     workspace('story', 'SuccessionArchiveStoryIntelligenceWorkspace.jsx', 'story phases, lanes, threads, and causal intelligence'),
     workspace('search', 'SuccessionArchiveApp.jsx#SearchWorkspace', 'grouped global product search'),
-    workspace('characters', 'SuccessionArchiveCharacterWorkspace.jsx', 'all character dossiers', { specializedRecords: true }),
+    workspace('characters', 'SuccessionArchiveCharacterWorkspace.jsx', 'all character dossiers, roles, life states, and body states', { specializedRecords: true }),
     workspace('princes', 'SuccessionArchiveWorkspaces.jsx#PrincesWorkspace', 'royal-family role index', { specializedRecords: true }),
     workspace('queens', 'SuccessionArchiveDeepWorkspaces.jsx#QueensWorkspace', 'legacy queen deep-link index', { specializedRecords: true }),
     workspace('bodyguards', 'SuccessionArchiveAssignmentWorkspace.jsx', 'assignments and reporting chains', { specializedRecords: true }),
-    workspace('hunters', 'SuccessionArchiveExtendedWorkspaces.jsx#HuntersWorkspace', 'Hunter role index'),
-    workspace('mafia', 'SuccessionArchiveWorkspaces.jsx#MafiaWorkspace', 'mafia role and institution index'),
-    workspace('military', 'SuccessionArchiveExtendedWorkspaces.jsx#MilitaryWorkspace', 'military and Justice role index'),
-    workspace('organizations', 'SuccessionArchiveOrganizationWorkspace.jsx', 'all institution dossiers', { specializedRecords: true }),
-    workspace('politics', 'SuccessionArchiveExtendedWorkspaces.jsx#PoliticsWorkspace', 'political relationship index'),
+    workspace('organizations', 'SuccessionArchiveOrganizationWorkspace.jsx', 'all mafia, military, Justice, political, royal, expedition, and institutional dossiers', { specializedRecords: true }),
     workspace('locations', 'SuccessionArchiveLocationWorkspace.jsx', 'location hierarchy and dossiers', { specializedRecords: true }),
     workspace('nen', 'SuccessionArchiveNenWorkspace.jsx', 'abilities and Nen-system dossiers', { specializedRecords: true }),
     workspace('guardian-spirit-beasts', 'SuccessionArchiveGuardianBeastWorkspace.jsx', 'Guardian Spirit Beast dossiers', { specializedRecords: true }),
     workspace('events', 'SuccessionArchiveEventWorkspace.jsx', 'chapter-bounded event dossiers', { specializedRecords: true }),
-    workspace('deaths', 'SuccessionArchiveDeepWorkspaces.jsx#BodyStatesWorkspace', 'death and exceptional body-state index'),
     workspace('relationships', 'SuccessionArchiveRelationshipWorkspace.jsx', 'relationship dossiers', { specializedRecords: true }),
     workspace('chapters', 'SuccessionArchiveChapterStoryWorkspace.jsx', 'chapter story dossiers', { specializedRecords: true }),
-    workspace('research', 'SuccessionArchiveEvidenceWorkspace.jsx', 'sources, evidence, and closure reporting'),
+    workspace('research', 'SuccessionArchiveEvidenceWorkspace.jsx', 'sources, evidence, provenance, media records, and closure reporting'),
     workspace('glossary', 'SuccessionArchiveGlossaryWorkspace.jsx', 'graph-connected chapter-bounded vocabulary'),
-    workspace('media', 'SuccessionArchiveMediaWorkspace.jsx', 'media provenance and canonical subjects'),
   ]),
   preservedVisualTools: freeze([
     workspace('black-whale', '../BlackWhaleGuide.jsx', 'ship visual atlas', { kind: 'preserved-visual-tool' }),
     workspace('timeline', '../TimelineWorkspace.jsx', 'voyage visual timeline', { kind: 'preserved-visual-tool' }),
     workspace('reader', 'SuccessionReader route', 'chapter image reader', { kind: 'external-route-tool' }),
   ]),
-  legacyAliases: Object.freeze({
-    overview: 'archive',
-    'family-tree': 'princes',
-    'royal-family': 'princes',
-    'succession-roster': 'characters',
-    'succession-timeline': 'timeline',
-    beasts: 'guardian-spirit-beasts',
-  }),
+  legacyAliases: successionArchiveLegacyTargets,
   removedImplementationClasses: freeze([
     'static Story workspace',
     'legacy Chapter Records workspace',
@@ -58,7 +47,12 @@ export const successionProductInventory = Object.freeze({
     'legacy Locations workspace',
     'legacy Research workspace',
     'static Glossary workspace',
-    'legacy Media workspace',
+    'standalone Media route',
+    'standalone Hunters route',
+    'standalone Deaths route',
+    'standalone Mafia route',
+    'standalone Military route',
+    'standalone Politics route',
     'Nen migration tab',
     'legacy Guardian Spirit Beast board',
     'duplicate SuccessionArchiveApp module wrapper',

@@ -1,0 +1,107 @@
+/* Final browser-matrix patch: only selectors reported by the release QA. */
+
+/* The desktop brand line is part of the persistent ship context. */
+.succession-archive .succession-archive__brand-copy > span,
+.succession-archive .succession-archive__brand-copy > p {
+  font-size: 11px !important;
+  line-height: 1.4;
+}
+
+/* Every event summary is narrative content, never microcopy. */
+.succession-archive .succession-canonical-events .succession-event-command-card > p,
+.succession-archive .succession-canonical-events .succession-canonical-event-timeline > button p,
+.succession-archive .succession-canonical-events [class*="event"] p {
+  font-size: 11px !important;
+  line-height: 1.55 !important;
+}
+
+/* The selected spatial bridge label remained below the archive minimum. */
+.succession-archive .black-whale-intelligence .ship-location-inspector > header > span,
+.succession-archive .black-whale-intelligence .ship-location-inspector [class*="bridge"],
+.succession-archive .black-whale-intelligence .ship-location-inspector [class*="precision"] {
+  font-size: 11px !important;
+  line-height: 1.4;
+}
+
+/* Consolidated hub navigation keeps detailed records while reducing top-level choices. */
+.succession-archive .succession-hub-tabs {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 16px;
+  padding: 8px;
+  overflow-x: auto;
+  border: 1px solid var(--succession-line-dark);
+  border-radius: 5px;
+  background: var(--succession-hull);
+  scrollbar-width: thin;
+}
+
+.succession-archive .succession-hub-tabs a {
+  min-height: 44px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 9px 14px;
+  border: 1px solid rgba(217, 224, 225, .2);
+  border-radius: 4px;
+  background: var(--succession-gunmetal);
+  color: #dce3e2;
+  font-family: var(--mono);
+  font-size: 11px !important;
+  font-weight: 750;
+  letter-spacing: .04em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.succession-archive .succession-hub-tabs a:hover,
+.succession-archive .succession-hub-tabs a:focus-visible {
+  border-color: #9fc3d4;
+  background: var(--succession-naval);
+  color: #f3f6f4;
+}
+
+.succession-archive .succession-hub-tabs a.is-active,
+.succession-archive .succession-hub-tabs a[aria-current="page"] {
+  border-color: #9fc3d4;
+  background: var(--succession-naval-bright);
+  color: #fff;
+  box-shadow: inset 0 -3px 0 #9fc3d4;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-archive .succession-hub-tabs,
+  .succession-archive .succession-hub-tabs a {
+    scroll-behavior: auto;
+    transition: none;
+  }
+}
+
+/* Final matrix closure. These responsive fixes belong to the final release
+   layer, not the desktop-only Phase 2 presentation contract. */
+body .succession-archive[data-archive-route="glossary"] .succession-glossary-canonical__grid article > p {
+  font-size: 12px !important;
+  line-height: 1.55 !important;
+}
+
+body .succession-archive[data-archive-route="glossary"] :is(
+  .succession-product-tools button,
+  .succession-glossary-canonical__grid footer button,
+  .succession-product-tools label
+) {
+  min-height: 44px !important;
+}
+
+body .succession-archive[data-archive-route="glossary"] .succession-product-tools input,
+body .succession-archive[data-archive-route="glossary"] .succession-product-tools input::placeholder {
+  color: #17272f !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #17272f !important;
+}
+
+body .succession-archive .succession-archive__skip-link {
+  background: #fff !important;
+  color: #101820 !important;
+  -webkit-text-fill-color: #101820 !important;
+}

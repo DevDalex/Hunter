@@ -1,0 +1,71 @@
+.succession-integrated-reference.succession-integrated-reference {
+  /* Standalone reference pages bypass SuccessionArchiveEntry, so their reboot tokens
+     live here instead of depending on a second global CSS entry point. */
+  --vr-paper: #f2ede3;
+  --vr-paper-raised: #fbf8f1;
+  --vr-ink: #181714;
+  --vr-burgundy: #781f2d;
+  --vr-burgundy-dark: #571620;
+  --vr-brass: #a47e43;
+  --vr-line: rgba(24, 23, 20, .16);
+  --vr-line-strong: rgba(24, 23, 20, .28);
+  --vr-serif: Georgia, 'Times New Roman', serif;
+  --vr-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --forest: var(--vr-burgundy) !important;
+  --forest-dark: var(--vr-burgundy-dark) !important;
+  --gold: var(--vr-brass) !important;
+  background: var(--vr-paper) !important;
+  color: var(--vr-ink) !important;
+}
+
+.succession-integrated-reference.succession-integrated-reference .page-intro {
+  border-bottom: 1px solid var(--vr-line-strong) !important;
+  background: linear-gradient(105deg, rgba(120,31,45,.07), transparent 48%), var(--vr-paper) !important;
+  box-shadow: none !important;
+}
+
+.succession-integrated-reference.succession-integrated-reference .page-intro h1 {
+  color: var(--vr-ink) !important;
+  font-family: var(--vr-serif) !important;
+  font-weight: 500 !important;
+  letter-spacing: -.045em !important;
+}
+
+.succession-integrated-reference.succession-integrated-reference :where(
+  .reference-backbone,
+  .nen-desk-hero,
+  .nen-principle-workbench,
+  .nen-principle-map,
+  .nen-category-view,
+  .nen-technique-view,
+  .nen-principle-inspector
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-integrated-reference.succession-integrated-reference .reference-backbone {
+  max-width: 1480px !important;
+  margin-inline: auto !important;
+}
+
+.succession-integrated-reference.succession-integrated-reference :where(
+  .nen-principle-map__center,
+  .nen-principle-node.is-active,
+  .nen-foundation-index button.is-active,
+  .nen-lesson-tabs button.is-active,
+  .nen-category-list button.is-active
+) {
+  border-color: var(--vr-burgundy) !important;
+  background: var(--vr-burgundy-dark) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+
+.succession-integrated-reference.succession-integrated-reference :where(
+  .nen-evidence-card__copy > span,
+  .nen-category-view article > div > span,
+  .nen-technique-view li button
+) {
+  color: var(--vr-burgundy) !important;
+}

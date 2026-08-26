@@ -95,7 +95,7 @@ const inlineInspectionContract = `<script data-inspection-contract="inline">
 
     if (payload && Array.isArray(payload.pages)) return response;
 
-    const looksLikeHtml = /^\\s*</.test(text);
+    const looksLikeHtml = /^\s*</.test(text);
     const message = payload?.error
       || (looksLikeHtml
         ? 'The inspection request was rewritten to a webpage instead of reaching the chapter-import API.'

@@ -7,12 +7,13 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Succession Batch 2 completion audit failed: ${message}`);
 };
 
-const [shell, primitives, spoiler, app, completionCss, searchCss, packageJson, workflow, docs] = await Promise.all([
+const [shell, primitives, spoiler, app, completionCss, releasePatch, searchCss, packageJson, workflow, docs] = await Promise.all([
   read('src/components/succession/SuccessionArchiveShell.jsx'),
   read('src/components/succession/SuccessionArchivePrimitives.jsx'),
   read('src/components/SpoilerControl.jsx'),
   read('src/components/succession/SuccessionArchiveApp.jsx'),
   read('src/components/succession/SuccessionArchiveBatch2Completion.css'),
+  read('src/components/succession/SuccessionFinalReleasePatch.css'),
   read('src/components/succession/SuccessionArchiveSearch.css'),
   read('package.json'),
   read('.github/workflows/succession-visual-redesign.yml'),
@@ -20,11 +21,16 @@ const [shell, primitives, spoiler, app, completionCss, searchCss, packageJson, w
 ]);
 
 for (const token of [
-  'successionArchiveGroups.map',
-  'aria-current={active ? \'page\' : undefined}',
+  'successionArchiveHubGroups.map',
+  'successionArchiveHubs.filter',
+  "aria-current={active ? 'page' : undefined}",
   'succession-desktop-navigation',
-  'succession-mobile-navigation',
-]) assert(shell.includes(token), `main navigation contract is missing ${token}`);
+  'function SuccessionHubTabs',
+  'className="succession-hub-tabs"',
+  'data-archive-hub={activeHub.id}',
+]) assert(shell.includes(token), `consolidated desktop navigation contract is missing ${token}`);
+assert(!shell.includes('succession-mobile-navigation'), 'alternate narrow-screen navigation returned');
+assert(!shell.includes('succession-drawer'), 'drawer navigation returned');
 
 for (const token of [
   'className="succession-tabs"',
@@ -32,7 +38,7 @@ for (const token of [
   'role="tab"',
   'aria-selected={selected}',
   'tabIndex={selected ? 0 : -1}',
-]) assert(primitives.includes(token), `local navigation contract is missing ${token}`);
+]) assert(primitives.includes(token), `record-local navigation contract is missing ${token}`);
 
 for (const token of [
   'data-boundary-state',
@@ -45,27 +51,24 @@ for (const token of [
 for (const token of [
   'succession-search-complete__groups',
   'succession-directory__tools',
-  'id="succession-entry-points"',
-  'succession-home-grid',
-  'succession-data-health',
-  'succession-route-matrix',
-]) assert(app.includes(token), `shared search or landing presentation is missing ${token}`);
+]) assert(app.includes(token), `shared search presentation is missing ${token}`);
 
 for (const selector of [
   '.succession-archive-nav',
   '.succession-tabs',
   '.spoiler-control__navigation',
   '.succession-search-complete > label',
-  '#succession-entry-points',
-  '.succession-data-health',
-  '.succession-route-matrix',
 ]) assert(completionCss.includes(selector), `completion CSS is missing ${selector}`);
 
-assert(completionCss.includes('@media (max-width: 1100px)'), 'desktop-to-tablet responsive closure is required');
-assert(completionCss.includes('@media (max-width: 860px)'), 'archive shell mobile breakpoint is required');
-assert(completionCss.includes('@media (max-width: 620px)'), 'compact mobile breakpoint is required');
+for (const selector of [
+  '.succession-hub-tabs',
+  '.succession-hub-tabs a',
+  '.succession-hub-tabs a.is-active',
+]) assert(releasePatch.includes(selector), `consolidated hub CSS is missing ${selector}`);
+
+assert(!completionCss.includes('@media (max-width:'), 'Batch 2 desktop-only completion CSS must not carry narrow-width breakpoints');
+assert(!releasePatch.includes('@media (max-width:'), 'desktop-only release patch must not carry narrow-width breakpoints');
 assert(completionCss.includes('@media (prefers-reduced-motion: reduce)'), 'reduced-motion closure is required');
-assert(completionCss.includes('min-height: 44px'), 'interactive mobile controls must retain 44px targets');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(completionCss), 'Batch 2 completion CSS must not introduce raw hex colors');
 assert(!completionCss.includes('!important'), 'Batch 2 completion CSS must not depend on !important');
 
@@ -78,4 +81,4 @@ for (const hour of ['Hour 18', 'Hour 19', 'Hour 20', 'Hour 21', 'Hour 22', 'Hour
 }
 assert(docs.includes('Batch 2 closure gate'), 'design record must include the Batch 2 closure gate');
 
-console.log('Succession Batch 2 completion audit passed: navigation, keyboard-complete tabs, chapter controls, search, landing experience, and responsive closure are registered.');
+console.log('Succession Batch 2 completion audit passed: consolidated desktop hub navigation, keyboard-complete record tabs, chapter controls, search, and desktop-only closure are registered.');

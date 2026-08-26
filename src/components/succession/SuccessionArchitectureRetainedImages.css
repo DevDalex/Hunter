@@ -1,0 +1,301 @@
+/* Phase 1 visual repair.
+   The architecture portal presents one canonical Black Whale exterior only.
+   Tier cutaways and room plans remain available inside the Black Whale and
+   Locations workspaces, never as portal artwork. */
+
+.succession-architecture-board .succession-architecture__ship-portrait {
+  position: relative !important;
+  isolation: isolate !important;
+  overflow: hidden !important;
+  background: #fff !important;
+  background-image: none !important;
+}
+
+.succession-architecture-board .succession-architecture__ship-portrait::before,
+.succession-architecture-board .succession-architecture__ship-portrait::after {
+  display: none !important;
+  visibility: hidden !important;
+  content: none !important;
+  background: none !important;
+}
+
+.succession-architecture-board .succession-architecture__ship-portrait > .succession-architecture__retained-ship-image {
+  position: relative !important;
+  inset: auto !important;
+  z-index: 1 !important;
+  display: block !important;
+  visibility: visible !important;
+  width: 100% !important;
+  height: 150px !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 100% !important;
+  max-height: 150px !important;
+  margin: 0 !important;
+  padding: 5px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  opacity: 1 !important;
+  filter: grayscale(1) contrast(1.04) !important;
+  transform: none !important;
+}
+
+.succession-architecture-board .succession-architecture__ship-portrait > small {
+  position: relative !important;
+  z-index: 2 !important;
+  display: block !important;
+  padding: 6px 5px 8px !important;
+  background: #fff !important;
+}
+
+/* Remove the tier cutaway and Tier 1 room plan from the portal itself. */
+.succession-architecture-board .succession-architecture__split-grid > a > .succession-architecture__retained-ship-image {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 0 !important;
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Only the Black Whale split grid receives neutral destination placeholders. */
+.succession-architecture-board .succession-architecture__split-grid:has(.succession-architecture__retained-ship-image) > a {
+  grid-template-rows: auto minmax(112px, 1fr) auto !important;
+  background: rgba(255, 255, 255, .34) !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid:has(.succession-architecture__retained-ship-image) > a::before {
+  position: static !important;
+  inset: auto !important;
+  z-index: auto !important;
+  grid-row: 2 !important;
+  align-self: stretch !important;
+  display: block !important;
+  visibility: visible !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 108px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  content: "" !important;
+  border: 1px solid #c9c9c4 !important;
+  border-radius: 0 !important;
+  background-color: #f7f7f4 !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-size: 72px 72px !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: none !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid:has(.succession-architecture__retained-ship-image) > a:first-child::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80' fill='none' stroke='%23111' stroke-width='2'%3E%3Cpath d='M13 50c14-21 31-31 51-31 18 0 33 7 43 20-7 19-23 28-48 28-20 0-36-6-46-17Z'/%3E%3Cpath d='M35 31h48M31 41h60M28 51h59M48 19v48M69 19v48' stroke-width='1' opacity='.65'/%3E%3Ccircle cx='91' cy='35' r='2' fill='%23111'/%3E%3C/svg%3E") !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid:has(.succession-architecture__retained-ship-image) > a:last-child::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80' fill='none' stroke='%23111' stroke-width='2'%3E%3Cpath d='M18 17h84v46H18z'/%3E%3Cpath d='M18 33h84M43 17v46M77 17v46' stroke-width='1' opacity='.55'/%3E%3Cpath d='M60 25c-8 0-14 6-14 14 0 11 14 23 14 23s14-12 14-23c0-8-6-14-14-14Z' fill='%23f7f7f4'/%3E%3Ccircle cx='60' cy='39' r='4'/%3E%3C/svg%3E") !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid:has(.succession-architecture__retained-ship-image) > a > strong {
+  grid-row: 1 !important;
+}
+
+.succession-architecture-board .succession-architecture__split-grid:has(.succession-architecture__retained-ship-image) > a > small {
+  grid-row: 3 !important;
+}
+
+/* Nen uses its own radar and beast artwork. Never add Black Whale placeholders. */
+.succession-architecture-board .succession-architecture__split-grid:not(:has(.succession-architecture__retained-ship-image)) > a::before {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  content: none !important;
+  background: none !important;
+}
+
+/* Preserve complete Guardian Spirit Beast silhouettes and reserve a separate
+   label strip so numerals never cover the artwork. */
+.succession-architecture-board .succession-architecture__retained-beast-grid span {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  min-width: 0;
+  min-height: 62px;
+  padding: 3px !important;
+  overflow: hidden;
+  background: #fff;
+}
+
+.succession-architecture-board .succession-architecture__retained-beast-grid :is(img, .safe-image-placeholder) {
+  display: block !important;
+  align-self: center !important;
+  width: 100% !important;
+  height: 48px !important;
+  min-height: 48px !important;
+  max-height: 48px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  filter: grayscale(1) brightness(1.08) contrast(1.04);
+}
+
+.succession-architecture-board .succession-architecture__retained-beast-grid b {
+  position: static !important;
+  z-index: auto !important;
+  justify-self: end;
+  min-width: 18px;
+  margin-top: 1px;
+  padding: 1px 4px;
+  border: 1px solid #111;
+  color: #fff !important;
+  background: #111;
+  font-size: 9px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+/* Final desktop tile geometry. Fixed tracks prevent grid stretch from turning
+   compact buttons into uneven columns with blank space above their icons. */
+@media (min-width: 1101px) {
+  .succession-architecture-board .succession-architecture__modules {
+    align-items: start !important;
+    grid-auto-rows: max-content !important;
+  }
+
+  .succession-architecture-board .succession-architecture__module {
+    align-self: start !important;
+  }
+
+  .succession-architecture-board .succession-architecture__view-grid {
+    align-items: start !important;
+  }
+
+  .succession-architecture-board .succession-architecture__view-cell,
+  .succession-architecture-board .succession-hub-tabs.succession-architecture__view-grid > a.succession-architecture__view-cell {
+    height: 154px !important;
+    min-height: 154px !important;
+    max-height: 154px !important;
+    grid-template-rows: 28px 54px 54px !important;
+    align-content: start !important;
+    gap: 3px !important;
+    padding: 6px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__view-cell > strong {
+    display: flex !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .succession-architecture-board .succession-architecture__view-cell > small {
+    display: flex !important;
+    height: 54px !important;
+    min-height: 54px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+  }
+
+  .succession-architecture-board .succession-architecture__view-visual {
+    height: 54px !important;
+    min-height: 54px !important;
+    max-height: 54px !important;
+    align-self: center !important;
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid {
+    align-items: start !important;
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid > a {
+    height: 184px !important;
+    min-height: 184px !important;
+    max-height: 184px !important;
+    grid-template-rows: 28px 108px 36px !important;
+    align-content: start !important;
+    gap: 0 !important;
+    padding: 6px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid > a > strong {
+    display: flex !important;
+    height: 28px !important;
+    min-height: 28px !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid > a > small {
+    display: flex !important;
+    height: 36px !important;
+    min-height: 36px !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid:has(.succession-architecture__retained-ship-image) > a::before {
+    height: 108px !important;
+    min-height: 108px !important;
+    max-height: 108px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__split-grid:not(:has(.succession-architecture__retained-ship-image)) > a > :is(.succession-architecture__radar, .succession-architecture__beast-grid) {
+    grid-row: 2 !important;
+    align-self: center !important;
+    height: 108px !important;
+    min-height: 108px !important;
+    max-height: 108px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__retained-beast-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    grid-template-rows: repeat(2, 50px) !important;
+    gap: 3px !important;
+    padding: 2px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__retained-beast-grid span {
+    min-height: 50px !important;
+    max-height: 50px !important;
+    padding: 2px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__retained-beast-grid :is(img, .safe-image-placeholder) {
+    height: 34px !important;
+    min-height: 34px !important;
+    max-height: 34px !important;
+  }
+
+  .succession-architecture-board .succession-architecture__library > a {
+    height: 64px !important;
+    min-height: 64px !important;
+    max-height: 64px !important;
+    align-items: center !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .succession-architecture-board .succession-architecture__retained-ship-image,
+  .succession-architecture-board .succession-architecture__retained-beast-grid :is(img, .safe-image-placeholder) {
+    filter: none !important;
+  }
+}

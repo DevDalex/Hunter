@@ -253,69 +253,6 @@
 .he-next-page p { margin: 0; color: var(--he-muted); font-size: 16px; }
 .he-next-page button { min-height: 50px; display: inline-flex; gap: 9px; align-items: center; border: 1px solid var(--he-green-dark); padding: 0 20px; background: var(--he-green-dark); color: #fff; cursor: pointer; font-weight: 850; }
 
-@media (max-width: 1180px) {
-  .he-funnel__layout,
-  .he-badge-matrix { grid-template-columns: 1fr; }
-  .he-badge-matrix aside { position: static; }
-  .he-phase__events { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .he-phase__body { grid-template-columns: 1fr; }
-  .he-badge-matrix__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
-@media (max-width: 850px) {
-  .he-hero__copy dl { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .he-hero__copy dl > div { border-bottom: 1px solid rgba(255,255,255,.2); }
-  .he-funnel ol,
-  .he-preliminary-grid,
-  .he-final__outcomes,
-  .he-rule-grid,
-  .he-journeys { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .he-phase__header { grid-template-columns: 58px minmax(0, 1fr); }
-  .he-phase__header > a { grid-column: 2; }
-  .he-phase__events { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .he-badge-matrix__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .he-interviews > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .he-applicant-toolbar { flex-direction: column; }
-  .he-applicant-toolbar label { width: 100%; }
-  .he-examiners article { grid-template-columns: 48px minmax(0, 1fr); }
-  .he-examiners article > a { grid-column: 2; }
-  .he-next-page { grid-template-columns: 1fr; align-items: start; }
-}
-
-@media (max-width: 620px) {
-  .he-route-nav { top: 16px; flex-wrap: wrap; }
-  .he-route-nav button:nth-child(2) { order: 3; width: 100%; justify-content: center; }
-  .he-hero { min-height: 760px; }
-  .he-hero__copy { padding-top: 170px; padding-bottom: 56px; }
-  .he-hero__copy h1 { font-size: clamp(68px, 22vw, 110px); }
-  .he-hero__copy dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .he-hero__source { display: none; }
-  .he-canvas { width: min(calc(100% - 28px), 1420px); padding-top: 55px; }
-  .he-section { padding: 56px 0; }
-  .he-section-heading { grid-template-columns: 44px minmax(0, 1fr); gap: 12px; }
-  .he-section-heading > i { width: 38px; height: 38px; }
-  .he-funnel ol,
-  .he-preliminary-grid,
-  .he-phase__events,
-  .he-points,
-  .he-badge-matrix__grid,
-  .he-final__matches,
-  .he-interviews > div,
-  .he-final__outcomes,
-  .he-rule-grid,
-  .he-object-ledger,
-  .he-adaptation__grid,
-  .he-sources > div,
-  .he-journeys { grid-template-columns: 1fr; }
-  .he-phase__numbers { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .he-phase__numbers > div { border-bottom: 1px solid var(--he-line); }
-  .he-phase__header { grid-template-columns: 45px minmax(0, 1fr); gap: 12px; }
-  .he-phase__header > i { font-size: 34px; }
-  .he-record-summary { grid-template-columns: auto 1fr; }
-  .he-record-summary button { grid-column: 1 / -1; }
-  .he-next-page { width: min(calc(100% - 28px), 1420px); }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .hunter-exam-page * { scroll-behavior: auto !important; }
 }

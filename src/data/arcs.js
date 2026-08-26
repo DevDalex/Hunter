@@ -1,3 +1,8 @@
+import {
+  LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
+  LATEST_PUBLISHED_CHAPTER,
+} from './latestChapterMetadata.js';
+
 export const arcs = [
   {
     id: 'hunter-exam', order: '01', short: 'Hunter Exam', title: 'Hunter Exam', chapters: [1, 43],
@@ -78,7 +83,7 @@ export const arcs = [
     source: 'https://hunterxhunter.fandom.com/wiki/13th_Hunter_Chairman_Election_arc', imageLabel: 'Election arc study image',
   },
   {
-    id: 'succession-contest', order: '07', short: 'Succession Contest', title: 'Succession Contest', chapters: [340, 413],
+    id: 'succession-contest', order: '07', short: 'Succession Contest', title: 'Succession Contest', chapters: [340, LATEST_PUBLISHED_CHAPTER],
     premise: 'The Dark Continent expedition and Kakin succession war converge aboard the Black Whale amid princes, guards, mafia families, and Nen abilities.',
     focus: ['Information warfare', 'Kakin succession', 'The Black Whale factions'],
     people: ['Kurapika', 'Oito Hui Guo Rou', 'Woble Hui Guo Rou', 'Tserriednich Hui Guo Rou'],
@@ -87,7 +92,7 @@ export const arcs = [
     factions: ['Fourteen royal camps', 'Hunter Association', 'Kakin military and Justice', 'Xi-Yu / Cha-R / Heil-Ly', 'Phantom Troupe'],
     nen: ['Guardian Spirit Beasts', 'Emperor Time and Stealth Dolphin', 'Contagion', 'Possession arrows', 'Parallel Future'],
     turningPoints: ['Seed Urn ceremony', 'Contest begins', 'Kacho dies escaping', 'Beyond’s curse children revealed', 'Halkenburg’s body dies', 'Bulkhead closes'],
-    aftermath: 'Ongoing through Chapter 413 in this archive.',
+    aftermath: `Published through Chapter ${LATEST_PUBLISHED_CHAPTER}; detailed maintained archive research remains explicitly separated from newly published chapters until source review is complete.`,
     source: 'https://hunterxhunter.fandom.com/wiki/Succession_Contest_arc', imageLabel: 'Black Whale study image',
   },
 ];

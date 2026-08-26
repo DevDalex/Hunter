@@ -139,16 +139,3 @@
 .reference-backbone__workspace ol li { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: center; font-size: 12px; line-height: 1.45; }
 .reference-backbone__sources { display: flex; flex-wrap: wrap; gap: 7px; }
 .reference-backbone__sources a { display: inline-flex; align-items: center; gap: 6px; color: var(--rb-accent); }
-
-@media (max-width: 980px) {
-  .reference-backbone__masthead,
-  .reference-backbone__workspace { grid-template-columns: 1fr; }
-  .reference-backbone__lanes,
-  .reference-backbone__records { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 640px) {
-  .reference-backbone__lanes,
-  .reference-backbone__records,
-  .reference-backbone__masthead dl { grid-template-columns: 1fr; }
-}

@@ -455,24 +455,3 @@
 .archive-landing button:focus-visible {
   outline-color: #d2b16d;
 }
-
-@media (max-width: 1180px) {
-  .archive-number-band dl > div:nth-child(n+4) {
-    border-top-color: var(--home-line);
-  }
-}
-
-@media (max-width: 640px) {
-  .archive-landing__hero-person {
-    opacity: .48;
-  }
-
-  .archive-nen-wheel {
-    min-height: 350px;
-    margin-inline: 8px;
-  }
-
-  .archive-featured-exhibit::after {
-    background: linear-gradient(180deg, rgba(42,46,50,.16), rgba(42,46,50,.95) 64%);
-  }
-}

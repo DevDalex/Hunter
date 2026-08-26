@@ -30,23 +30,6 @@
   font-size: .75rem;
 }
 
-@media (max-width: 760px) {
-  .gi-eta-scene__name {
-    font-size: .75rem;
-  }
-
-  .gi-eta-scene__lesson {
-    font-size: .72rem;
-  }
-}
-
-@media (max-width: 440px) {
-  .gi-eta-scene__sprite {
-    width: 100%;
-    max-width: 430px;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .gi-eta-scene__expression {
     display: none;

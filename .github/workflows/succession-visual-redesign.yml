@@ -178,13 +178,6 @@ jobs:
           VISUAL_QA_SCREENSHOTS: all
         run: npm run qa:visual
 
-      - name: Inspect Queen households at all viewports
-        env:
-          VISUAL_QA_ROUTE: succession/queens
-          VISUAL_QA_OUTPUT: .visual-qa/succession-queens
-          VISUAL_QA_SCREENSHOTS: all
-        run: npm run qa:visual
-
       - name: Inspect Institution command at all viewports
         env:
           VISUAL_QA_ROUTE: succession/organizations

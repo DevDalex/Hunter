@@ -9,10 +9,14 @@ const output = path.resolve(root, process.env.SUCCESSION_FINAL_PRODUCT_QA_OUTPUT
 const requestedExecutable = process.env.CHROMIUM_PATH || '';
 const results = [];
 const failures = [];
+const approvedExternalMediaHosts = new Set(['hunterxhunter.fandom.com', 'static.wikia.nocookie.net']);
+const externalResourceConsoleError = /^Failed to load resource: net::ERR_BLOCKED_BY_RESPONSE\.NotSameOrigin$/i;
 const mime = {
   '.css': 'text/css; charset=utf-8', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8',
   '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.json': 'application/json; charset=utf-8',
 };
+
+const normalizeText = (value) => String(value).trim().replace(/\s+/g, ' ').toLocaleLowerCase('en-US');
 
 const firstAvailable = async (candidates) => {
   for (const candidate of candidates.filter(Boolean)) {
@@ -20,6 +24,18 @@ const firstAvailable = async (candidates) => {
   }
   return '';
 };
+
+const isApprovedExternalMediaUrl = (value) => {
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' && approvedExternalMediaHosts.has(url.hostname);
+  } catch {
+    return false;
+  }
+};
+
+const isApprovedExternalMediaRequest = (request) => request.resourceType() === 'image'
+  && isApprovedExternalMediaUrl(request.url());
 
 const serve = async () => {
   await access(path.join(dist, 'index.html'));
@@ -44,25 +60,57 @@ const serve = async () => {
 const record = async (name, page, test) => {
   const runtimeErrors = [];
   const consoleErrors = [];
+  const approvedExternalMediaFailures = [];
   const onPageError = (error) => runtimeErrors.push(error.message);
-  const onConsole = (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); };
+  const onRequestFailed = (request) => {
+    if (!isApprovedExternalMediaRequest(request)) return;
+    approvedExternalMediaFailures.push(`${request.url()} · ${request.failure()?.errorText || 'failed'}`);
+  };
+  const onConsole = (message) => {
+    if (message.type() !== 'error') return;
+    consoleErrors.push({
+      text: message.text(),
+      url: message.location()?.url || '',
+    });
+  };
   page.on('pageerror', onPageError);
+  page.on('requestfailed', onRequestFailed);
   page.on('console', onConsole);
   try {
     await test();
+    const directlyApprovedConsoleErrors = consoleErrors.filter((entry) => externalResourceConsoleError.test(entry.text) && isApprovedExternalMediaUrl(entry.url));
+    let unmatchedExternalFailures = Math.max(0, approvedExternalMediaFailures.length - directlyApprovedConsoleErrors.length);
+    const actionableConsoleErrors = consoleErrors.filter((entry) => {
+      if (!externalResourceConsoleError.test(entry.text)) return true;
+      if (isApprovedExternalMediaUrl(entry.url)) return false;
+      if (unmatchedExternalFailures > 0) {
+        unmatchedExternalFailures -= 1;
+        return false;
+      }
+      return true;
+    });
     if (runtimeErrors.length) throw new Error(`Runtime errors: ${runtimeErrors.join(' | ')}`);
-    if (consoleErrors.length) throw new Error(`Console errors: ${consoleErrors.join(' | ')}`);
-    results.push({ name, status: 'passed' });
-    process.stdout.write(`✓ ${name}\n`);
+    if (actionableConsoleErrors.length) throw new Error(`Console errors: ${actionableConsoleErrors.map((entry) => entry.text).join(' | ')}`);
+    results.push({ name, status: 'passed', approvedExternalMediaFailures: approvedExternalMediaFailures.length });
+    process.stdout.write(`✓ ${name}${approvedExternalMediaFailures.length ? ` · approved external media:${approvedExternalMediaFailures.length}` : ''}\n`);
   } catch (error) {
     const screenshot = path.join(output, `${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.png`);
     await page.screenshot({ path: screenshot, fullPage: true }).catch(() => {});
-    const failure = { name, status: 'failed', error: error.message, screenshot: path.relative(root, screenshot), runtimeErrors, consoleErrors };
+    const failure = {
+      name,
+      status: 'failed',
+      error: error.message,
+      screenshot: path.relative(root, screenshot),
+      runtimeErrors,
+      consoleErrors,
+      approvedExternalMediaFailures,
+    };
     failures.push(failure);
     results.push(failure);
     process.stdout.write(`✗ ${name} · ${error.message}\n`);
   } finally {
     page.off('pageerror', onPageError);
+    page.off('requestfailed', onRequestFailed);
     page.off('console', onConsole);
   }
 };
@@ -101,6 +149,11 @@ try {
     await mediaResult.waitFor({ state: 'visible', timeout: 15_000 });
     const mediaReason = await mediaResult.locator('small').innerText();
     if (!mediaReason.toLowerCase().includes('media')) throw new Error(`Media result explanation is incomplete: ${mediaReason}`);
+    await mediaResult.getByRole('button', { name: 'Open', exact: true }).click();
+    await desktop.waitForSelector('.succession-evidence-workspace', { timeout: 15_000 });
+    if (!desktop.url().includes('/research') || !desktop.url().includes('media=')) throw new Error(`Media search result did not resolve through Research: ${desktop.url()}`);
+    await desktop.goBack({ waitUntil: 'domcontentloaded' });
+    await desktop.waitForSelector('.succession-search-complete input', { timeout: 15_000 });
   });
 
   await record('Search opens a graph-connected glossary dossier and browser back restores search', desktop, async () => {
@@ -120,41 +173,42 @@ try {
     await desktop.waitForSelector('.succession-search-complete input', { timeout: 15_000 });
   });
 
-  await record('Media library exposes alt text provenance and canonical subjects', desktop, async () => {
-    await desktop.goto(`${base}/story/succession-contest/media`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    const cards = desktop.locator('.succession-media-canonical__grid > article');
-    await cards.first().waitFor({ state: 'visible', timeout: 15_000 });
-    if (await cards.count() < 20) throw new Error(`Media library is unexpectedly sparse: ${await cards.count()} records`);
-    const images = cards.locator('img');
-    const imageCount = await images.count();
-    if (!imageCount) throw new Error('Media library rendered no images');
-    for (let index = 0; index < imageCount; index += 1) {
-      const alt = await images.nth(index).getAttribute('alt');
-      if (!alt?.trim()) throw new Error(`Media image ${index + 1} has no alt text`);
+  await record('Retired Succession routes resolve to maintained workspaces', desktop, async () => {
+    const redirects = [
+      ['hunters', '.succession-character-workspace'],
+      ['deaths', '.succession-character-workspace'],
+      ['mafia', '.succession-organization-workspace'],
+      ['military', '.succession-organization-workspace'],
+      ['politics', '.succession-organization-workspace'],
+      ['justice', '.succession-organization-workspace'],
+      ['power-blocs', '.succession-organization-workspace'],
+      ['media', '.succession-evidence-workspace'],
+    ];
+    for (const [route, selector] of redirects) {
+      await desktop.goto(`${base}/story/succession-contest/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+      await desktop.waitForSelector(selector, { timeout: 15_000 });
     }
-    await cards.first().getByRole('button', { name: /Open provenance/i }).click();
-    await desktop.waitForSelector('.succession-media-dossier', { timeout: 15_000 });
-    if (!await desktop.locator('.succession-media-dossier__visual code').count()) throw new Error('Media dossier does not expose its stable media ID');
-    const provenance = desktop.getByRole('link', { name: /Open provenance/i });
-    if (!await provenance.count()) throw new Error('Media dossier has no provenance link');
-    if ((await provenance.getAttribute('rel')) !== 'noreferrer noopener') throw new Error('External provenance link is missing safe rel attributes');
-    if (!await desktop.locator('.succession-product-links .succession-entity-link').count()) throw new Error('Media dossier does not link to canonical subjects');
+
+    await desktop.goto(`${base}/story/succession-contest`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+    await desktop.waitForSelector('.succession-command-home .succession-command-home__rail nav', { timeout: 15_000 });
+    const maintainedLabels = (await desktop.locator('.succession-command-home__rail nav a span').allInnerTexts()).map(normalizeText);
+    for (const label of ['Hunters', 'Deaths', 'Mafia', 'Military', 'Politics', 'Media']) {
+      if (maintainedLabels.includes(normalizeText(label))) throw new Error(`${label} returned to the released command-home navigation`);
+    }
   });
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true });
-  await record('Final Search Glossary and Media remain usable on mobile', mobile, async () => {
+  await record('Final Search Glossary and Research remain usable on mobile', mobile, async () => {
     for (const [route, selector] of [
       ['search', '.succession-search-complete'],
       ['glossary', '.succession-glossary-canonical'],
-      ['media', '.succession-media-canonical'],
+      ['research', '.succession-evidence-workspace'],
     ]) {
       await mobile.goto(`${base}/story/succession-contest/${route}`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
       await mobile.waitForSelector(selector, { timeout: 15_000 });
       const overflow = await horizontalOverflow(mobile);
       if (overflow > 1) throw new Error(`${route} overflows the mobile viewport by ${overflow}px`);
     }
-    const mediaFilterButtons = mobile.locator('.succession-product-tools [role="group"] button');
-    if (!await mediaFilterButtons.count()) throw new Error('Mobile media filters are not reachable');
   });
 
   await desktop.close();
@@ -164,8 +218,15 @@ try {
   await new Promise((resolve) => server.close(resolve));
 }
 
-const summary = { generatedAt: new Date().toISOString(), checks: results.length, passed: results.length - failures.length, failed: failures.length };
+const approvedExternalMediaFailureCount = results.reduce((total, result) => total + (result.approvedExternalMediaFailures?.length || 0), 0);
+const summary = {
+  generatedAt: new Date().toISOString(),
+  checks: results.length,
+  passed: results.length - failures.length,
+  failed: failures.length,
+  approvedExternalMediaFailureCount,
+};
 await writeFile(path.join(output, 'report.json'), `${JSON.stringify({ summary, results }, null, 2)}\n`);
 await writeFile(path.join(output, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
-console.log(`\nSuccession final product QA: ${summary.passed}/${summary.checks} checks passed.`);
+console.log(`\nSuccession final product QA: ${summary.passed}/${summary.checks} checks passed. Approved external media availability events: ${summary.approvedExternalMediaFailureCount}.`);
 if (failures.length) process.exitCode = 1;

@@ -220,68 +220,6 @@
   49%, 100% { opacity: 0; }
 }
 
-@media (max-width: 760px) {
-  .gi-eta-scene {
-    min-height: 650px;
-  }
-
-  .gi-eta-scene__room {
-    object-position: center top;
-  }
-
-  .gi-eta-scene__sprite {
-    bottom: 194px;
-    width: min(94vw, 490px);
-    max-height: 62%;
-  }
-
-  .gi-eta-scene__dialogue {
-    bottom: 10px;
-    width: calc(100% - 16px);
-    min-height: 186px;
-    padding: 36px 28px 46px;
-  }
-
-  .gi-eta-scene__name {
-    font-size: .62rem;
-  }
-
-  .gi-eta-scene__lesson {
-    font-size: .58rem;
-  }
-
-  .gi-eta-scene__text {
-    font-size: .9rem;
-  }
-
-  .gi-eta-scene__hint {
-    display: none;
-  }
-}
-
-@media (max-width: 440px) {
-  .gi-eta-scene {
-    min-height: 610px;
-  }
-
-  .gi-eta-scene__sprite {
-    bottom: 205px;
-    width: 480px;
-    max-width: 116vw;
-  }
-
-  .gi-eta-scene__dialogue {
-    min-height: 198px;
-    padding-inline: 23px;
-  }
-
-  .gi-eta-scene__lesson {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .gi-eta-scene__scanlines,
   .gi-eta-scene__floor-glow,

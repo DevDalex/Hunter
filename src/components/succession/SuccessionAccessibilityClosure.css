@@ -1,0 +1,184 @@
+/* Final desktop accessibility closure for the Succession redesign. */
+
+/* The archive contract keeps compact interface text at 11px or larger. */
+.succession-archive :where(
+  small,
+  dt,
+  code,
+  kbd,
+  figcaption,
+  [class*="badge"],
+  [class*="pill"],
+  [class*="kicker"],
+  [class*="eyebrow"],
+  [class*="label"],
+  [class*="meta"],
+  [class*="status"],
+  [class*="index"],
+  [class*="time"],
+  [class*="source"],
+  [class*="action"],
+  [class*="confidence"],
+  [class*="legend"]
+) {
+  font-size: max(11px, .6875rem) !important;
+  line-height: 1.35;
+}
+
+.succession-archive button,
+.succession-archive summary,
+.succession-archive input:not([type="range"]),
+.succession-archive select,
+.succession-archive textarea {
+  min-height: 44px;
+}
+
+.succession-archive :where(button, a, summary, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid #9fc3d4 !important;
+  outline-offset: 3px !important;
+  box-shadow: none;
+}
+
+.succession-archive a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.succession-archive button:disabled,
+.succession-archive select:disabled,
+.succession-archive input:disabled {
+  cursor: not-allowed;
+  opacity: .55;
+}
+
+.succession-archive :where(.is-active, [aria-current="page"], [aria-pressed="true"]) {
+  text-decoration: none;
+}
+
+/* Active and evidence states retain a non-colour cue. */
+.succession-archive button.is-active,
+.succession-archive a.is-active,
+.succession-archive [aria-current="page"],
+.succession-archive [aria-pressed="true"] {
+  font-weight: 850;
+}
+
+.succession-archive .evidence-badge,
+.succession-archive .status-pill,
+.succession-archive [class*="-state"] {
+  border-style: solid;
+  border-width: 1px;
+  font-weight: 850;
+}
+
+.succession-archive .evidence-badge::before,
+.succession-archive .status-pill::before {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border: 1px solid currentColor;
+  background: currentColor;
+  content: "";
+}
+
+.succession-archive .evidence-badge.is-inferred::before,
+.succession-archive .evidence-badge.is-unclear::before,
+.succession-archive .status-pill--warn::before,
+.succession-archive .status-pill--analysis::before {
+  background: transparent;
+}
+
+/* Keep dense tables and maps operable without shrinking their contents. */
+.succession-archive :where(
+  .succession-assignment-table-wrap,
+  .timeline-swimlanes,
+  .ship-map,
+  .black-whale-map,
+  [class*="table-wrap"],
+  [class*="network__canvas"]
+) {
+  scrollbar-width: thin;
+  scrollbar-color: #698897 #152128;
+}
+
+.succession-archive :where(
+  .succession-assignment-table-wrap,
+  .timeline-swimlanes,
+  [class*="table-wrap"]
+):focus-visible {
+  outline-offset: 0 !important;
+}
+
+.succession-archive table th {
+  font-size: 11px !important;
+  line-height: 1.35;
+}
+
+.succession-archive table td {
+  line-height: 1.45;
+}
+
+/* The relationship graph always keeps its semantic edge ledger visible. */
+.succession-archive .succession-relationship-accessible {
+  display: block;
+}
+
+.succession-archive .succession-relationship-network__legend span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+}
+
+@media (prefers-contrast: more) {
+  .succession-archive {
+    --succession-line-dark: rgba(255, 255, 255, .34);
+  }
+
+  .succession-archive :where(button, article, section, input, select, table, td, th) {
+    border-color: currentColor;
+  }
+
+  .succession-archive p,
+  .succession-archive small,
+  .succession-archive dt {
+    opacity: 1;
+  }
+}
+
+@media (forced-colors: active) {
+  .succession-archive *,
+  .succession-archive *::before,
+  .succession-archive *::after {
+    forced-color-adjust: auto;
+  }
+
+  .succession-archive :where(button, a, input, select, summary):focus-visible {
+    outline: 3px solid Highlight !important;
+  }
+
+  .succession-archive .succession-relationship-network__canvas line {
+    stroke: CanvasText;
+  }
+}
+
+@media print {
+  .view-succession .site-header,
+  .succession-archive__sidebar,
+  .succession-archive__status-strip,
+  .succession-page-header__actions,
+  .succession-reader__topbar,
+  .succession-reader__bottombar {
+    display: none !important;
+  }
+
+  .succession-archive,
+  .succession-archive__workspace,
+  .succession-archive__content {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .succession-archive__layout {
+    display: block;
+  }
+}

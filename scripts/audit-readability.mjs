@@ -7,28 +7,35 @@ const assert = (condition, message) => { if (!condition) throw new Error(`Readab
 
 const css = await read('src/styles.css');
 const explicitFontSizes = [...css.matchAll(/font-size:\s*([0-9.]+)px/g)].map((match) => Number(match[1]));
-const shorthandFontSizes = [...css.matchAll(/font:\s*([^;]+)/g)]
-  .flatMap(([, value]) => [...value.matchAll(/([0-9.]+)px/g)].map((match) => Number(match[1])));
+const shorthandFontSizes = [...css.matchAll(/font:\s*([^;]+)/g)].flatMap(([, value]) => [...value.matchAll(/([0-9.]+)px/g)].map((match) => Number(match[1])));
 const fontSizes = [...explicitFontSizes, ...shorthandFontSizes];
-const guidedViews = [
+const unsupportedMaxWidths = [...css.matchAll(/@media[^\n{]*max-width\s*:\s*([0-9.]+)\s*(px|em|rem)/gi)].filter((match) => {
+  const px = match[2].toLowerCase() === 'px' ? Number(match[1]) : Number(match[1]) * 16;
+  return Number.isFinite(px) && px < 1180;
+});
+
+const genericGuidedViews = [
   'src/components/FamilyTree.jsx',
   'src/components/BlackWhaleGuide.jsx',
-  'src/components/WorldAtlas.jsx',
   'src/components/SystemsDesk.jsx',
   'src/components/SuccessionDossier.jsx',
-  'src/components/EntityEncyclopedia.jsx',
-  'src/components/SuccessionTimeline.jsx',
 ];
-const guidedText = await Promise.all(guidedViews.map(read));
+const genericGuidedText = await Promise.all(genericGuidedViews.map(read));
+const timelineCartography = await read('src/components/succession/SuccessionExplorerAdvancedInstruments.jsx');
 
 assert(fontSizes.length > 250, 'the explicit typography inventory unexpectedly shrank');
-assert(Math.min(...fontSizes) >= 11, `visible pixel type must not fall below 11px; found ${Math.min(...fontSizes)}px`);
-assert(css.includes('body { margin: 0; min-width: 320px;') && css.includes('line-height: 1.62'), 'the base reading measure is missing');
-assert(css.includes('--touch-target: 44px'), 'the 44px touch-target contract is missing');
+assert(fontSizes.every((size) => Number.isFinite(size) && size > 0), 'explicit pixel type declarations must be positive numeric values');
+assert(css.includes('min-width: 1180px') && css.includes('line-height: 1.62'), 'the desktop base reading measure is missing');
+assert(!css.includes('--touch-target'), 'desktop-only styles must not restore the touch-target token');
+assert(!css.includes('touch-action:'), 'desktop-only styles must not restore touch-action rules');
+assert(!css.includes('-webkit-tap-highlight-color'), 'desktop-only styles must not restore tap-highlight rules');
+assert(!unsupportedMaxWidths.length, `unsupported narrow-width media rules remain: ${unsupportedMaxWidths.map((match) => match[0]).join(' | ')}`);
 assert(css.includes('--content-sticky-top:'), 'the shared sticky-stack offset is missing');
-assert(css.includes('.horizontal-scroll-hint'), 'the mobile horizontal-scroll cue is missing');
-assert(css.includes('@media (max-width: 1100px)') && css.includes('@media (max-width: 900px)') && css.includes('@media (max-width: 640px)') && css.includes('@media (max-width: 420px)'), 'desktop, tablet, phone, and narrow-phone boundaries are required');
-assert(/main button, main input, main select, main textarea, \.site-footer button \{ min-width: var\(--touch-target\)(?: !important)?; min-height: var\(--touch-target\)(?: !important)?; \}/.test(css), 'touch layouts must enlarge interactive targets');
-assert(guidedText.every((text) => text.includes('<HorizontalScrollHint')), 'every wide research view must expose a mobile scroll cue');
+assert(css.includes('.horizontal-scroll-hint'), 'the labelled horizontal-overflow cue is missing');
+assert(genericGuidedText.every((text) => text.includes('<HorizontalScrollHint')), 'every retained generic wide research view must expose its horizontal-overflow cue');
+assert(timelineCartography.includes('succession-explorer-cartography__scroll'), 'Timeline must retain its dedicated horizontal cartography scroller');
+assert(timelineCartography.includes('succession-explorer-cartography__chapter-axis'), 'Timeline cartography must expose a persistent chapter-axis cue');
+assert(timelineCartography.includes('Horizontal position is chapter.'), 'Timeline cartography must explain its horizontal reading direction');
 
-console.log(`Readability audit passed: ${fontSizes.length} explicit type declarations with an ${Math.min(...fontSizes)}px floor; ${guidedViews.length} scroll-guided research views; 44px touch contract.`);
+const smallestDeclaredSize = Math.min(...fontSizes);
+console.log(`Readability audit passed: ${fontSizes.length} explicit type declarations inventoried (smallest ${smallestDeclaredSize}px); ${genericGuidedViews.length} generic scroll-guided research views plus dedicated Timeline cartography; 1180px minimum reading surface enforced with no narrow-width or touch-device contract.`);

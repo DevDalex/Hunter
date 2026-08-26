@@ -1,0 +1,117 @@
+const freeze = (value) => Object.freeze(value);
+const chapterSourceId = (number) => `source:chapter-${number}`;
+
+const knowledge = ({ id, abilityName, knowledgeState, summary, activation, conditions = [], limitations = [], costs = [], targets = [], range = 'unknown', duration = 'unknown', knownUses = [], certainty = 'confirmed', sources = [409], chapterRange = { start: 409, end: 409 } }) => freeze({
+  id,
+  abilityName,
+  chapterRange: freeze(chapterRange),
+  knowledgeState,
+  certainty,
+  summary,
+  mechanics: freeze({ activation, conditions: freeze(conditions), limitations: freeze(limitations), costs: freeze(costs), targets: freeze(targets), range, duration, knownUses: freeze(knownUses) }),
+  sourceIds: freeze(sources.map(chapterSourceId)),
+});
+
+export const abilityKnowledge409Overrides = freeze({
+  'ability:contagion': freeze([knowledge({
+    id: 'ability-knowledge:contagion:409',
+    abilityName: 'Contagion',
+    knowledgeState: 'Three joining conditions disclosed; kiss condition completed and final Yes intentionally restored / full Borksen membership and awakening not established',
+    summary: 'Morena tells Borksen that counting as fully joined requires three conditions in any order: the negotiation ends with Yes, Morena infects Borksen through a kiss, and Borksen is present when Morena or another Heil-Ly member commits murder. Borksen completes Morena’s Deal kiss and later deliberately restores Yes, but Chapter 409 does not show the required murder-presence condition, a personal Nen ability, a level assignment, or completed awakening.',
+    activation: 'Chapter 409 shows the kiss component of Morena’s joining procedure and a final Yes response, but does not show a completed three-condition joining sequence. The archive therefore records the observed conditions without converting them into an unsupplied completed Contagion initiation.',
+    conditions: [
+      'The negotiation game ends with Yes.',
+      'Morena infects the recruit through a kiss.',
+      'The recruit is present where Morena or another Heil-Ly member commits murder.',
+      'Morena says the order does not matter but all three conditions are required before the recruit is considered to have joined.',
+      'Chapter 409 shows Borksen complete the kiss condition.',
+      'Chapter 409 ends with Borksen intentionally exchanging Return for Yes.',
+    ],
+    limitations: [
+      'The supplied Chapter 409 synopsis does not show Borksen present for the required Heil-Ly murder after the condition is explained.',
+      'No Chapter 409 scene gives Borksen a Nen ability, level, or completed awakening.',
+      'Borksen’s motive for restoring Yes is not supplied.',
+      'The specific Specialist ability Morena wants Borksen to develop remains withheld.',
+      'The unnamed category-detection Enhancer from Chapter 408 remains unidentified.',
+      'Morena’s Yes-and-No answer about whether the hideout was made with Nen does not define a specific hideout ability or owner.',
+    ],
+    costs: ['Full joining requires exposure to a Heil-Ly murder in addition to the negotiated Yes and kiss conditions.'],
+    targets: ['Borksen as the current Specialist recruitment target; broader compatible recruits remain part of the established Contagion system'],
+    range: 'The joining procedure occurs inside the Heil-Ly inter-tier hideout; broader community range remains as previously established.',
+    duration: 'No Chapter 409 termination rule is supplied.',
+    knownUses: [
+      'Chapter 409: Morena explains the three joining conditions, completes the kiss condition with Borksen, and receives Borksen’s intentional final Yes response while the third condition remains unshown.',
+    ],
+    sources: [378, 391, 393, 394, 408, 409],
+    certainty: 'three conditions, kiss and intentional Yes confirmed / full joining, awakening, level and personal ability unresolved',
+  })]),
+});
+
+export const nenSystemProfile409Corrections = freeze({
+  'nen-system:contagion-progression': freeze({
+    id: 'nen-system:contagion-progression',
+    name: 'Contagion Progression System',
+    summary: 'Morena’s community converts killing into levels and personal Nen development. Chapter 408 adds the dealer/mother model and negotiation-risk explanation; Chapter 409 makes the Borksen joining procedure explicit as a three-condition sequence requiring Yes, Morena’s kiss-based infection, and presence at a Heil-Ly murder, in any order but all required.',
+    category: 'progression',
+    chapterRange: freeze({ start: 378, end: null }),
+    rules: freeze([
+      'Morena initiates or infects recruits by kissing them on the lips, as established in the Contagion material and restated as a joining condition in Chapter 409.',
+      'The Chapter 378 community structure corresponds to Morena plus up to twenty-two children.',
+      'Civilian kills are worth 1 level, Nen-user kills 10 levels, and prince kills 50 levels, as established in earlier Contagion rules.',
+      'At level 20 an infected member gains a Nen ability; sufficiently progressed members can eventually found further communities, as established before Chapter 409.',
+      'Chapter 408 says Morena supports individualized ability development and frames genuine recruitment-failure risk as strengthening the system.',
+      'Chapter 409 says Borksen counts as joined only if three conditions are all satisfied: final Yes, infection through Morena’s kiss, and presence at a Morena/Heil-Ly murder.',
+      'Chapter 409 says the three joining conditions can occur in any order.',
+      'Chapter 409 shows the kiss condition and intentional Yes but does not show the murder-presence condition or completed membership.',
+    ]),
+    costs: freeze([
+      'Progression remains tied to killing people.',
+      'The Chapter 409 Borksen joining procedure explicitly requires presence at a Heil-Ly murder in addition to Yes and the kiss.',
+    ]),
+    risks: freeze([
+      'Rapid distributed Nen growth',
+      'Unknown personal abilities after the development threshold',
+      'Community replication after the established parent threshold',
+      'Coercive recruitment pressure and lethal rejection consequences within Morena’s negotiation system',
+      'Mistaking partial joining-condition completion for completed membership or awakening',
+    ]),
+    openQuestions: freeze([
+      'Why does Borksen intentionally choose Yes?',
+      'When, if ever, will the murder-presence condition be fulfilled for Borksen?',
+      'What exact Specialist ability does Morena want Borksen to develop?',
+      'How do successor communities relate to Morena’s original community?',
+    ]),
+    abilityIds: freeze(['ability:contagion']),
+    guardianBeastIds: freeze([]),
+    characterIds: freeze(['character:morena-prudo', 'character:borksen']),
+    organizationIds: freeze(['organization:heil-ly']),
+    locationIds: freeze(['location:black-whale:intertier-2-3:heil-ly-hideout']),
+    sourceIds: freeze(['source:chapter-378', 'source:chapter-391', 'source:chapter-393', 'source:chapter-394', 'source:chapter-408', 'source:chapter-409']),
+    certainty: 'joining-condition framework confirmed / Borksen full membership and awakening unresolved at Chapter 409 boundary',
+  }),
+  'nen-system:contracts-vows-and-conditions': freeze({
+    id: 'nen-system:contracts-vows-and-conditions',
+    name: 'Contracts, Vows, and Conditional Power',
+    summary: 'The arc repeatedly turns explicit restrictions, negotiated terms, loyalty requirements, and self-imposed costs into power and enforcement. Chapters 408–409 make Morena’s recruitment game a concrete example: genuine failure and rejection risk are part of the power logic, while full joining requires three separately stated conditions rather than a single automatic trigger.',
+    category: 'contract',
+    chapterRange: freeze({ start: 369, end: null }),
+    rules: freeze([
+      'A stronger or more meaningful restriction can increase the reliability or force of an ability.',
+      'Terms may structure the behavior or consequences for multiple participants rather than only the user.',
+      'Political agreements and Nen enforcement must be distinguished even when they operate together.',
+      'Unpublished breach consequences remain unknown rather than being inferred as automatic death.',
+      'Chapter 408 says Morena accepts genuine negotiation failure as a meaningful limitation that strengthens support and team unity.',
+      'Chapter 409 states that the Borksen joining procedure requires Yes, Morena’s kiss, and presence at a Heil-Ly murder; partial completion is not treated as completed membership.',
+    ]),
+    costs: freeze(['Loss of freedom after accepting some terms', 'Ability-specific penalties or risks tied to activation, breach, or failure conditions', 'Chapter 409 joining requires exposure to a Heil-Ly murder']),
+    risks: freeze(['Incomplete understanding before agreement', 'Hidden asymmetry between participants', 'Mistaking a stated negotiation consequence for a universal automatic Nen punishment', 'Mistaking two completed conditions for the required three-condition joining state']),
+    openQuestions: freeze(['What precise breach penalty governs Moonlight Act?', 'How exactly does Morena’s negotiation risk modify Contagion support beyond the qualitative explanation?', 'What happens mechanically after Borksen’s intentional Yes if the third joining condition is still incomplete?']),
+    abilityIds: freeze(['ability:moonlight-act', 'ability:emperor-time', 'ability:stealth-dolphin', 'ability:contagion']),
+    guardianBeastIds: freeze([]),
+    characterIds: freeze(['character:morena-prudo', 'character:borksen']),
+    organizationIds: freeze(['organization:heil-ly']),
+    locationIds: freeze(['location:black-whale:intertier-2-3:heil-ly-hideout']),
+    sourceIds: freeze(['source:chapter-369', 'source:chapter-401', 'source:chapter-402', 'source:chapter-408', 'source:chapter-409']),
+    certainty: 'general vow/condition principle confirmed / Chapter 409 joining conditions explicit / later enforcement consequences remain bounded to supplied material',
+  }),
+});

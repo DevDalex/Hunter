@@ -45,12 +45,11 @@ for (const selector of [
   '.succession-prince-risk-board',
 ]) assert(royalCss.includes(selector), `royal presentation is missing ${selector}`);
 
-assert(royalCss.includes('@media (max-width: 1100px)'), 'wide-to-tablet royal adaptation is required');
-assert(royalCss.includes('@media (max-width: 760px)'), 'tablet royal adaptation is required');
-assert(royalCss.includes('@media (max-width: 560px)'), 'mobile royal adaptation is required');
-assert(royalCss.includes('@media (hover: none)'), 'touch behavior is required');
+assert(!royalCss.includes('@media (max-width:'), 'desktop-only royal command must not carry narrow-width breakpoint layouts');
+assert(!royalCss.includes('@media (hover: none)'), 'desktop-only royal command must not carry no-hover device behavior');
+assert(!royalCss.includes('(pointer: coarse)'), 'desktop-only royal command must not carry coarse-pointer behavior');
+assert(!royalCss.includes('touch-action:'), 'desktop-only royal command must not carry touch-action rules');
 assert(royalCss.includes('@media (prefers-reduced-motion: reduce)'), 'reduced-motion behavior is required');
-assert(royalCss.includes('min-height: 44px'), 'royal controls must retain 44px targets');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(royalCss), 'royal command CSS must not introduce raw hex colors');
 assert(!royalCss.includes('!important'), 'royal command CSS must not depend on !important');
 assert(royalContrast.includes('font-size: 11px !important'), 'compact SVG labels require a route-owned readability floor');
@@ -59,4 +58,4 @@ assert(packageJson.includes('"audit:succession-royal-command"'), 'package.json m
 assert(workflow.includes('audit:succession-royal-command'), 'visual workflow must run the royal command audit');
 for (const hour of ['Hour 30', 'Hour 31']) assert(docs.includes(hour), `design record must document ${hour}`);
 
-console.log('Succession royal command audit passed: fourteen-prince orbit, status board, royal cards, dedicated prince dossiers, readability, touch, motion, and responsive contracts are registered.');
+console.log('Succession royal command audit passed: desktop fourteen-prince orbit, status board, royal cards, dedicated prince dossiers, readability, and reduced-motion contracts are registered.');

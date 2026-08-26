@@ -49,46 +49,6 @@ main a :is(span, small, em, i, b) {
   color: inherit !important;
 }
 
-/* Paper surfaces keep gold as a dark ink rather than a low-contrast highlight. */
-:where(
-  .chapter-row__number,
-  .timeline-record__time,
-  [id^="dossier-record-"] > span,
-  [id^="dossier-record-"] > div > span,
-  [id^="voyage-day-"] > header > div > span,
-  .timeline-prelude__heading > span,
-  .complete-roster-grid .roster-card > span,
-  .roster-card > span,
-  .room-card > div > span,
-  .story-context-rail > ol > li > i,
-  .story-hub-card > i,
-  .arc-nav > button > span,
-  .section-tabs > button > span,
-  .royal-room-plan__side > button > i,
-  .royal-household-matrix > div > button > span > small,
-  .ship-route > header > span,
-  .ea-character-board > article > div > span,
-  .ea-system-grid > article > span,
-  .ea-mechanics-inspector__detail > span,
-  .yn-conflict-ledger > article > div > span,
-  .yn-object-ledger > article > span,
-  .world-map-scale-path > article > span,
-  .world-map-inspector > header > span,
-  .world-map-inspector__mobile-toggle small,
-  .entity-record__header > div > span,
-  .entity-record__relations > header > span,
-  .entity-encyclopedia__context > div > span,
-  .conflict-index > header > span,
-  .conflict-dossier > header span,
-  .reference-backbone__sources > a,
-  .underworld-era--yorknew > header > span,
-  .nen-foundation-index > button > i,
-  .nen-record > header > span,
-  [class*="-paper-section"] [class*="-section-header"] > span
-) {
-  color: var(--archive-gold-ink) !important;
-}
-
 /* Secondary copy on paper uses a neutral dark ink. */
 :where(
   .story-context-rail__facts dt,

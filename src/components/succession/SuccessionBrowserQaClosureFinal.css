@@ -1,0 +1,194 @@
+/* Residual browser matrix closure. Loaded after the broader QA layer. */
+
+/* The repeated desktop label belongs to the sidebar brand, not the status strip. */
+.succession-archive .succession-archive__brand-copy > span,
+.succession-archive .ship-location-inspector > header > span,
+.succession-archive .succession-canonical-event-timeline__body > p {
+  font-size: 11px !important;
+  line-height: 1.4;
+}
+
+.succession-archive .ship-location-inspector > header > span {
+  color: #d8e1de !important;
+}
+
+.succession-archive .succession-canonical-event-timeline__body > p {
+  color: #405159 !important;
+}
+
+/* Remove inherited dimming from publication/status states measured by axe. */
+.succession-archive :where(
+  .succession-chapter-intel,
+  .succession-prince-board,
+  .succession-prince-card,
+  .succession-gsb-workspace,
+  .succession-gsb-dossier,
+  .timeline-workspace,
+  .black-whale-intelligence,
+  .succession-evidence-workspace
+) :where(p, span, small, dt, dd, li, h2, h3, h4, strong, b, button, a) {
+  opacity: 1 !important;
+}
+
+/* Chapter records use a single high-contrast document system. */
+.succession-archive .succession-chapter-intel__index,
+.succession-archive .succession-chapter-intel__dossier > header,
+.succession-archive .succession-chapter-intel__dossier > section,
+.succession-archive .succession-chapter-intel__event-columns > section,
+.succession-archive .succession-chapter-intel__entity-columns > section {
+  background: #eef0ec !important;
+  color: #17272f !important;
+}
+
+.succession-archive .succession-chapter-intel :where(h2, h3, h4, strong, b, dd, button, input, select) {
+  color: #17272f !important;
+}
+
+.succession-archive .succession-chapter-intel :where(p, span, small, dt, li) {
+  color: #344850 !important;
+}
+
+.succession-archive .succession-chapter-intel :where(button.is-active, [aria-current="page"]) {
+  background: #294d61 !important;
+  color: #fff !important;
+}
+
+.succession-archive .succession-chapter-intel :where(button.is-active, [aria-current="page"]) :where(span, small, strong, b) {
+  color: #fff !important;
+}
+
+/* Royal cards: light personnel records plus explicit dark-overlay text. */
+.succession-archive .succession-prince-card__body,
+.succession-archive .succession-royal-status-strip > div,
+.succession-archive .succession-royal-filter-bar,
+.succession-archive .succession-prince-risk-board article,
+.succession-archive .succession-prince-dossier__core > section,
+.succession-archive .succession-prince-dossier__network > section,
+.succession-archive .succession-prince-evidence {
+  color: #17272f !important;
+}
+
+.succession-archive .succession-prince-card__body :where(p, span, small, dt, dd, li),
+.succession-archive .succession-royal-status-strip :where(dt, dd),
+.succession-archive .succession-royal-filter-bar :where(span, strong),
+.succession-archive .succession-prince-risk-board :where(p, span, small, dt, dd, li),
+.succession-archive .succession-prince-dossier__core :where(p, span, small, dt, dd, li),
+.succession-archive .succession-prince-dossier__network :where(p, span, small, dt, dd, li),
+.succession-archive .succession-prince-evidence :where(p, span, small, dt, dd, li) {
+  color: #344850 !important;
+}
+
+.succession-archive .succession-prince-card__rank {
+  color: #f0d99d !important;
+}
+
+.succession-archive .succession-prince-card__status,
+.succession-archive .succession-prince-card__visual :where(span, small, strong, b) {
+  color: #fff !important;
+}
+
+.succession-archive .succession-prince-board__filters button.is-active,
+.succession-archive .succession-prince-board__filters button.is-active * {
+  color: #fff !important;
+}
+
+/* Guardian Beast containment: one remaining low-contrast accent becomes ivory. */
+.succession-archive .succession-gsb-workspace :where(span, small, dt),
+.succession-archive .succession-gsb-dossier :where(span, small, dt) {
+  color: #dce4e1 !important;
+}
+
+.succession-archive .succession-gsb-workspace :where(p, li, dd),
+.succession-archive .succession-gsb-dossier :where(p, li, dd) {
+  color: #edf2ef !important;
+}
+
+.succession-archive .succession-gsb-workspace :where(h2, h3, h4, strong, b),
+.succession-archive .succession-gsb-dossier :where(h2, h3, h4, strong, b) {
+  color: #fff !important;
+}
+
+.succession-archive .succession-gsb-tools button.is-active,
+.succession-archive .succession-gsb-tools button.is-active * {
+  color: #fff !important;
+  background: #5f4f70 !important;
+}
+
+/* Timeline light controls use dark ink; selected/dark controls use white ink. */
+.succession-archive .timeline-command :where(
+  .timeline-command__navigation,
+  .timeline-command__scope-deck,
+  .timeline-command__metrics,
+  .timeline-command-voyage__metrics,
+  .timeline-command-voyage__method,
+  .timeline-command-voyage__controls,
+  .timeline-command__ledger,
+  .timeline-command__arc-grid
+) :where(p, span, small, dt, li) {
+  color: #344850 !important;
+}
+
+.succession-archive .timeline-command :where(
+  .timeline-command__navigation,
+  .timeline-command__scope-deck,
+  .timeline-command__metrics,
+  .timeline-command-voyage__metrics,
+  .timeline-command-voyage__method,
+  .timeline-command-voyage__controls,
+  .timeline-command__ledger,
+  .timeline-command__arc-grid
+) :where(h2, h3, h4, strong, b, dd, button, input, select) {
+  color: #17272f !important;
+}
+
+.succession-archive .timeline-workspace__arc-rail button.is-active,
+.succession-archive .timeline-workspace__arc-rail button.is-active *,
+.succession-archive .timeline-command__scope-deck button.is-active,
+.succession-archive .timeline-command__scope-deck button.is-active *,
+.succession-archive .timeline-view-switcher button.is-active,
+.succession-archive .timeline-view-switcher button.is-active *,
+.succession-archive .timeline-density button.is-active,
+.succession-archive .timeline-density button.is-active * {
+  color: #fff !important;
+}
+
+.succession-archive .timeline-command__hero :where(h2, h3, strong, b),
+.succession-archive .timeline-command-voyage__hero :where(h2, h3, strong, b),
+.succession-archive .timeline-command__signal :where(h2, h3, strong, b),
+.succession-archive .timeline-command-voyage__boundary :where(h2, h3, strong, b) {
+  color: #fff !important;
+}
+
+.succession-archive .timeline-command__hero :where(p, span, small),
+.succession-archive .timeline-command-voyage__hero :where(p, span, small),
+.succession-archive .timeline-command__signal :where(p, span, small),
+.succession-archive .timeline-command-voyage__boundary :where(p, span, small) {
+  color: #dce4e1 !important;
+}
+
+.succession-archive .timeline-command__hero-copy > span,
+.succession-archive .timeline-command-voyage__hero > div:first-child > span {
+  color: #f0d794 !important;
+}
+
+.succession-archive .timeline-day-rail button,
+.succession-archive .timeline-day-rail button * {
+  color: #f3f7f5 !important;
+}
+
+/* Spatial and research warnings retain meaning with stronger text tokens. */
+.succession-archive .black-whale-intelligence :where(.ship-source-banner, .ship-temporal-command, .ship-location-inspector) :where(p, span, small, dt) {
+  color: #dce4e1 !important;
+}
+
+.succession-archive .black-whale-intelligence :where(.ship-source-banner, .ship-temporal-command, .ship-location-inspector) :where(h2, h3, h4, strong, b, dd) {
+  color: #fff !important;
+}
+
+.succession-archive .succession-evidence-workspace :where(.succession-evidence-chapter__warnings, .succession-evidence-open-questions, .succession-release-candidate.is-blocked, .succession-foundation-closure) :where(p, span, small, dt, li) {
+  color: #344850 !important;
+}
+
+.succession-archive .succession-evidence-workspace :where(.succession-evidence-chapter__warnings, .succession-evidence-open-questions, .succession-release-candidate.is-blocked, .succession-foundation-closure) :where(h2, h3, h4, strong, b, dd) {
+  color: #17272f !important;
+}

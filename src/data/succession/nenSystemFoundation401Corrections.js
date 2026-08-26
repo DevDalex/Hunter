@@ -1,0 +1,107 @@
+const freeze = (value) => Object.freeze(value);
+const chapterSourceId = (number) => `source:chapter-${number}`;
+
+const knowledge = ({ id, abilityName, start, end = start, knowledgeState, summary, activation, conditions = [], limitations = [], costs = [], targets = [], range = 'unknown', duration = 'unknown', knownUses = [], certainty = 'confirmed', sources = [start] }) => freeze({
+  id,
+  abilityName,
+  chapterRange: freeze({ start, end }),
+  knowledgeState,
+  certainty,
+  summary,
+  mechanics: freeze({ activation, conditions: freeze(conditions), limitations: freeze(limitations), costs: freeze(costs), targets: freeze(targets), range, duration, knownUses: freeze(knownUses) }),
+  sourceIds: freeze(sources.map(chapterSourceId)),
+});
+
+export const abilityKnowledge401Overrides = freeze({
+  'ability:moonlight-act': freeze([
+    knowledge({
+      id: 'ability-knowledge:moonlight-act:401',
+      abilityName: 'Transparent Words—Moonlight Act',
+      start: 401,
+      knowledgeState: 'official name, Manipulation type, contract enforcement, renewal, and one-use reward revealed',
+      summary: 'Longhi reveals Transparent Words—Moonlight Act as a conditional Manipulation ability. A counterparty must voluntarily sign a limited-term contract after Longhi truthfully explains the applicable terms. The demonstrated Tubeppa–Woble agreement can impose one week of enforced Zetsu for breach, and Longhi can offer Kurapika one use of the ability as a reward under a separate investigation condition.',
+      activation: 'Longhi manifests an aura pen and paper, makes the required truthful advance disclosures, and the counterparty voluntarily signs the limited-term agreement.',
+      conditions: [
+        'Voluntary signature is an absolute demonstrated condition.',
+        'Longhi’s vow and limitation require explanation in advance without deceit.',
+        'Ordinary contract enforcement requires accurate communication of the terms.',
+        'Granting the Chapter 401 reward power requires Longhi to explain the larger plan in detail and obtain a signature before the reward can be granted.',
+        'The Tubeppa–Woble agreement expires at 9:00 a.m. next Sunday and renews for another week if a Tubeppa messenger is inside Room 1014 at that moment.',
+        'The demonstrated agreement forbids harmful interference/attacks against the opposing prince, queen, and affiliated guards.',
+      ],
+      limitations: [
+        'Manipulation is the supplied Nen classification. The aura pen and paper do not establish Conjuration as an additional type.',
+        'The one-week enforced-Zetsu penalty belongs to the demonstrated Chapter 401 agreement and is not generalized to every Moonlight Act contract.',
+        'Maximum range, simultaneous-contract capacity, aura cost, general cancellation rules, and the full catalog of possible restrictions/rewards remain unresolved.',
+        'The Beyond-child investigation condition does not prove that a participating prince is Beyond’s child.',
+      ],
+      costs: ['Longhi binds herself to truthful advance disclosure under her vow and limitation.', 'A breaching signatory in the demonstrated peace agreement faces one week of enforced Zetsu.'],
+      targets: ['voluntary contract signatories', 'actions governed by a signed agreement', 'Kurapika as the prospective one-use reward recipient'],
+      range: 'contract-mediated; physical maximum unknown',
+      duration: 'contract-defined; the demonstrated peace agreement is weekly with a 9:00 a.m. Sunday renewal condition',
+      knownUses: ['Chapter 401: Longhi demonstrates the contract interface and explains the rules.', 'Chapter 401: Longhi formalizes the Tubeppa–Woble/Oito non-interference agreement.', 'Chapter 401: Longhi offers Kurapika one use of Moonlight Act if the Beyond-child investigation condition is fulfilled.'],
+      sources: [401],
+    }),
+  ]),
+  'ability:beyond-curse-child-network': freeze([
+    knowledge({
+      id: 'ability-knowledge:beyond-curse-child-network:401',
+      abilityName: 'Beyond’s Curse-Child Network',
+      start: 401,
+      knowledgeState: 'death-released curse seals and ten strong sacrifices disclosed / target map unresolved',
+      summary: 'Longhi discloses that Beyond prepared numerous biological children whose Nen was awakened from birth and whose bodies carry powerful malevolent seals. A renowned Nen user concluded that the prepared Nen is released when a bearer dies. Longhi and Makaha are two of ten selected “strong curse sacrifices.” The exact individual curse abilities and targets remain unknown.',
+      activation: 'Death releases the prepared malevolent Nen according to Longhi’s account of the examining Nen user. Any additional activation switch, timing rule, targeting procedure, or Beyond-controlled trigger remains unresolved.',
+      conditions: [
+        'Longhi and Makaha visibly share a prepared seal associated with Beyond’s program.',
+        'A renowned Nen user examined the seal and described death as releasing the prepared malevolent Nen.',
+        'Longhi and Makaha are identified as two of ten strong curse sacrifices.',
+      ],
+      limitations: [
+        'The official ability name, Nen category, application procedure, exact target-selection system, range, and individual effects are unknown.',
+        'Longhi’s belief that princes are the intended targets is explicitly speculation at Chapter 401.',
+        'Longhi’s estimate that additional weak curse sacrifices exist is speculative; no exact weak-sacrifice count is confirmed.',
+        'The examiner says burning or cutting the visible cursed area cannot purge the curse. Chapter 401 does not prove that every possible Nen exorcism method is impossible.',
+        'Bill’s controlled-switch versus automatic-activation models remain hypotheses.',
+      ],
+      costs: ['The bearer’s death is part of the disclosed release mechanism.'],
+      targets: ['unknown at Chapter 401; Longhi theorizes the Kakin princes'],
+      range: 'unknown',
+      duration: 'seals persist before death; post-death curse duration unknown',
+      knownUses: ['Chapter 401: Longhi shows the seal beneath her tongue and describes the examination of the prepared curse network.'],
+      sources: [401],
+    }),
+  ]),
+  'ability:dowsing-chain': freeze([
+    knowledge({
+      id: 'ability-knowledge:dowsing-chain:401',
+      abilityName: 'Dowsing Chain',
+      start: 401,
+      knowledgeState: 'used throughout Longhi disclosure with a motionless no-lie reading',
+      summary: 'Kurapika draws Dowsing Chain while threatening to stop the conversation if Longhi lies. Near the end of Longhi’s disclosures he notes that the chain has not moved, which he takes as no lie detected. The result is preserved as Kurapika’s reading rather than omniscient proof that every interpretation or hypothesis Longhi sincerely holds is objectively correct.',
+      activation: 'Kurapika holds Dowsing Chain while evaluating Longhi’s spoken claims during the Room 1014 negotiation.',
+      conditions: ['The chain response is interpreted by Kurapika in context.'],
+      limitations: ['Existing limitations remain: manipulation, altered memories, and sincere false belief can undermine truth-detection conclusions.', 'A motionless chain does not convert Longhi’s explicitly speculative curse-target and Beyond-child theories into confirmed facts.'],
+      targets: ['Longhi’s statements during the Chapter 401 negotiation'],
+      range: 'close-range conversation in the demonstrated use',
+      knownUses: ['Chapter 401: Kurapika observes no movement from Dowsing Chain during Longhi’s disclosure and assassination-intent statement.'],
+      sources: [348, 401],
+    }),
+  ]),
+  'ability:silent-majority': freeze([
+    knowledge({
+      id: 'ability-knowledge:silent-majority:401',
+      abilityName: 'Silent Majority',
+      start: 401,
+      knowledgeState: 'Longhi excluded as user / actual user remains unidentified',
+      summary: 'Longhi explicitly tells Kurapika that the snake ability does not belong to her. This removes Longhi from the candidate-user interpretation at Chapter 401 but does not identify the real Silent Majority user or change the unresolved ability mechanics.',
+      activation: 'Still unresolved beyond earlier Room 1014 demonstrations.',
+      conditions: ['Longhi is not the user according to her direct Chapter 401 denial.'],
+      limitations: ['Actual user, Nen category, complete activation conditions, range, targeting rules, and full effect remain unresolved.', 'Furykov’s belief that Longhi is the killer does not override her denial or establish an alternative mechanic.'],
+      targets: ['unknown / prior Room 1014 victims'],
+      range: 'unknown',
+      knownUses: ['Chapter 401 supplies no new attack; it supplies Longhi’s denial of ownership.'],
+      certainty: 'unknown',
+      sources: [369, 401],
+    }),
+  ]),
+});

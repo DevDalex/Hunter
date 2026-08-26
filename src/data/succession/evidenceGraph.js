@@ -31,9 +31,22 @@ export const createSuccessionEvidenceGraph = (data) => {
   const byId = new Map(entities.map((entity) => [entity.id, entity]));
   const sources = data.sources || [];
   const sourceById = new Map(sources.map((source) => [source.id, source]));
-  const latestChapter = data.chapters.at(-1)?.number || 414;
+  const latestChapter = data.chapters.at(-1)?.number || 418;
   const chapterNumbersByEntity = new Map();
+  const sourceLinkedByChapterAndType = new Map();
 
+  for (const entity of entities) {
+    for (const sourceId of entity.sourceIds || []) {
+      const source = sourceById.get(sourceId);
+      if (source?.sourceType !== 'chapter' || !Number.isFinite(Number(source.chapter))) continue;
+      const key = `${Number(source.chapter)}:${entity.entityType}`;
+      const current = sourceLinkedByChapterAndType.get(key) || [];
+      if (!current.includes(entity.id)) current.push(entity.id);
+      sourceLinkedByChapterAndType.set(key, current);
+    }
+  }
+
+  const sourceLinkedIds = (chapter, entityType) => sourceLinkedByChapterAndType.get(`${Number(chapter)}:${entityType}`) || [];
   const resolveMany = (ids) => unique(ids).map((id) => byId.get(id)).filter(Boolean);
   const appendChapterLink = (entityId, chapter) => {
     if (!entityId) return;
@@ -47,17 +60,24 @@ export const createSuccessionEvidenceGraph = (data) => {
     const assignments = (data.assignments || []).filter((assignment) => includesChapter(assignment.chapterRange, chapter.number));
     const relationships = (data.relationships || []).filter((relationship) => includesChapter(relationship.chapterRange, chapter.number));
 
-    const eventIds = unique([...(chapter.eventIds || []), ...events.map((event) => event.id)]);
-    const assignmentIds = unique(assignments.map((assignment) => assignment.id));
-    const relationshipIds = unique(relationships.map((relationship) => relationship.id));
+    const eventIds = unique([...(chapter.eventIds || []), ...events.map((event) => event.id), ...sourceLinkedIds(chapter.number, 'event')]);
+    const assignmentIds = unique([...assignments.map((assignment) => assignment.id), ...sourceLinkedIds(chapter.number, 'assignment')]);
+    const relationshipIds = unique([...relationships.map((relationship) => relationship.id), ...sourceLinkedIds(chapter.number, 'relationship')]);
     const abilityIds = unique([
       ...(chapter.abilityIds || []),
       ...events.flatMap((event) => event.abilityIds || []),
+      ...sourceLinkedIds(chapter.number, 'ability'),
+    ]);
+    const guardianBeastIds = unique([
+      ...(chapter.guardianBeastIds || []),
+      ...events.flatMap((event) => event.guardianBeastIds || []),
+      ...sourceLinkedIds(chapter.number, 'guardian-beast'),
     ]);
     const locationIds = unique([
       ...(chapter.locationIds || []),
       ...events.flatMap((event) => event.locationIds || []),
       ...assignments.map((assignment) => assignment.locationId),
+      ...sourceLinkedIds(chapter.number, 'location'),
     ]);
     const organizationIds = unique([
       ...(chapter.organizationIds || []),
@@ -66,6 +86,7 @@ export const createSuccessionEvidenceGraph = (data) => {
         .filter((id) => byId.get(id)?.entityType === 'organization'),
       ...relationships.flatMap((relationship) => [relationship.sourceEntityId, relationship.targetEntityId])
         .filter((id) => byId.get(id)?.entityType === 'organization'),
+      ...sourceLinkedIds(chapter.number, 'organization'),
     ]);
     const characterIds = unique([
       ...(chapter.appearanceRecords || []).map((appearance) => appearance.characterId),
@@ -79,6 +100,7 @@ export const createSuccessionEvidenceGraph = (data) => {
       ]).filter((id) => byId.get(id)?.entityType === 'character'),
       ...relationships.flatMap((relationship) => [relationship.sourceEntityId, relationship.targetEntityId])
         .filter((id) => byId.get(id)?.entityType === 'character'),
+      ...sourceLinkedIds(chapter.number, 'character'),
     ]);
 
     const linkedEntityIds = unique([
@@ -86,6 +108,7 @@ export const createSuccessionEvidenceGraph = (data) => {
       ...characterIds,
       ...organizationIds,
       ...abilityIds,
+      ...guardianBeastIds,
       ...locationIds,
       ...eventIds,
       ...assignmentIds,
@@ -139,6 +162,7 @@ export const createSuccessionEvidenceGraph = (data) => {
       assignmentIds: freezeList(assignmentIds),
       relationshipIds: freezeList(relationshipIds),
       abilityIds: freezeList(abilityIds),
+      guardianBeastIds: freezeList(guardianBeastIds),
       locationIds: freezeList(locationIds),
       organizationIds: freezeList(organizationIds),
       characterIds: freezeList(characterIds),
@@ -153,6 +177,7 @@ export const createSuccessionEvidenceGraph = (data) => {
         characters: characterIds.length,
         organizations: organizationIds.length,
         abilities: abilityIds.length,
+        guardianBeasts: guardianBeastIds.length,
         locations: locationIds.length,
         events: eventIds.length,
         assignments: assignmentIds.length,

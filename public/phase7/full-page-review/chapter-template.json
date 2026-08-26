@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "7.1C.0",
+  "chapter": null,
+  "source": {
+    "status": "not-provided",
+    "filename": null,
+    "sha256": null,
+    "pageCount": null,
+    "privateVaultPath": null
+  },
+  "review": {
+    "status": "awaiting-primary-pages",
+    "pagesInspectedPass1": 0,
+    "pagesInspectedPass2": 0,
+    "pass1Complete": false,
+    "pass2Complete": false,
+    "reviewedAt": null
+  },
+  "results": {
+    "blackWhalePanelsRetained": 0,
+    "evidenceAtomsAdded": 0,
+    "locationsAdded": [],
+    "locationsAmended": [],
+    "routesAdded": [],
+    "routesAmended": [],
+    "contradictionsAdded": [],
+    "unresolvedQuestions": []
+  },
+  "panelLocators": [],
+  "evidenceAtoms": [],
+  "excludedStoryMaterial": [],
+  "storage": {
+    "publicRecord": null,
+    "privateCropsDirectory": null
+  }
+}

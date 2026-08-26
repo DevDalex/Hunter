@@ -225,33 +225,3 @@
 .organization-workspace__operations h3 { margin: 5px 0; font-family: Georgia, serif; font-size: 1.55rem; }
 .organization-workspace__operations p { margin: 0; color: #555d60; line-height: 1.55; }
 .organization-workspace__operations > article > span { padding: 7px 10px; background: #eee7da; font-weight: 750; }
-
-@media (max-width: 1050px) {
-  .organization-workspace__hero { grid-template-columns: 1fr; }
-  .organization-workspace__overview { grid-template-columns: 1fr; }
-  .organization-workspace__institutions { grid-template-columns: 1fr; }
-  .organization-workspace__factions dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .organization-workspace__faction-members { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .organization-workspace__members > button { grid-template-columns: 54px minmax(180px, 1fr) minmax(140px, 1fr); }
-  .organization-workspace__members > button > span:nth-of-type(n+3) { display: none; }
-  .organization-workspace__relations article { grid-template-columns: 1fr 180px 1fr; }
-  .organization-workspace__relations article > p { grid-column: 1 / -1; }
-}
-
-@media (max-width: 700px) {
-  .organization-workspace { width: min(100% - 24px, 1420px); }
-  .organization-workspace__hero { padding-top: 44px; }
-  .organization-workspace__hero dl { grid-template-columns: 1fr; }
-  .organization-workspace__hero dl div { min-height: auto; border-left: 0; border-top: 1px solid rgba(23, 27, 29, .12); }
-  .organization-workspace__boundary,
-  .organization-workspace__toolbar { align-items: stretch; flex-direction: column; }
-  .organization-workspace__factions dl,
-  .organization-workspace__faction-members { grid-template-columns: 1fr; }
-  .organization-workspace__institutions > article > header,
-  .organization-workspace__factions article > header { flex-direction: column; }
-  .organization-workspace__members > button { grid-template-columns: 48px minmax(0, 1fr) auto; }
-  .organization-workspace__members > button > span:nth-of-type(n+2) { display: none; }
-  .organization-workspace__relations article { grid-template-columns: 1fr; text-align: left; }
-  .organization-workspace__relations article > span { text-align: left; }
-  .organization-workspace__operations article { grid-template-columns: 1fr; }
-}

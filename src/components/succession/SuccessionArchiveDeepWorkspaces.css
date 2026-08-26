@@ -855,7 +855,7 @@
   top: 18px;
   display: grid;
   gap: 10px;
-  max-height: calc(100dvh - 36px);
+  max-height: calc(100vh - 36px);
   padding: 14px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, .1);
@@ -957,83 +957,6 @@
 .succession-chapter-record__prelude p { margin-top: 6px; }
 .succession-chapter-record > footer { padding-top: 4px; }
 .succession-chapter-record > footer button:disabled { opacity: .4; cursor: default; }
-
-@media (max-width: 1100px) {
-  .succession-beast-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-transition-ledger > div { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .succession-chapter-records__layout { grid-template-columns: 1fr; }
-  .succession-chapter-index { position: static; max-height: 420px; }
-}
-
-@media (max-width: 820px) {
-  .succession-queen-board > header,
-  .succession-guards-workspace__hero,
-  .succession-beasts-workspace__hero,
-  .succession-events-workspace__hero,
-  .succession-body-states__hero,
-  .succession-relationships-workspace__hero,
-  .succession-chapter-records__hero,
-  .succession-queen-dossier__hero,
-  .succession-events-workspace__tools,
-  .succession-relationships-workspace__tools,
-  .succession-chapter-record > header {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-queen-board > div,
-  .succession-room-matrix > div,
-  .succession-body-state-ledger > div,
-  .succession-body-state-legend > div,
-  .succession-relationship-ledger,
-  .succession-chapter-record__grid,
-  .succession-queen-dossier__columns,
-  .succession-room-dossier > div,
-  .succession-room-dossier > dl,
-  .succession-event-dossier > dl,
-  .succession-beast-dossier > dl {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-queen-dossier__hero > .succession-entity-visual { width: min(180px, 52vw); }
-  .succession-queen-dossier__hero > a { justify-self: start; }
-  .succession-queen-card { grid-template-columns: 48px 76px minmax(0, 1fr); }
-  .succession-queen-card > .succession-entity-visual { width: 76px; height: 96px; }
-  .succession-beast-grid { grid-template-columns: 1fr; }
-  .succession-transition-ledger > div { grid-template-columns: 1fr; }
-  .succession-room-card { grid-template-columns: 34px 44px minmax(0, 1fr); }
-  .succession-room-card > b { grid-column: 3; max-width: none; text-align: left; }
-  .succession-room-card .succession-entity-visual { width: 44px; height: 52px; }
-  .succession-event-timeline > button { grid-template-columns: 36px minmax(0, 1fr); }
-  .succession-event-timeline > button > b { grid-column: 2; }
-  .succession-relationship-ledger__nodes { grid-template-columns: 1fr; }
-  .succession-relationship-ledger__nodes > svg { transform: rotate(90deg); justify-self: center; }
-  .succession-chapter-record > header button { justify-self: start; }
-  .succession-beast-dossier footer,
-  .succession-event-dossier footer,
-  .succession-chapter-record > footer { align-items: stretch; flex-direction: column; }
-}
-
-@media (max-width: 560px) {
-  .succession-queen-board > header dl,
-  .succession-guards-workspace__hero dl,
-  .succession-beasts-workspace__hero dl,
-  .succession-events-workspace__hero dl,
-  .succession-body-states__hero dl,
-  .succession-relationships-workspace__hero dl,
-  .succession-chapter-records__hero dl {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .succession-queen-card { grid-template-columns: 44px 64px minmax(0, 1fr); padding: 13px; gap: 10px; }
-  .succession-queen-card > .succession-entity-visual { width: 64px; height: 82px; }
-  .succession-queen-card dl { grid-column: 1 / -1; }
-  .succession-beast-grid > button { grid-template-columns: 30px 78px minmax(0, 1fr); padding: 12px; }
-  .succession-beast-grid__image { width: 78px; height: 98px; }
-  .succession-beast-grid dl { grid-column: 1 / -1; }
-  .succession-event-timeline { padding-left: 18px; }
-  .succession-event-timeline > button::before { left: -16px; }
-  .succession-chapter-index { max-height: 360px; }
-}
 
 @media (prefers-reduced-motion: reduce) {
   .succession-queen-card,

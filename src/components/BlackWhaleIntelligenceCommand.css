@@ -454,51 +454,6 @@
 .black-whale-intelligence .room-index__progress { color: var(--ship-intel-paper-muted-ink); }
 .black-whale-intelligence .room-card dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-@media (max-width: 1180px) {
-  .black-whale-intelligence__hero { grid-template-columns: minmax(0, 1fr) 270px; }
-  .ship-temporal-ledger ol { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 900px) {
-  .black-whale-intelligence__hero { grid-template-columns: 1fr; }
-  .black-whale-intelligence__hero dl { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  .ship-temporal-command > footer { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ship-temporal-ledger > header { align-items: flex-start; flex-direction: column; }
-  .ship-temporal-ledger > header > p { max-width: none; }
-  .ship-temporal-ledger li { grid-template-columns: minmax(130px, .35fr) minmax(0, 1fr); }
-  .ship-temporal-ledger li > button { grid-column: 1 / -1; }
-}
-
-@media (max-width: 720px) {
-  .black-whale-intelligence__hero { padding: 26px 21px; border-radius: 23px; }
-  .black-whale-intelligence__hero h2 { font-size: clamp(40px, 13vw, 62px); }
-  .black-whale-intelligence__hero dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ship-temporal-command { padding: 18px; }
-  .ship-temporal-command > header { align-items: flex-start; flex-wrap: wrap; }
-  .ship-temporal-command > header > b { margin-left: 0; }
-  .ship-temporal-command > label { grid-template-columns: 1fr; }
-  .ship-temporal-command > label > span:last-child { text-align: right; }
-  .ship-temporal-ledger { padding: 18px; }
-  .ship-temporal-ledger li { grid-template-columns: 1fr; }
-  .ship-temporal-ledger li > button { grid-column: auto; width: 100%; }
-  .ship-location-inspector__snapshot { grid-template-columns: 1fr; }
-  .black-whale-intelligence .room-card dl { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 560px) {
-  .black-whale-intelligence__hero dl { grid-template-columns: 1fr; }
-  .black-whale-intelligence__hero dl > div { min-height: 0; }
-  .ship-temporal-command > nav { grid-template-columns: 1fr; }
-  .ship-temporal-command > footer { grid-template-columns: 1fr; }
-  .ship-temporal-ledger > header > div { align-items: flex-start; }
-  .ship-hotspot__count { min-width: 25px; height: 25px; }
-}
-
-@media (hover: none) {
-  .black-whale-intelligence .ship-hotspot:hover,
-  .ship-temporal-ledger li > button:hover { transform: none; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .black-whale-intelligence *,
   .black-whale-intelligence *::before,
@@ -506,24 +461,5 @@
 }
 
 /* Batch 5 route-owned Black Whale contrast closure. */
-@media (max-width: 560px) {
-  .succession-archive .black-whale-intelligence .ship-location-inspector__snapshot > div > dt,
-  .succession-archive .black-whale-intelligence .ship-location-inspector__snapshot > div > dd {
-    color: var(--succession-text-strong);
-  }
-
-  .succession-archive .black-whale-intelligence .ship-manifest table thead th {
-    color: var(--succession-text-on-paper);
-  }
-}
 
 /* Batch 5 final Black Whale contrast specificity. */
-@media (max-width: 560px) {
-  #black-whale.black-whale-intelligence .ship-location-inspector__snapshot > div > dt {
-    color: var(--succession-text-strong);
-  }
-
-  #black-whale.black-whale-intelligence .ship-manifest table thead th {
-    color: var(--succession-text-on-paper);
-  }
-}

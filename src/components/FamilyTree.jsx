@@ -22,7 +22,7 @@ export default function FamilyTree({ onOpenPrince, spoilerLimit = Number.MAX_SAF
   };
 
   return <>
-    <HorizontalScrollHint>Swipe across the queen branches on smaller screens. Select a queen, then a prince, to update the protection circle below.</HorizontalScrollHint>
+    <HorizontalScrollHint>Tap any royal, guard, or mafia portrait to pin its essentials.</HorizontalScrollHint>
     <RoyalFamilyGuardTree onNavigate={navigate} spoilerLimit={spoilerLimit} initialPrince={14} />
   </>;
 }

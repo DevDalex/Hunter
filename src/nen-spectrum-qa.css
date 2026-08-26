@@ -1,0 +1,71 @@
+.nen-category-view.nen-category-view--visual.nen-type-atlas {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-auto-flow: row;
+  gap: 20px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.nen-category-view.nen-category-view--visual.nen-type-atlas > .nen-type-atlas__heading,
+.nen-category-view.nen-category-view--visual.nen-type-atlas > .nen-type-atlas__layout,
+.nen-category-view.nen-category-view--visual.nen-type-atlas > .nen-type-atlas__legend {
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.nen-category-view.nen-category-view--visual.nen-type-atlas > .nen-type-atlas__layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, .55fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.nen-category-view.nen-category-view--visual.nen-type-atlas .nen-type-spectrum,
+.nen-category-view.nen-category-view--visual.nen-type-atlas .nen-type-inspector {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.nen-category-view.nen-category-view--visual.nen-type-atlas .nen-type-inspector {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.nen-encyclopedia.nen-image-desk button {
+  min-height: 44px;
+}
+
+.nen-encyclopedia.nen-image-desk .nen-atlas-hero__roster button small,
+.nen-encyclopedia.nen-image-desk .nen-type-spectrum__center small,
+.nen-encyclopedia.nen-image-desk .nen-type-node__copy small,
+.nen-encyclopedia.nen-image-desk .nen-type-inspector header small,
+.nen-encyclopedia.nen-image-desk .nen-type-inspector__water small,
+.nen-encyclopedia.nen-image-desk .nen-type-inspector dt,
+.nen-encyclopedia.nen-image-desk .nen-type-atlas__legend small {
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.nen-encyclopedia.nen-image-desk .nen-type-node__copy em,
+.nen-encyclopedia.nen-image-desk .nen-type-spectrum__caption,
+.nen-encyclopedia.nen-image-desk .nen-atlas-hero__roster > em {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+@media (max-width: 1240px) {
+  .nen-category-view.nen-category-view--visual.nen-type-atlas > .nen-type-atlas__layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .nen-category-view.nen-category-view--visual.nen-type-atlas .nen-type-inspector {
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  }
+}

@@ -1,0 +1,45 @@
+.succession-coverage-roadmap {
+  margin: 0 0 16px;
+  border: 1px solid #bdbdb7;
+  background: #f6f6f2;
+  color: #181818;
+}
+.succession-coverage-roadmap *,
+.succession-coverage-roadmap *::before,
+.succession-coverage-roadmap *::after { box-sizing: border-box; }
+.succession-coverage-roadmap > header { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 11px; align-items: start; padding: 13px 14px; border-bottom: 1px solid #d0d0ca; background: #ecece7; }
+.succession-coverage-roadmap > header > svg { margin-top: 2px; }
+.succession-coverage-roadmap > header span { display: block; color: #5e5e59; font-size: 11px; font-weight: 820; letter-spacing: .055em; text-transform: uppercase; }
+.succession-coverage-roadmap > header h2 { margin: 5px 0 6px; font-size: 19px; line-height: 1.14; }
+.succession-coverage-roadmap > header p { max-width: 900px; margin: 0; color: #50504c; font-size: 11px; line-height: 1.5; }
+.succession-coverage-roadmap > header > dl { display: grid; grid-template-columns: repeat(3, minmax(92px, auto)); gap: 6px; margin: 0; }
+.succession-coverage-roadmap > header > dl > div { padding: 7px 8px; border: 1px solid #c8c8c2; background: #fff; }
+.succession-coverage-roadmap dt { color: #666661; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+.succession-coverage-roadmap dd { margin: 4px 0 0; font-size: 13px; font-weight: 820; }
+.succession-coverage-roadmap__pending { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 9px; align-items: center; padding: 9px 12px; border-bottom: 1px solid #d3d3cd; background: #f0f0eb; }
+.succession-coverage-roadmap__pending b { display: block; font-size: 12px; }
+.succession-coverage-roadmap__pending span { display: block; margin-top: 2px; color: #5f5f5a; font-size: 11px; }
+.succession-coverage-roadmap button { min-height: 32px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border: 1px solid #777; background: #fff; color: inherit; font: inherit; font-size: 11px; font-weight: 780; cursor: pointer; }
+.succession-coverage-roadmap button:hover,
+.succession-coverage-roadmap button:focus-visible { background: #e3e3de; }
+.succession-coverage-roadmap button:focus-visible { outline: 2px solid #181818; outline-offset: 2px; }
+.succession-coverage-roadmap__domains { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 10px 11px; }
+.succession-coverage-roadmap__domains article { min-width: 0; display: grid; grid-template-rows: auto auto 1fr auto; border: 1px solid #c8c8c2; background: #fff; }
+.succession-coverage-roadmap__domains article[data-status='current'] { border-style: double; }
+.succession-coverage-roadmap__domains article[data-status='needs-sources'] { border-left: 4px solid #333; }
+.succession-coverage-roadmap__domains article > header { display: flex; justify-content: space-between; gap: 8px; align-items: center; padding: 8px; border-bottom: 1px solid #deded9; background: #fafaf7; }
+.succession-coverage-roadmap__domains article > header span { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 820; }
+.succession-coverage-roadmap__domains article > header b { color: #62625d; font-size: 11px; text-transform: uppercase; }
+.succession-coverage-roadmap__domains article > dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 0; background: #d6d6d0; border-bottom: 1px solid #d6d6d0; }
+.succession-coverage-roadmap__domains article > dl > div { padding: 7px; background: #fff; }
+.succession-coverage-roadmap__why { padding: 8px; }
+.succession-coverage-roadmap__why > b { display: block; font-size: 11px; line-height: 1.4; }
+.succession-coverage-roadmap__why ul { margin: 6px 0 0 16px; padding: 0; color: #585853; font-size: 11px; line-height: 1.4; }
+.succession-coverage-roadmap__why p { margin: 6px 0 0; color: #585853; font-size: 11px; line-height: 1.4; }
+.succession-coverage-roadmap__domains article > footer { padding: 8px; border-top: 1px solid #dfdfda; background: #fafaf7; }
+.succession-coverage-roadmap > footer { padding: 8px 11px; border-top: 1px solid #d4d4ce; background: #f0f0eb; color: #5d5d58; font-size: 11px; line-height: 1.4; }
+@media (prefers-reduced-motion: reduce) {
+  .succession-coverage-roadmap *,
+  .succession-coverage-roadmap *::before,
+  .succession-coverage-roadmap *::after { transition: none !important; }
+}

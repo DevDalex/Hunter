@@ -3,18 +3,79 @@ import {
   abilityFoundationExpansion,
   guardianBeastAbilityExpansion,
 } from './abilityFoundationExpansion.js';
+import { abilityFoundation370Expansion } from './abilityFoundation370Expansion.js';
+import { abilityFoundation372Expansion } from './abilityFoundation372Expansion.js';
+import { abilityFoundation373Expansion } from './abilityFoundation373Expansion.js';
+import { abilityFoundation374Expansion } from './abilityFoundation374Expansion.js';
+import { abilityFoundation375Expansion } from './abilityFoundation375Expansion.js';
+import { abilityFoundation377Expansion } from './abilityFoundation377Expansion.js';
+import { abilityFoundation378Expansion } from './abilityFoundation378Expansion.js';
+import { abilityFoundation379Expansion } from './abilityFoundation379Expansion.js';
+import { abilityFoundation381Expansion } from './abilityFoundation381Expansion.js';
+import { abilityFoundation382Expansion } from './abilityFoundation382Expansion.js';
+import { abilityFoundation383Expansion } from './abilityFoundation383Expansion.js';
+import { abilityFoundation384Expansion } from './abilityFoundation384Expansion.js';
+import { abilityFoundation386Expansion } from './abilityFoundation386Expansion.js';
+import { abilityFoundation387Expansion } from './abilityFoundation387Expansion.js';
+import { abilityFoundation388Expansion } from './abilityFoundation388Expansion.js';
+import { abilityFoundation389Expansion } from './abilityFoundation389Expansion.js';
+import { abilityFoundation390Expansion } from './abilityFoundation390Expansion.js';
+import { abilityFoundation391Expansion } from './abilityFoundation391Expansion.js';
+import { abilityFoundation392Expansion } from './abilityFoundation392Expansion.js';
+import { abilityFoundation393Expansion } from './abilityFoundation393Expansion.js';
+import { abilityFoundation394Expansion } from './abilityFoundation394Expansion.js';
+import { abilityFoundation397Expansion } from './abilityFoundation397Expansion.js';
+import { abilityFoundation398Expansion } from './abilityFoundation398Expansion.js';
+import { abilityFoundation399Expansion } from './abilityFoundation399Expansion.js';
+import { abilityFoundation400Expansion } from './abilityFoundation400Expansion.js';
+import { abilityFoundation401Expansion } from './abilityFoundation401Expansion.js';
+import { abilityFoundation402Expansion } from './abilityFoundation402Expansion.js';
+import { abilityFoundation405Expansion } from './abilityFoundation405Expansion.js';
+import { abilityFoundation406Expansion } from './abilityFoundation406Expansion.js';
 
-const ARCHIVE_DATE = '2026-07-24';
+const ARCHIVE_DATE = '2026-08-11';
 const unique = (values) => [...new Set(values.filter(Boolean))];
 const uniqueById = (values) => [...new Map(values.map((value) => [value.id, value])).values()];
+const abilityExpansions = Object.freeze([
+  ...abilityFoundationExpansion,
+  ...abilityFoundation370Expansion,
+  ...abilityFoundation372Expansion,
+  ...abilityFoundation373Expansion,
+  ...abilityFoundation374Expansion,
+  ...abilityFoundation375Expansion,
+  ...abilityFoundation377Expansion,
+  ...abilityFoundation378Expansion,
+  ...abilityFoundation379Expansion,
+  ...abilityFoundation381Expansion,
+  ...abilityFoundation382Expansion,
+  ...abilityFoundation383Expansion,
+  ...abilityFoundation384Expansion,
+  ...abilityFoundation386Expansion,
+  ...abilityFoundation387Expansion,
+  ...abilityFoundation388Expansion,
+  ...abilityFoundation389Expansion,
+  ...abilityFoundation390Expansion,
+  ...abilityFoundation391Expansion,
+  ...abilityFoundation392Expansion,
+  ...abilityFoundation393Expansion,
+  ...abilityFoundation394Expansion,
+  ...abilityFoundation397Expansion,
+  ...abilityFoundation398Expansion,
+  ...abilityFoundation399Expansion,
+  ...abilityFoundation400Expansion,
+  ...abilityFoundation401Expansion,
+  ...abilityFoundation402Expansion,
+  ...abilityFoundation405Expansion,
+  ...abilityFoundation406Expansion,
+]);
 
 const abilities = Object.freeze(uniqueById([
   ...foundationData.abilities,
-  ...abilityFoundationExpansion,
+  ...abilityExpansions,
 ]));
 
 const abilityIdsByChapter = new Map();
-for (const ability of abilityFoundationExpansion) {
+for (const ability of abilityExpansions) {
   for (const chapterNumber of ability.sourceChapterNumbers || []) {
     const current = abilityIdsByChapter.get(chapterNumber) || [];
     current.push(ability.id);

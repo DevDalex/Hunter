@@ -10,6 +10,8 @@ on:
       - 'src/components/TimelineWorkspace.css'
       - 'src/components/TimelineCommand.css'
       - 'src/components/SuccessionTimeline.jsx'
+      - 'src/components/SuccessionTimelineAtlas.jsx'
+      - 'src/components/SuccessionTimelineAtlas.css'
       - 'src/components/BlackWhaleGuide.jsx'
       - 'src/components/BlackWhaleIntelligenceCommand.css'
       - 'src/components/SafeImage.jsx'
@@ -24,7 +26,9 @@ on:
       - 'src/components/succession/SuccessionArchiveAssignmentCommand.css'
       - 'src/components/succession/SuccessionArchiveSearch.css'
       - 'src/data/routeManifest.js'
+      - 'src/data/successionTimelineResearch.js'
       - 'scripts/audit-succession-batch-5-*.mjs'
+      - 'scripts/audit-succession-timeline-atlas.mjs'
       - 'scripts/succession-final-release-qa.mjs'
       - 'scripts/succession-cross-browser-qa.mjs'
       - 'docs/SUCCESSION-VISUAL-REDESIGN-*.md'
@@ -40,7 +44,7 @@ concurrency:
 
 jobs:
   final_closure:
-    name: Batch 5 final responsive, accessibility, performance, and cross-browser gate
+    name: Batch 5 final desktop accessibility, performance, and cross-browser gate
     runs-on: ubuntu-latest
     timeout-minutes: 120
 
@@ -59,6 +63,9 @@ jobs:
 
       - name: Audit Batch 5 timeline intelligence
         run: node scripts/audit-succession-batch-5-timeline.mjs
+
+      - name: Audit complete Timeline Atlas
+        run: node scripts/audit-succession-timeline-atlas.mjs
 
       - name: Audit Batch 5 relationship intelligence
         run: node scripts/audit-succession-batch-5-relationships.mjs
@@ -134,16 +141,19 @@ jobs:
       - name: Audit production performance budgets
         run: npm run audit:performance
 
-      - name: Install Chromium, Firefox, and WebKit
-        run: npx playwright install --with-deps chromium firefox webkit
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
 
-      - name: Run complete Chromium release matrix
+      - name: Run complete desktop Chromium release matrix
         shell: bash
         run: |
           set -o pipefail
           npm run qa:succession-final-release 2>&1 | tee batch5-final-release.log
 
-      - name: Run Firefox and WebKit regression matrix
+      - name: Install Firefox and WebKit
+        run: npx playwright install --with-deps firefox webkit
+
+      - name: Run desktop Firefox and WebKit regression matrix
         shell: bash
         run: |
           set -o pipefail

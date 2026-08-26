@@ -385,39 +385,6 @@
   color: var(--succession-muted, #aab3c2);
 }
 
-@media (max-width: 940px) {
-  .succession-organization-hero,
-  .succession-organization-state-board {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-organization-filters,
-  .succession-organization-dossier__columns {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 620px) {
-  .succession-organization-dossier__identity,
-  .succession-organization-grid dl,
-  .succession-organization-state-board dl {
-    grid-template-columns: 1fr;
-  }
-
-  .succession-organization-hero dl {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .succession-organization-chapter {
-    width: 100%;
-    grid-template-columns: 1fr;
-  }
-
-  .succession-organization-dossier__footer {
-    grid-template-columns: 1fr;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .succession-organization-workspace *,
   .succession-organization-dossier * {

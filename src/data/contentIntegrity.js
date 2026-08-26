@@ -223,7 +223,7 @@ export const integrityChecks = [
     detail: `${implementationSections.length} system notes, ${maintenanceMatrix.length} maintenance runbooks, ${releaseChecklist.reduce((total, group) => total + group.items.length, 0)} release checks, ${completionCriteria.length} completion criteria, and ${archiveDesignSystemStats.primitives} Batch 12 primitives form the current handoff.`,
   },
   {
-    id: 'cloudflare-release-contract', label: 'Cloudflare release contract', status: releaseGates.length === 10 && routeManifest.length === 26 && routeManifestStats.screens === releaseStats.routes && releaseStats.chapterBoundary === ARCHIVE_BOUNDARY ? 'pass' : 'fail',
+    id: 'cloudflare-release-contract', label: 'Cloudflare release contract', status: releaseGates.length === releaseStats.gates && routeManifest.length === routeManifestStats.screens && routeManifestStats.screens === releaseStats.routes && releaseStats.chapterBoundary === ARCHIVE_BOUNDARY ? 'pass' : 'fail',
     detail: `${releaseGates.length} active release gates cover ${routeManifest.length} focused reader-facing screens and the Worker-first Cloudflare deployment contract.`,
   },
 ];

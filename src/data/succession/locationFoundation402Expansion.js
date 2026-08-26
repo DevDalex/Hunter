@@ -1,0 +1,71 @@
+const freeze = (value) => Object.freeze(value);
+const sourceId = 'source:chapter-402';
+const justice = 'location:black-whale:tier-2:justice-bureau';
+
+const location = ({ id, slug, name, summary, locationType = 'room', parentId, ancestorIds, deck = null, accessLevel = 'controlled', zoneRole, certainty = 'confirmed' }) => freeze({
+  id,
+  entityType: 'location',
+  slug,
+  name,
+  aliases: freeze([]),
+  summary,
+  sourceIds: freeze([sourceId]),
+  publicationStatus: 'published',
+  canonLevel: 'canon',
+  createdAt: '2026-08-10',
+  updatedAt: '2026-08-10',
+  locationType,
+  parentId,
+  ancestorIds: freeze(ancestorIds),
+  deck,
+  accessLevel,
+  zoneRole,
+  certainty,
+});
+
+export const locationFoundation402Expansion = freeze([
+  location({
+    id: `${justice}:melody-cell`,
+    slug: 'justice-bureau-melody-cell',
+    name: 'Melody’s Justice Bureau Cell',
+    summary: 'Justice-controlled detention room where Kacho-form shows Melody the photograph of Fugetsu’s shoulder-blade mark at 6:00 a.m. on Voyage Day 11 and the two begin developing the marked-trap hypothesis.',
+    parentId: justice,
+    ancestorIds: ['location:black-whale', 'location:black-whale:tier-2', justice],
+    deck: 2,
+    accessLevel: 'justice-controlled',
+    zoneRole: 'detention-and-private-investigation',
+  }),
+  location({
+    id: `${justice}:kaiser-office`,
+    slug: 'justice-bureau-kaiser-office',
+    name: 'Kaiser’s Justice Bureau Office',
+    summary: 'Justice Bureau office used by Kaiser, Melody, and Kacho-form to develop the Luzurus-removal, prince-letter, and Fugetsu-protection plans. Chapter 402 returns here for the 8:50 a.m. debrief.',
+    parentId: justice,
+    ancestorIds: ['location:black-whale', 'location:black-whale:tier-2', justice],
+    deck: 2,
+    accessLevel: 'justice-controlled',
+    zoneRole: 'investigation-and-operational-planning',
+  }),
+  location({
+    id: 'location:black-whale:lifeboat-area',
+    slug: 'black-whale-lifeboat-area',
+    name: 'Black Whale Lifeboat Emergency Area',
+    summary: 'Ship emergency-lifeboat area. Chapter 402 adds Kacho-form’s report that Fugetsu can connect Magical Worm to this area even though an attempted destination outside the Black Whale fails.',
+    locationType: 'facility',
+    parentId: 'location:black-whale',
+    ancestorIds: ['location:black-whale'],
+    accessLevel: 'emergency-controlled',
+    zoneRole: 'lifeboat-launch-and-emergency-access',
+  }),
+  location({
+    id: 'location:black-whale:lifeboat-area:first-lifeboat',
+    slug: 'black-whale-first-lifeboat-interior',
+    name: 'First Lifeboat · Interior',
+    summary: 'Interior of the first lifeboat in the emergency area. Kacho-form reports in Chapter 402 that Fugetsu can connect Magical Worm directly to this interior, making it part of the proposed Luzurus-removal route.',
+    locationType: 'facility',
+    parentId: 'location:black-whale:lifeboat-area',
+    ancestorIds: ['location:black-whale', 'location:black-whale:lifeboat-area'],
+    accessLevel: 'emergency-controlled',
+    zoneRole: 'lifeboat-interior-route-endpoint',
+  }),
+]);

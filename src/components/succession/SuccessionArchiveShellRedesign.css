@@ -1,15 +1,16 @@
 /*
  * Succession Visual Redesign — Batch 2, Hour 15
  *
- * Shared archive-shell geometry only. This layer owns the application frame,
- * sidebar, workspace stage, mobile command bar, drawer, and responsive gutters.
- * It must not encode route content, canonical records, or workspace-specific UI.
+ * Shared desktop archive-shell geometry only. This layer owns the application
+ * frame, permanent sidebar, and workspace stage. Narrow-screen/mobile layouts
+ * are intentionally unsupported.
  */
 
 .succession-archive {
   --succession-shell-gutter: clamp(18px, 3vw, 46px);
   --succession-shell-top-gap: clamp(18px, 2.5vw, 34px);
   --succession-shell-rail-width: 14px;
+  min-width: 1180px;
   isolation: isolate;
 }
 
@@ -36,7 +37,7 @@
 .succession-archive__layout {
   display: grid;
   grid-template-columns: var(--succession-sidebar-width) minmax(0, 1fr);
-  min-height: 100dvh;
+  min-height: 100vh;
 }
 
 .succession-archive__sidebar {
@@ -44,7 +45,7 @@
   z-index: 12;
   top: 0;
   align-self: start;
-  height: 100dvh;
+  height: 100vh;
   min-height: 0;
   padding: var(--succession-space-4) var(--succession-space-3);
 }
@@ -232,120 +233,6 @@
   min-width: 0;
   max-width: 100%;
   margin-inline: 0;
-}
-
-.succession-archive__mobile-bar {
-  display: none;
-}
-
-.succession-drawer {
-  position: fixed;
-  z-index: 80;
-  inset: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 360px) 1fr;
-  background: color-mix(in srgb, var(--succession-canvas) 74%, transparent);
-  backdrop-filter: blur(10px);
-}
-
-.succession-drawer > aside {
-  display: flex;
-  min-height: 0;
-  flex-direction: column;
-  border-right: 1px solid var(--succession-border-default);
-  box-shadow: var(--succession-shadow-md);
-}
-
-.succession-drawer > aside > header {
-  flex: 0 0 auto;
-}
-
-.succession-drawer .succession-archive-nav {
-  min-height: 0;
-  flex: 1;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-}
-
-@media (max-width: 1100px) {
-  .succession-archive {
-    --succession-shell-gutter: clamp(18px, 2.5vw, 32px);
-  }
-}
-
-@media (max-width: 860px) {
-  .succession-archive__layout {
-    display: block;
-    min-height: calc(100dvh - 58px);
-  }
-
-  .succession-archive__sidebar {
-    display: none;
-  }
-
-  .succession-archive__mobile-bar {
-    position: sticky;
-    z-index: 50;
-    top: 0;
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    min-height: 58px;
-    align-items: center;
-    gap: var(--succession-space-3);
-    padding: max(8px, env(safe-area-inset-top)) var(--succession-space-3) 8px;
-    border-bottom: 1px solid var(--succession-border-default);
-    box-shadow: var(--succession-shadow-sm);
-  }
-
-  .succession-archive__mobile-bar > span {
-    overflow: hidden;
-    color: var(--succession-text-strong);
-    font-weight: 800;
-    text-align: center;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .succession-archive__mobile-bar button {
-    display: inline-flex;
-    min-width: 44px;
-    min-height: 44px;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    border: 1px solid var(--succession-border-subtle);
-    border-radius: var(--succession-radius-sm);
-    background: var(--succession-surface-1);
-    color: var(--succession-text);
-  }
-
-  .succession-archive__workspace {
-    padding-top: var(--succession-space-5);
-  }
-
-  .succession-archive__workspace::before {
-    display: none;
-  }
-}
-
-@media (max-width: 560px) {
-  .succession-archive {
-    --succession-shell-gutter: 14px;
-    --succession-shell-top-gap: 14px;
-  }
-
-  .succession-archive__workspace-frame::before,
-  .succession-archive__workspace-frame::after {
-    display: none;
-  }
-
-  .succession-drawer {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .succession-drawer > aside {
-    width: min(92vw, 360px);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

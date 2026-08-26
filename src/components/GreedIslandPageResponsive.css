@@ -102,33 +102,3 @@
   display: grid;
   gap: .7rem;
 }
-
-@media (max-width: 980px) {
-  .gi-hero__starting-point {
-    width: min(430px, 48vw);
-    right: 0;
-  }
-}
-
-@media (max-width: 680px) {
-  .gi-hero__starting-point {
-    width: 280px;
-    right: 0;
-    top: 13%;
-  }
-
-  .gi-hero__eta {
-    width: 150px;
-    height: 150px;
-  }
-
-  .gi-hero__binder {
-    width: 240px;
-    height: 165px;
-  }
-
-  .gi-hero__binder::before {
-    width: 92px;
-    height: 92px;
-  }
-}

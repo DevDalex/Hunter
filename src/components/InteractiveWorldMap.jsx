@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
-  ArrowRight, Check, ChevronDown, ChevronUp, Clipboard, ExternalLink, Eye, EyeOff, Focus, HelpCircle, Info, Layers3, List,
+  ArrowRight, Check, Clipboard, ExternalLink, Eye, EyeOff, Focus, HelpCircle, Info, Layers3, List,
   LocateFixed, Map as MapIcon, Minus, Plus, RotateCcw, Route, Search, ShipWheel,
 } from 'lucide-react';
 import {
@@ -16,17 +16,14 @@ function routePoints(route) {
   return route.stops.map((id) => worldMapLocationsById.get(id)).filter(Boolean).map((item) => `${item.x},${item.y}`).join(' ');
 }
 
-function MapInspector({ location, expanded, onToggle, onCenter, onOpenBlackWhale, onOpenEncyclopedia, onOpenTimeline }) {
+function MapInspector({ location, onCenter, onOpenBlackWhale, onOpenEncyclopedia, onOpenTimeline }) {
   if (!location) return <aside className="world-map-inspector world-map-inspector--empty"><MapIcon size={28} /><h3>Select a place</h3><p>Choose a marker or use the readable location list to inspect its role, connections, source, and placement confidence.</p></aside>;
   const placement = placementStates[location.confidence] || placementStates.approximate;
   const shipLink = location.id === 'black-whale-voyage';
   const voyageLink = location.era === 'succession' || ['kakin-empire', 'kakin-port', 'black-whale-voyage'].includes(location.id);
   const parentName = worldMapLocationsById.get(location.parent)?.name || location.parent.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()) || 'Known World';
   return (
-    <aside className={`world-map-inspector${expanded ? ' is-expanded' : ''}`} aria-live="polite">
-      <button type="button" className="world-map-inspector__mobile-toggle" onClick={onToggle} aria-expanded={expanded}>
-        <span><small>Selected place</small><strong>{location.name}</strong></span>{expanded ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
-      </button>
+    <aside className="world-map-inspector" aria-live="polite">
       <header>
         <span>{location.kind} · {location.depth} record</span>
         <h3>{location.name}</h3>
@@ -74,7 +71,6 @@ export default function InteractiveWorldMap({ initialLocation = '', initialMode 
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [copied, setCopied] = useState(false);
-  const [inspectorExpanded, setInspectorExpanded] = useState(false);
   const selected = worldMapLocationsById.get(selectedId);
 
   useEffect(() => {
@@ -180,7 +176,6 @@ export default function InteractiveWorldMap({ initialLocation = '', initialMode 
 
   const selectLocation = (location, shouldCenter = false) => {
     setSelectedId(location.id);
-    setInspectorExpanded(true);
     if (shouldCenter) centerLocation(location);
   };
 
@@ -210,7 +205,6 @@ export default function InteractiveWorldMap({ initialLocation = '', initialMode 
   const changeMode = (next) => {
     setMode(next);
     setKind('all'); setEra('all'); setQuery(''); resetView();
-    setInspectorExpanded(false);
     const first = worldMapLocations.find((item) => item.modes.includes(next));
     if (first) setSelectedId(first.id);
   };
@@ -311,7 +305,7 @@ export default function InteractiveWorldMap({ initialLocation = '', initialMode 
             <button type="button" onClick={copyView}>{copied ? <Check size={13} /> : <Clipboard size={13} />}{copied ? 'View copied' : 'Copy map view'}</button>
           </div>
         </div>
-        <MapInspector location={selected} expanded={inspectorExpanded} onToggle={() => setInspectorExpanded((value) => !value)} onCenter={centerLocation} onOpenBlackWhale={onOpenBlackWhale} onOpenEncyclopedia={onOpenEncyclopedia} onOpenTimeline={onOpenTimeline} />
+        <MapInspector location={selected} onCenter={centerLocation} onOpenBlackWhale={onOpenBlackWhale} onOpenEncyclopedia={onOpenEncyclopedia} onOpenTimeline={onOpenTimeline} />
       </div>
 
       <details className="world-map-location-list" id="world-map-location-list">

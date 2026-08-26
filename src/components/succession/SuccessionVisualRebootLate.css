@@ -1,0 +1,253 @@
+/*
+ * Late archive cascade lock.
+ *
+ * The Succession application still ships several historical route styles in
+ * lazy CSS chunks. This small high-specificity layer is imported after those
+ * files so the visual reboot remains the final presentation authority without
+ * changing any workspace markup or content.
+ */
+
+.succession-archive.succession-archive {
+  --sa-bg: var(--vr-paper) !important;
+  --sa-sidebar: var(--vr-night) !important;
+  --sa-surface: var(--vr-paper) !important;
+  --sa-surface-raised: var(--vr-paper-raised) !important;
+  --sa-surface-muted: var(--vr-paper-deep) !important;
+  --sa-ink: var(--vr-ink) !important;
+  --sa-ink-muted: var(--vr-muted) !important;
+  --sa-border: var(--vr-line) !important;
+  --sa-border-strong: var(--vr-line-strong) !important;
+  --sa-accent: var(--vr-burgundy) !important;
+  --sa-accent-dark: var(--vr-burgundy-dark) !important;
+  background: var(--vr-paper) !important;
+}
+
+.succession-archive.succession-archive .succession-archive__layout {
+  grid-template-columns: 268px minmax(0, 1fr) !important;
+  background: var(--vr-paper) !important;
+}
+
+.succession-archive.succession-archive .succession-archive__sidebar {
+  height: 100vh !important;
+  padding: 0 !important;
+  border-right: 1px solid rgba(255,255,255,.1) !important;
+  background: var(--vr-night) !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive.succession-archive .succession-archive__sidebar-inner {
+  height: 100% !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.succession-archive.succession-archive .succession-archive__brand {
+  padding: 22px 20px !important;
+  border: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,.12) !important;
+  background: transparent !important;
+  color: #f5f0e7 !important;
+}
+
+.succession-archive.succession-archive .succession-archive__brand-seal {
+  border-color: rgba(255,255,255,.38) !important;
+  background: transparent !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive.succession-archive .succession-archive__brand-copy :where(span, strong, p) {
+  color: inherit !important;
+}
+
+.succession-archive.succession-archive .succession-archive__brand-copy > span,
+.succession-archive.succession-archive .succession-archive__brand-copy p {
+  color: #aaa39a !important;
+}
+
+.succession-archive.succession-archive .succession-archive__sidebar-context {
+  border: 0 !important;
+  border-bottom: 1px solid rgba(255,255,255,.12) !important;
+  background: transparent !important;
+}
+
+.succession-archive.succession-archive .succession-archive__sidebar-context > div {
+  background: transparent !important;
+}
+
+.succession-archive.succession-archive .succession-archive__sidebar-context :where(dt, dd) {
+  color: #d8d1c8 !important;
+}
+
+.succession-archive.succession-archive .succession-archive-nav section > div {
+  border: 0 !important;
+}
+
+.succession-archive.succession-archive .succession-archive-nav a {
+  border: 0 !important;
+  background: transparent !important;
+  color: #b8b1a8 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.succession-archive.succession-archive .succession-archive-nav a:hover {
+  background: rgba(255,255,255,.055) !important;
+  color: #fff !important;
+}
+
+.succession-archive.succession-archive .succession-archive-nav a.is-active,
+.succession-archive.succession-archive .succession-archive-nav a[aria-current='page'] {
+  background: rgba(255,255,255,.075) !important;
+  color: #fff !important;
+}
+
+.succession-archive.succession-archive .succession-archive__boundary {
+  border: 0 !important;
+  border-top: 1px solid rgba(255,255,255,.12) !important;
+  background: transparent !important;
+  color: #d8d1c8 !important;
+}
+
+.succession-archive.succession-archive .succession-archive__workspace,
+.succession-archive.succession-archive .succession-archive__workspace-frame {
+  background: var(--vr-paper) !important;
+}
+
+.succession-archive.succession-archive .succession-route-context {
+  width: min(100%, var(--vr-content-width)) !important;
+  margin-inline: auto !important;
+  padding: 14px var(--vr-gutter) 0 !important;
+  border: 0 !important;
+}
+
+.succession-archive.succession-archive .succession-hub-tabs {
+  width: min(calc(100% - (var(--vr-gutter) * 2)), calc(var(--vr-content-width) - (var(--vr-gutter) * 2))) !important;
+  margin: 14px auto 0 !important;
+  border: 0 !important;
+  border-block: 1px solid var(--vr-line-strong) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.succession-archive.succession-archive .succession-hub-tabs > a {
+  border: 0 !important;
+  border-right: 1px solid var(--vr-line) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--vr-muted) !important;
+  box-shadow: none !important;
+}
+
+.succession-archive.succession-archive .succession-hub-tabs > a.is-active,
+.succession-archive.succession-archive .succession-hub-tabs > a[aria-current='page'] {
+  background: var(--vr-ink) !important;
+  color: #fff !important;
+}
+
+.succession-archive.succession-archive .succession-page-header {
+  width: min(100%, var(--vr-content-width)) !important;
+  max-width: none !important;
+  margin: 0 auto !important;
+  padding: 34px var(--vr-gutter) 26px !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--vr-line) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.succession-archive.succession-archive .succession-page-header h1,
+.succession-archive.succession-archive .succession-page-header h2 {
+  color: var(--vr-ink) !important;
+  font-family: var(--vr-serif) !important;
+  font-size: clamp(38px, 4.25vw, 64px) !important;
+  font-weight: 500 !important;
+  line-height: .96 !important;
+  letter-spacing: -.05em !important;
+}
+
+.succession-archive.succession-archive .succession-page-header__copy > p,
+.succession-archive.succession-archive .succession-page-header__description {
+  color: var(--vr-muted) !important;
+  font-family: var(--vr-sans) !important;
+  font-size: 13px !important;
+  line-height: 1.7 !important;
+}
+
+.succession-archive.succession-archive .succession-page-header__meta {
+  border: 0 !important;
+  border-top: 1px solid var(--vr-line) !important;
+  background: transparent !important;
+}
+
+.succession-archive.succession-archive .succession-page-header__meta > div {
+  background: transparent !important;
+}
+
+.succession-archive.succession-archive .succession-button,
+.succession-archive.succession-archive .succession-page-header button {
+  border: 1px solid var(--vr-line-strong) !important;
+  border-radius: 0 !important;
+  background: var(--vr-paper-raised) !important;
+  color: var(--vr-ink) !important;
+  box-shadow: none !important;
+}
+
+.succession-archive.succession-archive .succession-button:hover,
+.succession-archive.succession-archive .succession-page-header button:hover {
+  border-color: var(--vr-burgundy) !important;
+  background: var(--vr-burgundy) !important;
+  color: #fff !important;
+}
+
+.succession-archive.succession-archive .succession-archive__content {
+  width: min(100%, var(--vr-content-width)) !important;
+  max-width: none !important;
+  margin-inline: auto !important;
+  padding: var(--vr-section-gap) var(--vr-gutter) 90px !important;
+}
+
+.succession-archive.succession-archive :where(
+  .archive-card,
+  .succession-entity-grid > article,
+  .succession-source-reference,
+  .succession-state,
+  .succession-related,
+  [class$='__panel'],
+  [class$='-panel']
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-command-home.succession-command-home {
+  --home-bg: #121113 !important;
+  --home-panel: rgba(25,23,25,.94) !important;
+  --home-text: #f5f0e7 !important;
+  --home-muted: #aaa39a !important;
+  --home-accent: #a93243 !important;
+  background: var(--vr-night) !important;
+}
+
+.succession-command-home.succession-command-home .succession-command-home__rail {
+  background: linear-gradient(180deg, rgba(120,31,45,.12), transparent 220px), #111012 !important;
+  box-shadow: none !important;
+}
+
+.succession-command-home.succession-command-home .succession-command-home__main {
+  height: auto !important;
+  min-height: 100vh !important;
+  overflow: visible !important;
+  gap: 1px !important;
+  padding: 0 !important;
+}
+
+.succession-command-home.succession-command-home :where(
+  .succession-command-home__portal,
+  .succession-command-home__lower-grid > section
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}

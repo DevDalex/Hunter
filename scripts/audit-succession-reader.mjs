@@ -11,71 +11,108 @@ const assert = (condition, message) => {
 const vite = await createServer({ appType: 'custom', logLevel: 'error', server: { middlewareMode: true } });
 
 try {
-  const availabilityModule = await vite.ssrLoadModule('/src/data/successionChapterAvailability.generated.js');
-  const manifestModule = await vite.ssrLoadModule('/src/data/successionChapterReader.js');
-  const catalogueModule = await vite.ssrLoadModule('/src/data/successionReaderCatalog.js');
-  const {
-    SUCCESSION_READER_END,
-    SUCCESSION_READER_START,
-    successionChapterReaderRecords,
-  } = manifestModule;
-  const {
-    successionReaderCatalog,
-    successionReaderPhaseGroups,
-  } = catalogueModule;
-  const { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } = availabilityModule;
-  const expectedTotal = SUCCESSION_READER_END - SUCCESSION_READER_START + 1;
+  const availability = await vite.ssrLoadModule('/src/data/successionChapterAvailability.generated.js');
+  const latest = await vite.ssrLoadModule('/src/data/latestChapterMetadata.js');
+  const manifest = await vite.ssrLoadModule('/src/data/successionChapterReader.js');
+  const catalogue = await vite.ssrLoadModule('/src/data/successionReaderCatalog.js');
+  const routes = await vite.ssrLoadModule('/src/data/succession/archiveRoutes.js');
 
-  assert(SUCCESSION_READER_START === 338, 'reader chapter start must remain Chapter 338');
-  assert(SUCCESSION_READER_END === Math.max(414, LATEST_AUTHORIZED_SUCCESSION_CHAPTER), 'reader end must follow the generated imported-chapter boundary');
-  assert(successionChapterReaderRecords.length === expectedTotal, 'reader manifest must contain every sequential chapter through the generated boundary');
-  assert(successionReaderCatalog.length === expectedTotal, 'enriched reader catalogue must cover every manifest chapter');
-  assert(successionReaderPhaseGroups.length >= 10, 'chapter drawer requires comprehensive phase grouping');
-  assert(successionReaderCatalog.every((record, index) => record.chapter === SUCCESSION_READER_START + index), 'reader catalogue must remain sequential');
-  assert(successionReaderCatalog.at(-1)?.chapter === SUCCESSION_READER_END, 'reader catalogue must expose the latest generated chapter');
-  assert(successionReaderCatalog.every((record) => record.title && record.phase && record.mediaStatus), 'reader catalogue records require title, phase, and media status');
+  const expectedTotal = manifest.SUCCESSION_READER_END - manifest.SUCCESSION_READER_START + 1;
+  assert(manifest.SUCCESSION_READER_START === 338, 'reader chapter start must remain Chapter 338');
+  assert(
+    manifest.SUCCESSION_READER_END === Math.max(414, latest.LATEST_PUBLISHED_CHAPTER, availability.LATEST_AUTHORIZED_SUCCESSION_CHAPTER),
+    'reader end must follow the latest published chapter while preserving the separate local-media authorization boundary',
+  );
+  assert(manifest.successionChapterReaderRecords.length === expectedTotal, 'reader manifest must remain sequential and complete');
+  assert(catalogue.successionReaderCatalog.length === expectedTotal, 'enriched reader catalogue must cover the manifest');
+  assert(catalogue.successionReaderPhaseGroups.length >= 10, 'reader requires comprehensive phase grouping');
+  assert(catalogue.successionReaderCatalog.every((record, index) => record.chapter === manifest.SUCCESSION_READER_START + index), 'reader catalogue must remain sequential');
+  assert(routes.successionArchiveRouteById.get('reader')?.path === 'reader', 'Reader must remain a canonical Succession route');
 
-  const [reader, storage, panel, enhancements, series, router, css, polishCss, shellCss, qa] = await Promise.all([
+  const latestRecord = manifest.successionChapterReaderByNumber.get(latest.LATEST_PUBLISHED_CHAPTER);
+  assert(latestRecord?.chapter === latest.LATEST_PUBLISHED_CHAPTER, 'latest published chapter must have a reader record even before local page media is imported');
+  if (latest.LATEST_PUBLISHED_CHAPTER > availability.LATEST_AUTHORIZED_SUCCESSION_CHAPTER) {
+    assert(latestRecord.pageCount === 0 && latestRecord.mediaStatus === 'awaiting-local-media', 'published chapters beyond the media authorization boundary must be represented honestly as awaiting local media');
+  }
+
+  const [reader, storage, panel, enhancements, readerRoute, entry, router, css, polishCss, routeCss, qa] = await Promise.all([
     read('src/components/SuccessionChapterReader.jsx'),
     read('src/components/succession-reader/readerState.js'),
     read('src/components/succession-reader/ReaderPanel.jsx'),
     read('src/components/succession-reader/ReaderPanelEnhancements.jsx'),
-    read('src/components/SeriesWorkspace.jsx'),
+    read('src/components/succession/SuccessionArchiveReaderRoute.jsx'),
+    read('src/components/succession/SuccessionArchiveEntry.jsx'),
     read('src/lib/appRouter.js'),
     read('src/components/SuccessionChapterReader.css'),
     read('src/components/SuccessionChapterReaderPolish.css'),
-    read('src/components/StoryUtilities.css'),
+    read('src/components/succession/SuccessionReaderCommand.css'),
     read('scripts/succession-reader-qa.mjs'),
   ]);
 
-  for (const mode of ['page', 'spread', 'scroll']) assert(reader.includes(`value="${mode}"`) || reader.includes(`'${mode}'`), `missing ${mode} reading mode`);
-  for (const feature of ['succession-reader__topbar', 'succession-reader__bottombar', 'succession-reader__canvas', 'succession-reader__chapter-groups', 'succession-reader__thumbnails', 'succession-reader__settings', 'succession-reader__bookmark-list', 'succession-reader__command-list', 'succession-reader__shortcuts']) assert(reader.includes(feature), `missing reader feature ${feature}`);
-  for (const state of ['requestedChapter', 'requestedPage', 'requestedMode', 'requestedFit', 'requestedDirection', 'requestedPanel']) assert(reader.includes(state) && series.includes(state), `route state ${state} is not wired end to end`);
-  assert(reader.includes('onOpenChapterRecord') && series.includes('entity: `chapter:${chapter}`'), 'reader must bridge into canonical Chapter Records');
-  assert(reader.includes('requestFullscreen') && reader.includes('IntersectionObserver') && reader.includes('navigator.clipboard'), 'fullscreen, scroll tracking, and share-link behavior are required');
-  assert(reader.includes('toggleReaderBookmark') && reader.includes('chapterProgressFor'), 'bookmarks and chapter progress must use the versioned reader state');
+  for (const mode of ['page', 'spread', 'scroll']) {
+    assert(reader.includes(`value="${mode}"`) || reader.includes(`'${mode}'`), `missing ${mode} reading mode`);
+  }
+  for (const feature of [
+    'succession-reader__topbar',
+    'succession-reader__bottombar',
+    'succession-reader__canvas',
+    'succession-reader__chapter-groups',
+    'succession-reader__thumbnails',
+    'succession-reader__settings',
+    'succession-reader__bookmark-list',
+    'succession-reader__command-list',
+    'succession-reader__shortcuts',
+  ]) assert(reader.includes(feature), `missing reader feature ${feature}`);
+
+  for (const state of [
+    'requestedChapter',
+    'requestedPage',
+    'requestedMode',
+    'requestedFit',
+    'requestedDirection',
+    'requestedPanel',
+  ]) assert(reader.includes(state) && readerRoute.includes(state), `route state ${state} is not wired end to end`);
+
+  assert(
+    reader.includes('onOpenChapterRecord')
+      && readerRoute.includes('entity: `chapter:${chapter}`')
+      && readerRoute.includes("onNavigate('chapters'"),
+    'reader must bridge into canonical Succession Chapter Records',
+  );
+  assert(entry.includes("props.routeTarget === 'reader'") && entry.includes('SuccessionArchiveReaderRoute'), 'the focused archive entry must route Reader independently');
+  assert(readerRoute.includes('SuccessionArchiveShell') && readerRoute.includes('SuccessionChapterReader'), 'Reader must remain inside the Succession shell');
+  assert(router.includes("['chapters', 'reader']"), 'the former /chapters reader URL must remain a compatibility redirect');
+
+  assert(reader.includes('requestFullscreen') && reader.includes('IntersectionObserver') && reader.includes('navigator.clipboard'), 'fullscreen, tracking, and share behavior are required');
+  assert(reader.includes('toggleReaderBookmark') && reader.includes('chapterProgressFor'), 'bookmarks and progress must use reader state');
   assert(!reader.includes('public/media/succession-contest/chapters'), 'public reader must not expose internal media paths');
-  assert(!reader.includes('succession-reader__heading') && !reader.includes('succession-reader__directory'), 'legacy dashboard reader architecture must be removed');
+  assert(storage.includes('hxh-succession-reader-state-v2') && storage.includes('bookmarks: []'), 'reader storage must remain versioned');
+  assert(storage.includes('setChapterCompleted') && storage.includes('clearReaderBookmarks'), 'completion and bookmark reset helpers are required');
+  assert(panel.includes('aria-modal="true"') && panel.includes("event.key === 'Escape'") && panel.includes('focusableSelector'), 'reader panels need modal semantics, focus containment, and Escape');
+  assert(panel.includes('ReaderPanelEnhancements'), 'reader panels must mount enhancements');
+  assert(enhancements.includes('400:7') && enhancements.includes("normalized === 'latest'"), 'direct commands must support chapter:page and latest');
 
-  assert(storage.includes("hxh-succession-reader-state-v2") && storage.includes('chapters: {}') && storage.includes('bookmarks: []'), 'reader storage must be versioned and include progress plus bookmarks');
-  assert(storage.includes("if (value === 'continuous') return 'scroll'") && storage.includes("if (value === 'single') return 'page'"), 'legacy reader mode URLs must remain compatible');
-  assert(storage.includes('setChapterCompleted') && storage.includes('clearReaderBookmarks'), 'manual completion and bookmark-only reset helpers are required');
-  assert(panel.includes('aria-modal="true"') && panel.includes("event.key === 'Escape'") && panel.includes('focusableSelector'), 'reader panels must trap focus, close on Escape, and expose modal semantics');
-  assert(panel.includes('ReaderPanelEnhancements'), 'reader panels must mount completion, reset, and command enhancements');
-  assert(enhancements.includes('400:7') && enhancements.includes('page\\s+(\\d+)') && enhancements.includes("normalized === 'latest'"), 'direct reader command syntax must support chapter:page, page jumps, and latest chapter');
-  assert(enhancements.includes('setChapterCompleted') && enhancements.includes('clearReaderBookmarks'), 'reader panel controls must expose manual completion and bookmark-only reset');
+  assert(routeCss.includes('.succession-reader-command') && routeCss.includes('width: 100%'), 'reader shell must remain full width');
+  for (const selector of [
+    '.succession-reader__topbar',
+    '.succession-reader__bottombar',
+    '.succession-reader__canvas',
+    '.succession-reader-panel',
+    '.succession-reader__pages.is-spread',
+    '.succession-reader__chapter-groups',
+  ]) assert(css.includes(selector), `reader design is missing ${selector}`);
+  assert(!/@media\s*\([^)]*max-width:/i.test(css) && css.includes('@media (prefers-reduced-motion: reduce)'), 'reader requires desktop-only and reduced-motion layers');
+  assert(polishCss.includes('.succession-reader__panel-enhancement') && polishCss.includes('.succession-reader__command-syntax'), 'reader enhancements require route-owned styling');
 
-  assert(router.includes("'/story/succession-contest/chapters'"), 'clean chapter reader URL must remain authoritative');
-  assert(router.includes('readerParams'), 'reader query parameters must pass through clean URL generation');
-  assert(shellCss.includes('.story-utility-shell--succession-reader') && shellCss.includes('width: 100%'), 'reader route shell must be full bleed');
-  for (const selector of ['.succession-reader__topbar', '.succession-reader__bottombar', '.succession-reader__canvas', '.succession-reader-panel', '.succession-reader__pages.is-spread', '.succession-reader__chapter-groups']) assert(css.includes(selector), `reader design is missing ${selector}`);
-  assert(css.includes('@media (max-width: 620px)') && css.includes('@media (prefers-reduced-motion: reduce)'), 'reader design requires mobile and reduced-motion layers');
-  assert(css.includes('env(safe-area-inset-bottom)') && css.includes(':focus-visible'), 'reader design requires safe-area and focus-visible handling');
-  assert(polishCss.includes('.succession-reader__panel-enhancement') && polishCss.includes('.succession-reader__command-syntax'), 'reader completion and direct-command controls require route-owned styling');
+  for (const check of [
+    'standalone and reading-first',
+    'complete grouped catalogue',
+    'modes fit direction',
+    'Bookmarks persist',
+    'Keyboard chapter navigation',
+  ]) assert(qa.includes(check), `browser QA is missing ${check}`);
 
-  for (const check of ['standalone and reading-first', 'complete grouped catalogue', 'modes fit direction', 'Bookmarks persist', 'Keyboard chapter navigation', 'Mobile reader is contained']) assert(qa.includes(check), `browser QA is missing ${check}`);
-
-  console.log(`Succession reader audit passed: ${successionReaderCatalog.length} chapters through ${SUCCESSION_READER_END}, ${successionReaderPhaseGroups.length} chapter phases, three reading modes, full route state, progress, manual completion, bookmarks, direct commands, panels, archive bridging, responsive design, and browser QA verified.`);
+  console.log(`Succession reader audit passed: ${catalogue.successionReaderCatalog.length} chapter records through published Chapter ${manifest.SUCCESSION_READER_END}, local media through Chapter ${availability.LATEST_AUTHORIZED_SUCCESSION_CHAPTER}, canonical focused routing, three reading modes, progress, bookmarks, direct commands, chapter-record bridging, and desktop design verified.`);
 } finally {
   await vite.close();
 }

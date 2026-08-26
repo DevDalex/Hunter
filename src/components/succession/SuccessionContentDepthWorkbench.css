@@ -1,0 +1,427 @@
+.succession-depth-entry,
+.succession-depth-workbench {
+  border: 1px solid var(--archive-border, #b8b8b8);
+  background: #f7f7f5;
+  color: #171717;
+}
+
+.succession-depth-entry {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+
+.succession-depth-entry > svg {
+  width: 38px;
+  height: 38px;
+  padding: 9px;
+  border: 1px solid #222;
+  background: #fff;
+}
+
+.succession-depth-entry span,
+.succession-depth-section-head > span,
+.succession-depth-overview > header > span,
+.succession-depth-card-grid article > span {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.succession-depth-entry h3,
+.succession-depth-section-head h3,
+.succession-depth-overview h3 {
+  margin: 4px 0 6px;
+  font-size: 22px;
+  line-height: 1.08;
+}
+
+.succession-depth-entry p,
+.succession-depth-section-head p,
+.succession-depth-overview p,
+.succession-depth-card-grid p {
+  margin: 0;
+  color: #484848;
+  line-height: 1.5;
+}
+
+.succession-depth-entry button,
+.succession-depth-overview article button,
+.succession-depth-entity {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #202020;
+  background: #fff;
+  color: #151515;
+  min-height: 36px;
+  padding: 8px 11px;
+  font: inherit;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.succession-depth-entry button:hover,
+.succession-depth-overview article button:hover,
+.succession-depth-entity:hover,
+.succession-depth-tabs button:hover {
+  background: #ebebe8;
+}
+
+.succession-depth-workbench {
+  margin-bottom: 22px;
+}
+
+.succession-depth-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  align-items: end;
+  gap: 24px;
+  padding: 20px 22px 18px;
+  border-bottom: 2px solid #222;
+  background: #ecece8;
+}
+
+.succession-depth-hero > div > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.succession-depth-hero h2 {
+  margin: 5px 0 7px;
+  font-size: 28px;
+  line-height: 1.05;
+}
+
+.succession-depth-hero p {
+  margin: 0;
+  max-width: 840px;
+  color: #424242;
+}
+
+.succession-depth-hero label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #555;
+  background: #fff;
+  padding: 0 10px;
+  min-height: 40px;
+}
+
+.succession-depth-hero input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+}
+
+.succession-depth-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  border-bottom: 1px solid #aaa;
+  background: #fff;
+}
+
+.succession-depth-tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 0;
+  border-right: 1px solid #c8c8c8;
+  border-bottom: 3px solid transparent;
+  background: #fff;
+  color: #2a2a2a;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 750;
+  cursor: pointer;
+}
+
+.succession-depth-tabs button.is-active {
+  border-bottom-color: #111;
+  background: #e5e5e1;
+  color: #000;
+}
+
+.succession-depth-body {
+  padding: 22px;
+}
+
+.succession-depth-section-head,
+.succession-depth-overview > header {
+  margin-bottom: 18px;
+  max-width: 980px;
+}
+
+.succession-depth-overview > div,
+.succession-depth-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.succession-depth-overview article,
+.succession-depth-card-grid article {
+  min-width: 0;
+  border: 1px solid #bdbdb7;
+  background: #fff;
+  padding: 15px;
+}
+
+.succession-depth-overview article > svg {
+  margin-bottom: 12px;
+}
+
+.succession-depth-overview article h4,
+.succession-depth-card-grid article h4 {
+  margin: 6px 0 8px;
+  font-size: 16px;
+}
+
+.succession-depth-overview article p {
+  min-height: 66px;
+  margin-bottom: 14px;
+}
+
+.succession-depth-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 18px;
+}
+
+.succession-depth-stats > div {
+  min-width: 120px;
+  border: 1px solid #b5b5b0;
+  background: #fff;
+  padding: 10px 12px;
+}
+
+.succession-depth-stats dt,
+.succession-depth-card-grid dt {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.succession-depth-stats dd {
+  margin: 2px 0 0;
+  font-size: 21px;
+  font-weight: 850;
+}
+
+.succession-depth-card-grid dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+.succession-depth-card-grid dl > div {
+  min-width: 0;
+  border-top: 1px solid #deded9;
+  padding-top: 7px;
+}
+
+.succession-depth-card-grid dd {
+  margin: 3px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.succession-depth-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #aaa;
+  background: #fff;
+}
+
+.succession-depth-table-wrap table {
+  width: 100%;
+  min-width: 1080px;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.succession-depth-table-wrap th,
+.succession-depth-table-wrap td {
+  padding: 9px 10px;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #e5e5e5;
+  text-align: left;
+  vertical-align: top;
+}
+
+.succession-depth-table-wrap th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #e8e8e4;
+  font-size: 11px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.succession-depth-table-wrap tbody tr:hover {
+  background: #f1f1ee;
+}
+
+.succession-depth-entity {
+  min-height: 28px;
+  padding: 4px 7px;
+  font-size: 12px;
+  text-align: left;
+}
+
+.succession-depth-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.succession-depth-links--large {
+  margin: 12px 0 20px;
+}
+
+.succession-depth-links > span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 5px 9px;
+  border: 1px solid #bdbdb7;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.succession-depth-links > span.is-active {
+  border-color: #222;
+  background: #deded8;
+}
+
+.succession-depth-subhead {
+  margin: 24px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #aaa;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.succession-depth-setup-timeline {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.succession-depth-setup-timeline > article {
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(180px, .55fr) minmax(0, .9fr);
+  gap: 8px;
+  align-items: stretch;
+  padding: 8px;
+  border: 1px solid #bdbdb7;
+  background: #fff;
+}
+
+.succession-depth-setup-node {
+  display: grid;
+  gap: 6px;
+  align-content: center;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid #d3d3cd;
+  background: #fafaf7;
+}
+
+.succession-depth-setup-node > span,
+.succession-depth-setup-gap > span,
+.succession-depth-setup-gap > small,
+.succession-depth-shown,
+.succession-depth-research-detail > summary {
+  color: #5e5e59;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.succession-depth-setup-node > span,
+.succession-depth-research-detail > summary {
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.succession-depth-setup-node.is-payoff { border-width: 2px; }
+
+.succession-depth-setup-gap {
+  display: grid;
+  align-content: center;
+  gap: 5px;
+  text-align: center;
+}
+
+.succession-depth-setup-gap > i {
+  display: block;
+  height: 7px;
+  overflow: hidden;
+  border: 1px solid #aaa9a3;
+  background: #ecece7;
+  font-style: normal;
+}
+
+.succession-depth-setup-gap > i > b {
+  display: block;
+  width: var(--setup-gap-width, 0%);
+  height: 100%;
+  background: #343434;
+}
+
+.succession-depth-shown {
+  display: block;
+  margin: 8px 0 12px;
+}
+
+.succession-depth-research-detail {
+  margin-top: 12px;
+  border: 1px solid #aaa;
+  background: #fafaf7;
+}
+
+.succession-depth-research-detail > summary {
+  padding: 9px 11px;
+  cursor: pointer;
+}
+
+.succession-depth-body button:focus-visible,
+.succession-depth-tabs button:focus-visible,
+.succession-depth-entry button:focus-visible,
+.succession-depth-hero input:focus-visible {
+  outline: 3px solid #111;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-depth-workbench *,
+  .succession-depth-entry * {
+    scroll-behavior: auto;
+    transition: none !important;
+  }
+}

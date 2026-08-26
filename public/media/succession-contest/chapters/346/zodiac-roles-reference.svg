@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1300" height="1240" viewBox="0 0 1300 1240" role="img" aria-labelledby="title desc">
+  <title id="title">Overview of the Zodiacs' Roles on the Dark Continent Expedition</title>
+  <desc id="desc">Reference visual recreated from the user-supplied Chapter 346 table, showing each Zodiac's expedition team and assigned tasks.</desc>
+  <rect width="1300" height="1240" fill="#f5f5f3"/>
+  <text x="20" y="42" font-family="Arial, Helvetica, sans-serif" font-size="33" font-weight="700" fill="#333">Overview of the Zodiacs' Roles on the Dark Continent Expedition</text>
+  <line x1="20" x2="1280" y1="62" y2="62" stroke="#c8c8c8"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#333">
+    <rect x="20" y="88" width="1260" height="1092" fill="#fafafa" stroke="#c7c7c7"/>
+    <rect x="20" y="88" width="1260" height="70" fill="#e7e7e7"/>
+    <g stroke="#c8c8c8" stroke-width="1">
+      <line x1="155" x2="155" y1="88" y2="1180"/><line x1="315" x2="315" y1="88" y2="1180"/>
+      <line x1="20" x2="1280" y1="158" y2="158"/><line x1="20" x2="1280" y1="268" y2="268"/><line x1="20" x2="1280" y1="338" y2="338"/><line x1="20" x2="1280" y1="408" y2="408"/><line x1="20" x2="1280" y1="518" y2="518"/><line x1="20" x2="1280" y1="628" y2="628"/><line x1="20" x2="1280" y1="698" y2="698"/><line x1="20" x2="1280" y1="768" y2="768"/><line x1="20" x2="1280" y1="878" y2="878"/><line x1="20" x2="1280" y1="948" y2="948"/><line x1="20" x2="1280" y1="1018" y2="1018"/><line x1="20" x2="1280" y1="1088" y2="1088"/>
+    </g>
+    <g font-size="24" font-weight="700"><text x="88" y="132" text-anchor="middle">Name</text><text x="235" y="132" text-anchor="middle">Team</text><text x="797" y="132" text-anchor="middle">Task</text></g>
+    <g font-size="22">
+      <g fill="#247b13"><text x="88" y="214" text-anchor="middle">Cheadle</text></g><text x="235" y="214" text-anchor="middle">Science</text><text x="350" y="198">• Organize a top medical team.</text><text x="350" y="235">• Recruit talented people for the trip through the Hunter Exam.</text>
+      <g fill="#247b13"><text x="88" y="312" text-anchor="middle">Gel</text></g><text x="235" y="312" text-anchor="middle">Science</text><text x="350" y="312">• Write disease control procedures with Sanbica.</text>
+      <g fill="#247b13"><text x="88" y="382" text-anchor="middle">Leorio</text></g><text x="235" y="382" text-anchor="middle">Science</text><text x="350" y="382">• Support Cheadle's medical team.</text>
+      <g fill="#247b13"><text x="88" y="452" text-anchor="middle">Mizaistom</text></g><text x="235" y="452" text-anchor="middle">Intelligence</text><text x="350" y="442">• Perform background checks of candidates.</text><text x="350" y="480">• Negotiate to obtain the passenger list of the Black Whale No.1.</text>
+      <g fill="#247b13"><text x="88" y="562" text-anchor="middle">Pyon</text></g><text x="235" y="562" text-anchor="middle">Intelligence</text><text x="350" y="552">• Program a language analysis software.</text><text x="350" y="590">• Confirm and reorganize passenger-list data once obtained.</text>
+      <g fill="#247b13"><text x="88" y="672" text-anchor="middle">Saccho</text></g><text x="235" y="672" text-anchor="middle">Intelligence</text><text x="350" y="672">• Perform background checks of candidates.</text>
+      <g fill="#247b13"><text x="88" y="742" text-anchor="middle">Kurapika</text></g><text x="235" y="742" text-anchor="middle">Intelligence</text><text x="350" y="742">• Offer confidential information about Beyond and Kakin.</text>
+      <g fill="#247b13"><text x="88" y="812" text-anchor="middle">Botobai</text></g><text x="235" y="812" text-anchor="middle">Defense</text><text x="350" y="800">• Negotiate to obtain the passenger list of the Black Whale No.1.</text><text x="350" y="838">• Secretly cooperate with Intelligence on post-landing defense and preventing Beyond's escape.</text>
+      <g fill="#247b13"><text x="88" y="922" text-anchor="middle">Saiyu</text></g><text x="235" y="922" text-anchor="middle">Defense</text><text x="350" y="922">• Supervise Beyond.</text>
+      <g fill="#247b13"><text x="88" y="992" text-anchor="middle">Kanzai</text></g><text x="235" y="992" text-anchor="middle">Defense</text><text x="350" y="992">• Eliminate anything that may attack them on the Dark Continent.</text>
+      <g fill="#247b13"><text x="88" y="1062" text-anchor="middle">Cluck</text></g><text x="235" y="1062" text-anchor="middle">Flora/Fauna</text><text x="350" y="1062">• Gather intelligence and plants after landing.</text>
+      <g fill="#247b13"><text x="88" y="1132" text-anchor="middle">Ginta</text></g><text x="235" y="1132" text-anchor="middle">Flora/Fauna</text><text x="350" y="1132">• Find someone with abilities similar to Knov.</text>
+    </g>
+  </g>
+</svg>

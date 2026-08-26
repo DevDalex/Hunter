@@ -1,458 +1,199 @@
-.succession-archive .royal-guard-tree {
-  --royal-gold: #d6b56d;
-  --royal-gold-bright: #f1d690;
-  --royal-ivory: #f5efe6;
-  --royal-muted: #c5bdb1;
-  --royal-dim: #928a7f;
-  --royal-surface: #11141a;
-  --royal-surface-raised: #171a21;
-  --royal-line: rgba(214, 181, 109, 0.54);
-  border-color: rgba(214, 181, 109, 0.24);
-  background:
-    radial-gradient(circle at 50% 3%, rgba(214, 181, 109, 0.09), transparent 29%),
-    linear-gradient(150deg, #0a0c10 0%, #101319 55%, #090b0f 100%);
-  color: var(--royal-ivory) !important;
+/*
+ * Royal Family relationship-map geometry and immersive route ownership.
+ * This layer owns responsive behavior, full-screen shell integration, maternal
+ * junction spacing, and the complete guard-record grid.
+ */
+
+.royal-map__canvas {
+  min-width: 1660px;
 }
 
-.succession-archive .royal-guard-tree__header {
-  align-items: flex-start;
-  margin-bottom: 30px;
+.royal-map__forces {
+  height: 1010px;
 }
 
-.succession-archive .royal-guard-tree__header > div:first-child {
-  max-width: 780px;
+.royal-map__king {
+  left: 615px;
 }
 
-.succession-archive .royal-guard-tree__header h2 {
-  max-width: 760px;
-  margin: 9px 0 14px;
-  color: var(--royal-ivory) !important;
-  font-size: clamp(35px, 4vw, 54px);
-  font-weight: 500;
-  letter-spacing: -0.035em;
-  line-height: 1.02;
-  text-shadow: none !important;
+.royal-map__queen-node {
+  width: 58px;
+  height: 62px;
+  padding: 4px;
 }
 
-.succession-archive .royal-guard-tree__header p {
-  max-width: 760px;
-  color: var(--royal-muted) !important;
-  font-size: 15px;
-  line-height: 1.65;
+.royal-map__queen-node::before {
+  inset: 3px;
 }
 
-.succession-archive .royal-guard-tree__header > div:first-child > span,
-.succession-archive .royal-guard-tree__orbit-panel > header span,
-.succession-archive .royal-guard-tree__inspector-content > span {
-  color: var(--royal-gold-bright) !important;
+.royal-map__queen-node small {
+  font-size: 8px;
 }
 
-.succession-archive .royal-guard-tree__legend {
-  min-width: 180px;
-  padding: 14px 16px;
-  border-color: rgba(214, 181, 109, 0.23);
-  background: rgba(8, 10, 14, 0.84);
+.royal-map__queen-node strong {
+  max-width: 50px;
+  font-size: 10px;
 }
 
-.succession-archive .royal-guard-tree__legend span {
-  color: #d5cec3 !important;
+.royal-map__queen-node > span {
+  width: 23px;
+  height: 23px;
 }
 
-.succession-archive .royal-guard-tree__king {
-  grid-template-columns: 82px minmax(0, 1fr);
-  width: min(100%, 380px);
-  min-height: 132px;
-  padding: 16px 20px 16px 16px;
-  border-color: rgba(214, 181, 109, 0.58);
-  background: linear-gradient(135deg, rgba(214, 181, 109, 0.1), #15181e 46%);
-}
-
-.succession-archive .royal-guard-tree__king > .succession-entity-visual,
-.succession-archive .royal-guard-tree__king > .royal-guard-tree__fallback {
-  width: 82px !important;
-  height: 94px !important;
-  min-width: 82px;
-  min-height: 94px;
-  border-radius: 14px;
-}
-
-.succession-archive .royal-guard-tree__king > strong {
-  color: var(--royal-ivory) !important;
-  font-size: clamp(21px, 2vw, 27px);
-}
-
-.succession-archive .royal-guard-tree__king > small {
-  color: var(--royal-muted) !important;
-}
-
-.succession-archive .royal-guard-tree__queen-grid {
-  grid-template-columns: repeat(8, minmax(142px, 1fr));
-  gap: 11px;
-  min-width: 1205px;
-}
-
-.succession-archive .royal-guard-tree__branch {
-  padding: 10px;
-  border-radius: 17px;
-  border-color: rgba(255, 255, 255, 0.075);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.025), rgba(255, 255, 255, 0.008));
-}
-
-.succession-archive .royal-guard-tree__branch.is-selected {
-  border-color: rgba(214, 181, 109, 0.54);
-  background: linear-gradient(180deg, rgba(214, 181, 109, 0.085), rgba(255, 255, 255, 0.012));
-  transform: translateY(-3px);
-}
-
-.succession-archive .royal-guard-tree__queen {
-  padding: 0 3px 11px;
-}
-
-.succession-archive .royal-guard-tree__queen > .succession-entity-visual,
-.succession-archive .royal-guard-tree__queen > .royal-guard-tree__fallback {
-  width: 70px !important;
-  height: 74px !important;
-  min-width: 70px;
-  min-height: 74px;
-  max-width: 70px;
-  max-height: 74px;
-  margin-bottom: 8px;
-  border-radius: 15px;
-}
-
-.succession-archive .royal-guard-tree__queen > span:not(.succession-entity-visual):not(.royal-guard-tree__fallback):not(.royal-guard-tree__hover-card) {
-  color: var(--royal-gold-bright) !important;
-}
-
-.succession-archive .royal-guard-tree__queen > strong {
-  color: var(--royal-ivory) !important;
-  font-size: 16px;
-  line-height: 1.15;
-}
-
-.succession-archive .royal-guard-tree__queen > small {
-  color: var(--royal-muted) !important;
-}
-
-.succession-archive .royal-guard-tree__children {
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.succession-archive .royal-guard-tree__children > button {
-  grid-template-columns: 34px 24px minmax(0, 1fr);
-  min-height: 42px;
-  padding: 4px 7px 4px 4px;
-  border-radius: 11px;
-  background: rgba(6, 8, 12, 0.72);
-}
-
-.succession-archive .royal-guard-tree__children .succession-entity-visual,
-.succession-archive .royal-guard-tree__children .royal-guard-tree__fallback {
-  width: 34px !important;
-  height: 34px !important;
-  min-width: 34px;
-  min-height: 34px;
-  max-width: 34px;
-  max-height: 34px;
-  border-radius: 50%;
-}
-
-.succession-archive .royal-guard-tree__children > button > span:not(.succession-entity-visual):not(.royal-guard-tree__fallback):not(.royal-guard-tree__hover-card) {
-  color: var(--royal-gold-bright) !important;
-}
-
-.succession-archive .royal-guard-tree__children > button > strong {
-  color: #eee7dc !important;
-  font-size: 12px;
-}
-
-.succession-archive .royal-guard-tree__selection-bar,
-.succession-archive .royal-guard-tree__orbit-panel,
-.succession-archive .royal-guard-tree__inspector {
-  border-color: rgba(214, 181, 109, 0.16);
-  background: rgba(10, 12, 17, 0.82);
-}
-
-.succession-archive .royal-guard-tree__selection-bar strong,
-.succession-archive .royal-guard-tree__orbit-panel h3,
-.succession-archive .royal-guard-tree__inspector-content h3,
-.succession-archive .royal-guard-tree__center-prince > strong {
-  color: var(--royal-ivory) !important;
-  text-shadow: none !important;
-}
-
-.succession-archive .royal-guard-tree__selection-bar span,
-.succession-archive .royal-guard-tree__orbit-panel > header > small,
-.succession-archive .royal-guard-tree__center-prince > small,
-.succession-archive .royal-guard-tree__inspector-content > p,
-.succession-archive .royal-guard-tree__inspector-content dt,
-.succession-archive .royal-guard-tree__footer {
-  color: var(--royal-muted) !important;
-}
-
-.succession-archive .royal-guard-tree__center-prince {
-  width: 174px;
-  min-height: 206px;
-  padding: 16px 14px;
-  border-radius: 26px;
-  background: linear-gradient(160deg, rgba(214, 181, 109, 0.12), rgba(14, 16, 21, 0.99) 57%);
-}
-
-.succession-archive .royal-guard-tree__center-prince .succession-entity-visual,
-.succession-archive .royal-guard-tree__center-prince .royal-guard-tree__fallback {
-  width: 100px !important;
-  height: 108px !important;
-  min-width: 100px;
-  min-height: 108px;
-  margin-bottom: 10px;
-  border-radius: 20px;
-}
-
-.succession-archive .royal-guard-tree__center-prince > strong {
-  font-size: 24px;
-}
-
-.succession-archive .royal-guard-tree .succession-entity-visual,
-.succession-archive .royal-guard-tree .royal-guard-tree__fallback {
-  overflow: hidden;
-  background: #f2efe8;
-}
-
-.succession-archive .royal-guard-tree .succession-entity-visual img,
-.succession-archive .royal-guard-tree .safe-image {
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: contain !important;
-  object-position: center !important;
-  background: #f2efe8;
-}
-
-.succession-archive .royal-guard-tree__fallback {
-  color: #ead8a8 !important;
-  background: radial-gradient(circle at 35% 25%, rgba(214, 181, 109, 0.21), transparent 42%), #171a20 !important;
-}
-
-.succession-archive .royal-guard-tree__hover-card {
-  width: min(225px, 76vw);
-  padding: 12px 13px;
-  border-color: rgba(214, 181, 109, 0.42);
-  background: rgba(8, 10, 14, 0.985);
-}
-
-.succession-archive .royal-guard-tree__hover-card strong {
-  color: var(--royal-ivory) !important;
-}
-
-.succession-archive .royal-guard-tree__hover-card > span,
-.succession-archive .royal-guard-tree__hover-card em {
-  color: var(--royal-muted) !important;
-}
-
-.royal-guard-tree__orbit.is-dense {
-  min-height: 680px;
-}
-
-.royal-guard-tree__guard {
+.royal-map__prince-node {
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr;
-  place-items: center;
-  width: 80px;
-  height: 80px;
-  min-height: 80px;
-  padding: 6px;
-  border-radius: 50%;
-  text-align: center;
+  grid-template-rows: 67px minmax(0, 1fr) 18px;
+  width: 350px;
+  height: 154px;
 }
 
-.royal-guard-tree__guard .succession-entity-visual,
-.royal-guard-tree__guard .royal-guard-tree__fallback {
-  grid-row: 1;
-  grid-column: 1;
-  width: 64px !important;
-  height: 64px !important;
-  min-width: 64px;
-  min-height: 64px;
-  max-width: 64px;
-  max-height: 64px;
-  aspect-ratio: 1;
-  margin: 0;
-  border-radius: 50%;
+.royal-map__prince-summary {
+  min-height: 67px;
 }
 
-.royal-guard-tree__guard .succession-entity-visual,
-.royal-guard-tree__guard .succession-entity-visual img,
-.royal-guard-tree__guard .safe-image-placeholder {
-  overflow: hidden;
-  border-radius: 50%;
-}
-
-.royal-guard-tree__guard .succession-entity-visual img,
-.royal-guard-tree__guard .safe-image,
-.royal-guard-tree__guard .safe-image-placeholder {
-  width: 100% !important;
-  height: 100% !important;
-  min-width: 0 !important;
-  min-height: 0 !important;
-  object-fit: contain !important;
-  object-position: center !important;
-  background: #f2efe8;
-}
-
-.royal-guard-tree__guard .safe-image-placeholder {
+.royal-map__guard-strip {
   display: grid;
-  place-items: center;
-  padding: 0;
-  background: linear-gradient(145deg, #28232b, #111419);
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  grid-auto-rows: 29px;
+  align-content: start;
+  gap: 3px;
+  height: auto;
+  min-height: 0;
+  padding: 4px 5px;
+  overflow: visible;
 }
 
-.royal-guard-tree__guard .safe-image-placeholder small {
+.royal-map__guard-mini {
+  grid-template-columns: 22px minmax(0, 1fr);
+  width: 100%;
+  min-width: 0;
+  height: 29px;
+}
+
+.royal-map__guard-mini .royal-map__portrait.is-compact,
+.royal-map__guard-mini .royal-map__portrait-fallback.is-compact {
+  width: 22px;
+  height: 24px;
+}
+
+.royal-map__guard-mini > span:last-child {
+  font-size: 8px;
+}
+
+.royal-map__prince-node > footer {
+  align-items: center;
+  min-height: 18px;
+  padding: 1px 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .royal-map__prince-node,
+  .royal-map__connectors path { transition: none; }
+}
+
+/*
+ * Royal Family immersive route
+ *
+ * The hierarchy map is a dedicated intelligence workspace. When this renderer
+ * is mounted, it owns the browser viewport while archive navigation moves into
+ * the existing focus-managed drawer.
+ */
+html:has(.succession-royal-hierarchy-workspace),
+html:has(.succession-royal-hierarchy-workspace) body {
+  height: 100%;
+  overflow: hidden;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .app-shell {
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .site-header,
+html:has(.succession-royal-hierarchy-workspace) .succession-route-context,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__sidebar {
   display: none;
 }
 
-.royal-guard-tree__guard .safe-image-placeholder b {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 13px;
-  letter-spacing: 0.04em;
+html:has(.succession-royal-hierarchy-workspace) #main-content,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__layout,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace-frame,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__content,
+html:has(.succession-royal-hierarchy-workspace) .succession-royal-hierarchy-workspace {
+  width: 100%;
+  height: 100vh;
+  min-height: 0;
+  max-width: none;
 }
 
-.royal-guard-tree__guard > span:not(.succession-entity-visual):not(.royal-guard-tree__fallback):not(.royal-guard-tree__hover-card) {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  display: grid;
-  place-items: center;
-  width: 25px;
-  height: 25px;
-  border: 1px solid rgba(242, 216, 147, 0.62);
-  border-radius: 50%;
-  background: #0b0d11;
-  color: var(--royal-gold-bright);
-  font-size: 11px;
-  font-weight: 800;
-  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.42);
-}
-
-.royal-guard-tree__guard > strong {
-  position: absolute;
-  width: 1px;
-  height: 1px;
+html:has(.succession-royal-hierarchy-workspace) #main-content,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__layout {
   overflow: hidden;
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  white-space: nowrap;
 }
 
-.royal-guard-tree__guard.is-group {
-  border-style: dashed;
-  background: radial-gradient(circle, rgba(213, 177, 102, 0.12), rgba(12, 14, 18, 0.98) 68%);
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__layout {
+  display: block;
 }
 
-.royal-guard-tree__guard:hover,
-.royal-guard-tree__guard:focus-visible,
-.royal-guard-tree__guard.is-locked {
-  z-index: 40;
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace {
+  padding: 0;
 }
 
-.royal-guard-tree__guard:hover .succession-entity-visual,
-.royal-guard-tree__guard:focus-visible .succession-entity-visual,
-.royal-guard-tree__guard.is-locked .succession-entity-visual,
-.royal-guard-tree__guard:hover .royal-guard-tree__fallback,
-.royal-guard-tree__guard:focus-visible .royal-guard-tree__fallback,
-.royal-guard-tree__guard.is-locked .royal-guard-tree__fallback {
-  box-shadow: 0 0 0 3px rgba(213, 177, 102, 0.12), 0 0 24px rgba(213, 177, 102, 0.2);
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace::before,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace-frame::before,
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace-frame::after {
+  display: none;
 }
 
-@media (max-width: 900px) {
-  .succession-archive .royal-guard-tree__header {
-    display: grid;
-    gap: 18px;
-  }
-
-  .succession-archive .royal-guard-tree__legend {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    width: 100%;
-  }
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__workspace-frame {
+  margin: 0;
 }
 
-@media (max-width: 760px) {
-  .succession-archive .royal-guard-tree__header h2 {
-    font-size: clamp(31px, 10vw, 43px);
-  }
-
-  .succession-archive .royal-guard-tree__king {
-    grid-template-columns: 72px minmax(0, 1fr);
-    width: 100%;
-  }
-
-  .succession-archive .royal-guard-tree__king > .succession-entity-visual,
-  .succession-archive .royal-guard-tree__king > .royal-guard-tree__fallback {
-    width: 72px !important;
-    height: 84px !important;
-    min-width: 72px;
-    min-height: 84px;
-  }
-
-  .royal-guard-tree__orbit.is-dense {
-    min-height: 0;
-  }
-
-  .royal-guard-tree__guard {
-    display: grid;
-    grid-template-columns: 52px minmax(0, 1fr);
-    grid-template-rows: auto auto;
-    place-items: initial;
-    align-items: center;
-    gap: 2px 9px;
-    width: 100%;
-    height: auto;
-    min-height: 68px;
-    padding: 7px 10px 7px 7px;
-    border-radius: 38px 15px 15px 38px;
-    text-align: left;
-  }
-
-  .royal-guard-tree__guard .succession-entity-visual,
-  .royal-guard-tree__guard .royal-guard-tree__fallback {
-    grid-row: 1 / 3;
-    grid-column: 1;
-    width: 52px !important;
-    height: 52px !important;
-    min-width: 52px;
-    min-height: 52px;
-  }
-
-  .royal-guard-tree__guard > span:not(.succession-entity-visual):not(.royal-guard-tree__fallback):not(.royal-guard-tree__hover-card) {
-    position: static;
-    display: block;
-    grid-column: 2;
-    width: auto;
-    height: auto;
-    border: 0;
-    border-radius: 0;
-    background: none;
-    box-shadow: none;
-    font-size: 11px;
-  }
-
-  .royal-guard-tree__guard > strong {
-    position: static;
-    grid-column: 2;
-    width: auto;
-    height: auto;
-    overflow: hidden;
-    clip: auto;
-    clip-path: none;
-    color: #eee7dc !important;
-    font-size: 12px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
+html:has(.succession-royal-hierarchy-workspace) .succession-archive__content {
+  display: block;
+  padding: 0;
+  overflow: hidden;
 }
 
-@media (max-width: 430px) {
-  .succession-archive .royal-guard-tree__legend {
-    grid-template-columns: 1fr;
-  }
+html:has(.succession-royal-hierarchy-workspace) .horizontal-scroll-hint {
+  display: none;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .royal-map {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 10px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .royal-map__toolbar {
+  padding-left: 54px;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .royal-map__viewport {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  scroll-padding: 18px;
+}
+
+html:has(.succession-royal-hierarchy-workspace) .royal-map__inspector {
+  top: 98px;
+  right: 18px;
+  max-height: calc(100vh - 126px);
+}
+
+html:has(.succession-royal-hierarchy-workspace) .royal-map__footer {
+  min-height: 34px;
+  padding: 6px 4px 0;
 }

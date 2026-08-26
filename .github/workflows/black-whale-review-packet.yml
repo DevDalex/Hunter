@@ -1,0 +1,107 @@
+name: Black Whale chapter review packet
+
+on:
+  pull_request:
+    paths:
+      - 'research/black-whale/current-review-chapter.txt'
+      - '.github/workflows/black-whale-review-packet.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  packet:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Initialize sparse repository
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config core.sparseCheckout true
+          git config core.sparseCheckoutCone true
+          git sparse-checkout init --cone
+          git sparse-checkout set research/black-whale
+          git -c protocol.version=2 fetch --depth=1 --filter=blob:none origin "$GITHUB_SHA"
+          git checkout --detach FETCH_HEAD
+
+      - name: Resolve review selection
+        id: selection
+        shell: bash
+        run: |
+          selection="$(tr -d '[:space:]' < research/black-whale/current-review-chapter.txt)"
+          if [[ "$selection" =~ ^([0-9]+)-([0-9]+)$ ]]; then
+            start="${BASH_REMATCH[1]}"
+            end="${BASH_REMATCH[2]}"
+          elif [[ "$selection" =~ ^[0-9]+$ ]]; then
+            start="$selection"
+            end="$selection"
+          else
+            echo "Invalid chapter selection: $selection" >&2
+            exit 1
+          fi
+          if (( start > end )); then
+            echo "Invalid descending range: $selection" >&2
+            exit 1
+          fi
+          if (( end - start > 19 )); then
+            echo "Review packets are limited to twenty chapters" >&2
+            exit 1
+          fi
+
+          chapter_paths=(research/black-whale)
+          for chapter in $(seq "$start" "$end"); do
+            chapter_paths+=("public/media/succession-contest/chapters/$chapter")
+          done
+          git sparse-checkout set "${chapter_paths[@]}"
+
+          mkdir -p review-packet
+          : > review-packet/manifest.tsv
+          total_pages=0
+          for chapter in $(seq "$start" "$end"); do
+            source_dir="public/media/succession-contest/chapters/$chapter"
+            if [[ ! -d "$source_dir" ]]; then
+              echo "Missing chapter media: $source_dir" >&2
+              exit 1
+            fi
+
+            mapfile -d '' pages < <(
+              find "$source_dir" -maxdepth 1 -type f \
+                \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' -o -iname '*.avif' \) \
+                -print0 | sort -z
+            )
+            page_count="${#pages[@]}"
+            if [[ "$page_count" -eq 0 ]]; then
+              echo "No supported image pages found for Chapter $chapter" >&2
+              exit 1
+            fi
+
+            target_dir="review-packet/$chapter"
+            mkdir -p "$target_dir"
+            for page in "${pages[@]}"; do
+              cp "$page" "$target_dir/"
+            done
+            printf '%s\n' "$page_count" > "$target_dir/page-count.txt"
+            find "$target_dir" -maxdepth 1 -type f ! -name '*.txt' -print0 \
+              | sort -z \
+              | xargs -0 sha256sum > "$target_dir/sha256.txt"
+            printf '%s\t%s\n' "$chapter" "$page_count" >> review-packet/manifest.tsv
+            total_pages=$((total_pages + page_count))
+          done
+
+          printf '%s\n' "$selection" > review-packet/selection.txt
+          sha256sum review-packet/*/sha256.txt > review-packet/chapter-manifests.sha256
+          echo "label=$selection" >> "$GITHUB_OUTPUT"
+          echo "total_pages=$total_pages" >> "$GITHUB_OUTPUT"
+
+      - name: Upload chapter pages
+        uses: actions/upload-artifact@v4
+        with:
+          name: bw3d-review-chapters-${{ steps.selection.outputs.label }}
+          path: review-packet/
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0

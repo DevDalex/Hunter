@@ -52,12 +52,11 @@ for (const selector of [
   '.succession-character-lifetime__lanes',
 ]) assert(commandCss.includes(selector), `advanced character CSS is missing ${selector}`);
 
-assert(commandCss.includes('@media (max-width: 1180px)'), 'wide-to-tablet character adaptation is required');
-assert(commandCss.includes('@media (max-width: 700px)'), 'tablet-to-mobile character adaptation is required');
-assert(commandCss.includes('@media (max-width: 520px)'), 'compact mobile character adaptation is required');
-assert(commandCss.includes('@media (hover: none)'), 'touch-specific interaction behavior is required');
+assert(!commandCss.includes('@media (max-width:'), 'desktop-only character command must not carry narrow-width breakpoint layouts');
+assert(!commandCss.includes('@media (hover: none)'), 'desktop-only character command must not carry no-hover device behavior');
+assert(!commandCss.includes('(pointer: coarse)'), 'desktop-only character command must not carry coarse-pointer behavior');
+assert(!commandCss.includes('touch-action:'), 'desktop-only character command must not carry touch-action rules');
 assert(commandCss.includes('@media (prefers-reduced-motion: reduce)'), 'reduced-motion behavior is required');
-assert(commandCss.includes('min-height: 44px'), 'mobile controls must retain 44px targets');
 assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(commandCss), 'advanced character CSS must not introduce raw hex colors');
 assert(!commandCss.includes('!important'), 'advanced character CSS must not depend on !important');
 assert(workspace.includes("import './SuccessionArchiveCharacterCommand.css';"), 'character workspace must load the advanced command layer');
@@ -65,4 +64,4 @@ assert(packageJson.includes('"audit:succession-character-command"'), 'package.js
 assert(workflow.includes('audit:succession-character-command'), 'visual workflow must run the character command audit');
 for (const hour of ['Hour 25', 'Hour 26', 'Hour 27', 'Hour 28', 'Hour 29']) assert(docs.includes(hour), `design record must document ${hour}`);
 
-console.log('Succession character command audit passed: directory, cards, profile identity, dossier sections, chronology, accessibility, and responsive contracts are registered.');
+console.log('Succession character command audit passed: desktop directory, cards, profile identity, dossier sections, chronology, accessibility, and reduced-motion contracts are registered.');
