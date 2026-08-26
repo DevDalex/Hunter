@@ -8,6 +8,12 @@ import {
   TimelineCartographyInstrument,
 } from './SuccessionExplorerAdvancedInstruments';
 import {
+  ChapterCausalGatewayInstrument,
+  GuardianBeastEcologyInstrument,
+  OrganizationDependencyInstrument,
+} from './SuccessionExplorerCausalSystemsInstruments';
+import './SuccessionExplorerCausalSystemsClosure.css';
+import {
   ReaderContinuityInstrument,
   StructuredQueryInstrument,
 } from './SuccessionExplorerContinuityInstruments';
@@ -44,6 +50,9 @@ const searchProjectionViews = new Set(['timeline', 'ship', 'graph']);
 const shipHierarchyViews = new Set(['atlas', 'occupancy', 'events', 'paths', 'control', 'playback']);
 const knowledgeTrailRoutes = new Set(['characters', 'timeline', 'research']);
 const researchEvidenceViews = new Set(['evidence', 'claims']);
+const chapterCausalViews = new Set(['previously', 'impact']);
+const guardianEcologyViews = new Set(['ecology', 'hosts', 'ritual', 'mechanics']);
+const organizationTopologyViews = new Set(['hierarchy', 'territory', 'dependencies']);
 
 export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit, onNavigate }) {
   const explorer = useSuccessionExplorer();
@@ -96,11 +105,14 @@ export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit
     {routeId === 'characters' && view === 'timeline' && <CharacterStateEvolutionInstrument chapter={explorer.chapter} onNavigate={onNavigate} />}
     {routeId === 'black-whale' && <BlackWhaleDeckInstrument chapter={explorer.chapter} view={view} onNavigate={onNavigate} />}
     {routeId === 'black-whale' && shipHierarchyViews.has(view) && <BlackWhaleHierarchyInstrument chapter={explorer.chapter} onNavigate={onNavigate} />}
+    {routeId === 'organizations' && organizationTopologyViews.has(view) && <OrganizationDependencyInstrument chapter={explorer.chapter} mode={view} onNavigate={onNavigate} />}
+    {routeId === 'guardian-spirit-beasts' && guardianEcologyViews.has(view) && <GuardianBeastEcologyInstrument chapter={explorer.chapter} mode={view} />}
     {routeId === 'relationships' && <RelationshipEdgeBiographyInstrument chapter={explorer.chapter} view={view} onNavigate={onNavigate} />}
     {routeId === 'nen' && view === 'interactions' && <NenInteractionGraphInstrument chapter={explorer.chapter} />}
     {routeId === 'nen' && nenLaboratoryViews.has(view) && <NenInteractionInstrument chapter={explorer.chapter} view={view} onNavigate={onNavigate} />}
     {routeId === 'nen' && nenCircuitViews.has(view) && <NenMechanicsCircuitInstrument chapter={explorer.chapter} onNavigate={onNavigate} />}
     {routeId === 'chapters' && view === 'diff' && <ChapterStateDiffInstrument chapter={explorer.chapter} />}
+    {routeId === 'chapters' && chapterCausalViews.has(view) && <ChapterCausalGatewayInstrument chapter={explorer.chapter} mode={view} />}
     {routeId === 'research' && researchEvidenceViews.has(view) && <ResearchEvidenceTopologyInstrument chapter={explorer.chapter} />}
     {routeId === 'search' && searchProjectionViews.has(view) && <SearchProjectionInstrument chapter={explorer.chapter} view={view} />}
     {routeId === 'reader' && <ReaderContinuityInstrument chapter={explorer.chapter} onNavigate={onNavigate} />}

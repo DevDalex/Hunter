@@ -1,0 +1,431 @@
+.succession-explorer-causal-systems {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+  padding: clamp(18px, 2.5vw, 30px);
+  border-block: 1px solid color-mix(in srgb, var(--succession-border-default) 76%, transparent);
+  background: color-mix(in srgb, var(--succession-surface-paper-raised) 94%, transparent);
+  color: var(--succession-text-on-paper);
+}
+
+.succession-explorer-causal-systems__head {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+}
+.succession-explorer-causal-systems__head > div { display: grid; gap: 6px; min-width: 0; }
+.succession-explorer-causal-systems__head > div > span,
+.succession-explorer-causal-gateway__lanes > header span,
+.succession-explorer-beast-ecology__systems > header span,
+.succession-explorer-beast-ecology__field > header span,
+.succession-explorer-organization-topology__objectives > header span,
+.succession-explorer-organization-topology__pressure > header span,
+.succession-explorer-organization-topology__categories > section > header span {
+  color: var(--succession-crimson-strong);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.succession-explorer-causal-systems__head h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: var(--succession-text-on-paper);
+  font-family: var(--succession-font-display);
+  font-size: clamp(24px, 2.7vw, 39px);
+  line-height: 1;
+  letter-spacing: -.035em;
+}
+.succession-explorer-causal-systems__head p {
+  max-width: 1040px;
+  margin: 0;
+  color: var(--succession-text-on-paper-muted);
+  line-height: 1.65;
+}
+
+.succession-explorer-causal-systems__empty {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  padding: 15px;
+  border-left: 3px solid var(--succession-gold-strong);
+  background: color-mix(in srgb, var(--succession-gold-strong) 7%, transparent);
+}
+.succession-explorer-causal-systems__empty p { margin: 0; color: var(--succession-text-on-paper-muted); }
+
+.succession-explorer-causal-systems button,
+.succession-explorer-causal-systems summary {
+  min-height: 44px;
+}
+.succession-explorer-causal-systems button:focus-visible,
+.succession-explorer-causal-systems summary:focus-visible {
+  outline: 2px solid var(--succession-focus-ring, currentColor);
+  outline-offset: 2px;
+}
+
+.succession-explorer-causal-systems__entity {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 3px 10px;
+  align-items: center;
+  min-width: 0;
+  padding: 10px 11px;
+  border: 1px solid var(--succession-border-default);
+  background: var(--succession-surface-paper-raised);
+  color: var(--succession-text-on-paper);
+  text-align: left;
+  cursor: pointer;
+}
+.succession-explorer-causal-systems__entity > span {
+  color: var(--succession-crimson-strong);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.succession-explorer-causal-systems__entity > strong,
+.succession-explorer-causal-systems__entity > small { grid-column: 1; }
+.succession-explorer-causal-systems__entity > small { color: var(--succession-text-on-paper-muted); }
+.succession-explorer-causal-systems__entity > svg { grid-column: 2; grid-row: 1 / 4; }
+
+/* Chapter causal gateway */
+.succession-explorer-causal-gateway__metrics,
+.succession-explorer-beast-ecology__metrics {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--succession-border-default);
+}
+.succession-explorer-causal-gateway__metrics > div,
+.succession-explorer-beast-ecology__metrics > div {
+  padding: 14px;
+  border-right: 1px solid var(--succession-border-subtle);
+}
+.succession-explorer-causal-gateway__metrics > div:last-child,
+.succession-explorer-beast-ecology__metrics > div:last-child { border-right: 0; }
+.succession-explorer-causal-gateway__metrics dt,
+.succession-explorer-beast-ecology__metrics dt,
+.succession-explorer-organization-topology__center dt {
+  color: var(--succession-text-on-paper-muted);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.succession-explorer-causal-gateway__metrics dd,
+.succession-explorer-beast-ecology__metrics dd,
+.succession-explorer-organization-topology__center dd {
+  margin: 5px 0 0;
+  color: var(--succession-text-on-paper);
+  font-family: var(--succession-font-display);
+  font-size: clamp(22px, 2vw, 32px);
+  font-weight: 850;
+  line-height: 1;
+}
+
+.succession-explorer-causal-gateway__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  padding-block: 7px;
+  border-bottom: 1px solid var(--succession-border-subtle);
+}
+.succession-explorer-causal-gateway__legend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--succession-text-on-paper-muted);
+  font-size: 12px;
+}
+.succession-explorer-causal-gateway__legend i { width: 18px; height: 3px; background: #6a625b; }
+.succession-explorer-causal-gateway__legend i.is-direct { background: var(--succession-crimson-strong); }
+.succession-explorer-causal-gateway__legend i.is-enable { background: var(--succession-state-positive); }
+.succession-explorer-causal-gateway__legend i.is-constraint { background: var(--succession-gold-strong); }
+.succession-explorer-causal-gateway__legend i.is-context { background: #665a70; }
+.succession-explorer-causal-gateway__legend i.is-sequence { height: 1px; border-top: 1px dashed currentColor; background: transparent; }
+
+.succession-explorer-causal-gateway__lanes { display: grid; gap: 8px; }
+.succession-explorer-causal-gateway__lanes > header,
+.succession-explorer-beast-ecology__systems > header,
+.succession-explorer-beast-ecology__field > header,
+.succession-explorer-organization-topology__objectives > header,
+.succession-explorer-organization-topology__pressure > header,
+.succession-explorer-organization-topology__categories > section > header {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--succession-border-subtle);
+}
+.succession-explorer-causal-gateway__lanes > header > div,
+.succession-explorer-beast-ecology__systems > header > div,
+.succession-explorer-beast-ecology__field > header > div,
+.succession-explorer-organization-topology__objectives > header > div,
+.succession-explorer-organization-topology__pressure > header > div,
+.succession-explorer-organization-topology__categories > section > header > div { display: grid; gap: 2px; }
+.succession-explorer-causal-gateway__lanes > div { display: grid; }
+.succession-explorer-causal-gateway__lanes article {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(180px, .55fr) minmax(220px, 1fr);
+  gap: 12px;
+  align-items: center;
+  min-width: 0;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--succession-border-subtle);
+}
+.succession-explorer-causal-gateway__lanes article > button {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--succession-border-default);
+  background: var(--succession-surface-paper-raised);
+  color: var(--succession-text-on-paper);
+  text-align: left;
+  cursor: pointer;
+}
+.succession-explorer-causal-gateway__lanes article > button > span {
+  color: var(--succession-crimson-strong);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 800;
+}
+.succession-explorer-causal-gateway__edge { display: grid; grid-template-columns: auto minmax(24px, 1fr) auto; gap: 6px; align-items: center; min-width: 0; }
+.succession-explorer-causal-gateway__edge > b,
+.succession-explorer-causal-gateway__edge > small {
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.succession-explorer-causal-gateway__edge > small { color: var(--succession-text-on-paper-muted); }
+.succession-explorer-causal-gateway__edge > i { height: 3px; background: #6a625b; }
+.succession-explorer-causal-gateway__lanes article.is-direct-cause .succession-explorer-causal-gateway__edge > i { background: var(--succession-crimson-strong); }
+.succession-explorer-causal-gateway__lanes article.is-enabling-condition .succession-explorer-causal-gateway__edge > i { background: var(--succession-state-positive); }
+.succession-explorer-causal-gateway__lanes article.is-constraint .succession-explorer-causal-gateway__edge > i { background: var(--succession-gold-strong); }
+.succession-explorer-causal-gateway__lanes article.is-contextual-link .succession-explorer-causal-gateway__edge > i { background: #665a70; }
+.succession-explorer-causal-gateway__lanes article.is-sequence-only .succession-explorer-causal-gateway__edge > i { height: 1px; border-top: 1px dashed currentColor; background: transparent; }
+.succession-explorer-causal-gateway__lanes article > footer {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  padding-left: 8px;
+  color: var(--succession-text-on-paper-muted);
+  font-size: 12px;
+}
+.succession-explorer-causal-gateway__lanes article > footer > button {
+  min-height: 34px;
+  padding: 5px 8px;
+  border: 1px solid var(--succession-border-subtle);
+  background: transparent;
+  color: var(--succession-text-on-paper);
+  cursor: pointer;
+}
+
+/* Guardian Beast ecology */
+.succession-explorer-beast-ecology__systems,
+.succession-explorer-beast-ecology__field { display: grid; gap: 10px; }
+.succession-explorer-beast-ecology__systems > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.succession-explorer-beast-ecology__systems article {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 15px;
+  border: 1px solid var(--succession-border-default);
+  background: var(--succession-surface-paper-raised);
+}
+.succession-explorer-beast-ecology__systems article > div:first-child { display: grid; gap: 4px; }
+.succession-explorer-beast-ecology__systems article > div:first-child > span {
+  color: var(--succession-crimson-strong);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.succession-explorer-beast-ecology__systems article p { margin: 0; color: var(--succession-text-on-paper-muted); line-height: 1.55; }
+.succession-explorer-beast-ecology__systems article > dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; }
+.succession-explorer-beast-ecology__systems article > dl > div { padding: 8px; border-left: 1px solid var(--succession-border-subtle); }
+.succession-explorer-beast-ecology__systems dt { color: var(--succession-text-on-paper-muted); font-family: var(--succession-font-mono); font-size: 11px; text-transform: uppercase; }
+.succession-explorer-beast-ecology__systems dd { margin: 4px 0 0; font-weight: 800; }
+.succession-explorer-beast-ecology__systems details { border-top: 1px solid var(--succession-border-subtle); }
+.succession-explorer-beast-ecology__systems summary { display: flex; align-items: center; justify-content: space-between; gap: 8px; cursor: pointer; }
+.succession-explorer-beast-ecology__systems details[open] summary svg { transform: rotate(90deg); }
+.succession-explorer-beast-ecology__systems details > div { display: grid; gap: 6px; padding-top: 8px; }
+
+.succession-explorer-beast-ecology__field > div { display: grid; }
+.succession-explorer-beast-ecology__field article {
+  display: grid;
+  grid-template-columns: minmax(170px, .7fr) 18px minmax(230px, 1fr) 18px minmax(240px, 1.1fr);
+  gap: 10px;
+  align-items: center;
+  min-width: 0;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--succession-border-subtle);
+}
+.succession-explorer-beast-ecology__field article.is-derived { box-shadow: inset 3px 0 0 var(--succession-gold-strong); }
+.succession-explorer-beast-ecology__field article.is-explicit { box-shadow: inset 3px 0 0 var(--succession-state-positive); }
+.succession-explorer-beast-ecology__host,
+.succession-explorer-beast-ecology__beast,
+.succession-explorer-beast-ecology__abilities > button {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid var(--succession-border-default);
+  background: var(--succession-surface-paper-raised);
+  color: var(--succession-text-on-paper);
+  text-align: left;
+  cursor: pointer;
+}
+.succession-explorer-beast-ecology__host > span,
+.succession-explorer-beast-ecology__beast > span,
+.succession-explorer-beast-ecology__abilities > button > span {
+  color: var(--succession-crimson-strong);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.succession-explorer-beast-ecology__beast > small { color: var(--succession-text-on-paper-muted); }
+.succession-explorer-beast-ecology__abilities { display: grid; gap: 5px; min-width: 0; }
+.succession-explorer-beast-ecology__abilities > button.is-known { border-left: 3px solid var(--succession-state-positive); }
+.succession-explorer-beast-ecology__abilities > button.is-suspected { border-left: 3px solid var(--succession-gold-strong); }
+.succession-explorer-beast-ecology__abilities > .is-empty { color: var(--succession-text-on-paper-muted); font-size: 12px; }
+.succession-explorer-beast-ecology__field article > footer {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 14px;
+  padding-left: 8px;
+  color: var(--succession-text-on-paper-muted);
+  font-size: 12px;
+}
+
+/* Organization operating topology */
+.succession-explorer-organization-topology__chooser {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.succession-explorer-organization-topology__chooser > button {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 10px;
+  align-items: center;
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid var(--succession-border-default);
+  background: var(--succession-surface-paper-raised);
+  color: var(--succession-text-on-paper);
+  text-align: left;
+  cursor: pointer;
+}
+.succession-explorer-organization-topology__chooser > button > span {
+  color: var(--succession-crimson-strong);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.succession-explorer-organization-topology__chooser > button > strong,
+.succession-explorer-organization-topology__chooser > button > small { grid-column: 1; }
+.succession-explorer-organization-topology__chooser > button > small { color: var(--succession-text-on-paper-muted); }
+.succession-explorer-organization-topology__chooser > button > svg { grid-column: 2; grid-row: 1 / 4; }
+
+.succession-explorer-organization-topology__center {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(560px, 1.5fr);
+  overflow: hidden;
+  border: 1px solid var(--succession-border-default);
+}
+.succession-explorer-organization-topology__center > div:first-child { display: grid; align-content: start; gap: 6px; padding: 18px; }
+.succession-explorer-organization-topology__center > div:first-child > span {
+  color: var(--succession-crimson-strong);
+  font-family: var(--succession-font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.succession-explorer-organization-topology__center > div:first-child > strong { font-family: var(--succession-font-display); font-size: clamp(25px, 2.4vw, 36px); }
+.succession-explorer-organization-topology__center > div:first-child > p { margin: 0; color: var(--succession-text-on-paper-muted); line-height: 1.55; }
+.succession-explorer-organization-topology__center > dl { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0; border-left: 1px solid var(--succession-border-default); }
+.succession-explorer-organization-topology__center > dl > div { padding: 14px; border-left: 1px solid var(--succession-border-subtle); border-bottom: 1px solid var(--succession-border-subtle); }
+
+.succession-explorer-organization-topology__objectives,
+.succession-explorer-organization-topology__pressure { display: grid; gap: 8px; }
+.succession-explorer-organization-topology__objectives > div,
+.succession-explorer-organization-topology__pressure > div { display: grid; gap: 6px; }
+.succession-explorer-organization-topology__objectives p,
+.succession-explorer-organization-topology__pressure p { margin: 0; padding: 9px 11px; border-left: 2px solid var(--succession-gold-strong); background: color-mix(in srgb, var(--succession-gold-strong) 5%, transparent); }
+.succession-explorer-organization-topology__pressure p { border-left-color: var(--succession-crimson-strong); background: color-mix(in srgb, var(--succession-crimson-strong) 4%, transparent); }
+
+.succession-explorer-organization-topology__categories {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.succession-explorer-organization-topology__categories > section { display: grid; gap: 7px; align-content: start; min-width: 0; }
+.succession-explorer-organization-topology__categories > section > div { display: grid; gap: 6px; }
+.succession-explorer-organization-topology__categories > section > div > p { margin: 0; padding: 10px; color: var(--succession-text-on-paper-muted); border: 1px dashed var(--succession-border-subtle); }
+
+.succession-explorer-causal-systems__footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 1px solid var(--succession-border-subtle);
+  color: var(--succession-text-on-paper-muted);
+}
+.succession-explorer-causal-systems__footer > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 12px;
+  border: 1px solid var(--succession-border-default);
+  background: var(--succession-surface-paper-raised);
+  color: var(--succession-text-on-paper);
+  font-weight: 760;
+  cursor: pointer;
+}
+.succession-explorer-causal-systems__footer > span { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+
+@media (max-width: 1260px) {
+  .succession-explorer-causal-gateway__metrics,
+  .succession-explorer-beast-ecology__metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .succession-explorer-causal-gateway__metrics > div:nth-child(3n),
+  .succession-explorer-beast-ecology__metrics > div:nth-child(3n) { border-right: 0; }
+  .succession-explorer-beast-ecology__systems > div,
+  .succession-explorer-organization-topology__center { grid-template-columns: 1fr; }
+  .succession-explorer-organization-topology__center > dl { border-left: 0; border-top: 1px solid var(--succession-border-default); }
+  .succession-explorer-organization-topology__categories { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-explorer-causal-systems *,
+  .succession-explorer-causal-systems *::before,
+  .succession-explorer-causal-systems *::after {
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .succession-explorer-causal-gateway__legend i,
+  .succession-explorer-causal-gateway__edge > i { border: 1px solid CanvasText; background: CanvasText; }
+  .succession-explorer-causal-systems button:focus-visible,
+  .succession-explorer-causal-systems summary:focus-visible { outline-color: CanvasText; }
+}
