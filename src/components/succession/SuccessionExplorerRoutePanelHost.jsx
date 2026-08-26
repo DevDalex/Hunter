@@ -12,6 +12,7 @@ import {
   GuardianBeastEcologyInstrument,
   OrganizationDependencyInstrument,
 } from './SuccessionExplorerCausalSystemsInstruments';
+import './SuccessionExplorerCausalSystemsClosure.css';
 import {
   ReaderContinuityInstrument,
   StructuredQueryInstrument,
