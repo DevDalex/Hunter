@@ -1,4 +1,16 @@
 .succession-integrated-reference.succession-integrated-reference {
+  /* Standalone reference pages bypass SuccessionArchiveEntry, so their reboot tokens
+     live here instead of depending on a second global CSS entry point. */
+  --vr-paper: #f2ede3;
+  --vr-paper-raised: #fbf8f1;
+  --vr-ink: #181714;
+  --vr-burgundy: #781f2d;
+  --vr-burgundy-dark: #571620;
+  --vr-brass: #a47e43;
+  --vr-line: rgba(24, 23, 20, .16);
+  --vr-line-strong: rgba(24, 23, 20, .28);
+  --vr-serif: Georgia, 'Times New Roman', serif;
+  --vr-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --forest: var(--vr-burgundy) !important;
   --forest-dark: var(--vr-burgundy-dark) !important;
   --gold: var(--vr-brass) !important;

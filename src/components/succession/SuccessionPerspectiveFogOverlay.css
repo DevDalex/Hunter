@@ -1,0 +1,110 @@
+.succession-explorer-surface {
+  position: relative;
+}
+
+.succession-perspective-fog {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.succession-perspective-fog__legend {
+  position: absolute;
+  z-index: 7;
+  right: 342px;
+  bottom: 18px;
+  width: 230px;
+  border: 1px solid #454c53;
+  background: rgba(16, 19, 22, .96);
+  color: #e9e4dc;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .28);
+}
+
+.succession-perspective-fog__legend header {
+  min-height: 46px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 3px 7px;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid #3a4148;
+}
+
+.succession-perspective-fog__legend header svg {
+  grid-row: 1 / 3;
+  color: #c9a86a;
+}
+
+.succession-perspective-fog__legend header span {
+  color: #8f979f;
+  font: 700 8px/1 var(--sx-mono, ui-monospace, monospace);
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.succession-perspective-fog__legend header strong {
+  font: 600 12px/1.1 var(--sx-serif, Georgia, serif);
+}
+
+.succession-perspective-fog__legend > div {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 6px 10px;
+  border-bottom: 1px solid #30363c;
+}
+
+.succession-perspective-fog__legend > div > span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #b9b2aa;
+  font-size: 9px;
+}
+
+.succession-perspective-fog__legend > div b {
+  font: 700 9px/1 var(--sx-mono, ui-monospace, monospace);
+}
+
+.succession-perspective-fog__legend i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #77808a;
+}
+
+.succession-perspective-fog__legend i.is-known {
+  background: #d8c7a2;
+}
+
+.succession-perspective-fog__legend i.is-misinformed {
+  background: #cf9d4d;
+}
+
+.succession-perspective-fog__legend i.is-hidden {
+  background: #4f565d;
+}
+
+.succession-perspective-fog__legend > small {
+  display: block;
+  padding: 8px 10px;
+  color: #858d95;
+  font-size: 8px;
+  line-height: 1.45;
+}
+
+.succession-explorer-surface[data-explorer-route='timeline'] .succession-perspective-fog__legend,
+.succession-explorer-surface[data-explorer-route='black-whale'] .succession-perspective-fog__legend,
+.succession-explorer-surface[data-explorer-route='relationships'] .succession-perspective-fog__legend {
+  bottom: 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-perspective-fog,
+  .succession-perspective-fog__legend {
+    transition: none !important;
+    animation: none !important;
+  }
+}

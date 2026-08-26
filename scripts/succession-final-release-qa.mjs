@@ -179,7 +179,16 @@ try {
       const axe = await page.evaluate(async () => globalThis.axe.run(document, {
         runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] },
       }));
-      const axeViolations = axe.violations.map((violation) => ({ id: violation.id, impact: violation.impact, nodes: violation.nodes.length }));
+      const axeViolations = axe.violations.map((violation) => ({
+        id: violation.id,
+        impact: violation.impact,
+        nodes: violation.nodes.length,
+        samples: violation.nodes.slice(0, 12).map((node) => ({
+          target: node.target,
+          html: node.html.slice(0, 260),
+          failureSummary: node.failureSummary,
+        })),
+      }));
       const requiresWorkspaceRegion = route.path.startsWith('succession/') && !['story', 'archive'].includes(route.id);
       const defects = [
         ...runtimeErrors,

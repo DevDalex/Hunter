@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
-import HorizontalScrollHint from './HorizontalScrollHint';
 import SuccessionTimeline from './SuccessionTimeline';
 import TimelineCharacterSpatialFollower from './TimelineCharacterSpatialFollower';
 import TimelineComparisonBuilder from './TimelineComparisonBuilder';
@@ -164,17 +163,14 @@ export default function TimelineWorkspace({
           onNavigate={navigateTimelineState}
         />}
 
-        {(atlasActive || archiveActive) && <>
-          <HorizontalScrollHint>Timeline chronology continues horizontally. Use Shift + mouse wheel or the chapter controls to inspect the complete record.</HorizontalScrollHint>
-          <SuccessionTimeline
-            spoilerLimit={spoilerLimit}
-            initialQuery={requestedSearch}
-            requestedState={atlasState}
-            onOpenLocation={openLocationInSpatialIntelligence}
-            onSearchCommit={applySearch}
-            onStateCommit={commitTimelineState}
-          />
-        </>}
+        {(atlasActive || archiveActive) && <SuccessionTimeline
+          spoilerLimit={spoilerLimit}
+          initialQuery={requestedSearch}
+          requestedState={atlasState}
+          onOpenLocation={openLocationInSpatialIntelligence}
+          onSearchCommit={applySearch}
+          onStateCommit={commitTimelineState}
+        />}
 
         {spatialActive && <TimelineSpatialIntelligence
           requestedState={resolvedState}
