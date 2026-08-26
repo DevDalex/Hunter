@@ -6,6 +6,7 @@ import { ARCHIVE_BOUNDARY } from '../../data/archiveMeta';
 import { referencePages } from '../../data/routeManifest';
 import { routeModuleLoaders } from '../../lib/routePreload';
 import './SuccessionIntegratedReferences.css';
+import './SuccessionIntegratedReferenceReboot.css';
 
 const NenEncyclopedia = lazy(routeModuleLoaders.nen);
 const nenReferencePage = referencePages.find((page) => page.id === 'nen');

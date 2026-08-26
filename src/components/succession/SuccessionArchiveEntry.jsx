@@ -24,6 +24,10 @@ import './SuccessionArchitectureVisualRevision.css';
 import './SuccessionPhase2PresentationConsistency.css';
 import './SuccessionFinalReleasePatch.css';
 import './SuccessionFinalContrastClosure.css';
+import '../../styles/visual-reboot.css';
+import './SuccessionVisualRebootLate.css';
+import './SuccessionRouteVisualTuning.css';
+import './SuccessionChromeFinal.css';
 import SuccessionCommandHome from './SuccessionCommandHome';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));

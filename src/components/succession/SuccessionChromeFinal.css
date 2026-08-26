@@ -1,0 +1,85 @@
+/* Final shared chrome pass. Non-command routes sit below the global sticky header. */
+
+.succession-archive.succession-archive {
+  min-height: calc(100vh - var(--header-height)) !important;
+}
+
+.succession-archive.succession-archive .succession-archive__layout {
+  min-height: calc(100vh - var(--header-height)) !important;
+}
+
+.succession-archive.succession-archive .succession-archive__sidebar {
+  top: var(--header-height) !important;
+  height: calc(100vh - var(--header-height)) !important;
+}
+
+/* One compact instrument strip. It is metadata/control chrome, not another card. */
+.succession-archive.succession-archive .succession-comprehension-bar {
+  width: min(100%, var(--vr-content-width)) !important;
+  min-height: 44px !important;
+  margin: 0 auto !important;
+  padding: 6px var(--vr-gutter) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--vr-line-strong) !important;
+  background: #e9e1d5 !important;
+  color: var(--vr-ink) !important;
+  box-shadow: none !important;
+}
+
+.succession-archive.succession-archive .succession-comprehension-bar__chapter > span,
+.succession-archive.succession-archive .succession-comprehension-bar__density > span {
+  color: var(--vr-burgundy) !important;
+  font-family: var(--vr-mono) !important;
+  font-size: 9px !important;
+  letter-spacing: .11em !important;
+}
+
+.succession-archive.succession-archive .succession-comprehension-bar button,
+.succession-archive.succession-archive .succession-comprehension-bar__legend summary {
+  min-height: 30px !important;
+  border: 1px solid var(--vr-line) !important;
+  border-radius: 0 !important;
+  background: var(--vr-paper-raised) !important;
+  color: var(--vr-ink) !important;
+  box-shadow: none !important;
+}
+
+.succession-archive.succession-archive .succession-comprehension-bar button:hover,
+.succession-archive.succession-archive .succession-comprehension-bar button.is-active,
+.succession-archive.succession-archive .succession-comprehension-bar__density button.is-active {
+  border-color: var(--vr-ink) !important;
+  background: var(--vr-ink) !important;
+  color: #fff !important;
+}
+
+.succession-archive.succession-archive .succession-comprehension-bar__legend > div {
+  border-radius: 0 !important;
+  border-color: var(--vr-line-strong) !important;
+  background: var(--vr-paper-raised) !important;
+  box-shadow: 0 5px 12px rgba(24,23,20,.1) !important;
+}
+
+/* The old shell hides this context block. Keep it hidden; duplicate metadata is noise. */
+.succession-archive.succession-archive .succession-archive__sidebar-context {
+  display: none !important;
+}
+
+/* Retain minimum target sizes without turning dense result rows into giant cards. */
+.succession-archive[data-presentation-density='high'] :where(
+  .succession-assignment-ledger-row,
+  .succession-chapter-command__index > button,
+  .succession-relationship-accessible li > button
+),
+.succession-archive[data-presentation-density='extreme'] :where(
+  .succession-assignment-ledger-row,
+  .succession-chapter-command__index > button,
+  .succession-relationship-accessible li > button
+) {
+  min-height: 44px !important;
+}
+
+/* Dense pages use hard separation instead of nested shadows. */
+.succession-archive[data-presentation-density='high'] :where(section, article),
+.succession-archive[data-presentation-density='extreme'] :where(section, article) {
+  --sa-shadow: none;
+}

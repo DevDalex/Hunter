@@ -14,14 +14,14 @@ const unsupportedMaxWidths = [...css.matchAll(/@media[^\n{]*max-width\s*:\s*([0-
   return Number.isFinite(px) && px < 1180;
 });
 
-const guidedViews = [
+const genericGuidedViews = [
   'src/components/FamilyTree.jsx',
   'src/components/BlackWhaleGuide.jsx',
   'src/components/SystemsDesk.jsx',
   'src/components/SuccessionDossier.jsx',
-  'src/components/SuccessionTimeline.jsx',
 ];
-const guidedText = await Promise.all(guidedViews.map(read));
+const genericGuidedText = await Promise.all(genericGuidedViews.map(read));
+const timelineWorkspace = await read('src/components/TimelineWorkspace.jsx');
 
 assert(fontSizes.length > 250, 'the explicit typography inventory unexpectedly shrank');
 assert(fontSizes.every((size) => Number.isFinite(size) && size > 0), 'explicit pixel type declarations must be positive numeric values');
@@ -32,7 +32,9 @@ assert(!css.includes('-webkit-tap-highlight-color'), 'desktop-only styles must n
 assert(!unsupportedMaxWidths.length, `unsupported narrow-width media rules remain: ${unsupportedMaxWidths.map((match) => match[0]).join(' | ')}`);
 assert(css.includes('--content-sticky-top:'), 'the shared sticky-stack offset is missing');
 assert(css.includes('.horizontal-scroll-hint'), 'the labelled horizontal-overflow cue is missing');
-assert(guidedText.every((text) => text.includes('<HorizontalScrollHint')), 'every retained wide research view must expose its horizontal-overflow cue');
+assert(genericGuidedText.every((text) => text.includes('<HorizontalScrollHint')), 'every retained generic wide research view must expose its horizontal-overflow cue');
+assert(timelineWorkspace.includes('<HorizontalScrollHint>'), 'Timeline must expose its dedicated horizontal chronology cue');
+assert(timelineWorkspace.includes('Timeline chronology continues horizontally.'), 'Timeline must explain its horizontal reading direction');
 
 const smallestDeclaredSize = Math.min(...fontSizes);
-console.log(`Readability audit passed: ${fontSizes.length} explicit type declarations inventoried (smallest ${smallestDeclaredSize}px); ${guidedViews.length} retained desktop scroll-guided research views; 1180px minimum reading surface enforced with no narrow-width or touch-device contract.`);
+console.log(`Readability audit passed: ${fontSizes.length} explicit type declarations inventoried (smallest ${smallestDeclaredSize}px); ${genericGuidedViews.length} generic scroll-guided research views plus dedicated Timeline chronology; 1180px minimum reading surface enforced with no narrow-width or touch-device contract.`);

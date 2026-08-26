@@ -14,6 +14,7 @@ import { ARCHIVE_BOUNDARY } from '../../data/archiveMeta';
 import { routeToHref } from '../../lib/appRouter';
 import { getEntitiesByType, getEntityById } from '../../data/succession/successionData';
 import { recordSuccessionLocalRouteView } from '../../data/succession/localAnalytics';
+import { getRoutePresentationProfile } from '../../data/succession/routePresentation';
 import {
   getSuccessionArchiveHub,
   getSuccessionArchiveRoute,
@@ -138,6 +139,7 @@ export default function SuccessionArchiveShell({
   const contentRef = useRef(null);
   const previousRouteRef = useRef(null);
   const route = getSuccessionArchiveRoute(activeId);
+  const presentation = getRoutePresentationProfile(route.id);
   const activeHub = getSuccessionArchiveHub(route.id);
   const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
   const showCharacterConsistency = needsCharacterConsistency(route.id, routeParams);
@@ -180,9 +182,17 @@ export default function SuccessionArchiveShell({
   const showNenSpatial = ['nen', 'black-whale'].includes(activeHub.id);
   const showResearchOverviewMeta = route.id === 'research' && (!routeParams?.mode || routeParams.mode === 'overview');
 
-  return <article className="succession-archive" data-archive-route={route.id} data-archive-hub={activeHub.id}>
+  return <article
+    className="succession-archive"
+    data-archive-route={route.id}
+    data-archive-hub={activeHub.id}
+    data-presentation-kind={presentation.kind}
+    data-presentation-density={presentation.density}
+    data-record-count={presentation.recordCount}
+    data-information-units={presentation.informationUnits}
+  >
     <a className="succession-archive__skip-link" href="#succession-workspace-content">Skip to workspace</a>
-    <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{route.label} workspace loaded. Reading boundary Chapter {spoilerLimit}. Active hub: {activeHub.label}.</span>
+    <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{route.label} workspace loaded. Reading boundary Chapter {spoilerLimit}. Active hub: {activeHub.label}. Presentation density: {presentation.density}.</span>
 
     <div className="succession-archive__layout">
       <aside className="succession-archive__sidebar">

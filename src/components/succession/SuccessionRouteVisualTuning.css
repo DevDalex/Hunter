@@ -1,0 +1,384 @@
+/* Per-route composition. Loaded last so every maintained workspace gets a deliberate
+   visual grammar rather than inheriting whichever historical stylesheet happened to win. */
+
+/* PEOPLE */
+.succession-archive[data-archive-route='characters'] .succession-character-command-hero,
+.succession-archive[data-archive-route='princes'] .succession-royal-command,
+.succession-archive[data-archive-route='queens'] :where(.succession-queen-command, .succession-queen-board > header) {
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-top: 3px solid var(--vr-burgundy) !important;
+  background: linear-gradient(112deg, rgba(120,31,45,.18), transparent 56%), var(--vr-night) !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='characters'] .succession-character-command-hero :where(h2, strong, dd),
+.succession-archive[data-archive-route='princes'] .succession-royal-command :where(h2, strong, dd),
+.succession-archive[data-archive-route='queens'] :where(.succession-queen-command, .succession-queen-board > header) :where(h2, strong, dd) {
+  color: #fff !important;
+}
+
+.succession-archive[data-archive-route='characters'] :where(.succession-character-command-card, .succession-character-card),
+.succession-archive[data-archive-route='princes'] :where(.succession-prince-card, .succession-prince-dossier),
+.succession-archive[data-archive-route='queens'] :where([class*='queen-card'], [class*='queen-dossier']) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='princes'] .succession-prince-board__grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+  gap: var(--vr-card-gap) !important;
+}
+
+.succession-archive[data-archive-route='princes'] .succession-prince-card {
+  border: 1px solid var(--vr-line) !important;
+  background: var(--vr-paper-raised) !important;
+}
+
+.succession-archive[data-archive-route='princes'] .succession-prince-card:hover {
+  border-color: var(--vr-burgundy) !important;
+  transform: none !important;
+}
+
+/* ASSIGNMENTS */
+.succession-archive[data-archive-route='bodyguards'] .succession-canonical-assignments__hero {
+  padding: clamp(28px, 3.2vw, 48px) !important;
+  border: 0 !important;
+  border-top: 3px solid var(--vr-burgundy) !important;
+  background: linear-gradient(112deg, rgba(120,31,45,.18), transparent 58%), var(--vr-night) !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='bodyguards'] .succession-canonical-assignments__hero :where(h2, strong) { color: #fff !important; }
+.succession-archive[data-archive-route='bodyguards'] .succession-canonical-assignments__hero :where(p, span) { color: #bbb3aa !important; }
+
+.succession-archive[data-archive-route='bodyguards'] :where(
+  .succession-assignment-filter-panel,
+  .succession-assignment-type-board,
+  .succession-assignment-table-wrap
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='bodyguards'] .succession-assignment-directory {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  gap: var(--vr-card-gap) !important;
+}
+
+.succession-archive[data-archive-route='bodyguards'] .succession-assignment-card {
+  border: 1px solid var(--vr-line) !important;
+  border-radius: 0 !important;
+  background: var(--vr-paper-raised) !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='bodyguards'][data-presentation-density='high'] .succession-assignment-card,
+.succession-archive[data-archive-route='bodyguards'][data-presentation-density='extreme'] .succession-assignment-card {
+  padding: 14px !important;
+}
+
+.succession-archive[data-archive-route='bodyguards'] .succession-assignment-ledger-row {
+  border-radius: 0 !important;
+  border-inline: 0 !important;
+  box-shadow: none !important;
+}
+
+/* ORGANIZATIONS */
+.succession-archive[data-archive-route='organizations'] .succession-institution-command__hero {
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-top: 3px solid var(--vr-burgundy) !important;
+  background: linear-gradient(112deg, rgba(120,31,45,.17), transparent 58%), var(--vr-night) !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='organizations'] .succession-institution-command__hero :where(h2, h3, strong, dd) { color: #fff !important; }
+.succession-archive[data-archive-route='organizations'] .succession-institution-command__hero :where(p, span, dt) { color: #bbb3aa !important; }
+
+.succession-archive[data-archive-route='organizations'] :where(
+  .succession-institution-comparison,
+  .succession-institution-comparison__table-wrap,
+  [class*='institution-command__']
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* LOCATIONS + BLACK WHALE */
+.succession-archive[data-archive-route='locations'] .succession-canonical-locations__hero {
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-top: 3px solid var(--vr-burgundy) !important;
+  background: linear-gradient(112deg, rgba(120,31,45,.16), transparent 56%), var(--vr-night) !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='locations'] .succession-canonical-locations__hero :where(h2, strong, dd) { color: #fff !important; }
+.succession-archive[data-archive-route='locations'] .succession-canonical-locations__hero :where(p, span, dt) { color: #bbb3aa !important; }
+
+.succession-archive[data-archive-route='locations'] .succession-location-filter-panel {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='locations'] .succession-location-directory {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)) !important;
+  gap: var(--vr-card-gap) !important;
+}
+
+.succession-archive[data-archive-route='locations'] .succession-location-card {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='black-whale'] :where(
+  .black-whale-guide,
+  .black-whale-intelligence-command,
+  .ship-visual-tour,
+  .ship-location-inspector
+) {
+  max-width: 100% !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* NEN */
+.succession-archive[data-archive-route='nen'] .succession-nen-command__hero,
+.succession-archive[data-archive-route='guardian-spirit-beasts'] .succession-gsb-command__hero {
+  padding: clamp(28px, 3.2vw, 48px) !important;
+  border: 0 !important;
+  border-top: 3px solid var(--vr-burgundy) !important;
+  border-radius: 0 !important;
+  background: linear-gradient(112deg, rgba(120,31,45,.18), transparent 56%), var(--vr-night) !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='nen'] .succession-nen-command__hero :where(h2, strong),
+.succession-archive[data-archive-route='guardian-spirit-beasts'] .succession-gsb-command__hero :where(h2, strong) { color: #fff !important; }
+.succession-archive[data-archive-route='nen'] .succession-nen-command__hero :where(p, span),
+.succession-archive[data-archive-route='guardian-spirit-beasts'] .succession-gsb-command__hero :where(p, span) { color: #bbb3aa !important; }
+
+.succession-archive[data-archive-route='nen'] :where(
+  .succession-nen-command__control-deck,
+  .succession-nen-command-system,
+  .succession-nen-command-ability,
+  .succession-nen-command-dossier,
+  .succession-nen-command-pipeline,
+  .succession-nen-command-mechanic-list
+),
+.succession-archive[data-archive-route='guardian-spirit-beasts'] :where(
+  .succession-gsb-command-orbit,
+  .succession-gsb-command-card,
+  .succession-gsb-command-dossier
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='nen'] .succession-nen-command__system-grid,
+.succession-archive[data-archive-route='nen'] .succession-nen-command__ability-grid {
+  gap: var(--vr-card-gap) !important;
+}
+
+.succession-archive[data-archive-route='guardian-spirit-beasts'] :where(.succession-gsb-command-card) {
+  border: 1px solid var(--vr-line) !important;
+  background: var(--vr-paper-raised) !important;
+}
+
+/* EVENTS + CHAPTERS */
+.succession-archive[data-archive-route='events'] .succession-event-command__hero,
+.succession-archive[data-archive-route='chapters'] .succession-chapter-command__hero {
+  padding: clamp(28px, 3.2vw, 48px) !important;
+  border: 0 !important;
+  border-top: 3px solid var(--vr-burgundy) !important;
+  border-radius: 0 !important;
+  background: linear-gradient(112deg, rgba(120,31,45,.18), transparent 56%), var(--vr-night) !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='events'] .succession-event-command__hero :where(h2, strong),
+.succession-archive[data-archive-route='chapters'] .succession-chapter-command__hero :where(h2, strong) { color: #fff !important; }
+.succession-archive[data-archive-route='events'] .succession-event-command__hero :where(p, span),
+.succession-archive[data-archive-route='chapters'] .succession-chapter-command__hero :where(p, span) { color: #bbb3aa !important; }
+
+.succession-archive[data-archive-route='events'] .succession-event-command-card,
+.succession-archive[data-archive-route='chapters'] .succession-chapter-command__card {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='chapters'] :where(
+  .succession-chapter-command__controls,
+  .succession-chapter-command__grid,
+  .succession-chapter-command__index
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='chapters'] .succession-chapter-command__grid {
+  gap: var(--vr-card-gap) !important;
+}
+
+/* RELATIONSHIPS */
+.succession-archive[data-archive-route='relationships'] :where(
+  .succession-relationship-network,
+  .succession-relationship-accessible,
+  .succession-relationship-card
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='relationships'] .succession-relationship-network__canvas {
+  min-height: 560px !important;
+  border: 1px solid var(--vr-line-strong) !important;
+  background:
+    linear-gradient(rgba(24,23,20,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(24,23,20,.045) 1px, transparent 1px),
+    #ece5da !important;
+  background-size: 44px 44px !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='relationships'] .succession-relationship-network__node {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* RESEARCH */
+.succession-archive[data-archive-route='research'] .succession-evidence-hero {
+  padding: clamp(28px, 3vw, 46px) !important;
+  border: 0 !important;
+  border-top: 3px solid var(--vr-burgundy) !important;
+  border-radius: 0 !important;
+  background: linear-gradient(112deg, rgba(120,31,45,.17), transparent 56%), var(--vr-night) !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='research'] .succession-evidence-hero :where(h2, strong, dd) { color: #fff !important; }
+.succession-archive[data-archive-route='research'] .succession-evidence-hero :where(p, span, dt) { color: #bbb3aa !important; }
+
+.succession-archive[data-archive-route='research'] :where(
+  .succession-release-candidate,
+  .succession-foundation-closure,
+  .succession-evidence-chapter,
+  .succession-evidence-gap-controls,
+  .succession-evidence-gap-list,
+  .succession-evidence-media-record,
+  .succession-intelligence-workbench,
+  .succession-mystery-case-workbench
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='research'][data-presentation-density='extreme'] :where(
+  .succession-evidence-linked-groups,
+  .succession-release-candidate__inventory,
+  .succession-release-candidate__batches
+) {
+  gap: 1px !important;
+}
+
+/* GLOSSARY */
+.succession-archive[data-archive-route='glossary'] .succession-product-hero {
+  padding: clamp(28px, 3vw, 46px) !important;
+  border: 0 !important;
+  border-top: 3px solid var(--vr-burgundy) !important;
+  border-radius: 0 !important;
+  background: linear-gradient(112deg, rgba(120,31,45,.17), transparent 56%), var(--vr-night) !important;
+  color: #f5f0e7 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='glossary'] .succession-product-hero :where(h2, strong, dd) { color: #fff !important; }
+.succession-archive[data-archive-route='glossary'] .succession-product-hero :where(p, span, dt) { color: #bbb3aa !important; }
+
+.succession-archive[data-archive-route='glossary'] .succession-product-tools {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='glossary'] .succession-glossary-canonical__grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  gap: var(--vr-card-gap) !important;
+}
+
+.succession-archive[data-archive-route='glossary'] .succession-glossary-canonical__grid > article {
+  border-radius: 0 !important;
+  border: 1px solid var(--vr-line) !important;
+  background: var(--vr-paper-raised) !important;
+  box-shadow: none !important;
+}
+
+/* SEARCH */
+.succession-archive[data-archive-route='search'] :where(
+  .succession-search-complete__facets,
+  .succession-search-result,
+  .succession-search-comprehension
+) {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.succession-archive[data-archive-route='search'][data-presentation-density='extreme'] :where(
+  .succession-search-results,
+  .succession-search-complete__groups
+) {
+  gap: var(--vr-card-gap) !important;
+}
+
+/* TIMELINE */
+.succession-archive[data-archive-route='timeline'] .succession-archive__content {
+  width: 100% !important;
+  padding-inline: 18px !important;
+}
+
+.succession-archive[data-archive-route='timeline'] :where(
+  .timeline-context-navigator,
+  .timeline-workspace,
+  .timeline-story-field,
+  .timeline-command
+) {
+  max-width: 100% !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* READER */
+.succession-archive[data-archive-route='reader'] .succession-archive__content {
+  width: 100% !important;
+  padding: 0 !important;
+}
+
+.succession-archive[data-archive-route='reader'] .succession-reader-command {
+  max-width: 100% !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Make high-volume result controls sticky when their own route stylesheet already
+   establishes a toolbar. This reduces re-scrolling without altering content. */
+.succession-archive[data-presentation-density='extreme'] :where(
+  .succession-assignment-filter-panel,
+  .succession-location-filter-panel,
+  .succession-chapter-command__controls,
+  .succession-nen-command__control-deck
+) {
+  position: sticky;
+  top: 0;
+  z-index: 24;
+}

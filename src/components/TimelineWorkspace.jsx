@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { ChevronDown } from 'lucide-react';
+import HorizontalScrollHint from './HorizontalScrollHint';
 import SuccessionTimeline from './SuccessionTimeline';
 import TimelineCharacterSpatialFollower from './TimelineCharacterSpatialFollower';
 import TimelineComparisonBuilder from './TimelineComparisonBuilder';
@@ -163,14 +164,17 @@ export default function TimelineWorkspace({
           onNavigate={navigateTimelineState}
         />}
 
-        {(atlasActive || archiveActive) && <SuccessionTimeline
-          spoilerLimit={spoilerLimit}
-          initialQuery={requestedSearch}
-          requestedState={atlasState}
-          onOpenLocation={openLocationInSpatialIntelligence}
-          onSearchCommit={applySearch}
-          onStateCommit={commitTimelineState}
-        />}
+        {(atlasActive || archiveActive) && <>
+          <HorizontalScrollHint>Timeline chronology continues horizontally. Use Shift + mouse wheel or the chapter controls to inspect the complete record.</HorizontalScrollHint>
+          <SuccessionTimeline
+            spoilerLimit={spoilerLimit}
+            initialQuery={requestedSearch}
+            requestedState={atlasState}
+            onOpenLocation={openLocationInSpatialIntelligence}
+            onSearchCommit={applySearch}
+            onStateCommit={commitTimelineState}
+          />
+        </>}
 
         {spatialActive && <TimelineSpatialIntelligence
           requestedState={resolvedState}
@@ -181,7 +185,7 @@ export default function TimelineWorkspace({
 
         {atlasActive && <details className="st-research-annex">
           <summary>
-            <div><span>Extended intelligence annex</span><strong>Princes, open questions, Nen developments, and active deadlines</strong></div>
+            <div><span>Research annex · extended intelligence</span><strong>Princes, open questions, Nen developments, and active deadlines</strong></div>
             <ChevronDown size={20} aria-hidden="true" />
           </summary>
           <TimelineIntelligencePanels
