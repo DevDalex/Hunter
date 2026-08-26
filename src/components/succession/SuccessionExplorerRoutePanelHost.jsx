@@ -33,6 +33,7 @@ import {
   ChapterStateDiffInstrument,
   ResearchEvidenceTopologyInstrument,
 } from './SuccessionExplorerStateDiffInstruments';
+import './SuccessionExplorerStateDiffInstrumentsClosure.css';
 import SuccessionExplorerWorkbench from './SuccessionExplorerWorkbench';
 import SuccessionPerspectiveFogOverlay from './SuccessionPerspectiveFogOverlay';
 
