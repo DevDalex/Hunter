@@ -137,6 +137,21 @@ body {
   text-underline-offset: 3px;
 }
 
+/* A collapsed header details element must not keep its full positioned box in the hit-test
+   tree. Only the summary stays interactive, so route controls beneath it remain clickable. */
+.spoiler-settings:not([open]) {
+  pointer-events: none;
+}
+
+.spoiler-settings:not([open]) > summary {
+  pointer-events: auto;
+}
+
+/* Timeline Story Field footer metrics are persistent interface labels, not micro-annotations. */
+.tsf-footer span {
+  font-size: 11px !important;
+}
+
 /* Explicit readability overrides for legacy route CSS. Component CSS is loaded lazily,
    so !important is required to keep the maintained 11px floor after route chunks arrive. */
 .character-profile-dossier__hero > div > span,
@@ -219,18 +234,6 @@ body {
 .v0-state-changes article > div span,
 .v0-gallery article a {
   font-size: 11px !important;
-}
-
-/* A collapsed spoiler-settings <details> retains a full-width layout box even
-   though only the summary is visible. Prevent that transparent box from
-   intercepting content clicks after scrollIntoView, while keeping the visible
-   summary control interactive. Open spoiler controls are unchanged. */
-.spoiler-settings:not([open]) {
-  pointer-events: none;
-}
-
-.spoiler-settings:not([open]) > summary {
-  pointer-events: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {

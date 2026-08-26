@@ -15,6 +15,10 @@ test('collapsed spoiler settings cannot create an invisible pointer shield', () 
   assert.ok(finalPolish.includes('pointer-events: auto'));
 });
 
+test('Timeline Story Field persistent footer labels keep the 11px readability floor', () => {
+  assert.match(finalPolish, /\.tsf-footer span\s*\{[^}]*font-size:\s*11px\s*!important;/s);
+});
+
 test('global CSS ownership remains the exact approved import chain', () => {
   const cssImports = [...main.matchAll(/import ['"](.+?\.css)['"];?/g)].map((match) => match[1]);
   assert.deepEqual(cssImports, ['./styles.css', './nen.css', './styles/final-polish.css']);
