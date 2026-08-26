@@ -66,7 +66,7 @@ test('organization topology exposes documented operating links without declaring
 });
 
 test('causal systems retain text cues, 44px interaction sizing, reduced motion, and forced-colors focus', () => {
-  assert.ok(css.includes('sequence only, not causal'));
+  assert.ok(instrument.includes('sequence only, not causal'), 'visible legend must label chronology-only links as non-causal');
   assert.ok(css.includes('font-size: 11px'));
   assert.ok(css.includes('@media (prefers-reduced-motion: reduce)'));
   assert.ok(css.includes('@media (forced-colors: active)'));
