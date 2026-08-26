@@ -68,7 +68,7 @@ export function BlackWhaleHierarchyInstrument({ chapter, onNavigate }) {
     || safe(() => getEntitiesByType('location').find((location) => !location.parentId), null);
   const focus = selected || root;
   const snapshot = useMemo(() => focus ? safe(() => getLocationSnapshot(focus.id, chapter), null) : null, [chapter, focus]);
-  const breadcrumbs = useMemo(() => focus ? safe(() => getLocationBreadcrumbs(focus.id), []), [focus]);
+  const breadcrumbs = useMemo(() => focus ? safe(() => getLocationBreadcrumbs(focus.id), []) : [], [focus]);
   const children = useMemo(() => focus ? safe(() => getLocationChildren(focus.id), []) : [], [focus]);
   const childRows = useMemo(() => children.map((location) => {
     const childSnapshot = safe(() => getLocationSnapshot(location.id, chapter), null);
