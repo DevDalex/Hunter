@@ -1,0 +1,9 @@
+/* Final interaction-size closure for state/diff/evidence instruments. */
+.succession-explorer-state-instrument .succession-explorer-evidence-topology__links button {
+  min-height: 44px;
+}
+
+.succession-explorer-state-instrument :is(button, summary, input):focus-visible {
+  outline: 2px solid var(--succession-focus-ring, currentColor);
+  outline-offset: 2px;
+}

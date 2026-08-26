@@ -12,6 +12,12 @@ import {
   StructuredQueryInstrument,
 } from './SuccessionExplorerContinuityInstruments';
 import {
+  BlackWhaleHierarchyInstrument,
+  KnowledgePropagationTrailInstrument,
+  NenMechanicsCircuitInstrument,
+  RelationshipEdgeBiographyInstrument,
+} from './SuccessionExplorerDeepInstruments';
+import {
   NenInteractionGraphInstrument,
   TimelineCausalityGraphInstrument,
 } from './SuccessionExplorerGraphInstruments';
@@ -22,12 +28,22 @@ import {
 import SuccessionExplorerGuidedTour from './SuccessionExplorerGuidedTour';
 import SuccessionExplorerRoutePanels from './SuccessionExplorerRoutePanels';
 import { useSuccessionExplorer } from './SuccessionExplorerState';
+import {
+  CharacterStateEvolutionInstrument,
+  ChapterStateDiffInstrument,
+  ResearchEvidenceTopologyInstrument,
+} from './SuccessionExplorerStateDiffInstruments';
+import './SuccessionExplorerStateDiffInstrumentsClosure.css';
 import SuccessionExplorerWorkbench from './SuccessionExplorerWorkbench';
 import SuccessionPerspectiveFogOverlay from './SuccessionPerspectiveFogOverlay';
 
 const timelineCartographyViews = new Set(['atlas', 'braid', 'matrix', 'heatmap', 'playback']);
 const nenLaboratoryViews = new Set(['interactions', 'conditions', 'threat', 'hypotheses']);
+const nenCircuitViews = new Set(['conditions', 'threat', 'hypotheses', 'compare']);
 const searchProjectionViews = new Set(['timeline', 'ship', 'graph']);
+const shipHierarchyViews = new Set(['atlas', 'occupancy', 'events', 'paths', 'control', 'playback']);
+const knowledgeTrailRoutes = new Set(['characters', 'timeline', 'research']);
+const researchEvidenceViews = new Set(['evidence', 'claims']);
 
 export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit, onNavigate }) {
   const explorer = useSuccessionExplorer();
@@ -68,6 +84,7 @@ export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit
   return createPortal(<>
     <SuccessionPerspectiveFogOverlay routeId={routeId} model={model} />
     {explorer.perspective !== 'reader' && <PerspectiveKnowledgeMapInstrument chapter={explorer.chapter} />}
+    {explorer.perspective !== 'reader' && knowledgeTrailRoutes.has(routeId) && <KnowledgePropagationTrailInstrument chapter={explorer.chapter} />}
     {!!explorer.filters.query && <StructuredQueryInstrument routeId={routeId} spoilerLimit={spoilerLimit} onNavigate={onNavigate} />}
     {routeId === 'archive' && view === 'world' && <SuccessionExplorerWorkbench onNavigate={onNavigate} />}
     {routeId === 'archive' && view === 'resume' && <ArchiveResumeInstrument onNavigate={onNavigate} />}
@@ -75,9 +92,16 @@ export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit
     {routeId === 'story' && view === 'causality' && <TimelineCausalityGraphInstrument chapter={explorer.chapter} />}
     {routeId === 'timeline' && timelineCartographyViews.has(view) && <TimelineCartographyInstrument chapter={explorer.chapter} view={view} />}
     {routeId === 'timeline' && view === 'causality' && <TimelineCausalityGraphInstrument chapter={explorer.chapter} />}
+    {routeId === 'timeline' && view === 'diff' && <ChapterStateDiffInstrument chapter={explorer.chapter} />}
+    {routeId === 'characters' && view === 'timeline' && <CharacterStateEvolutionInstrument chapter={explorer.chapter} onNavigate={onNavigate} />}
     {routeId === 'black-whale' && <BlackWhaleDeckInstrument chapter={explorer.chapter} view={view} onNavigate={onNavigate} />}
+    {routeId === 'black-whale' && shipHierarchyViews.has(view) && <BlackWhaleHierarchyInstrument chapter={explorer.chapter} onNavigate={onNavigate} />}
+    {routeId === 'relationships' && <RelationshipEdgeBiographyInstrument chapter={explorer.chapter} view={view} onNavigate={onNavigate} />}
     {routeId === 'nen' && view === 'interactions' && <NenInteractionGraphInstrument chapter={explorer.chapter} />}
     {routeId === 'nen' && nenLaboratoryViews.has(view) && <NenInteractionInstrument chapter={explorer.chapter} view={view} onNavigate={onNavigate} />}
+    {routeId === 'nen' && nenCircuitViews.has(view) && <NenMechanicsCircuitInstrument chapter={explorer.chapter} onNavigate={onNavigate} />}
+    {routeId === 'chapters' && view === 'diff' && <ChapterStateDiffInstrument chapter={explorer.chapter} />}
+    {routeId === 'research' && researchEvidenceViews.has(view) && <ResearchEvidenceTopologyInstrument chapter={explorer.chapter} />}
     {routeId === 'search' && searchProjectionViews.has(view) && <SearchProjectionInstrument chapter={explorer.chapter} view={view} />}
     {routeId === 'reader' && <ReaderContinuityInstrument chapter={explorer.chapter} onNavigate={onNavigate} />}
     <SuccessionExplorerRoutePanels
