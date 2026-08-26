@@ -28,11 +28,17 @@ import '../../styles/visual-reboot.css';
 import './SuccessionVisualRebootLate.css';
 import './SuccessionRouteVisualTuning.css';
 import './SuccessionChromeFinal.css';
+import './SuccessionBrowserReleaseClosure.css';
+import './SuccessionBrowserMatrixClosure.css';
+import './SuccessionBrowserMatrixClosureFinalPass.css';
 import SuccessionCommandHome from './SuccessionCommandHome';
+import { SuccessionExplorerProvider } from './SuccessionExplorerState';
 
 const SuccessionArchiveApp = lazy(() => import('./SuccessionArchiveApp'));
 const SuccessionArchiveReaderRoute = lazy(() => import('./SuccessionArchiveReaderRoute'));
 const SuccessionArchiveLightRoute = lazy(() => import('./SuccessionArchiveLightRoute'));
+const SuccessionExplorerSurface = lazy(() => import('./SuccessionExplorerSurface'));
+const SuccessionExplorerRoutePanelHost = lazy(() => import('./SuccessionExplorerRoutePanelHost'));
 
 function ArchiveRouteLoading() {
   return <div className="route-loading succession-route-loading" role="status" aria-live="polite">Opening Succession workspace…</div>;
@@ -45,18 +51,42 @@ export default function SuccessionArchiveEntry(props) {
   const isLightRoute = props.routeTarget === 'black-whale' || props.routeTarget === 'princes';
 
   if (isCommandHome) {
-    return <SuccessionCommandHome
-      spoilerLimit={props.spoilerLimit}
-      onNavigate={props.onNavigate}
-      onOpenSearch={props.onOpenSearch}
-    />;
+    return <SuccessionExplorerProvider spoilerLimit={props.spoilerLimit}>
+      <SuccessionCommandHome
+        spoilerLimit={props.spoilerLimit}
+        onNavigate={props.onNavigate}
+        onOpenSearch={props.onOpenSearch}
+      />
+      <Suspense fallback={null}>
+        <div className="succession-command-explorer-wrap">
+          <SuccessionExplorerSurface
+            routeId="archive"
+            routeParams={props.routeParams || {}}
+            spoilerLimit={props.spoilerLimit}
+            onNavigate={props.onNavigate}
+          />
+        </div>
+        <SuccessionExplorerRoutePanelHost
+          routeId="archive"
+          spoilerLimit={props.spoilerLimit}
+          onNavigate={props.onNavigate}
+        />
+      </Suspense>
+    </SuccessionExplorerProvider>;
   }
 
-  return <Suspense fallback={<ArchiveRouteLoading />}>
-    {isReader
-      ? <SuccessionArchiveReaderRoute {...props} />
-      : isLightRoute
-        ? <SuccessionArchiveLightRoute {...props} />
-        : <SuccessionArchiveApp {...props} />}
-  </Suspense>;
+  return <SuccessionExplorerProvider spoilerLimit={props.spoilerLimit}>
+    <Suspense fallback={<ArchiveRouteLoading />}>
+      {isReader
+        ? <SuccessionArchiveReaderRoute {...props} />
+        : isLightRoute
+          ? <SuccessionArchiveLightRoute {...props} />
+          : <SuccessionArchiveApp {...props} />}
+      <SuccessionExplorerRoutePanelHost
+        routeId={props.routeTarget}
+        spoilerLimit={props.spoilerLimit}
+        onNavigate={props.onNavigate}
+      />
+    </Suspense>
+  </SuccessionExplorerProvider>;
 }

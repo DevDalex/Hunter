@@ -36,6 +36,7 @@ import { ArchivePageHeader } from './SuccessionArchivePrimitives';
 import './SuccessionArchiveHistoricalLayers.css';
 
 const SuccessionInformationConsistencyPanel = lazy(() => import('./SuccessionInformationConsistencyPanel'));
+const SuccessionExplorerSurface = lazy(() => import('./SuccessionExplorerSurface'));
 
 const iconByHub = {
   story: BookOpen,
@@ -139,7 +140,7 @@ export default function SuccessionArchiveShell({
   const contentRef = useRef(null);
   const previousRouteRef = useRef(null);
   const route = getSuccessionArchiveRoute(activeId);
-  const presentation = getRoutePresentationProfile(route.id);
+  const presentation = getRoutePresentationProfile(route.id, { spoilerLimit });
   const activeHub = getSuccessionArchiveHub(route.id);
   const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
   const showCharacterConsistency = needsCharacterConsistency(route.id, routeParams);
@@ -273,6 +274,14 @@ export default function SuccessionArchiveShell({
             aria-label={`${route.label} workspace content`}
             tabIndex="-1"
           >
+            <Suspense fallback={<div className="succession-route-loading" role="status">Opening connected explorer…</div>}>
+              <SuccessionExplorerSurface
+                routeId={route.id}
+                routeParams={routeParams}
+                spoilerLimit={spoilerLimit}
+                onNavigate={navigate}
+              />
+            </Suspense>
             {briefingEntity && <SuccessionEntityQuickBriefing entity={briefingEntity} chapter={briefingChapter} onNavigate={navigate} />}
             {showNow && <SuccessionNowDashboard chapter={spoilerLimit} onNavigate={navigate} />}
             {showPeoplePower && <SuccessionPeoplePowerComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
