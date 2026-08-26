@@ -221,6 +221,18 @@ body {
   font-size: 11px !important;
 }
 
+/* A collapsed spoiler-settings <details> retains a full-width layout box even
+   though only the summary is visible. Prevent that transparent box from
+   intercepting content clicks after scrollIntoView, while keeping the visible
+   summary control interactive. Open spoiler controls are unchanged. */
+.spoiler-settings:not([open]) {
+  pointer-events: none;
+}
+
+.spoiler-settings:not([open]) > summary {
+  pointer-events: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

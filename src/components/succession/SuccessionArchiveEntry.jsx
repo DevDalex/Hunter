@@ -30,6 +30,7 @@ import './SuccessionRouteVisualTuning.css';
 import './SuccessionChromeFinal.css';
 import './SuccessionBrowserReleaseClosure.css';
 import './SuccessionBrowserMatrixClosure.css';
+import './SuccessionBrowserMatrixClosureFinalPass.css';
 import SuccessionCommandHome from './SuccessionCommandHome';
 import { SuccessionExplorerProvider } from './SuccessionExplorerState';
 

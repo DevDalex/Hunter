@@ -8,10 +8,16 @@
  */
 
 /* Shared page-header labels: lazy workspace CSS can load after the shell, so
- * target the actual child text with enough specificity to survive that order. */
+ * target the actual child text with enough specificity to survive that order.
+ * Historical layers also faded this strip via opacity, so restore it here. */
+html body .succession-page-header .succession-page-header__classification {
+  color: #4a4641 !important;
+  opacity: 1 !important;
+}
 html body .succession-page-header .succession-page-header__classification > span,
 html body .succession-page-header .succession-page-header__meta-item dt b {
   color: #4a4641 !important;
+  opacity: 1 !important;
 }
 
 /* Unknown-state cells sit on white research tables. Keep the uncertainty cue,
@@ -26,13 +32,33 @@ html body .succession-command-home .succession-command-home__updates header > bu
   color: #efc2c9 !important;
 }
 
-/* Royal portrait cards can fall back to pale portrait placeholders. Give the
+/* Royal portrait cards can fall back to pale portrait placeholders. Give all
  * rank/status overlays their own dark backing instead of assuming an image. */
-html body .succession-prince-card.is-active .succession-prince-card__visual .succession-prince-card__rank,
-html body .succession-prince-card.is-active .succession-prince-card__visual .succession-prince-card__status {
+html body .succession-prince-card .succession-prince-card__visual .succession-prince-card__rank,
+html body .succession-prince-card .succession-prince-card__visual .succession-prince-card__status {
   color: #ffffff !important;
   background: #2b2424 !important;
   text-shadow: none !important;
+}
+
+/* Assignment cards are paper in the reboot even though the old contrast layer
+ * still marks their copy as a dark-surface family. */
+html body .succession-archive[data-archive-route="bodyguards"] .succession-archive__content {
+  --archive-muted: #514c47 !important;
+  --succession-dark-text: #181714 !important;
+  --succession-dark-muted: #514c47 !important;
+  --succession-dark-dim: #514c47 !important;
+  --succession-dark-accent: #781f2d !important;
+}
+html body .succession-archive[data-archive-route="bodyguards"] .succession-assignment-card__copy > h3,
+html body .succession-archive[data-archive-route="bodyguards"] .succession-assignment-card__copy > p,
+html body .succession-archive[data-archive-route="bodyguards"] .succession-assignment-card__action,
+html body .succession-archive[data-archive-route="bodyguards"] .succession-assignment-card__copy :is(strong, b) {
+  color: #181714 !important;
+  text-shadow: none !important;
+}
+html body .succession-archive[data-archive-route="bodyguards"] .succession-assignment-card__copy :is(span, small, dt) {
+  color: #514c47 !important;
 }
 
 /* Chapter-selected prose is rendered over a slate selection fill. */
@@ -50,9 +76,21 @@ html body .succession-archive .ship-temporal-command > footer > div > strong {
   color: #181714 !important;
   text-shadow: none !important;
 }
-
 html body .succession-archive .ship-temporal-command > header > b {
   color: #781f2d !important;
+}
+
+/* The route-owned location inspector is also paper after the reboot. */
+html body .succession-archive[data-archive-route="black-whale"] .ship-location-inspector {
+  color: #181714 !important;
+}
+html body .succession-archive[data-archive-route="black-whale"] .ship-location-inspector :is(h2, h3, h4, p, span, small, dt, dd, strong, b),
+html body .succession-archive[data-archive-route="black-whale"] .ship-location-inspector button > span {
+  color: #181714 !important;
+  text-shadow: none !important;
+}
+html body .succession-archive[data-archive-route="black-whale"] .ship-location-inspector :is(.is-muted, small, dt) {
+  color: #514c47 !important;
 }
 
 /* Nen command cards currently use a dark card body while several inherited
@@ -77,26 +115,57 @@ html body .succession-gsb-command {
   --gsb-paper-muted-ink: #514c47 !important;
   --gsb-gold: #6b531a !important;
 }
-
 html body .succession-gsb-workspace .succession-page-header__meta-item dt b,
 html body .succession-gsb-command .succession-gsb-command__metrics dt,
 html body .succession-gsb-command .succession-gsb-command__metrics dd {
   color: #181714 !important;
 }
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-orbit,
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-orbit :is(h2, h3, h4, p, b, strong) {
+  color: #181714 !important;
+}
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-orbit :is(span, small, dt, dd) {
+  color: #514c47 !important;
+}
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-orbit > header span,
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-orbit__stage > i,
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-orbit__index button > span {
+  color: #6b531a !important;
+}
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-orbit__core > span {
+  color: #181714 !important;
+}
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-orbit__core > small,
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-orbit__index button small {
+  color: #514c47 !important;
+}
 
-/* Research is now a light evidence ledger. These specific legacy labels were
- * still using the old dark-panel muted token (#c0b9ae). */
+/* Research is now a light evidence ledger. Override the old dark-workspace
+ * semantic variables at the route root, then directly close the remaining
+ * evidence labels and near-threshold filter buttons. */
+html body .succession-archive[data-archive-route="research"] .succession-archive__content {
+  --archive-muted: #514c47 !important;
+  --succession-dark-text: #181714 !important;
+  --succession-dark-muted: #514c47 !important;
+  --succession-dark-dim: #514c47 !important;
+  --succession-dark-accent: #781f2d !important;
+}
 html body .succession-archive[data-archive-route="research"] .is-closed > span,
 html body .succession-archive[data-archive-route="research"] .is-release-candidate > span,
 html body .succession-archive[data-archive-route="research"] .succession-release-candidate__external > span,
 html body .succession-archive[data-archive-route="research"] .succession-evidence-chapter > header > div > span,
 html body .succession-archive[data-archive-route="research"] .succession-evidence-chapter header > label > span,
-html body .succession-archive[data-archive-route="research"] .succession-evidence-linked-groups > section > header > div > span {
+html body .succession-archive[data-archive-route="research"] .succession-evidence-linked-groups > section > header > div > span,
+html body .succession-archive[data-archive-route="research"] .succession-evidence-gap-controls > header > div > span,
+html body .succession-archive[data-archive-route="research"] .succession-evidence-gap-list :is(span, p, small),
+html body .succession-archive[data-archive-route="research"] .succession-evidence-source-catalogue :is(span, p, small, dt) {
   color: #514c47 !important;
 }
-
 html body .succession-archive[data-archive-route="research"] .succession-evidence-chapter__score > div > b {
   color: #781f2d !important;
+}
+html body .succession-archive[data-archive-route="research"] .succession-evidence-gap-controls button {
+  color: #3f484d !important;
 }
 
 /* Timeline cartography: record-count labels sit inside dark burgundy density
@@ -143,6 +212,8 @@ html body .timeline-story-field .tsf-context-line span,
 html body .timeline-story-field .tsf-lane-deck > span,
 html body .timeline-story-field .tsf-duration span,
 html body .timeline-story-field .tsf-node__label small,
-html body .timeline-story-field .tsf-node__label em {
+html body .timeline-story-field .tsf-node__label em,
+html body .timeline-story-field .tsf-footer span,
+html body .timeline-story-field .tsf-footer small {
   font-size: 11px !important;
 }
