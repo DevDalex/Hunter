@@ -1,0 +1,55 @@
+/*
+ * Rendered desktop matrix closure, final pass.
+ *
+ * These rules are intentionally selector-specific. They only address the four
+ * foreground/background inheritance defects reported by the Chromium release
+ * matrix on head 94e9573a. No geometry, route behavior, or archive semantics
+ * are changed here.
+ */
+
+/* Bodyguards: the pagination action has a burgundy fill, so it must use a
+ * light foreground rather than the paper-route ink token. */
+html body .succession-archive[data-archive-route="bodyguards"] .succession-assignment-load-more,
+html body .succession-archive[data-archive-route="bodyguards"] .succession-assignment-load-more > span {
+  color: #fff4ea !important;
+}
+
+/* Black Whale: numbered figure badges use the retained brass fill. The old
+ * near-black foreground only reaches ~2.8:1 there; use light archive ink. */
+html body .succession-archive[data-archive-route="black-whale"] button[type="button"] > figure > i {
+  color: #fff4ea !important;
+  text-shadow: none !important;
+}
+
+/* Guardian Spirit Beast cards and controls are paper surfaces after the visual
+ * reboot. Historical route CSS still injects pale dark-theme text into these
+ * exact descendants, so close them directly rather than changing all beast
+ * semantics globally. */
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command__controls > header > strong,
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command__controls label > span:not(.sr-only),
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command__controls > footer > span {
+  color: #181714 !important;
+  text-shadow: none !important;
+}
+
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card > div:nth-child(2) > h3 {
+  color: #181714 !important;
+  text-shadow: none !important;
+}
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card > div:nth-child(2) > :is(span, p, small),
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card > dl dt,
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card > footer > span {
+  color: #514c47 !important;
+  text-shadow: none !important;
+}
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card > dl dd,
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card > footer > b {
+  color: #181714 !important;
+  text-shadow: none !important;
+}
+
+/* Research: active gap-view tabs use a dark burgundy selected fill. */
+html body .succession-archive[data-archive-route="research"] .succession-evidence-gap-controls > div > button.is-active[type="button"] {
+  color: #fff4ea !important;
+  text-shadow: none !important;
+}
