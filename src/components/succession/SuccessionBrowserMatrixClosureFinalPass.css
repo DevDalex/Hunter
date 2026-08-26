@@ -1,10 +1,9 @@
 /*
  * Rendered desktop matrix closure, final pass.
  *
- * These rules are intentionally selector-specific. They only address the four
+ * These rules are intentionally selector-specific. They only address the
  * foreground/background inheritance defects reported by the Chromium release
- * matrix on head 94e9573a. No geometry, route behavior, or archive semantics
- * are changed here.
+ * matrix. No geometry, route behavior, or archive semantics are changed here.
  */
 
 /* Bodyguards: the pagination action has a burgundy fill, so it must use a
@@ -14,10 +13,16 @@ html body .succession-archive[data-archive-route="bodyguards"] .succession-assig
   color: #fff4ea !important;
 }
 
-/* Black Whale: numbered figure badges use the retained brass fill. The old
- * near-black foreground only reaches ~2.8:1 there; use light archive ink. */
+/* Black Whale: numbered figure badges use the retained brass fill. */
 html body .succession-archive[data-archive-route="black-whale"] button[type="button"] > figure > i {
   color: #fff4ea !important;
+  text-shadow: none !important;
+}
+
+/* Passenger manifest headers are on raised paper. Historical table rules were
+ * still forcing white despite the component's inline black hint. */
+html body .succession-archive[data-archive-route="black-whale"] .ship-manifest__table-wrap thead th {
+  color: #181714 !important;
   text-shadow: none !important;
 }
 
@@ -45,6 +50,17 @@ html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succ
 html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card > dl dd,
 html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-command-card > footer > b {
   color: #181714 !important;
+  text-shadow: none !important;
+}
+
+/* The GSB body/consciousness boundary callout also sits on warm paper, but an
+ * earlier dark-panel closure still forces white and pale teal descendants. */
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-boundary > div > h3 {
+  color: #181714 !important;
+  text-shadow: none !important;
+}
+html body .succession-archive[data-archive-route="guardian-spirit-beasts"] .succession-gsb-boundary > div > p {
+  color: #514c47 !important;
   text-shadow: none !important;
 }
 
