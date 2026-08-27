@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { maintainedSuccessionChapterResearch } from '../../data/successionMaintainedChapterResearch';
 import { timelineCausality } from '../../data/successionTimelineIntelligence';
 import './SuccessionTimelineMangaWall.css';
+import './SuccessionTimelineMangaWallReadability.css';
 
 const FILTERS = [
   { id: 'all', label: 'All', terms: [] },
