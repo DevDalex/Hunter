@@ -43,17 +43,6 @@ const serve = async () => {
   return server;
 };
 
-const visible = (element) => {
-  if (!element) return false;
-  const style = getComputedStyle(element);
-  const rect = element.getBoundingClientRect();
-  return style.display !== 'none'
-    && style.visibility !== 'hidden'
-    && Number(style.opacity) !== 0
-    && rect.width > 0
-    && rect.height > 0;
-};
-
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 const server = await serve();
@@ -83,24 +72,30 @@ try {
   await page.waitForTimeout(350);
 
   const initial = await page.evaluate(({ expectedLenses }) => {
+    const isVisible = (element) => {
+      if (!element) return false;
+      const style = getComputedStyle(element);
+      const rect = element.getBoundingClientRect();
+      return style.display !== 'none'
+        && style.visibility !== 'hidden'
+        && Number(style.opacity) !== 0
+        && rect.width > 0
+        && rect.height > 0;
+    };
     const lensLabels = [...document.querySelectorAll('.tsf-lensbar button')].map((button) => button.textContent.trim());
     const tinyText = [...document.querySelectorAll('.timeline-context-navigator :is(span, small, button), .timeline-story-field :is(span, small, button, strong, em)')]
-      .filter((element) => visible(element) && !element.matches('.sr-only, .sr-only *'))
+      .filter((element) => isVisible(element) && !element.matches('.sr-only, .sr-only *'))
       .map((element) => ({ text: element.textContent.trim().replace(/\s+/g, ' ').slice(0, 80), size: Number.parseFloat(getComputedStyle(element).fontSize) }))
       .filter((row) => Number.isFinite(row.size) && row.size < 11);
-    const map = document.querySelector('.timeline-story-field');
-    const navigator = document.querySelector('.timeline-context-navigator');
-    const lanes = document.querySelector('.tsf-lanes');
-    const viewportElement = document.querySelector('.tsf-viewport');
     return {
-      mapVisible: visible(map),
-      navigatorVisible: visible(navigator),
-      lanesVisible: visible(lanes),
-      viewportVisible: visible(viewportElement),
+      mapVisible: isVisible(document.querySelector('.timeline-story-field')),
+      navigatorVisible: isVisible(document.querySelector('.timeline-context-navigator')),
+      lanesVisible: isVisible(document.querySelector('.tsf-lanes')),
+      viewportVisible: isVisible(document.querySelector('.tsf-viewport')),
       chapterGrid: document.querySelectorAll('.tsf-chapter-grid > i').length,
       laneCount: document.querySelectorAll('.tsf-lanes > button').length,
       nodeCount: document.querySelectorAll('.tsf-node').length,
-      contextCursor: visible(document.querySelector('.tsf-context-line')),
+      contextCursor: isVisible(document.querySelector('.tsf-context-line')),
       lensLabels,
       lensContract: expectedLenses.every((label) => lensLabels.includes(label)),
       genericExplorerPresent: Boolean(document.querySelector('.succession-explorer-surface[data-explorer-route="timeline"], .succession-explorer-surface')),
@@ -133,10 +128,15 @@ try {
     report.assertions.push('semantic zoom already at minimum window');
   }
 
+  await page.getByRole('button', { name: 'Full arc' }).click();
+  await page.waitForTimeout(220);
+  await page.locator('.tsf-depth button', { hasText: 'complete' }).click();
+  await page.waitForTimeout(220);
+
   for (const label of expectedLenses) {
     const button = page.locator('.tsf-lensbar button', { hasText: label }).first();
     await button.click();
-    await page.waitForTimeout(160);
+    await page.waitForTimeout(180);
     const state = await page.evaluate((expected) => {
       const active = document.querySelector('.tsf-lensbar button.is-active')?.textContent.trim();
       const lanes = document.querySelectorAll('.tsf-lanes > button').length;
