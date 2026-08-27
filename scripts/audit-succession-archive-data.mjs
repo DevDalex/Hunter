@@ -132,7 +132,7 @@ try {
   assert(getEventsForAbility('ability:silent-majority').some((record) => record.id === 'event:silent-majority-class-killings'), 'Silent Majority must expose linked events');
   assert(getEventsForCharacter('character:kurapika').length > 0, 'Kurapika must expose linked events');
   assert(getEventsForOrganization('organization:hunter-association').length > 0, 'Hunter Association must expose linked events');
-  assert(getOrganizationMembers('organization:hunter-association').some((record) => record.id === 'character:kurapika'), 'Hunter Association membership lookup must include Kurapika');
+  assert(getOrganizationMembers('organization:hunter-association').some((record) => record.character?.id === 'character:kurapika'), 'Hunter Association membership lookup must include Kurapika');
   assert(getAssignmentsForPerson('character:kurapika').length > 0, 'Kurapika must expose assignment history');
   assert(getAssignmentsForSubject('character:woble-hui-guo-rou').length > 0, 'Woble must expose protection assignments');
   assert(getActiveAssignmentsForSubject('character:woble-hui-guo-rou', latestChapter).length > 0, 'Woble must expose active protection assignments at the current boundary');
