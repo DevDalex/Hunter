@@ -1,81 +1,95 @@
-/* Primary Timeline cartography. The map is the route, not an embedded dashboard. */
+/* /succession/timeline is the map. No archive page chrome, no stacked tools. */
+.succession-archive--timeline-map {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--st-paper, #f4efe5);
+}
+
+.succession-archive--timeline-map .succession-archive__layout {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.succession-archive--timeline-map .succession-archive__sidebar,
+.succession-archive--timeline-map .succession-archive__skip-link {
+  display: none;
+}
+
 .succession-archive--timeline-map .succession-archive__workspace,
 .succession-archive--timeline-map .succession-archive__workspace-frame,
 .succession-archive--timeline-map .succession-archive__content {
+  width: 100%;
+  height: 100%;
   min-width: 0;
   max-width: none;
-}
-
-.succession-archive--timeline-map .succession-archive__workspace-frame {
-  width: 100%;
-  padding: 0;
-}
-
-.succession-archive--timeline-map .succession-archive__content {
-  display: block;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  outline: 0;
-}
-
-.succession-archive--timeline-map .timeline-workspace {
-  width: 100%;
-  max-width: none;
   margin: 0;
   padding: 0;
+  overflow: hidden;
+}
+
+.succession-archive--timeline-map .timeline-workspace--map-only {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100vh;
+  grid-template-rows: 112px minmax(0, 1fr);
+  overflow: hidden;
   background: var(--st-paper, #f4efe5);
 }
 
 .succession-archive--timeline-map .timeline-context-navigator {
-  position: sticky;
-  top: 0;
+  position: relative;
   z-index: 80;
+  top: auto;
+  height: 112px;
+  grid-template-rows: 38px 48px 26px;
   margin: 0;
   border-top: 0;
-  box-shadow: 0 10px 28px rgba(20, 18, 15, .08);
+  box-shadow: 0 10px 24px rgba(20, 18, 15, .08);
 }
 
-/* Density navigator, compact map controls, fixed lanes, then the explorable chronology. */
+.succession-archive--timeline-map .tcn-head__identity,
+.succession-archive--timeline-map .tcn-head__clock {
+  padding-inline: 12px;
+}
+
+.succession-archive--timeline-map .tcn-head__actions button,
+.succession-archive--timeline-map .tcn-controls__zoom button {
+  min-height: 38px;
+}
+
+.succession-archive--timeline-map .tcn-field {
+  padding-block: 4px 7px;
+}
+
+.succession-archive--timeline-map .tcn-bars {
+  height: 36px;
+}
+
 .succession-archive--timeline-map .timeline-story-field {
+  display: grid;
   width: 100%;
-  min-height: calc(100vh - 118px);
+  height: 100%;
+  min-height: 0;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
   margin: 0;
-  border-top: 0;
+  overflow: hidden;
+  border: 0;
   background: var(--tsf-paper, #f4efe5);
 }
 
 .succession-archive--timeline-map .tsf-head {
-  min-height: 58px;
+  min-height: 50px;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  gap: 18px;
-  padding: 9px 14px 9px 18px;
-  background: color-mix(in srgb, var(--tsf-paper-raised) 88%, transparent);
+  gap: 14px;
+  padding: 7px 12px 7px 16px;
+  background: color-mix(in srgb, var(--tsf-paper-raised) 90%, transparent);
 }
 
-.succession-archive--timeline-map .tsf-head > div:first-child > span {
-  font-size: 11px;
-  letter-spacing: .11em;
-}
-
-.succession-archive--timeline-map .tsf-head h2 {
-  display: inline;
-  margin: 0 0 0 12px;
-  font-size: 20px;
-  font-weight: 600;
-  letter-spacing: -.025em;
-  line-height: 1;
-}
-
-.succession-archive--timeline-map .tsf-head p {
-  display: none;
-}
-
-.succession-archive--timeline-map .tsf-camera {
-  min-width: 190px;
-}
-
+.succession-archive--timeline-map .tsf-head > div:first-child > span,
 .succession-archive--timeline-map .tsf-camera > span,
 .succession-archive--timeline-map .tsf-camera button,
 .succession-archive--timeline-map .tsf-depth button,
@@ -91,7 +105,6 @@
 .succession-archive--timeline-map .tsf-lane-deck > span,
 .succession-archive--timeline-map .tsf-duration span,
 .succession-archive--timeline-map .tsf-node__label small,
-.succession-archive--timeline-map .tsf-node__label strong,
 .succession-archive--timeline-map .tsf-node__label em,
 .succession-archive--timeline-map .tsf-footer span,
 .succession-archive--timeline-map .tsf-footer small,
@@ -101,14 +114,31 @@
   font-size: 11px;
 }
 
+.succession-archive--timeline-map .tsf-head h2 {
+  display: inline;
+  margin: 0 0 0 10px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -.025em;
+  line-height: 1;
+}
+
+.succession-archive--timeline-map .tsf-head p {
+  display: none;
+}
+
+.succession-archive--timeline-map .tsf-camera {
+  min-width: 180px;
+}
+
 .succession-archive--timeline-map .tsf-lensbar {
   position: relative;
   z-index: 34;
   display: flex;
-  min-height: 56px;
+  min-height: 48px;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
+  padding: 4px 12px;
   border-bottom: 1px solid var(--tsf-line-strong);
   background: var(--tsf-paper-raised);
 }
@@ -122,9 +152,9 @@
 }
 
 .succession-archive--timeline-map .tsf-lensbar button {
-  min-height: 44px;
+  min-height: 40px;
   border: 1px solid var(--tsf-line);
-  padding: 0 12px;
+  padding: 0 11px;
   background: transparent;
   color: var(--tsf-ink);
   cursor: pointer;
@@ -150,27 +180,25 @@
 .succession-archive--timeline-map .tsf-toolbar {
   position: relative;
   z-index: 30;
-  min-height: 56px;
+  min-height: 48px;
 }
 
 .succession-archive--timeline-map .tsf-toolbar > div {
-  min-height: 56px;
-}
-
-.succession-archive--timeline-map .tsf-camera button,
-.succession-archive--timeline-map .tsf-depth button,
-.succession-archive--timeline-map .tsf-context button {
-  min-height: 44px;
+  min-height: 48px;
 }
 
 .succession-archive--timeline-map .tsf-shell {
-  grid-template-columns: 236px minmax(0, 1fr);
-  min-height: 790px;
+  min-height: 0;
+  height: 100%;
+  grid-template-columns: 226px minmax(0, 1fr);
+  overflow: hidden;
 }
 
 .succession-archive--timeline-map .tsf-lanes {
   position: relative;
   z-index: 24;
+  min-height: 0;
+  overflow: auto hidden;
   box-shadow: 10px 0 24px color-mix(in srgb, var(--tsf-ink) 7%, transparent);
 }
 
@@ -183,11 +211,13 @@
 }
 
 .succession-archive--timeline-map .tsf-viewport {
-  min-height: 790px;
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
   overscroll-behavior: contain;
   scrollbar-gutter: stable;
   cursor: grab;
-  touch-action: pan-y;
+  touch-action: none;
   user-select: none;
 }
 
@@ -201,17 +231,12 @@
 }
 
 .succession-archive--timeline-map .tsf-scene {
-  min-height: 790px;
-  background:
-    linear-gradient(to right, color-mix(in srgb, var(--tsf-ink) 2%, transparent), transparent 16%, transparent 84%, color-mix(in srgb, var(--tsf-ink) 2%, transparent));
+  min-height: max(100%, 720px);
+  background: linear-gradient(to right, color-mix(in srgb, var(--tsf-ink) 2%, transparent), transparent 16%, transparent 84%, color-mix(in srgb, var(--tsf-ink) 2%, transparent));
 }
 
 .succession-archive--timeline-map .tsf-stage {
   inset-inline: 34px 22px;
-}
-
-.succession-archive--timeline-map .tsf-node {
-  cursor: pointer;
 }
 
 .succession-archive--timeline-map .tsf-node__label {
@@ -244,22 +269,38 @@
 }
 
 .succession-archive--timeline-map .tsf-footer {
-  position: sticky;
-  bottom: 0;
+  position: relative;
   z-index: 26;
-  backdrop-filter: blur(10px);
 }
 
-/* Secondary tools live below the map instead of interrupting it. */
-.succession-archive--timeline-map .timeline-workspace-switcher {
-  margin: 12px 14px 0;
-  border: 1px solid color-mix(in srgb, var(--st-ink, #171716) 18%, transparent);
-  background: color-mix(in srgb, var(--st-paper-raised, #fffaf0) 88%, transparent);
+.timeline-map-event-drawer {
+  position: fixed;
+  z-index: 300;
+  inset: 0;
+  overflow: auto;
+  background: color-mix(in srgb, #111 38%, transparent);
+  backdrop-filter: blur(7px);
 }
 
-.succession-archive--timeline-map .timeline-map-supporting-intelligence {
-  margin-top: 14px;
-  border-top: 1px solid color-mix(in srgb, var(--st-ink, #171716) 18%, transparent);
+.timeline-map-event-drawer .timeline-event-focus {
+  width: min(1180px, calc(100vw - 48px));
+  min-height: 100vh;
+  margin-left: auto;
+  box-shadow: -28px 0 70px rgba(0, 0, 0, .28);
+}
+
+.timeline-map-event-drawer .tef-topbar {
+  top: 0;
+}
+
+@media (max-width: 1100px) {
+  .succession-archive--timeline-map .tsf-shell {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+
+  .succession-archive--timeline-map .tsf-lensbar small {
+    display: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
