@@ -38,6 +38,9 @@ jobs:
           mkdir -p .ci
           npm run verify 2>&1 | tee .ci/build.log
 
+      - name: Build design workshop
+        run: npm run storybook:build
+
       - name: Verify full-stack artifact shape
         shell: bash
         run: |

@@ -1,18 +1,30 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import SuccessionCommandHome from './components/succession/SuccessionCommandHome';
 import { ARCHIVE_BOUNDARY } from './data/archiveMeta';
 
+const SuccessionArtDirectionLab = import.meta.env.DEV
+  ? lazy(() => import('./components/succession/art-direction/SuccessionArtDirectionLab'))
+  : null;
+
+const isDesignLabPath = () => import.meta.env.DEV
+  && typeof window !== 'undefined'
+  && window.location.pathname.startsWith('/__design-lab');
+
 const resetLocationToHome = () => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || isDesignLabPath()) return;
   const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
   if (current !== '/') window.history.replaceState({ hxhRoute: '/' }, '', '/');
 };
 
 export default function App() {
+  const designLab = isDesignLabPath();
+
   useEffect(() => {
-    document.title = 'Hunter × Hunter Archive';
-    resetLocationToHome();
-  }, []);
+    if (!designLab) {
+      document.title = 'Hunter × Hunter Archive';
+      resetLocationToHome();
+    }
+  }, [designLab]);
 
   const stayHome = () => {
     resetLocationToHome();
@@ -32,6 +44,10 @@ export default function App() {
     event.preventDefault();
     stayHome();
   };
+
+  if (designLab && SuccessionArtDirectionLab) {
+    return <Suspense fallback={null}><SuccessionArtDirectionLab /></Suspense>;
+  }
 
   return (
     <div

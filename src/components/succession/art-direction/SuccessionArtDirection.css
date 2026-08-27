@@ -1,0 +1,235 @@
+/*
+ * Succession art-direction primitives
+ *
+ * This layer is intentionally composition-first. It does not define cards,
+ * dashboards, lore, routing, or archive state. Use it to art-direct content
+ * with the existing Succession semantic tokens.
+ */
+
+.succession-art-direction {
+  --succession-art-columns: 12;
+  --succession-art-gap: clamp(16px, 1.8vw, 30px);
+  --succession-art-edge: clamp(28px, 5vw, 88px);
+  --succession-art-section: clamp(96px, 12vw, 190px);
+  --succession-art-monument: clamp(5rem, 12vw, 12rem);
+  --succession-art-display: clamp(3rem, 7vw, 7.5rem);
+  --succession-art-reading: min(64ch, 100%);
+  --succession-art-annotation: 11px;
+
+  position: relative;
+  overflow: clip;
+  color: var(--succession-text);
+  background: var(--succession-canvas);
+}
+
+.succession-art-canvas {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(var(--succession-art-columns), minmax(0, 1fr));
+  column-gap: var(--succession-art-gap);
+  width: 100%;
+  padding-inline: var(--succession-art-edge);
+}
+
+.succession-art-act {
+  position: relative;
+  min-height: 70vh;
+  padding-block: var(--succession-art-section);
+}
+
+.succession-art-monument {
+  margin: 0;
+  color: var(--succession-text-strong);
+  font-family: var(--succession-font-display);
+  font-size: var(--succession-art-monument);
+  font-weight: 560;
+  letter-spacing: -0.065em;
+  line-height: 0.78;
+  text-wrap: balance;
+}
+
+.succession-art-display {
+  margin: 0;
+  max-width: 11ch;
+  color: var(--succession-text-strong);
+  font-family: var(--succession-font-display);
+  font-size: var(--succession-art-display);
+  font-weight: 560;
+  letter-spacing: -0.055em;
+  line-height: 0.88;
+  text-wrap: balance;
+}
+
+.succession-art-copy {
+  max-width: var(--succession-art-reading);
+  color: var(--succession-text-muted);
+  font-size: clamp(1rem, 1.2vw, 1.18rem);
+  line-height: 1.75;
+}
+
+.succession-art-meta,
+.succession-art-annotation {
+  color: var(--succession-text-subtle);
+  font-family: var(--succession-font-mono);
+  font-size: var(--succession-art-annotation);
+  font-weight: 650;
+  letter-spacing: 0.09em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.succession-art-meta-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  align-items: center;
+}
+
+.succession-art-meta-rail > * + *::before {
+  margin-right: 18px;
+  color: var(--succession-border-strong);
+  content: '/';
+}
+
+.succession-art-media {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--succession-surface-inset);
+}
+
+.succession-art-media img {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  object-fit: cover;
+  object-position: var(--succession-art-focal, 50% 50%);
+  filter: saturate(0.72) contrast(1.06);
+}
+
+.succession-art-media::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 55%, rgba(9, 11, 15, 0.36));
+  content: '';
+  pointer-events: none;
+}
+
+.succession-art-media.is-bleed-left {
+  margin-left: calc(var(--succession-art-edge) * -1);
+}
+
+.succession-art-media.is-bleed-right {
+  margin-right: calc(var(--succession-art-edge) * -1);
+}
+
+.succession-art-media.is-fragment {
+  clip-path: inset(0 8% 0 0);
+}
+
+.succession-art-overlap {
+  position: relative;
+  z-index: 2;
+  margin-top: clamp(-110px, -7vw, -54px);
+}
+
+.succession-art-annotation {
+  position: absolute;
+  z-index: 3;
+  max-width: 24ch;
+  color: var(--succession-text-muted);
+}
+
+.succession-art-annotation::before {
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  margin: 0 10px 4px 0;
+  background: var(--succession-border-strong);
+  content: '';
+}
+
+.succession-art-story-beat {
+  position: relative;
+  padding-left: 22px;
+}
+
+.succession-art-story-beat::before {
+  position: absolute;
+  top: 0.35em;
+  bottom: -2.2rem;
+  left: 3px;
+  width: 1px;
+  background: var(--succession-border-default);
+  content: '';
+}
+
+.succession-art-story-beat::after {
+  position: absolute;
+  top: 0.45em;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--succession-gold);
+  border-radius: 50%;
+  background: var(--succession-canvas);
+  content: '';
+}
+
+.succession-art-story-beat:last-child::before {
+  display: none;
+}
+
+.succession-art-story-beat strong {
+  display: block;
+  color: var(--succession-text-strong);
+  font-family: var(--succession-font-display);
+  font-size: clamp(1.25rem, 2vw, 2rem);
+  font-weight: 560;
+  letter-spacing: -0.025em;
+}
+
+.succession-art-story-beat p {
+  max-width: 48ch;
+  margin: 8px 0 0;
+  color: var(--succession-text-muted);
+}
+
+.succession-art-sticky-stage {
+  position: sticky;
+  top: clamp(18px, 5vh, 72px);
+  min-height: min(76vh, 760px);
+}
+
+.succession-art-index-number {
+  color: var(--succession-text-strong);
+  font-family: var(--succession-font-display);
+  font-size: clamp(6rem, 18vw, 18rem);
+  font-weight: 500;
+  letter-spacing: -0.08em;
+  line-height: 0.7;
+  opacity: 0.09;
+  user-select: none;
+}
+
+@media (max-width: 980px) {
+  .succession-art-direction {
+    --succession-art-columns: 8;
+    --succession-art-edge: clamp(20px, 4vw, 42px);
+  }
+
+  .succession-art-act {
+    min-height: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-art-direction *,
+  .succession-art-direction *::before,
+  .succession-art-direction *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+}
