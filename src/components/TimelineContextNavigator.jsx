@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef } from 'react';
 import {
   ChevronLeft,
   ChevronRight,
@@ -22,6 +22,7 @@ export default function TimelineContextNavigator({
   spoilerLimit = Number.MAX_SAFE_INTEGER,
   onNavigate,
 }) {
+  const dragRef = useRef(null);
   const events = useMemo(() => {
     const prelude = successionPreludeEvents.filter((event) => event.chapter <= spoilerLimit);
     const voyage = successionDays.flatMap((day) => day.events.filter((event) => event.chapter <= spoilerLimit));
@@ -33,7 +34,8 @@ export default function TimelineContextNavigator({
   const chapterSpan = Math.max(1, chapterMaximum - chapterMinimum + 1);
   const requestedChapter = finiteNumber(requestedState.chapter);
   const contextChapter = clamp(requestedChapter ?? chapterMaximum, chapterMinimum, chapterMaximum);
-  const [windowSize, setWindowSize] = useState(() => Math.min(chapterSpan, 18));
+  const requestedWindow = finiteNumber(requestedState.window);
+  const boundedWindowSize = clamp(requestedWindow ?? Math.min(chapterSpan, 18), 5, chapterSpan);
   const spatialActive = requestedState.view === 'intelligence' && requestedState.intel === 'space';
 
   const chapters = useMemo(() => {
@@ -46,7 +48,6 @@ export default function TimelineContextNavigator({
   }, [chapterMinimum, chapterSpan, events]);
 
   const maximumDensity = Math.max(1, ...chapters.map((row) => row.count));
-  const boundedWindowSize = clamp(windowSize, 5, chapterSpan);
   let windowFrom = contextChapter - Math.floor((boundedWindowSize - 1) / 2);
   let windowTo = windowFrom + boundedWindowSize - 1;
   if (windowFrom < chapterMinimum) {
@@ -64,27 +65,77 @@ export default function TimelineContextNavigator({
   const viewportWidth = ((windowTo - windowFrom + 1) / chapterSpan) * 100;
   const markerLeft = (((contextChapter - chapterMinimum) + 0.5) / chapterSpan) * 100;
 
-  const navigateToChapter = (chapter, overrides = {}) => {
+  const commitContext = (chapter, windowSize = boundedWindowSize, overrides = {}, remove = []) => {
     const nextChapter = clamp(chapter, chapterMinimum, chapterMaximum);
-    const { event: _event, ...preservedState } = requestedState;
+    const preservedState = { ...requestedState };
+    delete preservedState.event;
+    for (const key of remove) delete preservedState[key];
     onNavigate?.({
       ...preservedState,
       scope: 'events',
       chapter: nextChapter,
+      window: clamp(windowSize, 5, chapterSpan),
       ...overrides,
     });
   };
 
-  const zoomIn = () => setWindowSize((current) => Math.max(5, Math.round(current / 1.55)));
-  const zoomOut = () => setWindowSize((current) => Math.min(chapterSpan, Math.max(6, Math.round(current * 1.55))));
+  const navigateToChapter = (chapter, overrides = {}) => commitContext(chapter, boundedWindowSize, overrides);
+  const setWindowSize = (nextSize) => commitContext(contextChapter, nextSize, { mode: requestedState.mode || 'story' }, ['depth']);
+  const zoomIn = () => setWindowSize(Math.max(5, Math.round(boundedWindowSize / 1.55)));
+  const zoomOut = () => setWindowSize(Math.min(chapterSpan, Math.max(6, Math.round(boundedWindowSize * 1.55))));
   const fitAll = () => setWindowSize(chapterSpan);
   const recenter = () => setWindowSize(Math.min(chapterSpan, 18));
+
+  const startViewportDrag = (event) => {
+    if (event.button !== 0) return;
+    const field = event.currentTarget.parentElement;
+    const bounds = field?.getBoundingClientRect();
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      width: field?.clientWidth || 1,
+      fieldLeft: bounds?.left || 0,
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    event.currentTarget.classList.add('is-dragging');
+  };
+
+  const finishViewportDrag = (event) => {
+    const drag = dragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - drag.startX;
+    dragRef.current = null;
+    event.currentTarget.classList.remove('is-dragging');
+    if (Math.abs(deltaX) < 5) {
+      const fraction = clamp((event.clientX - drag.fieldLeft) / Math.max(1, drag.width), 0, .999);
+      navigateToChapter(chapterMinimum + Math.floor(fraction * chapterSpan));
+      return;
+    }
+    const chapterDelta = Math.round((deltaX / Math.max(1, drag.width)) * chapterSpan);
+    if (chapterDelta) navigateToChapter(contextChapter + chapterDelta);
+  };
+
+  const handleViewportKey = (event) => {
+    if (event.key === 'ArrowLeft') { event.preventDefault(); navigateToChapter(contextChapter - 1); }
+    if (event.key === 'ArrowRight') { event.preventDefault(); navigateToChapter(contextChapter + 1); }
+    if (event.key === 'PageUp') { event.preventDefault(); navigateToChapter(contextChapter - Math.max(1, Math.floor(boundedWindowSize / 2))); }
+    if (event.key === 'PageDown') { event.preventDefault(); navigateToChapter(contextChapter + Math.max(1, Math.floor(boundedWindowSize / 2))); }
+    if (event.key === 'Home') { event.preventDefault(); navigateToChapter(chapterMinimum); }
+    if (event.key === 'End') { event.preventDefault(); navigateToChapter(chapterMaximum); }
+  };
+
+  const handleNavigatorWheel = (event) => {
+    if (!event.ctrlKey && !event.metaKey) return;
+    event.preventDefault();
+    if (event.deltaY < 0) zoomIn();
+    else if (event.deltaY > 0) zoomOut();
+  };
 
   return (
     <section className="timeline-context-navigator" aria-label="Persistent story timeline navigator">
       <header className="tcn-head">
         <div className="tcn-head__identity">
-          <span>STORY CONTEXT</span>
+          <span>FULL ARC</span>
           <strong>Ch. {chapterMinimum}–{chapterMaximum}</strong>
           <small>{events.length.toLocaleString()} indexed records</small>
         </div>
@@ -92,20 +143,31 @@ export default function TimelineContextNavigator({
           <Crosshair size={14} aria-hidden="true" />
           <span>ACTIVE CHAPTER</span>
           <strong>{contextChapter}</strong>
-          <small>window {windowFrom}–{windowTo}</small>
+          <small>visible {windowFrom}–{windowTo}</small>
         </div>
         <div className="tcn-head__actions">
           <button type="button" onClick={() => navigateToChapter(contextChapter - 1)} disabled={contextChapter <= chapterMinimum} aria-label="Previous chapter"><ChevronLeft size={16} aria-hidden="true" /></button>
           <button type="button" onClick={() => navigateToChapter(contextChapter + 1)} disabled={contextChapter >= chapterMaximum} aria-label="Next chapter"><ChevronRight size={16} aria-hidden="true" /></button>
-          <button type="button" className={`tcn-spatial${spatialActive ? ' is-active' : ''}`} aria-pressed={spatialActive} onClick={() => navigateToChapter(contextChapter, { view: 'intelligence', intel: 'space' })}><ShipWheel size={14} aria-hidden="true" /><span>Spatial intelligence</span></button>
+          <button type="button" className={`tcn-spatial${spatialActive ? ' is-active' : ''}`} aria-pressed={spatialActive} onClick={() => navigateToChapter(contextChapter, { view: 'intelligence', intel: 'space' })}><ShipWheel size={14} aria-hidden="true" /><span>Ship map</span></button>
         </div>
       </header>
 
-      <div className="tcn-field" style={{ '--tcn-chapter-count': chapters.length }}>
+      <div className="tcn-field" style={{ '--tcn-chapter-count': chapters.length }} onWheel={handleNavigatorWheel}>
         <div
           className="tcn-viewport"
           style={{ left: `${viewportLeft}%`, width: `${viewportWidth}%` }}
-          aria-hidden="true"
+          role="slider"
+          tabIndex="0"
+          aria-label={`Visible Timeline window, Chapters ${windowFrom} through ${windowTo}. Drag to pan.`}
+          aria-valuemin={chapterMinimum}
+          aria-valuemax={chapterMaximum}
+          aria-valuenow={contextChapter}
+          aria-valuetext={`Active Chapter ${contextChapter}; visible Chapters ${windowFrom} through ${windowTo}`}
+          title="Drag to pan the visible chapter window. Click inside it to jump. Ctrl/Command + wheel to zoom."
+          onPointerDown={startViewportDrag}
+          onPointerUp={finishViewportDrag}
+          onPointerCancel={finishViewportDrag}
+          onKeyDown={handleViewportKey}
         />
         <div className="tcn-marker" style={{ left: `${markerLeft}%` }} aria-hidden="true"><i /></div>
         <div className="tcn-bars" role="group" aria-label="Chapter density. Select a chapter to move the shared story context.">
@@ -127,12 +189,12 @@ export default function TimelineContextNavigator({
       </div>
 
       <footer className="tcn-controls">
-        <div className="tcn-controls__legend"><span><i /> current context</span><span><b /> visible context window</span><span>Height = event density</span></div>
-        <div className="tcn-controls__zoom" aria-label="Timeline context zoom">
-          <button type="button" onClick={zoomOut} disabled={boundedWindowSize >= chapterSpan} aria-label="Zoom context out"><Minus size={14} aria-hidden="true" /></button>
-          <button type="button" onClick={recenter}><Crosshair size={13} aria-hidden="true" /> 18-chapter window</button>
+        <div className="tcn-controls__legend"><span><i /> active chapter</span><span><b /> visible map window</span><span>Drag window to pan · Ctrl/⌘ + wheel to zoom</span></div>
+        <div className="tcn-controls__zoom" aria-label="Timeline map zoom">
+          <button type="button" onClick={zoomOut} disabled={boundedWindowSize >= chapterSpan} aria-label="Zoom Timeline out"><Minus size={14} aria-hidden="true" /></button>
+          <button type="button" onClick={recenter}><Crosshair size={13} aria-hidden="true" /> 18 chapters</button>
           <button type="button" onClick={fitAll}><Maximize2 size={13} aria-hidden="true" /> Full arc</button>
-          <button type="button" onClick={zoomIn} disabled={boundedWindowSize <= 5} aria-label="Zoom context in"><Plus size={14} aria-hidden="true" /></button>
+          <button type="button" onClick={zoomIn} disabled={boundedWindowSize <= 5} aria-label="Zoom Timeline in"><Plus size={14} aria-hidden="true" /></button>
         </div>
       </footer>
     </section>

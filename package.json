@@ -64,6 +64,7 @@
     "qa:succession-reader": "node scripts/succession-reader-qa.mjs && node scripts/succession-reader-enhancements-qa.mjs",
     "qa:succession-shell": "node scripts/succession-archive-shell-qa.mjs",
     "qa:succession-final-product": "node scripts/succession-final-product-qa.mjs",
+    "qa:timeline-map": "node scripts/timeline-map-qa.mjs",
     "stabilize:media": "node scripts/stabilize-media.mjs",
     "stabilize:rooms": "node scripts/stabilize-room-media.mjs",
     "prepare:media-derivatives": "node scripts/generate-media-derivatives.mjs",
@@ -88,7 +89,7 @@
     "admin:chapters": "node scripts/succession-chapter-admin.mjs",
     "import:succession-chapter": "node scripts/import-succession-chapter.mjs",
     "import:succession-chapter:url": "node scripts/import-succession-chapter-url.mjs",
-    "qa:browser:verify": "npm run qa:nen-final && npm run qa:accessibility && npm run qa:search && npm run qa:visual && npm run qa:succession-shell && npm run qa:succession-final-product && npm run qa:succession-reader && node scripts/performance-qa.mjs",
+    "qa:browser:verify": "npm run qa:timeline-map && npm run qa:nen-final && npm run qa:accessibility && npm run qa:search && npm run qa:visual && npm run qa:succession-shell && npm run qa:succession-final-product && npm run qa:succession-reader && node scripts/performance-qa.mjs",
     "qa:browser:ci": "npm run verify && npm run qa:browser:verify",
     "qa:browser": "npm run verify && npm run qa:browser:verify"
   },

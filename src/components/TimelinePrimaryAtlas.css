@@ -1,0 +1,312 @@
+/* /succession/timeline is the map. No archive page chrome, no stacked tools. */
+.succession-archive--timeline-map {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--st-paper, #f4efe5);
+}
+
+.succession-archive--timeline-map .succession-archive__layout {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.succession-archive--timeline-map .succession-archive__sidebar,
+.succession-archive--timeline-map .succession-archive__skip-link {
+  display: none;
+}
+
+.succession-archive--timeline-map .succession-archive__workspace,
+.succession-archive--timeline-map .succession-archive__workspace-frame,
+.succession-archive--timeline-map .succession-archive__content {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.succession-archive--timeline-map .timeline-workspace--map-only {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100vh;
+  grid-template-rows: 112px minmax(0, 1fr);
+  overflow: hidden;
+  background: var(--st-paper, #f4efe5);
+}
+
+.succession-archive--timeline-map .timeline-context-navigator {
+  position: relative;
+  z-index: 80;
+  top: auto;
+  height: 112px;
+  grid-template-rows: 38px 48px 26px;
+  margin: 0;
+  border-top: 0;
+  box-shadow: 0 10px 24px rgba(20, 18, 15, .08);
+}
+
+.succession-archive--timeline-map .tcn-head__identity,
+.succession-archive--timeline-map .tcn-head__clock {
+  padding-inline: 12px;
+}
+
+.succession-archive--timeline-map .tcn-head__actions button,
+.succession-archive--timeline-map .tcn-controls__zoom button {
+  min-height: 38px;
+}
+
+.succession-archive--timeline-map .tcn-field {
+  padding-block: 4px 7px;
+}
+
+.succession-archive--timeline-map .tcn-bars {
+  height: 36px;
+}
+
+.succession-archive--timeline-map .timeline-story-field {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  margin: 0;
+  overflow: hidden;
+  border: 0;
+  background: var(--tsf-paper, #f4efe5);
+}
+
+.succession-archive--timeline-map .tsf-head {
+  min-height: 50px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 7px 12px 7px 16px;
+  background: color-mix(in srgb, var(--tsf-paper-raised) 90%, transparent);
+}
+
+.succession-archive--timeline-map .tsf-head > div:first-child > span,
+.succession-archive--timeline-map .tsf-camera > span,
+.succession-archive--timeline-map .tsf-camera button,
+.succession-archive--timeline-map .tsf-depth button,
+.succession-archive--timeline-map .tsf-context button,
+.succession-archive--timeline-map .tsf-legend,
+.succession-archive--timeline-map .tsf-lanes > button small,
+.succession-archive--timeline-map .tsf-lanes > button > i,
+.succession-archive--timeline-map .tsf-lanes > button > b,
+.succession-archive--timeline-map .tsf-horizon,
+.succession-archive--timeline-map .tsf-horizon strong,
+.succession-archive--timeline-map .tsf-chapter-grid > i span,
+.succession-archive--timeline-map .tsf-context-line span,
+.succession-archive--timeline-map .tsf-lane-deck > span,
+.succession-archive--timeline-map .tsf-duration span,
+.succession-archive--timeline-map .tsf-node__label small,
+.succession-archive--timeline-map .tsf-node__label em,
+.succession-archive--timeline-map .tsf-footer span,
+.succession-archive--timeline-map .tsf-footer small,
+.succession-archive--timeline-map .tsf-lensbar,
+.succession-archive--timeline-map .tsf-lensbar button,
+.succession-archive--timeline-map .tsf-lensbar small {
+  font-size: 11px;
+}
+
+.succession-archive--timeline-map .tsf-head h2 {
+  display: inline;
+  margin: 0 0 0 10px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -.025em;
+  line-height: 1;
+}
+
+.succession-archive--timeline-map .tsf-head p {
+  display: none;
+}
+
+.succession-archive--timeline-map .tsf-camera {
+  min-width: 180px;
+}
+
+.succession-archive--timeline-map .tsf-lensbar {
+  position: relative;
+  z-index: 34;
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-bottom: 1px solid var(--tsf-line-strong);
+  background: var(--tsf-paper-raised);
+}
+
+.succession-archive--timeline-map .tsf-lensbar > span {
+  margin-right: 4px;
+  color: var(--tsf-accent);
+  font-family: var(--succession-font-mono, ui-monospace, monospace);
+  font-weight: 900;
+  letter-spacing: .09em;
+}
+
+.succession-archive--timeline-map .tsf-lensbar button {
+  min-height: 40px;
+  border: 1px solid var(--tsf-line);
+  padding: 0 11px;
+  background: transparent;
+  color: var(--tsf-ink);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.succession-archive--timeline-map .tsf-lensbar button:hover,
+.succession-archive--timeline-map .tsf-lensbar button.is-active {
+  border-color: var(--tsf-ink);
+  background: var(--tsf-ink);
+  color: var(--tsf-paper);
+}
+
+.succession-archive--timeline-map .tsf-lensbar small {
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+  color: var(--tsf-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.succession-archive--timeline-map .tsf-toolbar {
+  position: relative;
+  z-index: 30;
+  min-height: 48px;
+}
+
+.succession-archive--timeline-map .tsf-toolbar > div {
+  min-height: 48px;
+}
+
+.succession-archive--timeline-map .tsf-shell {
+  min-height: 0;
+  height: 100%;
+  grid-template-columns: 226px minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.succession-archive--timeline-map .tsf-lanes {
+  position: relative;
+  z-index: 24;
+  min-height: 0;
+  overflow: auto hidden;
+  box-shadow: 10px 0 24px color-mix(in srgb, var(--tsf-ink) 7%, transparent);
+}
+
+.succession-archive--timeline-map .tsf-lanes > button {
+  height: 50px;
+}
+
+.succession-archive--timeline-map .tsf-lanes > button strong {
+  font-size: 14px;
+}
+
+.succession-archive--timeline-map .tsf-viewport {
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.succession-archive--timeline-map .tsf-viewport.is-panning {
+  cursor: grabbing;
+}
+
+.succession-archive--timeline-map .tsf-viewport:focus-visible {
+  outline: 3px solid var(--tsf-focus);
+  outline-offset: -3px;
+}
+
+.succession-archive--timeline-map .tsf-scene {
+  min-height: max(100%, 720px);
+  background: linear-gradient(to right, color-mix(in srgb, var(--tsf-ink) 2%, transparent), transparent 16%, transparent 84%, color-mix(in srgb, var(--tsf-ink) 2%, transparent));
+}
+
+.succession-archive--timeline-map .tsf-stage {
+  inset-inline: 34px 22px;
+}
+
+.succession-archive--timeline-map .tsf-node__label {
+  width: 244px;
+  gap: 5px;
+  padding: 10px 11px;
+}
+
+.succession-archive--timeline-map .tsf-node__label strong {
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.succession-archive--timeline-map .tsf-node__label em {
+  line-height: 1.35;
+}
+
+.succession-archive--timeline-map .tsf-node__cap {
+  box-shadow: 0 0 0 3px var(--tsf-paper), 0 0 0 4px color-mix(in srgb, var(--tsf-ink) 54%, transparent);
+}
+
+.succession-archive--timeline-map .tsf-node.is-major .tsf-node__cap,
+.succession-archive--timeline-map .tsf-node.is-selected .tsf-node__cap {
+  box-shadow: 0 0 0 3px var(--tsf-paper), 0 0 0 5px color-mix(in srgb, var(--tsf-accent) 72%, transparent);
+}
+
+.succession-archive--timeline-map .tsf-context-line {
+  width: 2px;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--tsf-focus) 36%, transparent);
+}
+
+.succession-archive--timeline-map .tsf-footer {
+  position: relative;
+  z-index: 26;
+}
+
+.timeline-map-event-drawer {
+  position: fixed;
+  z-index: 300;
+  inset: 0;
+  overflow: auto;
+  background: color-mix(in srgb, #111 38%, transparent);
+  backdrop-filter: blur(7px);
+}
+
+.timeline-map-event-drawer .timeline-event-focus {
+  width: min(1180px, calc(100vw - 48px));
+  min-height: 100vh;
+  margin-left: auto;
+  box-shadow: -28px 0 70px rgba(0, 0, 0, .28);
+}
+
+.timeline-map-event-drawer .tef-topbar {
+  top: 0;
+}
+
+@media (max-width: 1100px) {
+  .succession-archive--timeline-map .tsf-shell {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+
+  .succession-archive--timeline-map .tsf-lensbar small {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-archive--timeline-map .tsf-stage,
+  .succession-archive--timeline-map .tsf-lane-deck,
+  .succession-archive--timeline-map .tsf-duration {
+    transition: none;
+  }
+}
