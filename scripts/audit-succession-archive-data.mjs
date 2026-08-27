@@ -11,9 +11,10 @@ const vite = await createServer({
 });
 
 try {
-  const [archiveModule, availabilityModule] = await Promise.all([
+  const [archiveModule, availabilityModule, metadataModule] = await Promise.all([
     vite.ssrLoadModule('/src/data/succession/successionData.js'),
     vite.ssrLoadModule('/src/data/successionChapterAvailability.generated.js'),
+    vite.ssrLoadModule('/src/data/latestChapterMetadata.js'),
   ]);
   const {
     getAbilitiesAtLocation,
@@ -39,9 +40,11 @@ try {
     successionArchiveValidation,
   } = archiveModule;
   const { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } = availabilityModule;
-  const latestChapter = Math.max(414, LATEST_AUTHORIZED_SUCCESSION_CHAPTER);
+  const { LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER } = metadataModule;
+  const latestChapter = Math.max(414, LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER);
   const expectedChapterRecords = latestChapter - 340 + 1;
 
+  assert(latestChapter >= LATEST_AUTHORIZED_SUCCESSION_CHAPTER, 'research chapter boundary must not be lower than the local page-media boundary');
   assert(successionArchiveValidation.valid, 'canonical data must pass schema validation');
   assert(successionArchiveValidation.stats.entities >= 343, 'canonical graph must contain the expanded Batch 1 current-arc catalogue');
   assert(successionArchiveIndexes.byId.size === successionArchiveValidation.stats.entities, 'global ID index must include every entity');
@@ -141,7 +144,7 @@ try {
   assert(dowsingSearch.some((record) => record.id === 'ability:dowsing-chain'), 'search must resolve Dowsing Chain');
   assert(successionArchiveData.characters.length === characterRecords.length, 'public canonical data must expose the same character catalogue as selectors');
 
-  console.log(`Succession Archive audit passed: ${characterRecords.length} characters, ${bodyguards.length} bodyguards with explicit media slots, ${abilities.length} abilities, ${locations.length} locations, ${events.length} events, ${assignments.length} assignments, ${relationships.length} relationships, and ${chapterRecords.length} sequential chapter records through Chapter ${latestChapter}.`);
+  console.log(`Succession Archive audit passed: ${characterRecords.length} characters, ${bodyguards.length} bodyguards with explicit media slots, ${abilities.length} abilities, ${locations.length} locations, ${events.length} events, ${assignments.length} assignments, ${relationships.length} relationships, ${chapterRecords.length} sequential chapter records through research Chapter ${latestChapter}; local page media through Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}.`);
 } finally {
   await vite.close();
 }
