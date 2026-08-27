@@ -142,7 +142,8 @@ export default function SuccessionArchiveShell({
   const route = getSuccessionArchiveRoute(activeId);
   const presentation = getRoutePresentationProfile(route.id, { spoilerLimit });
   const activeHub = getSuccessionArchiveHub(route.id);
-  const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
+  const immersiveTimeline = route.id === 'timeline';
+  const hidePageHeader = immersiveTimeline || (route.id === 'princes' && routeParams?.view === 'tree');
   const showCharacterConsistency = needsCharacterConsistency(route.id, routeParams);
   const briefingEntity = hidePageHeader ? null : resolveBriefingEntity(route.id, routeParams);
   const requestedBriefingChapter = Number(routeParams?.chapter);
@@ -184,7 +185,7 @@ export default function SuccessionArchiveShell({
   const showResearchOverviewMeta = route.id === 'research' && (!routeParams?.mode || routeParams.mode === 'overview');
 
   return <article
-    className="succession-archive"
+    className={`succession-archive${immersiveTimeline ? ' succession-archive--timeline-map' : ''}`}
     data-archive-route={route.id}
     data-archive-hub={activeHub.id}
     data-presentation-kind={presentation.kind}
@@ -225,10 +226,10 @@ export default function SuccessionArchiveShell({
 
       <div className="succession-archive__workspace">
         <div className="succession-archive__workspace-frame">
-          <SuccessionComprehensionBar spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} />
-          <SuccessionConsolidatedRouteNotice from={consolidationSource} currentRouteId={route.id} onNavigate={navigate} />
+          {!immersiveTimeline && <SuccessionComprehensionBar spoilerLimit={spoilerLimit} onSpoilerChange={onSpoilerChange} onNavigate={navigate} />}
+          {!immersiveTimeline && <SuccessionConsolidatedRouteNotice from={consolidationSource} currentRouteId={route.id} onNavigate={navigate} />}
 
-          <div className="succession-route-context">
+          {!immersiveTimeline && <div className="succession-route-context">
             <nav className="succession-breadcrumbs" aria-label="Breadcrumb">
               <ol>
                 <li><button type="button" onClick={onExitArchive}>Story</button></li>
@@ -254,9 +255,9 @@ export default function SuccessionArchiveShell({
               <ArrowLeft size={15} aria-hidden="true" />
               <span>Return to Story</span>
             </button>
-          </div>
+          </div>}
 
-          <SuccessionHubTabs hub={activeHub} activeRouteId={route.id} routeParams={routeParams} onNavigate={navigate} onIntent={onIntent} />
+          {!immersiveTimeline && <SuccessionHubTabs hub={activeHub} activeRouteId={route.id} routeParams={routeParams} onNavigate={navigate} onIntent={onIntent} />}
 
           {!hidePageHeader && <ArchivePageHeader
             headingLevel="h1"
@@ -274,14 +275,15 @@ export default function SuccessionArchiveShell({
             aria-label={`${route.label} workspace content`}
             tabIndex="-1"
           >
-            <Suspense fallback={<div className="succession-route-loading" role="status">Opening connected explorer…</div>}>
+            {immersiveTimeline && <h1 className="sr-only">Voyage Timeline</h1>}
+            {!immersiveTimeline && <Suspense fallback={<div className="succession-route-loading" role="status">Opening connected explorer…</div>}>
               <SuccessionExplorerSurface
                 routeId={route.id}
                 routeParams={routeParams}
                 spoilerLimit={spoilerLimit}
                 onNavigate={navigate}
               />
-            </Suspense>
+            </Suspense>}
             {briefingEntity && <SuccessionEntityQuickBriefing entity={briefingEntity} chapter={briefingChapter} onNavigate={navigate} />}
             {showNow && <SuccessionNowDashboard chapter={spoilerLimit} onNavigate={navigate} />}
             {showPeoplePower && <SuccessionPeoplePowerComprehensionPanel chapter={spoilerLimit} onNavigate={navigate} />}
