@@ -15,7 +15,7 @@ const mime = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.jpeg': 'image/jpeg',
-  '.jpg': 'image/jpeg',
+  '.jpg': 'image/jpg',
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
   '.svg': 'image/svg+xml',
@@ -126,42 +126,50 @@ try {
     await assertAxe('homepage');
   });
 
-  await record('Story opens the production timeline route', async () => {
+  await record('Story opens the production archive-explorer timeline route', async () => {
     const story = page.getByRole('button', { name: /01\s*Story/i });
     await story.click();
     await page.locator('#succession-home-story.succession-command-home__detail.is-open').waitFor({ state: 'visible' });
     await page.getByRole('link', { name: /Timeline/i }).click();
     await page.waitForURL(`${base}/timeline`);
-    await page.locator('.timeline-manga-wall').waitFor({ state: 'visible' });
+    await page.locator('.timeline-archive-explorer').waitFor({ state: 'visible', timeout: 15_000 });
     if (await page.title() !== 'Timeline · Hunter × Hunter Archive') throw new Error(`unexpected timeline title: ${await page.title()}`);
   });
 
-  await record('timeline spans maintained beginning through latest boundary', async () => {
-    await page.locator('#timeline-chapter-340').waitFor({ state: 'attached' });
-    await page.locator('#timeline-chapter-418').waitFor({ state: 'attached' });
-    const chapterCount = await page.locator('.timeline-manga-wall__chapter').count();
-    if (chapterCount < 70) throw new Error(`expected broad chapter coverage, found only ${chapterCount} chapter slices`);
+  await record('production timeline exposes the seven-phase minimap and density overview', async () => {
+    const phaseCount = await page.locator('.tae-phase-strip button').count();
+    const densityBars = await page.locator('.tae-density-graph > span').count();
+    if (phaseCount !== 7) throw new Error(`expected 7 phases, found ${phaseCount}`);
+    if (densityBars !== 48) throw new Error(`expected 48 density buckets, found ${densityBars}`);
+    await page.getByText(/1555 events available/i).waitFor({ state: 'visible' });
   });
 
-  await record('timeline uses real chapter manga media and maintained events', async () => {
-    const firstChapter = page.locator('#timeline-chapter-340');
-    const pageImage = firstChapter.locator('.timeline-manga-wall__page img').first();
-    await pageImage.waitFor({ state: 'attached' });
-    const src = await pageImage.getAttribute('src');
-    if (!src?.includes('/media/succession-contest/chapters/340/')) throw new Error(`unexpected manga media path: ${src}`);
-    if (await firstChapter.locator('.timeline-manga-wall__event').count() < 1) throw new Error('Chapter 340 has no maintained event blocks');
+  await record('Full mode exposes the complete archive with bounded DOM rendering', async () => {
+    await page.getByRole('button', { name: /Full\s*Complete chronology/i }).click();
+    await page.waitForFunction(() => document.querySelector('.tae-density-modes button[aria-pressed="true"] strong')?.textContent?.trim() === 'Full');
+    const rows = await page.locator('.tae-event').count();
+    if (rows < 1 || rows > 120) throw new Error(`expected 1–120 rendered rows, found ${rows}`);
+    await page.getByText(/still hidden from the DOM, not from the archive/i).waitFor({ state: 'visible' });
   });
 
-  await record('timeline filters stay in place and preserve the route', async () => {
-    await page.getByRole('button', { name: 'Nen', exact: true }).click();
+  await record('selecting an event fills the persistent inspector', async () => {
+    await page.locator('.tae-event').first().click();
+    await page.locator('.tae-inspector__record').waitFor({ state: 'visible' });
+    await page.getByText('Complete event record', { exact: true }).waitFor({ state: 'visible' });
+  });
+
+  await record('timeline search filters in place without leaving /timeline', async () => {
+    const input = page.getByPlaceholder('Search people, places, events, evidence…');
+    await input.fill('Kurapika');
+    await page.waitForTimeout(100);
+    if (await page.locator('.tae-event').count() < 1) throw new Error('Kurapika search returned no visible events');
     const location = await page.evaluate(() => ({ pathname: location.pathname, search: location.search, hash: location.hash }));
     if (location.pathname !== '/timeline' || location.search || location.hash) throw new Error(`timeline filter escaped route: ${JSON.stringify(location)}`);
-    await page.locator('.timeline-manga-wall__event.is-dimmed').first().waitFor({ state: 'attached' });
   });
 
   await record('timeline direct URL survives a fresh navigation', async () => {
     await page.goto(`${base}/timeline`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-    await page.locator('.timeline-manga-wall').waitFor({ state: 'visible', timeout: 15_000 });
+    await page.locator('.timeline-archive-explorer').waitFor({ state: 'visible', timeout: 15_000 });
     if (new URL(page.url()).pathname !== '/timeline') throw new Error(`timeline normalized away: ${page.url()}`);
   });
 
