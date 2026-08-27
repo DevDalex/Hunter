@@ -202,44 +202,31 @@
   overflow: hidden;
 }
 
-.succession-command-home__detail nav {
+.succession-command-home__subcategories {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   padding: 26px 0 34px 110px;
 }
 
-.succession-command-home__detail a {
+.succession-command-home__subcategories > span {
   min-height: 52px;
   display: flex;
   align-items: center;
   padding: 0 18px 0 0;
   border-bottom: 1px solid var(--home-line);
   color: rgba(242, 238, 228, 0.72);
-  text-decoration: none;
   font-size: 11px;
   font-weight: 580;
   letter-spacing: 0.11em;
   text-transform: uppercase;
-  transition: color 160ms ease, padding-left 160ms ease;
 }
 
-.succession-command-home__detail a:nth-child(odd) {
+.succession-command-home__subcategories > span:nth-child(odd) {
   border-right: 1px solid var(--home-line);
 }
 
-.succession-command-home__detail a:nth-child(even) {
+.succession-command-home__subcategories > span:nth-child(even) {
   padding-left: 18px;
-}
-
-.succession-command-home__detail a:hover,
-.succession-command-home__detail a:focus-visible {
-  color: var(--home-text);
-  padding-left: 8px;
-}
-
-.succession-command-home__detail a:nth-child(even):hover,
-.succession-command-home__detail a:nth-child(even):focus-visible {
-  padding-left: 26px;
 }
 
 @media (max-width: 760px) {
@@ -266,23 +253,16 @@
     font-size: clamp(42px, 14vw, 74px);
   }
 
-  .succession-command-home__detail nav {
+  .succession-command-home__subcategories {
     grid-template-columns: 1fr;
     padding-left: 0;
   }
 
-  .succession-command-home__detail a,
-  .succession-command-home__detail a:nth-child(odd),
-  .succession-command-home__detail a:nth-child(even) {
+  .succession-command-home__subcategories > span,
+  .succession-command-home__subcategories > span:nth-child(odd),
+  .succession-command-home__subcategories > span:nth-child(even) {
     border-right: 0;
     padding-left: 0;
-  }
-
-  .succession-command-home__detail a:hover,
-  .succession-command-home__detail a:focus-visible,
-  .succession-command-home__detail a:nth-child(even):hover,
-  .succession-command-home__detail a:nth-child(even):focus-visible {
-    padding-left: 8px;
   }
 }
 
@@ -291,8 +271,7 @@
   .succession-command-home__entry::before,
   .succession-command-home__entry-copy > strong,
   .succession-command-home__plus,
-  .succession-command-home__detail,
-  .succession-command-home__detail a {
+  .succession-command-home__detail {
     transition: none;
   }
 }
