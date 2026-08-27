@@ -16,16 +16,18 @@ test('Timeline route is an immersive map rather than a generic Explorer dashboar
   assert.match(shell, /succession-archive--timeline-map/);
 });
 
-test('cartographic story field is mounted before secondary Timeline modes', () => {
-  const mapIndex = workspace.indexOf('{storyActive && <TimelineStoryField');
-  const switcherIndex = workspace.indexOf('<TimelineWorkspaceSwitcher');
+test('Timeline workspace mounts the cartographic story field as its only primary mode', () => {
+  const navigatorIndex = workspace.indexOf('<TimelineContextNavigator');
+  const mapIndex = workspace.indexOf('<TimelineStoryField');
+  assert.ok(navigatorIndex >= 0, 'TimelineContextNavigator is missing');
   assert.ok(mapIndex >= 0, 'primary TimelineStoryField is missing');
-  assert.ok(switcherIndex >= 0, 'workspace switcher is missing');
-  assert.ok(mapIndex < switcherIndex, 'secondary mode switcher appears before the primary map');
-  assert.match(workspace, /timeline-workspace--primary-map/);
+  assert.ok(navigatorIndex < mapIndex, 'Timeline navigator must appear before the map');
+  assert.match(workspace, /timeline-workspace timeline-workspace--map-only/);
+  assert.doesNotMatch(workspace, /TimelineWorkspaceSwitcher/);
+  assert.match(workspace, /timeline-map-event-drawer/);
 });
 
-test('Timeline naming makes the cartographic map primary and research atlas secondary', () => {
+test('preserved Timeline switcher keeps map-primary naming for future reuse', () => {
   assert.match(switcher, /id: 'story', label: 'Timeline Map', note: 'Primary cartographic chronology'/);
   assert.match(switcher, /id: 'atlas', label: 'Research Atlas'/);
   assert.match(switcher, /The map is the Timeline\./);
@@ -72,8 +74,9 @@ test('Timeline Map can rearrange the same chronology without replacing the route
 
 test('primary map owns the full Timeline workspace and keeps an accessible text floor', () => {
   assert.match(primaryCss, /\.succession-archive--timeline-map \.succession-archive__content/);
-  assert.match(primaryCss, /min-height: calc\(100vh - 118px\)/);
-  assert.match(primaryCss, /\.tsf-shell[\s\S]*grid-template-columns: 236px minmax\(0, 1fr\)/);
+  assert.match(primaryCss, /\.timeline-workspace--map-only[\s\S]*height: 100vh/);
+  assert.match(primaryCss, /\.timeline-workspace--map-only[\s\S]*grid-template-rows: 112px minmax\(0, 1fr\)/);
+  assert.match(primaryCss, /\.tsf-shell[\s\S]*grid-template-columns: 226px minmax\(0, 1fr\)/);
   assert.match(primaryCss, /\.tsf-viewport[\s\S]*cursor: grab/);
   assert.match(primaryCss, /\.tsf-lensbar/);
   assert.match(primaryCss, /font-size: 11px/);

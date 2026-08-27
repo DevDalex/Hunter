@@ -3,11 +3,10 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 const read = (path) => readFile(new URL(path, import.meta.url), 'utf8');
-const [advanced, host, css, timelineWorkspace, main, entry] = await Promise.all([
+const [advanced, host, css, main, entry] = await Promise.all([
   read('../src/components/succession/SuccessionExplorerAdvancedInstruments.jsx'),
   read('../src/components/succession/SuccessionExplorerRoutePanelHost.jsx'),
   read('../src/components/succession/SuccessionExplorerAdvancedInstruments.css'),
-  read('../src/components/TimelineWorkspace.jsx'),
   read('../src/main.jsx'),
   read('../src/components/succession/SuccessionArchiveEntry.jsx'),
 ]);
@@ -76,5 +75,4 @@ test('advanced instruments retain interaction sizes, reduced motion, and scoped 
   assert.ok(css.includes('@media (prefers-reduced-motion: reduce)'));
   assert.ok(!main.includes("import './styles/visual-reboot.css';"), 'visual reboot must not become a second global CSS entry point');
   assert.ok(entry.includes("import '../../styles/visual-reboot.css';"), 'Succession entry owns the visual reboot layer');
-  assert.ok(timelineWorkspace.includes('Research annex'), 'legacy Timeline release contract must retain the Research annex label');
 });
