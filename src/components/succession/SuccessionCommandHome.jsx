@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { routeToHref } from '../../lib/appRouter';
 import './SuccessionCommandHome.css';
 
 const groups = [
@@ -7,58 +6,23 @@ const groups = [
     id: 'story',
     number: '01',
     label: 'Story',
-    meta: ['Timeline', 'Chapters', 'Events', 'Threads', 'Black Whale'],
-    links: [
-      { label: 'Timeline', target: 'timeline' },
-      { label: 'Chapters', target: 'chapters' },
-      { label: 'Succession Archive', target: 'story', params: { mode: 'workspace' } },
-      { label: 'Manga Reader', target: 'reader' },
-      { label: 'Research', target: 'research' },
-    ],
+    items: ['Timeline', 'Chapters', 'Events', 'Threads', 'Black Whale'],
   },
   {
     id: 'characters',
     number: '02',
     label: 'Characters',
-    meta: ['Princes', 'Queens', 'Guards', 'Hunters', 'Mafia', 'Troupe'],
-    links: [
-      { label: 'Princes', target: 'princes' },
-      { label: 'Families', target: 'princes', params: { view: 'tree' } },
-      { label: 'Organizations', target: 'organizations' },
-      { label: 'Bodyguards', target: 'bodyguards' },
-    ],
+    items: ['Princes', 'Queens', 'Guards', 'Hunters', 'Mafia', 'Troupe'],
   },
   {
     id: 'nen',
     number: '03',
     label: 'Nen',
-    meta: ['Abilities', 'Types', 'Beasts', 'Conditions', 'Unknowns'],
-    links: [
-      { label: 'Nen Encyclopedia', href: '/nen' },
-      { label: 'Glossary', target: 'glossary' },
-    ],
+    items: ['Abilities', 'Types', 'Beasts', 'Conditions', 'Unknowns'],
   },
 ];
 
-const routeHref = (target, params = {}) => routeToHref('succession', target, params);
-
-function ArchiveAction({ item, onNavigate }) {
-  if (item.href) {
-    return <a href={item.href}>{item.label}</a>;
-  }
-
-  return <a
-    href={routeHref(item.target, item.params || {})}
-    onClick={(event) => {
-      event.preventDefault();
-      onNavigate(item.target, item.params || {});
-    }}
-  >
-    {item.label}
-  </a>;
-}
-
-export default function SuccessionCommandHome({ onNavigate }) {
+export default function SuccessionCommandHome() {
   const [openGroup, setOpenGroup] = useState(null);
 
   return <article
@@ -90,7 +54,7 @@ export default function SuccessionCommandHome({ onNavigate }) {
               <span className="succession-command-home__entry-copy">
                 <strong>{group.label}</strong>
                 <small>
-                  {group.meta.map((item) => <span key={item}>{item}</span>)}
+                  {group.items.map((item) => <span key={item}>{item}</span>)}
                 </small>
               </span>
 
@@ -102,11 +66,9 @@ export default function SuccessionCommandHome({ onNavigate }) {
               className={`succession-command-home__detail${expanded ? ' is-open' : ''}`}
             >
               <div className="succession-command-home__detail-inner">
-                <nav aria-label={`${group.label} destinations`}>
-                  {group.links.map((item) => (
-                    <ArchiveAction key={item.label} item={item} onNavigate={onNavigate} />
-                  ))}
-                </nav>
+                <div className="succession-command-home__subcategories" aria-label={`${group.label} subcategories`}>
+                  {group.items.map((item) => <span key={item}>{item}</span>)}
+                </div>
               </div>
             </div>
           </div>;
