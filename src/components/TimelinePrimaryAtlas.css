@@ -102,7 +102,7 @@
   position: relative;
   z-index: 34;
   display: flex;
-  min-height: 46px;
+  min-height: 56px;
   align-items: center;
   gap: 6px;
   padding: 6px 14px;
@@ -119,7 +119,7 @@
 }
 
 .succession-archive--timeline-map .tsf-lensbar button {
-  min-height: 34px;
+  min-height: 44px;
   border: 1px solid var(--tsf-line);
   padding: 0 12px;
   background: transparent;
@@ -147,11 +147,17 @@
 .succession-archive--timeline-map .tsf-toolbar {
   position: relative;
   z-index: 30;
-  min-height: 52px;
+  min-height: 56px;
 }
 
 .succession-archive--timeline-map .tsf-toolbar > div {
-  min-height: 52px;
+  min-height: 56px;
+}
+
+.succession-archive--timeline-map .tsf-camera button,
+.succession-archive--timeline-map .tsf-depth button,
+.succession-archive--timeline-map .tsf-context button {
+  min-height: 44px;
 }
 
 .succession-archive--timeline-map .tsf-shell {
