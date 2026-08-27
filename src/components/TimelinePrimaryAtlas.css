@@ -310,3 +310,286 @@
     transition: none;
   }
 }
+
+/* Flat instrument chrome: this is a map, not a dashboard made of cards. */
+.succession-archive--timeline-map .timeline-context-navigator {
+  box-shadow: none;
+  background: var(--tcn-paper);
+}
+
+.succession-archive--timeline-map .tcn-head {
+  grid-template-columns: auto auto minmax(0, 1fr);
+  border-bottom-color: color-mix(in srgb, var(--tcn-ink) 18%, transparent);
+  background: transparent;
+}
+
+.succession-archive--timeline-map .tcn-head__identity,
+.succession-archive--timeline-map .tcn-head__clock,
+.succession-archive--timeline-map .tcn-head__actions {
+  min-height: 38px;
+  border: 0;
+  background: transparent;
+}
+
+.succession-archive--timeline-map .tcn-head__clock {
+  border-left: 1px solid color-mix(in srgb, var(--tcn-ink) 14%, transparent);
+}
+
+.succession-archive--timeline-map .tcn-head__actions {
+  justify-self: end;
+  padding-right: 8px;
+}
+
+.succession-archive--timeline-map .tcn-head__actions button,
+.succession-archive--timeline-map .tcn-controls__zoom button {
+  border: 0;
+  border-left: 0;
+  background: transparent;
+  color: var(--tcn-muted);
+}
+
+.succession-archive--timeline-map .tcn-head__actions button:hover:not(:disabled),
+.succession-archive--timeline-map .tcn-controls__zoom button:hover:not(:disabled) {
+  background: transparent;
+  color: var(--tcn-accent);
+}
+
+.succession-archive--timeline-map .tcn-controls {
+  border-top-color: color-mix(in srgb, var(--tcn-ink) 14%, transparent);
+  background: transparent;
+}
+
+.succession-archive--timeline-map .tcn-controls__zoom {
+  border-left: 0;
+}
+
+.succession-archive--timeline-map .tsf-head {
+  border-bottom: 1px solid color-mix(in srgb, var(--tsf-ink) 15%, transparent);
+  background: transparent;
+}
+
+.succession-archive--timeline-map .tsf-camera {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 14px;
+  border: 0;
+  background: transparent;
+}
+
+.succession-archive--timeline-map .tsf-camera > span {
+  grid-column: auto;
+  padding: 0;
+  border: 0;
+}
+
+.succession-archive--timeline-map .tsf-camera button {
+  position: relative;
+  min-height: 34px;
+  gap: 6px;
+  border: 0;
+  padding: 0 2px;
+  background: transparent;
+  color: var(--tsf-muted);
+}
+
+.succession-archive--timeline-map .tsf-camera button::after,
+.succession-archive--timeline-map .tsf-lensbar button::after,
+.succession-archive--timeline-map .tsf-depth button::after {
+  position: absolute;
+  right: 0;
+  bottom: 2px;
+  left: 0;
+  height: 2px;
+  background: var(--tsf-accent);
+  content: '';
+  opacity: 0;
+  transform: scaleX(.35);
+  transition: opacity .12s ease, transform .12s ease;
+}
+
+.succession-archive--timeline-map .tsf-camera button:hover,
+.succession-archive--timeline-map .tsf-camera button.is-active,
+.succession-archive--timeline-map .tsf-lensbar button:hover,
+.succession-archive--timeline-map .tsf-lensbar button.is-active,
+.succession-archive--timeline-map .tsf-depth button:hover,
+.succession-archive--timeline-map .tsf-depth button.is-active {
+  border-color: transparent;
+  background: transparent;
+  color: var(--tsf-accent);
+}
+
+.succession-archive--timeline-map .tsf-camera button.is-active::after,
+.succession-archive--timeline-map .tsf-lensbar button.is-active::after,
+.succession-archive--timeline-map .tsf-depth button.is-active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.succession-archive--timeline-map .tsf-lensbar {
+  min-height: 42px;
+  gap: 18px;
+  padding: 0 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--tsf-ink) 14%, transparent);
+  background: transparent;
+}
+
+.succession-archive--timeline-map .tsf-lensbar > span {
+  margin-right: 2px;
+}
+
+.succession-archive--timeline-map .tsf-lensbar button {
+  position: relative;
+  min-height: 42px;
+  border: 0;
+  padding: 0 1px;
+  background: transparent;
+  color: var(--tsf-muted);
+  font-weight: 760;
+}
+
+.succession-archive--timeline-map .tsf-toolbar {
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, auto);
+  min-height: 42px;
+  border-bottom: 1px solid color-mix(in srgb, var(--tsf-ink) 14%, transparent);
+  background: transparent;
+}
+
+.succession-archive--timeline-map .tsf-toolbar > div {
+  min-height: 42px;
+  padding-block: 4px;
+  border-right: 0;
+}
+
+.succession-archive--timeline-map .tsf-depth {
+  gap: 15px;
+}
+
+.succession-archive--timeline-map .tsf-depth button {
+  position: relative;
+  min-height: 34px;
+  border: 0;
+  padding: 0 1px;
+  background: transparent;
+  color: var(--tsf-muted);
+  text-transform: capitalize;
+}
+
+.succession-archive--timeline-map .tsf-context {
+  border-left: 1px solid color-mix(in srgb, var(--tsf-ink) 14%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--tsf-ink) 14%, transparent);
+}
+
+.succession-archive--timeline-map .tsf-context button {
+  width: 30px;
+  min-height: 30px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--tsf-muted);
+}
+
+.succession-archive--timeline-map .tsf-context button:hover {
+  background: transparent;
+  color: var(--tsf-accent);
+}
+
+.succession-archive--timeline-map .tsf-legend {
+  gap: 12px;
+  padding-left: 12px;
+}
+
+.succession-archive--timeline-map .tsf-lanes {
+  border-right: 1px solid color-mix(in srgb, var(--tsf-ink) 16%, transparent);
+  background: color-mix(in srgb, var(--tsf-paper-raised) 50%, transparent);
+  box-shadow: none;
+}
+
+.succession-archive--timeline-map .tsf-lanes > header {
+  height: 44px;
+  padding: 0 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--tsf-ink) 15%, transparent);
+  background: transparent;
+}
+
+.succession-archive--timeline-map .tsf-lanes > button {
+  position: relative;
+  height: 48px;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--tsf-ink) 9%, transparent);
+  padding: 0 16px;
+  background: transparent;
+  color: var(--tsf-ink);
+}
+
+.succession-archive--timeline-map .tsf-lanes > button::before {
+  position: absolute;
+  top: 7px;
+  bottom: 7px;
+  left: 0;
+  width: 3px;
+  background: var(--tsf-accent);
+  content: '';
+  opacity: 0;
+  transform: scaleY(.3);
+  transition: opacity .12s ease, transform .12s ease;
+}
+
+.succession-archive--timeline-map .tsf-lanes > button > i {
+  color: var(--tsf-muted);
+  opacity: .48;
+}
+
+.succession-archive--timeline-map .tsf-lanes > button > b {
+  display: none;
+}
+
+.succession-archive--timeline-map .tsf-lanes > button strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.succession-archive--timeline-map .tsf-lanes > button small {
+  margin-top: 1px;
+  color: var(--tsf-muted);
+  opacity: .72;
+}
+
+.succession-archive--timeline-map .tsf-lanes > button:hover,
+.succession-archive--timeline-map .tsf-lanes > button.is-active {
+  background: linear-gradient(90deg, color-mix(in srgb, var(--tsf-accent) 8%, transparent), transparent 78%);
+  color: var(--tsf-ink);
+}
+
+.succession-archive--timeline-map .tsf-lanes > button:hover::before,
+.succession-archive--timeline-map .tsf-lanes > button.is-active::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.succession-archive--timeline-map .tsf-lanes > button.is-active strong {
+  color: var(--tsf-accent);
+}
+
+.succession-archive--timeline-map .tsf-lanes > button:hover small,
+.succession-archive--timeline-map .tsf-lanes > button.is-active small {
+  color: var(--tsf-muted);
+}
+
+.succession-archive--timeline-map .tsf-horizon {
+  border-bottom-color: color-mix(in srgb, var(--tsf-ink) 12%, transparent);
+  background: color-mix(in srgb, var(--tsf-paper) 96%, transparent);
+}
+
+.succession-archive--timeline-map .tsf-footer {
+  border-top: 1px solid color-mix(in srgb, var(--tsf-ink) 12%, transparent);
+  background: transparent;
+}
+
+.succession-archive--timeline-map .tsf-footer > div {
+  min-height: 46px;
+  border-right: 0;
+  padding-block: 7px;
+}
