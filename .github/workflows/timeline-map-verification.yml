@@ -1,0 +1,71 @@
+name: Timeline Map Verification
+
+on:
+  pull_request:
+    paths:
+      - 'src/components/Timeline*.jsx'
+      - 'src/components/Timeline*.css'
+      - 'src/components/succession/SuccessionArchiveShell.jsx'
+      - 'tests/timeline*.test.mjs'
+      - 'scripts/timeline-map-qa.mjs'
+      - 'package.json'
+      - '.github/workflows/timeline-map-verification.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/components/Timeline*.jsx'
+      - 'src/components/Timeline*.css'
+      - 'src/components/succession/SuccessionArchiveShell.jsx'
+      - 'tests/timeline*.test.mjs'
+      - 'scripts/timeline-map-qa.mjs'
+      - 'package.json'
+      - '.github/workflows/timeline-map-verification.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: timeline-map-verification-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  timeline-map:
+    name: Timeline Map production browser gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install locked dependencies
+        run: npm ci
+
+      - name: Verify Timeline map contracts
+        run: node --test tests/timelinePrimaryMap.test.mjs tests/timelineMapLensData.test.mjs
+
+      - name: Build production runtime
+        run: npm run build:runtime
+
+      - name: Install Chromium
+        run: npm exec playwright -- install --with-deps chromium
+
+      - name: Exercise rendered Timeline map
+        run: npm run qa:timeline-map
+
+      - name: Publish Timeline map diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: timeline-map-qa-${{ github.sha }}
+          if-no-files-found: warn
+          include-hidden-files: true
+          retention-days: 14
+          path: .timeline-map-qa/
