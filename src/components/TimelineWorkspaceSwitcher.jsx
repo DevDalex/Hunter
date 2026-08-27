@@ -8,9 +8,9 @@ import {
 import './TimelineWorkspaceSwitcher.css';
 
 export const TIMELINE_WORKSPACE_MODES = Object.freeze([
-  { id: 'story', label: 'Story Map', note: 'Topography, landmarks, and the 2.5D field', icon: Rotate3d },
+  { id: 'story', label: 'Timeline Map', note: 'Primary cartographic chronology', icon: Rotate3d },
   { id: 'compare', label: 'Compare', note: 'Build parallel chronologies', icon: Layers3 },
-  { id: 'atlas', label: 'Atlas', note: 'Situation, threads, people, intelligence, research', icon: BrainCircuit },
+  { id: 'atlas', label: 'Research Atlas', note: 'Situation, threads, people, intelligence', icon: BrainCircuit },
   { id: 'archive', label: 'Archive', note: 'Search and inspect every record', icon: BookOpen },
   { id: 'space', label: 'Space', note: 'Black Whale spatial intelligence', icon: ShipWheel },
 ]);
@@ -52,9 +52,9 @@ export default function TimelineWorkspaceSwitcher({ activeMode, requestedState =
 
   return <nav className="timeline-workspace-switcher" aria-label="Timeline workspace modes">
     <div className="tws-identity">
-      <span>REPRESENTATION</span>
-      <strong>One archive. Five ways in.</strong>
-      <small>Switch views without discarding your chapter, thread, character, or research state.</small>
+      <span>SECONDARY LENSES</span>
+      <strong>The map is the Timeline.</strong>
+      <small>Switch representations without discarding chapter, thread, character, or research state.</small>
     </div>
     <div className="tws-modes">
       {TIMELINE_WORKSPACE_MODES.map(({ id, label, note, icon: Icon }) => <button
