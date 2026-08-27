@@ -1,0 +1,175 @@
+/* Primary Timeline cartography. The map is the route, not an embedded dashboard. */
+.succession-archive--timeline-map .succession-archive__workspace,
+.succession-archive--timeline-map .succession-archive__workspace-frame,
+.succession-archive--timeline-map .succession-archive__content {
+  min-width: 0;
+  max-width: none;
+}
+
+.succession-archive--timeline-map .succession-archive__workspace-frame {
+  width: 100%;
+  padding: 0;
+}
+
+.succession-archive--timeline-map .succession-archive__content {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  outline: 0;
+}
+
+.succession-archive--timeline-map .timeline-workspace {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: var(--st-paper, #f4efe5);
+}
+
+.succession-archive--timeline-map .timeline-context-navigator {
+  position: sticky;
+  top: 0;
+  z-index: 80;
+  margin: 0;
+  border-top: 0;
+  box-shadow: 0 10px 28px rgba(20, 18, 15, .08);
+}
+
+/* The screenshot contract: density navigator, then compact map controls, then lanes. */
+.succession-archive--timeline-map .timeline-story-field {
+  width: 100%;
+  min-height: calc(100vh - 118px);
+  margin: 0;
+  border-top: 0;
+  background: var(--tsf-paper, #f4efe5);
+}
+
+.succession-archive--timeline-map .tsf-head {
+  min-height: 58px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  padding: 9px 14px 9px 18px;
+  background: color-mix(in srgb, var(--tsf-paper-raised) 88%, transparent);
+}
+
+.succession-archive--timeline-map .tsf-head > div:first-child > span {
+  font-size: 11px;
+  letter-spacing: .11em;
+}
+
+.succession-archive--timeline-map .tsf-head h2 {
+  display: inline;
+  margin: 0 0 0 12px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -.025em;
+  line-height: 1;
+}
+
+.succession-archive--timeline-map .tsf-head p {
+  display: none;
+}
+
+.succession-archive--timeline-map .tsf-camera {
+  min-width: 190px;
+}
+
+.succession-archive--timeline-map .tsf-camera > span,
+.succession-archive--timeline-map .tsf-camera button,
+.succession-archive--timeline-map .tsf-depth button,
+.succession-archive--timeline-map .tsf-context button,
+.succession-archive--timeline-map .tsf-legend,
+.succession-archive--timeline-map .tsf-lanes > button small,
+.succession-archive--timeline-map .tsf-lanes > button > i,
+.succession-archive--timeline-map .tsf-lanes > button > b,
+.succession-archive--timeline-map .tsf-horizon,
+.succession-archive--timeline-map .tsf-horizon strong,
+.succession-archive--timeline-map .tsf-chapter-grid > i span,
+.succession-archive--timeline-map .tsf-context-line span,
+.succession-archive--timeline-map .tsf-lane-deck > span,
+.succession-archive--timeline-map .tsf-duration span {
+  font-size: 11px;
+}
+
+.succession-archive--timeline-map .tsf-toolbar {
+  position: relative;
+  z-index: 30;
+  min-height: 52px;
+}
+
+.succession-archive--timeline-map .tsf-toolbar > div {
+  min-height: 52px;
+}
+
+.succession-archive--timeline-map .tsf-shell {
+  grid-template-columns: 236px minmax(0, 1fr);
+  min-height: 790px;
+}
+
+.succession-archive--timeline-map .tsf-lanes {
+  position: sticky;
+  left: 0;
+  z-index: 24;
+}
+
+.succession-archive--timeline-map .tsf-lanes > button {
+  height: 50px;
+}
+
+.succession-archive--timeline-map .tsf-lanes > button strong {
+  font-size: 14px;
+}
+
+.succession-archive--timeline-map .tsf-viewport {
+  min-height: 790px;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.succession-archive--timeline-map .tsf-scene {
+  min-height: 790px;
+}
+
+.succession-archive--timeline-map .tsf-stage {
+  inset-inline: 34px 22px;
+}
+
+.succession-archive--timeline-map .tsf-node {
+  cursor: pointer;
+}
+
+.succession-archive--timeline-map .tsf-node__cap {
+  box-shadow: 0 0 0 3px var(--tsf-paper), 0 0 0 4px color-mix(in srgb, var(--tsf-ink) 54%, transparent);
+}
+
+.succession-archive--timeline-map .tsf-node.is-major .tsf-node__cap,
+.succession-archive--timeline-map .tsf-node.is-selected .tsf-node__cap {
+  box-shadow: 0 0 0 3px var(--tsf-paper), 0 0 0 5px color-mix(in srgb, var(--tsf-accent) 72%, transparent);
+}
+
+.succession-archive--timeline-map .tsf-context-line {
+  width: 2px;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--tsf-focus) 36%, transparent);
+}
+
+/* Secondary tools sit below the map instead of interrupting it. */
+.succession-archive--timeline-map .timeline-workspace-switcher {
+  margin: 12px 14px 0;
+  border: 1px solid color-mix(in srgb, var(--st-ink, #171716) 18%, transparent);
+  background: color-mix(in srgb, var(--st-paper-raised, #fffaf0) 88%, transparent);
+}
+
+.succession-archive--timeline-map .timeline-map-supporting-intelligence {
+  margin-top: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--st-ink, #171716) 18%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .succession-archive--timeline-map .tsf-stage,
+  .succession-archive--timeline-map .tsf-lane-deck,
+  .succession-archive--timeline-map .tsf-duration {
+    transition: none;
+  }
+}
