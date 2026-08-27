@@ -1,0 +1,12 @@
+.timeline-manga-wall__event.is-open,
+.timeline-manga-wall[data-zoom='detail'] .timeline-manga-wall__event {
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #393631 transparent;
+}
+
+.timeline-manga-wall__event.is-open .timeline-manga-wall__event-detail,
+.timeline-manga-wall[data-zoom='detail'] .timeline-manga-wall__event-detail {
+  max-height: none;
+  overflow: visible;
+}
