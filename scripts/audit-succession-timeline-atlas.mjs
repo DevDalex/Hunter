@@ -5,107 +5,84 @@ import { timelineEventCount } from '../src/data/successionTimeline.js';
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
 const assert = (condition, message) => {
-  if (!condition) throw new Error(`Succession Timeline Atlas audit failed: ${message}`);
+  if (!condition) throw new Error(`Succession Timeline Explorer audit failed: ${message}`);
 };
 
-const [atlas, atlasStyles, timeline, workspace, app, research, packageJson] = await Promise.all([
-  read('src/components/SuccessionTimelineAtlas.jsx'),
-  read('src/components/SuccessionTimelineAtlas.css'),
-  read('src/components/SuccessionTimeline.jsx'),
+const [explorer, explorerStyles, workspace, app, packageJson] = await Promise.all([
+  read('src/components/TimelineArchiveExplorer.jsx'),
+  read('src/components/TimelineArchiveExplorer.css'),
   read('src/components/TimelineWorkspace.jsx'),
   read('src/components/succession/SuccessionArchiveApp.jsx'),
-  read('src/data/successionTimelineResearch.js'),
   read('package.json'),
 ]);
 
 assert(timelineEventCount === 1555, `the unabridged chronology must contain 1,555 records; found ${timelineEventCount}`);
 
 for (const token of [
-  'STATE OF THE VOYAGE',
-  'Semantic zoom',
-  'Chapter density navigator',
-  'Voyage day navigator',
-  'Previously in the Succession Contest',
-  'Thread braid',
-  'Canonical thread ledger',
-  'Character lenses',
-  'Royal status board',
-  'Political comparison',
-  'Black Whale location sync',
-  'Ship-state comparison',
-  'Knowledge warfare',
-  'Operations tracker',
-  'Deadline and countdown ledger',
-  'Nen development history',
-  'Mystery ledger',
-  'Decision tracker',
-  'Causal trails',
-  'Evidence and uncertainty',
-  'Chapter state diff',
-  'Research memory',
-  'COLLECTIONS / WATCHLISTS',
-]) assert(atlas.includes(token), `atlas is missing ${token}`);
+  'Semantic chronology',
+  'Succession Timeline',
+  'Story minimap',
+  'Search people, places, events, evidence',
+  'All story threads',
+  'Major only',
+  'Complete event record',
+  'Cause and consequence',
+  'still hidden from the DOM, not from the archive',
+]) assert(explorer.includes(token), `explorer is missing ${token}`);
 
-for (const depth of ['pulse', 'recap', 'study', 'research', 'complete']) {
-  assert(atlas.includes(`id: '${depth}'`), `five-level semantic zoom is missing ${depth}`);
+for (const density of ['recap', 'story', 'full']) {
+  assert(explorer.includes(`id: '${density}'`), `semantic density is missing ${density}`);
 }
-for (const view of ['overview', 'threads', 'people', 'ship', 'intelligence', 'research']) {
-  assert(atlas.includes(`['${view}'`), `atlas navigation is missing ${view}`);
-}
-for (const view of ['knowledge', 'operations', 'deadlines', 'nen', 'mysteries', 'decisions', 'causality', 'evidence']) {
-  assert(atlas.includes(`['${view}'`), `intelligence navigation is missing ${view}`);
-}
+
+for (const helper of [
+  'successionPreludeEvents',
+  'successionDays',
+  'timelineEventCount',
+  'timelinePhaseForChapter',
+  'successionTimelinePhases',
+  'peopleForTimelineEvent',
+  'timelineCausalityForEvent',
+  'timelineImportance',
+  'timingConfidenceForEvent',
+  'evidenceConfidenceForEvent',
+]) assert(explorer.includes(helper), `canonical timeline integration is missing ${helper}`);
+
+for (const feature of [
+  'function PhaseStrip',
+  'function DensityGraph',
+  'function TimelineEventRow',
+  'function EventInspector',
+  'const DISPLAY_BATCH = 120',
+  'filteredEvents.slice(0, displayLimit)',
+  'setDisplayLimit((current) => current + DISPLAY_BATCH)',
+  'activePhase && event.phase.id !== activePhase',
+  'activeTrack && !(event.tracks || []).includes(activeTrack)',
+  "majorOnly && event.importance !== 'major'",
+]) assert(explorer.includes(feature), `large-timeline presentation is missing ${feature}`);
 
 for (const selector of [
-  '.sta-state',
-  '.sta-density',
-  '.sta-days',
-  '.sta-view-nav',
-  '.sta-previously',
-  '.sta-braid',
-  '.sta-people__layout',
-  '.sta-princes',
-  '.sta-politics',
-  '.sta-ship-index',
-  '.sta-intel-nav',
-  '.sta-decision-ledger',
-  '.sta-causal-links',
-  '.sta-diff',
-  '.sta-memory',
-  '.st-record__research-note',
-]) assert(atlasStyles.includes(selector), `desktop editorial system is missing ${selector}`);
+  '.timeline-workspace--archive-explorer',
+  '.timeline-archive-explorer',
+  '.tae-density-modes',
+  '.tae-phase-strip',
+  '.tae-density-graph',
+  '.tae-toolbar',
+  '.tae-body',
+  '.tae-stream',
+  '.tae-event',
+  '.tae-inspector',
+]) assert(explorerStyles.includes(selector), `explorer styling is missing ${selector}`);
 
-for (const token of [
-  'SuccessionTimelineAtlas',
-  'classifyTimelineEvent',
-  'archiveItemForTimelineEvent',
-  'readSuccessionArchiveMemory',
-  'toggleSuccessionArchiveBookmark',
-  'toggleSuccessionCompareItem',
-  'toggleSuccessionWatchlistItem',
-  'writeSuccessionTimelineNote',
-  'data-reading-depth',
-  'PAGE_SIZE',
-  'visibleLimit',
-  'Show all {filteredEvents.length}',
-  'Copy deep link',
-]) assert(timeline.includes(token), `timeline integration is missing ${token}`);
+assert(workspace.includes("import TimelineArchiveExplorer from './TimelineArchiveExplorer'"), 'TimelineWorkspace does not mount TimelineArchiveExplorer');
+assert(workspace.includes('timeline-workspace--archive-explorer'), 'TimelineWorkspace does not expose the archive-explorer layout class');
+assert(!workspace.includes('<TimelineStoryField'), 'legacy TimelineStoryField is still mounted by TimelineWorkspace');
+assert(!workspace.includes('<TimelineContextNavigator'), 'legacy TimelineContextNavigator is still mounted by TimelineWorkspace');
+assert(app.includes('requestedState={routeParams}'), 'route parameters do not hydrate the Timeline workspace');
+assert(explorer.includes('requestedState.search'), 'route search is not hydrated into the explorer');
+assert(explorer.includes('requestedState.event'), 'event deep links are not hydrated into the inspector');
+assert(explorer.includes('chapter: event.chapter') && explorer.includes('event: event.id'), 'selected events do not preserve deep links');
+assert(explorerStyles.includes('grid-template-columns: minmax(0, 1fr) minmax(300px, 31vw)'), 'desktop chronology and inspector are not presented as a two-pane workspace');
+assert(explorerStyles.includes('overflow-y: auto'), 'large event collections are not contained in local scroll regions');
+assert(packageJson.includes('audit:succession-timeline-atlas'), 'package scripts must retain the timeline audit command');
 
-for (const arrangement of ['day', 'movement', 'thread', 'character', 'location', 'evidence']) {
-  assert(timeline.includes(`['${arrangement}'`), `complete archive arrangement is missing ${arrangement}`);
-}
-
-for (const token of ['requestedState', 'onStateCommit']) assert(workspace.includes(token), `workspace deep-link bridge is missing ${token}`);
-assert(app.includes('requestedState={routeParams}'), 'route parameters do not hydrate the timeline atlas');
-for (const token of ['SUCCESSION_TIMELINE_NOTES_KEY', 'classifyTimelineEvent', 'archiveItemForTimelineEvent', 'writeSuccessionTimelineNote']) {
-  assert(research.includes(token), `timeline research persistence is missing ${token}`);
-}
-
-assert(!atlas.includes('<svg'), 'analytical views must not use hand-authored SVG');
-assert(!atlasStyles.includes('!important'), 'atlas CSS must not depend on important overrides');
-assert(!/#(?:[0-9a-fA-F]{3,8})\b/.test(atlasStyles), 'atlas CSS must use archive design tokens instead of raw hex colors');
-assert(!atlasStyles.includes('@media (max-width:'), 'this delivery explicitly excludes new mobile layout work');
-assert(!atlasStyles.includes('backdrop-filter'), 'editorial surfaces must remain flat and authored');
-assert(packageJson.includes('audit:succession-timeline-atlas'), 'package scripts must register the Atlas audit');
-
-console.log('Succession Timeline Atlas audit passed: 1,555 records, five semantic depths, voyage state, chapter/day navigation, recap, threads, people, princes, politics, ship, intelligence, causality, evidence, dossiers, research memory, and permanent links are registered without a new mobile layer.');
+console.log('Succession Timeline Explorer audit passed: 1,555 records remain canonical, with recap/story/full density, seven-phase minimap navigation, bounded DOM rendering, search and thread filtering, and a persistent event inspector.');
