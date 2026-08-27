@@ -67,7 +67,11 @@ export default function SuccessionCommandHome() {
             >
               <div className="succession-command-home__detail-inner">
                 <div className="succession-command-home__subcategories" aria-label={`${group.label} subcategories`}>
-                  {group.items.map((item) => <span key={item}>{item}</span>)}
+                  {group.items.map((item) => item === 'Timeline' ? (
+                    <a key={item} href="/timeline">{item}<span aria-hidden="true">↗</span></a>
+                  ) : (
+                    <span key={item}>{item}</span>
+                  ))}
                 </div>
               </div>
             </div>
