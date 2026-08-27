@@ -143,9 +143,10 @@ export default function SuccessionArchiveShell({
   const presentation = getRoutePresentationProfile(route.id, { spoilerLimit });
   const activeHub = getSuccessionArchiveHub(route.id);
   const immersiveTimeline = route.id === 'timeline';
-  const hidePageHeader = immersiveTimeline || (route.id === 'princes' && routeParams?.view === 'tree');
+  const hidePageHeader = route.id === 'princes' && routeParams?.view === 'tree';
+  const suppressPageHeader = immersiveTimeline || hidePageHeader;
   const showCharacterConsistency = needsCharacterConsistency(route.id, routeParams);
-  const briefingEntity = hidePageHeader ? null : resolveBriefingEntity(route.id, routeParams);
+  const briefingEntity = suppressPageHeader ? null : resolveBriefingEntity(route.id, routeParams);
   const requestedBriefingChapter = Number(routeParams?.chapter);
   const briefingChapter = Number.isFinite(requestedBriefingChapter) ? Math.min(spoilerLimit, Math.max(340, requestedBriefingChapter)) : spoilerLimit;
   const consolidationSource = routeParams?.consolidatedFrom || (route.status === 'legacy' ? route.id : null);
@@ -259,7 +260,7 @@ export default function SuccessionArchiveShell({
 
           {!immersiveTimeline && <SuccessionHubTabs hub={activeHub} activeRouteId={route.id} routeParams={routeParams} onNavigate={navigate} onIntent={onIntent} />}
 
-          {!hidePageHeader && <ArchivePageHeader
+          {!suppressPageHeader && <ArchivePageHeader
             headingLevel="h1"
             kicker={`${activeHub.group} hub`}
             title={activeHub.title}
