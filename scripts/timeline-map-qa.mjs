@@ -7,7 +7,6 @@ const root = process.cwd();
 const dist = path.join(root, 'dist/client');
 const output = path.join(root, '.timeline-map-qa');
 const viewport = { width: 1600, height: 1000 };
-const expectedLenses = ['Story', 'Characters', 'Locations', 'Organizations', 'Nen', 'Knowledge'];
 const assert = (condition, message) => { if (!condition) throw new Error(message); };
 
 const mime = {
@@ -67,11 +66,12 @@ const check = (condition, message) => {
 
 try {
   await page.goto(`${base}/#/succession/timeline`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
-  await page.waitForSelector('.timeline-story-field', { state: 'visible', timeout: 20_000 });
-  await page.waitForSelector('.timeline-context-navigator', { state: 'visible', timeout: 20_000 });
-  await page.waitForTimeout(350);
+  await page.waitForSelector('.timeline-archive-explorer', { state: 'visible', timeout: 20_000 });
+  await page.waitForSelector('.tae-stream', { state: 'visible', timeout: 20_000 });
+  await page.waitForSelector('.tae-inspector', { state: 'visible', timeout: 20_000 });
+  await page.waitForTimeout(300);
 
-  const initial = await page.evaluate(({ expectedLenses }) => {
+  const initial = await page.evaluate(() => {
     const isVisible = (element) => {
       if (!element) return false;
       const style = getComputedStyle(element);
@@ -82,83 +82,80 @@ try {
         && rect.width > 0
         && rect.height > 0;
     };
-    const lensLabels = [...document.querySelectorAll('.tsf-lensbar button')].map((button) => button.textContent.trim());
-    const tinyText = [...document.querySelectorAll('.timeline-context-navigator :is(span, small, button), .timeline-story-field :is(span, small, button, strong, em)')]
-      .filter((element) => isVisible(element) && !element.matches('.sr-only, .sr-only *'))
-      .map((element) => ({ text: element.textContent.trim().replace(/\s+/g, ' ').slice(0, 80), size: Number.parseFloat(getComputedStyle(element).fontSize) }))
-      .filter((row) => Number.isFinite(row.size) && row.size < 11);
+    const densityLabels = [...document.querySelectorAll('.tae-density-modes button strong')].map((node) => node.textContent.trim());
     return {
-      mapVisible: isVisible(document.querySelector('.timeline-story-field')),
-      navigatorVisible: isVisible(document.querySelector('.timeline-context-navigator')),
-      lanesVisible: isVisible(document.querySelector('.tsf-lanes')),
-      viewportVisible: isVisible(document.querySelector('.tsf-viewport')),
-      chapterGrid: document.querySelectorAll('.tsf-chapter-grid > i').length,
-      laneCount: document.querySelectorAll('.tsf-lanes > button').length,
-      nodeCount: document.querySelectorAll('.tsf-node').length,
-      contextCursor: isVisible(document.querySelector('.tsf-context-line')),
-      lensLabels,
-      lensContract: expectedLenses.every((label) => lensLabels.includes(label)),
+      explorerVisible: isVisible(document.querySelector('.timeline-archive-explorer')),
+      streamVisible: isVisible(document.querySelector('.tae-stream')),
+      inspectorVisible: isVisible(document.querySelector('.tae-inspector')),
+      phaseCount: document.querySelectorAll('.tae-phase-strip button').length,
+      densityBars: document.querySelectorAll('.tae-density-graph > span').length,
+      eventRows: document.querySelectorAll('.tae-event').length,
+      densityLabels,
       genericExplorerPresent: Boolean(document.querySelector('.succession-explorer-surface[data-explorer-route="timeline"], .succession-explorer-surface')),
-      tinyText,
       bodyOverflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
     };
-  }, { expectedLenses });
+  });
 
-  check(initial.mapVisible, 'Timeline Map is visible');
-  check(initial.navigatorVisible, 'full-arc navigator is visible');
-  check(initial.lanesVisible && initial.laneCount >= 4, 'fixed lane index is visible');
-  check(initial.viewportVisible, 'chronology viewport is visible');
-  check(initial.chapterGrid >= 5, 'chapter ruler/grid is rendered');
-  check(initial.contextCursor, 'active chapter cursor is rendered');
-  check(initial.nodeCount > 0, 'timeline event marks are rendered');
-  check(initial.lensContract, `Arrange by exposes ${expectedLenses.join(', ')}`);
+  check(initial.explorerVisible, 'Timeline archive explorer is visible');
+  check(initial.streamVisible, 'chronology stream is visible');
+  check(initial.inspectorVisible, 'persistent event inspector is visible');
+  check(initial.phaseCount === 7, `seven maintained story phases are visible (${initial.phaseCount})`);
+  check(initial.densityBars === 48, `density graph renders 48 bounded buckets (${initial.densityBars})`);
+  check(initial.eventRows > 0, 'recap view renders story-defining events');
+  check(['Recap', 'Story', 'Full'].every((label) => initial.densityLabels.includes(label)), 'Recap, Story, and Full density modes are available');
   check(!initial.genericExplorerPresent, 'generic Connected Explorer is absent from the primary Timeline route');
-  check(initial.tinyText.length === 0, `Timeline text floor stays at 11px (${JSON.stringify(initial.tinyText.slice(0, 5))})`);
   check(initial.bodyOverflow <= 2, `Timeline does not spill outside the desktop viewport (${initial.bodyOverflow}px)`);
 
-  const clock = page.locator('.tcn-head__clock small');
-  const beforeZoom = (await clock.textContent())?.trim() || '';
-  const zoomIn = page.getByRole('button', { name: 'Zoom Timeline in' });
-  if (await zoomIn.isEnabled()) {
-    await zoomIn.click();
-    await page.waitForTimeout(220);
-    const afterZoom = (await clock.textContent())?.trim() || '';
-    check(afterZoom !== beforeZoom, `semantic zoom changes the visible chapter window (${beforeZoom} → ${afterZoom})`);
-  } else {
-    report.assertions.push('semantic zoom already at minimum window');
-  }
-
-  await page.getByRole('button', { name: 'Full arc' }).click();
+  await page.getByRole('button', { name: /Full Complete chronology/i }).click();
   await page.waitForTimeout(220);
-  await page.locator('.tsf-depth button', { hasText: 'complete' }).click();
-  await page.waitForTimeout(220);
+  const fullState = await page.evaluate(() => ({
+    rows: document.querySelectorAll('.tae-event').length,
+    loadMoreVisible: Boolean(document.querySelector('.tae-load-more')),
+    streamStatus: document.querySelector('.tae-stream__head p')?.textContent || '',
+  }));
+  check(fullState.rows > 0 && fullState.rows <= 120, `Full mode bounds first DOM batch to at most 120 rows (${fullState.rows})`);
+  check(fullState.loadMoreVisible, 'Full mode exposes progressive loading for the 1,555-event archive');
+  check(/matching/.test(fullState.streamStatus), 'Full mode reports the complete filtered result count');
 
-  for (const label of expectedLenses) {
-    const button = page.locator('.tsf-lensbar button', { hasText: label }).first();
-    await button.click();
-    await page.waitForTimeout(180);
-    const state = await page.evaluate((expected) => {
-      const active = document.querySelector('.tsf-lensbar button.is-active')?.textContent.trim();
-      const lanes = document.querySelectorAll('.tsf-lanes > button').length;
-      const marks = document.querySelectorAll('.tsf-node').length;
-      const heading = document.querySelector('.tsf-head > div:first-child > span')?.textContent || '';
-      return { active, lanes, marks, heading, matches: active === expected };
-    }, label);
-    check(state.matches, `${label} projection becomes active`);
-    check(state.lanes > 0, `${label} projection renders lanes`);
-    check(state.marks > 0, `${label} projection renders chronology marks`);
-    check(state.heading.toUpperCase().includes(label.toUpperCase()), `${label} projection updates the map identity`);
-  }
+  const beforeLoad = fullState.rows;
+  await page.locator('.tae-load-more').click();
+  await page.waitForTimeout(180);
+  const afterLoad = await page.locator('.tae-event').count();
+  check(afterLoad > beforeLoad, `progressive loading expands the DOM batch (${beforeLoad} → ${afterLoad})`);
+
+  const firstEvent = page.locator('.tae-event').first();
+  await firstEvent.click();
+  await page.waitForTimeout(160);
+  const inspector = await page.evaluate(() => ({
+    title: document.querySelector('.tae-inspector__title h2')?.textContent?.trim() || '',
+    record: document.querySelector('.tae-inspector__description p')?.textContent?.trim() || '',
+    facts: document.querySelectorAll('.tae-inspector__facts > div').length,
+  }));
+  check(Boolean(inspector.title), 'selecting an event opens its title in the persistent inspector');
+  check(Boolean(inspector.record), 'selected event keeps its complete description in the inspector');
+  check(inspector.facts >= 4, 'selected event exposes location, timing, evidence, and chapter metadata');
+
+  const firstPhase = page.locator('.tae-phase-strip button').first();
+  await firstPhase.click();
+  await page.waitForTimeout(160);
+  const activePhaseCount = await page.locator('.tae-phase-strip button.is-active').count();
+  check(activePhaseCount === 1, 'story minimap can isolate one maintained phase');
+
+  const search = page.locator('.tae-search input');
+  await search.fill('Kurapika');
+  await page.waitForTimeout(220);
+  const searchedRows = await page.locator('.tae-event').count();
+  check(searchedRows > 0, `timeline search returns matching events (${searchedRows})`);
 
   check(runtimeErrors.length === 0, `Timeline has no runtime errors (${runtimeErrors.join(' | ')})`);
-  await page.screenshot({ path: path.join(output, 'timeline-map.png'), fullPage: false });
+  await page.screenshot({ path: path.join(output, 'timeline-explorer.png'), fullPage: false });
   report.status = 'passed';
   await writeFile(path.join(output, 'results.json'), `${JSON.stringify(report, null, 2)}\n`);
-  process.stdout.write(`Timeline Map QA passed: ${report.assertions.length} assertions across the primary map and six projections.\n`);
+  process.stdout.write(`Timeline Explorer QA passed: ${report.assertions.length} assertions across the minimap, density modes, bounded event stream, search, and inspector.\n`);
 } catch (error) {
   report.status = 'failed';
   report.error = error.message;
-  await page.screenshot({ path: path.join(output, 'timeline-map-failure.png'), fullPage: false }).catch(() => {});
+  await page.screenshot({ path: path.join(output, 'timeline-explorer-failure.png'), fullPage: false }).catch(() => {});
   await writeFile(path.join(output, 'results.json'), `${JSON.stringify(report, null, 2)}\n`);
   throw error;
 } finally {
