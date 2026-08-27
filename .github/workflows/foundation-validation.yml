@@ -1,0 +1,26 @@
+name: Foundation validation
+
+on:
+  push:
+    branches:
+      - foundation/design-engineering-lab
+    paths:
+      - .github/workflows/foundation-validation.yml
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: foundation/design-engineering-lab
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run test:unit
+      - run: npm run storybook:build
+      - run: npx vite build
