@@ -28,7 +28,8 @@
 .timeline-context-navigator *::after { box-sizing: border-box; }
 .timeline-context-navigator button { min-height: 32px; font: inherit; cursor: pointer; }
 .timeline-context-navigator button:disabled { cursor: default; opacity: .35; }
-.timeline-context-navigator button:focus-visible { outline: 3px solid var(--tcn-focus); outline-offset: 2px; }
+.timeline-context-navigator button:focus-visible,
+.tcn-viewport:focus-visible { outline: 3px solid var(--tcn-focus); outline-offset: 2px; }
 
 .tcn-head {
   display: grid;
@@ -45,7 +46,7 @@
 .tcn-head__clock > span {
   color: var(--tcn-accent);
   font-family: var(--succession-font-mono, var(--mono));
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 900;
   letter-spacing: .09em;
   text-transform: uppercase;
@@ -58,7 +59,7 @@
   letter-spacing: -.02em;
 }
 .tcn-head__identity > small,
-.tcn-head__clock > small { overflow: hidden; color: var(--tcn-muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.tcn-head__clock > small { overflow: hidden; color: var(--tcn-muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 .tcn-head__clock {
   gap: 8px;
   justify-content: center;
@@ -79,11 +80,11 @@
   padding: 0 12px;
   background: transparent;
   color: var(--tcn-ink);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 850;
 }
 .tcn-head__actions button:hover:not(:disabled) { background: var(--tcn-ink); color: var(--tcn-paper); }
-.tcn-head__actions .tcn-spatial { min-width: 150px; color: var(--tcn-accent); }
+.tcn-head__actions .tcn-spatial { min-width: 124px; color: var(--tcn-accent); }
 .tcn-head__actions .tcn-spatial:hover { color: var(--tcn-paper); }
 
 .tcn-field {
@@ -133,30 +134,35 @@
   position: absolute;
   z-index: 5;
   right: 50%;
-  bottom: -11px;
+  bottom: -12px;
   color: var(--tcn-muted);
   font-family: var(--succession-font-mono, var(--mono));
-  font-size: 7px;
+  font-size: 11px;
   line-height: 1;
-  transform: translateX(50%);
+  transform: translateX(50%) scale(.86);
+  transform-origin: center top;
 }
 .tcn-viewport {
   position: absolute;
-  z-index: 3;
+  z-index: 6;
   top: 4px;
   bottom: 7px;
-  min-width: 6px;
+  min-width: 10px;
   border: 1px solid var(--tcn-accent);
+  padding: 0;
   background: color-mix(in srgb, var(--tcn-accent) 7%, transparent);
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tcn-paper) 70%, transparent);
-  pointer-events: none;
+  cursor: grab;
+  touch-action: none;
 }
+.tcn-viewport:hover { background: color-mix(in srgb, var(--tcn-accent) 12%, transparent); }
+.tcn-viewport.is-dragging { cursor: grabbing; background: color-mix(in srgb, var(--tcn-accent) 17%, transparent); }
 .tcn-viewport::before,
 .tcn-viewport::after {
   position: absolute;
   top: 50%;
   width: 3px;
-  height: 18px;
+  height: 20px;
   background: var(--tcn-accent);
   content: "";
   transform: translateY(-50%);
@@ -165,7 +171,7 @@
 .tcn-viewport::after { right: -2px; }
 .tcn-marker {
   position: absolute;
-  z-index: 4;
+  z-index: 7;
   top: 2px;
   bottom: 5px;
   width: 1px;
@@ -201,7 +207,7 @@
   border-top: 1px solid var(--tcn-line);
   background: var(--tcn-paper-raised);
 }
-.tcn-controls__legend { display: flex; min-width: 0; gap: 16px; align-items: center; padding: 0 16px; color: var(--tcn-muted); font-size: 8px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
+.tcn-controls__legend { display: flex; min-width: 0; gap: 16px; align-items: center; padding: 0 16px; color: var(--tcn-muted); font-size: 11px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; }
 .tcn-controls__legend span { display: inline-flex; gap: 6px; align-items: center; white-space: nowrap; }
 .tcn-controls__legend i { width: 2px; height: 13px; background: var(--tcn-focus); }
 .tcn-controls__legend b { width: 15px; height: 9px; border: 1px solid var(--tcn-accent); background: color-mix(in srgb, var(--tcn-accent) 7%, transparent); }
@@ -216,7 +222,7 @@
   padding: 0 11px;
   background: transparent;
   color: var(--tcn-ink);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 850;
 }
 .tcn-controls__zoom button:hover:not(:disabled) { background: var(--tcn-ink); color: var(--tcn-paper); }
