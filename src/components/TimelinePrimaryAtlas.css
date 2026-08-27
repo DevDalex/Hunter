@@ -90,6 +90,9 @@
 .succession-archive--timeline-map .tsf-context-line span,
 .succession-archive--timeline-map .tsf-lane-deck > span,
 .succession-archive--timeline-map .tsf-duration span,
+.succession-archive--timeline-map .tsf-node__label small,
+.succession-archive--timeline-map .tsf-node__label strong,
+.succession-archive--timeline-map .tsf-node__label em,
 .succession-archive--timeline-map .tsf-footer span,
 .succession-archive--timeline-map .tsf-footer small,
 .succession-archive--timeline-map .tsf-lensbar,
@@ -209,6 +212,21 @@
 
 .succession-archive--timeline-map .tsf-node {
   cursor: pointer;
+}
+
+.succession-archive--timeline-map .tsf-node__label {
+  width: 244px;
+  gap: 5px;
+  padding: 10px 11px;
+}
+
+.succession-archive--timeline-map .tsf-node__label strong {
+  font-size: 13px;
+  line-height: 1.2;
+}
+
+.succession-archive--timeline-map .tsf-node__label em {
+  line-height: 1.35;
 }
 
 .succession-archive--timeline-map .tsf-node__cap {
