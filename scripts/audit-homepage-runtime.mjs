@@ -7,27 +7,28 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Homepage runtime audit failed: ${message}`);
 };
 
-const [app, home, homeCss, timeline, timelineCss, main] = await Promise.all([
+const [app, home, homeCss, workspace, explorer, explorerCss, main] = await Promise.all([
   read('src/App.jsx'),
   read('src/components/succession/SuccessionCommandHome.jsx'),
   read('src/components/succession/SuccessionCommandHome.css'),
-  read('src/components/succession/SuccessionTimelineMangaWall.jsx'),
-  read('src/components/succession/SuccessionTimelineMangaWall.css'),
+  read('src/components/TimelineWorkspace.jsx'),
+  read('src/components/TimelineArchiveExplorer.jsx'),
+  read('src/components/TimelineArchiveExplorer.css'),
   read('src/main.jsx'),
 ]);
 
 for (const token of [
   "import SuccessionCommandHome from './components/succession/SuccessionCommandHome'",
-  "lazy(() => import('./components/succession/SuccessionTimelineMangaWall'))",
+  "lazy(() => import('./components/TimelineWorkspace'))",
   "pathname === '/timeline'",
   "'Timeline · Hunter × Hunter Archive'",
   'onClickCapture={keepInternalNavigationInApp}',
   '<SuccessionCommandHome',
-  '<SuccessionTimelineMangaWall',
+  '<TimelineWorkspace',
   'spoilerLimit={ARCHIVE_BOUNDARY}',
 ]) assert(app.includes(token), `App is missing current route contract: ${token}`);
 
-for (const retiredMount of ['SuccessionArchiveApp', 'SuccessionArchiveEntry', 'successionPanels', 'routeModuleLoaders']) {
+for (const retiredMount of ['SuccessionArchiveApp', 'SuccessionArchiveEntry', 'successionPanels', 'routeModuleLoaders', '<SuccessionTimelineMangaWall']) {
   assert(!app.includes(retiredMount), `App restored retired live runtime mount: ${retiredMount}`);
 }
 
@@ -52,25 +53,42 @@ for (const token of [
 ]) assert(homeCss.includes(token), `homepage stylesheet is missing ${token}`);
 
 for (const token of [
-  'maintainedSuccessionChapterResearch',
-  'timelineCausality',
-  'buildChapterRecords',
-  'PAGE_EXTENSIONS',
-  'loading="lazy"',
-  'timeline-manga-wall__chapter-grid',
-  'timeline-manga-wall__lightbox',
-]) assert(timeline.includes(token) || timelineCss.includes(token), `timeline manga wall is missing ${token}`);
+  "import TimelineArchiveExplorer from './TimelineArchiveExplorer'",
+  'timeline-workspace--archive-explorer',
+  '<TimelineArchiveExplorer',
+]) assert(workspace.includes(token), `production Timeline workspace is missing ${token}`);
 
-assert(timeline.includes("const DEFAULT_PAGE_NUMBERS = [1, 7, 13]"), 'timeline must sample real chapter manga pages across each chapter');
-assert(timeline.includes("const DENSE_PAGE_NUMBERS = [1, 7, 13, 18]"), 'dense chapters must receive additional manga coverage');
-assert(timeline.includes("record?.events?.length ? record.events : (record?.timelineEvents || [])"), 'timeline must consume maintained chapter event records');
-assert(timelineCss.includes("grid-auto-flow: column"), 'timeline must preserve the horizontal manga-wall flow');
-assert(timelineCss.includes("width: max-content"), 'timeline chapters must be allowed to expand with story density');
+for (const token of [
+  'Semantic chronology',
+  'Story minimap',
+  "id: 'recap'",
+  "id: 'story'",
+  "id: 'full'",
+  'const DISPLAY_BATCH = 120',
+  'filteredEvents.slice(0, displayLimit)',
+  'Search people, places, events, evidence',
+  'All story threads',
+  'Complete event record',
+  'Cause and consequence',
+]) assert(explorer.includes(token), `timeline explorer is missing ${token}`);
+
+for (const selector of [
+  '.timeline-workspace--archive-explorer',
+  '.timeline-archive-explorer',
+  '.tae-density-modes',
+  '.tae-phase-strip',
+  '.tae-density-graph',
+  '.tae-toolbar',
+  '.tae-body',
+  '.tae-stream',
+  '.tae-inspector',
+]) assert(explorerCss.includes(selector), `timeline explorer stylesheet is missing ${selector}`);
+
 assert(!homeCss.toLowerCase().includes('gold'), 'homepage stylesheet restored a gold design token');
-assert(!timelineCss.toLowerCase().includes('gold'), 'timeline stylesheet introduced a gold design token');
+assert(!explorerCss.toLowerCase().includes('gold'), 'timeline explorer stylesheet introduced a gold design token');
 assert(main.includes('<App />') || main.includes('<App/>'), 'main entry must render App');
 assert(app.includes("if (!anchor || anchor.target === '_blank') return;"), 'new-tab links must not be intercepted');
 assert(app.includes("if (!href || href.startsWith('#')) return;"), 'in-page anchors must not be intercepted');
 assert(app.includes('if (destination.origin !== window.location.origin) return;'), 'external links must not be intercepted');
 
-console.log('Homepage runtime audit passed: production exposes the private Story / Characters / Nen homepage plus a lazy-loaded data-driven /timeline manga wall.');
+console.log('Homepage runtime audit passed: production exposes the private Story / Characters / Nen homepage plus the lazy-loaded 1,555-event /timeline archive explorer.');
