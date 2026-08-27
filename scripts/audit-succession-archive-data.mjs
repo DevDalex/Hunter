@@ -139,9 +139,9 @@ try {
   assert(getRelatedEntities('character:kurapika').length > 0, 'Kurapika must expose graph relationships');
 
   const kurapikaSearch = searchSuccessionArchive('Kurapika');
-  assert(kurapikaSearch.some((record) => record.id === 'character:kurapika'), 'search must resolve Kurapika');
+  assert(kurapikaSearch.some((record) => record.entity?.id === 'character:kurapika'), 'search must resolve Kurapika');
   const dowsingSearch = searchSuccessionArchive('Dowsing Chain');
-  assert(dowsingSearch.some((record) => record.id === 'ability:dowsing-chain'), 'search must resolve Dowsing Chain');
+  assert(dowsingSearch.some((record) => record.entity?.id === 'ability:dowsing-chain'), 'search must resolve Dowsing Chain');
   assert(successionArchiveData.characters.length === characterRecords.length, 'public canonical data must expose the same character catalogue as selectors');
 
   console.log(`Succession Archive audit passed: ${characterRecords.length} characters, ${bodyguards.length} bodyguards with explicit media slots, ${abilities.length} abilities, ${locations.length} locations, ${events.length} events, ${assignments.length} assignments, ${relationships.length} relationships, and ${chapterRecords.length} sequential chapter records through research Chapter ${latestChapter}; local page media through Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}.`);
