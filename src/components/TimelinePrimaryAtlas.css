@@ -91,8 +91,57 @@
 .succession-archive--timeline-map .tsf-lane-deck > span,
 .succession-archive--timeline-map .tsf-duration span,
 .succession-archive--timeline-map .tsf-footer span,
-.succession-archive--timeline-map .tsf-footer small {
+.succession-archive--timeline-map .tsf-footer small,
+.succession-archive--timeline-map .tsf-lensbar,
+.succession-archive--timeline-map .tsf-lensbar button,
+.succession-archive--timeline-map .tsf-lensbar small {
   font-size: 11px;
+}
+
+.succession-archive--timeline-map .tsf-lensbar {
+  position: relative;
+  z-index: 34;
+  display: flex;
+  min-height: 46px;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--tsf-line-strong);
+  background: var(--tsf-paper-raised);
+}
+
+.succession-archive--timeline-map .tsf-lensbar > span {
+  margin-right: 4px;
+  color: var(--tsf-accent);
+  font-family: var(--succession-font-mono, ui-monospace, monospace);
+  font-weight: 900;
+  letter-spacing: .09em;
+}
+
+.succession-archive--timeline-map .tsf-lensbar button {
+  min-height: 34px;
+  border: 1px solid var(--tsf-line);
+  padding: 0 12px;
+  background: transparent;
+  color: var(--tsf-ink);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.succession-archive--timeline-map .tsf-lensbar button:hover,
+.succession-archive--timeline-map .tsf-lensbar button.is-active {
+  border-color: var(--tsf-ink);
+  background: var(--tsf-ink);
+  color: var(--tsf-paper);
+}
+
+.succession-archive--timeline-map .tsf-lensbar small {
+  min-width: 0;
+  margin-left: auto;
+  overflow: hidden;
+  color: var(--tsf-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .succession-archive--timeline-map .tsf-toolbar {
