@@ -76,19 +76,34 @@ try {
     await page.waitForFunction(() => location.pathname === '/' && location.search === '' && location.hash === '');
   });
 
-  await record('homepage identity and primary landmark render', async () => {
+  await record('simplified homepage and Black Whale backdrop render', async () => {
     if (await page.title() !== 'Hunter × Hunter Archive') throw new Error(`unexpected title: ${await page.title()}`);
     await page.locator('main#succession-command-content').waitFor({ state: 'visible' });
-    await page.getByRole('heading', { level: 1, name: 'Voyage status' }).waitFor({ state: 'visible' });
+
+    for (const label of ['Story', 'Characters', 'Nen']) {
+      await page.getByRole('button', { name: new RegExp(`^\\d{2}\\s*${label}`, 'i') }).waitFor({ state: 'visible' });
+    }
+
+    const whale = page.locator('.succession-command-home__whale');
+    await whale.waitFor({ state: 'attached' });
+    const background = await whale.evaluate((element) => getComputedStyle(element).backgroundImage);
+    if (!background.includes('black-whale-exterior.webp')) throw new Error(`Black Whale background missing: ${background}`);
   });
 
-  await record('internal archive navigation stays on the homepage', async () => {
-    const timeline = page.locator('.succession-command-home__rail nav a').filter({ hasText: 'Timeline' }).first();
-    await timeline.click();
-    await page.waitForTimeout(100);
-    const location = await page.evaluate(() => ({ pathname: window.location.pathname, search: window.location.search, hash: window.location.hash }));
-    if (location.pathname !== '/' || location.search || location.hash) throw new Error(`navigation escaped homepage: ${JSON.stringify(location)}`);
-    await page.locator('.succession-command-home').waitFor({ state: 'visible' });
+  await record('archive sections expand in place without jumping to the top', async () => {
+    const characters = page.getByRole('button', { name: /02\s*Characters/i });
+    await characters.scrollIntoViewIfNeeded();
+    const before = await page.evaluate(() => window.scrollY);
+    await characters.click();
+    await page.waitForFunction(() => document.querySelector('[aria-controls="succession-home-characters"]')?.getAttribute('aria-expanded') === 'true');
+    const after = await page.evaluate(() => window.scrollY);
+    if (Math.abs(after - before) > 4) throw new Error(`section click changed scroll position: ${before} -> ${after}`);
+
+    const location = await page.evaluate(() => ({ pathname: location.pathname, search: location.search, hash: location.hash }));
+    if (location.pathname !== '/' || location.search || location.hash) throw new Error(`section interaction escaped homepage: ${JSON.stringify(location)}`);
+
+    await page.locator('#succession-home-characters.succession-command-home__detail.is-open').waitFor({ state: 'visible' });
+    await page.getByText('Princes', { exact: true }).last().waitFor({ state: 'visible' });
   });
 
   await record('skip link moves keyboard focus to archive content', async () => {
