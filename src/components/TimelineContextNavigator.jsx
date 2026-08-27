@@ -88,7 +88,14 @@ export default function TimelineContextNavigator({
 
   const startViewportDrag = (event) => {
     if (event.button !== 0) return;
-    dragRef.current = { pointerId: event.pointerId, startX: event.clientX, width: event.currentTarget.parentElement?.clientWidth || 1 };
+    const field = event.currentTarget.parentElement;
+    const bounds = field?.getBoundingClientRect();
+    dragRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      width: field?.clientWidth || 1,
+      fieldLeft: bounds?.left || 0,
+    };
     event.currentTarget.setPointerCapture?.(event.pointerId);
     event.currentTarget.classList.add('is-dragging');
   };
@@ -97,9 +104,14 @@ export default function TimelineContextNavigator({
     const drag = dragRef.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
     const deltaX = event.clientX - drag.startX;
-    const chapterDelta = Math.round((deltaX / Math.max(1, drag.width)) * chapterSpan);
     dragRef.current = null;
     event.currentTarget.classList.remove('is-dragging');
+    if (Math.abs(deltaX) < 5) {
+      const fraction = clamp((event.clientX - drag.fieldLeft) / Math.max(1, drag.width), 0, .999);
+      navigateToChapter(chapterMinimum + Math.floor(fraction * chapterSpan));
+      return;
+    }
+    const chapterDelta = Math.round((deltaX / Math.max(1, drag.width)) * chapterSpan);
     if (chapterDelta) navigateToChapter(contextChapter + chapterDelta);
   };
 
@@ -151,7 +163,7 @@ export default function TimelineContextNavigator({
           aria-valuemax={chapterMaximum}
           aria-valuenow={contextChapter}
           aria-valuetext={`Active Chapter ${contextChapter}; visible Chapters ${windowFrom} through ${windowTo}`}
-          title="Drag to pan the visible chapter window. Ctrl/Command + wheel to zoom."
+          title="Drag to pan the visible chapter window. Click inside it to jump. Ctrl/Command + wheel to zoom."
           onPointerDown={startViewportDrag}
           onPointerUp={finishViewportDrag}
           onPointerCancel={finishViewportDrag}
