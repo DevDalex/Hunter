@@ -18,7 +18,7 @@ const [app, home, homeCss, timeline, timelineCss, main] = await Promise.all([
 
 for (const token of [
   "import SuccessionCommandHome from './components/succession/SuccessionCommandHome'",
-  "import SuccessionTimelineMangaWall from './components/succession/SuccessionTimelineMangaWall'",
+  "lazy(() => import('./components/succession/SuccessionTimelineMangaWall'))",
   "pathname === '/timeline'",
   "'Timeline · Hunter × Hunter Archive'",
   'onClickCapture={keepInternalNavigationInApp}',
@@ -73,4 +73,4 @@ assert(app.includes("if (!anchor || anchor.target === '_blank') return;"), 'new-
 assert(app.includes("if (!href || href.startsWith('#')) return;"), 'in-page anchors must not be intercepted');
 assert(app.includes('if (destination.origin !== window.location.origin) return;'), 'external links must not be intercepted');
 
-console.log('Homepage runtime audit passed: production exposes the private Story / Characters / Nen homepage plus the data-driven /timeline manga wall.');
+console.log('Homepage runtime audit passed: production exposes the private Story / Characters / Nen homepage plus a lazy-loaded data-driven /timeline manga wall.');
