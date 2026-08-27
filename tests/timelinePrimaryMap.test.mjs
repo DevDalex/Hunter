@@ -4,80 +4,80 @@ import test from 'node:test';
 
 const shell = readFileSync(new URL('../src/components/succession/SuccessionArchiveShell.jsx', import.meta.url), 'utf8');
 const workspace = readFileSync(new URL('../src/components/TimelineWorkspace.jsx', import.meta.url), 'utf8');
-const switcher = readFileSync(new URL('../src/components/TimelineWorkspaceSwitcher.jsx', import.meta.url), 'utf8');
-const navigator = readFileSync(new URL('../src/components/TimelineContextNavigator.jsx', import.meta.url), 'utf8');
-const storyField = readFileSync(new URL('../src/components/TimelineStoryField.jsx', import.meta.url), 'utf8');
-const primaryCss = readFileSync(new URL('../src/components/TimelinePrimaryAtlas.css', import.meta.url), 'utf8');
+const explorer = readFileSync(new URL('../src/components/TimelineArchiveExplorer.jsx', import.meta.url), 'utf8');
+const explorerCss = readFileSync(new URL('../src/components/TimelineArchiveExplorer.css', import.meta.url), 'utf8');
 
-test('Timeline route is an immersive map rather than a generic Explorer dashboard', () => {
+test('Timeline route remains an immersive surface rather than a generic Explorer dashboard', () => {
   assert.match(shell, /const immersiveTimeline = route\.id === 'timeline'/);
   assert.match(shell, /!immersiveTimeline && <Suspense[\s\S]*?<SuccessionExplorerSurface/);
   assert.match(shell, /immersiveTimeline && <h1 className="sr-only">Voyage Timeline<\/h1>/);
   assert.match(shell, /succession-archive--timeline-map/);
 });
 
-test('Timeline workspace mounts the cartographic story field as its only primary mode', () => {
-  const navigatorIndex = workspace.indexOf('<TimelineContextNavigator');
-  const mapIndex = workspace.indexOf('<TimelineStoryField');
-  assert.ok(navigatorIndex >= 0, 'TimelineContextNavigator is missing');
-  assert.ok(mapIndex >= 0, 'primary TimelineStoryField is missing');
-  assert.ok(navigatorIndex < mapIndex, 'Timeline navigator must appear before the map');
-  assert.match(workspace, /timeline-workspace timeline-workspace--map-only/);
-  assert.doesNotMatch(workspace, /TimelineWorkspaceSwitcher/);
-  assert.match(workspace, /timeline-map-event-drawer/);
+test('Timeline workspace mounts the scalable archive explorer as its primary presentation', () => {
+  assert.match(workspace, /import TimelineArchiveExplorer from '\.\/TimelineArchiveExplorer'/);
+  assert.match(workspace, /timeline-workspace timeline-workspace--archive-explorer/);
+  assert.match(workspace, /<TimelineArchiveExplorer/);
+  assert.doesNotMatch(workspace, /<TimelineStoryField/);
+  assert.doesNotMatch(workspace, /<TimelineContextNavigator/);
 });
 
-test('preserved Timeline switcher keeps map-primary naming for future reuse', () => {
-  assert.match(switcher, /id: 'story', label: 'Timeline Map', note: 'Primary cartographic chronology'/);
-  assert.match(switcher, /id: 'atlas', label: 'Research Atlas'/);
-  assert.match(switcher, /The map is the Timeline\./);
-});
-
-test('global arc navigator owns a serialized visible window and supports map pan and zoom', () => {
-  assert.match(navigator, /const requestedWindow = finiteNumber\(requestedState\.window\)/);
-  assert.match(navigator, /window: clamp\(windowSize, 5, chapterSpan\)/);
-  assert.match(navigator, /role="slider"/);
-  assert.match(navigator, /onPointerDown=\{startViewportDrag\}/);
-  assert.match(navigator, /Ctrl\/Command \+ wheel to zoom/);
-  assert.match(navigator, /if \(event\.deltaY < 0\) zoomIn\(\)/);
-});
-
-test('map semantic detail follows the visible chapter window unless manually pinned', () => {
-  assert.match(storyField, /const automaticDepth = boundedWindow >= 56/);
-  assert.match(storyField, /boundedWindow >= 32[\s\S]*?'recap'/);
-  assert.match(storyField, /boundedWindow >= 18[\s\S]*?'study'/);
-  assert.match(storyField, /boundedWindow >= 9[\s\S]*?'research'/);
-  assert.match(storyField, /: 'complete'/);
-  assert.match(storyField, /const depth = DEPTH_ORDER\.includes\(requestedState\.depth\) \? requestedState\.depth : automaticDepth/);
-});
-
-test('dragging, double-clicking, and lane isolation stay inside the Timeline Map', () => {
-  assert.match(storyField, /onPointerDown=\{startPan\}/);
-  assert.match(storyField, /onPointerMove=\{movePan\}/);
-  assert.match(storyField, /onPointerUp=\{finishPan\}/);
-  assert.match(storyField, /onDoubleClick=\{handleMapDoubleClick\}/);
-  assert.match(storyField, /thread: laneId, mode: 'story'/);
-  assert.doesNotMatch(storyField, /thread: laneId, view: 'threads'/);
-});
-
-test('Timeline Map can rearrange the same chronology without replacing the route', () => {
-  for (const lens of ['story', 'characters', 'locations', 'organizations', 'nen', 'knowledge']) {
-    assert.match(storyField, new RegExp(`id: '${lens}'`), `missing ${lens} Timeline lens`);
+test('semantic density keeps recap, story, and complete chronology in one data surface', () => {
+  for (const mode of ['recap', 'story', 'full']) {
+    assert.match(explorer, new RegExp(`id: '${mode}'`), `missing ${mode} density mode`);
   }
-  assert.match(storyField, /const lens = LENS_IDS\.has\(requestedState\.lens\) \? requestedState\.lens : 'story'/);
-  assert.match(storyField, /const setLens = \(nextLens\) => commit\(\{ lens: nextLens, mode: 'story' \}/);
-  assert.match(storyField, /getEventsForOrganization/);
-  assert.match(storyField, /getEventsForAbility/);
-  assert.match(storyField, /getEntitiesByType\('knowledge-record'\)/);
-  assert.match(storyField, /aria-label="Arrange Timeline map by"/);
+  assert.match(explorer, /if \(density === 'recap'\) return event\.importance === 'major'/);
+  assert.match(explorer, /if \(density === 'story'\) return importanceRank\(event\.importance\) >= 2/);
+  assert.match(explorer, /return true;/);
 });
 
-test('primary map owns the full Timeline workspace and keeps an accessible text floor', () => {
-  assert.match(primaryCss, /\.succession-archive--timeline-map \.succession-archive__content/);
-  assert.match(primaryCss, /\.timeline-workspace--map-only[\s\S]*height: 100vh/);
-  assert.match(primaryCss, /\.timeline-workspace--map-only[\s\S]*grid-template-rows: 112px minmax\(0, 1fr\)/);
-  assert.match(primaryCss, /\.tsf-shell[\s\S]*grid-template-columns: 226px minmax\(0, 1fr\)/);
-  assert.match(primaryCss, /\.tsf-viewport[\s\S]*cursor: grab/);
-  assert.match(primaryCss, /\.tsf-lensbar/);
-  assert.match(primaryCss, /font-size: 11px/);
+test('story minimap is generated from maintained Succession phases and real event counts', () => {
+  assert.match(explorer, /successionTimelinePhases/);
+  assert.match(explorer, /timelinePhaseForChapter/);
+  assert.match(explorer, /function PhaseStrip/);
+  assert.match(explorer, /function DensityGraph/);
+  assert.match(explorer, /phaseStats/);
+  assert.match(explorer, /activePhase/);
+});
+
+test('event rows preserve the research payload rather than compressing the source data', () => {
+  assert.match(explorer, /peopleForTimelineEvent/);
+  assert.match(explorer, /timelineCausalityForEvent/);
+  assert.match(explorer, /timingConfidenceForEvent/);
+  assert.match(explorer, /evidenceConfidenceForEvent/);
+  assert.match(explorer, /event\.detail/);
+  assert.match(explorer, /event\.source/);
+  assert.match(explorer, /event\.tracks/);
+});
+
+test('large result sets stay bounded in the DOM without deleting archive events', () => {
+  assert.match(explorer, /const DISPLAY_BATCH = 120/);
+  assert.match(explorer, /const renderedEvents = filteredEvents\.slice\(0, displayLimit\)/);
+  assert.match(explorer, /setDisplayLimit\(\(current\) => current \+ DISPLAY_BATCH\)/);
+  assert.match(explorer, /still hidden from the DOM, not from the archive/);
+});
+
+test('timeline supports search, phase isolation, story-thread filters, and major-only scanning', () => {
+  assert.match(explorer, /Search people, places, events, evidence/);
+  assert.match(explorer, /All story threads/);
+  assert.match(explorer, /activePhase && event\.phase\.id !== activePhase/);
+  assert.match(explorer, /activeTrack && !\(event\.tracks \|\| \[\]\)\.includes\(activeTrack\)/);
+  assert.match(explorer, /majorOnly && event\.importance !== 'major'/);
+});
+
+test('event inspector stays beside the chronology and preserves deep links', () => {
+  assert.match(explorer, /function EventInspector/);
+  assert.match(explorer, /Cause and consequence/);
+  assert.match(explorer, /className="tae-inspector"/);
+  assert.match(explorer, /chapter: event\.chapter/);
+  assert.match(explorer, /event: event\.id/);
+});
+
+test('archive explorer owns a bounded two-pane desktop workspace', () => {
+  assert.match(explorerCss, /\.timeline-workspace--archive-explorer[\s\S]*height: 100vh/);
+  assert.match(explorerCss, /\.timeline-archive-explorer[\s\S]*grid-template-rows: auto auto auto minmax\(0, 1fr\)/);
+  assert.match(explorerCss, /\.tae-body[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(300px, 31vw\)/);
+  assert.match(explorerCss, /\.tae-stream,[\s\S]*\.tae-inspector[\s\S]*overflow-y: auto/);
+  assert.match(explorerCss, /\.tae-phase-strip/);
+  assert.match(explorerCss, /\.tae-density-graph/);
 });
