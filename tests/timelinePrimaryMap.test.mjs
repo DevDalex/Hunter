@@ -58,10 +58,23 @@ test('dragging, double-clicking, and lane isolation stay inside the Timeline Map
   assert.doesNotMatch(storyField, /thread: laneId, view: 'threads'/);
 });
 
+test('Timeline Map can rearrange the same chronology without replacing the route', () => {
+  for (const lens of ['story', 'characters', 'locations', 'organizations', 'nen', 'knowledge']) {
+    assert.match(storyField, new RegExp(`id: '${lens}'`), `missing ${lens} Timeline lens`);
+  }
+  assert.match(storyField, /const lens = LENS_IDS\.has\(requestedState\.lens\) \? requestedState\.lens : 'story'/);
+  assert.match(storyField, /const setLens = \(nextLens\) => commit\(\{ lens: nextLens, mode: 'story' \}/);
+  assert.match(storyField, /getEventsForOrganization/);
+  assert.match(storyField, /getEventsForAbility/);
+  assert.match(storyField, /getEntitiesByType\('knowledge-record'\)/);
+  assert.match(storyField, /aria-label="Arrange Timeline map by"/);
+});
+
 test('primary map owns the full Timeline workspace and keeps an accessible text floor', () => {
   assert.match(primaryCss, /\.succession-archive--timeline-map \.succession-archive__content/);
   assert.match(primaryCss, /min-height: calc\(100vh - 118px\)/);
   assert.match(primaryCss, /\.tsf-shell[\s\S]*grid-template-columns: 236px minmax\(0, 1fr\)/);
   assert.match(primaryCss, /\.tsf-viewport[\s\S]*cursor: grab/);
+  assert.match(primaryCss, /\.tsf-lensbar/);
   assert.match(primaryCss, /font-size: 11px/);
 });
