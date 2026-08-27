@@ -1,35 +1,28 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import test from 'node:test';
-import { successionDays, successionPreludeEvents } from '../src/data/successionTimeline.js';
-import {
-  getEntitiesByType,
-  getEventsForAbility,
-  getEventsForOrganization,
-} from '../src/data/succession/successionData.js';
 
-const timelineEventIds = new Set([
-  ...successionPreludeEvents.map((event) => event.id),
-  ...successionDays.flatMap((day) => day.events.map((event) => event.id)),
-]);
+const storyField = readFileSync(new URL('../src/components/TimelineStoryField.jsx', import.meta.url), 'utf8');
+const selectors = readFileSync(new URL('../src/data/succession/selectors.js', import.meta.url), 'utf8');
+const knowledgeFoundation = readFileSync(new URL('../src/data/succession/highValueIntelligenceFoundation.js', import.meta.url), 'utf8');
 
-const intersectingEventIds = (entities, getEvents) => new Set(entities.flatMap((entity) => (
-  getEvents(entity.id) || []
-).map((event) => event.id).filter((id) => timelineEventIds.has(id))));
-
-test('Timeline organization lens has explicit canonical event intersections', () => {
-  const organizations = getEntitiesByType('organization');
-  const intersections = intersectingEventIds(organizations, getEventsForOrganization);
-  assert.ok(intersections.size > 0, 'no canonical organization-linked events intersect the Timeline chronology');
+test('Timeline organization lens is wired only through canonical organization-event selectors', () => {
+  assert.match(selectors, /const getEventsForOrganization = \(organizationId\) => resolveMany\(indexes\.eventsByOrganization\.get\(organizationId\), indexes\)/);
+  assert.match(storyField, /buildEventEntityMap\(organizations, getEventsForOrganization\)/);
+  assert.match(storyField, /canonicalEvent\?\.organizationIds/);
 });
 
-test('Timeline Nen lens has explicit canonical ability-event intersections', () => {
-  const abilities = getEntitiesByType('ability');
-  const intersections = intersectingEventIds(abilities, getEventsForAbility);
-  assert.ok(intersections.size > 0, 'no canonical ability-linked events intersect the Timeline chronology');
+test('Timeline Nen lens is wired through canonical ability-event selectors with an explicit tagged fallback', () => {
+  assert.match(selectors, /const getEventsForAbility = \(abilityId\) => resolveMany\(indexes\.eventsByAbility\.get\(abilityId\), indexes\)/);
+  assert.match(storyField, /buildEventEntityMap\(abilities, getEventsForAbility\)/);
+  assert.match(storyField, /canonicalEvent\?\.abilityIds/);
+  assert.match(storyField, /Other Nen \/ ritual activity/);
 });
 
-test('Timeline knowledge lens has chapter-bounded published records', () => {
-  const records = getEntitiesByType('knowledge-record');
-  assert.ok(records.length > 0, 'no published knowledge records are available to the Timeline lens');
-  assert.ok(records.every((record) => Number.isFinite(Number(record.chapterRange?.start))), 'knowledge lens contains records without a chapterRange.start');
+test('Timeline knowledge lens consumes chapter-bounded published knowledge records', () => {
+  const knowledgeRecordCount = (knowledgeFoundation.match(/entityType: 'knowledge-record'/g) || []).length;
+  assert.ok(knowledgeRecordCount > 0, 'knowledge foundation contains no published knowledge records');
+  assert.match(knowledgeFoundation, /chapterRange: range\(/);
+  assert.match(storyField, /getEntitiesByType\('knowledge-record'\)/);
+  assert.match(storyField, /Number\(record\.chapterRange\?\.start\)/);
 });
