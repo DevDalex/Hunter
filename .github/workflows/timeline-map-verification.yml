@@ -1,25 +1,6 @@
 name: Timeline Map Verification
 
 on:
-  pull_request:
-    paths:
-      - 'src/components/Timeline*.jsx'
-      - 'src/components/Timeline*.css'
-      - 'src/components/succession/SuccessionArchiveShell.jsx'
-      - 'tests/timeline*.test.mjs'
-      - 'scripts/timeline-map-qa.mjs'
-      - 'package.json'
-      - '.github/workflows/timeline-map-verification.yml'
-  push:
-    branches: [main]
-    paths:
-      - 'src/components/Timeline*.jsx'
-      - 'src/components/Timeline*.css'
-      - 'src/components/succession/SuccessionArchiveShell.jsx'
-      - 'tests/timeline*.test.mjs'
-      - 'scripts/timeline-map-qa.mjs'
-      - 'package.json'
-      - '.github/workflows/timeline-map-verification.yml'
   workflow_dispatch:
 
 concurrency:
@@ -31,7 +12,7 @@ permissions:
 
 jobs:
   timeline-map:
-    name: Timeline Map production browser gate
+    name: Legacy Timeline Map production browser gate
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -48,7 +29,7 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
-      - name: Verify Timeline map contracts
+      - name: Verify preserved Timeline map contracts
         run: node --test tests/timelinePrimaryMap.test.mjs tests/timelineMapLensData.test.mjs
 
       - name: Build production runtime
@@ -57,7 +38,7 @@ jobs:
       - name: Install Chromium
         run: npm exec playwright -- install --with-deps chromium
 
-      - name: Exercise rendered Timeline map
+      - name: Exercise preserved Timeline map
         run: npm run qa:timeline-map
 
       - name: Publish Timeline map diagnostics
@@ -69,3 +50,7 @@ jobs:
           include-hidden-files: true
           retention-days: 14
           path: .timeline-map-qa/
+
+      - name: Explain scope
+        if: always()
+        run: echo 'This is a manual historical Timeline regression suite. It is not part of the homepage production release gate.' >> "$GITHUB_STEP_SUMMARY"

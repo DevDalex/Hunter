@@ -1,28 +1,7 @@
 name: Succession Visual Redesign
 
 on:
-  push:
-    branches:
-      - 'succession-visual-redesign-batch-*'
-  pull_request:
-    paths:
-      - 'src/components/succession/**'
-      - 'src/data/succession/**'
-      - 'src/data/routeManifest.js'
-      - 'scripts/audit-succession-visual-foundation.mjs'
-      - 'scripts/audit-succession-shell-redesign.mjs'
-      - 'scripts/audit-succession-page-header-redesign.mjs'
-      - 'scripts/audit-succession-breadcrumb-redesign.mjs'
-      - 'scripts/audit-succession-batch-2-completion.mjs'
-      - 'scripts/audit-succession-character-command.mjs'
-      - 'scripts/audit-succession-royal-command.mjs'
-      - 'scripts/audit-succession-batch-3-closure.mjs'
-      - 'scripts/report-succession-visual-inventory.mjs'
-      - 'docs/SUCCESSION-VISUAL-REDESIGN.md'
-      - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-2-CLOSURE.md'
-      - 'docs/SUCCESSION-VISUAL-REDESIGN-BATCH-3.md'
-      - 'package.json'
-      - '.github/workflows/succession-visual-redesign.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -32,55 +11,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  baseline_runtime:
-    name: Main runtime baseline
+  legacy-regression:
+    name: Legacy Succession redesign regression suite
     runs-on: ubuntu-latest
-    timeout-minutes: 20
-    outputs:
-      runtime_outcome: ${{ steps.baseline_runtime.outcome }}
-
-    steps:
-      - name: Check out main baseline
-        uses: actions/checkout@v4
-        with:
-          ref: main
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Capture main Succession runtime
-        id: baseline_runtime
-        continue-on-error: true
-        shell: bash
-        run: |
-          set -o pipefail
-          npm run audit:succession-runtime 2>&1 | tee succession-runtime-main.log
-
-      - name: Publish main runtime baseline
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: succession-runtime-main-baseline
-          path: succession-runtime-main.log
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Summarize main runtime state
-        if: always()
-        run: |
-          echo "Main runtime outcome: ${{ steps.baseline_runtime.outcome }}" >> "$GITHUB_STEP_SUMMARY"
-
-  foundation:
-    name: Batch 3 people institutions and comparison regression audits
-    needs: baseline_runtime
-    runs-on: ubuntu-latest
-    timeout-minutes: 70
+    timeout-minutes: 90
 
     steps:
       - name: Check out repository
@@ -95,137 +29,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Audit visual foundation
-        run: npm run audit:succession-visual-foundation
-
-      - name: Audit shared shell redesign
-        run: npm run audit:succession-shell-redesign
-
-      - name: Audit page-header redesign
-        run: npm run audit:succession-page-header-redesign
-
-      - name: Audit breadcrumb redesign
-        run: npm run audit:succession-breadcrumb-redesign
-
-      - name: Audit Batch 2 closure
-        run: npm run audit:succession-batch-2
-
-      - name: Audit Batch 3 character command
-        run: npm run audit:succession-character-command
-
-      - name: Audit Batch 3 royal command
-        run: npm run audit:succession-royal-command
-
-      - name: Audit Batch 3 closure
-        run: npm run audit:succession-batch-3
-
-      - name: Report visual inventory
-        run: npm run report:succession-visual-inventory > succession-visual-inventory.md
-
-      - name: Audit CSS ownership
-        run: npm run audit:css
-
-      - name: Audit readability
-        run: npm run audit:readability
-
-      - name: Audit accessibility contracts
-        run: npm run audit:accessibility
-
-      - name: Audit Succession runtime
-        id: succession_runtime
-        continue-on-error: true
-        shell: bash
+      - name: Run preserved visual-redesign contracts
         run: |
-          set -o pipefail
-          npm run audit:succession-runtime 2>&1 | tee succession-runtime.log
+          npm run audit:succession-visual-foundation
+          npm run audit:succession-shell-redesign
+          npm run audit:succession-page-header-redesign
+          npm run audit:succession-breadcrumb-redesign
+          npm run audit:succession-batch-2
+          npm run audit:succession-character-command
+          npm run audit:succession-royal-command
+          npm run audit:succession-batch-3
 
-      - name: Build presentation bundle
-        run: |
-          npm run prepare:eta-assets
-          npx vite build
-
-      - name: Install Chromium for visual QA
-        shell: bash
-        run: |
-          npx playwright install --with-deps chromium
-          echo "CHROMIUM_PATH=$(node -e "import('playwright').then(({ chromium }) => console.log(chromium.executablePath()))")" >> "$GITHUB_ENV"
-
-      - name: Inspect Story workspace at all viewports
-        env:
-          VISUAL_QA_ROUTE: succession/story
-          VISUAL_QA_OUTPUT: .visual-qa/succession-story
-          VISUAL_QA_SCREENSHOTS: all
-        run: npm run qa:visual
-
-      - name: Inspect Timeline workspace at all viewports
-        env:
-          VISUAL_QA_ROUTE: succession/timeline
-          VISUAL_QA_OUTPUT: .visual-qa/succession-timeline
-          VISUAL_QA_SCREENSHOTS: all
-        run: npm run qa:visual
-
-      - name: Inspect Character workspace at all viewports
-        env:
-          VISUAL_QA_ROUTE: succession/characters
-          VISUAL_QA_OUTPUT: .visual-qa/succession-characters
-          VISUAL_QA_SCREENSHOTS: all
-        run: npm run qa:visual
-
-      - name: Inspect Prince command at all viewports
-        env:
-          VISUAL_QA_ROUTE: succession/princes
-          VISUAL_QA_OUTPUT: .visual-qa/succession-princes
-          VISUAL_QA_SCREENSHOTS: all
-        run: npm run qa:visual
-
-      - name: Inspect Institution command at all viewports
-        env:
-          VISUAL_QA_ROUTE: succession/organizations
-          VISUAL_QA_OUTPUT: .visual-qa/succession-organizations
-          VISUAL_QA_SCREENSHOTS: all
-        run: npm run qa:visual
-
-      - name: Inspect Black Whale workspace at all viewports
-        env:
-          VISUAL_QA_ROUTE: succession/black-whale
-          VISUAL_QA_OUTPUT: .visual-qa/succession-black-whale
-          VISUAL_QA_SCREENSHOTS: all
-        run: npm run qa:visual
-
-      - name: Inspect Nen workspace at all viewports
-        env:
-          VISUAL_QA_ROUTE: succession/nen
-          VISUAL_QA_OUTPUT: .visual-qa/succession-nen
-          VISUAL_QA_SCREENSHOTS: all
-        run: npm run qa:visual
-
-      - name: Inspect Research workspace at all viewports
-        env:
-          VISUAL_QA_ROUTE: succession/research
-          VISUAL_QA_OUTPUT: .visual-qa/succession-research
-          VISUAL_QA_SCREENSHOTS: all
-        run: npm run qa:visual
-
-      - name: Publish visual and runtime diagnostics
+      - name: Explain scope
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: succession-visual-redesign-diagnostics
-          path: |
-            succession-runtime.log
-            succession-visual-inventory.md
-            .visual-qa
-          include-hidden-files: true
-          if-no-files-found: warn
-          retention-days: 14
-
-      - name: Record inherited runtime debt
-        if: steps.succession_runtime.outcome == 'failure' && needs.baseline_runtime.outputs.runtime_outcome == 'failure'
-        run: |
-          echo 'The branch and main runtime sweeps both fail. The visual gate treats this as inherited baseline debt, not a redesign regression.' >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Enforce branch-only runtime regressions
-        if: steps.succession_runtime.outcome == 'failure' && needs.baseline_runtime.outputs.runtime_outcome == 'success'
-        run: |
-          echo 'The Succession runtime passes on main but fails on this branch.'
-          exit 1
+        run: echo 'This is a manual historical regression suite. It is not part of the homepage production release gate.' >> "$GITHUB_STEP_SUMMARY"

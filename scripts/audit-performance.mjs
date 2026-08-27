@@ -1,4 +1,4 @@
-import { access, readFile, readdir, stat } from 'node:fs/promises';
+import { readFile, readdir, stat } from 'node:fs/promises';
 import path from 'node:path';
 import {
   formatPerformanceBudget,
@@ -7,13 +7,12 @@ import {
 
 const root = process.cwd();
 const dist = path.join(root, 'dist/client');
-const manifestPath = path.join(dist, '.vite/manifest.json');
+const manifest = JSON.parse(await readFile(path.join(dist, '.vite/manifest.json'), 'utf8'));
 const assert = (condition, message) => {
   if (!condition) throw new Error(`Performance audit failed: ${message}`);
 };
+const sizeOf = async (file) => (await stat(path.join(dist, file))).size;
 
-await access(manifestPath);
-const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
 const entry = manifest['index.html'];
 assert(entry?.isEntry, 'the production manifest has no index.html entry');
 
@@ -25,124 +24,37 @@ const collectImports = (key) => {
 };
 collectImports('index.html');
 
-const sizeOf = async (file) => (await stat(path.join(dist, file))).size;
 const startupFiles = [...imported].map((key) => manifest[key]?.file).filter(Boolean);
 const startupJs = (await Promise.all(startupFiles.map(sizeOf))).reduce((total, bytes) => total + bytes, 0);
 const entryJs = await sizeOf(entry.file);
 const startupCss = (await Promise.all((entry.css || []).map(sizeOf))).reduce((total, bytes) => total + bytes, 0);
-const dynamicEntries = Object.entries(manifest).filter(([, record]) => record.isDynamicEntry);
-
-const [app, routePreload, integratedReferences, safeImage, packageText] = await Promise.all([
-  readFile(path.join(root, 'src/App.jsx'), 'utf8'),
-  readFile(path.join(root, 'src/lib/routePreload.js'), 'utf8'),
-  readFile(path.join(root, 'src/components/succession/SuccessionIntegratedReferences.jsx'), 'utf8'),
-  readFile(path.join(root, 'src/components/SafeImage.jsx'), 'utf8'),
-  readFile(path.join(root, 'package.json'), 'utf8'),
-]);
-
-const loaderImports = [...routePreload.matchAll(/import\(['"]\.\.\/components\/([^'"]+)['"]\)/g)]
-  .map((match) => `src/components/${match[1]}${path.extname(match[1]) ? '' : '.jsx'}`);
-const routeLoaderKeys = [...new Set(loaderImports)];
-
-const expectedRouteLoaderKeys = [
-  'src/components/succession/SuccessionArchiveEntry.jsx',
-  'src/components/FamilyTree.jsx',
-  'src/components/SuccessionRoster.jsx',
-  'src/components/SuccessionTimeline.jsx',
-  'src/components/SuccessionChapterReader.jsx',
-  'src/components/SuccessionConnectionBoard.jsx',
-  'src/components/BlackWhaleGuide.jsx',
-  'src/components/SuccessionDossier.jsx',
-  'src/components/NenEncyclopedia.jsx',
-];
-
-const successionControllerBoundaryKeys = [
-  'src/components/succession/SuccessionArchiveApp.jsx',
-  'src/components/succession/SuccessionArchiveReaderRoute.jsx',
-  'src/components/succession/SuccessionArchiveLightRoute.jsx',
-  'src/components/succession/SuccessionArchiveWorkspaces.jsx',
-  'src/components/succession/SuccessionWorkspaceRefinementDeck.jsx',
-];
-
-const retiredBoundaryKeys = [
-  'src/components/ArchiveSearch.jsx',
-  'src/components/SeriesWorkspace.jsx',
-  'src/components/SiteHome.jsx',
-  'src/components/StoryHub.jsx',
-  'src/components/ArcPage.jsx',
-  'src/components/VolumeZeroPage.jsx',
-  'src/components/HunterExamPage.jsx',
-  'src/components/GreedIslandPage.jsx',
-  'src/components/EntityEncyclopedia.jsx',
-  'src/components/OrganizationWorkspace.jsx',
-  'src/components/ConflictArchive.jsx',
-  'src/components/HisokaChrolloDossier.jsx',
-  'src/components/WorldAtlas.jsx',
-  'src/components/greed-island/GreedIslandHub.jsx',
-  'src/components/greed-island/EtaTutorial.jsx',
-  'src/components/greed-island/GreedIslandBinder.jsx',
-  'src/components/greed-island/SpecifiedCardArchive.jsx',
-  'src/components/greed-island/GreedIslandCardLibraries.jsx',
-  'src/components/greed-island/GreedIslandSystems.jsx',
-  'src/components/greed-island/GreedIslandTacticalRecords.jsx',
-  'src/components/greed-island/GreedIslandCompletionArchive.jsx',
-  'src/data/archiveSearch.series.js',
-  'src/data/archiveSearch.reference.js',
-];
-
-const javascriptFiles = Object.values(manifest)
-  .map((record) => record.file)
-  .filter((file) => file?.endsWith('.js'));
-const javascriptSizes = await Promise.all(
-  javascriptFiles.map(async (file) => ({ file, bytes: await sizeOf(file) })),
-);
+const javascriptFiles = Object.values(manifest).map((record) => record.file).filter((file) => file?.endsWith('.js'));
+const javascriptSizes = await Promise.all(javascriptFiles.map(async (file) => ({ file, bytes: await sizeOf(file) })));
 const largestJavascript = javascriptSizes.sort((a, b) => b.bytes - a.bytes)[0];
-const chunkWarning = largestJavascript.bytes > budgets.javascriptChunk;
 
 assert(entryJs <= budgets.entryJs, `startup application chunk is ${entryJs} bytes; budget is ${formatPerformanceBudget(budgets.entryJs)}`);
 assert(startupJs <= budgets.startupJs, `startup JavaScript closure is ${startupJs} bytes; budget is ${formatPerformanceBudget(budgets.startupJs)}`);
 assert(startupCss <= budgets.startupCss, `startup stylesheet is ${startupCss} bytes; budget is ${formatPerformanceBudget(budgets.startupCss)}`);
-assert(largestJavascript.bytes <= budgets.javascriptChunkEmergency, `${largestJavascript.file} is ${largestJavascript.bytes} bytes; emergency per-chunk ceiling is ${formatPerformanceBudget(budgets.javascriptChunkEmergency)}`);
+assert(largestJavascript?.bytes <= budgets.javascriptChunkEmergency, `${largestJavascript?.file || 'largest JS chunk'} exceeds the emergency ceiling of ${formatPerformanceBudget(budgets.javascriptChunkEmergency)}`);
 
-assert(routeLoaderKeys.length === expectedRouteLoaderKeys.length, `the focused route loader map must expose ${expectedRouteLoaderKeys.length} boundaries, found ${routeLoaderKeys.length}`);
-assert(expectedRouteLoaderKeys.every((key) => routeLoaderKeys.includes(key)), 'the route loader map must contain Succession plus the retained general Nen boundary');
-assert(routeLoaderKeys.every((key) => manifest[key]?.isDynamicEntry), 'every retained route loader must remain an on-demand production entry');
-assert(successionControllerBoundaryKeys.every((key) => manifest[key]?.isDynamicEntry), 'the Succession controller, Reader, light route, workspaces, and refinement deck must remain separate on-demand chunks');
-assert(retiredBoundaryKeys.every((key) => !manifest[key]), 'a retired Home, Story, global reference, fight, Greed Island, World Atlas, or search boundary returned to the production manifest');
-assert(dynamicEntries.length >= routeLoaderKeys.length + successionControllerBoundaryKeys.length, `the production manifest exposes only ${dynamicEntries.length} dynamic entries for ${routeLoaderKeys.length + successionControllerBoundaryKeys.length} required focused boundaries`);
-
-for (const retiredComponent of [
-  'SiteHome',
-  'SeriesWorkspace',
-  'ArchiveSearch',
-  'EntityEncyclopedia',
-  'OrganizationWorkspace',
-  'ConflictArchive',
-  'HisokaChrolloDossier',
-  'WorldAtlas',
-]) assert(!app.includes(retiredComponent), `App.jsx still mounts retired ${retiredComponent}`);
-assert(app.includes('SuccessionArchiveApp'), 'App.jsx must retain the Succession application boundary');
-assert(app.includes('SuccessionIntegratedReferences'), 'App.jsx must retain the integrated reference shell');
-assert(integratedReferences.includes('lazy(routeModuleLoaders.nen)'), 'the integrated reference shell must lazily mount the general Nen Encyclopedia');
-assert(!integratedReferences.includes('WorldAtlas'), 'the retired World Atlas returned to the integrated reference shell');
-assert(manifest['src/components/NenEncyclopedia.jsx']?.isDynamicEntry, 'the production manifest must retain the general Nen Encyclopedia as an on-demand entry');
-assert(!manifest['src/components/WorldAtlas.jsx'], 'the retired World Atlas must not return to the production manifest');
-assert(!/from ['"].*\/(chapters|encyclopedia|successionDossier|successionRoster|seriesResearch)['"]/.test(app), 'App.jsx imports a heavy research dataset directly');
-assert(safeImage.includes("priority || (eager ? 'high' : 'auto')"), 'SafeImage must support explicit fetch priority');
-assert(!/vite-plugin-pwa|workbox|serviceWorker\.register|manifest\.webmanifest/.test(`${packageText}\n${app}\n${routePreload}`), 'PWA or service-worker behavior is outside the website scope');
+const [app, packageText] = await Promise.all([
+  readFile(path.join(root, 'src/App.jsx'), 'utf8'),
+  readFile(path.join(root, 'package.json'), 'utf8'),
+]);
+assert(app.includes('SuccessionCommandHome'), 'production App must retain the homepage boundary');
+assert(!app.includes('SuccessionArchiveApp'), 'production App must not eagerly restore the retired archive application');
+assert(!/vite-plugin-pwa|workbox|serviceWorker\.register|manifest\.webmanifest/.test(`${packageText}\n${app}`), 'PWA or service-worker behavior is outside the current website scope');
 
 const portraitsDir = path.join(root, 'public/media/portraits');
 const portraitFiles = await readdir(portraitsDir);
-const portraitSizes = await Promise.all(
-  portraitFiles.map(async (file) => ({ file, bytes: (await stat(path.join(portraitsDir, file))).size })),
-);
+const portraitSizes = await Promise.all(portraitFiles.map(async (file) => ({ file, bytes: (await stat(path.join(portraitsDir, file))).size })));
 const portraitBytes = portraitSizes.reduce((total, record) => total + record.bytes, 0);
 const largestPortrait = portraitSizes.sort((a, b) => b.bytes - a.bytes)[0];
-assert(largestPortrait.bytes <= budgets.portrait, `${largestPortrait.file} is ${largestPortrait.bytes}; local portrait ceiling is ${formatPerformanceBudget(budgets.portrait)}`);
-assert(portraitBytes <= budgets.portraitLibrary, `local portrait library is ${portraitBytes} bytes; budget is ${formatPerformanceBudget(budgets.portraitLibrary)}`);
+assert(largestPortrait.bytes <= budgets.portrait, `${largestPortrait.file} is ${largestPortrait.bytes}; portrait ceiling is ${formatPerformanceBudget(budgets.portrait)}`);
+assert(portraitBytes <= budgets.portraitLibrary, `portrait library is ${portraitBytes} bytes; budget is ${formatPerformanceBudget(budgets.portraitLibrary)}`);
 
-if (chunkWarning) {
-  console.warn(`Performance warning: ${largestJavascript.file} is ${largestJavascript.bytes} bytes; preferred per-chunk target is ${formatPerformanceBudget(budgets.javascriptChunk)} bytes. Build remains allowed until the emergency ceiling of ${formatPerformanceBudget(budgets.javascriptChunkEmergency)} bytes.`);
+if (largestJavascript.bytes > budgets.javascriptChunk) {
+  console.warn(`Performance warning: ${largestJavascript.file} is ${largestJavascript.bytes} bytes; preferred target is ${formatPerformanceBudget(budgets.javascriptChunk)}.`);
 }
 
-console.log(`Performance audit passed: entry JS ${entryJs}/${formatPerformanceBudget(budgets.entryJs)} bytes; startup JS ${startupJs}/${formatPerformanceBudget(budgets.startupJs)} bytes; startup CSS ${startupCss}/${formatPerformanceBudget(budgets.startupCss)} bytes; ${routeLoaderKeys.length} focused route loaders; ${successionControllerBoundaryKeys.length} Succession controller boundaries; ${dynamicEntries.length} total dynamic entries; largest JS chunk ${largestJavascript.file} at ${largestJavascript.bytes} bytes (preferred ${formatPerformanceBudget(budgets.javascriptChunk)}, emergency ${formatPerformanceBudget(budgets.javascriptChunkEmergency)}); local portraits ${portraitBytes} bytes.`);
+console.log(`Performance audit passed: entry JS ${entryJs}/${formatPerformanceBudget(budgets.entryJs)}; startup JS ${startupJs}/${formatPerformanceBudget(budgets.startupJs)}; startup CSS ${startupCss}/${formatPerformanceBudget(budgets.startupCss)}; largest JS ${largestJavascript.file} at ${largestJavascript.bytes}; portrait library ${portraitBytes} bytes.`);

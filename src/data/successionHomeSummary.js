@@ -1,12 +1,16 @@
 import { chapterTitles } from './chapterTitles.js';
-import { getChapterCatalogueTitle } from './latestChapterMetadata.js';
-import { maintainedSuccessionChapterNumbers } from './successionMaintainedChapterResearch.js';
+import {
+  LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
+  getChapterCatalogueTitle,
+} from './latestChapterMetadata.js';
 
 const freeze = (value) => Object.freeze(value);
+const FIRST_SUCCESSION_CHAPTER = 340;
 
-const successionChapterNumbers = maintainedSuccessionChapterNumbers
-  .filter((number) => number >= 340)
-  .sort((left, right) => left - right);
+const successionChapterNumbers = freeze(Array.from(
+  { length: Math.max(0, LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER - FIRST_SUCCESSION_CHAPTER + 1) },
+  (_, index) => FIRST_SUCCESSION_CHAPTER + index,
+));
 
 export const successionHomeCounts = freeze({
   princes: 14,
@@ -24,7 +28,7 @@ export const successionHomeChapterSummaries = freeze(
   })),
 );
 
-export const getSuccessionHomeRecentChapters = (boundary = successionChapterNumbers.at(-1), limit = 4) => {
+export const getSuccessionHomeRecentChapters = (boundary = LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER, limit = 4) => {
   const safeBoundary = Number(boundary);
   const safeLimit = Math.max(1, Math.min(12, Number(limit) || 4));
   return freeze(successionHomeChapterSummaries

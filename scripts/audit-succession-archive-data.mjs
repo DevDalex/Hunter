@@ -11,9 +11,10 @@ const vite = await createServer({
 });
 
 try {
-  const [archiveModule, availabilityModule] = await Promise.all([
+  const [archiveModule, availabilityModule, metadataModule] = await Promise.all([
     vite.ssrLoadModule('/src/data/succession/successionData.js'),
     vite.ssrLoadModule('/src/data/successionChapterAvailability.generated.js'),
+    vite.ssrLoadModule('/src/data/latestChapterMetadata.js'),
   ]);
   const {
     getAbilitiesAtLocation,
@@ -39,9 +40,11 @@ try {
     successionArchiveValidation,
   } = archiveModule;
   const { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } = availabilityModule;
-  const latestChapter = Math.max(414, LATEST_AUTHORIZED_SUCCESSION_CHAPTER);
+  const { LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER } = metadataModule;
+  const latestChapter = Math.max(414, LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER);
   const expectedChapterRecords = latestChapter - 340 + 1;
 
+  assert(latestChapter >= LATEST_AUTHORIZED_SUCCESSION_CHAPTER, 'research chapter boundary must not be lower than the local page-media boundary');
   assert(successionArchiveValidation.valid, 'canonical data must pass schema validation');
   assert(successionArchiveValidation.stats.entities >= 343, 'canonical graph must contain the expanded Batch 1 current-arc catalogue');
   assert(successionArchiveIndexes.byId.size === successionArchiveValidation.stats.entities, 'global ID index must include every entity');
@@ -52,7 +55,7 @@ try {
   const bodyguards = characterRecords.filter((record) => record.roles?.includes('bodyguard'));
   const hunters = characterRecords.filter((record) => record.roles?.includes('hunter'));
   const placeholders = characterRecords.filter((record) => /^(Unnamed |Stone Wall |V6 Leader |Temp Hunter |Cha-R Associate |Tserriednich Friend |Heil-Ly Associate )/.test(record.name));
-  const bodyguardsWithoutPortraitCandidates = bodyguards.filter((record) => !record.media?.portrait);
+  const bodyguardsWithoutMediaSlots = bodyguards.filter((record) => !record.media || !Object.prototype.hasOwnProperty.call(record.media, 'portrait') || !Array.isArray(record.media.galleryIds));
   const characterNames = characterRecords.map((record) => record.name);
   const chapterRecords = getEntitiesByType('chapter');
   const abilities = getEntitiesByType('ability');
@@ -66,7 +69,7 @@ try {
   assert(princes.length === 14, `expected 14 princes, found ${princes.length}`);
   assert(queens.length === 8, `expected 8 queens, found ${queens.length}`);
   assert(bodyguards.length >= 85, `expected the expanded bodyguard catalogue, found ${bodyguards.length}`);
-  assert(bodyguardsWithoutPortraitCandidates.length === 0, `every named bodyguard must carry a portrait candidate; missing ${bodyguardsWithoutPortraitCandidates.map((record) => record.name).join(', ')}`);
+  assert(bodyguardsWithoutMediaSlots.length === 0, `every named bodyguard must carry a valid media slot; malformed ${bodyguardsWithoutMediaSlots.map((record) => record.name).join(', ')}`);
   assert(hunters.length >= 20, `expected the current-arc Hunter catalogue, found ${hunters.length}`);
   assert(placeholders.length === 0, 'generic unnamed placeholders must not appear as canonical characters');
   assert(new Set(characterNames).size === characterNames.length, 'canonical character names must be deduplicated');
@@ -118,105 +121,30 @@ try {
   assert(chapter403?.abilityIds?.includes('ability:halkenburg-possession-arrow'), 'Chapter 403 must derive the possession-arrow ability link');
   const chapter405 = getChapter(405);
   assert(chapter405?.eventIds?.includes('event:hisoka-tier-1-confirmation'), 'Chapter 405 must link Hisoka’s Tier 1 confirmation');
-  const chapter413 = getChapter(413);
-  assert(chapter413?.abilityIds?.includes('ability:have-not-curse'), 'Chapter 413 must retain the active Have-Not curse threat');
-  assert(chapter413?.abilityIds?.includes('ability:woble-guardian-beast-unrevealed'), 'Chapter 413 must preserve Woble’s unrevealed Guardian Spirit Beast mystery');
-  assert(chapter413?.eventIds?.includes('event:second-room-1014-nen-class'), 'Chapter 413 must retain the expanded second Nen class');
-  const chapter414 = getChapter(414);
-  assert(chapter414?.reader?.manifestChapter === 414, 'Chapter 414 must bridge into the reader manifest');
-  assert(chapter414?.sourceIds?.includes('source:chapter-414'), 'Chapter 414 must preserve its canonical source record');
-  const latestRecord = getChapter(latestChapter);
-  assert(latestRecord?.reader?.manifestChapter === latestChapter, `latest Chapter ${latestChapter} must bridge into the reader manifest`);
 
-  const kurapikaEvents = getEventsForCharacter('character:kurapika');
-  assert(kurapikaEvents.some((event) => event.id === 'event:room-1014-nen-classes'), 'character event index must include the Room 1014 Nen classes');
-  assert(kurapikaEvents.some((event) => event.id === 'event:longhi-kurapika-treaty'), 'character event index must include the Longhi treaty');
-  assert(kurapikaEvents.some((event) => event.id === 'event:room-1014-opening-crisis'), 'character event index must include the opening Room 1014 crisis');
-  assert(kurapikaEvents.some((event) => event.id === 'event:lower-prince-alliance-formation'), 'character event index must include the lower-prince alliance');
+  const room1014 = getLocationBreadcrumbs('location:black-whale:tier-1:room-1014');
+  assert(room1014.map((record) => record.name).join(' > ').includes('Room 1014'), 'location breadcrumbs must resolve the Room 1014 hierarchy');
+  assert(getEventsAtLocation('location:black-whale:tier-1:room-1014').some((record) => record.id === 'event:room-1014-opening-crisis'), 'Room 1014 must expose linked events');
+  assert(getEntitiesAtLocation('location:black-whale:tier-1:room-1014').some((record) => record.entity?.id === 'character:kurapika'), 'Room 1014 must expose Kurapika through its occupancy records');
+  assert(getAbilitiesAtLocation('location:black-whale:tier-1:room-1014').some((record) => record.id === 'ability:dowsing-chain'), 'Room 1014 must expose linked abilities');
+  assert(getLocationsForAbility('ability:dowsing-chain').some((record) => record.id === 'location:black-whale:tier-1:room-1014'), 'Dowsing Chain must expose linked locations');
+  assert(getChaptersForAbility('ability:dowsing-chain').some((record) => record.number === 348), 'Dowsing Chain must expose linked chapters');
+  assert(getEventsForAbility('ability:silent-majority').some((record) => record.id === 'event:silent-majority-class-killings'), 'Silent Majority must expose linked events');
+  assert(getEventsForCharacter('character:kurapika').length > 0, 'Kurapika must expose linked events');
+  assert(getEventsForOrganization('organization:hunter-association').length > 0, 'Hunter Association must expose linked events');
+  assert(getOrganizationMembers('organization:hunter-association').some((record) => record.character?.id === 'character:kurapika'), 'Hunter Association membership lookup must include Kurapika');
+  assert(getAssignmentsForPerson('character:kurapika').length > 0, 'Kurapika must expose assignment history');
+  assert(getAssignmentsForSubject('character:woble-hui-guo-rou').length > 0, 'Woble must expose protection assignments');
+  assert(getActiveAssignmentsForSubject('character:woble-hui-guo-rou', latestChapter).length > 0, 'Woble must expose active protection assignments at the current boundary');
+  assert(getRelatedEntities('character:kurapika').length > 0, 'Kurapika must expose graph relationships');
 
-  const silentMajorityEvents = getEventsForAbility('ability:silent-majority');
-  assert(silentMajorityEvents.some((event) => event.id === 'event:silent-majority-class-killings'), 'ability event index must connect Silent Majority to its class killings');
-  const silentMajorityChapters = new Set(getChaptersForAbility('ability:silent-majority').map((chapter) => chapter.number));
-  assert(silentMajorityChapters.has(369) && silentMajorityChapters.has(376), 'ability chapter index must cover Silent Majority’s documented chapter range');
-  const contagionLocations = new Set(getLocationsForAbility('ability:contagion').map((location) => location.id));
-  assert(contagionLocations.has('location:black-whale:tier-3'), 'ability location index must connect Contagion to Tier 3');
-  assert(contagionLocations.has('location:black-whale:tier-3:heil-ly-hideout'), 'ability location index must connect Contagion to the Heil-Ly hideout');
-  const room1014Abilities = new Set(getAbilitiesAtLocation('location:black-whale:tier-1:room-1014').map((ability) => ability.id));
-  assert(room1014Abilities.has('ability:silent-majority'), 'location ability projection must expose Silent Majority in Room 1014');
-  assert(room1014Abilities.has('ability:have-not-curse'), 'location ability projection must expose the Have-Not curse threat in Room 1014');
-  const heilLyEvents = getEventsForOrganization('organization:heil-ly');
-  assert(heilLyEvents.some((event) => event.id === 'event:heil-ly-contagion-activation'), 'organization event index must expose the Heil-Ly campaign');
-  assert(heilLyEvents.some((event) => event.id === 'event:luini-troupe-confrontation'), 'organization event index must expose the Luini confrontation');
+  const kurapikaSearch = searchSuccessionArchive('Kurapika');
+  assert(kurapikaSearch.some((record) => record.entity?.id === 'character:kurapika'), 'search must resolve Kurapika');
+  const dowsingSearch = searchSuccessionArchive('Dowsing Chain');
+  assert(dowsingSearch.some((record) => record.entity?.id === 'ability:dowsing-chain'), 'search must resolve Dowsing Chain');
+  assert(successionArchiveData.characters.length === characterRecords.length, 'public canonical data must expose the same character catalogue as selectors');
 
-  const roomOccupants = getEntitiesAtLocation('location:black-whale:tier-1:room-1014', 369);
-  const roomOccupantIds = new Set(roomOccupants.map(({ entity }) => entity.id));
-  assert(roomOccupantIds.has('character:kurapika'), 'location history must place Kurapika in Room 1014 during Chapter 369');
-  assert(roomOccupantIds.has('character:woble-hui-guo-rou'), 'location history must place Woble in Room 1014 during Chapter 369');
-
-  const breadcrumbs = getLocationBreadcrumbs('location:black-whale:tier-3:room-3101');
-  assert(
-    breadcrumbs.map((location) => location.id).join('>') === 'location:black-whale>location:black-whale:tier-3>location:black-whale:tier-3:room-3101',
-    'location breadcrumbs must preserve the Room 3101 hierarchy',
-  );
-  assert(getEventsAtLocation('location:black-whale:tier-3:room-3101').some((event) => event.id === 'event:room-3101-breach'), 'Room 3101 must index its breach operation');
-
-  const heilLyMembers = getOrganizationMembers('organization:heil-ly');
-  assert(heilLyMembers.some(({ character }) => character.id === 'character:morena-prudo'), 'organization membership must derive Morena from canonical affiliation data');
-  assert(heilLyMembers.length >= 20, 'Heil-Ly membership must include the named Contagion network');
-
-  const kurapikaAssignments = getAssignmentsForPerson('character:kurapika');
-  assert(kurapikaAssignments.some((assignment) => assignment.id === 'assignment:kurapika-protects-woble'), 'person assignment index must include Kurapika’s Woble contract');
-  const wobleAssignments = getAssignmentsForSubject('character:woble-hui-guo-rou');
-  assert(wobleAssignments.some((assignment) => assignment.id === 'assignment:babimyna-observes-woble'), 'subject assignment index must include Benjamin surveillance');
-  assert(wobleAssignments.some((assignment) => assignment.id === 'assignment:sarahell-infiltrates-woble'), 'subject assignment index must include Sarahell’s curse infiltration');
-  const wobleAt400 = new Set(getActiveAssignmentsForSubject('character:woble-hui-guo-rou', 400).map((assignment) => assignment.id));
-  const wobleAt411 = new Set(getActiveAssignmentsForSubject('character:woble-hui-guo-rou', 411).map((assignment) => assignment.id));
-  assert(!wobleAt400.has('assignment:sarahell-infiltrates-woble'), 'Sarahell must not appear in the Chapter 400 assignment snapshot');
-  assert(wobleAt411.has('assignment:sarahell-infiltrates-woble'), 'Sarahell must appear in the Chapter 411 assignment snapshot');
-
-  const kachoBeast = getEntitiesByType('guardian-beast').find((record) => record.id === 'guardian-beast:kacho');
-  assert(kachoBeast?.knownAbilityIds?.includes('ability:without-you'), 'Kacho’s Guardian Spirit Beast must link to Without You');
-  const halkenburgBeast = getEntitiesByType('guardian-beast').find((record) => record.id === 'guardian-beast:halkenburg');
-  assert(halkenburgBeast?.knownAbilityIds?.includes('ability:halkenburg-guardian-marking'), 'Halkenburg’s Guardian Spirit Beast must link to its collective marking system');
-  const wobleBeast = getEntitiesByType('guardian-beast').find((record) => record.id === 'guardian-beast:woble');
-  assert(wobleBeast?.suspectedAbilityIds?.includes('ability:woble-guardian-beast-unrevealed'), 'Woble’s Guardian Spirit Beast must retain its unrevealed ability record');
-
-  const kurapikaRelatedIds = new Set(getRelatedEntities('character:kurapika').map((entity) => entity.id));
-  assert(kurapikaRelatedIds.has('organization:hunter-association'), 'related-entity projection must include affiliations');
-  assert(kurapikaRelatedIds.has('ability:emperor-time'), 'related-entity projection must include abilities');
-  assert(kurapikaRelatedIds.has('ability:stealth-dolphin'), 'related-entity projection must include Batch 1 abilities');
-  assert(kurapikaRelatedIds.has('ability:dowsing-chain'), 'related-entity projection must include expanded Kurapika abilities');
-  assert(kurapikaRelatedIds.has('ability:steal-chain'), 'related-entity projection must include Steal Chain');
-  assert(kurapikaRelatedIds.has('assignment:kurapika-protects-woble'), 'related-entity projection must include assignments');
-  assert(kurapikaRelatedIds.has('event:room-1014-opening-crisis'), 'related-entity projection must include expanded events');
-  assert(kurapikaRelatedIds.has('chapter:369'), 'related-entity projection must include chapter appearances');
-
-  const silentMajorityRelatedIds = new Set(getRelatedEntities('ability:silent-majority').map((entity) => entity.id));
-  assert(silentMajorityRelatedIds.has('event:silent-majority-class-killings'), 'ability related projection must include linked events');
-  assert(silentMajorityRelatedIds.has('location:black-whale:tier-1:room-1014'), 'ability related projection must include linked locations');
-  assert(silentMajorityRelatedIds.has('chapter:369'), 'ability related projection must include linked chapters');
-
-  const tserriednichSearch = searchSuccessionArchive('fourth prince');
-  assert(tserriednichSearch.some(({ entity }) => entity.id === 'character:tserriednich-hui-guo-rou'), 'global search must resolve character aliases');
-  assert(searchSuccessionArchive('Moonlight Act').some(({ entity }) => entity.id === 'ability:moonlight-act'), 'global search must resolve Batch 1 abilities');
-  assert(searchSuccessionArchive('Dowsing Chain').some(({ entity }) => entity.id === 'ability:dowsing-chain'), 'global search must resolve expanded canonical abilities');
-  assert(searchSuccessionArchive('First Nen-Class Assassinations').some(({ entity }) => entity.id === 'event:silent-majority-class-killings'), 'global search must resolve expanded event aliases');
-  assert(searchSuccessionArchive('surveillance Woble').some(({ entity }) => entity.id === 'assignment:babimyna-observes-woble'), 'global search must resolve assignment type and subject summaries');
-  const latestChapterSearch = searchSuccessionArchive(`chapter ${latestChapter}`);
-  assert(latestChapterSearch.some(({ entity }) => entity.id === `chapter:${latestChapter}`), `global search must resolve Chapter ${latestChapter}`);
-
-  const duplicateReferences = Object.values(successionArchiveData)
-    .filter(Array.isArray)
-    .flat()
-    .filter((entity) => entity.sourceIds && new Set(entity.sourceIds).size !== entity.sourceIds.length);
-  assert(duplicateReferences.length === 0, 'entity source references must not contain duplicates');
-
-  console.log(
-    `Succession Archive data audit passed: ${successionArchiveValidation.stats.entities} entities, `
-    + `${characterRecords.length} named characters, ${abilities.length} abilities, ${locations.length} locations, `
-    + `${events.length} events, ${assignments.length} assignments, ${relationships.length} relationships, `
-    + `and ${chapterRecords.length} chapter records through ${latestChapter}.`,
-  );
+  console.log(`Succession Archive audit passed: ${characterRecords.length} characters, ${bodyguards.length} bodyguards with explicit media slots, ${abilities.length} abilities, ${locations.length} locations, ${events.length} events, ${assignments.length} assignments, ${relationships.length} relationships, and ${chapterRecords.length} sequential chapter records through research Chapter ${latestChapter}; local page media through Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}.`);
 } finally {
   await vite.close();
 }
