@@ -8,6 +8,7 @@ import {
   MonumentTitle,
   StoryBeat,
 } from './ArtDirectionPrimitives';
+import './ArtDirectionPrimitives.stories.css';
 
 export default {
   title: 'Succession/Art Direction/Composition Grammar',
@@ -18,28 +19,28 @@ export default {
 
 export function MonumentAndBleed() {
   return <ArtCanvas className="succession-art-act" aria-label="Monument type and image bleed example">
-    <div style={{ gridColumn: '1 / span 7', alignSelf: 'end', position: 'relative', zIndex: 2 }}>
+    <div className="succession-art-story__copy">
       <MetaRail items={['Succession Contest', 'Chapter-aware', 'Editorial grammar']} />
       <MonumentTitle>Fourteen heirs. One vessel.</MonumentTitle>
       <p className="succession-art-copy">Typography and manga imagery are allowed to become architecture rather than content inside repeated component shells.</p>
     </div>
     <BleedMedia
+      className="succession-art-story__media"
       src="/media/rooms/black-whale-exterior.webp"
       alt="Black Whale 1"
       bleed="right"
-      style={{ gridColumn: '7 / -1', minHeight: '72vh' }}
     />
-    <Annotation style={{ right: '6%', bottom: '9%' }}>Content can occupy the interface instead of sitting inside it.</Annotation>
+    <Annotation className="succession-art-story__annotation">Content can occupy the interface instead of sitting inside it.</Annotation>
   </ArtCanvas>;
 }
 
 export function NarrativeBeat() {
   return <ArtCanvas className="succession-art-act" aria-label="Narrative beat example">
-    <div style={{ gridColumn: '1 / span 6' }}>
+    <div className="succession-art-story__title">
       <MetaRail items={['Narrative', 'Progressive disclosure']} />
       <DisplayTitle>Information arrives when it matters.</DisplayTitle>
     </div>
-    <div style={{ gridColumn: '8 / span 4', display: 'grid', gap: '38px', paddingTop: '140px' }}>
+    <div className="succession-art-story__beats">
       <StoryBeat title="Prince">Introduce the subject.</StoryBeat>
       <StoryBeat title="Protection">Reveal the surrounding personnel.</StoryBeat>
       <StoryBeat title="Conflict">Expose the relationship pressure.</StoryBeat>
