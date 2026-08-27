@@ -1,0 +1,31 @@
+.succession-art-story__copy {
+  grid-column: 1 / span 7;
+  align-self: end;
+  position: relative;
+  z-index: 2;
+}
+
+.succession-art-story__copy .succession-art-copy {
+  margin-top: 28px;
+}
+
+.succession-art-story__media {
+  grid-column: 7 / -1;
+  min-height: 72vh;
+}
+
+.succession-art-story__annotation {
+  right: 6%;
+  bottom: 9%;
+}
+
+.succession-art-story__title {
+  grid-column: 1 / span 6;
+}
+
+.succession-art-story__beats {
+  grid-column: 8 / span 4;
+  display: grid;
+  gap: 38px;
+  padding-top: 140px;
+}
