@@ -6,6 +6,9 @@
   "scripts": {
     "predev": "npm run prepare:media-derivatives",
     "dev": "vite --host 0.0.0.0",
+    "design:lab": "npm run prepare:media-derivatives && vite --host 0.0.0.0 --open /__design-lab",
+    "storybook": "storybook dev -p 6006",
+    "storybook:build": "storybook build",
     "audit:routes": "node scripts/audit-route-registry.mjs",
     "audit:coverage": "node scripts/audit-archive-coverage.mjs",
     "audit:spoilers": "node scripts/audit-chapter-boundary.mjs",
