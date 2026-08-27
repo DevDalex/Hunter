@@ -39,6 +39,7 @@ const DISPLAY_BATCH = 120;
 const DENSITY_BUCKETS = 48;
 const normalize = (value) => String(value || '').trim().toLocaleLowerCase();
 const trackLabel = (trackId) => timelineTracks.find((track) => track.id === trackId)?.label || trackId;
+const formatCount = (value) => Number(value || 0).toLocaleString();
 
 const importanceRank = (importance) => {
   if (importance === 'major') return 3;
@@ -120,22 +121,21 @@ function prepareTimelineEvents(spoilerLimit) {
 function PhaseStrip({ phases, stats, activePhase, onSelect }) {
   return (
     <div className="tae-phase-strip" aria-label="Timeline story phases">
-      {phases.map((phase) => {
+      {phases.map((phase, index) => {
         const phaseStats = stats.get(phase.id) || { count: 0, major: 0 };
-        const span = Math.max(1, phase.endChapter - phase.startChapter + 1);
         const active = activePhase === phase.id;
         return (
           <button
             type="button"
             className={active ? 'is-active' : ''}
-            style={{ flexGrow: span }}
             aria-pressed={active}
+            title={`${phase.title} · Chapters ${phase.startChapter}–${phase.endChapter}`}
             onClick={() => onSelect(active ? '' : phase.id)}
             key={phase.id}
           >
-            <small>{phase.ordinal} · Ch. {phase.startChapter}–{phase.endChapter}</small>
+            <small>Era {index + 1}</small>
             <strong>{phase.shortTitle}</strong>
-            <span>{phaseStats.count} events · {phaseStats.major} major</span>
+            <span>{formatCount(phaseStats.count)} events</span>
           </button>
         );
       })}
@@ -157,58 +157,50 @@ function DensityGraph({ buckets, maximum }) {
   );
 }
 
-function TimelineEventRow({ event, selected, showPhase, onSelect }) {
+function TimelineEventRow({ event, selected, onSelect }) {
   return (
-    <>
-      {showPhase && (
-        <header className="tae-phase-break">
-          <span>{event.phase.ordinal}</span>
-          <div>
-            <small>{event.phase.label}</small>
-            <strong>{event.phase.shortTitle}</strong>
-          </div>
-          <em>Ch. {event.phase.startChapter}–{event.phase.endChapter}</em>
-        </header>
-      )}
-      <button
-        type="button"
-        className={`tae-event tae-event--${event.importance}${selected ? ' is-selected' : ''}`}
-        aria-pressed={selected}
-        onClick={() => onSelect(event)}
-      >
-        <span className="tae-event__time">
-          <small>{event.day ? `Day ${event.day}` : 'Prelude'}</small>
-          <strong>{event.time || `Ch. ${event.chapter}`}</strong>
-          <em>Ch. {event.chapter}</em>
+    <button
+      type="button"
+      className={`tae-event tae-event--${event.importance}${selected ? ' is-selected' : ''}`}
+      aria-pressed={selected}
+      onClick={() => onSelect(event)}
+    >
+      <span className="tae-event__time">
+        <small>{event.day ? `Day ${event.day}` : 'Prelude'}</small>
+        <strong>{event.time || `Ch. ${event.chapter}`}</strong>
+        <em>Ch. {event.chapter}</em>
+      </span>
+      <span className="tae-event__rail" aria-hidden="true">
+        <i>{event.importance === 'major' ? '★' : event.importance === 'standard' ? '●' : '·'}</i>
+      </span>
+      <span className="tae-event__content">
+        <span className="tae-event__heading">
+          <strong>{event.title}</strong>
+          <small>{importanceLabel(event.importance)}</small>
         </span>
-        <span className="tae-event__rail" aria-hidden="true">
-          <i>{event.importance === 'major' ? '★' : event.importance === 'standard' ? '●' : '·'}</i>
+        <span className="tae-event__detail">{event.detail}</span>
+        <span className="tae-event__meta">
+          <i>{event.phase.shortTitle}</i>
+          {event.location && <i><MapPin size={11} aria-hidden="true" /> {event.location}</i>}
+          {!!event.people?.length && <i><Users size={11} aria-hidden="true" /> {event.people.slice(0, 2).join(', ')}{event.people.length > 2 ? ` +${event.people.length - 2}` : ''}</i>}
         </span>
-        <span className="tae-event__content">
-          <span className="tae-event__heading">
-            <strong>{event.title}</strong>
-            <small>{importanceLabel(event.importance)}</small>
-          </span>
-          <span className="tae-event__detail">{event.detail}</span>
-          <span className="tae-event__meta">
-            {event.location && <i><MapPin size={11} aria-hidden="true" /> {event.location}</i>}
-            {!!event.people?.length && <i><Users size={11} aria-hidden="true" /> {event.people.slice(0, 2).join(', ')}{event.people.length > 2 ? ` +${event.people.length - 2}` : ''}</i>}
-            {!!event.tracks?.length && <i><Layers3 size={11} aria-hidden="true" /> {event.tracks.slice(0, 2).map(trackLabel).join(' · ')}</i>}
-          </span>
-        </span>
-        <ChevronRight className="tae-event__chevron" size={16} aria-hidden="true" />
-      </button>
-    </>
+      </span>
+      <ChevronRight className="tae-event__chevron" size={16} aria-hidden="true" />
+    </button>
   );
 }
 
-function EventInspector({ event, onClose, onNavigate }) {
+function EventInspector({ event, onClose, onNavigate, totalEvents }) {
   if (!event) {
     return (
       <div className="tae-inspector__empty">
         <span>Event inspector</span>
-        <h2>Select an event without leaving the chronology.</h2>
-        <p>Full descriptions, timing confidence, evidence state, people, threads, cause, consequence, and source material stay attached to the selected record.</p>
+        <h2>Select an event</h2>
+        <p>The chronology stays in place while the full record opens here. Long descriptions, sources, images, consequences, and connected events stay attached to the selected moment.</p>
+        <div className="tae-inspector__scale-note">
+          <strong>Why this scales</strong>
+          <p>The archive contains {formatCount(totalEvents)} entries, but the interface only renders the amount appropriate to the selected zoom level.</p>
+        </div>
       </div>
     );
   }
@@ -226,7 +218,7 @@ function EventInspector({ event, onClose, onNavigate }) {
       <section className="tae-inspector__title">
         <span>{event.phase.shortTitle}</span>
         <h2>{event.title}</h2>
-        <p>{event.day ? `Voyage Day ${event.day}` : 'Pre-voyage'} · {event.time} · Chapter {event.chapter}</p>
+        <p>{event.day ? `Voyage Day ${event.day}` : 'Pre-voyage'} · {event.time || 'Time not fixed'} · Chapter {event.chapter}</p>
       </section>
 
       <section className="tae-inspector__description">
@@ -342,6 +334,7 @@ export default function TimelineArchiveExplorer({
   const renderedEvents = filteredEvents.slice(0, displayLimit);
   const densityMode = DENSITY_MODES.find((mode) => mode.id === density) || DENSITY_MODES[0];
   const activePhaseRecord = successionTimelinePhases.find((phase) => phase.id === activePhase) || null;
+  const streamTitle = density === 'recap' ? 'Key turning points' : density === 'story' ? 'Story chronology' : 'Full chronology';
 
   useEffect(() => setDisplayLimit(DISPLAY_BATCH), [activePhase, activeTrack, density, majorOnly, query]);
 
@@ -381,12 +374,14 @@ export default function TimelineArchiveExplorer({
   };
 
   return (
-    <div className="timeline-archive-explorer">
+    <div className="timeline-archive-explorer" aria-label={`Succession Timeline, ${formatCount(events.length)} events`}>
       <header className="tae-header">
         <div className="tae-header__identity">
           <span>Semantic chronology</span>
-          <h1>Succession Timeline</h1>
-          <p>{events.length} events available through Chapter {spoilerLimit}{timelineEventCount !== events.length ? ` · ${timelineEventCount} in the complete maintained archive` : ''}</p>
+          <div className="tae-header__countline">
+            <h1>{formatCount(events.length)} events</h1>
+            <p>showing {formatCount(filteredEvents.length)} of {formatCount(events.length)} events</p>
+          </div>
         </div>
         <nav className="tae-density-modes" aria-label="Timeline information density">
           {DENSITY_MODES.map((mode) => (
@@ -406,28 +401,25 @@ export default function TimelineArchiveExplorer({
 
       <section className="tae-overview" aria-label="Timeline overview">
         <div className="tae-overview__head">
-          <div>
-            <span>Story minimap</span>
-            <strong>{activePhaseRecord ? activePhaseRecord.title : 'Entire Succession Contest chronology'}</strong>
-          </div>
-          <p>{densityMode.note} · {filteredEvents.length} matching events</p>
+          <span>Story minimap</span>
+          <p>{activePhaseRecord ? activePhaseRecord.shortTitle : 'All eras'}</p>
         </div>
         <PhaseStrip phases={successionTimelinePhases} stats={phaseStats} activePhase={activePhase} onSelect={setActivePhase} />
         <DensityGraph buckets={densityBuckets} maximum={densityMaximum} />
       </section>
 
       <section className="tae-toolbar" aria-label="Timeline filters">
-        <label className="tae-search">
+        <label className="tae-search" title="Search people, places, events, evidence">
           <Search size={16} aria-hidden="true" />
           <span className="sr-only">Search timeline</span>
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search people, places, events, evidence…" />
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search event, character, faction, location…" />
           {query && <button type="button" onClick={() => setQuery('')} aria-label="Clear timeline search"><X size={14} aria-hidden="true" /></button>}
         </label>
         <label className="tae-track-filter">
           <Layers3 size={15} aria-hidden="true" />
-          <span className="sr-only">Filter timeline by story thread</span>
-          <select value={activeTrack} onChange={(event) => setActiveTrack(event.target.value)}>
-            <option value="">All story threads</option>
+          <span className="sr-only">All story threads</span>
+          <select aria-label="All story threads" value={activeTrack} onChange={(event) => setActiveTrack(event.target.value)}>
+            <option value="">All lanes</option>
             {availableTracks.map((track) => <option value={track.id} key={track.id}>{track.label} · {track.count}</option>)}
           </select>
         </label>
@@ -441,18 +433,16 @@ export default function TimelineArchiveExplorer({
         <main className="tae-stream" aria-label="Timeline event stream">
           <header className="tae-stream__head">
             <div>
-              <span>{densityMode.label} view</span>
-              <h2>{activePhaseRecord?.shortTitle || 'Complete story map'}</h2>
+              <h2>{streamTitle}</h2>
+              <p>{densityMode.note}{activePhaseRecord ? ` · ${activePhaseRecord.shortTitle}` : ''}</p>
             </div>
-            <p><strong>{filteredEvents.length}</strong> matching · rendering {Math.min(displayLimit, filteredEvents.length)}</p>
+            <span>click any event →</span>
           </header>
 
           <div className="tae-stream__events">
-            {renderedEvents.map((event, index) => {
-              const previous = renderedEvents[index - 1];
-              const showPhase = !previous || previous.phase.id !== event.phase.id;
-              return <TimelineEventRow event={event} selected={event.id === selectedId} showPhase={showPhase} onSelect={selectEvent} key={event.id} />;
-            })}
+            {renderedEvents.map((event) => (
+              <TimelineEventRow event={event} selected={event.id === selectedId} onSelect={selectEvent} key={event.id} />
+            ))}
             {!renderedEvents.length && (
               <div className="tae-empty">
                 <Search size={20} aria-hidden="true" />
@@ -471,7 +461,7 @@ export default function TimelineArchiveExplorer({
         </main>
 
         <aside className="tae-inspector" aria-label="Selected timeline event">
-          <EventInspector event={selectedEvent} onClose={closeInspector} onNavigate={onNavigate} />
+          <EventInspector event={selectedEvent} onClose={closeInspector} onNavigate={onNavigate} totalEvents={events.length || timelineEventCount} />
         </aside>
       </div>
     </div>
