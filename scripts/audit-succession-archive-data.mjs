@@ -125,7 +125,7 @@ try {
   const room1014 = getLocationBreadcrumbs('location:black-whale:tier-1:room-1014');
   assert(room1014.map((record) => record.name).join(' > ').includes('Room 1014'), 'location breadcrumbs must resolve the Room 1014 hierarchy');
   assert(getEventsAtLocation('location:black-whale:tier-1:room-1014').some((record) => record.id === 'event:room-1014-opening-crisis'), 'Room 1014 must expose linked events');
-  assert(getEntitiesAtLocation('location:black-whale:tier-1:room-1014').some((record) => record.id === 'character:kurapika'), 'Room 1014 must expose linked occupants');
+  assert(getEntitiesAtLocation('location:black-whale:tier-1:room-1014').some((record) => record.entity?.id === 'character:kurapika'), 'Room 1014 must expose Kurapika through its occupancy records');
   assert(getAbilitiesAtLocation('location:black-whale:tier-1:room-1014').some((record) => record.id === 'ability:dowsing-chain'), 'Room 1014 must expose linked abilities');
   assert(getLocationsForAbility('ability:dowsing-chain').some((record) => record.id === 'location:black-whale:tier-1:room-1014'), 'Dowsing Chain must expose linked locations');
   assert(getChaptersForAbility('ability:dowsing-chain').some((record) => record.number === 348), 'Dowsing Chain must expose linked chapters');
@@ -144,7 +144,7 @@ try {
   assert(dowsingSearch.some((record) => record.id === 'ability:dowsing-chain'), 'search must resolve Dowsing Chain');
   assert(successionArchiveData.characters.length === characterRecords.length, 'public canonical data must expose the same character catalogue as selectors');
 
-  console.log(`Succession Archive audit passed: ${characterRecords.length} characters, ${bodyguards.length} bodyguards with explicit media slots, ${abilities.length} abilities, ${locations.length} locations, ${events.length} events, ${assignments.length} assignments, ${relationships.length} relationships, ${chapterRecords.length} sequential chapter records through research Chapter ${latestChapter}; local page media through Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}.`);
+  console.log(`Succession Archive audit passed: ${characterRecords.length} characters, ${bodyguards.length} bodyguards with explicit media slots, ${abilities.length} abilities, ${locations.length} locations, ${events.length} events, ${assignments.length} assignments, ${relationships.length} relationships, and ${chapterRecords.length} sequential chapter records through research Chapter ${latestChapter}; local page media through Chapter ${LATEST_AUTHORIZED_SUCCESSION_CHAPTER}.`);
 } finally {
   await vite.close();
 }
