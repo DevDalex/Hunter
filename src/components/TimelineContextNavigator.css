@@ -139,7 +139,7 @@
   font-family: var(--succession-font-mono, var(--mono));
   font-size: 11px;
   line-height: 1;
-  transform: translateX(50%) scale(.86);
+  transform: translateX(50%);
   transform-origin: center top;
 }
 .tcn-viewport {
