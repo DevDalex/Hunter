@@ -12,6 +12,7 @@ import TimelineStoryField from './TimelineStoryField';
 import TimelineStoryTopography from './TimelineStoryTopography';
 import TimelineWorkspaceSwitcher, { resolveTimelineWorkspaceMode } from './TimelineWorkspaceSwitcher';
 import './TimelineWorkspace.css';
+import './TimelinePrimaryAtlas.css';
 
 export default function TimelineWorkspace({
   requestedSearch = '',
@@ -113,18 +114,12 @@ export default function TimelineWorkspace({
   };
 
   return (
-    <section className={`timeline-workspace timeline-command timeline-command--voyage-only timeline-workspace--mode-${workspaceMode}${spatialActive ? ' timeline-workspace--spatial-intelligence' : ''}${cinematicActive ? ' timeline-workspace--event-focus' : ''}`} id="timeline-workspace">
+    <section className={`timeline-workspace timeline-command timeline-command--voyage-only timeline-workspace--mode-${workspaceMode}${storyActive ? ' timeline-workspace--primary-map' : ''}${spatialActive ? ' timeline-workspace--spatial-intelligence' : ''}${cinematicActive ? ' timeline-workspace--event-focus' : ''}`} id="timeline-workspace">
       <TimelineContextNavigator
         requestedState={resolvedState}
         spoilerLimit={spoilerLimit}
         onNavigate={navigateTimelineState}
       />
-
-      {!cinematicActive && <TimelineWorkspaceSwitcher
-        activeMode={workspaceMode}
-        requestedState={resolvedState}
-        onNavigate={navigateTimelineState}
-      />}
 
       {cinematicActive ? <TimelineEventFocus
         eventId={resolvedState.event}
@@ -134,12 +129,24 @@ export default function TimelineWorkspace({
         onClose={closeEventFocus}
         onOpenLocation={openLocationInSpatialIntelligence}
       /> : <>
+        {storyActive && <TimelineStoryField
+          requestedState={resolvedState}
+          spoilerLimit={spoilerLimit}
+          onNavigate={navigateTimelineState}
+        />}
+
+        <TimelineWorkspaceSwitcher
+          activeMode={workspaceMode}
+          requestedState={resolvedState}
+          onNavigate={navigateTimelineState}
+        />
+
         <TimelineCharacterSpatialFollower
           requestedState={resolvedState}
           onNavigate={navigateTimelineState}
         />
 
-        {storyActive && <>
+        {storyActive && <section className="timeline-map-supporting-intelligence" aria-label="Supporting Timeline intelligence">
           <TimelineStoryTopography
             requestedState={resolvedState}
             spoilerLimit={spoilerLimit}
@@ -150,12 +157,7 @@ export default function TimelineWorkspace({
             spoilerLimit={spoilerLimit}
             onNavigate={navigateTimelineState}
           />
-          <TimelineStoryField
-            requestedState={resolvedState}
-            spoilerLimit={spoilerLimit}
-            onNavigate={navigateTimelineState}
-          />
-        </>}
+        </section>}
 
         {compareActive && <TimelineComparisonBuilder
           requestedState={resolvedState}
