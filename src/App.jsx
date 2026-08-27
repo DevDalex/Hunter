@@ -1,5 +1,6 @@
-import { lazy, Suspense, useEffect } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import SuccessionCommandHome from './components/succession/SuccessionCommandHome';
+import SuccessionTimelineMangaWall from './components/succession/SuccessionTimelineMangaWall';
 import { ARCHIVE_BOUNDARY } from './data/archiveMeta';
 
 const SuccessionArtDirectionLab = import.meta.env.DEV
@@ -10,28 +11,53 @@ const isDesignLabPath = () => import.meta.env.DEV
   && typeof window !== 'undefined'
   && window.location.pathname.startsWith('/__design-lab');
 
-const resetLocationToHome = () => {
-  if (typeof window === 'undefined' || isDesignLabPath()) return;
-  const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-  if (current !== '/') window.history.replaceState({ hxhRoute: '/' }, '', '/');
+const normalizePathname = (pathname = '/') => {
+  if (pathname === '/timeline' || pathname === '/timeline/') return '/timeline';
+  return '/';
+};
+
+const currentRoute = () => {
+  if (typeof window === 'undefined') return '/';
+  return normalizePathname(window.location.pathname);
 };
 
 export default function App() {
   const designLab = isDesignLabPath();
+  const [route, setRoute] = useState(currentRoute);
 
   useEffect(() => {
-    if (!designLab) {
-      document.title = 'Hunter × Hunter Archive';
-      resetLocationToHome();
+    if (designLab) return undefined;
+
+    const syncRoute = () => setRoute(currentRoute());
+    const normalized = normalizePathname(window.location.pathname);
+    const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    const canonical = normalized;
+
+    if (current !== canonical) {
+      window.history.replaceState({ hxhRoute: normalized }, '', canonical);
     }
+
+    syncRoute();
+    window.addEventListener('popstate', syncRoute);
+    return () => window.removeEventListener('popstate', syncRoute);
   }, [designLab]);
 
-  const stayHome = () => {
-    resetLocationToHome();
+  useEffect(() => {
+    if (designLab) return;
+    document.title = route === '/timeline'
+      ? 'Timeline · Hunter × Hunter Archive'
+      : 'Hunter × Hunter Archive';
+  }, [designLab, route]);
+
+  const navigate = (destination, { replace = false } = {}) => {
+    const next = normalizePathname(destination);
+    if (replace) window.history.replaceState({ hxhRoute: next }, '', next);
+    else window.history.pushState({ hxhRoute: next }, '', next);
+    setRoute(next);
     window.scrollTo?.({ top: 0, left: 0, behavior: 'auto' });
   };
 
-  const keepInternalLinksOnHome = (event) => {
+  const keepInternalNavigationInApp = (event) => {
     const anchor = event.target?.closest?.('a[href]');
     if (!anchor || anchor.target === '_blank') return;
 
@@ -42,7 +68,7 @@ export default function App() {
     if (destination.origin !== window.location.origin) return;
 
     event.preventDefault();
-    stayHome();
+    navigate(destination.pathname);
   };
 
   if (designLab && SuccessionArtDirectionLab) {
@@ -52,14 +78,17 @@ export default function App() {
   return (
     <div
       id="top"
-      className="app-shell view-succession is-command-home"
-      onClickCapture={keepInternalLinksOnHome}
+      className={`app-shell ${route === '/timeline' ? 'view-timeline' : 'view-succession is-command-home'}`}
+      onClickCapture={keepInternalNavigationInApp}
     >
-      <SuccessionCommandHome
-        spoilerLimit={ARCHIVE_BOUNDARY}
-        onNavigate={stayHome}
-        onOpenSearch={stayHome}
-      />
+      {route === '/timeline' ? (
+        <SuccessionTimelineMangaWall
+          spoilerLimit={ARCHIVE_BOUNDARY}
+          onBack={() => navigate('/')}
+        />
+      ) : (
+        <SuccessionCommandHome onNavigate={navigate} />
+      )}
     </div>
   );
 }
