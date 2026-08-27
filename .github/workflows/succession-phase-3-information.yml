@@ -1,21 +1,10 @@
 name: Succession Phase 3 Information Consistency
 
 on:
-  pull_request:
-    paths:
-      - 'src/data/succession/**'
-      - 'src/components/succession/SuccessionArchiveShell.jsx'
-      - 'src/components/succession/SuccessionInformationConsistencyPanel.jsx'
-      - 'src/components/succession/SuccessionInformationConsistencyPanel.css'
-      - 'scripts/audit-succession-phase-3-information-consistency.mjs'
-      - 'scripts/audit-succession-phase-3-exception-states.mjs'
-      - 'scripts/succession-phase-3-dossier-qa.mjs'
-      - 'scripts/run-succession-runtime-audits.mjs'
-      - '.github/workflows/succession-phase-3-information.yml'
   workflow_dispatch:
 
 concurrency:
-  group: succession-phase-3-information-${{ github.event.pull_request.number || github.ref }}
+  group: succession-phase-3-information-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -23,9 +12,9 @@ permissions:
 
 jobs:
   phase-3-information-consistency:
-    name: Phase 3 data and desktop dossier gate
+    name: Legacy Phase 3 information consistency suite
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 25
 
     steps:
       - name: Check out repository
@@ -40,26 +29,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Phase 3 data audits
+      - name: Run preserved Phase 3 data audits
         run: |
           node scripts/audit-succession-phase-3-information-consistency.mjs
           node scripts/audit-succession-phase-3-exception-states.mjs
 
-      - name: Build presentation runtime
-        run: npm run build:runtime
-
-      - name: Install Chromium
-        run: npm exec playwright -- install --with-deps chromium
-
-      - name: Inspect selected desktop dossiers
-        run: node scripts/succession-phase-3-dossier-qa.mjs
-
-      - name: Publish Phase 3 diagnostics
+      - name: Explain scope
         if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: succession-phase-3-information-diagnostics
-          path: .visual-qa/succession-phase-3-dossiers
-          include-hidden-files: true
-          if-no-files-found: warn
-          retention-days: 14
+        run: echo 'This is a manual historical Phase 3 information suite. Retired dossier routes are not part of the homepage production release gate.' >> "$GITHUB_STEP_SUMMARY"
