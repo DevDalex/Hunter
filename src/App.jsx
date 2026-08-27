@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import SuccessionCommandHome from './components/succession/SuccessionCommandHome';
 import { ARCHIVE_BOUNDARY } from './data/archiveMeta';
 
-const SuccessionTimelineMangaWall = lazy(() => import('./components/succession/SuccessionTimelineMangaWall'));
+const TimelineWorkspace = lazy(() => import('./components/TimelineWorkspace'));
 const SuccessionArtDirectionLab = import.meta.env.DEV
   ? lazy(() => import('./components/succession/art-direction/SuccessionArtDirectionLab'))
   : null;
@@ -83,9 +83,10 @@ export default function App() {
     >
       {route === '/timeline' ? (
         <Suspense fallback={null}>
-          <SuccessionTimelineMangaWall
+          <TimelineWorkspace
+            requestedState={{}}
             spoilerLimit={ARCHIVE_BOUNDARY}
-            onBack={() => navigate('/')}
+            onNavigate={() => {}}
           />
         </Suspense>
       ) : (
