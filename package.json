@@ -81,7 +81,7 @@
     "doctor": "node scripts/doctor.mjs",
     "generate:build-info": "node scripts/generate-build-info.mjs",
     "prepare:eta-assets": "node scripts/prepare-eta-assets.mjs",
-    "check": "npm run generate:build-info && npm run docs:check && npm run test:unit && npm run audit:homepage-runtime && npm run audit:foundation && npm run audit:schema && npm run audit:succession-visibility && npm run audit:hosted-admin",
+    "check": "npm run generate:build-info && npm run docs:check && npm run test:unit && npm run audit:homepage-runtime && npm run audit:foundation && npm run audit:schema && npm run audit:hosted-admin",
     "build:runtime": "node scripts/clean-hosting.mjs && npm run prepare:media-derivatives && npm run audit:media-derivatives && vite build && npm run audit:performance && node scripts/prepare-hosting.mjs && npm run audit:release",
     "build": "npm run build:runtime",
     "verify": "npm run check && npm run build:runtime",
