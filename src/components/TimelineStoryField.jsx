@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   Crosshair,
   Eye,
@@ -37,9 +37,9 @@ const CORE_LANES = [
   'expedition',
 ];
 const DEPTH_ORDER = ['pulse', 'recap', 'study', 'research', 'complete'];
-const CONTEXT_WINDOW = 18;
 const normalize = (value) => String(value || '').trim().toLocaleLowerCase();
 const clamp = (value, minimum, maximum) => Math.max(minimum, Math.min(value, maximum));
+const finiteNumber = (value) => Number.isFinite(Number(value)) ? Number(value) : null;
 
 function StoryFieldNode({ event, left, laneIndex, selected, muted, featured, onOpen }) {
   const elevation = event.importance === 'major' ? 38 : event.importance === 'standard' ? 22 : 10;
@@ -76,6 +76,7 @@ export default function TimelineStoryField({
 }) {
   const [camera, setCamera] = useState('flat');
   const [hoveredLane, setHoveredLane] = useState('');
+  const panRef = useRef(null);
 
   const events = useMemo(() => {
     const prelude = successionPreludeEvents
@@ -102,15 +103,26 @@ export default function TimelineStoryField({
 
   const chapterMinimum = events.length ? Math.min(...events.map((event) => event.chapter)) : 340;
   const chapterMaximum = events.length ? Math.max(...events.map((event) => event.chapter)) : chapterMinimum;
+  const chapterSpan = Math.max(1, chapterMaximum - chapterMinimum + 1);
   const contextChapter = clamp(Number(requestedState.chapter) || chapterMaximum, chapterMinimum, chapterMaximum);
-  const depth = DEPTH_ORDER.includes(requestedState.depth) ? requestedState.depth : 'complete';
+  const requestedWindow = finiteNumber(requestedState.window);
+  const boundedWindow = clamp(requestedWindow ?? Math.min(chapterSpan, 18), 5, chapterSpan);
+  const automaticDepth = boundedWindow >= 56
+    ? 'pulse'
+    : boundedWindow >= 32
+      ? 'recap'
+      : boundedWindow >= 18
+        ? 'study'
+        : boundedWindow >= 9
+          ? 'research'
+          : 'complete';
+  const depth = DEPTH_ORDER.includes(requestedState.depth) ? requestedState.depth : automaticDepth;
   const activeTrack = requestedState.thread || '';
   const activeCharacter = requestedState.character ? getEntityById(requestedState.character) : null;
   const activeCharacterTerms = activeCharacter
     ? [activeCharacter.name, ...(activeCharacter.aliases || [])].map(normalize).filter(Boolean)
     : [];
 
-  const boundedWindow = Math.min(CONTEXT_WINDOW, chapterMaximum - chapterMinimum + 1);
   let windowFrom = contextChapter - Math.floor((boundedWindow - 1) / 2);
   let windowTo = windowFrom + boundedWindow - 1;
   if (windowFrom < chapterMinimum) {
@@ -245,7 +257,7 @@ export default function TimelineStoryField({
     }).sort((left, right) => (right.end - right.start) - (left.end - left.start)).slice(0, 12);
   }, [assignedEvents, contextChapter, laneRank, lanes.length, windowFrom, windowTo]);
 
-  const sceneWidth = clamp(windowSpan * (camera === 'flat' ? 62 : 68), 980, 1320);
+  const sceneWidth = clamp(windowSpan * (camera === 'flat' ? 92 : 100), 1100, 4800);
   const focusLane = activeTrack && laneIds.has(activeTrack) ? activeTrack : hoveredLane;
   const contextLeft = ((contextChapter - windowFrom + .5) / windowSpan) * 100;
 
@@ -256,28 +268,78 @@ export default function TimelineStoryField({
   };
   const selectLane = (laneId) => {
     if (laneId === 'other') return;
-    if (activeTrack === laneId) commit({}, ['thread']);
-    else commit({ thread: laneId, view: 'threads' });
+    if (activeTrack === laneId) commit({ mode: 'story' }, ['thread', 'view', 'intel']);
+    else commit({ thread: laneId, mode: 'story' }, ['view', 'intel']);
   };
   const openEvent = (event) => commit({ event: event.id, chapter: event.chapter, depth: 'complete' });
-  const jumpContext = (chapter) => commit({ chapter: clamp(chapter, chapterMinimum, chapterMaximum) }, ['event']);
-  const setDepth = (nextDepth) => commit({ depth: nextDepth });
+  const jumpContext = (chapter) => commit({ chapter: clamp(chapter, chapterMinimum, chapterMaximum), window: boundedWindow, mode: 'story' }, ['event', 'view', 'intel']);
+  const setDepth = (nextDepth) => commit({ depth: nextDepth, mode: 'story' }, ['view', 'intel']);
+  const setWindow = (nextWindow, chapter = contextChapter) => commit({
+    chapter: clamp(chapter, chapterMinimum, chapterMaximum),
+    window: clamp(nextWindow, 5, chapterSpan),
+    mode: 'story',
+  }, ['depth', 'view', 'intel', 'event']);
+
+  const startPan = (event) => {
+    if (event.button !== 0 || event.target.closest('button')) return;
+    panRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      width: event.currentTarget.clientWidth || 1,
+      scrollLeft: event.currentTarget.scrollLeft,
+    };
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+    event.currentTarget.classList.add('is-panning');
+  };
+
+  const movePan = (event) => {
+    const pan = panRef.current;
+    if (!pan || pan.pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - pan.startX;
+    event.currentTarget.scrollLeft = pan.scrollLeft - deltaX;
+  };
+
+  const finishPan = (event) => {
+    const pan = panRef.current;
+    if (!pan || pan.pointerId !== event.pointerId) return;
+    const deltaX = event.clientX - pan.startX;
+    panRef.current = null;
+    event.currentTarget.classList.remove('is-panning');
+    if (Math.abs(deltaX) < 48) return;
+    const chapterDelta = Math.round((-deltaX / Math.max(1, pan.width)) * Math.max(2, windowSpan * .72));
+    if (chapterDelta) jumpContext(contextChapter + chapterDelta);
+  };
+
+  const handleMapWheel = (event) => {
+    if (!event.ctrlKey && !event.metaKey) return;
+    event.preventDefault();
+    if (event.deltaY < 0) setWindow(Math.max(5, Math.round(boundedWindow / 1.55)));
+    else if (event.deltaY > 0) setWindow(Math.min(chapterSpan, Math.max(6, Math.round(boundedWindow * 1.55))));
+  };
+
+  const handleMapDoubleClick = (event) => {
+    if (event.target.closest('button')) return;
+    const bounds = event.currentTarget.getBoundingClientRect();
+    const fraction = clamp((event.clientX - bounds.left + event.currentTarget.scrollLeft) / Math.max(1, event.currentTarget.scrollWidth), 0, .999);
+    const targetChapter = clamp(windowFrom + Math.floor(fraction * windowSpan), chapterMinimum, chapterMaximum);
+    setWindow(Math.max(5, Math.round(boundedWindow / 1.65)), targetChapter);
+  };
 
   return <section className={`timeline-story-field is-camera-${camera} is-depth-${depth}${focusLane ? ' has-focus' : ''}`} aria-labelledby="tsf-title">
     <header className="tsf-head">
       <div>
-        <span><Rotate3d size={14} aria-hidden="true" /> STORY FIELD · TIME × THREAD × IMPORTANCE</span>
-        <h2 id="tsf-title">The chronology has depth now.</h2>
-        <p>Only the active 18-chapter context is mounted here. The full archive stays indexed, while the field remains readable and fast.</p>
+        <span><Rotate3d size={14} aria-hidden="true" /> TIMELINE MAP · CHAPTER × STORY LANE</span>
+        <h2 id="tsf-title">Succession Timeline Map</h2>
+        <p>Drag the map to pan through chapters. Ctrl/Command + wheel or the full-arc navigator changes semantic zoom.</p>
       </div>
-      <div className="tsf-camera" aria-label="Story field camera">
-        <span>CAMERA</span>
-        <button type="button" className={camera === 'field' ? 'is-active' : ''} aria-pressed={camera === 'field'} onClick={() => setCamera('field')}><Rotate3d size={13} aria-hidden="true" /> Field</button>
+      <div className="tsf-camera" aria-label="Timeline map projection">
+        <span>PROJECTION</span>
         <button type="button" className={camera === 'flat' ? 'is-active' : ''} aria-pressed={camera === 'flat'} onClick={() => setCamera('flat')}><Rows3 size={13} aria-hidden="true" /> Flat</button>
+        <button type="button" className={camera === 'field' ? 'is-active' : ''} aria-pressed={camera === 'field'} onClick={() => setCamera('field')}><Rotate3d size={13} aria-hidden="true" /> Depth</button>
       </div>
     </header>
 
-    <section className="tsf-toolbar" aria-label="Story field controls">
+    <section className="tsf-toolbar" aria-label="Timeline map controls">
       <div className="tsf-depth">
         <span>SEMANTIC DEPTH</span>
         {DEPTH_ORDER.map((id) => <button type="button" className={depth === id ? 'is-active' : ''} aria-pressed={depth === id} onClick={() => setDepth(id)} key={id}>{id}</button>)}
@@ -293,7 +355,7 @@ export default function TimelineStoryField({
     </section>
 
     <div className="tsf-shell">
-      <aside className="tsf-lanes" aria-label="Story field lanes">
+      <aside className="tsf-lanes" aria-label="Timeline story lanes">
         <header><Layers3 size={14} aria-hidden="true" /><span>STORY LANES</span></header>
         {lanes.map((lane, index) => <button
           type="button"
@@ -311,8 +373,19 @@ export default function TimelineStoryField({
         </button>)}
       </aside>
 
-      <div className="tsf-viewport" role="region" aria-label="Scrollable story field" tabIndex="0">
-        <div className="tsf-horizon"><span>CHAPTER {windowFrom}</span><strong>{camera === 'field' ? 'PERSPECTIVE STORY FIELD' : 'ORTHOGRAPHIC STORY FIELD'}</strong><span>CHAPTER {windowTo}</span></div>
+      <div
+        className="tsf-viewport"
+        role="region"
+        aria-label={`Timeline map, Chapters ${windowFrom} through ${windowTo}. Drag empty map space to pan.`}
+        tabIndex="0"
+        onPointerDown={startPan}
+        onPointerMove={movePan}
+        onPointerUp={finishPan}
+        onPointerCancel={finishPan}
+        onWheel={handleMapWheel}
+        onDoubleClick={handleMapDoubleClick}
+      >
+        <div className="tsf-horizon"><span>CHAPTER {windowFrom}</span><strong>{windowSpan} CHAPTERS · {depth.toUpperCase()} DEPTH</strong><span>CHAPTER {windowTo}</span></div>
         <div className="tsf-scene" style={{ '--scene-width': `${sceneWidth}px`, '--lane-count': lanes.length }}>
           <div className="tsf-stage">
             <div className="tsf-chapter-grid" aria-hidden="true">
@@ -368,8 +441,8 @@ export default function TimelineStoryField({
     </div>
 
     <footer className="tsf-footer">
-      <div><Eye size={13} aria-hidden="true" /><span>{plottedEvents.length.toLocaleString()} mounted nodes</span><small>Ch. {windowFrom}–{windowTo}; {events.length.toLocaleString()} total archive records stay indexed.</small></div>
-      <div><Maximize2 size={13} aria-hidden="true" /><span>{rails.length} active rails</span><small>Only spans intersecting the current context are mounted.</small></div>
+      <div><Eye size={13} aria-hidden="true" /><span>{plottedEvents.length.toLocaleString()} visible events</span><small>{events.length.toLocaleString()} total archive records stay indexed.</small></div>
+      <div><Maximize2 size={13} aria-hidden="true" /><span>{rails.length} active story spans</span><small>Ch. {windowFrom}–{windowTo}; zoom automatically changes detail unless manually pinned.</small></div>
       {activeCharacter && <div><Crosshair size={13} aria-hidden="true" /><span>Following {activeCharacter.name}</span><small>Unrelated nodes recede instead of disappearing.</small></div>}
     </footer>
   </section>;
