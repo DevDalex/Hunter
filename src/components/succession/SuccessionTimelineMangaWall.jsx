@@ -117,6 +117,7 @@ function MangaPage({ chapter, page, onOpen }) {
 function TimelineEvent({ event, filter, open, onToggle, forceDetail }) {
   const matched = eventMatchesFilter(event, filter);
   const landmark = eventIsLandmark(event);
+  const detailVisible = forceDetail || open;
 
   return (
     <article className={`timeline-manga-wall__event${landmark ? ' is-landmark' : ''}${matched ? '' : ' is-dimmed'}${open ? ' is-open' : ''}`}>
@@ -124,7 +125,7 @@ function TimelineEvent({ event, filter, open, onToggle, forceDetail }) {
         type="button"
         className="timeline-manga-wall__event-button"
         onClick={() => !forceDetail && onToggle(event.id)}
-        aria-expanded={forceDetail || open}
+        aria-expanded={detailVisible}
       >
         <strong>{event.title}</strong>
         {!!event.tracks.length && (
@@ -133,7 +134,7 @@ function TimelineEvent({ event, filter, open, onToggle, forceDetail }) {
           </span>
         )}
       </button>
-      <div className="timeline-manga-wall__event-detail" aria-hidden={!forceDetail && !open}>
+      <div className="timeline-manga-wall__event-detail" hidden={!detailVisible}>
         <p>{event.detail}</p>
         <dl>
           {event.location && <div><dt>Place</dt><dd>{event.location}</dd></div>}
