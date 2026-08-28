@@ -16,6 +16,7 @@ import {
 import './TimelineWorkspace.css';
 import './TimelinePrimaryAtlas.css';
 import './TimelineCompleteSystem.css';
+import './TimelineCleanup.css';
 
 export default function TimelineWorkspace({
   requestedState = {},
