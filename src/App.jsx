@@ -40,6 +40,25 @@ const timelineHref = (state = {}) => {
   return `/timeline${search ? `?${search}` : ''}`;
 };
 
+const legacyTimelineDestination = (url) => {
+  const root = '/story/succession-contest';
+  if (!url.pathname.startsWith(root)) return '';
+  const chapter = url.searchParams.get('chapter');
+  const state = {};
+
+  if (url.pathname === `${root}/events`) state.mode = 'archive';
+  else if (url.pathname === `${root}/chapter-records`) {
+    state.mode = 'archive';
+    if (chapter) Object.assign(state, { chapter, from: chapter, to: chapter });
+  } else if (url.pathname === `${root}/nen`) Object.assign(state, { mode: 'story', lens: 'nen' });
+  else if (url.pathname === `${root}/relationships`) state.mode = 'atlas';
+  else if (url.pathname === `${root}/characters`) Object.assign(state, { mode: 'atlas', view: 'people' });
+  else if (url.pathname === `${root}/locations`) state.mode = 'space';
+  else return '';
+
+  return timelineHref(state);
+};
+
 const meaningfulTimelineNavigation = (current, next) => [
   'mode',
   'event',
@@ -118,8 +137,15 @@ export default function App() {
 
     const destination = new URL(anchor.href, window.location.href);
     if (destination.origin !== window.location.origin) return;
-    if (!['/', '/timeline', '/timeline/'].includes(destination.pathname)) return;
 
+    const legacyTimelineHref = legacyTimelineDestination(destination);
+    if (legacyTimelineHref) {
+      event.preventDefault();
+      navigate(legacyTimelineHref);
+      return;
+    }
+
+    if (!['/', '/timeline', '/timeline/'].includes(destination.pathname)) return;
     event.preventDefault();
     navigate(`${destination.pathname}${destination.search}`);
   };
