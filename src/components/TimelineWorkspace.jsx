@@ -80,6 +80,8 @@ export default function TimelineWorkspace({
     });
   };
 
+  const openTimelineLocation = onOpenLocation || openLocationInSpatialIntelligence;
+
   return (
     <section
       className={`timeline-workspace timeline-workspace--complete-system timeline-workspace--mode-${workspaceMode}${archiveActive ? ' timeline-workspace--archive-explorer' : ''}`}
@@ -159,7 +161,7 @@ export default function TimelineWorkspace({
           requestedState={modeState}
           spoilerLimit={spoilerLimit}
           onNavigate={navigateTimelineState}
-          onOpenLocation={onOpenLocation}
+          onOpenLocation={openTimelineLocation}
         />
       </div>}
 
