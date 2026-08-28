@@ -21,21 +21,57 @@ const currentRoute = () => {
   return normalizePathname(window.location.pathname);
 };
 
+const readTimelineState = () => {
+  if (typeof window === 'undefined' || normalizePathname(window.location.pathname) !== '/timeline') return {};
+  return Object.fromEntries(new URLSearchParams(window.location.search).entries());
+};
+
+const sanitizeTimelineState = (state = {}) => Object.fromEntries(Object.entries(state)
+  .filter(([key, value]) => key !== 'scope'
+    && value !== undefined
+    && value !== null
+    && value !== ''
+    && value !== false)
+  .map(([key, value]) => [key, String(value)]));
+
+const timelineHref = (state = {}) => {
+  const params = new URLSearchParams(sanitizeTimelineState(state));
+  const search = params.toString();
+  return `/timeline${search ? `?${search}` : ''}`;
+};
+
+const meaningfulTimelineNavigation = (current, next) => [
+  'mode',
+  'event',
+  'focus',
+  'compare',
+  'view',
+  'intel',
+  'character',
+  'thread',
+  'spaceLocation',
+].some((key) => String(current?.[key] || '') !== String(next?.[key] || ''));
+
 export default function App() {
   const designLab = isDesignLabPath();
   const [route, setRoute] = useState(currentRoute);
+  const [timelineState, setTimelineState] = useState(readTimelineState);
 
   useEffect(() => {
     if (designLab) return undefined;
 
-    const syncRoute = () => setRoute(currentRoute());
-    const normalized = normalizePathname(window.location.pathname);
-    const current = `${window.location.pathname}${window.location.search}${window.location.hash}`;
-    const canonical = normalized;
+    const syncRoute = () => {
+      const nextRoute = currentRoute();
+      setRoute(nextRoute);
+      setTimelineState(nextRoute === '/timeline' ? readTimelineState() : {});
+    };
 
-    if (current !== canonical) {
-      window.history.replaceState({ hxhRoute: normalized }, '', canonical);
-    }
+    const normalized = normalizePathname(window.location.pathname);
+    const canonical = normalized === '/timeline'
+      ? `/timeline${window.location.search}`
+      : '/';
+    const current = `${window.location.pathname}${window.location.search}`;
+    if (current !== canonical) window.history.replaceState({ hxhRoute: normalized }, '', canonical);
 
     syncRoute();
     window.addEventListener('popstate', syncRoute);
@@ -44,17 +80,33 @@ export default function App() {
 
   useEffect(() => {
     if (designLab) return;
+    const lens = route === '/timeline' ? timelineState.mode || 'archive' : '';
     document.title = route === '/timeline'
-      ? 'Timeline · Hunter × Hunter Archive'
+      ? `${lens.charAt(0).toUpperCase()}${lens.slice(1)} Timeline · Hunter × Hunter Archive`
       : 'Hunter × Hunter Archive';
-  }, [designLab, route]);
+  }, [designLab, route, timelineState.mode]);
 
   const navigate = (destination, { replace = false } = {}) => {
-    const next = normalizePathname(destination);
-    if (replace) window.history.replaceState({ hxhRoute: next }, '', next);
-    else window.history.pushState({ hxhRoute: next }, '', next);
-    setRoute(next);
+    const url = new URL(destination, window.location.origin);
+    const nextRoute = normalizePathname(url.pathname);
+    const href = nextRoute === '/timeline' ? `/timeline${url.search}` : '/';
+    if (replace) window.history.replaceState({ hxhRoute: nextRoute }, '', href);
+    else window.history.pushState({ hxhRoute: nextRoute }, '', href);
+    setRoute(nextRoute);
+    setTimelineState(nextRoute === '/timeline' ? Object.fromEntries(url.searchParams.entries()) : {});
     window.scrollTo?.({ top: 0, left: 0, behavior: 'auto' });
+  };
+
+  const commitTimelineState = (nextState = {}) => {
+    const sanitized = sanitizeTimelineState(nextState);
+    const href = timelineHref(sanitized);
+    const push = meaningfulTimelineNavigation(timelineState, sanitized);
+    if (`${window.location.pathname}${window.location.search}` !== href) {
+      if (push) window.history.pushState({ hxhRoute: '/timeline' }, '', href);
+      else window.history.replaceState({ hxhRoute: '/timeline' }, '', href);
+    }
+    setRoute('/timeline');
+    setTimelineState(sanitized);
   };
 
   const keepInternalNavigationInApp = (event) => {
@@ -66,9 +118,10 @@ export default function App() {
 
     const destination = new URL(anchor.href, window.location.href);
     if (destination.origin !== window.location.origin) return;
+    if (!['/', '/timeline', '/timeline/'].includes(destination.pathname)) return;
 
     event.preventDefault();
-    navigate(destination.pathname);
+    navigate(`${destination.pathname}${destination.search}`);
   };
 
   if (designLab && SuccessionArtDirectionLab) {
@@ -84,9 +137,9 @@ export default function App() {
       {route === '/timeline' ? (
         <Suspense fallback={null}>
           <TimelineWorkspace
-            requestedState={{}}
+            requestedState={timelineState}
             spoilerLimit={ARCHIVE_BOUNDARY}
-            onNavigate={() => {}}
+            onNavigate={commitTimelineState}
           />
         </Suspense>
       ) : (
