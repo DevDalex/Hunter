@@ -29,10 +29,10 @@ const hasArchiveShapedState = (state) => Boolean(
 );
 
 export function resolveTimelineWorkspaceMode(state = {}) {
-  if (TIMELINE_WORKSPACE_MODES.some((mode) => mode.id === state.mode)) return state.mode;
   if (state.view === 'intelligence' && state.intel === 'space') return 'space';
   if (state.compare) return 'compare';
   if (['threads', 'people', 'intelligence', 'research'].includes(state.view)) return 'atlas';
+  if (TIMELINE_WORKSPACE_MODES.some((mode) => mode.id === state.mode)) return state.mode;
   if (hasArchiveShapedState(state)) return 'archive';
   return 'archive';
 }
