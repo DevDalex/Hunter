@@ -6,10 +6,7 @@ import TimelineContextNavigator from './TimelineContextNavigator';
 import TimelineEventFocus from './TimelineEventFocus';
 import TimelineIntelligencePanels from './TimelineIntelligencePanels';
 import TimelineResearchWorkstation from './TimelineResearchWorkstation';
-import TimelineSemanticLandmarks from './TimelineSemanticLandmarks';
 import TimelineSpatialIntelligence from './TimelineSpatialIntelligence';
-import TimelineStoryField from './TimelineStoryField';
-import TimelineStoryTopography from './TimelineStoryTopography';
 import TimelineWorkspaceSwitcher, { resolveTimelineWorkspaceMode } from './TimelineWorkspaceSwitcher';
 import { SuccessionExplorerProvider } from './succession/SuccessionExplorerState';
 import {
@@ -31,7 +28,6 @@ export default function TimelineWorkspace({
     : requestedState;
   const workspaceMode = resolveTimelineWorkspaceMode(resolvedState);
   const modeState = { ...resolvedState, mode: workspaceMode };
-  const storyActive = workspaceMode === 'story';
   const compareActive = workspaceMode === 'compare';
   const atlasActive = workspaceMode === 'atlas';
   const archiveActive = workspaceMode === 'archive';
@@ -121,24 +117,6 @@ export default function TimelineWorkspace({
         spoilerLimit={spoilerLimit}
         onNavigate={navigateTimelineState}
       />}
-
-      {storyActive && <div className="timeline-system-mode timeline-system-mode--story">
-        <TimelineStoryTopography
-          requestedState={modeState}
-          spoilerLimit={spoilerLimit}
-          onNavigate={navigateTimelineState}
-        />
-        <TimelineSemanticLandmarks
-          requestedState={modeState}
-          spoilerLimit={spoilerLimit}
-          onNavigate={navigateWithDossier}
-        />
-        <TimelineStoryField
-          requestedState={modeState}
-          spoilerLimit={spoilerLimit}
-          onNavigate={navigateWithDossier}
-        />
-      </div>}
 
       {compareActive && <div className="timeline-system-mode timeline-system-mode--compare">
         <TimelineComparisonBuilder
