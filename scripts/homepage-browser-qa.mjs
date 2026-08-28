@@ -137,16 +137,11 @@ try {
     await page.locator('.timeline-workspace-switcher').waitFor({ state: 'visible' });
   });
 
-  await record('production timeline exposes the seven-phase minimap and interactive density overview', async () => {
+  await record('production timeline exposes the seven-phase minimap without the orange density graph', async () => {
     const phaseCount = await page.locator('.tae-phase-strip button').count();
-    const densityBars = await page.locator('.tae-density-graph > button').count();
     if (phaseCount !== 7) throw new Error(`expected 7 phases, found ${phaseCount}`);
-    if (densityBars !== 48) throw new Error(`expected 48 density buckets, found ${densityBars}`);
+    if (await page.locator('.tae-density-graph').isVisible()) throw new Error('orange density graph is still visible');
     await page.getByRole('heading', { name: /1,555 events/i }).waitFor({ state: 'visible' });
-    await page.locator('.tae-density-graph > button').nth(20).click();
-    await page.locator('.tae-window-chip').waitFor({ state: 'visible' });
-    if (!new URL(page.url()).searchParams.has('from')) throw new Error(`density window did not persist to URL: ${page.url()}`);
-    await page.locator('.tae-window-chip').click();
   });
 
   await record('Full mode exposes the complete archive with bounded DOM rendering and sequence clusters', async () => {
@@ -177,13 +172,9 @@ try {
     if (location.pathname !== '/timeline' || location.searchParams.get('search') !== 'Kurapika') throw new Error(`timeline search state was not addressable: ${location}`);
   });
 
-  await record('Map, Compare, Research, and Space all reopen the same chronology through dedicated lenses', async () => {
+  await record('Compare, Research, and Space reopen the same chronology while Map stays retired', async () => {
     const modes = page.locator('.timeline-workspace-switcher .tws-modes');
-
-    await modes.getByRole('button', { name: /Map/i }).click();
-    await page.locator('.timeline-system-mode--story').waitFor({ state: 'visible', timeout: 15_000 });
-    await page.locator('.timeline-context-navigator').waitFor({ state: 'visible' });
-    if (new URL(page.url()).searchParams.get('mode') !== 'story') throw new Error('Map mode did not persist');
+    if (await modes.getByRole('button', { name: /Map/i }).count() !== 0) throw new Error('retired Map lens is still visible');
 
     await modes.getByRole('button', { name: /Compare/i }).click();
     await page.locator('.timeline-system-mode--compare').waitFor({ state: 'visible', timeout: 15_000 });
@@ -197,6 +188,12 @@ try {
 
     await modes.getByRole('button', { name: /Archive/i }).click();
     await page.locator('.timeline-archive-explorer').waitFor({ state: 'visible', timeout: 15_000 });
+  });
+
+  await record('legacy Map URLs fall back to Archive instead of reopening the removed section', async () => {
+    await page.goto(`${base}/timeline?mode=story`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+    await page.locator('.timeline-archive-explorer').waitFor({ state: 'visible', timeout: 15_000 });
+    if (await page.locator('.timeline-system-mode--story').count() !== 0) throw new Error('legacy Map surface remounted');
   });
 
   await record('timeline direct URL rehydrates filters after a fresh navigation', async () => {
