@@ -1,3 +1,4 @@
+/* The orange density histogram is intentionally retired; keep the seven-era minimap compact. */
 .timeline-workspace--complete-system .tae-density-graph {
   display: none !important;
 }
