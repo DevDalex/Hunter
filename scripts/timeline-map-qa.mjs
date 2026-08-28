@@ -63,24 +63,22 @@ try {
   await page.waitForSelector('.timeline-archive-explorer', { state: 'visible', timeout: 20_000 });
   await page.waitForSelector('.timeline-workspace-switcher', { state: 'visible', timeout: 20_000 });
 
-  const initial = await page.evaluate(() => ({
-    phases: document.querySelectorAll('.tae-phase-strip button').length,
-    densityBars: document.querySelectorAll('.tae-density-graph > button').length,
-    events: document.querySelectorAll('.tae-event').length,
-    modes: [...document.querySelectorAll('.tws-modes button strong')].map((node) => node.textContent.trim()),
-    overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
-  }));
+  const initial = await page.evaluate(() => {
+    const graph = document.querySelector('.tae-density-graph');
+    return {
+      phases: document.querySelectorAll('.tae-phase-strip button').length,
+      densityVisible: graph ? getComputedStyle(graph).display !== 'none' : false,
+      events: document.querySelectorAll('.tae-event').length,
+      modes: [...document.querySelectorAll('.tws-modes button strong')].map((node) => node.textContent.trim()),
+      overflow: Math.max(document.documentElement.scrollWidth, document.body.scrollWidth) - innerWidth,
+    };
+  });
   check(initial.phases === 7, `seven maintained phases render (${initial.phases})`);
-  check(initial.densityBars === 48, `interactive density minimap renders 48 buckets (${initial.densityBars})`);
+  check(!initial.densityVisible, 'orange density graph is removed from the visible minimap');
   check(initial.events > 0 && initial.events <= 120, `Archive keeps the first event batch bounded (${initial.events})`);
-  check(['Archive', 'Map', 'Compare', 'Research', 'Space'].every((label) => initial.modes.includes(label)), 'all five Timeline lenses are visible');
+  check(['Archive', 'Compare', 'Research', 'Space'].every((label) => initial.modes.includes(label)), 'four Timeline lenses are visible');
+  check(!initial.modes.includes('Map'), 'Map lens is retired');
   check(initial.overflow <= 2, `Timeline does not spill outside the desktop viewport (${initial.overflow}px)`);
-
-  await page.locator('.tae-density-graph > button').nth(18).click();
-  await page.waitForSelector('.tae-window-chip', { state: 'visible' });
-  let current = new URL(page.url());
-  check(Boolean(current.searchParams.get('from') && current.searchParams.get('to')), 'density-window selection persists into the URL');
-  await page.locator('.tae-window-chip').click();
 
   await page.getByRole('button', { name: /^Full$/ }).click();
   await page.waitForTimeout(120);
@@ -90,7 +88,7 @@ try {
 
   await page.locator('.tae-event').first().click();
   await page.waitForSelector('.tae-inspector__record', { state: 'visible' });
-  current = new URL(page.url());
+  let current = new URL(page.url());
   check(Boolean(current.searchParams.get('event') && current.searchParams.get('chapter')), 'selected event creates an addressable deep link');
   check(await page.getByRole('button', { name: /Open full dossier/i }).count() === 1, 'persistent inspector exposes the full dossier');
 
@@ -101,10 +99,7 @@ try {
   await page.waitForSelector('.timeline-system-event-drawer', { state: 'detached', timeout: 15_000 });
 
   const modes = page.locator('.tws-modes');
-  await modes.getByRole('button', { name: /Map/i }).click();
-  await page.waitForSelector('.timeline-system-mode--story', { state: 'visible', timeout: 15_000 });
-  check(await page.locator('.timeline-context-navigator').count() === 1, 'Map restores persistent semantic chapter zoom');
-  check(await page.locator('.timeline-story-field').count() === 1, 'Map restores parallel story-field lanes');
+  check(await modes.getByRole('button', { name: /Map/i }).count() === 0, 'Map control is absent');
 
   await modes.getByRole('button', { name: /Compare/i }).click();
   await page.waitForSelector('.timeline-system-mode--compare', { state: 'visible', timeout: 15_000 });
@@ -118,6 +113,10 @@ try {
   await page.waitForSelector('.timeline-system-mode--space', { state: 'visible', timeout: 15_000 });
   check(await page.locator('.timeline-spatial-intelligence').count() === 1, 'Space restores Black Whale spatial intelligence');
 
+  await page.goto(`${base}/timeline?mode=story`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await page.waitForSelector('.timeline-archive-explorer', { state: 'visible', timeout: 15_000 });
+  check(await page.locator('.timeline-system-mode--story').count() === 0, 'legacy Map URLs fall back to Archive');
+
   await page.goto(`${base}/timeline?mode=archive&density=story&search=Kurapika`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
   await page.waitForSelector('.timeline-archive-explorer', { state: 'visible', timeout: 15_000 });
   check(await page.getByPlaceholder('Search event, character, faction, location…').inputValue() === 'Kurapika', 'fresh navigation rehydrates Archive search state');
@@ -127,7 +126,7 @@ try {
   await page.screenshot({ path: path.join(output, 'timeline-complete-system.png'), fullPage: false });
   report.status = 'passed';
   await writeFile(path.join(output, 'results.json'), `${JSON.stringify(report, null, 2)}\n`);
-  process.stdout.write(`Timeline System QA passed: ${report.assertions.length} assertions across Archive, semantic zoom, dossier, Map, Compare, Research, Space, and deep-link hydration.\n`);
+  process.stdout.write(`Timeline System QA passed: ${report.assertions.length} assertions across Archive, dossier, Compare, Research, Space, legacy Map fallback, and deep-link hydration.\n`);
 } catch (error) {
   report.status = 'failed';
   report.error = error.message;

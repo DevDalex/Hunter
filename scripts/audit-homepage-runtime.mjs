@@ -7,7 +7,7 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Homepage runtime audit failed: ${message}`);
 };
 
-const [app, home, homeCss, workspace, switcher, explorer, explorerCss, completeCss, main] = await Promise.all([
+const [app, home, homeCss, workspace, switcher, explorer, explorerCss, completeCss, cleanupCss, main] = await Promise.all([
   read('src/App.jsx'),
   read('src/components/succession/SuccessionCommandHome.jsx'),
   read('src/components/succession/SuccessionCommandHome.css'),
@@ -16,6 +16,7 @@ const [app, home, homeCss, workspace, switcher, explorer, explorerCss, completeC
   read('src/components/TimelineArchiveExplorer.jsx'),
   read('src/components/TimelineArchiveExplorer.css'),
   read('src/components/TimelineCompleteSystem.css'),
+  read('src/components/TimelineCleanup.css'),
   read('src/main.jsx'),
 ]);
 
@@ -60,7 +61,6 @@ for (const token of [
 for (const token of [
   "import TimelineArchiveExplorer from './TimelineArchiveExplorer'",
   'TimelineContextNavigator',
-  'TimelineStoryField',
   'TimelineComparisonBuilder',
   'TimelineIntelligencePanels',
   'TimelineSpatialIntelligence',
@@ -69,10 +69,15 @@ for (const token of [
   'NenInteractionGraphInstrument',
   'timeline-workspace--complete-system',
 ]) assert(workspace.includes(token), `production Timeline workspace is missing ${token}`);
+for (const retired of ['TimelineStoryField', 'TimelineStoryTopography', 'TimelineSemanticLandmarks', 'timeline-system-mode--story']) {
+  assert(!workspace.includes(retired), `production Timeline restored retired Map surface: ${retired}`);
+}
 
-for (const mode of ['archive', 'story', 'compare', 'atlas', 'space']) {
+for (const mode of ['archive', 'compare', 'atlas', 'space']) {
   assert(switcher.includes(`id: '${mode}'`), `timeline switcher is missing ${mode}`);
 }
+assert(!switcher.includes("id: 'story'"), 'retired Map mode remains in Timeline switcher');
+assert(switcher.includes("state.mode === 'story') return 'archive'"), 'legacy Map URLs must resolve safely to Archive');
 assert(switcher.includes("return 'archive';"), 'approved Archive explorer is not the default Timeline lens');
 
 for (const token of [
@@ -98,7 +103,6 @@ for (const selector of [
   '.timeline-archive-explorer',
   '.tae-density-modes',
   '.tae-phase-strip',
-  '.tae-density-graph',
   '.tae-toolbar',
   '.tae-body',
   '.tae-stream',
@@ -107,12 +111,13 @@ for (const selector of [
 
 for (const selector of [
   '.timeline-workspace--complete-system',
-  '.tae-density-graph > button',
   '.tae-phase-focus',
   '.tae-sequence',
   '.tae-inspector__visual',
   '.timeline-system-event-drawer',
 ]) assert(completeCss.includes(selector), `complete timeline styling is missing ${selector}`);
+assert(cleanupCss.includes('.tae-density-graph'), 'Timeline cleanup stylesheet no longer targets the removed density graph');
+assert(cleanupCss.includes('display: none !important'), 'removed density graph is not suppressed from the rendered Timeline');
 
 assert(!homeCss.toLowerCase().includes('gold'), 'homepage stylesheet restored a prohibited legacy color label');
 assert(!explorerCss.toLowerCase().includes('gold'), 'timeline explorer stylesheet introduced a prohibited legacy color label');
@@ -122,4 +127,4 @@ assert(app.includes("if (!anchor || anchor.target === '_blank') return;"), 'new-
 assert(app.includes("if (!href || href.startsWith('#')) return;"), 'in-page anchors must not be intercepted');
 assert(app.includes('if (destination.origin !== window.location.origin) return;'), 'external links must not be intercepted');
 
-console.log('Homepage runtime audit passed: production exposes the private homepage and a URL-addressable five-lens Timeline with the dark 1,555-event Archive explorer as its default.');
+console.log('Homepage runtime audit passed: production exposes the private homepage and a URL-addressable four-lens Timeline with the dark 1,555-event Archive explorer as its default.');

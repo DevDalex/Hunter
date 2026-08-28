@@ -8,6 +8,7 @@ const switcher = readFileSync(new URL('../src/components/TimelineWorkspaceSwitch
 const explorer = readFileSync(new URL('../src/components/TimelineArchiveExplorer.jsx', import.meta.url), 'utf8');
 const explorerCss = readFileSync(new URL('../src/components/TimelineArchiveExplorer.css', import.meta.url), 'utf8');
 const completeCss = readFileSync(new URL('../src/components/TimelineCompleteSystem.css', import.meta.url), 'utf8');
+const cleanupCss = readFileSync(new URL('../src/components/TimelineCleanup.css', import.meta.url), 'utf8');
 
 test('production Timeline hydrates and serializes real URL state', () => {
   assert.match(app, /const readTimelineState/);
@@ -30,20 +31,22 @@ test('Archive remains the default approved dark timeline presentation', () => {
   assert.match(completeCss, /\.timeline-workspace--complete-system \.timeline-workspace-switcher/);
 });
 
-test('one chronology exposes Archive, Map, Compare, Research, and Space lenses', () => {
-  for (const mode of ['archive', 'story', 'compare', 'atlas', 'space']) {
+test('one chronology exposes Archive, Compare, Research, and Space lenses with Map retired', () => {
+  for (const mode of ['archive', 'compare', 'atlas', 'space']) {
     assert.match(switcher, new RegExp(`id: '${mode}'`), `missing workspace mode ${mode}`);
   }
+  assert.doesNotMatch(switcher, /id: 'story'/);
+  assert.match(switcher, /state\.mode === 'story'\) return 'archive'/);
   for (const component of [
     'TimelineContextNavigator',
-    'TimelineStoryField',
-    'TimelineStoryTopography',
-    'TimelineSemanticLandmarks',
     'TimelineComparisonBuilder',
     'TimelineIntelligencePanels',
     'TimelineSpatialIntelligence',
     'TimelineCharacterSpatialFollower',
   ]) assert.match(workspace, new RegExp(component), `workspace no longer integrates ${component}`);
+  for (const retired of ['TimelineStoryField', 'TimelineStoryTopography', 'TimelineSemanticLandmarks', 'timeline-system-mode--story']) {
+    assert.doesNotMatch(workspace, new RegExp(retired), `retired Map surface remains mounted: ${retired}`);
+  }
 });
 
 test('research lens restores canonical causal and Nen graph instruments', () => {
@@ -61,16 +64,15 @@ test('semantic density keeps recap, story, and complete chronology in one archiv
   assert.match(explorer, /if \(density === 'story'\) return importanceRank\(event\.importance\) >= 2/);
 });
 
-test('archive minimap supports eras, interactive chapter windows, and phase before-after context', () => {
+test('archive minimap keeps eras and phase before-after context without the orange graph', () => {
   assert.match(explorer, /function PhaseStrip/);
   assert.match(explorer, /function PhaseFocus/);
-  assert.match(explorer, /function DensityGraph/);
-  assert.match(explorer, /onSelect\(bucket, active\)/);
   assert.match(explorer, /phase\.before/);
   assert.match(explorer, /phase\.after/);
   assert.match(explorer, /mediaForTimelinePhase/);
   assert.match(explorer, /activeFrom !== null && event\.chapter < activeFrom/);
   assert.match(explorer, /activeTo !== null && event\.chapter > activeTo/);
+  assert.match(cleanupCss, /\.tae-density-graph[\s\S]*display: none !important/);
 });
 
 test('flat event wall is broken into chapter/day sequence clusters', () => {
@@ -106,9 +108,8 @@ test('large result sets remain bounded while offscreen clusters use browser rend
   assert.match(completeCss, /contain-intrinsic-size/);
 });
 
-test('timeline keeps the approved two-pane archive proportions and orange density language', () => {
+test('timeline keeps the approved two-pane archive proportions and seven-era minimap', () => {
   assert.match(explorerCss, /\.tae-body[\s\S]*grid-template-columns: minmax\(0, 1\.68fr\) minmax\(320px, \.95fr\)/);
   assert.match(explorerCss, /\.tae-phase-strip[\s\S]*grid-template-columns: repeat\(7, minmax\(0, 1fr\)\)/);
-  assert.match(explorerCss, /\.tae-density-graph[\s\S]*background: var\(--tae-orange\)/);
-  assert.match(completeCss, /\.tae-density-graph > button/);
+  assert.match(cleanupCss, /display: none !important/);
 });
