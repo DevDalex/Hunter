@@ -5,6 +5,7 @@ import TimelineComparisonBuilder from './TimelineComparisonBuilder';
 import TimelineContextNavigator from './TimelineContextNavigator';
 import TimelineEventFocus from './TimelineEventFocus';
 import TimelineIntelligencePanels from './TimelineIntelligencePanels';
+import TimelineResearchWorkstation from './TimelineResearchWorkstation';
 import TimelineSemanticLandmarks from './TimelineSemanticLandmarks';
 import TimelineSpatialIntelligence from './TimelineSpatialIntelligence';
 import TimelineStoryField from './TimelineStoryField';
@@ -90,6 +91,12 @@ export default function TimelineWorkspace({
       <TimelineWorkspaceSwitcher
         activeMode={workspaceMode}
         requestedState={modeState}
+        onNavigate={navigateTimelineState}
+      />
+
+      <TimelineResearchWorkstation
+        requestedState={modeState}
+        spoilerLimit={spoilerLimit}
         onNavigate={navigateTimelineState}
       />
 
