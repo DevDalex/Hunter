@@ -8,15 +8,18 @@ import {
 import './TimelineWorkspaceSwitcher.css';
 
 export const TIMELINE_WORKSPACE_MODES = Object.freeze([
-  { id: 'story', label: 'Timeline Map', note: 'Primary cartographic chronology', icon: Rotate3d },
-  { id: 'compare', label: 'Compare', note: 'Build parallel chronologies', icon: Layers3 },
-  { id: 'atlas', label: 'Research Atlas', note: 'Situation, threads, people, intelligence', icon: BrainCircuit },
   { id: 'archive', label: 'Archive', note: 'Search and inspect every record', icon: BookOpen },
-  { id: 'space', label: 'Space', note: 'Black Whale spatial intelligence', icon: ShipWheel },
+  { id: 'story', label: 'Map', note: 'Semantic zoom and parallel story lanes', icon: Rotate3d },
+  { id: 'compare', label: 'Compare', note: 'Stack people, factions, threads and places', icon: Layers3 },
+  { id: 'atlas', label: 'Research', note: 'Questions, deadlines, princes and causal intelligence', icon: BrainCircuit },
+  { id: 'space', label: 'Space', note: 'Black Whale location and movement state', icon: ShipWheel },
 ]);
 
 const hasArchiveShapedState = (state) => Boolean(
   state.search
+  || state.density
+  || state.phase
+  || state.major
   || state.arrange
   || state.confidence
   || state.location
@@ -26,35 +29,37 @@ const hasArchiveShapedState = (state) => Boolean(
 );
 
 export function resolveTimelineWorkspaceMode(state = {}) {
-  if (state.event) return 'event';
   if (state.view === 'intelligence' && state.intel === 'space') return 'space';
-  if (TIMELINE_WORKSPACE_MODES.some((mode) => mode.id === state.mode)) return state.mode;
   if (state.compare) return 'compare';
   if (['threads', 'people', 'intelligence', 'research'].includes(state.view)) return 'atlas';
+  if (TIMELINE_WORKSPACE_MODES.some((mode) => mode.id === state.mode)) return state.mode;
   if (hasArchiveShapedState(state)) return 'archive';
-  return 'story';
+  return 'archive';
 }
 
 export default function TimelineWorkspaceSwitcher({ activeMode, requestedState = {}, onNavigate }) {
   const chooseMode = (mode) => {
-    const { event: _event, mode: _mode, ...preserved } = requestedState;
+    const {
+      event: _event,
+      focus: _focus,
+      mode: _mode,
+      view: _view,
+      intel: _intel,
+      compare: _compare,
+      ...preserved
+    } = requestedState;
     if (mode === 'space') {
-      onNavigate?.({ ...preserved, scope: 'events', view: 'intelligence', intel: 'space' });
+      onNavigate?.({ ...preserved, scope: 'events', mode: 'space', view: 'intelligence', intel: 'space' });
       return;
     }
-    const next = { ...preserved, scope: 'events', mode };
-    if (mode !== 'atlas' && next.view === 'intelligence' && next.intel === 'space') {
-      next.view = 'overview';
-      delete next.intel;
-    }
-    onNavigate?.(next);
+    onNavigate?.({ ...preserved, scope: 'events', mode });
   };
 
   return <nav className="timeline-workspace-switcher" aria-label="Timeline workspace modes">
     <div className="tws-identity">
-      <span>SECONDARY LENSES</span>
-      <strong>The map is the Timeline.</strong>
-      <small>Switch representations without discarding chapter, thread, character, or research state.</small>
+      <span>ONE CHRONOLOGY · FIVE LENSES</span>
+      <strong>Change representation, not the evidence.</strong>
+      <small>Archive, map, comparisons, research intelligence, and ship state all read the same maintained event system.</small>
     </div>
     <div className="tws-modes">
       {TIMELINE_WORKSPACE_MODES.map(({ id, label, note, icon: Icon }) => <button

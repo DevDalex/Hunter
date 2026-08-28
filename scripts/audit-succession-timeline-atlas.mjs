@@ -5,14 +5,16 @@ import { timelineEventCount } from '../src/data/successionTimeline.js';
 const root = process.cwd();
 const read = (relative) => readFile(path.join(root, relative), 'utf8');
 const assert = (condition, message) => {
-  if (!condition) throw new Error(`Succession Timeline Explorer audit failed: ${message}`);
+  if (!condition) throw new Error(`Succession Timeline System audit failed: ${message}`);
 };
 
-const [explorer, explorerStyles, workspace, app, packageJson] = await Promise.all([
+const [explorer, explorerStyles, completeStyles, workspace, switcher, app, packageJson] = await Promise.all([
   read('src/components/TimelineArchiveExplorer.jsx'),
   read('src/components/TimelineArchiveExplorer.css'),
+  read('src/components/TimelineCompleteSystem.css'),
   read('src/components/TimelineWorkspace.jsx'),
-  read('src/components/succession/SuccessionArchiveApp.jsx'),
+  read('src/components/TimelineWorkspaceSwitcher.jsx'),
+  read('src/App.jsx'),
   read('package.json'),
 ]);
 
@@ -20,15 +22,16 @@ assert(timelineEventCount === 1555, `the unabridged chronology must contain 1,55
 
 for (const token of [
   'Semantic chronology',
-  'Succession Timeline',
   'Story minimap',
   'Search people, places, events, evidence',
   'All story threads',
   'Major only',
   'Complete event record',
   'Cause and consequence',
+  'Related chronology',
+  'Open full dossier',
   'still hidden from the DOM, not from the archive',
-]) assert(explorer.includes(token), `explorer is missing ${token}`);
+]) assert(explorer.includes(token), `Archive explorer is missing ${token}`);
 
 for (const density of ['recap', 'story', 'full']) {
   assert(explorer.includes(`id: '${density}'`), `semantic density is missing ${density}`);
@@ -40,6 +43,7 @@ for (const helper of [
   'timelineEventCount',
   'timelinePhaseForChapter',
   'successionTimelinePhases',
+  'mediaForTimelinePhase',
   'peopleForTimelineEvent',
   'timelineCausalityForEvent',
   'timelineImportance',
@@ -49,40 +53,61 @@ for (const helper of [
 
 for (const feature of [
   'function PhaseStrip',
+  'function PhaseFocus',
   'function DensityGraph',
   'function TimelineEventRow',
   'function EventInspector',
+  'function sequenceGroups',
+  'function relatedEventsFor',
   'const DISPLAY_BATCH = 120',
   'filteredEvents.slice(0, displayLimit)',
   'setDisplayLimit((current) => current + DISPLAY_BATCH)',
   'activePhase && event.phase.id !== activePhase',
   'activeTrack && !(event.tracks || []).includes(activeTrack)',
   "majorOnly && event.importance !== 'major'",
+  'activeFrom !== null && event.chapter < activeFrom',
+  'activeTo !== null && event.chapter > activeTo',
 ]) assert(explorer.includes(feature), `large-timeline presentation is missing ${feature}`);
 
-for (const selector of [
-  '.timeline-workspace--archive-explorer',
-  '.timeline-archive-explorer',
-  '.tae-density-modes',
-  '.tae-phase-strip',
-  '.tae-density-graph',
-  '.tae-toolbar',
-  '.tae-body',
-  '.tae-stream',
-  '.tae-event',
-  '.tae-inspector',
-]) assert(explorerStyles.includes(selector), `explorer styling is missing ${selector}`);
+for (const mode of ['archive', 'story', 'compare', 'atlas', 'space']) {
+  assert(switcher.includes(`id: '${mode}'`), `workspace switcher is missing ${mode}`);
+}
+assert(switcher.includes("return 'archive';"), 'Archive is not the default Timeline lens');
 
-assert(workspace.includes("import TimelineArchiveExplorer from './TimelineArchiveExplorer'"), 'TimelineWorkspace does not mount TimelineArchiveExplorer');
-assert(workspace.includes('timeline-workspace--archive-explorer'), 'TimelineWorkspace does not expose the archive-explorer layout class');
-assert(!workspace.includes('<TimelineStoryField'), 'legacy TimelineStoryField is still mounted by TimelineWorkspace');
-assert(!workspace.includes('<TimelineContextNavigator'), 'legacy TimelineContextNavigator is still mounted by TimelineWorkspace');
-assert(app.includes('requestedState={routeParams}'), 'route parameters do not hydrate the Timeline workspace');
-assert(explorer.includes('requestedState.search'), 'route search is not hydrated into the explorer');
-assert(explorer.includes('requestedState.event'), 'event deep links are not hydrated into the inspector');
-assert(explorer.includes('chapter: event.chapter') && explorer.includes('event: event.id'), 'selected events do not preserve deep links');
+for (const integration of [
+  'TimelineArchiveExplorer',
+  'TimelineContextNavigator',
+  'TimelineStoryField',
+  'TimelineStoryTopography',
+  'TimelineSemanticLandmarks',
+  'TimelineComparisonBuilder',
+  'TimelineIntelligencePanels',
+  'TimelineSpatialIntelligence',
+  'TimelineCharacterSpatialFollower',
+  'TimelineEventFocus',
+  'TimelineCausalityGraphInstrument',
+  'NenInteractionGraphInstrument',
+]) assert(workspace.includes(integration), `TimelineWorkspace does not integrate ${integration}`);
+
+assert(workspace.includes("focus === 'dossier'"), 'full event dossier is not addressable from Timeline state');
+assert(workspace.includes('timeline-workspace--complete-system'), 'unified dark Timeline shell class is missing');
+assert(app.includes('const readTimelineState'), 'production App does not parse Timeline state from the URL');
+assert(app.includes('const commitTimelineState'), 'production App does not serialize Timeline state back to the URL');
+assert(app.includes('requestedState={timelineState}'), 'production Timeline does not hydrate URL state');
+assert(app.includes('onNavigate={commitTimelineState}'), 'production Timeline navigation is still a no-op');
+
+for (const selector of [
+  '.timeline-workspace--complete-system',
+  '.tae-density-graph > button',
+  '.tae-phase-focus',
+  '.tae-sequence',
+  '.tae-inspector__visual',
+  '.timeline-system-event-drawer',
+]) assert(completeStyles.includes(selector), `unified timeline styling is missing ${selector}`);
+
 assert(explorerStyles.includes('grid-template-columns: minmax(0, 1.68fr) minmax(320px, .95fr)'), 'desktop chronology and inspector do not match the approved dashboard proportions');
 assert(explorerStyles.includes('overflow-y: auto'), 'large event collections are not contained in local scroll regions');
+assert(completeStyles.includes('content-visibility: auto'), 'offscreen archive clusters are not browser-contained');
 assert(packageJson.includes('audit:succession-timeline-atlas'), 'package scripts must retain the timeline audit command');
 
-console.log('Succession Timeline Explorer audit passed: 1,555 records remain canonical, with recap/story/full density, seven-phase minimap navigation, bounded DOM rendering, search and thread filtering, and a persistent event inspector.');
+console.log('Succession Timeline System audit passed: 1,555 canonical records power a URL-addressable dark Archive plus semantic Map, Compare, Research, Space, causal graphs, image landmarks, clustered sequences, and full event dossiers.');

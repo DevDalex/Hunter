@@ -126,51 +126,86 @@ try {
     await assertAxe('homepage');
   });
 
-  await record('Story opens the production archive-explorer timeline route', async () => {
+  await record('Story opens the production dark Archive timeline by default', async () => {
     const story = page.getByRole('button', { name: /01\s*Story/i });
     await story.click();
     await page.locator('#succession-home-story.succession-command-home__detail.is-open').waitFor({ state: 'visible' });
     await page.getByRole('link', { name: /Timeline/i }).click();
     await page.waitForURL(`${base}/timeline`);
     await page.locator('.timeline-archive-explorer').waitFor({ state: 'visible', timeout: 15_000 });
-    if (await page.title() !== 'Timeline · Hunter × Hunter Archive') throw new Error(`unexpected timeline title: ${await page.title()}`);
+    if (await page.title() !== 'Archive Timeline · Hunter × Hunter Archive') throw new Error(`unexpected timeline title: ${await page.title()}`);
+    await page.locator('.timeline-workspace-switcher').waitFor({ state: 'visible' });
   });
 
-  await record('production timeline exposes the seven-phase minimap and density overview', async () => {
+  await record('production timeline exposes the seven-phase minimap and interactive density overview', async () => {
     const phaseCount = await page.locator('.tae-phase-strip button').count();
-    const densityBars = await page.locator('.tae-density-graph > span').count();
+    const densityBars = await page.locator('.tae-density-graph > button').count();
     if (phaseCount !== 7) throw new Error(`expected 7 phases, found ${phaseCount}`);
     if (densityBars !== 48) throw new Error(`expected 48 density buckets, found ${densityBars}`);
     await page.getByRole('heading', { name: /1,555 events/i }).waitFor({ state: 'visible' });
+    await page.locator('.tae-density-graph > button').nth(20).click();
+    await page.locator('.tae-window-chip').waitFor({ state: 'visible' });
+    if (!new URL(page.url()).searchParams.has('from')) throw new Error(`density window did not persist to URL: ${page.url()}`);
+    await page.locator('.tae-window-chip').click();
   });
 
-  await record('Full mode exposes the complete archive with bounded DOM rendering', async () => {
+  await record('Full mode exposes the complete archive with bounded DOM rendering and sequence clusters', async () => {
     await page.getByRole('button', { name: /^Full$/i }).click();
     await page.waitForFunction(() => document.querySelector('.tae-density-modes button[aria-pressed="true"] strong')?.textContent?.trim() === 'Full');
     const rows = await page.locator('.tae-event').count();
     if (rows < 1 || rows > 120) throw new Error(`expected 1–120 rendered rows, found ${rows}`);
+    if (await page.locator('.tae-sequence').count() < 1) throw new Error('chapter/day sequence clustering is absent');
     await page.getByText(/still hidden from the DOM, not from the archive/i).waitFor({ state: 'visible' });
   });
 
-  await record('selecting an event fills the persistent inspector', async () => {
+  await record('selecting an event fills the persistent inspector and preserves a deep link', async () => {
     await page.locator('.tae-event').first().click();
     await page.locator('.tae-inspector__record').waitFor({ state: 'visible' });
     await page.getByText('Complete event record', { exact: true }).waitFor({ state: 'visible' });
+    const url = new URL(page.url());
+    if (!url.searchParams.get('event') || !url.searchParams.get('chapter')) throw new Error(`event deep link missing: ${url}`);
+    await page.getByRole('button', { name: /Open full dossier/i }).waitFor({ state: 'visible' });
   });
 
-  await record('timeline search filters in place without leaving /timeline', async () => {
+  await record('timeline search persists without leaving /timeline', async () => {
     const input = page.getByPlaceholder('Search event, character, faction, location…');
     await input.fill('Kurapika');
-    await page.waitForTimeout(100);
+    await input.press('Enter');
+    await page.waitForTimeout(120);
     if (await page.locator('.tae-event').count() < 1) throw new Error('Kurapika search returned no visible events');
-    const location = await page.evaluate(() => ({ pathname: location.pathname, search: location.search, hash: location.hash }));
-    if (location.pathname !== '/timeline' || location.search || location.hash) throw new Error(`timeline filter escaped route: ${JSON.stringify(location)}`);
+    const location = new URL(page.url());
+    if (location.pathname !== '/timeline' || location.searchParams.get('search') !== 'Kurapika') throw new Error(`timeline search state was not addressable: ${location}`);
   });
 
-  await record('timeline direct URL survives a fresh navigation', async () => {
-    await page.goto(`${base}/timeline`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
+  await record('Map, Compare, Research, and Space all reopen the same chronology through dedicated lenses', async () => {
+    const modes = page.locator('.timeline-workspace-switcher .tws-modes');
+
+    await modes.getByRole('button', { name: /Map/i }).click();
+    await page.locator('.timeline-system-mode--story').waitFor({ state: 'visible', timeout: 15_000 });
+    await page.locator('.timeline-context-navigator').waitFor({ state: 'visible' });
+    if (new URL(page.url()).searchParams.get('mode') !== 'story') throw new Error('Map mode did not persist');
+
+    await modes.getByRole('button', { name: /Compare/i }).click();
+    await page.locator('.timeline-system-mode--compare').waitFor({ state: 'visible', timeout: 15_000 });
+
+    await modes.getByRole('button', { name: /Research/i }).click();
+    await page.locator('.timeline-system-mode--research').waitFor({ state: 'visible', timeout: 15_000 });
+    await page.getByText('See consequence, not just chronology.', { exact: true }).waitFor({ state: 'visible' });
+
+    await modes.getByRole('button', { name: /Space/i }).click();
+    await page.locator('.timeline-system-mode--space').waitFor({ state: 'visible', timeout: 15_000 });
+
+    await modes.getByRole('button', { name: /Archive/i }).click();
+    await page.locator('.timeline-archive-explorer').waitFor({ state: 'visible', timeout: 15_000 });
+  });
+
+  await record('timeline direct URL rehydrates filters after a fresh navigation', async () => {
+    await page.goto(`${base}/timeline?mode=archive&density=story&search=Kurapika`, { waitUntil: 'domcontentloaded', timeout: 20_000 });
     await page.locator('.timeline-archive-explorer').waitFor({ state: 'visible', timeout: 15_000 });
     if (new URL(page.url()).pathname !== '/timeline') throw new Error(`timeline normalized away: ${page.url()}`);
+    if (await page.getByPlaceholder('Search event, character, faction, location…').inputValue() !== 'Kurapika') throw new Error('search state did not rehydrate');
+    const storyPressed = await page.getByRole('button', { name: 'Story', exact: true }).getAttribute('aria-pressed');
+    if (storyPressed !== 'true') throw new Error('density state did not rehydrate');
   });
 
   await record('timeline passes WCAG A/AA axe checks', async () => {
