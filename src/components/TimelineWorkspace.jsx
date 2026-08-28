@@ -45,6 +45,11 @@ export default function TimelineWorkspace({
     onNavigate?.({ ...preserved, scope: 'events', mode: 'space', view: 'intelligence', intel: 'space' });
   }, [onNavigate, requestedState]);
 
+  useEffect(() => {
+    const breadcrumbNavigation = document.querySelector('.timeline-research-dock__trail[aria-label="Recent research breadcrumbs"]');
+    breadcrumbNavigation?.setAttribute('role', 'navigation');
+  }, []);
+
   const navigateTimelineState = (params) => onNavigate?.({ scope: 'events', ...params });
   const navigateWithDossier = (params) => onNavigate?.({
     scope: 'events',
