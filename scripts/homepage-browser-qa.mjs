@@ -204,7 +204,7 @@ try {
     await page.locator('.timeline-archive-explorer').waitFor({ state: 'visible', timeout: 15_000 });
     if (new URL(page.url()).pathname !== '/timeline') throw new Error(`timeline normalized away: ${page.url()}`);
     if (await page.getByPlaceholder('Search event, character, faction, location…').inputValue() !== 'Kurapika') throw new Error('search state did not rehydrate');
-    const storyPressed = await page.locator('.tae-density-modes button').filter({ hasText: 'Story' }).getAttribute('aria-pressed');
+    const storyPressed = await page.getByRole('button', { name: 'Story', exact: true }).getAttribute('aria-pressed');
     if (storyPressed !== 'true') throw new Error('density state did not rehydrate');
   });
 
