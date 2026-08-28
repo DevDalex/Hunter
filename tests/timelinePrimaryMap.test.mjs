@@ -76,8 +76,9 @@ test('event inspector stays beside the chronology and preserves deep links', () 
 test('archive explorer owns a bounded two-pane desktop workspace', () => {
   assert.match(explorerCss, /\.timeline-workspace--archive-explorer[\s\S]*height: 100vh/);
   assert.match(explorerCss, /\.timeline-archive-explorer[\s\S]*grid-template-rows: auto auto auto minmax\(0, 1fr\)/);
-  assert.match(explorerCss, /\.tae-body[\s\S]*grid-template-columns: minmax\(0, 1fr\) minmax\(300px, 31vw\)/);
+  assert.match(explorerCss, /\.timeline-archive-explorer[\s\S]*width: min\(100% - 32px, 1180px\)/);
+  assert.match(explorerCss, /\.tae-body[\s\S]*grid-template-columns: minmax\(0, 1\.68fr\) minmax\(320px, \.95fr\)/);
   assert.match(explorerCss, /\.tae-stream,[\s\S]*\.tae-inspector[\s\S]*overflow-y: auto/);
-  assert.match(explorerCss, /\.tae-phase-strip/);
-  assert.match(explorerCss, /\.tae-density-graph/);
+  assert.match(explorerCss, /\.tae-phase-strip[\s\S]*grid-template-columns: repeat\(7, minmax\(0, 1fr\)\)/);
+  assert.match(explorerCss, /\.tae-density-graph[\s\S]*background: var\(--tae-orange\)/);
 });
