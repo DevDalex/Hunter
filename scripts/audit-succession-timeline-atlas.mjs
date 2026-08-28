@@ -81,7 +81,7 @@ assert(app.includes('requestedState={routeParams}'), 'route parameters do not hy
 assert(explorer.includes('requestedState.search'), 'route search is not hydrated into the explorer');
 assert(explorer.includes('requestedState.event'), 'event deep links are not hydrated into the inspector');
 assert(explorer.includes('chapter: event.chapter') && explorer.includes('event: event.id'), 'selected events do not preserve deep links');
-assert(explorerStyles.includes('grid-template-columns: minmax(0, 1fr) minmax(300px, 31vw)'), 'desktop chronology and inspector are not presented as a two-pane workspace');
+assert(explorerStyles.includes('grid-template-columns: minmax(0, 1.68fr) minmax(320px, .95fr)'), 'desktop chronology and inspector do not match the approved dashboard proportions');
 assert(explorerStyles.includes('overflow-y: auto'), 'large event collections are not contained in local scroll regions');
 assert(packageJson.includes('audit:succession-timeline-atlas'), 'package scripts must retain the timeline audit command');
 

@@ -141,11 +141,11 @@ try {
     const densityBars = await page.locator('.tae-density-graph > span').count();
     if (phaseCount !== 7) throw new Error(`expected 7 phases, found ${phaseCount}`);
     if (densityBars !== 48) throw new Error(`expected 48 density buckets, found ${densityBars}`);
-    await page.getByText(/1555 events available/i).waitFor({ state: 'visible' });
+    await page.getByRole('heading', { name: /1,555 events/i }).waitFor({ state: 'visible' });
   });
 
   await record('Full mode exposes the complete archive with bounded DOM rendering', async () => {
-    await page.getByRole('button', { name: /Full\s*Complete chronology/i }).click();
+    await page.getByRole('button', { name: /^Full$/i }).click();
     await page.waitForFunction(() => document.querySelector('.tae-density-modes button[aria-pressed="true"] strong')?.textContent?.trim() === 'Full');
     const rows = await page.locator('.tae-event').count();
     if (rows < 1 || rows > 120) throw new Error(`expected 1–120 rendered rows, found ${rows}`);
@@ -159,7 +159,7 @@ try {
   });
 
   await record('timeline search filters in place without leaving /timeline', async () => {
-    const input = page.getByPlaceholder('Search people, places, events, evidence…');
+    const input = page.getByPlaceholder('Search event, character, faction, location…');
     await input.fill('Kurapika');
     await page.waitForTimeout(100);
     if (await page.locator('.tae-event').count() < 1) throw new Error('Kurapika search returned no visible events');
