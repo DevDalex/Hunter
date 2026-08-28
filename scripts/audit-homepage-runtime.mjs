@@ -7,13 +7,15 @@ const assert = (condition, message) => {
   if (!condition) throw new Error(`Homepage runtime audit failed: ${message}`);
 };
 
-const [app, home, homeCss, workspace, explorer, explorerCss, main] = await Promise.all([
+const [app, home, homeCss, workspace, switcher, explorer, explorerCss, completeCss, main] = await Promise.all([
   read('src/App.jsx'),
   read('src/components/succession/SuccessionCommandHome.jsx'),
   read('src/components/succession/SuccessionCommandHome.css'),
   read('src/components/TimelineWorkspace.jsx'),
+  read('src/components/TimelineWorkspaceSwitcher.jsx'),
   read('src/components/TimelineArchiveExplorer.jsx'),
   read('src/components/TimelineArchiveExplorer.css'),
+  read('src/components/TimelineCompleteSystem.css'),
   read('src/main.jsx'),
 ]);
 
@@ -21,7 +23,10 @@ for (const token of [
   "import SuccessionCommandHome from './components/succession/SuccessionCommandHome'",
   "lazy(() => import('./components/TimelineWorkspace'))",
   "pathname === '/timeline'",
-  "'Timeline · Hunter × Hunter Archive'",
+  'const readTimelineState',
+  'const commitTimelineState',
+  'requestedState={timelineState}',
+  'onNavigate={commitTimelineState}',
   'onClickCapture={keepInternalNavigationInApp}',
   '<SuccessionCommandHome',
   '<TimelineWorkspace',
@@ -54,9 +59,21 @@ for (const token of [
 
 for (const token of [
   "import TimelineArchiveExplorer from './TimelineArchiveExplorer'",
-  'timeline-workspace--archive-explorer',
-  '<TimelineArchiveExplorer',
+  'TimelineContextNavigator',
+  'TimelineStoryField',
+  'TimelineComparisonBuilder',
+  'TimelineIntelligencePanels',
+  'TimelineSpatialIntelligence',
+  'TimelineEventFocus',
+  'TimelineCausalityGraphInstrument',
+  'NenInteractionGraphInstrument',
+  'timeline-workspace--complete-system',
 ]) assert(workspace.includes(token), `production Timeline workspace is missing ${token}`);
+
+for (const mode of ['archive', 'story', 'compare', 'atlas', 'space']) {
+  assert(switcher.includes(`id: '${mode}'`), `timeline switcher is missing ${mode}`);
+}
+assert(switcher.includes("return 'archive';"), 'approved Archive explorer is not the default Timeline lens');
 
 for (const token of [
   'Semantic chronology',
@@ -70,6 +87,10 @@ for (const token of [
   'All story threads',
   'Complete event record',
   'Cause and consequence',
+  'function PhaseFocus',
+  'function sequenceGroups',
+  'Related chronology',
+  'Open full dossier',
 ]) assert(explorer.includes(token), `timeline explorer is missing ${token}`);
 
 for (const selector of [
@@ -84,11 +105,21 @@ for (const selector of [
   '.tae-inspector',
 ]) assert(explorerCss.includes(selector), `timeline explorer stylesheet is missing ${selector}`);
 
-assert(!homeCss.toLowerCase().includes('gold'), 'homepage stylesheet restored a gold design token');
-assert(!explorerCss.toLowerCase().includes('gold'), 'timeline explorer stylesheet introduced a gold design token');
+for (const selector of [
+  '.timeline-workspace--complete-system',
+  '.tae-density-graph > button',
+  '.tae-phase-focus',
+  '.tae-sequence',
+  '.tae-inspector__visual',
+  '.timeline-system-event-drawer',
+]) assert(completeCss.includes(selector), `complete timeline styling is missing ${selector}`);
+
+assert(!homeCss.toLowerCase().includes('gold'), 'homepage stylesheet restored a prohibited legacy color label');
+assert(!explorerCss.toLowerCase().includes('gold'), 'timeline explorer stylesheet introduced a prohibited legacy color label');
+assert(!completeCss.toLowerCase().includes('gold'), 'complete timeline stylesheet introduced a prohibited legacy color label');
 assert(main.includes('<App />') || main.includes('<App/>'), 'main entry must render App');
 assert(app.includes("if (!anchor || anchor.target === '_blank') return;"), 'new-tab links must not be intercepted');
 assert(app.includes("if (!href || href.startsWith('#')) return;"), 'in-page anchors must not be intercepted');
 assert(app.includes('if (destination.origin !== window.location.origin) return;'), 'external links must not be intercepted');
 
-console.log('Homepage runtime audit passed: production exposes the private Story / Characters / Nen homepage plus the lazy-loaded 1,555-event /timeline archive explorer.');
+console.log('Homepage runtime audit passed: production exposes the private homepage and a URL-addressable five-lens Timeline with the dark 1,555-event Archive explorer as its default.');
