@@ -11,14 +11,14 @@ const [workspace, workstation, memory, styles] = await Promise.all([
   read('src/components/TimelineResearchWorkstation.css'),
 ]);
 
-test('Timeline mounts one persistent research workstation above every chronology lens', () => {
+test('Timeline mounts one persistent research workstation above every active chronology lens', () => {
   assert.match(workspace, /import TimelineResearchWorkstation from '\.\/TimelineResearchWorkstation';/);
   assert.match(workspace, /<TimelineResearchWorkstation[\s\S]*requestedState=\{modeState\}[\s\S]*onNavigate=\{navigateTimelineState\}/);
   assert.match(workspace, /TimelineArchiveExplorer/);
-  assert.match(workspace, /TimelineStoryField/);
   assert.match(workspace, /TimelineComparisonBuilder/);
   assert.match(workspace, /TimelineIntelligencePanels/);
   assert.match(workspace, /TimelineSpatialIntelligence/);
+  assert.doesNotMatch(workspace, /TimelineStoryField/);
 });
 
 test('research workstation exposes the complete investigation workflow', () => {
