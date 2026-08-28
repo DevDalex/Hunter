@@ -1,6 +1,10 @@
 name: Timeline Map Verification
 
 on:
+  push:
+    branches:
+      - timeline-screenshot-research
+  pull_request:
   workflow_dispatch:
 
 concurrency:
