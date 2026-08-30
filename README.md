@@ -4,9 +4,23 @@
 
 This repository is maintained for the **Succession Contest arc only**.
 
-The public application focuses on the Succession Contest experience and its directly related material: story intelligence, voyage chronology, characters and royal family, assignments and organizations, Black Whale locations, Succession-specific Nen and ritual systems, Guardian Spirit Beasts, events, relationships, chapter dossiers, research, search, and glossary tools.
+The public product has exactly three first-class content systems:
 
-Earlier-arc pages, general-series encyclopedias, the standalone World Atlas, general Nen encyclopedia, manga page hosting, and chapter administration/import tooling are intentionally removed.
+1. **Timeline** — chapters, events, story threads, chronology, Black Whale locations and movement, causal context, and changing story state.
+2. **Characters** — royalty, guards, Hunters, mafia, the Troupe, affiliations, assignments, relationships, status, knowledge, and movement.
+3. **Nen** — abilities, Guardian Spirit Beasts, ritual mechanics, conditions, costs, curses, possession, instruction, Contagion, and unresolved systems.
+
+Other Succession data may exist only when it directly supports one of those three systems. Organizations, assignments, relationships, locations, events, royal-family data, Guardian Spirit Beasts, chapter records, evidence, and similar material are supporting data rather than independent products.
+
+Earlier arcs, general-series encyclopedias, the World Atlas, general Nen encyclopedia, manga page hosting, the manga Reader, and chapter administration/import tooling are intentionally removed.
+
+## Public routes
+
+- `/timeline`
+- `/characters`
+- `/nen`
+
+`/` is only the three-pillar entrance. Retired Succession routes redirect into the pillar that owns their information.
 
 ## Runtime architecture
 
@@ -41,17 +55,8 @@ npm run build
 npm run deploy
 ```
 
-`wrangler.jsonc` keeps the Worker name `hunter`, entry `dist/server/index.js`, asset directory `dist/client`, binding `ASSETS`, and Worker-first routing.
-
-## Core content owners
-
-- Succession application: `src/components/succession/`
-- Succession data: `src/data/succession/`
-- Succession route registry: `src/data/succession/archiveRoutes.js`
-- Browser entry: `src/App.jsx`
-- Succession geography: `src/data/succession/blackWhaleCanonicalMap.js`
-- Cloudflare Worker: `server/index.js`
-
 ## Repository policy
 
-New features should stay inside the Succession Contest scope. Do not reintroduce earlier-arc archives, general-series reference surfaces, manga scan storage, or publishing/admin infrastructure without an explicit scope change.
+The product owner decides presentation and product direction. Permanent checks may catch real breakage, malformed data, spoiler leaks, accessibility failures, serious performance regressions, vulnerable dependencies, invalid media output, or an undeployable build. They must not freeze colors, layouts, component structures, route counts, milestone phases, or previous design decisions.
+
+New public features should fit Timeline, Characters, or Nen unless the product scope is explicitly changed.
