@@ -1,0 +1,16 @@
+{
+  "schemaVersion": "7.1B.2",
+  "sourceCensus": [
+    "/phase7/source-census-01.json",
+    "/phase7/source-census-02.json",
+    "/phase7/source-census-03.json",
+    "/phase7/source-census-04.json",
+    "/phase7/source-census-05.json"
+  ],
+  "evidenceAtomJson": [
+    "/phase7/evidence-atoms-01.json",
+    "/phase7/evidence-atoms-02.json"
+  ],
+  "evidenceAtomGzipBase64": "/phase7/evidence-atoms-021-190.json.gz.b64",
+  "visualIndexGzipBase64": "/phase7/visual-index-342-415.json.gz.b64"
+}

@@ -1,0 +1,92 @@
+[
+  {
+    "id": "bw3d.atom.0072",
+    "status": "quarantined",
+    "subject": "burial-chamber-placement",
+    "statement": "Hunterpedia records conflicting Tier 1 and Tier 4 labels for the burial chamber.",
+    "chapters": [371],
+    "sources": ["https://hunterxhunter.fandom.com/wiki/Black_Whale","https://hunterxhunter.fandom.com/wiki/Black_Whale/Image_Gallery","https://hunterxhunter.fandom.com/wiki/Chapter_371"],
+    "locations": ["bw3d.node.burial-chamber"],
+    "modelingEffect": "blocked-or-limited-until-reviewed"
+  },
+  {
+    "id": "bw3d.atom.0183",
+    "status": "open",
+    "subject": "contradiction",
+    "statement": "Hunterpedia's gallery labels the princes' burial chamber as both Tier 1 and Tier 4.",
+    "chapters": [371],
+    "sources": ["https://hunterxhunter.fandom.com/wiki/Black_Whale","https://hunterxhunter.fandom.com/wiki/Black_Whale/Image_Gallery","https://hunterxhunter.fandom.com/wiki/Chapter_371"],
+    "locations": ["bw3d.node.burial-chamber"],
+    "modelingEffect": "blocked-or-limited-until-reviewed"
+  },
+  {
+    "id": "bw3d.atom.0184",
+    "status": "open",
+    "subject": "contradiction",
+    "statement": "Dialogue suggests the hideout's shower-room door may lead to Room 3131, but Chapter 399's forced teleport sends Hinrigh and Nobunaga to Room 3101.",
+    "chapters": [394,399],
+    "sources": ["https://hunterxhunter.fandom.com/wiki/Black_Whale","https://hunterxhunter.fandom.com/wiki/Chapter_394","https://hunterxhunter.fandom.com/wiki/Chapter_399"],
+    "locations": ["bw3d.node.room-3101","bw3d.node.room-3131"],
+    "modelingEffect": "blocked-or-limited-until-reviewed"
+  },
+  {
+    "id": "bw3d.atom.0185",
+    "status": "resolved",
+    "subject": "correction",
+    "statement": "Weekly Chapter 410 used Room 3125/125, but the author correction identifies Room 3101.",
+    "chapters": [410],
+    "sources": ["https://hunterxhunter.fandom.com/wiki/Black_Whale","https://hunterxhunter.fandom.com/wiki/Chapter_410"],
+    "locations": ["bw3d.node.room-3101"],
+    "modelingEffect": "canonical-correction-applied"
+  },
+  {
+    "id": "bw3d.atom.0186",
+    "status": "open",
+    "subject": "orientation-unknown",
+    "statement": "The Tier 1 plan's assumed north is not established as the ship's bow.",
+    "chapters": [358],
+    "sources": ["https://hunterxhunter.fandom.com/wiki/Black_Whale","https://hunterxhunter.fandom.com/wiki/Chapter_358"],
+    "locations": ["bw3d.node.tier-1"],
+    "modelingEffect": "blocked-or-limited-until-reviewed"
+  },
+  {
+    "id": "bw3d.atom.0187",
+    "status": "open",
+    "subject": "metric-unknown",
+    "statement": "Cross-section pixels establish tier order and broad envelope but not exact deck heights, room coordinates or corridor widths.",
+    "chapters": [358,398],
+    "sources": ["https://hunterxhunter.fandom.com/wiki/Black_Whale","https://hunterxhunter.fandom.com/wiki/Black_Whale/Image_Gallery","https://hunterxhunter.fandom.com/wiki/Chapter_358","https://hunterxhunter.fandom.com/wiki/Chapter_398"],
+    "locations": ["bw3d.node.habitable-stack"],
+    "modelingEffect": "blocked-or-limited-until-reviewed"
+  },
+  {
+    "id": "bw3d.atom.0188",
+    "status": "open",
+    "subject": "route-unknown",
+    "statement": "Exact lifts, stairs and standard vertical connectors among tiers remain insufficiently documented.",
+    "chapters": [358,406,407],
+    "sources": ["https://hunterxhunter.fandom.com/wiki/Black_Whale","https://hunterxhunter.fandom.com/wiki/Chapter_358","https://hunterxhunter.fandom.com/wiki/Chapter_406","https://hunterxhunter.fandom.com/wiki/Chapter_407"],
+    "locations": ["bw3d.node.ship"],
+    "modelingEffect": "blocked-or-limited-until-reviewed"
+  },
+  {
+    "id": "bw3d.atom.0189",
+    "status": "open",
+    "subject": "route-unknown",
+    "statement": "The exact full path of Central Passages and their checkpoint geometry remain unresolved.",
+    "chapters": [358,380],
+    "sources": ["https://hunterxhunter.fandom.com/wiki/Black_Whale","https://hunterxhunter.fandom.com/wiki/Chapter_358","https://hunterxhunter.fandom.com/wiki/Chapter_380"],
+    "locations": ["bw3d.route.central-passages"],
+    "modelingEffect": "blocked-or-limited-until-reviewed"
+  },
+  {
+    "id": "bw3d.atom.0190",
+    "status": "open",
+    "subject": "source-unavailable",
+    "statement": "No canon Hunterpedia chapter pages are available for requested Chapters 412–415 at corpus freeze.",
+    "chapters": [],
+    "sources": ["https://hunterxhunter.fandom.com/wiki/List_of_Volumes_and_Chapters"],
+    "locations": [],
+    "modelingEffect": "blocked-or-limited-until-reviewed"
+  }
+]

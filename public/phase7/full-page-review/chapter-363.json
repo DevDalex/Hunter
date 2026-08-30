@@ -1,0 +1,142 @@
+{
+  "schemaVersion": "7.1C.1",
+  "projectId": "bw3d",
+  "chapter": 363,
+  "reviewScope": "Black Whale vessel, spatial, access, operational, structural and scale evidence only",
+  "source": {
+    "type": "repository-local ordered chapter media",
+    "language": "Arabic translation",
+    "directory": "/media/succession-contest/chapters/363/",
+    "pagePattern": "/media/succession-contest/chapters/363/{page:000}.png",
+    "pageCount": 18,
+    "artifactDigestSha256": "761d9fbad450c90f3f9cf8af83a5b31ba5fde121881c3be6bfbad97fc6516801",
+    "pageHashManifestSha256": "4033953f5506fa21b8607b6a7f24e7aa7a67fcac30a34f7aaf0fa32afdfaedc8"
+  },
+  "review": {
+    "status": "complete-two-pass",
+    "pass1": {
+      "status": "complete",
+      "method": "Full-page visual sweep of all 18 ordered pages",
+      "pagesInspected": 18,
+      "candidatePages": [1, 2, 8, 9, 10, 12, 13, 15, 16, 17]
+    },
+    "pass2": {
+      "status": "complete",
+      "method": "Full-resolution verification of retained diagrams, corridors, room thresholds, intercoms and guard deployment panels",
+      "pagesInspected": [1, 2, 8, 9, 10, 12, 13, 15, 16, 17]
+    },
+    "retainedPages": [1, 2, 8, 9, 10, 12, 13, 15, 16, 17],
+    "excludedPages": [3, 4, 5, 6, 7, 11, 14, 18],
+    "blackWhalePanels": 18,
+    "evidenceAtoms": 15
+  },
+  "retainedPanels": [
+    {
+      "id": "bw3d.ch363.p002.panel01",
+      "page": 2,
+      "panel": 1,
+      "readingOrder": 1,
+      "bbox": {"x": 0.0, "y": 0.0, "w": 1.0, "h": 1.0},
+      "orientation": "landscape-diagram",
+      "subject": "Tier 1 royal residential block diagram",
+      "visualDescription": "An axonometric block diagram shows a central cluster of numbered royal rooms, perimeter circulation, access arrows, a broad common approach and a small inset plan for one suite.",
+      "evidenceTypes": ["tier-layout", "room-numbering", "circulation", "access-control", "relative-adjacency"],
+      "certainty": "c1-confirmed-panel-content",
+      "modelingPermissions": ["Use the numbered-room cluster and perimeter circulation as a relative topology reference", "Record visible access arrows and common approach zones"],
+      "modelingProhibitions": ["Do not derive metric dimensions", "Do not assume hidden walls or vertical stacking", "Do not convert perspective spacing into exact distances"]
+    },
+    {
+      "id": "bw3d.ch363.p009.panel03",
+      "page": 9,
+      "panel": 3,
+      "readingOrder": 3,
+      "bbox": {"x": 0.0, "y": 0.45, "w": 0.52, "h": 0.55},
+      "orientation": "landscape",
+      "subject": "Royal corridor outside Room 1001",
+      "visualDescription": "A wide decorated corridor includes a clearly mounted 1001 room plaque, repeated wall bays, a large doorway and circulation space sufficient for several guards.",
+      "evidenceTypes": ["room-threshold", "corridor", "signage", "guard-space"],
+      "certainty": "c1-confirmed-panel-content",
+      "modelingPermissions": ["Use 1001 as a verified doorway label", "Use the corridor as a Tier 1 royal-suite circulation type"],
+      "modelingProhibitions": ["Do not infer exact corridor width", "Do not assume every royal corridor is identical"]
+    },
+    {
+      "id": "bw3d.ch363.p013.panel01",
+      "page": 13,
+      "panel": 1,
+      "readingOrder": 1,
+      "bbox": {"x": 0.0, "y": 0.0, "w": 0.58, "h": 0.78},
+      "orientation": "portrait",
+      "subject": "Dense guard deployment in a royal room",
+      "visualDescription": "A large furnished chamber contains two opposing lines of guards around a central open floor, with multiple doors and wall bays visible around the perimeter.",
+      "evidenceTypes": ["room-capacity", "guard-deployment", "door-count", "operational-state"],
+      "certainty": "c1-confirmed-panel-content",
+      "modelingPermissions": ["Represent the room as able to hold a dense multi-party guard formation", "Record multiple perimeter thresholds"],
+      "modelingProhibitions": ["Do not derive exact occupancy capacity", "Do not treat this temporary formation as permanent furniture layout"]
+    },
+    {
+      "id": "bw3d.ch363.p015.panel04",
+      "page": 15,
+      "panel": 4,
+      "readingOrder": 4,
+      "bbox": {"x": 0.0, "y": 0.58, "w": 0.48, "h": 0.42},
+      "orientation": "landscape",
+      "subject": "Room 1014 threshold and corridor",
+      "visualDescription": "A wall-mounted 1014 plaque marks a royal-suite doorway opening directly onto the decorated Tier 1 corridor.",
+      "evidenceTypes": ["room-threshold", "signage", "corridor-adjacency"],
+      "certainty": "c1-confirmed-panel-content",
+      "modelingPermissions": ["Use Room 1014 as a verified corridor-facing suite threshold"],
+      "modelingProhibitions": ["Do not infer its exact position from this panel alone"]
+    },
+    {
+      "id": "bw3d.ch363.p016.panel03",
+      "page": 16,
+      "panel": 3,
+      "readingOrder": 3,
+      "bbox": {"x": 0.5, "y": 0.48, "w": 0.5, "h": 0.52},
+      "orientation": "portrait",
+      "subject": "Royal-suite intercom and monitored doorway",
+      "visualDescription": "A wall intercom with screen, keypad and call controls is mounted beside a large suite doorway while a guard stands inside the threshold.",
+      "evidenceTypes": ["communications", "door-monitoring", "access-control", "security-post"],
+      "certainty": "c1-confirmed-panel-content",
+      "modelingPermissions": ["Include a fixed video-intercom station beside at least some royal-suite doors", "Represent doorway guard posts as an operational state"],
+      "modelingProhibitions": ["Do not generalize identical hardware to every door without corroboration"]
+    }
+  ],
+  "evidence": [
+    {"id":"bw3d.ev.ch363.001","page":2,"type":"tier-location","claim":"The numbered royal residences shown in the chapter diagram belong to Tier 1.","certainty":"c1-confirmed-text-and-diagram","modelingUse":"Anchor the royal residential cluster to Tier 1."},
+    {"id":"bw3d.ev.ch363.002","page":2,"type":"relative-layout","claim":"The royal rooms are arranged as a compact numbered cluster bordered by circulation space rather than as isolated cabins.","certainty":"c1-confirmed-panel-content","modelingUse":"Build a relative adjacency graph, not a metric plan."},
+    {"id":"bw3d.ev.ch363.003","page":2,"type":"access-routing","claim":"The diagram presents controlled approach paths and perimeter routes around the royal-room block.","certainty":"c1-confirmed-panel-content","modelingUse":"Represent controlled approach and perimeter circulation nodes."},
+    {"id":"bw3d.ev.ch363.004","page":1,"type":"security-state","claim":"Royal guards are shown occupying and monitoring the decorated Tier 1 corridor outside the suites.","certainty":"c1-confirmed-panel-content","modelingUse":"Store guard presence as a chapter-state overlay rather than permanent geometry."},
+    {"id":"bw3d.ev.ch363.005","page":8,"type":"corridor-type","claim":"Tier 1 royal circulation uses broad decorated corridors with repeated wall bays, large doors and ceiling coffers.","certainty":"c1-confirmed-panel-content","modelingUse":"Define a verified royal-corridor visual type."},
+    {"id":"bw3d.ev.ch363.006","page":9,"type":"room-signage","claim":"Room 1001 has a corridor-facing numeric plaque mounted beside its threshold.","certainty":"c1-confirmed-panel-content","modelingUse":"Register Room 1001 as a verified labeled threshold."},
+    {"id":"bw3d.ev.ch363.007","page":9,"type":"suite-access","claim":"Room 1001 opens directly onto the royal corridor and can be approached by multiple guards simultaneously.","certainty":"c1-confirmed-panel-content","modelingUse":"Connect Room 1001 to the Tier 1 royal corridor node."},
+    {"id":"bw3d.ev.ch363.008","page":10,"type":"room-programme","claim":"Royal suites contain large furnished reception or meeting areas capable of holding several guards and occupants.","certainty":"c1-confirmed-panel-content","modelingUse":"Permit a large reception-space programme without fixing dimensions."},
+    {"id":"bw3d.ev.ch363.009","page":12,"type":"room-furniture","claim":"A royal room includes a rectangular table with multiple chairs within a formally finished interior.","certainty":"c1-confirmed-panel-content","modelingUse":"Record a meeting-table furniture state for the shown room only."},
+    {"id":"bw3d.ev.ch363.010","page":13,"type":"room-capacity","claim":"One royal chamber can hold two opposing lines of guards while retaining a central open circulation strip.","certainty":"c1-confirmed-panel-content","modelingUse":"Constrain the room to a large multi-party occupancy class."},
+    {"id":"bw3d.ev.ch363.011","page":13,"type":"multiple-thresholds","claim":"The same chamber shows multiple perimeter doorways or wall openings supporting more than one circulation connection.","certainty":"c2-strong-panel-inference","modelingUse":"Allow multiple room thresholds, with exact destinations unresolved."},
+    {"id":"bw3d.ev.ch363.012","page":15,"type":"room-signage","claim":"Room 1014 has a numeric plaque beside a corridor-facing doorway.","certainty":"c1-confirmed-panel-content","modelingUse":"Register Room 1014 as a verified labeled threshold."},
+    {"id":"bw3d.ev.ch363.013","page":16,"type":"communications-system","claim":"A fixed video intercom with screen and keypad is installed beside a royal-suite doorway.","certainty":"c1-confirmed-panel-content","modelingUse":"Add a royal-suite door communications and visitor-screening system."},
+    {"id":"bw3d.ev.ch363.014","page":16,"type":"door-security","claim":"A guard can be stationed immediately inside the suite doorway while communicating through the wall unit.","certainty":"c1-confirmed-panel-content","modelingUse":"Store an interior threshold guard-post state."},
+    {"id":"bw3d.ev.ch363.015","page":17,"type":"corridor-surveillance","claim":"Characters explicitly discuss watching a suite entrance continuously from the adjacent corridor.","certainty":"c1-confirmed-text","modelingUse":"Register line-of-sight entrance surveillance as an operational use of the corridor."}
+  ],
+  "contradictionsAndQuarantines": [
+    {"id":"bw3d.q.ch363.001","subject":"Diagram proportions","status":"open","rule":"The Chapter 363 axonometric diagram establishes relative topology and numbering but not metric dimensions or exact wall geometry."},
+    {"id":"bw3d.q.ch363.002","subject":"Room identity in guard-formation panels","status":"open","rule":"Do not assign the large guard-filled chamber to a specific room number unless the same sequence or later evidence explicitly confirms it."}
+  ],
+  "unresolvedQuestions": [
+    "Which exact numbered rooms occupy every position in the axonometric block where labels are partially obscured?",
+    "Which diagram arrows indicate public approach, staff access, emergency routing or merely narrative movement?",
+    "Are all royal-suite intercoms the same model or is the shown unit room-specific?"
+  ],
+  "excludedMaterial": {
+    "pages": 8,
+    "categories": ["Succession strategy without vessel facts", "Guardian Spirit Beast activity", "character motivation and loyalty", "combat planning without spatial consequence"],
+    "reason": "Excluded panels do not independently establish Black Whale geometry, location hierarchy, access, route, operational system, scale cue or durable chapter-state evidence."
+  },
+  "storage": {
+    "publicRecord": "/phase7/full-page-review/chapter-363.json",
+    "sourceMedia": "/media/succession-contest/chapters/363/",
+    "researchBranch": "phase-7-1c-full-page-ship-only-review",
+    "pullRequest": 92
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "schemaVersion": "7.1C.1",
+  "projectId": "bw3d",
+  "chapter": 342,
+  "reviewScope": "Black Whale vessel, spatial, access, operational, structural and scale evidence only",
+  "source": {
+    "type": "repository-local ordered chapter media",
+    "language": "Arabic translation",
+    "directory": "/media/succession-contest/chapters/342/",
+    "pagePattern": "/media/succession-contest/chapters/342/{page:000}.jpg",
+    "pageCount": 19,
+    "artifactDigestSha256": "91b6d05a3798f96cabc70119b70883b763262dd63886bb825c2925014e78b4bf",
+    "pageHashManifestSha256": "613e11f87d53acabe414c5f1d44b0a74cdba0fd9cc7bf342d0ff72709a115507"
+  },
+  "review": {
+    "status": "complete-two-pass",
+    "pass1": {
+      "status": "complete",
+      "method": "Full-page visual sweep of all 19 ordered pages",
+      "pagesInspected": 19,
+      "candidatePages": [14]
+    },
+    "pass2": {
+      "status": "complete",
+      "method": "Full-resolution inspection of the retained page and exterior panel",
+      "pagesInspected": [14]
+    },
+    "retainedPages": [14],
+    "excludedPages": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16, 17, 18, 19],
+    "blackWhalePanels": 1,
+    "evidenceAtoms": 10
+  },
+  "retainedPanels": [
+    {
+      "id": "bw3d.ch342.p014.panel01",
+      "page": 14,
+      "panel": 1,
+      "readingOrder": 1,
+      "bbox": {"x": 0.0, "y": 0.0, "w": 1.0, "h": 0.56},
+      "orientation": "landscape",
+      "sourcePageSha256": "f634c47fad225d3a768d172dab89e6a6653e05f60a25791ca82b8b86ae6ff2bf",
+      "subject": "Pre-launch promotional exterior reveal of Black Whale No. 1 in a harbor",
+      "visualDescription": "A colossal whale-shaped transport vessel dominates a harbor. The visible concept has a black hemispherical upper body, a pale lower hull, a whale eye and ribbed mouth treatment, a circular recessed top deck with a central structure, and a rectangular projection or ramp on the near-facing flank. Small boats, an airship, waterfront buildings and port infrastructure provide scale cues.",
+      "evidenceTypes": ["identity", "exterior-form", "scale", "access-feature", "upper-deck-feature"],
+      "certainty": "c1-confirmed-panel-content",
+      "temporalContext": "pre-launch promotional design",
+      "modelingPermissions": [
+        "Use as an early macro-silhouette reference",
+        "Record the visible exterior feature inventory",
+        "Use surrounding harbor objects only for broad scale class"
+      ],
+      "modelingProhibitions": [
+        "Do not derive exact metric dimensions",
+        "Do not assign port, starboard, bow-axis coordinates from panel direction alone",
+        "Do not treat this promotional design as the final launched geometry without later corroboration",
+        "Do not infer unseen interior layout from the exterior shell"
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "id": "bw3d.ev.ch342.001",
+      "page": 14,
+      "type": "identity-capacity",
+      "claim": "The vessel is publicly introduced as the giant transport ship Black Whale No. 1 with a stated capacity of 200,000 people.",
+      "certainty": "c1-confirmed-text",
+      "modelingUse": "Occupancy class and programme-scale constraint; not a usable floor-area calculation by itself."
+    },
+    {
+      "id": "bw3d.ev.ch342.002",
+      "page": 14,
+      "type": "interior-design-mandate",
+      "claim": "The promotional presentation describes the interior design as simplified for transport use.",
+      "certainty": "c1-confirmed-text",
+      "modelingUse": "Supports utilitarian mass-transport language outside elite zones; does not define a room plan."
+    },
+    {
+      "id": "bw3d.ev.ch342.003",
+      "page": 14,
+      "type": "construction-programme",
+      "claim": "The presentation links the simplified transport design to lower cost and faster construction.",
+      "certainty": "c1-confirmed-text-with-translation-caution",
+      "modelingUse": "Supports repetitive, economical construction assumptions only when later visual evidence agrees."
+    },
+    {
+      "id": "bw3d.ev.ch342.004",
+      "page": 14,
+      "type": "fleet-programme",
+      "claim": "Kakin publicly announces a plan to produce twenty similar ships within one year.",
+      "certainty": "c1-confirmed-text",
+      "modelingUse": "Programme context only; no direct geometry permission."
+    },
+    {
+      "id": "bw3d.ev.ch342.005",
+      "page": 14,
+      "type": "migration-programme",
+      "claim": "The presentation states a five-year ambition to send 100 million people toward the Dark Continent programme.",
+      "certainty": "c1-confirmed-text",
+      "modelingUse": "Operational context only; no direct geometry permission."
+    },
+    {
+      "id": "bw3d.ev.ch342.006",
+      "page": 14,
+      "type": "planned-occupancy",
+      "claim": "The first ship is presented as carrying Beyond, the Kakin king and all fourteen princes.",
+      "certainty": "c1-confirmed-text",
+      "modelingUse": "Supports the presence of distinct expedition leadership and royal accommodation classes."
+    },
+    {
+      "id": "bw3d.ev.ch342.007",
+      "page": 14,
+      "type": "ticket-access",
+      "claim": "General passengers are to be selected by lottery, with the presentation stating a one-in-1,300 chance of receiving a ticket for the first ship.",
+      "certainty": "c1-confirmed-text",
+      "modelingUse": "Supports controlled mass-passenger access and ticketed boarding operations."
+    },
+    {
+      "id": "bw3d.ev.ch342.008",
+      "page": 14,
+      "type": "early-exterior-form",
+      "claim": "The promotional exterior concept shows a black hemispherical upper body over a pale lower hull with a whale eye and ribbed mouth treatment.",
+      "certainty": "c1-confirmed-panel-content",
+      "modelingUse": "Early concept silhouette only, pending comparison with launched-vessel panels."
+    },
+    {
+      "id": "bw3d.ev.ch342.009",
+      "page": 14,
+      "type": "early-exterior-features",
+      "claim": "The visible concept includes a circular recessed top deck with a central structure and a rectangular projection or ramp on the near-facing flank.",
+      "certainty": "c1-confirmed-panel-content-c5-function-unknown",
+      "modelingUse": "Feature inventory; exact function and later continuity remain unresolved."
+    },
+    {
+      "id": "bw3d.ev.ch342.010",
+      "page": 14,
+      "type": "scale-class",
+      "claim": "The vessel is depicted as vastly larger than nearby boats, an airship and surrounding harbor districts.",
+      "certainty": "c2-strong-scale-inference",
+      "modelingUse": "Broad colossal scale class only; perspective prevents metric extraction."
+    }
+  ],
+  "contradictionsAndQuarantines": [
+    {
+      "id": "bw3d.q.ch342.001",
+      "subject": "Promotional concept versus launched vessel",
+      "status": "open",
+      "rule": "Chapter 342 exterior features remain early-concept evidence until compared against later exterior panels. Later launched-vessel evidence controls final geometry when conflict exists."
+    }
+  ],
+  "unresolvedQuestions": [
+    "Does the circular recessed top structure correspond to the later Tier 1 cruise-ship zone or an abandoned early design?",
+    "Is the near-facing rectangular projection a boarding ramp, cargo ramp, tender dock or another access mechanism?",
+    "Which visible end is the canonical bow cannot be assigned solely from panel orientation, despite the whale-face motif."
+  ],
+  "excludedMaterial": {
+    "pages": 18,
+    "categories": [
+      "Dark Continent geography and survival briefing",
+      "V5 and Kakin political discussion",
+      "Gatekeeper and guide exposition",
+      "character recruitment and association dialogue",
+      "non-ship conference, palace, residential and street settings"
+    ]
+  },
+  "storage": {
+    "publicRecord": "/phase7/full-page-review/chapter-342.json",
+    "sourceMedia": "/media/succession-contest/chapters/342/",
+    "researchBranch": "phase-7-1c-full-page-ship-only-review",
+    "pullRequest": 92
+  }
+}

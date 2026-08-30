@@ -1,0 +1,36 @@
+{
+  "schemaVersion": "7.1C.1",
+  "projectId": "bw3d",
+  "chapter": 347,
+  "reviewScope": "Black Whale vessel, spatial, access, operational, structural and scale evidence only",
+  "source": {
+    "type": "repository-local ordered chapter media",
+    "language": "Arabic translation",
+    "directory": "/media/succession-contest/chapters/347/",
+    "pagePattern": "/media/succession-contest/chapters/347/{page:000}.jpg",
+    "pageCount": 20,
+    "artifactDigestSha256": "5be96ce00b72c6dd5bae5927959b7437d30ecd4852097081e402e641d9108a7e",
+    "pageHashManifestSha256": "be1331c94e0e511c9051dffdd5dd977add29de8a990a9aa2bacbab5ac646fabf"
+  },
+  "review": {
+    "status": "complete-two-pass-reviewed-zero",
+    "pass1": {"status": "complete", "pagesInspected": 20, "candidatePages": []},
+    "pass2": {"status": "complete", "pagesInspected": 20},
+    "retainedPages": [],
+    "blackWhalePanels": 0,
+    "evidenceAtoms": 0
+  },
+  "retainedPanels": [],
+  "evidence": [],
+  "excludedMaterial": {
+    "pages": 20,
+    "categories": ["expedition training", "Hunter ability testing", "Dark Continent survival discussion", "non-ship underground and meeting settings"],
+    "reason": "No Black Whale-specific visual, spatial, access, operational, structural or scale evidence."
+  },
+  "storage": {
+    "publicRecord": "/phase7/full-page-review/chapter-347.json",
+    "sourceMedia": "/media/succession-contest/chapters/347/",
+    "researchBranch": "phase-7-1c-full-page-ship-only-review",
+    "pullRequest": 92
+  }
+}

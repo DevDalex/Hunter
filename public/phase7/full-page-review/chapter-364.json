@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "7.1C.1",
+  "projectId": "bw3d",
+  "chapter": 364,
+  "reviewScope": "Black Whale vessel, spatial, access, operational, structural and scale evidence only",
+  "source": {
+    "type": "repository-local ordered chapter media",
+    "language": "Arabic translation",
+    "directory": "/media/succession-contest/chapters/364/",
+    "pagePattern": "/media/succession-contest/chapters/364/{page:000}.png",
+    "pageCount": 19,
+    "artifactDigestSha256": "761d9fbad450c90f3f9cf8af83a5b31ba5fde121881c3be6bfbad97fc6516801",
+    "pageHashManifestSha256": "946b2c614c0e3664ce43a38de8a8d306c09c3000916b9e7e7bdba28e6b9451d3"
+  },
+  "review": {
+    "status": "complete-two-pass",
+    "pass1": {"status":"complete","method":"Full-page visual sweep of all 19 ordered pages","pagesInspected":19,"candidatePages":[1,2,3,6,7,8,11,12,13,14,15,16,18]},
+    "pass2": {"status":"complete","method":"Full-resolution verification of royal-suite interiors, corridors, thresholds, signage, intercoms and emergency-response movement","pagesInspected":[1,2,3,6,7,8,11,12,13,14,15,16,18]},
+    "retainedPages": [1,2,3,6,7,8,11,12,13,14,15,16,18],
+    "excludedPages": [4,5,9,10,17,19],
+    "blackWhalePanels": 17,
+    "evidenceAtoms": 13
+  },
+  "retainedPanels": [
+    {"id":"bw3d.ch364.p001.panel01","page":1,"panel":1,"readingOrder":1,"bbox":{"x":0.0,"y":0.0,"w":1.0,"h":1.0},"orientation":"portrait","subject":"Room 1014 emergency interior","visualDescription":"An armed confrontation unfolds inside a formally finished royal suite with broad open floor, wall panels, ceiling bands and several occupants able to move around one another.","evidenceTypes":["room-scale","interior-circulation","emergency-state"],"certainty":"c1-confirmed-panel-content","modelingPermissions":["Represent the shown suite as a large occupiable room with open circulation"],"modelingProhibitions":["Do not infer exact dimensions or full suite plan"]},
+    {"id":"bw3d.ch364.p007.panel03","page":7,"panel":3,"readingOrder":3,"bbox":{"x":0.0,"y":0.35,"w":0.65,"h":0.65},"orientation":"landscape","subject":"Response movement through royal room","visualDescription":"Multiple guards and attendants move across a large interior toward the incident, demonstrating clear circulation paths around furniture and occupants.","evidenceTypes":["room-circulation","response-route","occupancy"],"certainty":"c1-confirmed-panel-content","modelingPermissions":["Store emergency movement as a chapter-state overlay"],"modelingProhibitions":["Do not treat character trajectories as permanent route markings"]},
+    {"id":"bw3d.ch364.p014.panel01","page":14,"panel":1,"readingOrder":1,"bbox":{"x":0.0,"y":0.0,"w":1.0,"h":0.45},"orientation":"landscape","subject":"Room 1001 corridor threshold and intercom","visualDescription":"A 1001 plaque is visible above a corridor-facing doorway beside a wall communications unit while occupants coordinate from inside and outside the room.","evidenceTypes":["signage","threshold","communications","corridor-adjacency"],"certainty":"c1-confirmed-panel-content","modelingPermissions":["Connect Room 1001 to the royal corridor and register fixed communications hardware"],"modelingProhibitions":["Do not infer exact adjacency to Room 1014 from panel sequence alone"]},
+    {"id":"bw3d.ch364.p016.panel03","page":16,"panel":3,"readingOrder":3,"bbox":{"x":0.0,"y":0.45,"w":1.0,"h":0.55},"orientation":"landscape","subject":"Long royal corridor during lockdown","visualDescription":"A long decorated corridor extends past repeated room fronts while guards remain positioned near numbered suite doors during the incident.","evidenceTypes":["corridor-length-class","repeated-thresholds","lockdown-state","guard-posts"],"certainty":"c1-confirmed-panel-content","modelingPermissions":["Use repeated suite fronts along a long Tier 1 corridor", "Store lockdown guard positions as temporal state"],"modelingProhibitions":["Do not count unseen rooms or derive exact corridor length"]}
+  ],
+  "evidence": [
+    {"id":"bw3d.ev.ch364.001","page":1,"type":"suite-scale","claim":"The affected royal suite contains enough open interior area for an armed guard, Kurapika, attendants and a mother with an infant to reposition during an emergency.","certainty":"c1-confirmed-panel-content","modelingUse":"Large-room occupancy class only."},
+    {"id":"bw3d.ev.ch364.002","page":2,"type":"interior-circulation","claim":"The suite provides a direct movement path between the confrontation area and the attendants gathered deeper in the room.","certainty":"c2-strong-sequence-inference","modelingUse":"Represent internal circulation without fixing the full plan."},
+    {"id":"bw3d.ev.ch364.003","page":3,"type":"threshold-response","claim":"Additional guards can approach the incident from an adjacent doorway or corridor threshold.","certainty":"c1-confirmed-panel-content","modelingUse":"Register at least one usable response threshold."},
+    {"id":"bw3d.ev.ch364.004","page":6,"type":"communications-state","claim":"An attendant communicates remotely while remaining inside the royal suite during the emergency.","certainty":"c1-confirmed-panel-content","modelingUse":"Operational communications state; device identity remains separate from fixed intercom evidence."},
+    {"id":"bw3d.ev.ch364.005","page":7,"type":"response-route","claim":"Several people can move simultaneously across the room toward the incident without a single-file bottleneck.","certainty":"c1-confirmed-panel-content","modelingUse":"Constrain the shown room to broad internal circulation."},
+    {"id":"bw3d.ev.ch364.006","page":8,"type":"interior-boundary","claim":"The confrontation occurs against solid finished wall surfaces rather than an open public hall, confirming an enclosed suite environment.","certainty":"c1-confirmed-panel-content","modelingUse":"Enclosed-room classification."},
+    {"id":"bw3d.ev.ch364.007","page":11,"type":"room-zoning","claim":"The suite can support a treatment or restraint area while other occupants remain nearby, implying functional zoning within the large room.","certainty":"c2-strong-panel-inference","modelingUse":"Permit temporary emergency zoning, not permanent partitions."},
+    {"id":"bw3d.ev.ch364.008","page":12,"type":"doorway-control","claim":"Guards can control access to the room while occupants coordinate from both sides of the threshold.","certainty":"c1-confirmed-panel-content","modelingUse":"Store a controlled-threshold emergency state."},
+    {"id":"bw3d.ev.ch364.009","page":13,"type":"emergency-evacuation","claim":"Characters discuss leaving the room and moving the infant to safety while the incident remains contained inside.","certainty":"c1-confirmed-text","modelingUse":"Operational evacuation use of the suite-to-corridor connection."},
+    {"id":"bw3d.ev.ch364.010","page":14,"type":"room-signage","claim":"Room 1001 is marked by a numeric plaque at its corridor-facing entrance.","certainty":"c1-confirmed-panel-content","modelingUse":"Reconfirm Room 1001 threshold identity."},
+    {"id":"bw3d.ev.ch364.011","page":14,"type":"communications-system","claim":"A fixed wall communications unit is used to coordinate between rooms during the emergency.","certainty":"c1-confirmed-panel-content","modelingUse":"Connect royal rooms through a fixed internal communications system."},
+    {"id":"bw3d.ev.ch364.012","page":16,"type":"corridor-system","claim":"The royal residential zone contains a long decorated corridor with repeated suite fronts and room-number plaques.","certainty":"c1-confirmed-panel-content","modelingUse":"Extend the Tier 1 royal-corridor topology."},
+    {"id":"bw3d.ev.ch364.013","page":18,"type":"room-command-state","claim":"After the immediate incident, occupants regroup around a table inside the suite to coordinate the next response.","certainty":"c1-confirmed-panel-content","modelingUse":"Store a temporary command-meeting state for the shown room."}
+  ],
+  "contradictionsAndQuarantines": [
+    {"id":"bw3d.q.ch364.001","subject":"Room 1014 versus Room 1001 sequence","status":"open","rule":"Panel sequence confirms both room thresholds and communication between parties but does not by itself establish direct physical adjacency."},
+    {"id":"bw3d.q.ch364.002","subject":"Emergency movement","status":"open","rule":"Character paths and guard positions are temporal operational states, not permanent route geometry."}
+  ],
+  "unresolvedQuestions": ["Which doorway shown during the confrontation leads directly to the royal corridor?", "Does the fixed wall unit connect only adjacent suites or a broader Tier 1 communications network?", "What room number is partially visible in the long-corridor panel on page 16?"],
+  "excludedMaterial": {"pages":6,"categories":["Nen ability mechanics without vessel-system implications","character motives and succession strategy","medical effects not tied to ship infrastructure"],"reason":"Excluded material does not independently establish Black Whale geometry, route, access, operational infrastructure, scale or durable chapter-state evidence."},
+  "storage": {"publicRecord":"/phase7/full-page-review/chapter-364.json","sourceMedia":"/media/succession-contest/chapters/364/","researchBranch":"phase-7-1c-full-page-ship-only-review","pullRequest":92}
+}

@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "7.1C.1",
+  "projectId": "bw3d",
+  "chapter": 343,
+  "reviewScope": "Black Whale vessel, spatial, access, operational, structural and scale evidence only",
+  "source": {
+    "type": "repository-local ordered chapter media",
+    "language": "Arabic translation",
+    "directory": "/media/succession-contest/chapters/343/",
+    "pagePattern": "/media/succession-contest/chapters/343/{page:000}.jpg",
+    "pageCount": 20,
+    "artifactDigestSha256": "8953b434d6370c28d4585de8068ee7d2eaba18696fbc7b7e042006cda7c1994d",
+    "pageHashManifestSha256": "72d07a60178998e42c121dcd64b98a3302a19638f97552a7dc4a30ac72fcf2e0"
+  },
+  "review": {
+    "status": "complete-two-pass-reviewed-zero",
+    "pass1": {
+      "status": "complete",
+      "method": "Full-page visual sweep of all 20 ordered pages",
+      "pagesInspected": 20,
+      "candidatePages": []
+    },
+    "pass2": {
+      "status": "complete",
+      "method": "Second chapter-wide verification sweep for small background, dialogue and setting clues",
+      "pagesInspected": 20
+    },
+    "retainedPages": [],
+    "excludedPages": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+    "blackWhalePanels": 0,
+    "evidenceAtoms": 0
+  },
+  "retainedPanels": [],
+  "evidence": [],
+  "contradictionsAndQuarantines": [],
+  "unresolvedQuestions": [],
+  "excludedMaterial": {
+    "pages": 20,
+    "categories": [
+      "Hunter Association and Zodiac recruitment",
+      "Pariston and Beyond strategy",
+      "Kurapika recruitment and personality assessment",
+      "Dark Continent expedition discussion without vessel facts",
+      "street, office, residential and meeting-room settings unrelated to the Black Whale"
+    ],
+    "reason": "No panel or statement establishes Black Whale geometry, location hierarchy, route, access, operational system, scale cue or chapter-dependent vessel state."
+  },
+  "storage": {
+    "publicRecord": "/phase7/full-page-review/chapter-343.json",
+    "sourceMedia": "/media/succession-contest/chapters/343/",
+    "researchBranch": "phase-7-1c-full-page-ship-only-review",
+    "pullRequest": 92
+  }
+}
