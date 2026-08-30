@@ -13,10 +13,7 @@ import {
   OrganizationDependencyInstrument,
 } from './SuccessionExplorerCausalSystemsInstruments';
 import './SuccessionExplorerCausalSystemsClosure.css';
-import {
-  ReaderContinuityInstrument,
-  StructuredQueryInstrument,
-} from './SuccessionExplorerContinuityInstruments';
+import { StructuredQueryInstrument } from './SuccessionExplorerContinuityInstruments';
 import {
   BlackWhaleHierarchyInstrument,
   KnowledgePropagationTrailInstrument,
@@ -115,7 +112,6 @@ export default function SuccessionExplorerRoutePanelHost({ routeId, spoilerLimit
     {routeId === 'chapters' && chapterCausalViews.has(view) && <ChapterCausalGatewayInstrument chapter={explorer.chapter} mode={view} />}
     {routeId === 'research' && researchEvidenceViews.has(view) && <ResearchEvidenceTopologyInstrument chapter={explorer.chapter} />}
     {routeId === 'search' && searchProjectionViews.has(view) && <SearchProjectionInstrument chapter={explorer.chapter} view={view} />}
-    {routeId === 'reader' && <ReaderContinuityInstrument chapter={explorer.chapter} onNavigate={onNavigate} />}
     <SuccessionExplorerRoutePanels
       routeId={routeId}
       view={view}
