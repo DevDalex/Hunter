@@ -6,32 +6,43 @@ import {
 
 const routePolicy = Object.freeze({
   archive: { release: true, searchable: false, sitemap: true },
-  reader: { release: true, searchable: false, sitemap: true },
-  search: { release: true, searchable: false, sitemap: true },
-  glossary: { release: true, searchable: true, sitemap: true },
-  queens: { release: false, searchable: false, sitemap: false, canonicalTarget: 'princes' },
 });
 
 export const legacyRouteRedirects = Object.freeze({
   overview: 'archive',
-  'deep-dossier': 'princes',
-  'family-tree': 'princes',
-  'royal-family': 'princes',
-  'succession-roster': 'characters',
+  story: 'timeline',
+  search: 'timeline',
+  events: 'timeline',
+  chapters: 'timeline',
+  reader: 'timeline',
+  'black-whale': 'timeline',
+  locations: 'timeline',
+  research: 'timeline',
+  glossary: 'timeline',
+  mysteries: 'timeline',
+  'succession-sources': 'timeline',
   'succession-timeline': 'timeline',
-  'connection-board': 'relationships',
-  'nen-classes': 'nen',
-  beasts: 'guardian-spirit-beasts',
+  princes: 'characters',
+  queens: 'characters',
+  bodyguards: 'characters',
+  organizations: 'characters',
+  relationships: 'characters',
+  'deep-dossier': 'characters',
+  'family-tree': 'characters',
+  'royal-family': 'characters',
+  'succession-roster': 'characters',
+  'connection-board': 'characters',
   hunters: 'characters',
   deaths: 'characters',
-  mafia: 'organizations',
-  military: 'organizations',
-  politics: 'organizations',
-  justice: 'organizations',
-  'power-blocs': 'organizations',
-  media: 'research',
-  mysteries: 'chapters',
-  'succession-sources': 'research',
+  mafia: 'characters',
+  military: 'characters',
+  politics: 'characters',
+  justice: 'characters',
+  'power-blocs': 'characters',
+  'nen-classes': 'nen',
+  beasts: 'nen',
+  'guardian-spirit-beasts': 'nen',
+  media: 'timeline',
 });
 
 const defaultPolicy = Object.freeze({ release: true, searchable: true, sitemap: true });
@@ -43,7 +54,7 @@ export const canonicalSuccessionRoutes = Object.freeze(
     ...(routePolicy[route.id] || {}),
     hub: successionArchiveHubs.find((hub) => (
       hub.target === route.id || hub.tabs.some((tab) => tab.routes.includes(route.id))
-    ))?.id || 'story',
+    ))?.id || 'timeline',
   })),
 );
 

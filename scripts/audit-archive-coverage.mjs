@@ -9,16 +9,10 @@ for (const item of archiveCoverageList) {
   }
 }
 
-// Publication metadata and authorized reader media are maintained by different
-// pipelines. Reader authorization may temporarily lead the hand-reviewed
-// publication catalogue, so neither is treated as a strict parent boundary.
-const availableChapterBoundary = Math.max(
-  archiveCoverage.publication.chapter,
-  archiveCoverage.reader.chapter,
-);
+const availableChapterBoundary = archiveCoverage.publication.chapter;
 
 if (archiveCoverage.research.chapter > availableChapterBoundary) {
-  throw new Error('Fully indexed research coverage cannot exceed available chapter coverage.');
+  throw new Error('Fully indexed research coverage cannot exceed published chapter coverage.');
 }
 
 for (const [domain, coverage] of Object.entries(domainCoverage)) {
@@ -27,8 +21,8 @@ for (const [domain, coverage] of Object.entries(domainCoverage)) {
     throw new Error(`${domain} coverage needs a positive chapter boundary.`);
   }
   if (coverage.chapter > availableChapterBoundary) {
-    throw new Error(`${domain} coverage exceeds the available chapter boundary.`);
+    throw new Error(`${domain} coverage exceeds the published chapter boundary.`);
   }
 }
 
-console.log(`Archive coverage audit passed: ${Object.keys(domainCoverage).length} domains.`);
+console.log(`Archive coverage audit passed: ${Object.keys(domainCoverage).length} Succession domains.`);

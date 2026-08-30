@@ -1,4 +1,4 @@
-name: Browser Verification
+name: Browser verification
 
 on:
   pull_request:
@@ -15,49 +15,19 @@ permissions:
 
 jobs:
   browser-qa:
-    name: Browser-rendered QA
     runs-on: ubuntu-latest
     timeout-minutes: 35
-
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
-
       - name: Use Node.js 22
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-
       - name: Install locked dependencies
         run: npm ci
-
-      - name: Install Chromium and system dependencies
+      - name: Install Chromium
         run: npm exec playwright -- install --with-deps chromium
-
-      - name: Build runtime and run browser verification
-        shell: bash
-        env:
-          VISUAL_QA_SCREENSHOTS: failures
-          VISUAL_QA_VIEWPORT: desktop
-          ACCESSIBILITY_QA_VIEWPORT: desktop
-        run: |
-          set -o pipefail
-          mkdir -p .browser-qa
-          npm run qa:browser:ci 2>&1 | tee .browser-qa/console.log
-
-      - name: Upload browser QA reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: browser-qa-${{ github.sha }}
-          if-no-files-found: warn
-          include-hidden-files: true
-          retention-days: 14
-          path: |
-            .browser-qa/
-            .search-qa/
-            .visual-qa/
-            .accessibility-qa/
-            .interaction-qa/
-            .performance-qa/
+      - name: Run browser smoke checks
+        run: npm run qa:browser:ci

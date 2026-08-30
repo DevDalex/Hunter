@@ -1,43 +1,34 @@
-# Hunter × Hunter Archive
+# Hunter × Hunter Succession Contest Archive
 
-## Current public scope
+## Scope
 
-The website is intentionally limited to two maintained areas:
+This repository is maintained for the **Succession Contest arc only**.
 
-- the **Succession Contest Archive**, opened at `/`;
-- the **general Nen Encyclopedia**, opened at `/nen`.
+The public product has exactly three first-class content systems:
 
-The standalone **World Atlas** and `/world` route are retired. Succession-specific geography remains available through the maintained Black Whale and Locations workspaces inside the Succession Contest Archive.
+1. **Timeline** — chapters, events, story threads, chronology, Black Whale locations and movement, causal context, and changing story state.
+2. **Characters** — royalty, guards, Hunters, mafia, the Troupe, affiliations, assignments, relationships, status, knowledge, and movement.
+3. **Nen** — abilities, Guardian Spirit Beasts, ritual mechanics, conditions, costs, curses, possession, instruction, Contagion, and unresolved systems.
 
-Earlier-arc Story pages, the global timeline, the general character encyclopedia, the general organizations workspace, the general fights archive, and the old site homepage are retired.
+Other Succession data may exist only when it directly supports one of those three systems. Organizations, assignments, relationships, locations, events, royal-family data, Guardian Spirit Beasts, chapter records, evidence, and similar material are supporting data rather than independent products.
+
+Earlier arcs, general-series encyclopedias, the World Atlas, general Nen encyclopedia, manga page hosting, the manga Reader, and chapter administration/import tooling are intentionally removed.
+
+## Public routes
+
+- `/timeline`
+- `/characters`
+- `/nen`
+
+`/` is only the three-pillar entrance. Retired Succession routes redirect into the pillar that owns their information.
 
 ## Runtime architecture
 
-- React and Vite build the client application into `dist/client/`.
+- React and Vite build the client into `dist/client/`.
 - The Cloudflare Worker entry is `dist/server/index.js`.
-- `dist/client/` is bound as `ASSETS` with Worker-first routing.
-- `server/index.js` handles `/api/admin/chapter/*` and `/admin/chapters` before static files or the SPA fallback.
-- GitHub is the canonical content store for authorized Succession chapter media.
-
-## Maintained routes
-
-### Succession Contest
-
-The dedicated archive owns:
-
-- Story Intelligence
-- voyage timeline
-- manga reader
-- Succession search
-- characters and royal family
-- assignments and organizations
-- Black Whale and location records
-- Nen, ritual systems, and Guardian Spirit Beasts
-- events, relationships, chapter dossiers, research, and glossary
-
-### Retained general reference
-
-- `/nen` keeps the complete Nen system map and ability encyclopedia.
+- `dist/client/` is exposed through the `ASSETS` binding.
+- The Worker provides static asset serving plus SPA fallback routing only.
+- There are no chapter-admin or manga-import endpoints.
 
 ## Run locally
 
@@ -49,10 +40,14 @@ npm run dev
 ## Validate and build
 
 ```bash
-npm run build
+npm run verify
 ```
 
-The build runs the Succession runtime audit sweep, verifies the hosted chapter administrator, builds Vite, checks performance budgets, prepares the Worker artifact, and validates the Cloudflare release shape.
+For a production bundle without the full verification pass:
+
+```bash
+npm run build
+```
 
 ## Deploy to Cloudflare
 
@@ -60,30 +55,8 @@ The build runs the Succession runtime audit sweep, verifies the hosted chapter a
 npm run deploy
 ```
 
-`wrangler.jsonc` must retain:
+## Repository policy
 
-- Worker name `hunter`;
-- entry `dist/server/index.js`;
-- asset directory `dist/client`;
-- binding `ASSETS`;
-- `run_worker_first: true`;
-- disabled automatic HTML and not-found rewriting.
+The product owner decides presentation and product direction. Permanent checks may catch real breakage, malformed data, spoiler leaks, accessibility failures, serious performance regressions, vulnerable dependencies, invalid media output, or an undeployable build. They must not freeze colors, layouts, component structures, route counts, milestone phases, or previous design decisions.
 
-A successful commit is not proof of a hosted release. Record deployment success only after Cloudflare reaches terminal success.
-
-## Core content owners
-
-- Succession routes: `src/data/succession/archiveRoutes.js`
-- Public route boundary: `src/data/routeManifest.js`
-- Browser routing: `src/lib/appRouter.js`
-- Succession application: `src/components/succession/`
-- General Nen data and interface: `src/data/nenEncyclopedia.js`, `src/components/NenEncyclopedia.jsx`
-- Succession geography: `src/data/succession/blackWhaleCanonicalMap.js` and the Black Whale / Locations workspaces
-- Succession chapter media: `src/data/successionChapterMedia.generated.js`
-- Cloudflare Worker: `server/index.js`, `server/chapter-admin.js`, `wrangler.jsonc`
-
-## Chapter administrator
-
-The protected administrator remains at `/admin/chapters`. Its API family is `/api/admin/chapter/*` and must always return JSON rather than `index.html`.
-
-Required Worker secrets and variables are documented in `docs/HOSTED-CHAPTER-ADMIN.md`.
+New public features should fit Timeline, Characters, or Nen unless the product scope is explicitly changed.

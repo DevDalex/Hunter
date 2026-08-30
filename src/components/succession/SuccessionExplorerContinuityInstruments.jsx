@@ -1,16 +1,10 @@
 import { useMemo } from 'react';
 import {
   ArrowRight,
-  BookOpenCheck,
-  BrainCircuit,
-  Clock3,
-  FileSearch,
   SearchCheck,
 } from 'lucide-react';
 import {
-  getChapterWhatChanged,
   getEntityById,
-  getStorySnapshotAtChapter,
   searchArchiveProduct,
 } from '../../data/succession/successionData';
 import { useSuccessionExplorer } from './SuccessionExplorerState';
@@ -21,7 +15,6 @@ const safe = (factory, fallback) => {
 };
 const label = (entity) => entity?.name || entity?.title || entity?.term || entity?.label || entity?.id || 'Unknown';
 const labelize = (value) => String(value || 'unknown').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
-const unique = (values) => [...new Set((values || []).filter(Boolean))];
 
 const TYPE_RULES = Object.freeze([
   ['character', /\b(?:character|person|people|prince|queen|guard|hunter|who)\b/i],
@@ -107,30 +100,5 @@ export function StructuredQueryInstrument({ routeId, spoilerLimit, onNavigate })
       const entity = result.entity || getEntityById(result.entityId || result.id);
       return <button type="button" onClick={() => entity && explorer.selectEntity(entity.id, { routeId, chapter: parsed.chapter, label: label(entity) })} key={entity?.id || result.id || index}><small>{labelize(result.domain || entity?.entityType || result.resultType)}</small><strong>{label(entity || result)}</strong><span>{result.matchReason || result.reason || ''}</span></button>;
     })}</div></div>
-  </section>;
-}
-
-export function ReaderContinuityInstrument({ chapter, onNavigate }) {
-  const explorer = useSuccessionExplorer();
-  const changed = useMemo(() => safe(() => getChapterWhatChanged(chapter), null), [chapter]);
-  const story = useMemo(() => safe(() => getStorySnapshotAtChapter(chapter), null), [chapter]);
-  const eventIds = unique([...(changed?.eventIds || []), ...(story?.events || []).map((event) => event.id)]);
-  const selected = explorer.selectedIds.map(getEntityById).filter(Boolean).slice(0, 5);
-  return <section className="succession-explorer-reader-sync">
-    <header><div><span>Synchronized reading context</span><h3><BookOpenCheck size={17} /> Chapter {chapter} is the shared Explorer clock</h3><p>Reader, Timeline, Chapter intelligence and Research open against the same chapter boundary. Your comparison tray, perspective and watch state travel with you.</p></div><strong>{story?.phase?.name || story?.phasePresentation?.name || 'Succession Contest'}</strong></header>
-    <dl>
-      <div><dt>Events</dt><dd>{eventIds.length}</dd></div>
-      <div><dt>Open threads</dt><dd>{story?.openThreads?.length || 0}</dd></div>
-      <div><dt>State changes</dt><dd>{changed?.summary?.changed ?? changed?.records?.length ?? 0}</dd></div>
-      <div><dt>Compare tray</dt><dd>{explorer.compareIds.length}</dd></div>
-      <div><dt>Perspective</dt><dd>{explorer.perspective === 'reader' ? 'Reader' : label(getEntityById(explorer.perspective))}</dd></div>
-    </dl>
-    <nav aria-label="Open synchronized analysis">
-      <button type="button" onClick={() => onNavigate?.('timeline', explorer.buildDeepLinkParams('timeline', { chapter }))}><Clock3 /><span>Timeline</span><strong>Open the movable chronology at Ch. {chapter}</strong></button>
-      <button type="button" onClick={() => onNavigate?.('chapters', explorer.buildDeepLinkParams('chapters', { chapter, entity: `chapter:${chapter}` }))}><BookOpenCheck /><span>Chapter dossier</span><strong>Events, state changes and impact</strong></button>
-      <button type="button" onClick={() => onNavigate?.('research', explorer.buildDeepLinkParams('research', { mode: 'diff', from: Math.max(340, chapter - 1), to: chapter }))}><FileSearch /><span>Research diff</span><strong>Only what changed since Ch. {Math.max(340, chapter - 1)}</strong></button>
-      <button type="button" onClick={() => { explorer.setPerspective(explorer.perspective === 'reader' ? selected[0]?.id || 'reader' : 'reader'); }}><BrainCircuit /><span>Perspective</span><strong>{explorer.perspective === 'reader' ? 'Use selected character if available' : 'Return to reader knowledge'}</strong></button>
-    </nav>
-    {!!selected.length && <div className="succession-explorer-reader-sync__selection"><span>Research state travelling with the Reader</span>{selected.map((entity) => <button type="button" onClick={() => explorer.selectEntity(entity.id, { routeId: 'reader', chapter, label: label(entity) })} key={entity.id}><small>{labelize(entity.entityType)}</small><strong>{label(entity)}</strong></button>)}</div>}
   </section>;
 }

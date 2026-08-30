@@ -3,17 +3,34 @@ import SuccessionCommandHome from './components/succession/SuccessionCommandHome
 import { ARCHIVE_BOUNDARY } from './data/archiveMeta';
 
 const TimelineWorkspace = lazy(() => import('./components/TimelineWorkspace'));
+const SuccessionPillarWorkspace = lazy(() => import('./components/succession/SuccessionPillarWorkspace'));
 const SuccessionArtDirectionLab = import.meta.env.DEV
   ? lazy(() => import('./components/succession/art-direction/SuccessionArtDirectionLab'))
   : null;
+
+const CONTENT_ROUTES = new Set(['/timeline', '/characters', '/nen']);
+const CHARACTER_LEGACY = new Set(['characters', 'princes', 'queens', 'bodyguards', 'organizations', 'relationships']);
+const NEN_LEGACY = new Set(['nen', 'guardian-spirit-beasts']);
 
 const isDesignLabPath = () => import.meta.env.DEV
   && typeof window !== 'undefined'
   && window.location.pathname.startsWith('/__design-lab');
 
 const normalizePathname = (pathname = '/') => {
-  if (pathname === '/timeline' || pathname === '/timeline/') return '/timeline';
-  return '/';
+  const clean = pathname.length > 1 ? pathname.replace(/\/$/, '') : pathname;
+  return CONTENT_ROUTES.has(clean) ? clean : '/';
+};
+
+const legacyPillarDestination = (url) => {
+  const root = '/story/succession-contest';
+  if (!url.pathname.startsWith(root)) return '';
+  const target = url.pathname.slice(root.length).replace(/^\//, '').replace(/\/$/, '');
+  const path = CHARACTER_LEGACY.has(target)
+    ? '/characters'
+    : NEN_LEGACY.has(target)
+      ? '/nen'
+      : '/timeline';
+  return `${path}${url.search}`;
 };
 
 const currentRoute = () => {
@@ -21,12 +38,12 @@ const currentRoute = () => {
   return normalizePathname(window.location.pathname);
 };
 
-const readTimelineState = () => {
-  if (typeof window === 'undefined' || normalizePathname(window.location.pathname) !== '/timeline') return {};
+const readRouteState = (route = currentRoute()) => {
+  if (typeof window === 'undefined' || route === '/') return {};
   return Object.fromEntries(new URLSearchParams(window.location.search).entries());
 };
 
-const sanitizeTimelineState = (state = {}) => Object.fromEntries(Object.entries(state)
+const sanitizeState = (state = {}) => Object.fromEntries(Object.entries(state)
   .filter(([key, value]) => key !== 'scope'
     && value !== undefined
     && value !== null
@@ -34,47 +51,20 @@ const sanitizeTimelineState = (state = {}) => Object.fromEntries(Object.entries(
     && value !== false)
   .map(([key, value]) => [key, String(value)]));
 
-const timelineHref = (state = {}) => {
-  const params = new URLSearchParams(sanitizeTimelineState(state));
+const routeHref = (route, state = {}) => {
+  const params = new URLSearchParams(sanitizeState(state));
   const search = params.toString();
-  return `/timeline${search ? `?${search}` : ''}`;
-};
-
-const legacyTimelineDestination = (url) => {
-  const root = '/story/succession-contest';
-  if (!url.pathname.startsWith(root)) return '';
-  const chapter = url.searchParams.get('chapter');
-  const state = {};
-
-  if (url.pathname === `${root}/events`) state.mode = 'archive';
-  else if (url.pathname === `${root}/chapter-records`) {
-    state.mode = 'archive';
-    if (chapter) Object.assign(state, { chapter, from: chapter, to: chapter });
-  } else if (url.pathname === `${root}/nen`) Object.assign(state, { mode: 'story', lens: 'nen' });
-  else if (url.pathname === `${root}/relationships`) state.mode = 'atlas';
-  else if (url.pathname === `${root}/characters`) Object.assign(state, { mode: 'atlas', view: 'people' });
-  else if (url.pathname === `${root}/locations`) state.mode = 'space';
-  else return '';
-
-  return timelineHref(state);
+  return `${route}${search ? `?${search}` : ''}`;
 };
 
 const meaningfulTimelineNavigation = (current, next) => [
-  'mode',
-  'event',
-  'focus',
-  'compare',
-  'view',
-  'intel',
-  'character',
-  'thread',
-  'spaceLocation',
+  'mode', 'event', 'focus', 'compare', 'view', 'intel', 'character', 'thread', 'spaceLocation',
 ].some((key) => String(current?.[key] || '') !== String(next?.[key] || ''));
 
 export default function App() {
   const designLab = isDesignLabPath();
   const [route, setRoute] = useState(currentRoute);
-  const [timelineState, setTimelineState] = useState(readTimelineState);
+  const [routeState, setRouteState] = useState(() => readRouteState(currentRoute()));
 
   useEffect(() => {
     if (designLab) return undefined;
@@ -82,15 +72,19 @@ export default function App() {
     const syncRoute = () => {
       const nextRoute = currentRoute();
       setRoute(nextRoute);
-      setTimelineState(nextRoute === '/timeline' ? readTimelineState() : {});
+      setRouteState(readRouteState(nextRoute));
     };
 
-    const normalized = normalizePathname(window.location.pathname);
-    const canonical = normalized === '/timeline'
-      ? `/timeline${window.location.search}`
-      : '/';
-    const current = `${window.location.pathname}${window.location.search}`;
-    if (current !== canonical) window.history.replaceState({ hxhRoute: normalized }, '', canonical);
+    const incoming = new URL(window.location.href);
+    const legacyDestination = legacyPillarDestination(incoming);
+    if (legacyDestination) {
+      window.history.replaceState({ hxhRoute: legacyDestination.split('?')[0] }, '', legacyDestination);
+    } else {
+      const normalized = normalizePathname(window.location.pathname);
+      const canonical = normalized === '/' ? '/' : `${normalized}${window.location.search}`;
+      const current = `${window.location.pathname}${window.location.search}`;
+      if (current !== canonical) window.history.replaceState({ hxhRoute: normalized }, '', canonical);
+    }
 
     syncRoute();
     window.addEventListener('popstate', syncRoute);
@@ -99,53 +93,56 @@ export default function App() {
 
   useEffect(() => {
     if (designLab) return;
-    const lens = route === '/timeline' ? timelineState.mode || 'archive' : '';
-    document.title = route === '/timeline'
-      ? `${lens.charAt(0).toUpperCase()}${lens.slice(1)} Timeline · Hunter × Hunter Archive`
-      : 'Hunter × Hunter Archive';
-  }, [designLab, route, timelineState.mode]);
+    if (route === '/timeline') {
+      const lens = routeState.mode || 'archive';
+      document.title = `${lens.charAt(0).toUpperCase()}${lens.slice(1)} Timeline · Hunter × Hunter`;
+    } else if (route === '/characters') document.title = 'Succession Characters · Hunter × Hunter';
+    else if (route === '/nen') document.title = 'Succession Nen · Hunter × Hunter';
+    else document.title = 'Hunter × Hunter · Succession Contest';
+  }, [designLab, route, routeState.mode]);
 
   const navigate = (destination, { replace = false } = {}) => {
     const url = new URL(destination, window.location.origin);
-    const nextRoute = normalizePathname(url.pathname);
-    const href = nextRoute === '/timeline' ? `/timeline${url.search}` : '/';
+    const legacyDestination = legacyPillarDestination(url);
+    const resolved = legacyDestination ? new URL(legacyDestination, window.location.origin) : url;
+    const nextRoute = normalizePathname(resolved.pathname);
+    const href = nextRoute === '/' ? '/' : `${nextRoute}${resolved.search}`;
     if (replace) window.history.replaceState({ hxhRoute: nextRoute }, '', href);
     else window.history.pushState({ hxhRoute: nextRoute }, '', href);
     setRoute(nextRoute);
-    setTimelineState(nextRoute === '/timeline' ? Object.fromEntries(url.searchParams.entries()) : {});
+    setRouteState(readRouteState(nextRoute));
+    if (nextRoute !== '/') setRouteState(Object.fromEntries(resolved.searchParams.entries()));
     window.scrollTo?.({ top: 0, left: 0, behavior: 'auto' });
   };
 
   const commitTimelineState = (nextState = {}) => {
-    const sanitized = sanitizeTimelineState(nextState);
-    const href = timelineHref(sanitized);
-    const push = meaningfulTimelineNavigation(timelineState, sanitized);
+    const sanitized = sanitizeState(nextState);
+    const href = routeHref('/timeline', sanitized);
+    const push = meaningfulTimelineNavigation(routeState, sanitized);
     if (`${window.location.pathname}${window.location.search}` !== href) {
       if (push) window.history.pushState({ hxhRoute: '/timeline' }, '', href);
       else window.history.replaceState({ hxhRoute: '/timeline' }, '', href);
     }
     setRoute('/timeline');
-    setTimelineState(sanitized);
+    setRouteState(sanitized);
   };
 
   const keepInternalNavigationInApp = (event) => {
     const anchor = event.target?.closest?.('a[href]');
     if (!anchor || anchor.target === '_blank') return;
-
     const href = anchor.getAttribute('href') || '';
     if (!href || href.startsWith('#')) return;
-
     const destination = new URL(anchor.href, window.location.href);
     if (destination.origin !== window.location.origin) return;
 
-    const legacyTimelineHref = legacyTimelineDestination(destination);
-    if (legacyTimelineHref) {
+    const legacyDestination = legacyPillarDestination(destination);
+    if (legacyDestination) {
       event.preventDefault();
-      navigate(legacyTimelineHref);
+      navigate(legacyDestination);
       return;
     }
 
-    if (!['/', '/timeline', '/timeline/'].includes(destination.pathname)) return;
+    if (!['/', '/timeline', '/timeline/', '/characters', '/characters/', '/nen', '/nen/'].includes(destination.pathname)) return;
     event.preventDefault();
     navigate(`${destination.pathname}${destination.search}`);
   };
@@ -154,22 +151,33 @@ export default function App() {
     return <Suspense fallback={null}><SuccessionArtDirectionLab /></Suspense>;
   }
 
+  const pillar = route === '/characters' ? 'characters' : route === '/nen' ? 'nen' : '';
+
   return (
     <div
       id="top"
-      className={`app-shell ${route === '/timeline' ? 'view-timeline' : 'view-succession is-command-home'}`}
+      className={`app-shell ${route === '/timeline' ? 'view-timeline' : pillar ? `view-succession view-${pillar}` : 'view-succession is-command-home'}`}
       onClickCapture={keepInternalNavigationInApp}
     >
       {route === '/timeline' ? (
         <Suspense fallback={null}>
           <TimelineWorkspace
-            requestedState={timelineState}
+            requestedState={routeState}
             spoilerLimit={ARCHIVE_BOUNDARY}
             onNavigate={commitTimelineState}
           />
         </Suspense>
+      ) : pillar ? (
+        <Suspense fallback={null}>
+          <SuccessionPillarWorkspace
+            pillar={pillar}
+            requestedState={routeState}
+            spoilerLimit={ARCHIVE_BOUNDARY}
+            onNavigate={navigate}
+          />
+        </Suspense>
       ) : (
-        <SuccessionCommandHome onNavigate={navigate} />
+        <SuccessionCommandHome />
       )}
     </div>
   );
