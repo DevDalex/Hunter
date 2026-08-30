@@ -1,9 +1,12 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, startTransition, Suspense, useEffect, useState } from 'react';
 import SuccessionCommandHome from './components/succession/SuccessionCommandHome';
 import { ARCHIVE_BOUNDARY } from './data/archiveMeta';
 
-const TimelineWorkspace = lazy(() => import('./components/TimelineWorkspace'));
-const SuccessionPillarWorkspace = lazy(() => import('./components/succession/SuccessionPillarWorkspace'));
+const loadTimelineWorkspace = () => import('./components/TimelineWorkspace');
+const loadSuccessionPillarWorkspace = () => import('./components/succession/SuccessionPillarWorkspace');
+
+const TimelineWorkspace = lazy(loadTimelineWorkspace);
+const SuccessionPillarWorkspace = lazy(loadSuccessionPillarWorkspace);
 const SuccessionArtDirectionLab = import.meta.env.DEV
   ? lazy(() => import('./components/succession/art-direction/SuccessionArtDirectionLab'))
   : null;
@@ -11,6 +14,32 @@ const SuccessionArtDirectionLab = import.meta.env.DEV
 const CONTENT_ROUTES = new Set(['/timeline', '/characters', '/nen']);
 const CHARACTER_LEGACY = new Set(['characters', 'princes', 'queens', 'bodyguards', 'organizations', 'relationships']);
 const NEN_LEGACY = new Set(['nen', 'guardian-spirit-beasts']);
+
+const preloadRoute = (route) => {
+  if (route === '/timeline') return loadTimelineWorkspace();
+  if (route === '/characters' || route === '/nen') return loadSuccessionPillarWorkspace();
+  return Promise.resolve();
+};
+
+function RouteLoadingFallback({ section }) {
+  return (
+    <main className="route-loading-shell" aria-busy="true" aria-live="polite">
+      <div className="route-loading-shell__heading">
+        <span className="route-loading-shell__kicker">Succession Contest</span>
+        <strong>{section}</strong>
+      </div>
+      <div className="route-loading-shell__rule" />
+      <div className="route-loading-shell__line route-loading-shell__line--wide" />
+      <div className="route-loading-shell__line" />
+      <div className="route-loading-shell__cards" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <span className="sr-only">Loading {section}</span>
+    </main>
+  );
+}
 
 const isDesignLabPath = () => import.meta.env.DEV
   && typeof window !== 'undefined'
@@ -71,8 +100,11 @@ export default function App() {
 
     const syncRoute = () => {
       const nextRoute = currentRoute();
-      setRoute(nextRoute);
-      setRouteState(readRouteState(nextRoute));
+      void preloadRoute(nextRoute);
+      startTransition(() => {
+        setRoute(nextRoute);
+        setRouteState(readRouteState(nextRoute));
+      });
     };
 
     const incoming = new URL(window.location.href);
@@ -92,6 +124,25 @@ export default function App() {
   }, [designLab]);
 
   useEffect(() => {
+    if (designLab || typeof window === 'undefined') return undefined;
+
+    const preload = () => {
+      void Promise.allSettled([
+        loadTimelineWorkspace(),
+        loadSuccessionPillarWorkspace(),
+      ]);
+    };
+
+    if ('requestIdleCallback' in window) {
+      const idleId = window.requestIdleCallback(preload, { timeout: 1200 });
+      return () => window.cancelIdleCallback?.(idleId);
+    }
+
+    const timeoutId = window.setTimeout(preload, 250);
+    return () => window.clearTimeout(timeoutId);
+  }, [designLab]);
+
+  useEffect(() => {
     if (designLab) return;
     if (route === '/timeline') {
       const lens = routeState.mode || 'archive';
@@ -107,11 +158,16 @@ export default function App() {
     const resolved = legacyDestination ? new URL(legacyDestination, window.location.origin) : url;
     const nextRoute = normalizePathname(resolved.pathname);
     const href = nextRoute === '/' ? '/' : `${nextRoute}${resolved.search}`;
+    const nextState = nextRoute === '/' ? {} : Object.fromEntries(resolved.searchParams.entries());
+
+    void preloadRoute(nextRoute);
     if (replace) window.history.replaceState({ hxhRoute: nextRoute }, '', href);
     else window.history.pushState({ hxhRoute: nextRoute }, '', href);
-    setRoute(nextRoute);
-    setRouteState(readRouteState(nextRoute));
-    if (nextRoute !== '/') setRouteState(Object.fromEntries(resolved.searchParams.entries()));
+
+    startTransition(() => {
+      setRoute(nextRoute);
+      setRouteState(nextState);
+    });
     window.scrollTo?.({ top: 0, left: 0, behavior: 'auto' });
   };
 
@@ -123,8 +179,10 @@ export default function App() {
       if (push) window.history.pushState({ hxhRoute: '/timeline' }, '', href);
       else window.history.replaceState({ hxhRoute: '/timeline' }, '', href);
     }
-    setRoute('/timeline');
-    setRouteState(sanitized);
+    startTransition(() => {
+      setRoute('/timeline');
+      setRouteState(sanitized);
+    });
   };
 
   const keepInternalNavigationInApp = (event) => {
@@ -160,7 +218,7 @@ export default function App() {
       onClickCapture={keepInternalNavigationInApp}
     >
       {route === '/timeline' ? (
-        <Suspense fallback={null}>
+        <Suspense fallback={<RouteLoadingFallback section="Timeline" />}>
           <TimelineWorkspace
             requestedState={routeState}
             spoilerLimit={ARCHIVE_BOUNDARY}
@@ -168,7 +226,7 @@ export default function App() {
           />
         </Suspense>
       ) : pillar ? (
-        <Suspense fallback={null}>
+        <Suspense fallback={<RouteLoadingFallback section={pillar === 'characters' ? 'Characters' : 'Nen'} />}>
           <SuccessionPillarWorkspace
             pillar={pillar}
             requestedState={routeState}
