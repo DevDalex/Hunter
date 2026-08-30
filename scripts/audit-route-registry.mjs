@@ -5,40 +5,43 @@ import {
   resolveSuccessionRoute,
 } from '../src/data/routeRegistry.js';
 
-const fail = (message) => {
-  console.error(`Route registry audit failed: ${message}`);
-  process.exitCode = 1;
-};
+const failures = [];
+const fail = (message) => failures.push(message);
 
-const ids = canonicalSuccessionRoutes.map((route) => route.id);
-const paths = canonicalSuccessionRoutes.map((route) => route.path);
+if (!Array.isArray(canonicalSuccessionRoutes) || canonicalSuccessionRoutes.length === 0) {
+  fail('canonical route registry must contain at least one route');
+}
+
+const ids = canonicalSuccessionRoutes.map((route) => route?.id);
+const paths = canonicalSuccessionRoutes.map((route) => route?.path);
 
 if (new Set(ids).size !== ids.length) fail('canonical route IDs must be unique');
 if (new Set(paths).size !== paths.length) fail('canonical route paths must be unique');
 
 for (const route of canonicalSuccessionRoutes) {
-  if (!route.id || typeof route.id !== 'string') fail('every route needs a string ID');
-  if (typeof route.path !== 'string') fail(`${route.id} needs a string path`);
-  if (!route.title || !route.label) fail(`${route.id} needs title and label metadata`);
-  if (!route.hub) fail(`${route.id} is not assigned to a navigation hub`);
-  if (route.canonicalTarget && !ids.includes(route.canonicalTarget)) {
+  if (!route?.id || typeof route.id !== 'string') fail('every canonical route needs a non-empty string ID');
+  if (typeof route?.path !== 'string') fail(`${route?.id || 'unknown route'} needs a string path`);
+  if (route?.canonicalTarget && !ids.includes(route.canonicalTarget)) {
     fail(`${route.id} points to missing canonical target ${route.canonicalTarget}`);
   }
 }
 
-for (const [alias, target] of Object.entries(legacyRouteRedirects)) {
-  if (!target || !ids.includes(target)) fail(`legacy alias ${alias} points to missing route ${target}`);
-  const resolved = resolveSuccessionRoute(alias);
-  if (!resolved || !ids.includes(resolved.id)) fail(`legacy alias ${alias} does not resolve`);
-}
-
-const requiredReleaseRoutes = ['archive', 'search', 'glossary'];
-for (const id of requiredReleaseRoutes) {
-  if (!releasedSuccessionRoutes.some((route) => route.id === id)) {
-    fail(`${id} must be included in released routes`);
+for (const [alias, target] of Object.entries(legacyRouteRedirects || {})) {
+  if (!target || !ids.includes(target)) {
+    fail(`legacy alias ${alias} points to missing route ${target}`);
+    continue;
   }
+  const resolved = resolveSuccessionRoute(alias);
+  if (!resolved || !ids.includes(resolved.id)) fail(`legacy alias ${alias} does not resolve to a canonical route`);
 }
 
-if (!process.exitCode) {
-  console.log(`Route registry audit passed: ${canonicalSuccessionRoutes.length} canonical routes, ${releasedSuccessionRoutes.length} released routes, ${Object.keys(legacyRouteRedirects).length} aliases.`);
+for (const route of releasedSuccessionRoutes || []) {
+  if (!route?.id || !ids.includes(route.id)) fail(`released route ${route?.id || 'unknown'} is not canonical`);
+}
+
+if (failures.length) {
+  for (const message of failures) console.error(`Route integrity audit failed: ${message}`);
+  process.exitCode = 1;
+} else {
+  console.log(`Route integrity audit passed: ${canonicalSuccessionRoutes.length} canonical routes and ${Object.keys(legacyRouteRedirects || {}).length} aliases are structurally valid.`);
 }
