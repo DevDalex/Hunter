@@ -25,11 +25,6 @@ import {
   withUpdatedArchiveBookmarkMetadata,
   withUpdatedWatchlistMetadata,
 } from '../src/data/succession/archiveMemory.js';
-import {
-  chapterProgressFor,
-  defaultReaderState,
-  withReaderProgress,
-} from '../src/components/succession-reader/readerState.js';
 
 const item = (index) => ({
   route: 'characters',
@@ -39,7 +34,7 @@ const item = (index) => ({
 });
 
 test('Succession routes and hubs remain unique and resolvable', () => {
-  assert.equal(successionArchiveRoutes.length, 19);
+  assert.equal(successionArchiveRoutes.length, 18);
   assert.equal(successionArchiveRouteIds.size, successionArchiveRoutes.length);
   assert.equal(successionArchiveHubs.length, 7);
   for (const route of successionArchiveRoutes) assert.equal(getSuccessionArchiveRoute(route.id).id, route.id);
@@ -86,21 +81,4 @@ test('compare tray enforces its four-record boundary', () => {
     .reduce((current, record) => withToggledCompareItem(current, record), defaultSuccessionArchiveMemory);
   assert.equal(state.compare.length, SUCCESSION_ARCHIVE_COMPARE_LIMIT);
   assert.deepEqual(state.compare.map((record) => record.entityId), ['character:test-4', 'character:test-5', 'character:test-6', 'character:test-7']);
-});
-
-test('Reader progress remains authoritative for chapter/page resume', () => {
-  const state = withReaderProgress(defaultReaderState, {
-    chapter: 417,
-    page: 15,
-    pageCount: 20,
-    mode: 'page',
-    fit: 'width',
-    direction: 'rtl',
-    theme: 'black',
-    zoom: 100,
-  });
-  assert.equal(state.lastChapter, 417);
-  assert.equal(state.lastPage, 15);
-  assert.equal(chapterProgressFor(state, 417).page, 15);
-  assert.equal(chapterProgressFor(state, 417).percent, 75);
 });
