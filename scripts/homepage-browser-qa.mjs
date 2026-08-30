@@ -7,8 +7,9 @@ await withPreviewPage({ port: 4173 }, async ({ page, baseUrl }) => {
     const response = await page.goto(`${baseUrl}${route}`, { waitUntil: 'networkidle' });
     if (!response?.ok()) throw new Error(`${route} failed with HTTP ${response?.status() ?? 'unknown'}`);
     if (!(await page.locator('body').isVisible())) throw new Error(`${route} body is not visible`);
+    await page.waitForFunction(() => document.body.innerText.trim().length > 0, null, { timeout: 10000 });
     const text = (await page.locator('body').innerText()).trim();
     if (!text) throw new Error(`${route} rendered no visible text`);
   }
-  console.log(`Browser smoke QA passed: ${routes.join(', ')} rendered without page errors.`);
+  console.log(`Browser smoke QA passed: ${routes.join(', ')} rendered visible content without page errors.`);
 });
