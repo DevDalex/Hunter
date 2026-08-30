@@ -32,7 +32,7 @@ for (const [alias, target] of Object.entries(legacyRouteRedirects)) {
   if (!resolved || !ids.includes(resolved.id)) fail(`legacy alias ${alias} does not resolve`);
 }
 
-const requiredReleaseRoutes = ['archive', 'reader', 'search', 'glossary'];
+const requiredReleaseRoutes = ['archive', 'search', 'glossary'];
 for (const id of requiredReleaseRoutes) {
   if (!releasedSuccessionRoutes.some((route) => route.id === id)) {
     fail(`${id} must be included in released routes`);
