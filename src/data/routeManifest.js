@@ -28,12 +28,10 @@ export {
   sitemapSuccessionRoutes,
 } from './routeRegistry.js';
 
-export const viewIds = ['succession', 'reference', 'series'];
+export const viewIds = ['succession'];
 export const views = new Set(viewIds);
-export const seriesRoutes = ['chapters'];
+export const seriesRoutes = [];
 
-// Compatibility metadata for older navigation consumers. Canonical route behavior,
-// release status, aliases, and sitemap/search policy live in routeRegistry.js.
 export const successionPages = [
   {
     id: 'overview', label: 'Arc overview', kicker: 'The current story', title: 'Succession Contest',
@@ -49,7 +47,7 @@ export const successionPages = [
   },
   {
     id: 'chapters', label: 'Records', kicker: 'Chapters and changing states', title: 'Chapters, character states and mysteries',
-    description: `Current-arc chapter records, character life and body states, possession, consequential objects, and unresolved questions through Chapter ${ARCHIVE_BOUNDARY}.`,
+    description: `Succession chapter records, character life and body states, possession, consequential objects, and unresolved questions through Chapter ${ARCHIVE_BOUNDARY}.`,
   },
   {
     id: 'black-whale', label: 'Black Whale', kicker: 'Interactive ship atlas', title: 'Inside Black Whale 1',
@@ -93,32 +91,22 @@ export const dossierTabRoutes = {
   links: 'chapters', sources: 'research',
 };
 
-export const referencePages = [
-  {
-    id: 'nen', label: 'Nen & abilities', kicker: 'Power system', title: 'Nen and ability encyclopedia',
-    description: 'Learn the system from aura fundamentals through advanced techniques, six categories, vows, curses, Nen beasts, and named abilities.',
-  },
-];
-
-export const referencePrimary = referencePages.map((page) => page.id);
-export const referenceAliases = Object.freeze({
-  nen: { target: 'nen' },
-});
+export const referencePages = [];
+export const referencePrimary = [];
+export const referenceAliases = Object.freeze({});
 
 export const successionReleaseRouteIds = Object.freeze(releasedSuccessionRoutes.map((route) => route.id));
 export const successionReleaseRoutes = releasedSuccessionRoutes;
 
-export const routeManifest = Object.freeze([
-  ...releasedSuccessionRoutes.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
-  ...referencePages.map((route) => ({ view: 'reference', target: route.id, label: route.title })),
-  { view: 'series', target: 'chapters', label: 'Pre-Succession chapter record' },
-]);
+export const routeManifest = Object.freeze(
+  releasedSuccessionRoutes.map((route) => ({ view: 'succession', target: route.id, label: route.title })),
+);
 
 export const routeManifestStats = Object.freeze({
   screens: routeManifest.length,
   succession: canonicalSuccessionRoutes.length,
   successionReleaseScreens: releasedSuccessionRoutes.length + 1,
-  reference: referencePages.length,
-  series: seriesRoutes.length,
-  aliases: Object.keys(referenceAliases).length + Object.keys(legacyRouteRedirects).length,
+  reference: 0,
+  series: 0,
+  aliases: Object.keys(legacyRouteRedirects).length,
 });
