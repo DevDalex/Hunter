@@ -20,19 +20,6 @@ test('structured Explorer query parser turns explicit language into deterministi
     'does not invent facts or silently rewrite the query',
   ]) assert.ok(continuity.includes(token), `structured query parser missing ${token}`);
   assert.ok(host.includes('<StructuredQueryInstrument'));
-});
-
-test('Reader continuity shares chapter, perspective, comparison, Timeline, dossier, and diff state', () => {
-  for (const token of [
-    'ReaderContinuityInstrument',
-    'getChapterWhatChanged',
-    'getStorySnapshotAtChapter',
-    'Chapter {chapter} is the shared Explorer clock',
-    "onNavigate?.('timeline'",
-    "onNavigate?.('chapters'",
-    "onNavigate?.('research'",
-    'explorer.compareIds.length',
-    'explorer.perspective',
-  ]) assert.ok(continuity.includes(token), `Reader continuity missing ${token}`);
-  assert.ok(host.includes("routeId === 'reader'"));
+  assert.ok(!continuity.includes('ReaderContinuityInstrument'));
+  assert.ok(!host.includes("routeId === 'reader'"));
 });
