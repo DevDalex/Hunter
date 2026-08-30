@@ -17,10 +17,32 @@ const waitForPreview = async (url, processHandle) => {
   throw lastError || new Error('preview server did not become ready');
 };
 
+const stopServer = async (server) => {
+  if (server.exitCode !== null) return;
+  server.kill('SIGTERM');
+  await new Promise((resolve) => {
+    const timer = setTimeout(() => {
+      if (server.exitCode === null) server.kill('SIGKILL');
+      resolve();
+    }, 2000);
+    server.once('exit', () => {
+      clearTimeout(timer);
+      resolve();
+    });
+  });
+};
+
 export const withPreviewPage = async ({ port = 4173, path = '/' } = {}, callback) => {
-  const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
-  const server = spawn(npm, ['run', 'preview', '--', '--host', '127.0.0.1', '--port', String(port), '--strictPort'], {
-    cwd: process.cwd(), env: process.env, stdio: ['ignore', 'pipe', 'pipe'],
+  const server = spawn(process.execPath, [
+    'node_modules/vite/bin/vite.js',
+    'preview',
+    '--host', '127.0.0.1',
+    '--port', String(port),
+    '--strictPort',
+  ], {
+    cwd: process.cwd(),
+    env: process.env,
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
   let serverOutput = '';
   server.stdout.on('data', (chunk) => { serverOutput += String(chunk); });
@@ -42,6 +64,6 @@ export const withPreviewPage = async ({ port = 4173, path = '/' } = {}, callback
     throw error;
   } finally {
     if (browser) await browser.close();
-    if (server.exitCode === null) server.kill('SIGTERM');
+    await stopServer(server);
   }
 };
