@@ -3,9 +3,7 @@ const directoryUrl = `${wikiBase}/List_of_Hunter_%C3%97_Hunter_Characters/Chapte
 const article = (name) => `${wikiBase}/${encodeURIComponent(name.replaceAll(' ', '_'))}`;
 const portrait = (file) => `${wikiBase}/Special:Redirect/file/${encodeURIComponent(file)}`;
 import { statusNoteOf, statusOf } from './successionStatus';
-import { characters } from './characters';
 
-const verifiedCharacterMedia = new Map(characters.map((character) => [character.name, character]));
 const portraitFilenameOverrides = new Map([
   ['Bashō', 'Basho SC Portrait.png'],
   ['Himoncé', 'Himonce SC Portrait.png'],
@@ -23,15 +21,14 @@ const rosterPortraitFor = (name) => isGenericRosterName(name)
   : portrait(portraitFilenameOverrides.get(name) || `${name} SC Portrait.png`);
 
 const makeMembers = (group, role, rows) => rows.map(([name, , note]) => {
-  const verified = verifiedCharacterMedia.get(name);
-  const image = verified?.image || verified?.imageSource || rosterPortraitFor(name);
+  const image = rosterPortraitFor(name);
   return {
     name,
     group,
     role: note || role,
     image,
-    imageSource: verified?.imageSource || image,
-    media: verified?.media || null,
+    imageSource: image,
+    media: null,
     source: isGenericRosterName(name) ? directoryUrl : article(name),
     status: statusOf(name),
     statusNote: statusNoteOf(name),
