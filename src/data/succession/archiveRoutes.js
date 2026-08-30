@@ -1,11 +1,5 @@
 const route = (id, path, label, group, title, description, status = 'active') => Object.freeze({
-  id,
-  path,
-  label,
-  group,
-  title,
-  description,
-  status,
+  id, path, label, group, title, description, status,
 });
 
 const hubTab = (target, label, routes = [target], params = {}) => Object.freeze({
@@ -16,91 +10,23 @@ const hubTab = (target, label, routes = [target], params = {}) => Object.freeze(
 });
 
 const hub = (id, target, label, group, title, description, tabs = []) => Object.freeze({
-  id,
-  target,
-  label,
-  group,
-  title,
-  description,
-  tabs: Object.freeze([...tabs]),
+  id, target, label, group, title, description, tabs: Object.freeze([...tabs]),
 });
 
 export const successionArchiveRoutes = Object.freeze([
-  route('archive', '', 'Archive Home', 'Overview', 'Succession Contest Archive', 'The chapter-bounded research application connecting people, institutions, Nen systems, story intelligence, search, vocabulary, chronology, evidence, assignments, relationships, and location state.'),
-  route('story', 'story', 'Story', 'Overview', 'Chapter and story intelligence', 'Contiguous phases, parallel story lanes, causal event links, unresolved threads, current pressure, and pending research gaps at the selected chapter.'),
-  route('timeline', 'timeline', 'Timeline', 'Overview', 'Voyage timeline', 'Chapter-bounded events and movements presented in chronological order.'),
-  route('search', 'search', 'Global Search', 'Overview', 'Search the complete archive', 'Grouped, explained, chapter-safe search across canonical Succession entities, aliases, mechanics, conditions, operational states, Story Intelligence, and glossary vocabulary.'),
-
-  route('characters', 'characters', 'Characters', 'People', 'Character archive', 'Named Succession characters resolve chapter-bounded dossiers including life state, affiliations, assignments, abilities, relationships, and graph-derived context.'),
-  route('princes', 'princes', 'Royal Family', 'People', 'Kakin Royal Family', 'King Nasubi, the eight queens, all fourteen princes, and each selected prince’s documented protection circle in one visual workspace.'),
-  route('queens', 'queens', 'Queens', 'Legacy', 'Queens of Kakin', 'Legacy deep link retained for existing bookmarks; queen records now belong to the unified Royal Family workspace.'),
-  route('bodyguards', 'bodyguards', 'Assignments', 'People', 'Assignments and reporting chains', 'Canonical protection, surveillance, instruction, custody, infiltration, assassination, allegiance, reporting, transfer, and chapter-snapshot records.'),
-
-  route('organizations', 'organizations', 'Organizations', 'Power', 'Organizations and power structures', 'The authoritative institution route for mafia families, military and Justice bodies, royal houses, political institutions, expedition groups, and other Succession organizations.'),
-
-  route('black-whale', 'black-whale', 'Black Whale', 'World', 'Black Whale 1', 'The ship atlas, room lookup, and tier orientation inside the Succession archive.'),
-  route('locations', 'locations', 'Locations', 'World', 'Location archive', 'Ship hierarchy, royal rooms, access, occupants, incidents, legal routes, criminal passages, and Nen-mediated movement.'),
-
-  route('nen', 'nen', 'Nen', 'Systems', 'Nen and ritual systems', 'Succession abilities, activation, restrictions, costs, contracts, curses, possession, instruction, post-mortem Nen, Contagion, and the Seed Urn ritual at a selected chapter.'),
-  route('guardian-spirit-beasts', 'guardian-spirit-beasts', 'Guardian Spirit Beasts', 'Systems', 'Guardian Spirit Beast dossiers', 'Royal beasts tracked through chapter-bounded knowledge, host state, demonstrated and suspected abilities, ritual rules, continuation, destruction, and unresolved mechanics.'),
-
-  route('events', 'events', 'Events', 'Records', 'Event archive', 'Operations organized by chapter range, participants, location, causes, consequences, and chapter-bounded knowledge state.'),
-  route('relationships', 'relationships', 'Relationships', 'Records', 'Relationship archive', 'Typed family, professional, protective, political, allied, deceptive, command, and hostile links.'),
-  route('chapters', 'chapter-records', 'Chapters', 'Records', 'Canonical chapter dossiers', 'Succession chapters are placed inside their story phase, active lanes, events, causal links, state changes, unresolved threads, and evidence without hosting manga page scans.'),
-
-  route('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, provenance, evidence types, confidence, coverage, unresolved claims, and explicit research gaps.'),
-  route('glossary', 'glossary', 'Glossary', 'Library', 'Canonical Succession glossary', 'Chapter-bounded definitions, synonyms, certainty, canonical graph connections, and evidence for ritual, Nen, legal, political, location, status, and archive vocabulary.'),
+  route('archive', '', 'Home', 'Core', 'Succession Contest', 'A minimal entrance to the three maintained Succession Contest systems: Timeline, Characters, and Nen.'),
+  route('timeline', 'timeline', 'Timeline', 'Core', 'Succession Timeline', 'Chronology, chapters, events, threads, locations, Black Whale movement, causal context, and story state.'),
+  route('characters', 'characters', 'Characters', 'Core', 'Succession Characters', 'Royalty, guards, Hunters, mafia, the Troupe, affiliations, assignments, relationships, status, knowledge, and movement.'),
+  route('nen', 'nen', 'Nen', 'Core', 'Succession Nen', 'Abilities, Guardian Spirit Beasts, ritual mechanics, curses, conditions, costs, possession, instruction, Contagion, and unresolved systems.'),
 ]);
 
 export const successionArchiveHubs = Object.freeze([
-  hub(
-    'story',
-    'story',
-    'Story Intelligence',
-    'Operations',
-    'Story Intelligence',
-    'A unified narrative command center for story phases, canonical chapter dossiers, voyage chronology, and causal event records.',
-    [hubTab('story', 'Story'), hubTab('chapters', 'Chapters'), hubTab('timeline', 'Timeline'), hubTab('events', 'Events')],
-  ),
-  hub(
-    'people',
-    'characters',
-    'People & Power',
-    'Operations',
-    'People & Power',
-    'Characters, the Kakin Royal Family, operational assignments, organizations, and relationship intelligence in one connected workspace.',
-    [
-      hubTab('characters', 'Characters'),
-      hubTab('princes', 'Royal Family', ['princes', 'queens'], { view: 'tree' }),
-      hubTab('bodyguards', 'Assignments'),
-      hubTab('organizations', 'Organizations'),
-      hubTab('relationships', 'Relationships'),
-    ],
-  ),
-  hub(
-    'black-whale',
-    'black-whale',
-    'Black Whale',
-    'Operations',
-    'Black Whale',
-    'The vessel atlas and canonical location registry combined into one spatial intelligence workspace.',
-    [hubTab('black-whale', 'Ship Atlas'), hubTab('locations', 'Locations')],
-  ),
-  hub(
-    'nen',
-    'nen',
-    'Nen Systems',
-    'Operations',
-    'Nen Systems',
-    'Succession abilities, ritual rules, contracts, curses, possession, and Guardian Spirit Beast dossiers in one systems workspace.',
-    [hubTab('nen', 'Nen & Rituals'), hubTab('guardian-spirit-beasts', 'Guardian Spirit Beasts')],
-  ),
-  hub('search', 'search', 'Search', 'Library', 'Search the complete archive', 'Grouped, explained, chapter-safe search across every maintained Succession record.'),
-  hub('research', 'research', 'Research', 'Library', 'Research desk', 'Sources, provenance, confidence, coverage, and explicit research gaps.'),
-  hub('glossary', 'glossary', 'Glossary', 'Library', 'Canonical Succession glossary', 'Chapter-bounded definitions, synonyms, certainty, graph connections, and evidence.'),
+  hub('timeline', 'timeline', 'Timeline', 'Core', 'Timeline', 'Story, chapter, event, location, and movement intelligence.', [hubTab('timeline', 'Timeline')]),
+  hub('characters', 'characters', 'Characters', 'Core', 'Characters', 'People, affiliations, relationships, assignments, and royal-family intelligence.', [hubTab('characters', 'Characters')]),
+  hub('nen', 'nen', 'Nen', 'Core', 'Nen', 'Abilities, Guardian Spirit Beasts, ritual systems, conditions, curses, and unknown mechanics.', [hubTab('nen', 'Nen')]),
 ]);
 
-export const successionArchiveHubGroups = Object.freeze(['Operations', 'Library']);
+export const successionArchiveHubGroups = Object.freeze(['Core']);
 export const successionArchiveHubByRoute = new Map();
 for (const currentHub of successionArchiveHubs) {
   successionArchiveHubByRoute.set(currentHub.target, currentHub);
@@ -108,20 +34,36 @@ for (const currentHub of successionArchiveHubs) {
 }
 successionArchiveHubByRoute.set('archive', successionArchiveHubs[0]);
 
-export const getSuccessionArchiveHub = (routeId = 'story') => successionArchiveHubByRoute.get(routeId) || successionArchiveHubs[0];
+export const getSuccessionArchiveHub = (routeId = 'timeline') => successionArchiveHubByRoute.get(routeId) || successionArchiveHubs[0];
 
 export const successionArchiveRetiredTargets = Object.freeze({
+  story: 'timeline',
+  search: 'timeline',
+  events: 'timeline',
+  chapters: 'timeline',
+  reader: 'timeline',
+  'black-whale': 'timeline',
+  locations: 'timeline',
+  research: 'timeline',
+  glossary: 'timeline',
+  princes: 'characters',
+  queens: 'characters',
+  bodyguards: 'characters',
+  organizations: 'characters',
+  relationships: 'characters',
   hunters: 'characters',
   deaths: 'characters',
-  mafia: 'organizations',
-  military: 'organizations',
-  politics: 'organizations',
-  justice: 'organizations',
-  'power-blocs': 'organizations',
-  media: 'research',
+  mafia: 'characters',
+  military: 'characters',
+  politics: 'characters',
+  justice: 'characters',
+  'power-blocs': 'characters',
+  'guardian-spirit-beasts': 'nen',
+  beasts: 'nen',
+  media: 'timeline',
 });
 
-export const successionArchiveGroups = Object.freeze(['Overview', 'People', 'Power', 'World', 'Systems', 'Records', 'Library']);
+export const successionArchiveGroups = Object.freeze(['Core']);
 export const successionArchiveRouteIds = new Set(successionArchiveRoutes.map((item) => item.id));
 export const successionArchivePrimary = successionArchiveRoutes.map((item) => item.id);
 export const successionArchiveRouteById = new Map(successionArchiveRoutes.map((item) => [item.id, item]));
@@ -133,13 +75,15 @@ export const successionArchiveTargetToPath = new Map(successionArchiveRoutes.map
 
 export const successionArchiveLegacyTargets = Object.freeze({
   overview: 'archive',
-  'family-tree': 'princes',
-  'royal-family': 'princes',
+  'family-tree': 'characters',
+  'royal-family': 'characters',
   'succession-roster': 'characters',
   'succession-timeline': 'timeline',
-  beasts: 'guardian-spirit-beasts',
-  'black-whale': 'black-whale',
+  'connection-board': 'characters',
+  'nen-classes': 'nen',
   ...successionArchiveRetiredTargets,
 });
 
-export const getSuccessionArchiveRoute = (id = 'archive') => successionArchiveRouteById.get(id) || successionArchiveRouteById.get('archive');
+export const getSuccessionArchiveRoute = (id = 'archive') => successionArchiveRouteById.get(id)
+  || successionArchiveRouteById.get(successionArchiveRetiredTargets[id])
+  || successionArchiveRouteById.get('archive');
