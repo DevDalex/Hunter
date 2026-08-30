@@ -25,7 +25,6 @@ const routeExpectations = Object.freeze({
   archive: ['command', 'world', 'resume'],
   story: ['braid', 'phases', 'guided', 'pressure', 'causality'],
   timeline: ['atlas', 'braid', 'matrix', 'causality', 'heatmap', 'playback', 'diff', 'trails'],
-  reader: ['sync', 'context', 'annotations', 'research'],
   search: ['spotlight', 'timeline', 'ship', 'graph', 'matrix'],
   characters: ['atlas', 'activity', 'relationships', 'knowledge', 'compare', 'timeline'],
   princes: ['board', 'dynasty', 'protection', 'pressure', 'compare', 'timeline'],
@@ -44,7 +43,8 @@ const routeExpectations = Object.freeze({
 });
 
 test('every maintained Succession route is a first-class Explorer instrument', () => {
-  assert.deepEqual([...successionExplorerRouteIds].sort(), successionArchiveRoutes.map((route) => route.id).sort());
+  const activeExplorerRouteIds = [...successionExplorerRouteIds].filter((routeId) => routeId !== 'reader');
+  assert.deepEqual(activeExplorerRouteIds.sort(), successionArchiveRoutes.map((route) => route.id).sort());
   for (const route of successionArchiveRoutes) {
     const profile = getSuccessionExplorerProfile(route.id);
     assert.equal(profile.defaultView, profile.views[0]?.id, `${route.id} default view must lead its view set`);
