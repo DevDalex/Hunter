@@ -6,7 +6,6 @@ import {
 
 const routePolicy = Object.freeze({
   archive: { release: true, searchable: false, sitemap: true },
-  reader: { release: true, searchable: false, sitemap: true },
   search: { release: true, searchable: false, sitemap: true },
   glossary: { release: true, searchable: true, sitemap: true },
   queens: { release: false, searchable: false, sitemap: false, canonicalTarget: 'princes' },
