@@ -18,3 +18,74 @@
 
 .site-header { grid-template-columns: minmax(0, 1fr) auto; }
 .site-footer { display: none !important; }
+
+/* A cold route load should look intentional instead of exposing the bare paper background. */
+.route-loading-shell {
+  width: min(calc(100% - (var(--gutter) * 2)), var(--wide));
+  min-height: calc(100vh - var(--header-height));
+  margin-inline: auto;
+  display: grid;
+  align-content: start;
+  gap: 18px;
+  padding-block: clamp(72px, 9vw, 132px);
+}
+
+.route-loading-shell__heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+  padding-bottom: 22px;
+}
+
+.route-loading-shell__heading strong {
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(34px, 5vw, 68px);
+  line-height: 1;
+}
+
+.route-loading-shell__kicker {
+  color: var(--forest);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.route-loading-shell__rule,
+.route-loading-shell__line,
+.route-loading-shell__cards span {
+  background: var(--paper-deep);
+}
+
+.route-loading-shell__rule {
+  height: 1px;
+  margin-bottom: 18px;
+  background: var(--line-strong);
+}
+
+.route-loading-shell__line {
+  width: min(52%, 680px);
+  height: 12px;
+  border-radius: 999px;
+}
+
+.route-loading-shell__line--wide {
+  width: min(76%, 940px);
+  height: 18px;
+}
+
+.route-loading-shell__cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 28px;
+}
+
+.route-loading-shell__cards span {
+  min-height: 190px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface-soft);
+}
