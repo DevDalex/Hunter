@@ -1,3 +1,4 @@
+import SuccessionCharacterCourtMap from './SuccessionCharacterCourtMap';
 import SuccessionExplorerSurface from './SuccessionExplorerSurface';
 import { SuccessionExplorerProvider } from './SuccessionExplorerState';
 import './SuccessionPillarWorkspace.css';
@@ -21,21 +22,13 @@ const destinationFor = (target, params = {}) => {
   return `${path}${search ? `?${search}` : ''}`;
 };
 
-const labels = {
-  characters: {
-    eyebrow: 'Succession Contest · People',
-    title: 'Characters',
-    description: 'Royalty, guards, Hunters, mafia, the Troupe, affiliations, assignments, relationships, status, knowledge, and movement live here as one character intelligence system.',
-  },
-  nen: {
-    eyebrow: 'Succession Contest · Systems',
-    title: 'Nen',
-    description: 'Abilities, Guardian Spirit Beasts, curses, conditions, costs, ritual mechanics, possession, instruction, Contagion, and unresolved Nen questions live here as one systems workspace.',
-  },
+const nenCopy = {
+  eyebrow: 'Succession Contest · Systems',
+  title: 'Nen',
+  description: 'Abilities, Guardian Spirit Beasts, curses, conditions, costs, ritual mechanics, possession, instruction, Contagion, and unresolved Nen questions live here as one systems workspace.',
 };
 
 export default function SuccessionPillarWorkspace({ pillar, requestedState = {}, spoilerLimit, onNavigate }) {
-  const copy = labels[pillar] || labels.characters;
   const navigateExplorer = (target, params = {}) => onNavigate?.(destinationFor(target || pillar, params));
 
   return <article className={`succession-pillar-workspace succession-pillar-workspace--${pillar}`}>
@@ -46,19 +39,25 @@ export default function SuccessionPillarWorkspace({ pillar, requestedState = {},
       <a href="/nen" aria-current={pillar === 'nen' ? 'page' : undefined}>Nen</a>
     </nav>
 
-    <header className="succession-pillar-workspace__intro">
-      <span>{copy.eyebrow}</span>
-      <h1>{copy.title}</h1>
-      <p>{copy.description}</p>
-    </header>
+    {pillar === 'characters' ? <SuccessionCharacterCourtMap
+      requestedState={requestedState}
+      spoilerLimit={spoilerLimit}
+      onNavigate={navigateExplorer}
+    /> : <>
+      <header className="succession-pillar-workspace__intro">
+        <span>{nenCopy.eyebrow}</span>
+        <h1>{nenCopy.title}</h1>
+        <p>{nenCopy.description}</p>
+      </header>
 
-    <SuccessionExplorerProvider spoilerLimit={spoilerLimit}>
-      <SuccessionExplorerSurface
-        routeId={pillar}
-        routeParams={requestedState}
-        spoilerLimit={spoilerLimit}
-        onNavigate={navigateExplorer}
-      />
-    </SuccessionExplorerProvider>
+      <SuccessionExplorerProvider spoilerLimit={spoilerLimit}>
+        <SuccessionExplorerSurface
+          routeId={pillar}
+          routeParams={requestedState}
+          spoilerLimit={spoilerLimit}
+          onNavigate={navigateExplorer}
+        />
+      </SuccessionExplorerProvider>
+    </>}
   </article>;
 }
