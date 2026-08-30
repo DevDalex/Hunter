@@ -2,7 +2,6 @@ import {
   LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
   LATEST_PUBLISHED_CHAPTER,
 } from './latestChapterMetadata.js';
-import { LATEST_AUTHORIZED_SUCCESSION_CHAPTER } from './successionChapterAvailability.generated.js';
 
 export const archiveCoverage = Object.freeze({
   publication: Object.freeze({
@@ -11,24 +10,17 @@ export const archiveCoverage = Object.freeze({
     chapter: LATEST_PUBLISHED_CHAPTER,
     description: 'The latest chapter with verified publication metadata.',
   }),
-  reader: Object.freeze({
-    id: 'reader',
-    label: 'Latest chapter with local page images',
-    chapter: LATEST_AUTHORIZED_SUCCESSION_CHAPTER,
-    description: 'The latest chapter whose manga page images are imported into the integrated reader. This is separate from the published and fully indexed research ceilings.',
-  }),
   research: Object.freeze({
     id: 'research',
     label: 'Latest fully indexed chapter',
     chapter: LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER,
-    description: 'The latest chapter covered by maintained scene-level research.',
+    description: 'The latest chapter covered by maintained scene-level Succession research.',
   }),
 });
 
 export const archiveCoverageList = Object.freeze(Object.values(archiveCoverage));
 
 export const domainCoverage = Object.freeze({
-  reader: Object.freeze({ label: 'Chapter reader page images', chapter: archiveCoverage.reader.chapter, status: 'maintained' }),
   chapters: Object.freeze({ label: 'Chapter dossiers', chapter: archiveCoverage.research.chapter, status: 'maintained' }),
   story: Object.freeze({ label: 'Story Intelligence', chapter: archiveCoverage.research.chapter, status: 'maintained' }),
   timeline: Object.freeze({ label: 'Voyage timeline', chapter: archiveCoverage.research.chapter, status: 'maintained' }),
@@ -44,6 +36,5 @@ export const domainCoverage = Object.freeze({
 
 export const getCoverageSummary = () => ({
   officialPublication: archiveCoverage.publication.chapter,
-  readableChapter: archiveCoverage.reader.chapter,
   fullyIndexedChapter: archiveCoverage.research.chapter,
 });
