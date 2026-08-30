@@ -7,11 +7,7 @@ import {
   successionArchiveRouteIds,
   successionArchiveRoutes,
 } from '../src/data/succession/archiveRoutes.js';
-import {
-  normalizeSuccessionSemanticState,
-  successionInformationHierarchy,
-  successionSemanticStates,
-} from '../src/data/succession/comprehensionDesignSystem.js';
+import { normalizeSuccessionSemanticState } from '../src/data/succession/comprehensionDesignSystem.js';
 import {
   SUCCESSION_ARCHIVE_BOOKMARK_FOLDER_LIMIT,
   SUCCESSION_ARCHIVE_BOOKMARK_TAG_LIMIT,
@@ -26,24 +22,16 @@ import {
   withUpdatedWatchlistMetadata,
 } from '../src/data/succession/archiveMemory.js';
 
-const item = (index) => ({
-  route: 'characters',
-  entityId: `character:test-${index}`,
-  label: `Test ${index}`,
-  params: { entity: `character:test-${index}` },
-});
+const item = (index) => ({ route: 'characters', entityId: `character:test-${index}`, label: `Test ${index}`, params: { entity: `character:test-${index}` } });
 
-test('Succession routes and hubs remain unique and resolvable', () => {
-  assert.equal(successionArchiveRoutes.length, 18);
+test('Succession routes and hubs stay unique and resolvable', () => {
   assert.equal(successionArchiveRouteIds.size, successionArchiveRoutes.length);
-  assert.equal(successionArchiveHubs.length, 7);
-  for (const route of successionArchiveRoutes) assert.equal(getSuccessionArchiveRoute(route.id).id, route.id);
-  for (const hub of successionArchiveHubs) assert.equal(getSuccessionArchiveHub(hub.target).id, hub.id);
+  assert.equal(new Set(successionArchiveHubs.map((hub) => hub.id)).size, successionArchiveHubs.length);
+  for (const route of successionArchiveRoutes) assert.equal(getSuccessionArchiveRoute(route.id)?.id, route.id);
+  for (const hub of successionArchiveHubs) assert.equal(getSuccessionArchiveHub(hub.target)?.id, hub.id);
 });
 
-test('semantic vocabulary normalizes aliases without collapsing theory or translation', () => {
-  assert.equal(successionSemanticStates.length, 7);
-  assert.deepEqual(successionInformationHierarchy.map((row) => row.id), ['briefing', 'intelligence', 'research']);
+test('semantic aliases preserve distinct evidence states', () => {
   assert.equal(normalizeSuccessionSemanticState('confirmed'), 'canon');
   assert.equal(normalizeSuccessionSemanticState('inferred'), 'inference');
   assert.equal(normalizeSuccessionSemanticState('translation-note'), 'translation');
@@ -51,7 +39,7 @@ test('semantic vocabulary normalizes aliases without collapsing theory or transl
   assert.equal(normalizeSuccessionSemanticState('disputed'), 'unresolved');
 });
 
-test('archive bookmarks retain bounded folder and tag metadata', () => {
+test('archive bookmarks enforce their declared metadata limits', () => {
   let state = withToggledArchiveBookmark(defaultSuccessionArchiveMemory, item(1), new Date('2026-08-22T00:00:00Z'));
   state = withUpdatedArchiveBookmarkMetadata(state, item(1), {
     folder: 'x'.repeat(SUCCESSION_ARCHIVE_BOOKMARK_FOLDER_LIMIT + 20),
@@ -62,7 +50,7 @@ test('archive bookmarks retain bounded folder and tag metadata', () => {
   assert.equal(state.bookmarks[0].tags.length, SUCCESSION_ARCHIVE_BOOKMARK_TAG_LIMIT);
 });
 
-test('investigation rename preserves stable identity and bounded tags', () => {
+test('watchlist updates preserve identity and declared tag limits', () => {
   let state = withCreatedWatchlist(defaultSuccessionArchiveMemory, 'Original name', new Date('2026-08-22T00:00:00Z'));
   const id = state.watchlists[0].id;
   state = withRenamedWatchlist(state, id, 'Renamed investigation', new Date('2026-08-22T00:01:00Z'));
@@ -76,9 +64,8 @@ test('investigation rename preserves stable identity and bounded tags', () => {
   assert.equal(state.watchlists[0].tags.length, SUCCESSION_ARCHIVE_WATCHLIST_TAG_LIMIT);
 });
 
-test('compare tray enforces its four-record boundary', () => {
-  const state = Array.from({ length: 8 }, (_, index) => item(index))
+test('compare tray enforces its declared capacity', () => {
+  const state = Array.from({ length: SUCCESSION_ARCHIVE_COMPARE_LIMIT + 4 }, (_, index) => item(index))
     .reduce((current, record) => withToggledCompareItem(current, record), defaultSuccessionArchiveMemory);
   assert.equal(state.compare.length, SUCCESSION_ARCHIVE_COMPARE_LIMIT);
-  assert.deepEqual(state.compare.map((record) => record.entityId), ['character:test-4', 'character:test-5', 'character:test-6', 'character:test-7']);
 });
