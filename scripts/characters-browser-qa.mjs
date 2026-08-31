@@ -10,8 +10,14 @@ await withPreviewPage({ port: 4173, path: '/characters' }, async ({ page, baseUr
   await root.waitFor({ state: 'visible' });
 
   const rootText = await root.innerText();
-  if (!rootText.includes('644') || !rootText.includes('indexed characters')) {
-    throw new Error('Characters did not expose the full 644-character archive count');
+  const countMatch = rootText.match(/([\d,]+)\s+Succession character records/i);
+  if (!countMatch) throw new Error('Characters did not expose an in-scope Succession character count');
+  const characterCount = Number(countMatch[1].replaceAll(',', ''));
+  if (characterCount < 274) {
+    throw new Error(`Expected at least 274 in-scope Succession character records, found ${characterCount}`);
+  }
+  if (!rootText.includes('274 detailed roster profiles')) {
+    throw new Error('Characters did not preserve all 274 detailed Succession roster profiles');
   }
 
   const allView = page.getByTestId('characters-mode-all');
@@ -72,5 +78,5 @@ await withPreviewPage({ port: 4173, path: '/characters' }, async ({ page, baseUr
   await page.getByTestId('characters-mode-all').waitFor({ state: 'visible' });
   await assertNoHorizontalOverflow(page, 'mobile character directory');
 
-  console.log('Character browser QA passed: full archive, search, stable selection, 14 courts, 15 groups, and responsive overflow checks.');
+  console.log(`Character browser QA passed: ${characterCount} in-scope records, all 274 detailed profiles, search, stable selection, 14 courts, 15 groups, and responsive overflow checks.`);
 });
