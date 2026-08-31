@@ -73,9 +73,9 @@ await withPreviewPage({ port: 4173, path: '/characters' }, async ({ page, baseUr
   }
   if (!hierarchyText.toLowerCase().includes('nasubi')) throw new Error('Focused court does not show King Nasubi');
   if (/\bqueen\s+unknown\b|\bunknown\s+royal household\b/i.test(hierarchyText)) throw new Error('Focused court still resolves a Queen as Unknown');
-  if (focusedCourt.locator('.royal-lineage-portrait--king').count() !== 1) throw new Error('Focused court is missing the King portrait');
-  if (focusedCourt.locator('.royal-lineage-portrait--queen').count() !== 1) throw new Error('Focused court is missing the Queen portrait');
-  if (focusedCourt.locator('.court-prince-card').count() !== 1) throw new Error('Focused court is missing the Prince portrait');
+  if (await focusedCourt.locator('.royal-lineage-portrait--king').count() !== 1) throw new Error('Focused court is missing the King portrait');
+  if (await focusedCourt.locator('.royal-lineage-portrait--queen').count() !== 1) throw new Error('Focused court is missing the Queen portrait');
+  if (await focusedCourt.locator('.court-prince-card').count() !== 1) throw new Error('Focused court is missing the Prince portrait');
 
   const focusedBefore = await focusedCourt.innerText();
   await courtCards.nth(1).click();
