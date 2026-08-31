@@ -14,12 +14,16 @@ requireText("const portrait = (file) => `${wikiBase}/Special:Redirect/file/${enc
 
 const regressionNames = [
   'Anzel', 'Bachaem', 'Barrigen', 'Borksen', 'Bucket', 'Butch', 'Cleapatro', 'Don Freecss',
-  'Bonolenov Ndongo', 'Cha-R Associate 1', 'Temp Hunter 7', 'Stone Wall 1', 'V6 Leader 1',
-  'Heil-Ly Associate 9', 'Kakin Announcer',
+  'Bonolenov Ndongo', 'Heil-Ly Associate 9', 'Kakin Announcer',
 ];
 for (const name of regressionNames) {
   requireText(name, `Regression portrait roster entry is missing: ${name}`);
 }
+
+requireText('Array.from({ length: 8 }, (_, index) => [`Cha-R Associate ${index + 1}`])', 'Cha-R associate portrait-generating roster entries are missing');
+requireText('Array.from({ length: 3 }, (_, index) => [`Temp Hunter ${index + 7}`])', 'Temporary Hunter portrait-generating roster entries are missing');
+requireText('Array.from({ length: 8 }, (_, index) => [`Stone Wall ${index + 1}`])', 'Stone Wall portrait-generating roster entries are missing');
+requireText('const v6Rows = Array.from({ length: 5 }, (_, index) => [`V6 Leader ${index + 1}`]);', 'V6 leader portrait-generating roster entries are missing');
 
 requireText("['Bonolenov Ndongo', 'Bonolenov Ndongo CA Portrait.png']", 'Bonolenov Chimera Ant portrait fallback is missing');
 requireText("['Cluck', 'Cluck HCE Portrait.png']", 'Cluck Hunter Chairman Election portrait fallback is missing');
@@ -42,4 +46,4 @@ if (failures.length) {
   process.exit(1);
 }
 
-console.log('Portrait roster audit passed: portrait hints, screenshot regressions, generic roster attempts, and fallback families are structurally protected.');
+console.log('Portrait roster audit passed: portrait hints, screenshot regressions, generated roster families, generic portrait attempts, and fallback families are structurally protected.');
