@@ -20,6 +20,20 @@ await withPreviewPage({ port: 4173, path: '/characters' }, async ({ page, baseUr
     throw new Error('Characters did not preserve all 274 detailed Succession roster profiles');
   }
 
+  const theme = await root.evaluate((element) => {
+    const style = getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+    return {
+      background: style.backgroundColor,
+      color: style.color,
+      width: rect.width,
+      viewport: window.innerWidth,
+    };
+  });
+  if (theme.background !== 'rgb(0, 0, 0)') throw new Error(`Characters background is not pure black: ${theme.background}`);
+  if (theme.color !== 'rgb(255, 255, 255)') throw new Error(`Characters text is not pure white: ${theme.color}`);
+  if (theme.width / theme.viewport < 0.94) throw new Error(`Characters does not scale to the viewport: ${theme.width}/${theme.viewport}`);
+
   const allView = page.getByTestId('characters-mode-all');
   await allView.waitFor({ state: 'visible' });
   const initialCards = page.getByTestId('character-card');
@@ -51,12 +65,24 @@ await withPreviewPage({ port: 4173, path: '/characters' }, async ({ page, baseUr
   const courtCards = page.getByTestId('court-card');
   const courtCount = await courtCards.count();
   if (courtCount !== 14) throw new Error(`Expected 14 Prince courts, found ${courtCount}`);
-  const focusedBefore = await page.getByTestId('focused-court').innerText();
+
+  const focusedCourt = page.getByTestId('focused-court');
+  const hierarchyText = await focusedCourt.innerText();
+  if (!/King\s*→\s*Queen\s*→\s*Prince\s*→\s*Guard formation/i.test(hierarchyText)) {
+    throw new Error('Focused court does not expose the King → Queen → Prince → Guard hierarchy');
+  }
+  if (!hierarchyText.toLowerCase().includes('nasubi')) throw new Error('Focused court does not show King Nasubi');
+  if (/\bqueen\s+unknown\b|\bunknown\s+royal household\b/i.test(hierarchyText)) throw new Error('Focused court still resolves a Queen as Unknown');
+  if (focusedCourt.locator('.royal-lineage-portrait--king').count() !== 1) throw new Error('Focused court is missing the King portrait');
+  if (focusedCourt.locator('.royal-lineage-portrait--queen').count() !== 1) throw new Error('Focused court is missing the Queen portrait');
+  if (focusedCourt.locator('.court-prince-card').count() !== 1) throw new Error('Focused court is missing the Prince portrait');
+
+  const focusedBefore = await focusedCourt.innerText();
   await courtCards.nth(1).click();
   await page.waitForTimeout(50);
-  const focusedAfter = await page.getByTestId('focused-court').innerText();
+  const focusedAfter = await focusedCourt.innerText();
   if (focusedAfter === focusedBefore) throw new Error('Selecting another Prince did not update the focused court');
-  if (/surveillance|assassination|instruction|custody/i.test(focusedAfter.match(/confirmed protection[\s\S]*$/i)?.[0] || '')) {
+  if (/surveillance|assassination|instruction|custody/i.test(focusedAfter.match(/confirmed guards[\s\S]*$/i)?.[0] || '')) {
     throw new Error('Non-security operation leaked into the focused guard presentation');
   }
 
@@ -78,5 +104,5 @@ await withPreviewPage({ port: 4173, path: '/characters' }, async ({ page, baseUr
   await page.getByTestId('characters-mode-all').waitFor({ state: 'visible' });
   await assertNoHorizontalOverflow(page, 'mobile character directory');
 
-  console.log(`Character browser QA passed: ${characterCount} in-scope records, all 274 detailed profiles, search, stable selection, 14 courts, 15 groups, and responsive overflow checks.`);
+  console.log(`Character browser QA passed: ${characterCount} records, 274 detailed profiles, monochrome full-width layout, royal portrait hierarchy, search, court switching, groups, and responsive overflow checks.`);
 });
