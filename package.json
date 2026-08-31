@@ -20,6 +20,7 @@
     "qa:accessibility": "node scripts/accessibility-qa.mjs",
     "qa:search": "node scripts/search-qa.mjs",
     "qa:homepage": "node scripts/homepage-browser-qa.mjs",
+    "qa:characters": "node scripts/characters-browser-qa.mjs",
     "stabilize:media": "node scripts/stabilize-media.mjs",
     "stabilize:rooms": "node scripts/stabilize-room-media.mjs",
     "prepare:media-derivatives": "node scripts/generate-media-derivatives.mjs",
@@ -33,7 +34,7 @@
     "deploy": "npm run verify && wrangler deploy",
     "preview": "vite preview --host 0.0.0.0",
     "browser:install": "playwright install chromium",
-    "qa:browser:ci": "npm run build && npm run qa:homepage && npm run qa:accessibility && npm run qa:search"
+    "qa:browser:ci": "npm run build && npm run qa:homepage && npm run qa:characters && npm run qa:accessibility && npm run qa:search"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",
