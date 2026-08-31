@@ -1,7 +1,7 @@
 const wikiBase = 'https://hunterxhunter.fandom.com/wiki';
 const directoryUrl = `${wikiBase}/List_of_Hunter_%C3%97_Hunter_Characters/Chapters_340-current`;
 const article = (name) => `${wikiBase}/${encodeURIComponent(name.replaceAll(' ', '_'))}`;
-const portrait = (file) => `${wikiBase}/Special:FilePath/${encodeURIComponent(file)}`;
+const portrait = (file) => `${wikiBase}/Special:Redirect/file/${encodeURIComponent(file)}`;
 import { statusNoteOf, statusOf } from './successionStatus';
 
 const portraitFilenameOverrides = new Map([
@@ -11,22 +11,39 @@ const portraitFilenameOverrides = new Map([
   ['Naikēru', 'Naikēru SC Portrait.png'],
   ['Rēuen', 'Rēuen SC Portrait.png'],
   ['Salé-salé Hui Guo Rou', 'Sale-sale Hui Guo Rou SC Portrait.png'],
+  ['Bonolenov Ndongo', 'Bonolenov Ndongo CA Portrait.png'],
+  ['Cluck', 'Cluck HCE Portrait.png'],
+  ['Cheadle Yorkshire', 'Cheadle Yorkshire HCE Portrait.png'],
+  ['Ginta', 'Ginta HCE Portrait.png'],
+  ['Kanzai', 'Kanzai HCE Portrait.png'],
+  ['Mizaistom Nana', 'Mizaistom Nana HCE Portrait.png'],
+  ['Pariston Hill', 'Pariston Hill HCE Portrait.png'],
+  ['Pyon', 'Pyon HCE Portrait.png'],
+  ['Saccho Kobayakawa', 'Saccho Kobayakawa HCE Portrait.png'],
 ]);
 const isGenericRosterName = (name) => name.includes('Unnamed ') || name.startsWith('Stone Wall ')
   || name.startsWith('V6 Leader ') || name.startsWith('Temp Hunter ')
   || name.startsWith('Cha-R Associate ') || name.startsWith('Tserriednich Friend ')
   || name === 'Heil-Ly Associate 9' || name === 'Kakin Announcer';
-const rosterPortraitFor = (name) => isGenericRosterName(name)
-  ? ''
-  : portrait(portraitFilenameOverrides.get(name) || `${name} SC Portrait.png`);
+const isImageFilename = (value) => /\.(?:png|jpe?g|webp|gif)$/i.test(String(value || '').trim());
+const rosterPortraitFileFor = (name, portraitHint = '') => {
+  const override = portraitFilenameOverrides.get(name);
+  if (override) return override;
+  const hint = String(portraitHint || '').trim();
+  if (isImageFilename(hint)) return hint;
+  if (hint) return `${hint} SC Portrait.png`;
+  return `${name} SC Portrait.png`;
+};
 
-const makeMembers = (group, role, rows) => rows.map(([name, , note]) => {
-  const image = rosterPortraitFor(name);
+const makeMembers = (group, role, rows) => rows.map(([name, portraitHint, note]) => {
+  const imageFile = rosterPortraitFileFor(name, portraitHint);
+  const image = portrait(imageFile);
   return {
     name,
     group,
     role: note || role,
     image,
+    imageFile,
     imageSource: image,
     media: null,
     source: isGenericRosterName(name) ? directoryUrl : article(name),
