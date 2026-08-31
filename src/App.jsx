@@ -152,7 +152,7 @@ export default function App() {
     else document.title = 'Hunter × Hunter · Succession Contest';
   }, [designLab, route, routeState.mode]);
 
-  const navigate = (destination, { replace = false } = {}) => {
+  const navigate = (destination, { replace = false, preserveScroll = false } = {}) => {
     const url = new URL(destination, window.location.origin);
     const legacyDestination = legacyPillarDestination(url);
     const resolved = legacyDestination ? new URL(legacyDestination, window.location.origin) : url;
@@ -168,7 +168,7 @@ export default function App() {
       setRoute(nextRoute);
       setRouteState(nextState);
     });
-    window.scrollTo?.({ top: 0, left: 0, behavior: 'auto' });
+    if (!preserveScroll) window.scrollTo?.({ top: 0, left: 0, behavior: 'auto' });
   };
 
   const commitTimelineState = (nextState = {}) => {
