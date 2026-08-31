@@ -4,7 +4,6 @@ import {
   getEntityById,
   getRoyalHouseholdMatrix,
 } from '../../data/succession/successionData';
-import { SITE_STATS } from '../../data/siteStats.generated';
 import { successionRoster, successionRosterGroups } from '../../data/successionRoster';
 import './SuccessionCharacterCourtMap.css';
 
@@ -20,6 +19,7 @@ const normalized = (value) => String(value || '')
   .replace(/[^a-z0-9]+/g, ' ')
   .trim();
 
+const compactName = (value) => normalized(String(value || '').replace(/ Hui Guo Rou$/i, ''));
 const entityLabel = (entity) => entity?.name || entity?.title || entity?.label || entity?.id || 'Unknown';
 const initial = (entity) => entityLabel(entity).replace(/[^A-Za-z0-9]/g, '').slice(0, 1).toUpperCase() || '?';
 const safe = (factory, fallback = []) => {
@@ -40,10 +40,7 @@ const rosterIndex = new Map();
 const rosterGroupIndex = new Map();
 for (const group of successionRosterGroups) {
   for (const member of group.members) {
-    const keys = new Set([
-      normalized(member.name),
-      normalized(member.name.replace(/ Hui Guo Rou$/i, '')),
-    ]);
+    const keys = new Set([normalized(member.name), compactName(member.name)]);
     for (const key of keys) {
       if (!rosterIndex.has(key)) rosterIndex.set(key, member);
       if (!rosterGroupIndex.has(key)) rosterGroupIndex.set(key, group);
@@ -54,14 +51,14 @@ for (const group of successionRosterGroups) {
 function rosterRecordFor(entity) {
   if (!entity) return null;
   const label = entityLabel(entity);
-  const keys = [normalized(label), normalized(label.replace(/ Hui Guo Rou$/i, ''))];
+  const keys = [normalized(label), compactName(label)];
   for (const key of keys) {
     if (rosterIndex.has(key)) return rosterIndex.get(key);
   }
-  const compact = normalized(label.replace(/ Hui Guo Rou$/i, ''));
+  const compact = compactName(label);
   if (compact.length > 3) {
     const match = successionRoster.find((record) => {
-      const candidate = normalized(record.name.replace(/ Hui Guo Rou$/i, ''));
+      const candidate = compactName(record.name);
       return candidate === compact || candidate.startsWith(`${compact} `) || compact.startsWith(`${candidate} `);
     });
     if (match) return match;
@@ -73,8 +70,52 @@ function rosterGroupFor(entity) {
   if (!entity) return null;
   const label = entityLabel(entity);
   return rosterGroupIndex.get(normalized(label))
-    || rosterGroupIndex.get(normalized(label.replace(/ Hui Guo Rou$/i, '')))
+    || rosterGroupIndex.get(compactName(label))
     || null;
+}
+
+function buildCharacterDirectory() {
+  const canonical = safe(() => getEntitiesByType('character'), []);
+  const canonicalByName = new Map();
+
+  for (const character of canonical) {
+    const names = [entityLabel(character), ...(character.aliases || [])];
+    for (const name of names) {
+      for (const key of [normalized(name), compactName(name)]) {
+        if (key && !canonicalByName.has(key)) canonicalByName.set(key, character);
+      }
+    }
+  }
+
+  const directory = new Map();
+  for (const group of successionRosterGroups) {
+    for (const profile of group.members) {
+      const match = canonicalByName.get(normalized(profile.name))
+        || canonicalByName.get(compactName(profile.name))
+        || null;
+      if (match) {
+        directory.set(match.id, match);
+        continue;
+      }
+      const id = `succession-roster:${group.id}:${compactName(profile.name).replaceAll(' ', '-')}`;
+      directory.set(id, {
+        id,
+        entityType: 'character',
+        name: profile.name,
+        roles: [],
+        aliases: [],
+        status: { life: profile.status || 'unknown' },
+        summary: profile.note || profile.statusNote || '',
+        rosterOnly: true,
+      });
+    }
+  }
+
+  for (const character of canonical) {
+    if (!directory.has(character.id)) directory.set(character.id, character);
+  }
+
+  return [...directory.values()].sort((left, right) => entityLabel(left).localeCompare(entityLabel(right)));
 }
 
 function Portrait({ entity, className = '', eager = false }) {
@@ -143,7 +184,7 @@ function CharacterDossier({ character, chapter, onClose }) {
   if (!character) return <aside className="character-dossier character-dossier--empty" data-testid="character-detail">
     <span>Character dossier</span>
     <h2>Select anyone</h2>
-    <p>The full cast stays visible. Pick a portrait to inspect the canonical record without leaving the directory.</p>
+    <p>The full Succession cast stays visible. Pick a portrait to inspect the record without leaving the directory.</p>
   </aside>;
 
   const roster = rosterRecordFor(character);
@@ -157,7 +198,7 @@ function CharacterDossier({ character, chapter, onClose }) {
     <div className="character-dossier__hero">
       <Portrait entity={character} className="character-dossier__portrait" eager />
       <div>
-        <span>{group?.title || 'Canonical character'}</span>
+        <span>{group?.title || (character.rosterOnly ? 'Succession roster' : 'Canonical character')}</span>
         <h2>{entityLabel(character)}</h2>
         <p>{roster?.role || roles.map(readable).join(' · ') || 'Role not separately indexed'}</p>
       </div>
@@ -165,7 +206,7 @@ function CharacterDossier({ character, chapter, onClose }) {
     <dl className="character-dossier__facts">
       <div><dt>Archive state</dt><dd>Chapter {chapter}</dd></div>
       <div><dt>Status</dt><dd>{readable(life)}</dd></div>
-      <div><dt>Roles</dt><dd>{roles.length ? roles.map(readable).join(', ') : 'Not separately indexed'}</dd></div>
+      <div><dt>Roles</dt><dd>{roles.length ? roles.map(readable).join(', ') : roster?.role || 'Not separately indexed'}</dd></div>
       <div><dt>Aliases</dt><dd>{aliases.length ? aliases.join(', ') : 'None indexed'}</dd></div>
     </dl>
     {(character.summary || roster?.note || roster?.statusNote) && <div className="character-dossier__note">
@@ -260,7 +301,7 @@ function AllCharactersView({ characters, selected, chapter, initialGroup, onSele
 
     <div className="characters-directory__summary">
       <strong>{filtered.length.toLocaleString()} matching characters</strong>
-      <span>{SITE_STATS.characters.toLocaleString()} canonical records · {SITE_STATS.successionRoster.toLocaleString()} detailed Succession profiles</span>
+      <span>{characters.length.toLocaleString()} in-scope Succession records · {successionRoster.length.toLocaleString()} detailed roster profiles</span>
     </div>
 
     <div className="characters-directory__body">
@@ -396,9 +437,7 @@ function GroupsView({ onChooseGroup }) {
 
 export default function SuccessionCharacterCourtMap({ requestedState = {}, spoilerLimit, onNavigate }) {
   const chapter = Number(requestedState.chapter || spoilerLimit) || 410;
-  const characters = useMemo(() => safe(() => getEntitiesByType('character'), [])
-    .slice()
-    .sort((left, right) => entityLabel(left).localeCompare(entityLabel(right))), []);
+  const characters = useMemo(buildCharacterDirectory, []);
   const households = useMemo(() => safe(() => getRoyalHouseholdMatrix(chapter), [])
     .map(householdFromRow)
     .filter((row) => row.prince)
@@ -436,11 +475,11 @@ export default function SuccessionCharacterCourtMap({ requestedState = {}, spoil
       <div>
         <span>Succession Contest · Character system</span>
         <h1>Characters</h1>
-        <p>The whole cast is the archive. Courts and groups are visual lenses for navigating it, never substitutes for the complete character index.</p>
+        <p>The whole in-scope cast is the archive. Courts and groups are visual lenses for navigating it, never substitutes for the complete Succession character index.</p>
       </div>
       <div className="character-system__counts">
-        <strong>{characters.length.toLocaleString()}</strong><span>indexed characters</span>
-        <small>{successionRoster.length.toLocaleString()} detailed Succession profiles</small>
+        <strong>{characters.length.toLocaleString()}</strong><span>Succession character records</span>
+        <small>{successionRoster.length.toLocaleString()} detailed roster profiles</small>
       </div>
     </header>
 
