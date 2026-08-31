@@ -4,13 +4,18 @@ import {
   getEntityById,
   getRoyalHouseholdMatrix,
 } from '../../data/succession/successionData';
-import { successionRoster, successionRosterGroups } from '../../data/successionRoster';
+import {
+  biologicalRoyalFamilyTree,
+  successionRoster,
+  successionRosterGroups,
+} from '../../data/successionRoster';
 import './SuccessionCharacterCourtMap.css';
 
 const VALID_VIEWS = new Set(['all', 'courts', 'groups']);
 const PAGE_SIZE = 96;
 const SECURITY_POSITIVE = /(bodyguard|guard(?:ing)?|protect(?:ion|ive)?|security|escort|defen[cs]e|safeguard|watch over)/i;
 const SECURITY_NEGATIVE = /(assassin|kill|curse|poison|infect|hostile|attack|target|surveil|spy|infiltrat|observe|custody|detain|instruction|teach|training|nen class|coerc|interrogate)/i;
+const WIKI_FILE_BASE = 'https://hunterxhunter.fandom.com/wiki/Special:Redirect/file/';
 
 const normalized = (value) => String(value || '')
   .normalize('NFKD')
@@ -19,7 +24,7 @@ const normalized = (value) => String(value || '')
   .replace(/[^a-z0-9]+/g, ' ')
   .trim();
 
-const compactName = (value) => normalized(String(value || '').replace(/ Hui Guo Rou$/i, ''));
+const compactName = (value) => normalized(String(value || '').replace(/ Hui Guo Rou$/i, '').replace(/[†*]/g, ''));
 const entityLabel = (entity) => entity?.name || entity?.title || entity?.label || entity?.id || 'Unknown';
 const initial = (entity) => entityLabel(entity).replace(/[^A-Za-z0-9]/g, '').slice(0, 1).toUpperCase() || '?';
 const safe = (factory, fallback = []) => {
@@ -35,6 +40,12 @@ const ordinal = (value) => {
   return `${number}th`;
 };
 const readable = (value) => String(value || 'unknown').replaceAll('-', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+const wikiFile = (filename) => `${WIKI_FILE_BASE}${encodeURIComponent(filename)}`;
+const asciiDisplayName = (value) => String(value || '')
+  .normalize('NFKD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .replace(/[†*]/g, '')
+  .trim();
 
 const rosterIndex = new Map();
 const rosterGroupIndex = new Map();
@@ -44,6 +55,16 @@ for (const group of successionRosterGroups) {
     for (const key of keys) {
       if (!rosterIndex.has(key)) rosterIndex.set(key, member);
       if (!rosterGroupIndex.has(key)) rosterGroupIndex.set(key, group);
+    }
+  }
+}
+
+const canonicalCharacters = safe(() => getEntitiesByType('character'), []);
+const canonicalCharacterByName = new Map();
+for (const character of canonicalCharacters) {
+  for (const name of [entityLabel(character), ...(character.aliases || [])]) {
+    for (const key of [normalized(name), compactName(name)]) {
+      if (key && !canonicalCharacterByName.has(key)) canonicalCharacterByName.set(key, character);
     }
   }
 }
@@ -74,11 +95,27 @@ function rosterGroupFor(entity) {
     || null;
 }
 
+function canonicalCharacterForName(name) {
+  return canonicalCharacterByName.get(normalized(name))
+    || canonicalCharacterByName.get(compactName(name))
+    || null;
+}
+
+function syntheticCharacter(name, extras = {}) {
+  return {
+    id: `synthetic:${compactName(name).replaceAll(' ', '-')}`,
+    entityType: 'character',
+    name,
+    roles: [],
+    aliases: [],
+    ...extras,
+  };
+}
+
 function buildCharacterDirectory() {
-  const canonical = safe(() => getEntitiesByType('character'), []);
   const canonicalByName = new Map();
 
-  for (const character of canonical) {
+  for (const character of canonicalCharacters) {
     const names = [entityLabel(character), ...(character.aliases || [])];
     for (const name of names) {
       for (const key of [normalized(name), compactName(name)]) {
@@ -111,17 +148,59 @@ function buildCharacterDirectory() {
     }
   }
 
-  for (const character of canonical) {
+  for (const character of canonicalCharacters) {
     if (!directory.has(character.id)) directory.set(character.id, character);
   }
 
   return [...directory.values()].sort((left, right) => entityLabel(left).localeCompare(entityLabel(right)));
 }
 
-function Portrait({ entity, className = '', eager = false }) {
+function portraitCandidatesFor(entity) {
   const record = rosterRecordFor(entity);
-  const [failed, setFailed] = useState(false);
-  const image = failed ? '' : record?.image;
+  const names = [
+    record?.name,
+    entityLabel(entity),
+    ...(entity?.aliases || []),
+  ].filter(Boolean);
+  const files = [];
+  if (record?.image) files.push(record.image);
+  for (const rawName of names) {
+    const display = String(rawName).replace(/[†*]/g, '').trim();
+    const short = display.replace(/ Hui Guo Rou$/i, '').trim();
+    const ascii = asciiDisplayName(display);
+    const asciiShort = ascii.replace(/ Hui Guo Rou$/i, '').trim();
+    for (const candidate of [
+      `${display} SC Portrait.png`,
+      `${short} SC Portrait.png`,
+      `${ascii} SC Portrait.png`,
+      `${asciiShort} SC Portrait.png`,
+      `${display} Portrait.png`,
+      `${short} Portrait.png`,
+      `${asciiShort} 2011.png`,
+      `${asciiShort}.png`,
+    ]) {
+      if (candidate.trim()) files.push(wikiFile(candidate));
+    }
+  }
+  return [...new Set(files)].slice(0, 10);
+}
+
+function Portrait({ entity, className = '', eager = false }) {
+  const candidates = useMemo(() => portraitCandidatesFor(entity), [entity]);
+  const [candidateIndex, setCandidateIndex] = useState(0);
+  const [imageVisible, setImageVisible] = useState(false);
+  const image = candidates[candidateIndex] || '';
+
+  useEffect(() => {
+    setCandidateIndex(0);
+    setImageVisible(false);
+  }, [entity?.id, entityLabel(entity)]);
+
+  const tryNext = () => {
+    setImageVisible(false);
+    setCandidateIndex((index) => Math.min(index + 1, candidates.length));
+  };
+
   return <span className={`court-portrait ${className}`.trim()} aria-hidden="true">
     <span className="court-portrait__fallback">{initial(entity)}</span>
     {image && <img
@@ -129,7 +208,17 @@ function Portrait({ entity, className = '', eager = false }) {
       alt=""
       loading={eager ? 'eager' : 'lazy'}
       decoding="async"
-      onError={() => setFailed(true)}
+      referrerPolicy="no-referrer"
+      className={imageVisible ? 'is-visible' : ''}
+      onLoad={(event) => {
+        const { naturalWidth, naturalHeight } = event.currentTarget;
+        if (!naturalWidth || !naturalHeight) {
+          tryNext();
+          return;
+        }
+        setImageVisible(true);
+      }}
+      onError={tryNext}
     />}
   </span>;
 }
@@ -151,9 +240,21 @@ function isSecurityAssignment(assignment) {
   return SECURITY_POSITIVE.test(text) && !SECURITY_NEGATIVE.test(text);
 }
 
+function resolveQueen(prince, row) {
+  const direct = row.biologicalMotherId ? getEntityById(row.biologicalMotherId) : null;
+  if (direct?.entityType === 'character') return direct;
+  const princeKey = compactName(entityLabel(prince));
+  const branch = biologicalRoyalFamilyTree.find((entry) => (entry.children || []).some((child) => compactName(child) === princeKey));
+  if (!branch) return null;
+  return canonicalCharacterForName(branch.queen)
+    || syntheticCharacter(branch.queen, { queenRank: branch.order, roles: ['queen'] });
+}
+
 function householdFromRow(row) {
-  const prince = getEntityById(row.character?.id);
-  const queen = getEntityById(row.biologicalMotherId);
+  const prince = getEntityById(row.character?.id) || canonicalCharacterForName(row.character?.name);
+  const queen = resolveQueen(prince, row);
+  const king = canonicalCharacterForName('Nasubi Hui Guo Rou')
+    || syntheticCharacter('Nasubi Hui Guo Rou', { roles: ['king'] });
   const assignments = (row.householdAssignmentIds || [])
     .map((id) => getEntityById(id))
     .filter(Boolean);
@@ -167,6 +268,7 @@ function householdFromRow(row) {
   }
   return {
     ...row,
+    king,
     prince,
     queen,
     assignments,
@@ -326,6 +428,17 @@ function AllCharactersView({ characters, selected, chapter, initialGroup, onSele
   </section>;
 }
 
+function RoyalPortrait({ entity, title, subtitle, className = '' }) {
+  return <figure className={`royal-lineage-portrait ${className}`.trim()}>
+    <Portrait entity={entity} eager />
+    <figcaption>
+      <small>{title}</small>
+      <strong>{entityLabel(entity)}</strong>
+      {subtitle && <span>{subtitle}</span>}
+    </figcaption>
+  </figure>;
+}
+
 function SecurityMember({ character }) {
   return <figure className="court-security-member">
     <Portrait entity={character} />
@@ -340,26 +453,41 @@ function FocusedCourt({ household, chapter }) {
   const location = getEntityById(household.locationId);
 
   return <section className="court-focus" data-testid="focused-court">
-    <header className="court-focus__context">
-      <div className="court-focus__queen">
-        <Portrait entity={household.queen} />
-        <span><small>{household.queen?.queenRank || 'Queen'}</small><strong>{entityLabel(household.queen)}</strong></span>
+    <header className="court-focus__meta">
+      <div>
+        <span>Royal portrait hierarchy</span>
+        <strong>King → Queen → Prince → Guard formation</strong>
       </div>
       <div className="court-focus__facts">
         <span>Ch. {chapter}</span>
-        <span>{household.securityPersonnel.length} confirmed protection / security personnel</span>
-        <span>{household.otherOperations.length} other active operations kept outside the guard ring</span>
+        <span>{household.securityPersonnel.length} confirmed guards</span>
+        <span>{household.otherOperations.length} other operations excluded</span>
       </div>
     </header>
 
-    <div className="court-formation-grid">
-      <div className="court-prince-card">
-        <Portrait entity={household.prince} eager />
-        <small>{ordinal(household.order)} Prince</small>
-        <h2>{entityLabel(household.prince)}</h2>
-        <p>{readable(household.life || 'unknown')} · {location ? entityLabel(location) : 'Location unresolved'}</p>
+    <div className="court-lineage">
+      <RoyalPortrait entity={household.king} title="King" className="royal-lineage-portrait--king" />
+      <span className="court-lineage__connector" aria-hidden="true" />
+      <RoyalPortrait
+        entity={household.queen}
+        title={household.queen?.queenRank || 'Queen'}
+        subtitle="Royal household"
+        className="royal-lineage-portrait--queen"
+      />
+      <span className="court-lineage__connector court-lineage__connector--long" aria-hidden="true" />
+
+      <div className="court-formation-wrap">
+        <div className="court-formation-grid">
+          <div className="court-prince-card">
+            <Portrait entity={household.prince} eager />
+            <small>{ordinal(household.order)} Prince</small>
+            <h2>{entityLabel(household.prince)}</h2>
+            <p>{readable(household.life || 'unknown')} · {location ? entityLabel(location) : 'Location unresolved'}</p>
+          </div>
+          {visibleSecurity.map((person) => <SecurityMember key={person.id} character={person} />)}
+        </div>
+        <span className="court-formation-ring" aria-hidden="true" />
       </div>
-      {visibleSecurity.map((person) => <SecurityMember key={person.id} character={person} />)}
     </div>
 
     {!visibleSecurity.length && <p className="court-focus__notice">No active assignment at this chapter is explicitly classified as protection, guard, security, escort, or defense. Other operations are deliberately not shown as guards.</p>}
@@ -403,7 +531,7 @@ function CourtsView({ households, selectedId, chapter, onSelect, onNavigate }) {
     <FocusedCourt household={selected} chapter={chapter} />
     <header className="characters-section-heading">
       <div><span>Royal court lens</span><h2>Fourteen Prince courts</h2></div>
-      <p>Only assignments explicitly classified as protection or security enter a Prince’s formation. Surveillance, threats, instruction, custody, and other operations stay out of the guard ring.</p>
+      <p>Every court keeps the royal portrait chain visible, then places confirmed guards around the selected Prince. Surveillance, threats, instruction, custody, and other operations remain outside the guard formation.</p>
     </header>
     <div className="courts-grid">
       {households.map((household) => <CourtCard

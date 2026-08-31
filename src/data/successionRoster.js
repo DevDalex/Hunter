@@ -1,15 +1,15 @@
 const wikiBase = 'https://hunterxhunter.fandom.com/wiki';
 const directoryUrl = `${wikiBase}/List_of_Hunter_%C3%97_Hunter_Characters/Chapters_340-current`;
 const article = (name) => `${wikiBase}/${encodeURIComponent(name.replaceAll(' ', '_'))}`;
-const portrait = (file) => `${wikiBase}/Special:Redirect/file/${encodeURIComponent(file)}`;
+const portrait = (file) => `${wikiBase}/Special:FilePath/${encodeURIComponent(file)}`;
 import { statusNoteOf, statusOf } from './successionStatus';
 
 const portraitFilenameOverrides = new Map([
   ['Bashō', 'Basho SC Portrait.png'],
-  ['Himoncé', 'Himonce SC Portrait.png'],
-  ['Kōbihi', 'Kobihi SC Portrait.png'],
-  ['Naikēru', 'Naikeru SC Portrait.png'],
-  ['Rēuen', 'Reuen SC Portrait.png'],
+  ['Himoncé', 'Himoncé SC Portrait.png'],
+  ['Kōbihi', 'Kōbihi SC Portrait.png'],
+  ['Naikēru', 'Naikēru SC Portrait.png'],
+  ['Rēuen', 'Rēuen SC Portrait.png'],
   ['Salé-salé Hui Guo Rou', 'Sale-sale Hui Guo Rou SC Portrait.png'],
 ]);
 const isGenericRosterName = (name) => name.includes('Unnamed ') || name.startsWith('Stone Wall ')
