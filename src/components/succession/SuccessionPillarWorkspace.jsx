@@ -29,7 +29,10 @@ const nenCopy = {
 };
 
 export default function SuccessionPillarWorkspace({ pillar, requestedState = {}, spoilerLimit, onNavigate }) {
-  const navigateExplorer = (target, params = {}) => onNavigate?.(destinationFor(target || pillar, params));
+  const navigateExplorer = (target, params = {}, options = {}) => onNavigate?.(
+    destinationFor(target || pillar, params),
+    options,
+  );
 
   return <article className={`succession-pillar-workspace succession-pillar-workspace--${pillar}`}>
     <nav className="succession-pillar-workspace__nav" aria-label="Succession archive">
