@@ -1,7 +1,7 @@
 const wikiBase = 'https://hunterxhunter.fandom.com/wiki';
 const directoryUrl = `${wikiBase}/List_of_Hunter_%C3%97_Hunter_Characters/Chapters_340-current`;
 const article = (name) => `${wikiBase}/${encodeURIComponent(name.replaceAll(' ', '_'))}`;
-const portrait = (file) => `${wikiBase}/Special:Redirect/file/${encodeURIComponent(file)}`;
+const portrait = (file, title = '') => `/__hunterpedia/portrait?file=${encodeURIComponent(file)}${title ? `&title=${encodeURIComponent(title)}` : ''}`;
 import { statusNoteOf, statusOf } from './successionStatus';
 
 const portraitFilenameOverrides = new Map([
@@ -20,6 +20,19 @@ const portraitFilenameOverrides = new Map([
   ['Pariston Hill', 'Pariston Hill HCE Portrait.png'],
   ['Pyon', 'Pyon HCE Portrait.png'],
   ['Saccho Kobayakawa', 'Saccho Kobayakawa HCE Portrait.png'],
+  ['Gel', 'Gel HCE Portrait.png'],
+  ['Hisoka Morow', 'Hisoka Morow HCE Portrait.png'],
+  ['Leorio Paradinight', 'Leorio Paradinight HCE Portrait.png'],
+  ['Feitan Portor', 'Feitan Portor YC Portrait.png'],
+  ['Franklin Bordeau', 'Franklin Bordeau YC Portrait.png'],
+  ['Machi Komacine', 'Machi Komacine YC Portrait.png'],
+  ['Nobunaga Hazama', 'Nobunaga Hazama YC Portrait.png'],
+  ['Pakunoda', 'Pakunoda YC Portrait.png'],
+  ['Phinks Magcub', 'Phinks Magcub YC Portrait.png'],
+  ['Shalnark', 'Shalnark YC Portrait.png'],
+  ['Shizuku Murasaki', 'Shizuku Murasaki YC Portrait.png'],
+  ['Uvogin', 'Uvogin YC Portrait.png'],
+  ['Kortopi', 'Kortopi YC Portrait.png'],
 ]);
 const isGenericRosterName = (name) => name.includes('Unnamed ') || name.startsWith('Stone Wall ')
   || name.startsWith('V6 Leader ') || name.startsWith('Temp Hunter ')
@@ -37,7 +50,7 @@ const rosterPortraitFileFor = (name, portraitHint = '') => {
 
 const makeMembers = (group, role, rows) => rows.map(([name, portraitHint, note]) => {
   const imageFile = rosterPortraitFileFor(name, portraitHint);
-  const image = portrait(imageFile);
+  const image = portrait(imageFile, name);
   return {
     name,
     group,
