@@ -95,6 +95,20 @@ function inferredTitleFromFile(file) {
     .trim();
 }
 
+function staticFileCandidates(file, title) {
+  const candidates = [String(file || '').trim()];
+  const articleTitle = String(title || inferredTitleFromFile(file)).trim();
+  if (articleTitle) {
+    candidates.push(`${articleTitle} 2011 Design.png`);
+    const firstName = articleTitle.split(/\s+/)[0];
+    if (firstName && firstName !== articleTitle) {
+      candidates.push(`${firstName} 2011 Design.png`);
+      candidates.push(`${firstName} Chimera Ant Arc 2011 Design.png`);
+    }
+  }
+  return [...new Set(candidates.filter(Boolean))];
+}
+
 async function fetchJson(url) {
   const response = await fetch(url, {
     headers: {
@@ -166,8 +180,16 @@ async function handlePortrait(request, ctx) {
   const cached = await cache.match(request);
   if (cached) return cached;
 
-  let source = 'static-cdn';
-  let upstream = await fetchPortraitUpstream(hunterpediaStaticFileUrl(file));
+  let upstream = null;
+  let source = '';
+  for (const candidate of staticFileCandidates(file, title)) {
+    upstream = await fetchPortraitUpstream(hunterpediaStaticFileUrl(candidate));
+    if (upstream) {
+      source = `static-cdn:${candidate}`;
+      break;
+    }
+  }
+
   if (!upstream) {
     source = 'mediawiki-api';
     const fallbackUrl = await resolveHunterpediaApiFallback(file, title);
@@ -190,7 +212,7 @@ async function handlePortrait(request, ctx) {
   return response;
 }
 
-export { md5Hex, hunterpediaStaticFileUrl };
+export { md5Hex, hunterpediaStaticFileUrl, staticFileCandidates };
 
 export default {
   async fetch(request, env, ctx) {
