@@ -5,9 +5,9 @@ import {
   storyThreadProfiles,
 } from './storyIntelligenceFoundation.js';
 import {
-  contentDepthCurrentPhaseThreadIds418,
-  contentDepthStoryThreads418,
-} from './contentDepthStory418.js';
+  contentDepthCurrentPhaseThreadIds419,
+  contentDepthStoryThreads419,
+} from './contentDepthStory419.js';
 
 const threadId = 'story-thread:hisoka-chrollo-deathmatch-outcome';
 const legacyJusticeId = 'location:black-whale:tier-1:justice-bureau';
@@ -34,10 +34,10 @@ const deathmatchOutcomeThread = Object.freeze({
 });
 
 const currentReleasePhase = Object.freeze({
-  id: 'story-phase:current-releases-414-418',
+  id: 'story-phase:current-releases-414-419',
   name: 'Current releases under martial law',
-  summary: 'Chapters 414–418 move from Room 1014’s Woble crisis and Beyond-curse analysis into active Special Martial Law, Benjamin’s emergency campaign, TSK-17 and Justice consolidation, then Chapter 418’s non-linear reveal that Tserriednich survived the apparent Room 1004 execution through sustained-Zetsu Parallel Future perception and has begun an escape under a staged-death coffin cover.',
-  chapterRange: Object.freeze({ start: 414, end: 418 }),
+  summary: 'Chapters 414–419 move from Room 1014’s Woble crisis and Beyond-curse analysis into active Special Martial Law, Benjamin’s emergency campaign, TSK-17 and Justice consolidation, then Tserriednich’s staged-death escape. Chapter 419 converts his sustained Parallel Future range and outsider-entry theories into battlefield-tested rules, triggers a confused Royal Army countermeasure response, and carries him through the locked-down VVIP area to the Tier 1 casino while he seeks a route toward Tier 2.',
+  chapterRange: Object.freeze({ start: 414, end: 419 }),
   laneIds: Object.freeze([
     'story-lane:royal-succession',
     'story-lane:woble-defense',
@@ -58,6 +58,7 @@ const currentReleasePhase = Object.freeze({
     'character:balsamilco-might',
     'character:unma-hui-guo-rou',
     'character:halkenburg-hui-guo-rou',
+    'character:nasubi-hui-guo-rou',
   ]),
   organizationIds: Object.freeze([
     'organization:kakin-royal-family',
@@ -69,6 +70,7 @@ const currentReleasePhase = Object.freeze({
     'location:black-whale:tier-1:room-1014',
     'location:black-whale:tier-1:room-1001',
     'location:black-whale:tier-1:room-1004',
+    'location:black-whale:tier-1:casino',
   ]),
   threadIds: Object.freeze([
     'story-thread:succession-completion-condition',
@@ -76,14 +78,10 @@ const currentReleasePhase = Object.freeze({
     'story-thread:tserriednich-future-growth',
     'story-thread:martial-law-end-state',
     'story-thread:sarahell-curse-operation',
-    ...contentDepthCurrentPhaseThreadIds418,
+    ...contentDepthCurrentPhaseThreadIds419,
   ]),
   sourceIds: Object.freeze([
-    'source:chapter-414',
-    'source:chapter-415',
-    'source:chapter-416',
-    'source:chapter-417',
-    'source:chapter-418',
+    'source:chapter-414','source:chapter-415','source:chapter-416','source:chapter-417','source:chapter-418','source:chapter-419',
   ]),
   status: 'documented',
 });
@@ -91,37 +89,26 @@ const currentReleasePhase = Object.freeze({
 export const correctedStoryThreadProfiles = Object.freeze({
   ...storyThreadProfiles,
   [threadId]: deathmatchOutcomeThread,
-  ...contentDepthStoryThreads418,
+  ...contentDepthStoryThreads419,
 });
 
 export const correctedStoryLaneProfiles = Object.freeze(Object.fromEntries(
   Object.entries(storyLaneProfiles).map(([id, profile]) => {
-    const depthThreadIds = Object.values(contentDepthStoryThreads418)
-      .filter((thread) => thread.laneIds.includes(id))
-      .map((thread) => thread.id);
-    const withDeathmatch = deathmatchOutcomeThread.laneIds.includes(id)
-      ? addUnique(profile.threadIds, threadId)
-      : profile.threadIds;
-    return [id, Object.freeze({
-      ...profile,
-      locationIds: remapJusticeLocations(profile.locationIds),
-      threadIds: addUniqueMany(withDeathmatch, depthThreadIds),
-    })];
+    const depthThreadIds = Object.values(contentDepthStoryThreads419).filter((thread) => thread.laneIds.includes(id)).map((thread) => thread.id);
+    const withDeathmatch = deathmatchOutcomeThread.laneIds.includes(id) ? addUnique(profile.threadIds, threadId) : profile.threadIds;
+    return [id, Object.freeze({ ...profile, locationIds: remapJusticeLocations(profile.locationIds), threadIds: addUniqueMany(withDeathmatch, depthThreadIds) })];
   }),
 ));
 
 const correctedBasePhases = Object.fromEntries(
   Object.entries(storyPhaseProfiles)
-    .filter(([id]) => id !== 'story-phase:current-releases-414-417')
+    .filter(([id]) => id !== 'story-phase:current-releases-414-417' && id !== 'story-phase:current-releases-414-418')
     .map(([id, profile]) => {
       if (id !== 'story-phase:heavens-arena-consequence') return [id, profile];
       return [id, Object.freeze({ ...profile, threadIds: addUnique(profile.threadIds, threadId) })];
     }),
 );
 
-export const correctedStoryPhaseProfiles = Object.freeze({
-  ...correctedBasePhases,
-  [currentReleasePhase.id]: currentReleasePhase,
-});
+export const correctedStoryPhaseProfiles = Object.freeze({ ...correctedBasePhases, [currentReleasePhase.id]: currentReleasePhase });
 
 export { storyCausalLinks };
