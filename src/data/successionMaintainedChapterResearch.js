@@ -70,6 +70,7 @@ import { succession414415ChapterResearch } from './succession414415Research.js';
 import { succession416ChapterResearch } from './succession416Research.js';
 import { succession417ChapterResearch } from './succession417Research.js';
 import { succession418ChapterResearch } from './succession418Research.js';
+import { succession419ChapterResearch } from './succession419Research.js';
 
 const succession412MaintainedChapterResearch = Object.freeze(succession412ChapterResearch.map((record) => Object.freeze({
   ...record,
@@ -100,7 +101,7 @@ export const maintainedSuccessionChapterResearch = Object.freeze([
   ...succession406ChapterResearch, ...succession407ChapterResearch, ...succession408ChapterResearch, ...succession409ChapterResearch,
   ...succession410ChapterResearch, ...succession411ChapterResearch, ...succession412MaintainedChapterResearch,
   ...succession413ChapterResearch, ...succession414415ChapterResearch, ...succession416ChapterResearch, ...succession417ChapterResearch,
-  ...succession418ChapterResearch,
+  ...succession418ChapterResearch, ...succession419ChapterResearch,
 ].sort((left, right) => left.number - right.number));
 
 export const maintainedSuccessionChapterNumbers = Object.freeze(maintainedSuccessionChapterResearch.map((record) => record.number));
