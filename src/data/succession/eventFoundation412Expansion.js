@@ -5,6 +5,7 @@ import { eventFoundation415Expansion } from './eventFoundation415Expansion.js';
 import { eventFoundation416Expansion } from './eventFoundation416Expansion.js';
 import { eventFoundation417Expansion } from './eventFoundation417Expansion.js';
 import { eventFoundation418Expansion } from './eventFoundation418Expansion.js';
+import { eventFoundation419Expansion } from './eventFoundation419Expansion.js';
 
 export const eventFoundation412Expansion = Object.freeze([
   ...eventFoundation412ExpansionBase,
@@ -14,4 +15,5 @@ export const eventFoundation412Expansion = Object.freeze([
   ...eventFoundation416Expansion,
   ...eventFoundation417Expansion,
   ...eventFoundation418Expansion,
+  ...eventFoundation419Expansion,
 ]);
