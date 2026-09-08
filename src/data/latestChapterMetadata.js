@@ -71,10 +71,22 @@ export const latestChapterMetadata = Object.freeze({
     sourceUrl: 'https://hunterxhunter.fandom.com/wiki/Chapter_419',
     officialReaderUrl: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-419/chapter/51146',
   }),
+  420: Object.freeze({
+    number: 420,
+    title: null,
+    japaneseTitle: null,
+    alternateTitles: Object.freeze([]),
+    releaseDate: 'September 6, 2026',
+    titleStatus: 'official-title-not-supplied',
+    detailStatus: 'maintained-research',
+    researchReviewedAt: 'September 9, 2026',
+    sourceUrl: 'https://hunterxhunter.fandom.com/wiki/Chapter_420',
+    officialReaderUrl: 'https://www.viz.com/shonenjump/hunter-x-hunter-chapter-420/chapter/51204',
+  }),
 });
 
 export const LATEST_PUBLISHED_CHAPTER = Math.max(...Object.keys(latestChapterMetadata).map(Number));
-export const LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER = 419;
+export const LATEST_DETAILED_SUCCESSION_RESEARCH_CHAPTER = 420;
 
 export const getLatestChapterMetadata = (number) => latestChapterMetadata[Number(number)] || null;
 
