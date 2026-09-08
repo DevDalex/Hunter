@@ -1,4 +1,4 @@
-import { successionArchiveData } from './entitiesHighValueIntelligence.js';
+import { successionArchiveData } from './entitiesHighValueIntelligence420Bridge.js';
 import { successionArchiveData as productClosureLineage } from './entitiesProductClosureCorrections.js';
 import { successionArchiveData as storyFoundationLineage } from './entitiesStoryIntelligenceFoundation.js';
 import { createSuccessionEvidenceGraph } from './evidenceGraph.js';
