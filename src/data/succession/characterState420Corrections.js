@@ -21,12 +21,12 @@ export const characterState420CorrectionProfiles = freeze({
   })]),
   'character:hisoka-morow':freeze([state({
     characterId:'character:hisoka-morow',
-    operationalState:'Confirmed in the Tier 1 VVIP casino during Special Martial Law. He is seen gambling amid a trail of Royal Army corpses, rapidly repositions behind Tserriednich, appears in Tserriednich’s predicted future as killing him, then reacts to an unexplained Nen/perception anomaly before walking away from the real Tserriednich.',
+    operationalState:'Confirmed in the Tier 1 VVIP casino during Special Martial Law. He is seen gambling amid a trail of Royal Army corpses, rapidly repositions behind Tserriednich, appears in Tserriednich’s predicted future as killing him, then reacts to an unexplained Nen/perception anomaly before walking away from the real Tserriednich. His exact position after leaving the encounter is not supplied.',
     protectionState:'Self-protected elite Nen combatant moving freely through a militarized Tier 1 environment; no formal allied protection network is shown.',
     threatLevel:'extreme independent combat threat / capable of immediately overwhelming Tserriednich in the predicted line',
     nenKnowledge:'Chapter 420 does not reveal a new named Hisoka ability. His reaction suggests he detects some inconsistency involving Tserriednich’s imposed future and/or Guardian Spirit Beast, but the exact sensory mechanism is unresolved and must not be labelled as a confirmed technique.',
     allegianceState:'Independent / actively seeking Spider-related targets according to his own priorities.',
-    locationId:'location:black-whale:tier-1:casino',
+    locationId:'location:black-whale:tier-1',
     openQuestions:['Did he perceive the Guardian Spirit Beast, the real Tserriednich, or only a general anomaly?','Did he cause the entire throat-slit Royal Army corpse trail?','Why did he walk away after apparently detecting something?']
   })]),
   'character:nasubi-hui-guo-rou':freeze([state({
